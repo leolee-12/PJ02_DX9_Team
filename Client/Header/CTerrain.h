@@ -30,8 +30,8 @@ private:
 	Engine::CTransform*		m_pTransformCom;
 	Engine::CTexture*		m_pTextureCom;
 
-	optional<_vec3>		m_optPos;
-	optional<_float>	m_optRotY;
+	//optional<_vec3>		m_optPos;
+	//optional<_float>	m_optRotY;
 public:
 	static CTerrain* Create(LPDIRECT3DDEVICE9 pGraphicDev, optional<_vec3> vPos = nullopt, optional<_float> fRotY = nullopt);
 
