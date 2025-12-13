@@ -5,8 +5,8 @@
 #include "CRenderer.h"
 #include "CDInputMgr.h"
 
-CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
-	: CGameObject(pGraphicDev)
+CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel)
+	: CGameObject(pGraphicDev, StageChannel)
 {
 }
 
@@ -23,6 +23,10 @@ HRESULT CPlayer::Ready_GameObject()
 {
 	if (FAILED(Add_Component()))
 		return E_FAIL;
+
+	m_pMessageChannel->Subscribe(L"Start_Game", [this](const IMessageChannel::EVENT&) {
+
+		})
 
 	//m_pTransformCom->m_vInfo[INFO_POS].y = 1.f;
 
@@ -190,9 +194,9 @@ _vec3 CPlayer::Picking_OnTerrain()
 	return m_pCalculatorCom->Picking_OnTerrain(g_hWnd, pTerrainVtxCom, pTerrainTransformCom);
 }
 
-CPlayer* CPlayer::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+CPlayer* CPlayer::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel)
 {
-	CPlayer* pPlayer = new CPlayer(pGraphicDev);
+	CPlayer* pPlayer = new CPlayer(pGraphicDev, StageChannel);
 
 	if (FAILED(pPlayer->Ready_GameObject()))
 	{

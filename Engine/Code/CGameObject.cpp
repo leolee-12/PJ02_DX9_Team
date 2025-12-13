@@ -1,15 +1,23 @@
 #include "CGameObject.h"
 
 CGameObject::CGameObject(LPDIRECT3DDEVICE9 pGraphicDev)
-    : m_pGraphicDev(pGraphicDev)
+    : m_pGraphicDev(pGraphicDev), m_pMessageChannel(nullptr), m_eOBJID(OID_END)
 {
     m_pGraphicDev->AddRef();
 }
 
-CGameObject::CGameObject(const CGameObject& rhs)
-    : m_pGraphicDev(rhs.m_pGraphicDev)
+CGameObject::CGameObject(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* SceneChannel)
+    : m_pGraphicDev(pGraphicDev), m_pMessageChannel(SceneChannel), m_eOBJID(OID_END)
 {
     m_pGraphicDev->AddRef();
+    m_pMessageChannel->AddRef();
+}
+
+CGameObject::CGameObject(const CGameObject& rhs)
+    : m_pGraphicDev(rhs.m_pGraphicDev), m_pMessageChannel(rhs.m_pMessageChannel), m_eOBJID(rhs.m_eOBJID)
+{
+    m_pGraphicDev->AddRef();
+    if (m_pMessageChannel != nullptr) { m_pMessageChannel->AddRef(); }
 }
 
 CGameObject::~CGameObject()
@@ -70,4 +78,5 @@ void CGameObject::Free()
     }
 
     Safe_Release(m_pGraphicDev);
+    Safe_Release(m_pMessageChannel);
 }

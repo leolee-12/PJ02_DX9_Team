@@ -17,6 +17,9 @@ CLogo::~CLogo()
 
 HRESULT CLogo::Ready_Scene()
 {
+	//테스트용
+	m_pMessageChannel = CStageMessage::Create();
+
 	if(FAILED(Ready_Prototype()))
 		return E_FAIL;
 
@@ -74,7 +77,7 @@ void CLogo::Render_Scene()
 
 HRESULT CLogo::Ready_Environment_Layer(const _tchar* pLayerTag)
 {
-	CLayer* pLayer = CLayer::Create();
+	CLayer* pLayer = CLayer::Create(m_pMessageChannel);
 	if (nullptr == pLayer)
 		return E_FAIL;
 

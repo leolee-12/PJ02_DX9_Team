@@ -68,3 +68,77 @@ https://drive.google.com/drive/folders/1zx3saK3foV18kZLbxc0bIW1SqXbGBRih?usp=dri
 - 기존엔 광선이 어느방향이든 광선이랑 충돌 하고자 하는 지형의 모든 셀을 순회하여 충돌지점을 파악하는 방식 > 연산량 많음
 
 - 현재 광선이 진행하는 방향에 광선이 지나가는 셀을 찾고 해당 셀들만 충돌체크 > 연산량 매우감소
+
+## 업데이트 사항
+### 2025 12 14 업데이트
+
+#### 1. 메세지/이벤트 추가
+
+- 각각의 씬은 메세지 채널을 보유함
+
+- 메세지 채널은 IMessageChannel 인터페이스를 상속받음
+
+- 씬 > 레이어 > 오브젝트 각각 생성시에 __씬의 메세지채널__ 을 공유함
+
+- 씬은 항상 메세지 채널을 보유해야함 (Ready시에 메세지 채널 생성해줄것)
+
+- 레이어, 오브젝트는 채널을 보유 할 수도 안 할 수도
+
+- 해당 채널을 공유하는 객체들끼리 이벤트를 공유함
+
+- 예시. 플레이어가 보스방 입장 이벤트발생 > 씬이 이벤트확인 > 씬이 보스전 진입 이벤트 발생 > 해당 이벤트를 구독중인 모든 오브젝트는 상호작용.
+
+- 코드 참조
+
+        public:
+	    typedef struct tagEvent
+	    {
+		    wstring strType;
+		    unordered_map<wstring, any> hmapData;
+
+		    tagEvent(const wstring& strEventType)
+			    : strType(strEventType) {}
+	    }EVENT;
+        // 인터페이스 클래스 내부에 있는 구조체
+        // 1. 이벤트 명(타입)
+        // 2. 추가 기입 데이터 {이벤트 적용대상, 플레이어*} 같은 형식으로 사용
+        // 3. 생성자 (이벤트 명) 편의성을위함
+
+
+        private:
+        unordered_map<wstring, vector<function<void(const EVENT&)>>> hmapHandlers;
+        // 인터페이스를 상속받은 구현 클래스의 내부 멤버 (해시맵 <키값, 벡터<펑터(함수포인터)>>)
+        // 이벤트가 발생했을때에 내부에 보관중인 펑터를 호출하는방식
+
+        void CStageMessage::Subscribe(const wstring& strEventType, function<void(const EVENT&)> fcHandler)
+        {
+	        auto [iter, inserted] = hmapHandlers.try_emplace(strEventType);
+
+	        if (inserted) {
+		        iter->second.reserve(16);
+	        }
+
+	        iter->second.push_back(fcHandler);
+            // 구독함수
+            // 발생하는 이벤트명을 키값으로 해쉬맵에 해당 이벤트가 발생하였을때에 실행 하고자 하는 함수 포인터 저장(람다도 가능)
+        }
+
+        void CStageMessage::Publish(const EVENT& Event)
+        {
+    	    auto iter = hmapHandlers.find(Event.strType);
+
+	        if (iter != hmapHandlers.end()) {
+    		    auto CopyHandlers = iter->second;
+		        for (auto& functor : CopyHandlers) 
+		        {
+    			    functor(Event);
+		        }
+	        }
+
+            // 이벤트 발생 함수
+            // 해당 함수 호출시 해당 이벤트명으로 해쉬맵을 탐색
+            // 이벤트를 구독중인 객체가 하나라도 있다면 (키값이 이미 있으면)
+            // 해당 키값에 해당하는 벡터<펑터> 를 전체 순회하며 펑터 호출
+        }
+
+

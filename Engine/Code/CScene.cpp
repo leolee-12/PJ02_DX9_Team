@@ -1,7 +1,7 @@
 #include "CScene.h"
 
 CScene::CScene(LPDIRECT3DDEVICE9 pGraphicDev)
-    : m_pGraphicDev(pGraphicDev)
+    : m_pGraphicDev(pGraphicDev), m_pMessageChannel(nullptr)
 {
     m_pGraphicDev->AddRef();
 }
@@ -47,4 +47,5 @@ void CScene::Free()
     m_mapLayer.clear();
 
     Safe_Release(m_pGraphicDev);
+    Safe_Release(m_pMessageChannel);
 }

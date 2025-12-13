@@ -2,6 +2,7 @@
 
 #include "CBase.h"
 #include "CLayer.h"
+#include "Engine_MsgChannel.h"
 
 BEGIN(Engine)
 
@@ -29,6 +30,9 @@ protected:
 
 protected:
 	virtual void			Free();
+
+protected:
+	IMessageChannel* m_pMessageChannel;
 
 };
 
