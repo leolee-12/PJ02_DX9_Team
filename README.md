@@ -17,13 +17,13 @@ https://drive.google.com/drive/folders/1zx3saK3foV18kZLbxc0bIW1SqXbGBRih?usp=dri
 1. fork했던 repository의 main branch를 기존 repository의 main branch와 동기화
 2. local branch를 하나 만들어 원하는 이름으로 설정
 3. 해당 branch에 들어가서 작업
-⚠️ 절대 main branch에서 작업하면 안됨!
+  ⚠️ 절대 main branch에서 작업하면 안됨!
 
 ### 수정 작업 업로드 시
 1. fork했던 repository의 main branch를 기존 repository의 main branch와 동기화
 2. 자신이 작업한 branch를 main branch와 merge
 3. local main branch를 fork한 repository의 main branch에 push
-⚠️ 절대 원본 repository의 main branch에 push하면 안됨!!!!!!!!
+  ⚠️ 절대 원본 repository의 main branch에 push하면 안됨!!!!!!!!
 4. 이후 웹사이트 깃허브로 돌아와 fork한 repository와 원본 repository의 main 동기화 (이 작업은 회의 시에 함께 할 예정. 절대 개인이 하지 않을 것)
 
 
