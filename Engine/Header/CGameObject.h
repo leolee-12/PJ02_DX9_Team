@@ -15,6 +15,7 @@ protected:
 
 public:
 	CComponent* Get_Component(COMPONENTID eID, const _tchar* pComponentTag);
+	OBJID		Get_OBJID() { return m_eOBJID; }
 
 public:
 	virtual			HRESULT		Ready_GameObject();

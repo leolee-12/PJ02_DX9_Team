@@ -16,10 +16,11 @@ public:
 	typedef struct tagEvent
 	{
 		wstring strType;
+		OBJID   eOBJID;
 		unordered_map<wstring, any> hmapData;
 
 		tagEvent(const wstring& strEventType)
-			: strType(strEventType) {}
+			: strType(strEventType), eOBJID(OID_END) {}
 	}EVENT;
 
 public:
