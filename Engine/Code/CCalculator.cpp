@@ -216,5 +216,5 @@ CComponent* CCalculator::Clone()
 
 void CCalculator::Free()
 {
-    Safe_Release(m_pGraphicDev);
+    CComponent::Free();
 }

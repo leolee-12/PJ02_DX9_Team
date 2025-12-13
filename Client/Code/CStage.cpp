@@ -42,7 +42,12 @@ void CStage::LateUpdate_Scene(const _float& fTimeDelta)
 	Engine::CScene::LateUpdate_Scene(fTimeDelta);
 
 	IMessageChannel::EVENT EventTest(L"Start_Game");
-	EventTest.hmapData.insert({ L"TargetID", Engine::OID_PLAYER });
+	EventTest.eOBJID = Engine::OID_PLAYER;
+
+	m_pMessageChannel->Publish(EventTest);
+
+	EventTest.strType = L"Monster.Move";
+	EventTest.eOBJID = Engine::OID_MONSTER;
 
 	m_pMessageChannel->Publish(EventTest);
 }
@@ -120,6 +125,15 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 		return E_FAIL;
 
 	if (FAILED(pLayer->Add_GameObject(L"Player", pGameObject)))
+		return E_FAIL;
+
+	//TestMonster
+	pGameObject = CMonster::Create(m_pGraphicDev, m_pMessageChannel);
+
+	if (nullptr == pGameObject)
+		return E_FAIL;
+
+	if (FAILED(pLayer->Add_GameObject(L"Monster", pGameObject)))
 		return E_FAIL;
 
 	m_mapLayer.insert({ pLayerTag , pLayer });

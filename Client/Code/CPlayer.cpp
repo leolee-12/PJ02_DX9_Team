@@ -24,9 +24,13 @@ HRESULT CPlayer::Ready_GameObject()
 	if (FAILED(Add_Component()))
 		return E_FAIL;
 
-	m_pMessageChannel->Subscribe(L"Start_Game", [this](const IMessageChannel::EVENT&) {
+	m_eOBJID = OID_PLAYER;
 
-		})
+	m_pMessageChannel->Subscribe(L"Start_Game", [this](const IMessageChannel::EVENT& Event) {
+		if (Event.eOBJID == this->Get_OBJID()) {
+			m_pTransformCom->Set_Pos(10.f, 10.f, 10.f);
+		}
+		});
 
 	//m_pTransformCom->m_vInfo[INFO_POS].y = 1.f;
 

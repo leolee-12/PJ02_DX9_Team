@@ -94,15 +94,17 @@ https://drive.google.com/drive/folders/1zx3saK3foV18kZLbxc0bIW1SqXbGBRih?usp=dri
 	    typedef struct tagEvent
 	    {
 		    wstring strType;
+            OBJID   eOBJID;
 		    unordered_map<wstring, any> hmapData;
 
 		    tagEvent(const wstring& strEventType)
-			    : strType(strEventType) {}
+			    : strType(strEventType), eOBJID(OID_END) {}
 	    }EVENT;
         // 인터페이스 클래스 내부에 있는 구조체
         // 1. 이벤트 명(타입)
-        // 2. 추가 기입 데이터 {이벤트 적용대상, 플레이어*} 같은 형식으로 사용
-        // 3. 생성자 (이벤트 명) 편의성을위함
+        // 2. 해당 이벤트를 적용시킬 오브젝트의 ID인데 자세한 사용법은 내부코드 참조
+        // 3. 추가 기입 데이터 {데미지발생, 발생한 데미지 수치} 같은 형식으로 사용
+        // 4. 생성자 (이벤트 명) 편의성을위함
 
 
         private:
@@ -128,6 +130,10 @@ https://drive.google.com/drive/folders/1zx3saK3foV18kZLbxc0bIW1SqXbGBRih?usp=dri
     	    auto iter = hmapHandlers.find(Event.strType);
 
 	        if (iter != hmapHandlers.end()) {
+                // 원본 벡터를 복사해서 순회하는 이유
+                // 순회 도중에 벡터가 수정될 가능성을 방지하기 위함
+                // 예시. 벡터의 첫번째 펑터에서 구독을 해지하라고 명령
+                //      벡터의 첫번째 요소가 삭제되면서 에러
     		    auto CopyHandlers = iter->second;
 		        for (auto& functor : CopyHandlers) 
 		        {
