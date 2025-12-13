@@ -27,7 +27,7 @@ https://drive.google.com/drive/folders/1zx3saK3foV18kZLbxc0bIW1SqXbGBRih?usp=dri
 
 ⚠️ 절대 원본 repository의 main branch에 push하면 안됨!!!!!!!!
 
-5. 이후 웹사이트 깃허브로 돌아와 fork한 repository와 원본 repository의 main 동기화 (이 작업은 회의 시에 함께 할 예정. 절대 개인이 하지 않을 것)
+4. 이후 웹사이트 깃허브로 돌아와 fork한 repository와 원본 repository의 main 동기화 (이 작업은 회의 시에 함께 할 예정. 절대 개인이 하지 않을 것)
 
 
 ## 업데이트 사항
