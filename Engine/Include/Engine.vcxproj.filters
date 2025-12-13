@@ -91,6 +91,12 @@
     <Filter Include="05. ComponentEx\00. VIBuffer\05. TerrainWallTex">
       <UniqueIdentifier>{922f26ca-de51-45c0-b940-6ecf0a2d5272}</UniqueIdentifier>
     </Filter>
+    <Filter Include="06. MessageChannel">
+      <UniqueIdentifier>{77d0e071-5f2e-4a75-bf79-6c6997e027bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06. MessageChannel\00. StageMessage">
+      <UniqueIdentifier>{d946424b-f838-4a68-8e8e-8d1022ff0e3a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\CGraphicDev.cpp">
@@ -170,6 +176,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CTerrainWallTex.cpp">
       <Filter>05. ComponentEx\00. VIBuffer\05. TerrainWallTex</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CStageMessage.cpp">
+      <Filter>06. MessageChannel\00. StageMessage</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -268,6 +277,15 @@
     </ClInclude>
     <ClInclude Include="..\Header\CTerrainWallTex.h">
       <Filter>05. ComponentEx\00. VIBuffer\05. TerrainWallTex</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\IMessageChannel.h">
+      <Filter>06. MessageChannel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CStageMessage.h">
+      <Filter>06. MessageChannel\00. StageMessage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\Engine_MsgChannel.h">
+      <Filter>99. Header</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

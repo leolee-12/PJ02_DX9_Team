@@ -1,6 +1,7 @@
 #pragma once
 #include "CBase.h"
 #include "CGameObject.h"
+#include "Engine_MsgChannel.h"
 
 BEGIN(Engine)
 
@@ -8,6 +9,7 @@ class ENGINE_DLL CLayer : public CBase
 {
 private:
 	explicit CLayer();
+	explicit CLayer(IMessageChannel* SceneChannel);
 	virtual ~CLayer();
 
 public:
@@ -23,10 +25,13 @@ private:
 	map<const _tchar*, CGameObject*>			m_mapObject;
 
 public:
-	static CLayer* Create();
+	static CLayer* Create(IMessageChannel* SceneChannel);
 
 private:
 	virtual void	Free();
+
+private:
+	IMessageChannel* m_pMessageChannel;
 };
 
 END

@@ -1,7 +1,14 @@
 #include "CLayer.h"
 
 CLayer::CLayer()
+	: m_pMessageChannel(nullptr)
 {
+}
+
+CLayer::CLayer(IMessageChannel* SceneChannel)
+	: m_pMessageChannel(SceneChannel)
+{
+	m_pMessageChannel->AddRef();
 }
 
 CLayer::~CLayer()
@@ -58,9 +65,9 @@ void CLayer::LateUpdate_Layer(const _float& fTimeDelta)
 
 
 
-CLayer* CLayer::Create()
+CLayer* CLayer::Create(IMessageChannel* SceneChannel)
 {
-	CLayer* pLayer = new CLayer;
+	CLayer* pLayer = new CLayer(SceneChannel);
 
 	if (FAILED(pLayer->Ready_Layer()))
 	{
@@ -76,4 +83,5 @@ void CLayer::Free()
 {
 	for_each(m_mapObject.begin(), m_mapObject.end(), CDeleteMap());
 	m_mapObject.clear();
+	Safe_Release(m_pMessageChannel);
 }
