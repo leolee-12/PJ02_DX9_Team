@@ -4,17 +4,17 @@
 #include "CRenderer.h"
 
 CTerrain::CTerrain(LPDIRECT3DDEVICE9 pGraphicDev)
-	: CGameObject(pGraphicDev), m_optPos(nullopt), m_optRotY(nullopt)
+	: CGameObject(pGraphicDev)//, m_optPos(nullopt), m_optRotY(nullopt)
 {
 }
 
 CTerrain::CTerrain(LPDIRECT3DDEVICE9 pGraphicDev, optional<_vec3> vPos, optional<_float> fRotY)
-	: CGameObject(pGraphicDev), m_optPos(vPos), m_optRotY(fRotY)
+	: CGameObject(pGraphicDev)//, m_optPos(vPos), m_optRotY(fRotY)
 {
 }
 
 CTerrain::CTerrain(const CTerrain& rhs)
-	: CGameObject(rhs), m_optPos(rhs.m_optPos), m_optRotY(rhs.m_optRotY)
+	: CGameObject(rhs)//, m_optPos(rhs.m_optPos), m_optRotY(rhs.m_optRotY)
 {
 }
 
@@ -27,7 +27,7 @@ HRESULT CTerrain::Ready_GameObject()
 	if (FAILED(Add_Component()))
 		return E_FAIL;
 
-	if (m_optPos.has_value()) {
+	/*if (m_optPos.has_value()) {
 		_vec3 vMovePos = m_optPos.value();
 		m_pTransformCom->Set_Pos(vMovePos.x, vMovePos.y, vMovePos.z);
 	}
@@ -35,9 +35,9 @@ HRESULT CTerrain::Ready_GameObject()
 	if (m_optRotY.has_value()) {
 		_float fRotY = m_optRotY.value();
 		m_pTransformCom->Rotation(ROT_Y, fRotY);
-	}
+	}*/
 
-	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
+	//m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
 
 	return S_OK;
 }
@@ -109,13 +109,25 @@ HRESULT CTerrain::Add_Component()
 
 CTerrain* CTerrain::Create(LPDIRECT3DDEVICE9 pGraphicDev, optional<_vec3> vPos, optional<_float> fRotY)
 {
-	CTerrain* pTerrain = new CTerrain(pGraphicDev, vPos, fRotY);
+	CTerrain* pTerrain = new CTerrain(pGraphicDev);
 
 	if (FAILED(pTerrain->Ready_GameObject()))
 	{
 		Safe_Release(pTerrain);
 		MSG_BOX("pTerrain Create Failed");
 		return nullptr;
+	}
+
+	CTransform* pTransform = dynamic_cast<CTransform*>(pTerrain->Get_Component(ID_DYNAMIC, L"Com_Transform"));
+
+	if (vPos.has_value()) {
+		_vec3 vMovePos = vPos.value();
+		pTransform->Set_Pos(vMovePos.x, vMovePos.y, vMovePos.z);
+	}
+
+	if (fRotY.has_value()) {
+		_float fRotYvalue = fRotY.value();
+		pTransform->Rotation(ROT_Y, fRotYvalue);
 	}
 
 	return pTerrain;
