@@ -1,19 +1,19 @@
 # JusinSRProject
 쥬신 159기 1조 SR 프로젝트입니다
 
-# Resource
+## Resource
 https://drive.google.com/drive/folders/1zx3saK3foV18kZLbxc0bIW1SqXbGBRih?usp=drive_link
 - 위 구글 드라이브 링크 접속하셔서 Resource 파일 다운받아 Client/Bin 폴더 내부에 넣어서 사용해주세요
 
-# Git 사용 방식
+## Git 사용 방식
 
 
-# 업데이트 사항
-## 2025 12 13 업데이트
+## 업데이트 사항
+### 2025 12 13 업데이트
 
 강의 코드에서 추가,수정했음 (5개월 15일차 프로젝트)
 
-### 1. 지형 버퍼 생성 시 높이맵 선택적 입력
+#### 1. 지형 버퍼 생성 시 높이맵 선택적 입력
 
 - 지형 버퍼를 생성할 때 높이맵 경로를 선택적으로 받을 수 있도록 optional<wstring>을 사용.
 
@@ -21,7 +21,7 @@ https://drive.google.com/drive/folders/1zx3saK3foV18kZLbxc0bIW1SqXbGBRih?usp=dri
 
 - CTerrainTex::Create()에서 인자로 높이맵 경로를 넘겨줄 수 있음.
 
-### 2. 지형 월드좌표 설정 추가
+#### 2. 지형 월드좌표 설정 추가
 
 - 지형 오브젝트의 y축 회전값을 선택적으로 받을 수 있도록 optional<float> 추가.
 
@@ -29,7 +29,7 @@ https://drive.google.com/drive/folders/1zx3saK3foV18kZLbxc0bIW1SqXbGBRih?usp=dri
 
 - 위치와 회전이 없으면 기본값(0,0,0 / 회전 0도)으로 설정.
 
-### 3. 지형 월드좌표 추가에 따른 계산구조 수정
+#### 3. 지형 월드좌표 추가에 따른 계산구조 수정
 
 - 기존 코드에서는 지형의 월드좌표 = 로컬좌표 였기 때문에 플레이어의 월드좌표와 지형의 로컬좌표로 지형타기 처리를 해도 문제가 없었음
 
@@ -39,7 +39,7 @@ https://drive.google.com/drive/folders/1zx3saK3foV18kZLbxc0bIW1SqXbGBRih?usp=dri
 
 <u>오브젝트의 좌표를 지형의 월드행렬의 역행렬을 곱해서 지형의 로컬좌표로 내린다.</u>
 
-### 4. 마우스 피킹 DDA 알고리즘
+#### 4. 마우스 피킹 DDA 알고리즘
 
 - 마우스 클릭시 생성하는 광선이 지나가는 셀을 확인하는 용도로 사용
 
