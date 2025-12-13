@@ -1,6 +1,7 @@
 #pragma once
 #include "CBase.h"
 #include "CComponent.h"
+#include "Engine_MsgChannel.h"
 
 BEGIN(Engine)
 
@@ -8,11 +9,13 @@ class ENGINE_DLL CGameObject : public CBase
 {
 protected:
 	explicit CGameObject(LPDIRECT3DDEVICE9 pGraphicDev);
+	explicit CGameObject(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* SceneChannel);
 	explicit CGameObject(const CGameObject& rhs);
 	virtual ~CGameObject();
 
 public:
 	CComponent* Get_Component(COMPONENTID eID, const _tchar* pComponentTag);
+	OBJID		Get_OBJID() { return m_eOBJID; }
 
 public:
 	virtual			HRESULT		Ready_GameObject();
@@ -30,6 +33,10 @@ private:
 
 protected:
 	virtual		void		Free();
+
+protected:
+	IMessageChannel* m_pMessageChannel;
+	OBJID			 m_eOBJID;
 };
 
 END

@@ -20,5 +20,7 @@ namespace Engine
 
 	enum MOUSEMOVESTATE {	DIMS_X, DIMS_Y, DIMS_Z, DIMS_END };
 
+	enum OBJID { OID_PLAYER, OID_MONSTER, OID_DCAM, OID_MAINCAM, OID_END };
+
 }
 #endif // Engine_Enum_h__

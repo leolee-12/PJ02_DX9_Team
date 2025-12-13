@@ -165,6 +165,7 @@ call Copy.bat</Command>
     <ClInclude Include="..\Header\CRcTex.h" />
     <ClInclude Include="..\Header\CRenderer.h" />
     <ClInclude Include="..\Header\CScene.h" />
+    <ClInclude Include="..\Header\CStageMessage.h" />
     <ClInclude Include="..\Header\CTerrainTex.h" />
     <ClInclude Include="..\Header\CTerrainWallTex.h" />
     <ClInclude Include="..\Header\CTexture.h" />
@@ -177,8 +178,10 @@ call Copy.bat</Command>
     <ClInclude Include="..\Header\Engine_Enum.h" />
     <ClInclude Include="..\Header\Engine_Function.h" />
     <ClInclude Include="..\Header\Engine_Macro.h" />
+    <ClInclude Include="..\Header\Engine_MsgChannel.h" />
     <ClInclude Include="..\Header\Engine_Struct.h" />
     <ClInclude Include="..\Header\Engine_Typedef.h" />
+    <ClInclude Include="..\Header\IMessageChannel.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\CCalculator.cpp" />
@@ -199,6 +202,7 @@ call Copy.bat</Command>
     <ClCompile Include="..\Code\CRcTex.cpp" />
     <ClCompile Include="..\Code\CRenderer.cpp" />
     <ClCompile Include="..\Code\CScene.cpp" />
+    <ClCompile Include="..\Code\CStageMessage.cpp" />
     <ClCompile Include="..\Code\CTerrainTex.cpp" />
     <ClCompile Include="..\Code\CTerrainWallTex.cpp" />
     <ClCompile Include="..\Code\CTexture.cpp" />
