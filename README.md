@@ -6,6 +6,25 @@ https://drive.google.com/drive/folders/1zx3saK3foV18kZLbxc0bIW1SqXbGBRih?usp=dri
 - 위 구글 드라이브 링크 접속하셔서 Resource 파일 다운받아 Client/Bin 폴더 내부에 넣어서 사용해주세요
 
 ## Git 사용 방식
+### 첫 프로젝트 다운로드 시
+1. 자신의 repository로 현재 프로젝트를 fork하기
+2. github desktop 접속
+3. clone repository 클릭
+4. Repository URL: 자신이 fork한 repository의 url || Locak path: 개인 컴퓨터에 다운로드할 위치
+5. 구글 드라이브에서 Resource파일 다운받아 적용
+
+### 프로젝트 작업 전
+1. fork했던 repository의 main branch를 기존 repository의 main branch와 동기화
+2. local branch를 하나 만들어 원하는 이름으로 설정
+3. 해당 branch에 들어가서 작업
+⚠️ 절대 main branch에서 작업하면 안됨!
+
+### 수정 작업 업로드 시
+1. fork했던 repository의 main branch를 기존 repository의 main branch와 동기화
+2. 자신이 작업한 branch를 main branch와 merge
+3. local main branch를 fork한 repository의 main branch에 push
+⚠️ 절대 원본 repository의 main branch에 push하면 안됨!!!!!!!!
+4. 이후 웹사이트 깃허브로 돌아와 fork한 repository와 원본 repository의 main 동기화 (이 작업은 회의 시에 함께 할 예정. 절대 개인이 하지 않을 것)
 
 
 ## 업데이트 사항
