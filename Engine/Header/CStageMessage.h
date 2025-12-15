@@ -14,15 +14,24 @@ private:
 public:
     // IMessageChannel을(를) 통해 상속됨
     void Free() override;
-    void Subscribe(const wstring& strEventType, function<void(const EVENT&)> fcHandler) override;
+    SUBHANDLE Subscribe(const wstring& strEventType, function<void(const EVENT&)> func) override;
     void Publish(const EVENT& Event) override;
+    void Unsubscribe(SUBHANDLE SubHandle) override;
 
 public:
     static CStageMessage* Create();
 
+private:
+    typedef struct tagHandlerSlot {
+        function<void(const EVENT&)> func;
+        _uint uiVersion = 0;
+        _bool bAlive = true;
+    }HANDLERSLOT;
 
 private:
-    unordered_map<wstring, vector<function<void(const EVENT&)>>> hmapHandlers;
+    unordered_map<wstring, vector<HANDLERSLOT>> m_hmapHandlers;
+    vector<SUBHANDLE> m_vecUnsubscribeQueue;
+    _bool m_bRunning;
 };
 
 
