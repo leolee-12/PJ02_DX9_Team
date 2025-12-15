@@ -1,10 +1,18 @@
 ﻿// Client.cpp : 애플리케이션에 대한 진입점을 정의합니다.
 //
 
+//// ImGui
+//#include "imgui.h"
+//#include "imgui_impl_dx9.h"
+//#include "imgui_impl_glfw.h"
+//#include "imgui_impl_opengl3.h"
+//#include "imgui_impl_win32.h"
+
 #include "pch.h"
 #include "framework.h"
 #include "Client.h"
 #include "CMainApp.h"
+#include "CImGuiManager.h"
 
 #define MAX_LOADSTRING 100
 

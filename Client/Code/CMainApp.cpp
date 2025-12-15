@@ -6,6 +6,7 @@
 #include "CRenderer.h"
 #include "CDInputMgr.h"
 #include "CFontMgr.h"
+#include "CImGuiManager.h"
 
 CMainApp::CMainApp() : m_pDeviceClass(nullptr), m_pGraphicDev(nullptr)
 , m_pManagementClass(CManagement::GetInstance())
@@ -23,6 +24,9 @@ HRESULT CMainApp::Ready_MainApp()
 
 	if (FAILED(Ready_Scene(m_pGraphicDev)))
 		return E_FAIL;
+
+	// CImGui추가 코드
+	// CImGuiManager::GetInstance()->ImGui_Setup(g_hWnd, m_pGraphicDev);
 
 	return S_OK;
 }
@@ -122,6 +126,7 @@ CMainApp* CMainApp::Create()
 		return nullptr;
 	}
 
+
 	return pMainApp;
 }
 
@@ -137,5 +142,6 @@ void CMainApp::Free()
 	CFrameMgr::DestroyInstance();
 	CTimerMgr::DestroyInstance();
 	CManagement::DestroyInstance();
+	//CImGuiManager::DestroyInstance();
 	m_pDeviceClass->DestroyInstance();
 }

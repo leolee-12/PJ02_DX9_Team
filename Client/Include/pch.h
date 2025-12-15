@@ -20,6 +20,11 @@
 
 #include <process.h>
 
+// ImGui
+#include "imgui.h"
+#include "imgui_impl_dx9.h"
+#include "imgui_impl_win32.h"
+
 #ifdef _DEBUG
 
 #define _CRTDBG_MAP_ALLOC
