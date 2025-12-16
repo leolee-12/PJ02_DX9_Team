@@ -33,10 +33,14 @@ private:
 
 protected:
 	virtual		void		Free();
+	virtual     void		Unsubscribe_Handles();
 
 protected:
 	IMessageChannel* m_pMessageChannel;
 	OBJID			 m_eOBJID;
+	unordered_map<wstring, IMessageChannel::SUBHANDLE> m_hmapSubHandles;
+
+	_int m_iHp = 1;
 };
 
 END

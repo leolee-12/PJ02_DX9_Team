@@ -30,7 +30,7 @@ _int CScene::Update_Scene(const _float& fTimeDelta)
     for (auto& pLayer : m_mapLayer)
         pLayer.second->Update_Layer(fTimeDelta);
 
-    return 0;
+    return NOEVENT;
 }
 
 void CScene::LateUpdate_Scene(const _float& fTimeDelta)
