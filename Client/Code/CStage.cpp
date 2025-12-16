@@ -41,15 +41,15 @@ void CStage::LateUpdate_Scene(const _float& fTimeDelta)
 {
 	Engine::CScene::LateUpdate_Scene(fTimeDelta);
 
-	IMessageChannel::EVENT EventTest(L"Start_Game");
-	EventTest.eOBJID = Engine::OID_PLAYER;
+	//IMessageChannel::EVENT EventTest(L"Start_Game");
+	//EventTest.eOBJID = Engine::OID_PLAYER;
 
-	m_pMessageChannel->Publish(EventTest);
+	//m_pMessageChannel->Publish(EventTest);
 
-	EventTest.strType = L"Monster.Move";
-	EventTest.eOBJID = Engine::OID_MONSTER;
+	//EventTest.strType = L"Monster.Move";
+	//EventTest.eOBJID = Engine::OID_MONSTER;
 
-	m_pMessageChannel->Publish(EventTest);
+	//m_pMessageChannel->Publish(EventTest);
 }
 
 void CStage::Render_Scene()

@@ -70,16 +70,20 @@ void CMainApp::LateUpdate_MainApp(const float& fTimeDelta)
 
 void CMainApp::Render_MainApp()
 {
-	m_pDeviceClass->Render_Begin(D3DXCOLOR(0.f, 0.f, 1.f, 1.f));
+
 
 #ifdef IMGUI
 	CImGuiManager::GetInstance()->ImGui_Render();
 
 #else
+	m_pDeviceClass->Render_Begin(D3DXCOLOR(0.f, 0.f, 1.f, 1.f));
+
 	m_pManagementClass->Render_Scene(m_pGraphicDev);
-#endif // IMGUI
 
 	m_pDeviceClass->Render_End();
+#endif // IMGUI
+
+
 }
 
 HRESULT CMainApp::Ready_DefaultSetting(LPDIRECT3DDEVICE9* ppGraphicDev)
