@@ -8,6 +8,8 @@
 #include "CFontMgr.h"
 #include "CImGuiManager.h"
 
+#define IMGUI
+
 CMainApp::CMainApp() : m_pDeviceClass(nullptr), m_pGraphicDev(nullptr)
 , m_pManagementClass(CManagement::GetInstance())
 {
@@ -25,8 +27,10 @@ HRESULT CMainApp::Ready_MainApp()
 	if (FAILED(Ready_Scene(m_pGraphicDev)))
 		return E_FAIL;
 
+#ifdef IMGUI
 	// CImGui추가 코드
-	// CImGuiManager::GetInstance()->ImGui_Setup(g_hWnd, m_pGraphicDev);
+	CImGuiManager::GetInstance()->ImGui_Setup(g_hWnd, m_pGraphicDev);
+#endif // IMGUI
 
 	return S_OK;
 }
@@ -35,7 +39,12 @@ int CMainApp::Update_MainApp(const float& fTimeDelta)
 {
 	CDInputMgr::GetInstance()->Update_InputDev();
 
+#ifdef IMGUI
+	CImGuiManager::GetInstance()->ImGui_Tick();
+#else
 	m_pManagementClass->Update_Scene(fTimeDelta);
+#endif // IMGUI
+
 
 	// _ulong dwDst = 0;
 
@@ -44,19 +53,31 @@ int CMainApp::Update_MainApp(const float& fTimeDelta)
 	//	int a = 0;
 	//}
 
+
+
 	return 0;
 }
 
 void CMainApp::LateUpdate_MainApp(const float& fTimeDelta)
 {
+#ifdef IMGUI
+
+#else
 	m_pManagementClass->LateUpdate_Scene(fTimeDelta);
+#endif // IMGUI
+
 }
 
 void CMainApp::Render_MainApp()
 {
 	m_pDeviceClass->Render_Begin(D3DXCOLOR(0.f, 0.f, 1.f, 1.f));
 
+#ifdef IMGUI
+	CImGuiManager::GetInstance()->ImGui_Render();
+
+#else
 	m_pManagementClass->Render_Scene(m_pGraphicDev);
+#endif // IMGUI
 
 	m_pDeviceClass->Render_End();
 }
@@ -117,6 +138,12 @@ HRESULT CMainApp::Ready_Scene(LPDIRECT3DDEVICE9 pGraphicDev)
 
 CMainApp* CMainApp::Create()
 {
+#ifdef IMGUI
+
+#else
+
+#endif // IMGUI
+
 	CMainApp* pMainApp = new CMainApp;
 
 	if (FAILED(pMainApp->Ready_MainApp()))
@@ -142,6 +169,7 @@ void CMainApp::Free()
 	CFrameMgr::DestroyInstance();
 	CTimerMgr::DestroyInstance();
 	CManagement::DestroyInstance();
-	//CImGuiManager::DestroyInstance();
+	CImGuiManager::GetInstance()->ImGui_Shutdown();
+	CImGuiManager::DestroyInstance();
 	m_pDeviceClass->DestroyInstance();
 }

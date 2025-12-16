@@ -32,7 +32,7 @@ public:
 public:
     void ImGui_Setup(HWND hWnd, LPDIRECT3DDEVICE9 pDevice);
     void ImGui_Tick();
-    void ImGui_Render(LPDIRECT3DDEVICE9 pDevice);
+    void ImGui_Render();
     void ImGui_Shutdown();
 
     unsigned long Free();

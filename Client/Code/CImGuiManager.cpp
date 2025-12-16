@@ -23,6 +23,7 @@ void CImGuiManager::ImGui_Setup(HWND hWnd, LPDIRECT3DDEVICE9 pDevice)
     m_pGraphicDev = pDevice;
     m_pGraphicDev->AddRef();
 
+
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -79,7 +80,7 @@ void CImGuiManager::ImGui_Tick()
     }
 }
 
-void CImGuiManager::ImGui_Render(LPDIRECT3DDEVICE9 pDevice)
+void CImGuiManager::ImGui_Render()
 {
     // Rendering
     ImGui::EndFrame();
