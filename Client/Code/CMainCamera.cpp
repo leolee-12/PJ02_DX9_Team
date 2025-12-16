@@ -6,16 +6,30 @@
 
 CMainCamera::CMainCamera(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CCamera(pGraphicDev), m_bFix(true), m_bCheck(true)
+	, m_pTargetTransformCom(nullptr)
 {
 }
 
 CMainCamera::CMainCamera(const CMainCamera& rhs)
 	: CCamera(rhs), m_bFix(true), m_bCheck(true)
+	, m_pTargetTransformCom(rhs.m_pTargetTransformCom)
 {
+	if (m_pTargetTransformCom != nullptr) {
+		m_pTargetTransformCom->AddRef();
+	}
 }
 
 CMainCamera::~CMainCamera()
 {
+}
+
+void CMainCamera::Set_TargetTransform(CTransform* pTargetTrans)
+{
+	if (m_pTargetTransformCom != nullptr) {
+		Safe_Release(m_pTargetTransformCom);
+	}
+	m_pTargetTransformCom = pTargetTrans;
+	//m_pTargetTransformCom->AddRef();
 }
 
 HRESULT CMainCamera::Ready_GameObject(const _vec3* pEye,
@@ -46,18 +60,23 @@ HRESULT CMainCamera::Ready_GameObject(const _vec3* pEye,
 _int CMainCamera::Update_GameObject(const _float& fTimeDelta)
 {
 	if (m_pTargetTransformCom == nullptr) {
-		m_pTargetTransformCom = dynamic_cast<CTransform*>(CManagement::GetInstance()->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Transform_Com"));
+		Set_TargetTransform(dynamic_cast<CTransform*>(CManagement::GetInstance()->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform")));
 	}
 
 	_int		iExit = CCamera::Update_GameObject(fTimeDelta);
 
-	return iExit;
+	return NOEVENT;
 }
 
 void CMainCamera::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	CCamera::LateUpdate_GameObject(fTimeDelta);
 
+	m_pTargetTransformCom->Get_Info(INFO_POS, &m_vAt);
+	m_vEye.z = m_vAt.z - 10.f;
+	m_vEye.y = m_vAt.y + 5.f;
+
+	
 	//Key_Input(fTimeDelta);
 
 	/*if (m_bFix)

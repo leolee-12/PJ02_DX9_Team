@@ -17,6 +17,8 @@ public:
 	virtual		_int	Update_Component(const _float& fTimeDelta);
 	virtual		void	LateUpdate_Component();
 
+	void		Compute_Bilboard(BILBOARD Axis);
+
 public:
 	void		Set_Pos(_float _fX, _float _fY, _float _fZ)
 	{

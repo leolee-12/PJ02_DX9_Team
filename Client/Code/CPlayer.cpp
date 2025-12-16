@@ -8,10 +8,11 @@
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel)
 	: CGameObject(pGraphicDev, StageChannel)
 {
+	ZeroMemory(&m_vPos, sizeof(_vec3));
 }
 
-CPlayer::CPlayer(const CGameObject& rhs)
-	: CGameObject(rhs)
+CPlayer::CPlayer(const CPlayer& rhs)
+	: CGameObject(rhs), m_vPos(rhs.m_vPos)
 {
 }
 
@@ -26,11 +27,11 @@ HRESULT CPlayer::Ready_GameObject()
 
 	m_eOBJID = OID_PLAYER;
 
-	m_hmapSubHandles.insert({ L"StartGame.Move", m_pMessageChannel->Subscribe(L"Start_Game", [this](const IMessageChannel::EVENT& Event) {
+	/*m_hmapSubHandles.insert({ L"StartGame.Move", m_pMessageChannel->Subscribe(L"Start_Game", [this](const IMessageChannel::EVENT& Event) {
 		if (Event.eOBJID == this->Get_OBJID()) {
 			m_pTransformCom->Set_Pos(10.f, 10.f, 10.f);
 		}
-		}) });
+		}) });*/
 
 	
 
@@ -53,6 +54,9 @@ _int CPlayer::Update_GameObject(const _float& fTimeDelta)
 void CPlayer::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	Key_Input(fTimeDelta);
+
+	m_pTransformCom->Get_Info(INFO_POS, &m_vPos);
+	Compute_ViewDepth(&m_vPos);
 
 
 	CGameObject::LateUpdate_GameObject(fTimeDelta);

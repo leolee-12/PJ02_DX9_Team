@@ -16,6 +16,7 @@ protected:
 public:
 	CComponent* Get_Component(COMPONENTID eID, const _tchar* pComponentTag);
 	OBJID		Get_OBJID() { return m_eOBJID; }
+	_float		Get_Depth() { return m_fDepth; }
 
 public:
 	virtual			HRESULT		Ready_GameObject();
@@ -23,9 +24,13 @@ public:
 	virtual			void		LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual			void		Render_GameObject();
 
+	void			Compute_ViewDepth(const _vec3* pPos);
+
 protected:
 	map<const _tchar*, CComponent*>			m_mapComponent[ID_END];
 	LPDIRECT3DDEVICE9						m_pGraphicDev;
+	
+	_float									m_fDepth;
 
 
 private:

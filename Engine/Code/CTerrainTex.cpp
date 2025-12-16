@@ -115,8 +115,6 @@ HRESULT CTerrainTex::Ready_Heightmap(const _ulong& dwCntX, const _ulong& dwCntZ,
 	pHeightTex->UnlockRect(0);
 	pHeightTex->Release();
 
-	
-
 	VTXTEX* pVertex = NULL;
 
 	// &pVertex : 버텍스 버퍼에 저장된 정점 중 첫 번째 주소를 얻어 옴.
@@ -141,12 +139,14 @@ HRESULT CTerrainTex::Ready_Heightmap(const _ulong& dwCntX, const _ulong& dwCntZ,
 										((_float)i / (dwCntZ - 1)) * 20.f };
 
 			m_pPos[dwIndex] = pVertex[dwIndex].vPosition;
+
+			pVertex[dwIndex].vNormal = { 0.f, 0.f, 0.f };
 		}
 	}
 
-	m_pVB->Unlock();
-
 	Safe_Delete_Array(pPixel);
+
+	_vec3	vNormal, vDst, vSrc;
 
 	INDEX32* pIndex = nullptr;
 
@@ -165,6 +165,15 @@ HRESULT CTerrainTex::Ready_Heightmap(const _ulong& dwCntX, const _ulong& dwCntZ,
 			pIndex[dwTriCnt]._1 = dwIndex + dwCntX + 1;
 			pIndex[dwTriCnt]._2 = dwIndex + 1;
 
+			vDst = pVertex[pIndex[dwTriCnt]._1].vPosition - pVertex[pIndex[dwTriCnt]._0].vPosition;
+			vSrc = pVertex[pIndex[dwTriCnt]._2].vPosition - pVertex[pIndex[dwTriCnt]._1].vPosition;
+
+			D3DXVec3Cross(&vNormal, &vDst, &vSrc);
+
+			pVertex[pIndex[dwTriCnt]._0].vNormal += vNormal;
+			pVertex[pIndex[dwTriCnt]._1].vNormal += vNormal;
+			pVertex[pIndex[dwTriCnt]._2].vNormal += vNormal;
+
 			dwTriCnt++;
 
 			// 왼쪽 아래
@@ -172,10 +181,25 @@ HRESULT CTerrainTex::Ready_Heightmap(const _ulong& dwCntX, const _ulong& dwCntZ,
 			pIndex[dwTriCnt]._1 = dwIndex + 1;
 			pIndex[dwTriCnt]._2 = dwIndex;
 
+			vDst = pVertex[pIndex[dwTriCnt]._1].vPosition - pVertex[pIndex[dwTriCnt]._0].vPosition;
+			vSrc = pVertex[pIndex[dwTriCnt]._2].vPosition - pVertex[pIndex[dwTriCnt]._1].vPosition;
+
+			D3DXVec3Cross(&vNormal, &vDst, &vSrc);
+
+			pVertex[pIndex[dwTriCnt]._0].vNormal += vNormal;
+			pVertex[pIndex[dwTriCnt]._1].vNormal += vNormal;
+			pVertex[pIndex[dwTriCnt]._2].vNormal += vNormal;
+
 			dwTriCnt++;
 		}
 	}
 
+	for (_uint i = 0; i < m_dwVtxCnt; ++i)
+	{
+		D3DXVec3Normalize(&pVertex[i].vNormal, &pVertex[i].vNormal);
+	}
+
+	m_pVB->Unlock();
 	m_pIB->Unlock();
 
 	return S_OK;
@@ -207,10 +231,12 @@ HRESULT CTerrainTex::Ready_Flat(const _ulong& dwCntX, const _ulong& dwCntZ, cons
 										((_float)i / (dwCntZ - 1)) * 20.f };
 
 			m_pPos[dwIndex] = pVertex[dwIndex].vPosition;
+
+			pVertex[dwIndex].vNormal = { 0.f, 0.f, 0.f };
 		}
 	}
 
-	m_pVB->Unlock();
+	_vec3	vNormal, vDst, vSrc;
 
 	INDEX32* pIndex = nullptr;
 
@@ -229,6 +255,15 @@ HRESULT CTerrainTex::Ready_Flat(const _ulong& dwCntX, const _ulong& dwCntZ, cons
 			pIndex[dwTriCnt]._1 = dwIndex + dwCntX + 1;
 			pIndex[dwTriCnt]._2 = dwIndex + 1;
 
+			vDst = pVertex[pIndex[dwTriCnt]._1].vPosition - pVertex[pIndex[dwTriCnt]._0].vPosition;
+			vSrc = pVertex[pIndex[dwTriCnt]._2].vPosition - pVertex[pIndex[dwTriCnt]._1].vPosition;
+
+			D3DXVec3Cross(&vNormal, &vDst, &vSrc);
+
+			pVertex[pIndex[dwTriCnt]._0].vNormal += vNormal;
+			pVertex[pIndex[dwTriCnt]._1].vNormal += vNormal;
+			pVertex[pIndex[dwTriCnt]._2].vNormal += vNormal;
+
 			dwTriCnt++;
 
 			// 왼쪽 아래
@@ -236,10 +271,25 @@ HRESULT CTerrainTex::Ready_Flat(const _ulong& dwCntX, const _ulong& dwCntZ, cons
 			pIndex[dwTriCnt]._1 = dwIndex + 1;
 			pIndex[dwTriCnt]._2 = dwIndex;
 
+			vDst = pVertex[pIndex[dwTriCnt]._1].vPosition - pVertex[pIndex[dwTriCnt]._0].vPosition;
+			vSrc = pVertex[pIndex[dwTriCnt]._2].vPosition - pVertex[pIndex[dwTriCnt]._1].vPosition;
+
+			D3DXVec3Cross(&vNormal, &vDst, &vSrc);
+
+			pVertex[pIndex[dwTriCnt]._0].vNormal += vNormal;
+			pVertex[pIndex[dwTriCnt]._1].vNormal += vNormal;
+			pVertex[pIndex[dwTriCnt]._2].vNormal += vNormal;
+
 			dwTriCnt++;
 		}
 	}
 
+	for (_uint i = 0; i < m_dwVtxCnt; ++i)
+	{
+		D3DXVec3Normalize(&pVertex[i].vNormal, &pVertex[i].vNormal);
+	}
+
+	m_pVB->Unlock();
 	m_pIB->Unlock();
 
 	return S_OK;
