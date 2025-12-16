@@ -23,12 +23,12 @@ HRESULT CMonster::Ready_GameObject()
 	m_eOBJID = OID_MONSTER;
 	if (FAILED(Add_Component()))
 		return E_FAIL;
-
-	m_pMessageChannel->Subscribe(L"Monster.Move", [this](const IMessageChannel::EVENT& Event) {
+	
+	m_hmapSubHandles.insert({ L"Monster_Rotate", m_pMessageChannel->Subscribe(L"Monster.Move", [this](const IMessageChannel::EVENT& Event) {
 		if (Event.eOBJID == this->Get_OBJID()) {
 			m_pTransformCom->Rotation(ROT_Y, 1.f);
 		}
-		});
+		}) });
 
 
 	return S_OK;
@@ -126,6 +126,6 @@ CMonster* CMonster::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* Stage
 void CMonster::Free()
 {
 	Safe_Release(m_pBufferCom);
-
+	
 	CGameObject::Free();
 }

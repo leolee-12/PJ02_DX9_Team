@@ -33,6 +33,7 @@ protected:
 
 protected:
 	IMessageChannel* m_pMessageChannel;
+	unordered_map<wstring, IMessageChannel::SUBHANDLE> m_hmapSubHandles;
 
 };
 

@@ -41,7 +41,8 @@ void CStage::LateUpdate_Scene(const _float& fTimeDelta)
 {
 	Engine::CScene::LateUpdate_Scene(fTimeDelta);
 
-	IMessageChannel::EVENT EventTest(L"Start_Game");
+	IMessageChannel::EVENT EventTest;
+	EventTest.strType = L"Start_Game";
 	EventTest.eOBJID = Engine::OID_PLAYER;
 
 	m_pMessageChannel->Publish(EventTest);
@@ -58,19 +59,19 @@ void CStage::Render_Scene()
 
 HRESULT CStage::Ready_Environment_Layer(const _tchar* pLayerTag)
 {
-	CLayer* pLayer = CLayer::Create(m_pMessageChannel);
+	CLayer* pLayer = CLayer::Create();
 	if (nullptr == pLayer)
 		return E_FAIL;
 
 	CGameObject* pGameObject = nullptr;
 
-	pGameObject = CSkyBox::Create(m_pGraphicDev);
+	/*pGameObject = CSkyBox::Create(m_pGraphicDev);
 
 	if (nullptr == pGameObject)
 		return E_FAIL;
 
 	if (FAILED(pLayer->Add_GameObject(L"SkyBox", pGameObject)))
-		return E_FAIL;
+		return E_FAIL;*/
 
 	_vec3   vEye{ 0.f, 10.f, -10.f };
 	_vec3   vAt{ 0.f, 0.f, 1.f };
@@ -94,7 +95,7 @@ HRESULT CStage::Ready_Environment_Layer(const _tchar* pLayerTag)
 
 HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 {
-	CLayer* pLayer = CLayer::Create(m_pMessageChannel);
+	CLayer* pLayer = CLayer::Create();
 	if (nullptr == pLayer)
 		return E_FAIL;
 
@@ -143,7 +144,7 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 
 HRESULT CStage::Ready_UI_Layer(const _tchar* pLayerTag)
 {
-	CLayer* pLayer = CLayer::Create(m_pMessageChannel);
+	CLayer* pLayer = CLayer::Create();
 	if (nullptr == pLayer)
 		return E_FAIL;
 

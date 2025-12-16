@@ -1,14 +1,7 @@
 #include "CLayer.h"
 
 CLayer::CLayer()
-	: m_pMessageChannel(nullptr)
 {
-}
-
-CLayer::CLayer(IMessageChannel* SceneChannel)
-	: m_pMessageChannel(SceneChannel)
-{
-	m_pMessageChannel->AddRef();
 }
 
 CLayer::~CLayer()
@@ -45,15 +38,27 @@ _int CLayer::Update_Layer(const _float& fTimeDelta)
 {
 	_int	iResult(0);
 
-	for (auto& pObj : m_mapObject)
+	/*for (auto& pObj : m_mapObject)
 	{
 		iResult = pObj.second->Update_GameObject(fTimeDelta);
 
 		if (iResult & 0x80000000)
 			return iResult;
+	}*/
+	for (auto iter = m_mapObject.begin();
+		iter != m_mapObject.end();) 
+	{
+		iResult = iter->second->Update_GameObject(fTimeDelta);
+		if (iResult == DEAD) {
+			Safe_Release(iter->second);
+			iter = m_mapObject.erase(iter);
+		}
+		else {
+			++iter;
+		}
 	}
 
-	return iResult;
+	return NOEVENT;
 }
 
 void CLayer::LateUpdate_Layer(const _float& fTimeDelta)
@@ -65,9 +70,9 @@ void CLayer::LateUpdate_Layer(const _float& fTimeDelta)
 
 
 
-CLayer* CLayer::Create(IMessageChannel* SceneChannel)
+CLayer* CLayer::Create()
 {
-	CLayer* pLayer = new CLayer(SceneChannel);
+	CLayer* pLayer = new CLayer();
 
 	if (FAILED(pLayer->Ready_Layer()))
 	{
@@ -83,5 +88,4 @@ void CLayer::Free()
 {
 	for_each(m_mapObject.begin(), m_mapObject.end(), CDeleteMap());
 	m_mapObject.clear();
-	Safe_Release(m_pMessageChannel);
 }

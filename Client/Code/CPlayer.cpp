@@ -26,11 +26,13 @@ HRESULT CPlayer::Ready_GameObject()
 
 	m_eOBJID = OID_PLAYER;
 
-	m_pMessageChannel->Subscribe(L"Start_Game", [this](const IMessageChannel::EVENT& Event) {
+	m_hmapSubHandles.insert({ L"StartGame.Move", m_pMessageChannel->Subscribe(L"Start_Game", [this](const IMessageChannel::EVENT& Event) {
 		if (Event.eOBJID == this->Get_OBJID()) {
 			m_pTransformCom->Set_Pos(10.f, 10.f, 10.f);
 		}
-		});
+		}) });
+
+	
 
 	//m_pTransformCom->m_vInfo[INFO_POS].y = 1.f;
 
@@ -149,6 +151,11 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 		m_pTransformCom->Move_Pos(D3DXVec3Normalize(&vDir, &vDir), fTimeDelta, 10.f);
 	}
 
+	if (GetAsyncKeyState('P'))
+	{
+		m_iHp = 0;
+	}
+
 }
 
 void CPlayer::Set_OnTerrain()
@@ -215,6 +222,6 @@ CPlayer* CPlayer::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageCh
 void CPlayer::Free()
 {
 	Safe_Release(m_pBufferCom);
-
+	
 	CGameObject::Free();
 }

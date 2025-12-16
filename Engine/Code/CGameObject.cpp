@@ -41,10 +41,13 @@ HRESULT CGameObject::Ready_GameObject()
 
 _int CGameObject::Update_GameObject(const _float& fTimeDelta)
 {
+    if (m_iHp <= 0) {
+        return DEAD;
+    }
     for (auto& pComponent : m_mapComponent[ID_DYNAMIC])
         pComponent.second->Update_Component(fTimeDelta);
 
-    return 0;
+    return NOEVENT;
 }
 
 void CGameObject::LateUpdate_GameObject(const _float& fTimeDelta)
@@ -76,7 +79,19 @@ void CGameObject::Free()
         for_each(m_mapComponent[i].begin(), m_mapComponent[i].end(), CDeleteMap());
         m_mapComponent[i].clear();
     }
-
+    Unsubscribe_Handles();
     Safe_Release(m_pGraphicDev);
     Safe_Release(m_pMessageChannel);
 }
+
+void CGameObject::Unsubscribe_Handles()
+{
+    for (auto iter = m_hmapSubHandles.begin();
+        iter != m_hmapSubHandles.end();) 
+    {
+        m_pMessageChannel->Unsubscribe(iter->second);
+        iter = m_hmapSubHandles.erase(iter);
+    }
+}
+
+
