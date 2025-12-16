@@ -21,7 +21,13 @@ public:
 
 		tagEvent(const wstring& strEventType)
 			: strType(strEventType), eOBJID(OID_END) {}
-	}EVENT;
+	} EVENT;
+
+	typedef struct tagHandler
+	{
+		void* pOwner;
+		function<void(const EVENT&)> func;
+	} HANDLER;
 
 public:
 	virtual void Subscribe(const wstring& strEventType, function<void(const EVENT&)> fcHandler)PURE;
