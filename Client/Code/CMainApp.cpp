@@ -21,6 +21,7 @@ CMainApp::~CMainApp()
 
 HRESULT CMainApp::Ready_MainApp()
 {
+
 	if (FAILED(Ready_DefaultSetting(&m_pGraphicDev)))
 		return E_FAIL;
 
@@ -39,11 +40,12 @@ HRESULT CMainApp::Ready_MainApp()
 
 int CMainApp::Update_MainApp(const float& fTimeDelta)
 {
-	CDInputMgr::GetInstance()->Update_InputDev();
 
 #ifdef IMGUI
 	CImGuiManager::GetInstance()->ImGui_Tick();
 #else
+	CDInputMgr::GetInstance()->Update_InputDev();
+
 	m_pManagementClass->Update_Scene(fTimeDelta);
 #endif // IMGUI
 

@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "CImGuiManager.h"
-
+//#include "imgui_demo.cpp"
+#include <iostream>
 
 CImGuiManager* CImGuiManager::Instance = nullptr;
 LPDIRECT3DDEVICE9 CImGuiManager::m_pGraphicDev = nullptr;
@@ -28,31 +29,64 @@ void CImGuiManager::ImGui_Setup(HWND hWnd, LPDIRECT3DDEVICE9 pDevice)
     m_pGraphicDev = pDevice;
     m_pGraphicDev->AddRef();
 
+    //// Initialize Direct3D
+    //if (!CreateDeviceD3D(g_hWnd))
+    //{
+    //    CleanupDeviceD3D();
+    //    ::UnregisterClassW(wc.lpszClassName, wc.hInstance);
+    //}
+
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO(); (void)io;
-    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
-    io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
 
     // Setup Dear ImGui style
     ImGui::StyleColorsDark();
     //ImGui::StyleColorsLight();
 
     // Setup Platform/Renderer backends
-    ImGui_ImplWin32_Init(hWnd);
+    ImGui_ImplWin32_Init(g_hWnd);
     ImGui_ImplDX9_Init(m_pGraphicDev);
+
+
+    char buf[128];
+    sprintf_s(buf, "ImGui Manager Init HWND = %p\n", g_hWnd);
+    OutputDebugStringA(buf);
 }
 
 void CImGuiManager::ImGui_Tick()
 {
+    ImGuiIO& io = ImGui::GetIO(); (void)io;
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+
+
+    //// Handle lost D3D9 device
+    //if (g_DeviceLost)
+    //{
+    //    HRESULT hr = m_pGraphicDev->TestCooperativeLevel();
+    //    if (hr == D3DERR_DEVICELOST)
+    //    {
+    //        ::Sleep(10);
+    //        return;
+    //    }
+    //    if (hr == D3DERR_DEVICENOTRESET)
+    //        ResetDevice();
+    //    g_DeviceLost = false;
+    //}
+
     // Handle window resize (we don't resize directly in the WM_SIZE handler)
     if (g_ResizeWidth != 0 && g_ResizeHeight != 0)
     {
+        //g_d3dpp.BackBufferWidth = g_ResizeWidth;
+        //g_d3dpp.BackBufferHeight = g_ResizeHeight;
+        //g_ResizeWidth = g_ResizeHeight = 0;
+        //ResetDevice();
+        // 
         g_d3dpp.BackBufferWidth = g_ResizeWidth;
         g_d3dpp.BackBufferHeight = g_ResizeHeight;
         g_ResizeWidth = g_ResizeHeight = 0;
-        ResetDevice();
+        //ResetDevice();
     }
 
     // Start the Dear ImGui frame
@@ -66,17 +100,34 @@ void CImGuiManager::ImGui_Tick()
 
     // 2. Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
     {
+        static float f = 0.0f;
+        static int counter = 0;
+
         ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
 
-        ImGui::SliderFloat("float", &m_f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-        ImGui::ColorEdit3("clear color", (float*)&m_clear_color); // Edit 3 floats as a color
+        ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
+        ImGui::Checkbox("Demo Window", &m_show_demo_window);      // Edit bools storing our window open/close state
+        ImGui::Checkbox("Another Window", &m_show_another_window);
+
+        ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
+        ImGui::ColorEdit3("clear color", (float*)&m_clear_color); // Edit 3 floats representing a color
 
         if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
-            m_counter++;
+            counter++;
         ImGui::SameLine();
-        ImGui::Text("counter = %d", m_counter);
+        ImGui::Text("counter = %d", counter);
 
-        ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+        ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
+        ImGui::End();
+    }
+
+    // 3. Show another simple window.
+    if (m_show_another_window)
+    {
+        ImGui::Begin("Another Window", &m_show_another_window);   // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
+        ImGui::Text("Hello from another window!");
+        if (ImGui::Button("Close Me"))
+            m_show_another_window = false;
         ImGui::End();
     }
 }
@@ -164,35 +215,3 @@ void CImGuiManager::ResetDevice()
         IM_ASSERT(0);
     ImGui_ImplDX9_CreateDeviceObjects();
 }
-//
-//// Forward declare message handler from imgui_impl_win32.cpp
-//extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
-//
-//// Win32 message handler
-//// You can read the io.WantCaptureMouse, io.WantCaptureKeyboard flags to tell if dear imgui wants to use your inputs.
-//// - When io.WantCaptureMouse is true, do not dispatch mouse input data to your main application, or clear/overwrite your copy of the mouse data.
-//// - When io.WantCaptureKeyboard is true, do not dispatch keyboard input data to your main application, or clear/overwrite your copy of the keyboard data.
-//// Generally you may always pass all inputs to dear imgui, and hide them from your application based on those two flags.
-//LRESULT WINAPI CImGuiManager::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
-//{
-//    if (ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam))
-//        return true;
-//
-//    switch (msg)
-//    {
-//    case WM_SIZE:
-//        if (wParam == SIZE_MINIMIZED)
-//            return 0;
-//        g_ResizeWidth = (UINT)LOWORD(lParam); // Queue resize
-//        g_ResizeHeight = (UINT)HIWORD(lParam);
-//        return 0;
-//    case WM_SYSCOMMAND:
-//        if ((wParam & 0xfff0) == SC_KEYMENU) // Disable ALT application menu
-//            return 0;
-//        break;
-//    case WM_DESTROY:
-//        ::PostQuitMessage(0);
-//        return 0;
-//    }
-//    return ::DefWindowProcW(hWnd, msg, wParam, lParam);
-//}
