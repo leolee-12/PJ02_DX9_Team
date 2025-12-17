@@ -4,6 +4,8 @@
 #include "CProtoMgr.h"
 #include "CDynamicCamera.h"
 #include "CSkyBox.h"
+#include "CTestEffect.h"
+#include "CLightMgr.h"
 
 CStage::CStage(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -17,6 +19,9 @@ CStage::~CStage()
 HRESULT CStage::Ready_Scene()
 {
 	m_pMessageChannel = CStageMessage::Create();
+
+	if (FAILED(Ready_Light()))
+		return E_FAIL;
 
 	if (FAILED(Ready_Environment_Layer(L"Environment_Layer")))
 		return E_FAIL;
@@ -41,15 +46,16 @@ void CStage::LateUpdate_Scene(const _float& fTimeDelta)
 {
 	Engine::CScene::LateUpdate_Scene(fTimeDelta);
 
-	//IMessageChannel::EVENT EventTest(L"Start_Game");
-	//EventTest.eOBJID = Engine::OID_PLAYER;
+	IMessageChannel::EVENT EventTest;
+	EventTest.strType = L"Start_Game";
+	EventTest.eOBJID = Engine::OID_PLAYER;
 
-	//m_pMessageChannel->Publish(EventTest);
+	m_pMessageChannel->Publish(EventTest);
 
-	//EventTest.strType = L"Monster.Move";
-	//EventTest.eOBJID = Engine::OID_MONSTER;
+	EventTest.strType = L"Monster.Move";
+	EventTest.eOBJID = Engine::OID_MONSTER;
 
-	//m_pMessageChannel->Publish(EventTest);
+	m_pMessageChannel->Publish(EventTest);
 }
 
 void CStage::Render_Scene()
@@ -58,19 +64,19 @@ void CStage::Render_Scene()
 
 HRESULT CStage::Ready_Environment_Layer(const _tchar* pLayerTag)
 {
-	CLayer* pLayer = CLayer::Create(m_pMessageChannel);
+	CLayer* pLayer = CLayer::Create();
 	if (nullptr == pLayer)
 		return E_FAIL;
 
 	CGameObject* pGameObject = nullptr;
 
-	pGameObject = CSkyBox::Create(m_pGraphicDev);
+	/*pGameObject = CSkyBox::Create(m_pGraphicDev);
 
 	if (nullptr == pGameObject)
 		return E_FAIL;
 
 	if (FAILED(pLayer->Add_GameObject(L"SkyBox", pGameObject)))
-		return E_FAIL;
+		return E_FAIL;*/
 
 	_vec3   vEye{ 0.f, 10.f, -10.f };
 	_vec3   vAt{ 0.f, 0.f, 1.f };
@@ -85,8 +91,6 @@ HRESULT CStage::Ready_Environment_Layer(const _tchar* pLayerTag)
 	if (FAILED(pLayer->Add_GameObject(L"DynamicCamera", pGameObject)))
 		return E_FAIL;
 
-	
-	
 	m_mapLayer.insert({ pLayerTag , pLayer });
 
 	return S_OK;
@@ -94,7 +98,7 @@ HRESULT CStage::Ready_Environment_Layer(const _tchar* pLayerTag)
 
 HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 {
-	CLayer* pLayer = CLayer::Create(m_pMessageChannel);
+	CLayer* pLayer = CLayer::Create();
 	if (nullptr == pLayer)
 		return E_FAIL;
 
@@ -143,14 +147,45 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 
 HRESULT CStage::Ready_UI_Layer(const _tchar* pLayerTag)
 {
-	CLayer* pLayer = CLayer::Create(m_pMessageChannel);
+	CLayer* pLayer = CLayer::Create();
 	if (nullptr == pLayer)
 		return E_FAIL;
 
 	CGameObject* pGameObject = nullptr;
 
+	for (_int i = 0; i < 50; ++i)
+	{
+		pGameObject = CTestEffect::Create(m_pGraphicDev);
+
+		if (nullptr == pGameObject)
+			return E_FAIL;
+
+		if (FAILED(pLayer->Add_GameObject(L"Effect", pGameObject)))
+			return E_FAIL;
+	}
+
 
 	m_mapLayer.insert({ pLayerTag , pLayer });
+
+	return S_OK;
+}
+
+HRESULT CStage::Ready_Light()
+{
+	D3DLIGHT9	tLightInfo;
+	ZeroMemory(&tLightInfo, sizeof(D3DLIGHT9));
+
+	tLightInfo.Type = D3DLIGHT_DIRECTIONAL;
+
+	tLightInfo.Diffuse = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
+	tLightInfo.Specular = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
+	tLightInfo.Ambient = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
+
+	tLightInfo.Direction = { 1.f, -1.f, 1.f };
+
+	if (FAILED(CLightMgr::GetInstance()->Ready_Light(m_pGraphicDev, &tLightInfo, 0)))
+		return E_FAIL;
+
 
 	return S_OK;
 }

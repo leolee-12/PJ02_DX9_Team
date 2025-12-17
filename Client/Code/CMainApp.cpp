@@ -6,6 +6,7 @@
 #include "CRenderer.h"
 #include "CDInputMgr.h"
 #include "CFontMgr.h"
+#include "CLightMgr.h"
 #include "CImGuiManager.h"
 #include "ImGui_Define.h"
 
@@ -21,12 +22,13 @@ CMainApp::~CMainApp()
 
 HRESULT CMainApp::Ready_MainApp()
 {
-
+	srand(unsigned(time(NULL)));
+	
 	if (FAILED(Ready_DefaultSetting(&m_pGraphicDev)))
 		return E_FAIL;
 
 #ifdef IMGUI
-	// CImGuiÃß°¡ ÄÚµå
+	// CImGuiï¿½ß°ï¿½ ï¿½Úµï¿½
 	CImGuiManager::GetInstance()->ImGui_Setup(g_hWnd, m_pGraphicDev);
 #else
 
@@ -114,12 +116,12 @@ HRESULT CMainApp::Ready_DefaultSetting(LPDIRECT3DDEVICE9* ppGraphicDev)
 	(*ppGraphicDev)->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
 	(*ppGraphicDev)->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
 
-	// ÆùÆ® Ãß°¡
+	// ï¿½ï¿½Æ® ï¿½ß°ï¿½
 
-	if (FAILED(CFontMgr::GetInstance()->Ready_Font((*ppGraphicDev), L"Font_Default", L"°ß¸íÁ¶", 20, 20, FW_HEAVY)))
+	if (FAILED(CFontMgr::GetInstance()->Ready_Font((*ppGraphicDev), L"Font_Default", L"ï¿½ß¸ï¿½ï¿½ï¿½", 20, 20, FW_HEAVY)))
 		return E_FAIL;
 
-	if (FAILED(CFontMgr::GetInstance()->Ready_Font((*ppGraphicDev), L"Font_Jinji", L"±Ã¼­", 20, 15, FW_THIN)))
+	if (FAILED(CFontMgr::GetInstance()->Ready_Font((*ppGraphicDev), L"Font_Jinji", L"ï¿½Ã¼ï¿½", 20, 15, FW_THIN)))
 		return E_FAIL;
 
 	return S_OK;
@@ -168,6 +170,7 @@ void CMainApp::Free()
 	Safe_Release(m_pGraphicDev);
 	Safe_Release(m_pDeviceClass);	
 
+	CLightMgr::DestroyInstance();
 	CFontMgr::DestroyInstance();
 	CDInputMgr::DestroyInstance();
 	CRenderer::DestroyInstance();

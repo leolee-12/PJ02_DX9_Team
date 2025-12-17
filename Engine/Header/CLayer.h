@@ -9,7 +9,6 @@ class ENGINE_DLL CLayer : public CBase
 {
 private:
 	explicit CLayer();
-	explicit CLayer(IMessageChannel* SceneChannel);
 	virtual ~CLayer();
 
 public:
@@ -22,16 +21,13 @@ public:
 	void			LateUpdate_Layer(const _float& fTimeDelta);
 
 private:
-	map<const _tchar*, CGameObject*>			m_mapObject;
+	map<const _tchar*, vector<CGameObject*>>			m_mapObject;
 
 public:
-	static CLayer* Create(IMessageChannel* SceneChannel);
+	static CLayer* Create();
 
 private:
 	virtual void	Free();
-
-private:
-	IMessageChannel* m_pMessageChannel;
 };
 
 END

@@ -1,14 +1,7 @@
 #include "CLayer.h"
 
 CLayer::CLayer()
-	: m_pMessageChannel(nullptr)
 {
-}
-
-CLayer::CLayer(IMessageChannel* SceneChannel)
-	: m_pMessageChannel(SceneChannel)
-{
-	m_pMessageChannel->AddRef();
 }
 
 CLayer::~CLayer()
@@ -17,13 +10,10 @@ CLayer::~CLayer()
 
 CComponent* CLayer::Get_Component(COMPONENTID eID, const _tchar* pObjTag, const _tchar* pComponentTag)
 {
-	auto	iter = find_if(m_mapObject.begin(), m_mapObject.end(), 
-		CTag_Finder(pObjTag));
+	auto iter = m_mapObject.find(pObjTag);
+	if (iter == m_mapObject.end()) { return nullptr; }
 
-	if (iter == m_mapObject.end())
-		return nullptr;
-
-	return iter->second->Get_Component(eID, pComponentTag);
+	return iter->second.front()->Get_Component(eID, pComponentTag);
 }
 
 HRESULT CLayer::Add_GameObject(const _tchar* pObjTag, CGameObject* pGameObject)
@@ -31,7 +21,9 @@ HRESULT CLayer::Add_GameObject(const _tchar* pObjTag, CGameObject* pGameObject)
 	if (nullptr == pGameObject)
 		return E_FAIL;
 
-	m_mapObject.insert({ pObjTag, pGameObject });
+	auto& vec = m_mapObject[pObjTag];
+
+	vec.push_back(pGameObject);
 
 	return S_OK;
 }
@@ -45,29 +37,55 @@ _int CLayer::Update_Layer(const _float& fTimeDelta)
 {
 	_int	iResult(0);
 
-	for (auto& pObj : m_mapObject)
+	/*for (auto& pObj : m_mapObject)
 	{
 		iResult = pObj.second->Update_GameObject(fTimeDelta);
 
 		if (iResult & 0x80000000)
 			return iResult;
+	}*/
+
+	for (auto iter = m_mapObject.begin();
+		iter != m_mapObject.end();
+		++iter)
+	{
+		auto& vecOrigin = iter->second;
+
+		for (auto veciter = vecOrigin.begin();
+			veciter != vecOrigin.end();)
+		{
+			iResult = (*veciter)->Update_GameObject(fTimeDelta);
+			if (iResult == DEAD) {
+				Safe_Release((*veciter));
+				veciter = vecOrigin.erase(veciter);
+			}
+			else {
+				++veciter;
+			}
+		}
 	}
 
-	return iResult;
+	return NOEVENT;
 }
 
 void CLayer::LateUpdate_Layer(const _float& fTimeDelta)
 {
-	for (auto& pObj : m_mapObject)
-		pObj.second->LateUpdate_GameObject(fTimeDelta);
+	for (auto iter = m_mapObject.begin();
+		iter != m_mapObject.end();
+		++iter)
+	{
+		for (auto& vec : iter->second) {
+			vec->LateUpdate_GameObject(fTimeDelta);
+		}
+	}
 }
 
 
 
 
-CLayer* CLayer::Create(IMessageChannel* SceneChannel)
+CLayer* CLayer::Create()
 {
-	CLayer* pLayer = new CLayer(SceneChannel);
+	CLayer* pLayer = new CLayer();
 
 	if (FAILED(pLayer->Ready_Layer()))
 	{
@@ -81,7 +99,16 @@ CLayer* CLayer::Create(IMessageChannel* SceneChannel)
 
 void CLayer::Free()
 {
-	for_each(m_mapObject.begin(), m_mapObject.end(), CDeleteMap());
-	m_mapObject.clear();
-	Safe_Release(m_pMessageChannel);
+	for (auto iter = m_mapObject.begin();
+		iter != m_mapObject.end();
+		++iter)
+	{
+		auto& vecOrigin = iter->second;
+		for (auto veciter = vecOrigin.begin();
+			veciter != vecOrigin.end();) 
+		{
+			Safe_Release((*veciter));
+			veciter = vecOrigin.erase(veciter);
+		}
+	}
 }

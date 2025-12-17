@@ -77,7 +77,7 @@ void CLogo::Render_Scene()
 
 HRESULT CLogo::Ready_Environment_Layer(const _tchar* pLayerTag)
 {
-	CLayer* pLayer = CLayer::Create(m_pMessageChannel);
+	CLayer* pLayer = CLayer::Create();
 	if (nullptr == pLayer)
 		return E_FAIL;
 

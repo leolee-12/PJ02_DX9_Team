@@ -4,13 +4,21 @@
 #include "CManagement.h"
 #include "CRenderer.h"
 
+CMonster::CMonster(LPDIRECT3DDEVICE9 pGraphicDev)
+	: CGameObject(pGraphicDev)
+{
+	ZeroMemory(&m_vPos, sizeof(_vec3));
+}
+
 CMonster::CMonster(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel)
 	: CGameObject(pGraphicDev, StageChannel)
 {
+	ZeroMemory(&m_vPos, sizeof(_vec3));
 }
 
-CMonster::CMonster(const CGameObject& rhs)
-	: CGameObject(rhs)
+
+CMonster::CMonster(const CMonster& rhs)
+	: CGameObject(rhs), m_vPos(rhs.m_vPos)
 {
 }
 
@@ -23,12 +31,12 @@ HRESULT CMonster::Ready_GameObject()
 	m_eOBJID = OID_MONSTER;
 	if (FAILED(Add_Component()))
 		return E_FAIL;
-
-	m_pMessageChannel->Subscribe(L"Monster.Move", [this](const IMessageChannel::EVENT& Event) {
+	
+	m_hmapSubHandles.insert({ L"Monster_Rotate", m_pMessageChannel->Subscribe(L"Monster.Move", [this](const IMessageChannel::EVENT& Event) {
 		if (Event.eOBJID == this->Get_OBJID()) {
 			m_pTransformCom->Rotation(ROT_Y, 1.f);
 		}
-		});
+		}) });
 
 
 	return S_OK;
@@ -45,6 +53,9 @@ _int CMonster::Update_GameObject(const _float& fTimeDelta)
 
 void CMonster::LateUpdate_GameObject(const _float& fTimeDelta)
 {
+	m_pTransformCom->Get_Info(INFO_POS, &m_vPos);
+	Compute_ViewDepth(&m_vPos);
+
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
 
 	/*Engine::CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()->
@@ -126,6 +137,6 @@ CMonster* CMonster::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* Stage
 void CMonster::Free()
 {
 	Safe_Release(m_pBufferCom);
-
+	
 	CGameObject::Free();
 }

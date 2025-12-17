@@ -24,6 +24,7 @@ public:
 
 private:
 	HRESULT			Add_Component();
+	HRESULT			Ready_Material();
 
 private:
 	Engine::CTerrainTex*	m_pBufferCom;
