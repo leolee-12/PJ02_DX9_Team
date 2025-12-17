@@ -10,7 +10,9 @@ CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel)
 		m_ePreState(PS_END),
 		m_eCurState(PS_IDLE),
 		m_fFrame(0.f),
-		m_fFrameSpeed(0.f)
+		m_fFrameSpeed(0.f),
+		m_fSpeed(0.f),
+		m_iAttack(0)
 {
 	ZeroMemory(m_fFrameEnd, sizeof(m_fFrameEnd));
 }
@@ -20,7 +22,9 @@ CPlayer::CPlayer(const CPlayer& rhs)
 		m_ePreState(PS_END),
 		m_eCurState(PS_IDLE),
 		m_fFrame(0.f),
-		m_fFrameSpeed(0.f)
+		m_fFrameSpeed(0.f),
+		m_fSpeed(rhs.m_fSpeed),
+		m_iAttack(rhs.m_iAttack)
 {
 	memcpy(m_fFrameEnd, rhs.m_fFrameEnd, sizeof(m_fFrameEnd));
 }
@@ -36,15 +40,24 @@ HRESULT CPlayer::Ready_GameObject()
 
 	m_eOBJID = OID_PLAYER;
 
-	m_hmapSubHandles.insert({ L"StartGame.Move", m_pMessageChannel->Subscribe(L"Start_Game", [this](const IMessageChannel::EVENT& Event) {
-		if (Event.eOBJID == this->Get_OBJID()) {
-			m_pTransformCom->Set_Pos(10.f, 10.f, 10.f);
-		}
-		}) });
+	//m_hmapSubHandles.insert({ L"StartGame.Move", m_pMessageChannel->Subscribe(L"Start_Game", [this](const IMessageChannel::EVENT& Event) {
+	//	if (Event.eOBJID == this->Get_OBJID()) {
+	//		m_pTransformCom->Set_Pos(10.f, 10.f, 10.f);
+	//	}
+	//	}) });
+	m_pTransformCom->Set_Pos(10.f, 0.f, 10.f);
+	m_fFrameSpeed = 90.f;
 
-	
+	_float fAngle(0.f);
 
-	//m_pTransformCom->m_vInfo[INFO_POS].y = 1.f;
+	for (_uint i = 0; i < DIR_END; ++i)
+	{
+		m_vNormDir[i] = { cosf(fAngle), 0.f, -sinf(fAngle) };
+		fAngle += D3DX_PI * 0.25f;
+	}
+
+	m_fSpeed = 10.f;
+	m_iAttack = 1;
 
 	return S_OK;
 }
@@ -66,7 +79,7 @@ _int CPlayer::Update_GameObject(const _float& fTimeDelta)
 void CPlayer::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	Key_Input(fTimeDelta);
-
+	BillBoard(ROT_X);
 
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
 }
@@ -82,7 +95,6 @@ void CPlayer::Render_GameObject()
 	m_pBufferCom->Render_Buffer();
 
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
-
 }
 
 HRESULT CPlayer::Add_Component()
@@ -131,39 +143,55 @@ HRESULT CPlayer::Add_Component()
 
 void CPlayer::Key_Input(const _float& fTimeDelta)
 {
-	_vec3		vLook;
+	_vec3	vDir;
 
-	m_pTransformCom->Get_Info(INFO_LOOK, &vLook);
-
-	if (GetAsyncKeyState(VK_UP))
+	if (GetAsyncKeyState('W'))
 	{
-		m_pTransformCom->Move_Pos(D3DXVec3Normalize(&vLook, &vLook), fTimeDelta, 10.f);
+		if (GetAsyncKeyState('A')) vDir = m_vNormDir[DIR_LU];
+
+		else if (GetAsyncKeyState('D')) vDir = m_vNormDir[DIR_RU];
+
+		else vDir = m_vNormDir[DIR_UP];
+
+		m_pTransformCom->Move_Pos(&vDir, fTimeDelta, m_fSpeed);
 	}
 
-	if (GetAsyncKeyState(VK_DOWN))
+	else if (GetAsyncKeyState('S'))
 	{
-		m_pTransformCom->Move_Pos(D3DXVec3Normalize(&vLook, &vLook), fTimeDelta, -10.f);
-	}
-		
+		if (GetAsyncKeyState('A')) vDir = m_vNormDir[DIR_LD];
 
-	if (GetAsyncKeyState(VK_LEFT))
-	{
-		m_pTransformCom->Rotation(ROT_Y, 180.f * fTimeDelta);
-	}
+		else if (GetAsyncKeyState('D')) vDir = m_vNormDir[DIR_RD];
 
-	if (GetAsyncKeyState(VK_RIGHT))
-	{
-		m_pTransformCom->Rotation(ROT_Y, -180.f * fTimeDelta);
+		else vDir = m_vNormDir[DIR_DOWN];
+
+		m_pTransformCom->Move_Pos(&vDir, fTimeDelta, m_fSpeed);
 	}
 
-	if (CDInputMgr::GetInstance()->Get_DIMouseState(DIM_LB) & 0x80)
+	else if (GetAsyncKeyState('A'))
 	{
-		_vec3		vPickPos = Picking_OnTerrain();
-
-		_vec3	vDir = vPickPos - m_pTransformCom->m_vInfo[INFO_POS];
-		
-		m_pTransformCom->Move_Pos(D3DXVec3Normalize(&vDir, &vDir), fTimeDelta, 10.f);
+		vDir = m_vNormDir[DIR_LEFT];
+		m_pTransformCom->Move_Pos(&vDir, fTimeDelta, m_fSpeed);
 	}
+
+	else if (GetAsyncKeyState('D'))
+	{
+		vDir = m_vNormDir[DIR_RIGHT];
+		m_pTransformCom->Move_Pos(&vDir, fTimeDelta, m_fSpeed);
+	}
+
+	else
+	{
+		m_eCurState = PS_IDLE;
+	}
+
+	//if (CDInputMgr::GetInstance()->Get_DIMouseState(DIM_LB) & 0x80)
+	//{
+	//	_vec3		vPickPos = Picking_OnTerrain();
+
+	//	_vec3	vDir = vPickPos - m_pTransformCom->m_vInfo[INFO_POS];
+	//	
+	//	m_pTransformCom->Move_Pos(D3DXVec3Normalize(&vDir, &vDir), fTimeDelta, 10.f);
+	//}
 
 	if (GetAsyncKeyState('P'))
 	{
@@ -224,11 +252,13 @@ void CPlayer::Check_Frame()
 	if (m_ePreState == m_eCurState)
 		return;
 
+	m_fFrame = 0.f;
+
 	switch (m_eCurState)
 	{
 	case PS_IDLE:
 	{
-
+		m_fFrameEnd[PS_IDLE] = 180;
 	}
 	break;
 	}
@@ -242,6 +272,45 @@ void CPlayer::Move_Frame(const _float& fTimeDelta)
 
 	if (m_fFrame > m_fFrameEnd[m_eCurState])
 		m_fFrame = 0.f;
+}
+
+void CPlayer::BillBoard(ROTATION eAxis)
+{
+	_matrix matWorld, matView, matBill;
+
+	matWorld = *m_pTransformCom->Get_World();
+	m_pGraphicDev->GetTransform(D3DTS_VIEW, &matView);
+	D3DXMatrixIdentity(&matBill);
+
+	switch (eAxis)
+	{
+	case ROT_X:
+		matBill._22 = matView._22;
+		matBill._23 = matView._23;
+		matBill._32 = matView._32;
+		matBill._33 = matView._33;
+		break;
+
+	case ROT_Y:
+		matBill._11 = matView._11;
+		matBill._13 = matView._13;
+		matBill._31 = matView._31;
+		matBill._33 = matView._33;
+		break;
+
+	case ROT_Z:
+		matBill._11 = matView._11;
+		matBill._12 = matView._12;
+		matBill._21 = matView._21;
+		matBill._22 = matView._22;
+		break;
+	}
+
+	D3DXMatrixInverse(&matBill, 0, &matBill);
+
+	matWorld = matBill * matWorld;
+
+	m_pTransformCom->m_matWorld = matWorld;
 }
 
 CPlayer* CPlayer::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel)
