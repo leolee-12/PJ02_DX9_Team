@@ -65,7 +65,6 @@ HRESULT CPlayer::Ready_GameObject()
 
 _int CPlayer::Update_GameObject(const _float& fTimeDelta)
 {
-	Check_Frame();
 	Move_Frame(fTimeDelta);
 
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
@@ -80,6 +79,7 @@ _int CPlayer::Update_GameObject(const _float& fTimeDelta)
 void CPlayer::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	Key_Input(fTimeDelta);
+	Check_Frame();
 	m_pTransformCom->Compute_Bilboard(BBD_X);
 	m_pTransformCom->Get_Info(INFO_POS, &m_vPos);
 	Compute_ViewDepth(&m_vPos);
@@ -94,30 +94,45 @@ void CPlayer::Render_GameObject()
 
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 
-	//if (m_vDir == m_vNormDir[DIR_RU] || m_vDir == m_vNormDir[DIR_RIGHT] || m_vDir == m_vNormDir[DIR_RD])
-	//{
-	//	// 8방향 모두 스프라이트 이미지는 비효율적 -> 좌우반전해서 사용
-	//
-	//	_matrix matScale, matTrans, matFilp;
-	//	D3DXMatrixScaling(&matScale, -1.f, 1.f, 1.f);
-	//	// 1. 텍스처의 u좌표의 부호를 반대로
-	//	// (u,v) : (0.f, 1.f)	-> (0.f, 1.f)	|	(u,v) : (1.f, 1.f)	-> (-1.f, 1.f)
-	//	// (u,v) : (0.f, 0.f)	-> (0.f, 0.f)	|	(u,v) : (1.f, 0.f)	-> (-1.f, 0.f)
-	//
-	//	D3DXMatrixScaling(&matScale, -1.f, 0.f, 0.f);
-	//	// 2. 텍스처의 u축으로 1만큼 이동
-	//	// (u,v) : (0.f, 1.f)	-> (1.f, 1.f)	|	(u,v) : (-1.f, 1.f)	-> (0.f, 1.f)
-	//	// (u,v) : (0.f, 0.f)	-> (1.f, 0.f)	|	(u,v) : (-1.f, 0.f)	-> (0.f, 0.f)
-	//
-	//	matFilp = matScale * matTrans;
-	//
-	//	m_pGraphicDev->SetTransform(D3DTS_TEXTURE0, &matFilp);
-	//}
+	// 8방향 모두 스프라이트 이미지는 비효율적 -> 좌우반전해서 사용
+	bool bFlipH = (m_vDir.x > 0.f);
+	_float u1 = bFlipH ? 1.f : 0.f;
+	_float u2 = bFlipH ? 0.f : 1.f;
 
+	// bFlipH = false (반전X)
+	//(u,v) : (0.f, 1.f)	|	(1.f, 1.f)
+	//(u,v) : (0.f, 0.f)	|	(1.f, 0.f)
+
+	// bFlipH = true (반전)
+	//(u,v) : (1.f, 1.f)	|	(0.f, 1.f)
+	//(u,v) : (1.f, 0.f)	|	(0.f, 0.f)
+
+	// 문제는 버텍스 버퍼를 동적으로 수정하면 오버헤드 심함
+	// - 버텍스/인덱스 버퍼를 사용하지 않고 그리기 : DrawPrimitiveUP
+	// - 인덱스버퍼 없으므로 D3DPT_TRIANGLELIST 사용 불가 : D3DPT_TRIANGLESTRIP으로 그리면 (0-1-2), (2-1-3) 으로 그려짐
+	// 0 1 > 0 1
+	// 3 2 > 2 3
+	VTXTEX pVertex[4];
+
+	pVertex[0].vPosition = { -1.f, 1.f, 0.f };
+	pVertex[0].vTexUV = { u1, 0.f };
+
+	pVertex[1].vPosition = { 1.f, 1.f, 0.f };
+	pVertex[1].vTexUV = { u2, 0.f };
+
+	pVertex[3].vPosition = { 1.f, -1.f, 0.f };
+	pVertex[3].vTexUV = { u2, 1.f };
+
+	pVertex[2].vPosition = { -1.f, -1.f, 0.f };
+	pVertex[2].vTexUV = { u1, 1.f };
 
 	Set_TextureSet();
 	
-	m_pBufferCom->Render_Buffer();
+	//m_pBufferCom->Render_Buffer();
+
+	m_pGraphicDev->SetFVF(Engine::FVF_TEX);
+
+	m_pGraphicDev->DrawPrimitiveUP(D3DPT_TRIANGLESTRIP, 2, pVertex, sizeof(VTXTEX));
 
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 }
@@ -314,13 +329,14 @@ void CPlayer::Set_TextureSet()
 		else if (m_vDir == m_vNormDir[DIR_DOWN]) strTemp = L"run-down";
 		else if (m_vDir == m_vNormDir[DIR_LU] || m_vDir == m_vNormDir[DIR_RU]) strTemp = L"run-diagonal";
 		else if (m_vDir == m_vNormDir[DIR_LD] || m_vDir == m_vNormDir[DIR_RD]) strTemp = L"run-diagonal";
-		else if (m_vDir == m_vNormDir[DIR_LEFT] || m_vDir == m_vNormDir[DIR_RIGHT]) strTemp = L"run-horizontal";
+		else strTemp = L"run-horizontal";
 	}
 	break;
 	}
 
-	m_pTextureCom->Set_Texture(strTemp, _uint(m_fFrame));
+	_uint iCurFrame = min(m_fFrame, m_fFrameEnd);
 
+	m_pTextureCom->Set_Texture(strTemp, iCurFrame);
 }
 
 CPlayer* CPlayer::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel)
