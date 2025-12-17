@@ -2,17 +2,17 @@
 //
 
 //// ImGui
-//#include "imgui.h"
-//#include "imgui_impl_dx9.h"
-//#include "imgui_impl_glfw.h"
-//#include "imgui_impl_opengl3.h"
-//#include "imgui_impl_win32.h"
+#include "imgui.h"
+#include "imgui_impl_win32.h"
+#include "imgui_impl_dx9.h"
+#include "imgui_impl_win32.cpp"
+#include "CImGuiManager.h"
+#include "ImGui_Define.h"
 
 #include "pch.h"
 #include "framework.h"
 #include "Client.h"
 #include "CMainApp.h"
-#include "CImGuiManager.h"
 
 #define MAX_LOADSTRING 100
 
@@ -21,6 +21,9 @@ HINSTANCE g_hInst;                                // 현재 인스턴스입니�
 WCHAR szTitle[MAX_LOADSTRING];                  // 제목 표시줄 텍스트입니다.
 WCHAR szWindowClass[MAX_LOADSTRING];            // 기본 창 클래스 이름입니다.
 HWND    g_hWnd;
+
+// ImGui
+UINT                     g_ResizeWidth = 0, g_ResizeHeight = 0;
 
 // 이 코드 모듈에 포함된 함수의 선언을 전달합니다:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
@@ -156,7 +159,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
     g_hInst = hInstance; // 인스턴스 핸들을 전역 변수에 저장합니다.
 
-   RECT rc{ 0, 0, 800, 600 };
+   RECT rc{ 0, 0, WINCX, WINCY };
 
    AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
 
@@ -187,11 +190,26 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 //  WM_PAINT    - 주 창을 그립니다.
 //  WM_DESTROY  - 종료 메시지를 게시하고 반환합니다.
 //
-//
+// 
+
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+#ifdef IMGUI
+    if (ImGui_ImplWin32_WndProcHandler(hWnd, message, wParam, lParam))
+        return true;
+#endif
+
     switch (message)
     {
+    ////case WM_SIZE:
+    ////    if (wParam == SIZE_MINIMIZED)
+    ////        return 0;
+    ////    g_ResizeWidth = (UINT)LOWORD(lParam); // Queue resize
+    ////    g_ResizeHeight = (UINT)HIWORD(lParam);
+    ////    return 0;
+
     case WM_COMMAND:
         {
             int wmId = LOWORD(wParam);
@@ -219,7 +237,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         break;
 
     case WM_KEYDOWN:
-
+        
         switch (wParam)
         {
         case VK_ESCAPE:

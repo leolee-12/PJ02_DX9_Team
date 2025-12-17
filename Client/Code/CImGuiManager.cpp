@@ -5,6 +5,11 @@
 CImGuiManager* CImGuiManager::Instance = nullptr;
 LPDIRECT3DDEVICE9 CImGuiManager::m_pGraphicDev = nullptr;
 
+static LPDIRECT3D9              g_pD3D = nullptr;
+
+static D3DPRESENT_PARAMETERS    g_d3dpp = {};
+
+
 // ==========================
 //	CImGuiManager functions
 // ==========================
@@ -23,7 +28,6 @@ void CImGuiManager::ImGui_Setup(HWND hWnd, LPDIRECT3DDEVICE9 pDevice)
     m_pGraphicDev = pDevice;
     m_pGraphicDev->AddRef();
 
-
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -38,22 +42,19 @@ void CImGuiManager::ImGui_Setup(HWND hWnd, LPDIRECT3DDEVICE9 pDevice)
     // Setup Platform/Renderer backends
     ImGui_ImplWin32_Init(hWnd);
     ImGui_ImplDX9_Init(m_pGraphicDev);
-
-    // Load Fonts
-    // - If no fonts are loaded, dear imgui will use the default font. You can also load multiple fonts and use ImGui::PushFont()/PopFont() to select them.
-    // - AddFontFromFileTTF() will return the ImFont* so you can store it if you need to select the font among loaded ones.
-    // - If your file paths are relative and you want to load them from a file system you can change the ImFileRead function.
-    // - The synthetic best fit scale factor of 1.0f is used in ImFontAtlas::AddFontDefault().
-    //io.Fonts->AddFontDefault();
-    //io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\segoeui.ttf", 18.0f);
-    //io.Fonts->AddFontFromFileTTF("../../misc/fonts/DroidSans.ttf", 16.0f);
-    //io.Fonts->AddFontFromFileTTF("../../misc/fonts/Calibri.ttf", 24.0f, nullptr, io.Fonts->GetGlyphRangesKorean());
-    //ImFont* font = io.Fonts->AddFontFromFileTTF("res/Roboto-Medium.ttf", 16.0f, nullptr, io.Fonts->GetGlyphRangesJapanese());
-    //IM_ASSERT(font != nullptr);
 }
 
 void CImGuiManager::ImGui_Tick()
 {
+    // Handle window resize (we don't resize directly in the WM_SIZE handler)
+    if (g_ResizeWidth != 0 && g_ResizeHeight != 0)
+    {
+        g_d3dpp.BackBufferWidth = g_ResizeWidth;
+        g_d3dpp.BackBufferHeight = g_ResizeHeight;
+        g_ResizeWidth = g_ResizeHeight = 0;
+        ResetDevice();
+    }
+
     // Start the Dear ImGui frame
     ImGui_ImplDX9_NewFrame();
     ImGui_ImplWin32_NewFrame();
@@ -123,3 +124,75 @@ unsigned long CImGuiManager::Free()
 
     return dwRefCnt;
 }
+
+
+// ==========================
+//	ImGui helper functions
+// ==========================
+
+bool CImGuiManager::CreateDeviceD3D(HWND hWnd)
+{
+    if ((g_pD3D = Direct3DCreate9(D3D_SDK_VERSION)) == nullptr)
+        return false;
+
+    // Create the D3DDevice
+    ZeroMemory(&g_d3dpp, sizeof(g_d3dpp));
+    g_d3dpp.Windowed = TRUE;
+    g_d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;
+    g_d3dpp.BackBufferFormat = D3DFMT_UNKNOWN; // Need to use an explicit format with alpha if needing per-pixel alpha composition.
+    g_d3dpp.EnableAutoDepthStencil = TRUE;
+    g_d3dpp.AutoDepthStencilFormat = D3DFMT_D16;
+    g_d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_ONE;           // Present with vsync
+    //g_d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_IMMEDIATE;   // Present without vsync, maximum unthrottled framerate
+    if (g_pD3D->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, hWnd, D3DCREATE_HARDWARE_VERTEXPROCESSING, &g_d3dpp, &m_pGraphicDev) < 0)
+        return false;
+
+    return true;
+}
+
+void CImGuiManager::CleanupDeviceD3D()
+{
+    if (m_pGraphicDev) { m_pGraphicDev->Release(); m_pGraphicDev = nullptr; }
+    if (g_pD3D) { g_pD3D->Release(); g_pD3D = nullptr; }
+}
+
+void CImGuiManager::ResetDevice()
+{
+    ImGui_ImplDX9_InvalidateDeviceObjects();
+    HRESULT hr = m_pGraphicDev->Reset(&g_d3dpp);
+    if (hr == D3DERR_INVALIDCALL)
+        IM_ASSERT(0);
+    ImGui_ImplDX9_CreateDeviceObjects();
+}
+//
+//// Forward declare message handler from imgui_impl_win32.cpp
+//extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+//
+//// Win32 message handler
+//// You can read the io.WantCaptureMouse, io.WantCaptureKeyboard flags to tell if dear imgui wants to use your inputs.
+//// - When io.WantCaptureMouse is true, do not dispatch mouse input data to your main application, or clear/overwrite your copy of the mouse data.
+//// - When io.WantCaptureKeyboard is true, do not dispatch keyboard input data to your main application, or clear/overwrite your copy of the keyboard data.
+//// Generally you may always pass all inputs to dear imgui, and hide them from your application based on those two flags.
+//LRESULT WINAPI CImGuiManager::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
+//{
+//    if (ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam))
+//        return true;
+//
+//    switch (msg)
+//    {
+//    case WM_SIZE:
+//        if (wParam == SIZE_MINIMIZED)
+//            return 0;
+//        g_ResizeWidth = (UINT)LOWORD(lParam); // Queue resize
+//        g_ResizeHeight = (UINT)HIWORD(lParam);
+//        return 0;
+//    case WM_SYSCOMMAND:
+//        if ((wParam & 0xfff0) == SC_KEYMENU) // Disable ALT application menu
+//            return 0;
+//        break;
+//    case WM_DESTROY:
+//        ::PostQuitMessage(0);
+//        return 0;
+//    }
+//    return ::DefWindowProcW(hWnd, msg, wParam, lParam);
+//}

@@ -150,6 +150,9 @@
     <ClInclude Include="..\Header\CImGuiManager.h">
       <Filter>99. ImGui\ImGuiManager</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\ImGui_Define.h">
+      <Filter>99. ImGui\ImGuiManager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">

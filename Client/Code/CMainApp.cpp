@@ -7,8 +7,8 @@
 #include "CDInputMgr.h"
 #include "CFontMgr.h"
 #include "CImGuiManager.h"
+#include "ImGui_Define.h"
 
-#define IMGUI
 
 CMainApp::CMainApp() : m_pDeviceClass(nullptr), m_pGraphicDev(nullptr)
 , m_pManagementClass(CManagement::GetInstance())
@@ -24,12 +24,14 @@ HRESULT CMainApp::Ready_MainApp()
 	if (FAILED(Ready_DefaultSetting(&m_pGraphicDev)))
 		return E_FAIL;
 
-	if (FAILED(Ready_Scene(m_pGraphicDev)))
-		return E_FAIL;
-
 #ifdef IMGUI
 	// CImGui추가 코드
 	CImGuiManager::GetInstance()->ImGui_Setup(g_hWnd, m_pGraphicDev);
+#else
+
+	if (FAILED(Ready_Scene(m_pGraphicDev)))
+		return E_FAIL;
+
 #endif // IMGUI
 
 	return S_OK;
@@ -52,8 +54,6 @@ int CMainApp::Update_MainApp(const float& fTimeDelta)
 	//{
 	//	int a = 0;
 	//}
-
-
 
 	return 0;
 }
@@ -173,7 +173,9 @@ void CMainApp::Free()
 	CFrameMgr::DestroyInstance();
 	CTimerMgr::DestroyInstance();
 	CManagement::DestroyInstance();
+#ifdef IMGUI
 	CImGuiManager::GetInstance()->ImGui_Shutdown();
 	CImGuiManager::DestroyInstance();
+#endif // IMGUI
 	m_pDeviceClass->DestroyInstance();
 }

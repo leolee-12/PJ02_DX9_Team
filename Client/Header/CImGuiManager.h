@@ -7,6 +7,8 @@
 #include <d3d9.h>
 #include <d3d9types.h>
 #include <tchar.h>
+#include "ImGui_Define.h"
+#include "Engine_Macro.h"
 
 class CImGuiManager
 {
@@ -43,6 +45,13 @@ private:
 
 private:
     static LPDIRECT3DDEVICE9 m_pGraphicDev;
+
+public:
+    /* imgui helper function */
+    bool CreateDeviceD3D(HWND hWnd);
+    void CleanupDeviceD3D();
+    void ResetDevice();
+    LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 private:
     // ImGui state variables
