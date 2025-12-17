@@ -11,6 +11,10 @@ namespace Engine
 
 class CPlayer : public CGameObject
 {
+public:
+	enum PLAYERSTATE { PS_IDLE, PS_RUN, PS_ROLL, PS_ATTACK, PS_ACTION, PS_TALK, PS_INTROIDLE, PS_INTRORUN, PS_INTROKNEE, PS_END };
+	enum DIRECTIONID { DIR_RIGHT, DIR_RD, DIR_DOWN, DIR_LD, DIR_LEFT, DIR_LU, DIR_UP, DIR_RU, DIR_END };
+
 private:
 	explicit CPlayer(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel);
 	explicit CPlayer(const CPlayer& rhs);
@@ -28,13 +32,29 @@ private:
 	void			Set_OnTerrain();
 	_vec3			Picking_OnTerrain();
 
-private:
-	Engine::CRcTex*			m_pBufferCom;
-	Engine::CTransform*		m_pTransformCom;
-	Engine::CTexture*		m_pTextureCom;
-	Engine::CCalculator*	m_pCalculatorCom;
+	void			Check_Frame();
+	void			Move_Frame(const _float& fTimeDelta);
 
-	_vec3					m_vPos;
+private:
+	Engine::CRcTex* m_pBufferCom;
+	Engine::CTransform* m_pTransformCom;
+	Engine::CTexture* m_pTextureCom;
+	Engine::CCalculator* m_pCalculatorCom;
+
+	// 스프라이트 관련
+	PLAYERSTATE		m_ePreState;
+	PLAYERSTATE		m_eCurState;
+	_float			m_fFrame;
+	_float			m_fFrameSpeed;
+	_float			m_fFrameEnd[PS_END];
+	_vec3			m_vNormDir[DIR_END];
+
+	// 캐릭터 스테이터스 관련
+	_float			m_fSpeed;
+	_int			m_iAttack;
+
+	// 알파 소팅 관련
+	_vec3			m_vPos;
 
 public:
 	static CPlayer* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel);

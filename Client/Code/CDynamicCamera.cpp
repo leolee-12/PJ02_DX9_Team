@@ -54,7 +54,7 @@ void CDynamicCamera::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	CCamera::LateUpdate_GameObject(fTimeDelta);
 
-	Key_Input(fTimeDelta);
+	//Key_Input(fTimeDelta);
 
 	if (m_bFix)
 	{

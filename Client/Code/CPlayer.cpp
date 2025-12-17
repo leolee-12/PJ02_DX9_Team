@@ -6,14 +6,28 @@
 #include "CDInputMgr.h"
 
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel)
-	: CGameObject(pGraphicDev, StageChannel)
+	:	CGameObject(pGraphicDev, StageChannel),
+		m_ePreState(PS_END),
+		m_eCurState(PS_IDLE),
+		m_fFrame(0.f),
+		m_fFrameSpeed(0.f),
+		m_fSpeed(0.f),
+		m_iAttack(0)
 {
-	ZeroMemory(&m_vPos, sizeof(_vec3));
+	ZeroMemory(m_fFrameEnd, sizeof(m_fFrameEnd));
 }
 
 CPlayer::CPlayer(const CPlayer& rhs)
-	: CGameObject(rhs), m_vPos(rhs.m_vPos)
+	:	CGameObject(rhs),
+		m_ePreState(PS_END),
+		m_eCurState(PS_IDLE),
+		m_fFrame(0.f),
+		m_fFrameSpeed(0.f),
+		m_fSpeed(rhs.m_fSpeed),
+		m_iAttack(rhs.m_iAttack),
+		m_vPos(rhs.m_vPos)
 {
+	memcpy(m_fFrameEnd, rhs.m_fFrameEnd, sizeof(m_fFrameEnd));
 }
 
 CPlayer::~CPlayer()
@@ -27,21 +41,33 @@ HRESULT CPlayer::Ready_GameObject()
 
 	m_eOBJID = OID_PLAYER;
 
-	/*m_hmapSubHandles.insert({ L"StartGame.Move", m_pMessageChannel->Subscribe(L"Start_Game", [this](const IMessageChannel::EVENT& Event) {
-		if (Event.eOBJID == this->Get_OBJID()) {
-			m_pTransformCom->Set_Pos(10.f, 10.f, 10.f);
-		}
-		}) });*/
+	//m_hmapSubHandles.insert({ L"StartGame.Move", m_pMessageChannel->Subscribe(L"Start_Game", [this](const IMessageChannel::EVENT& Event) {
+	//	if (Event.eOBJID == this->Get_OBJID()) {
+	//		m_pTransformCom->Set_Pos(10.f, 10.f, 10.f);
+	//	}
+	//	}) });
+	m_pTransformCom->Set_Pos(10.f, 0.f, 10.f);
+	m_fFrameSpeed = 90.f;
 
-	
+	_float fAngle(0.f);
 
-	//m_pTransformCom->m_vInfo[INFO_POS].y = 1.f;
+	for (_uint i = 0; i < DIR_END; ++i)
+	{
+		m_vNormDir[i] = { cosf(fAngle), 0.f, -sinf(fAngle) };
+		fAngle += D3DX_PI * 0.25f;
+	}
+
+	m_fSpeed = 10.f;
+	m_iAttack = 1;
 
 	return S_OK;
 }
 
 _int CPlayer::Update_GameObject(const _float& fTimeDelta)
 {
+	Check_Frame();
+	Move_Frame(fTimeDelta);
+
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 	
 	Set_OnTerrain();
@@ -54,7 +80,7 @@ _int CPlayer::Update_GameObject(const _float& fTimeDelta)
 void CPlayer::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	Key_Input(fTimeDelta);
-
+	m_pTransformCom->Compute_Bilboard(BBD_X);
 	m_pTransformCom->Get_Info(INFO_POS, &m_vPos);
 	Compute_ViewDepth(&m_vPos);
 
@@ -68,11 +94,11 @@ void CPlayer::Render_GameObject()
 
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 		
-	m_pTextureCom->Set_Texture(0);
+	m_pTextureCom->Set_Texture(_uint(m_fFrame));
+	
 	m_pBufferCom->Render_Buffer();
 
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
-
 }
 
 HRESULT CPlayer::Add_Component()
@@ -121,39 +147,55 @@ HRESULT CPlayer::Add_Component()
 
 void CPlayer::Key_Input(const _float& fTimeDelta)
 {
-	_vec3		vLook;
+	_vec3	vDir;
 
-	m_pTransformCom->Get_Info(INFO_LOOK, &vLook);
-
-	if (GetAsyncKeyState(VK_UP))
+	if (GetAsyncKeyState('W'))
 	{
-		m_pTransformCom->Move_Pos(D3DXVec3Normalize(&vLook, &vLook), fTimeDelta, 10.f);
+		if (GetAsyncKeyState('A')) vDir = m_vNormDir[DIR_LU];
+
+		else if (GetAsyncKeyState('D')) vDir = m_vNormDir[DIR_RU];
+
+		else vDir = m_vNormDir[DIR_UP];
+
+		m_pTransformCom->Move_Pos(&vDir, fTimeDelta, m_fSpeed);
 	}
 
-	if (GetAsyncKeyState(VK_DOWN))
+	else if (GetAsyncKeyState('S'))
 	{
-		m_pTransformCom->Move_Pos(D3DXVec3Normalize(&vLook, &vLook), fTimeDelta, -10.f);
-	}
-		
+		if (GetAsyncKeyState('A')) vDir = m_vNormDir[DIR_LD];
 
-	if (GetAsyncKeyState(VK_LEFT))
-	{
-		m_pTransformCom->Rotation(ROT_Y, 180.f * fTimeDelta);
-	}
+		else if (GetAsyncKeyState('D')) vDir = m_vNormDir[DIR_RD];
 
-	if (GetAsyncKeyState(VK_RIGHT))
-	{
-		m_pTransformCom->Rotation(ROT_Y, -180.f * fTimeDelta);
+		else vDir = m_vNormDir[DIR_DOWN];
+
+		m_pTransformCom->Move_Pos(&vDir, fTimeDelta, m_fSpeed);
 	}
 
-	if (CDInputMgr::GetInstance()->Get_DIMouseState(DIM_LB) & 0x80)
+	else if (GetAsyncKeyState('A'))
 	{
-		_vec3		vPickPos = Picking_OnTerrain();
-
-		_vec3	vDir = vPickPos - m_pTransformCom->m_vInfo[INFO_POS];
-		
-		m_pTransformCom->Move_Pos(D3DXVec3Normalize(&vDir, &vDir), fTimeDelta, 10.f);
+		vDir = m_vNormDir[DIR_LEFT];
+		m_pTransformCom->Move_Pos(&vDir, fTimeDelta, m_fSpeed);
 	}
+
+	else if (GetAsyncKeyState('D'))
+	{
+		vDir = m_vNormDir[DIR_RIGHT];
+		m_pTransformCom->Move_Pos(&vDir, fTimeDelta, m_fSpeed);
+	}
+
+	else
+	{
+		m_eCurState = PS_IDLE;
+	}
+
+	//if (CDInputMgr::GetInstance()->Get_DIMouseState(DIM_LB) & 0x80)
+	//{
+	//	_vec3		vPickPos = Picking_OnTerrain();
+
+	//	_vec3	vDir = vPickPos - m_pTransformCom->m_vInfo[INFO_POS];
+	//	
+	//	m_pTransformCom->Move_Pos(D3DXVec3Normalize(&vDir, &vDir), fTimeDelta, 10.f);
+	//}
 
 	if (GetAsyncKeyState('P'))
 	{
@@ -183,7 +225,6 @@ void CPlayer::Set_OnTerrain()
 	_matrix matInvTerrainWorld;
 	_vec3   vLocalPos;
 
-	// 지형 월드변환 추가로 인한 플레이어 좌표계 로컬로 끌어내리기
 	D3DXMatrixInverse(&matInvTerrainWorld, 0, pTerrainTransformCom->Get_World());
 	D3DXVec3TransformCoord(&vLocalPos, &vPos, &matInvTerrainWorld);
 
@@ -207,6 +248,33 @@ _vec3 CPlayer::Picking_OnTerrain()
 		return _vec3();
 
 	return m_pCalculatorCom->Picking_OnTerrain(g_hWnd, pTerrainVtxCom, pTerrainTransformCom);
+}
+
+void CPlayer::Check_Frame()
+{
+	if (m_ePreState == m_eCurState)
+		return;
+
+	m_fFrame = 0.f;
+
+	switch (m_eCurState)
+	{
+	case PS_IDLE:
+	{
+		m_fFrameEnd[PS_IDLE] = 180;
+	}
+	break;
+	}
+
+	m_ePreState = m_eCurState;
+}
+
+void CPlayer::Move_Frame(const _float& fTimeDelta)
+{
+	m_fFrame += m_fFrameSpeed * fTimeDelta;
+
+	if (m_fFrame > m_fFrameEnd[m_eCurState])
+		m_fFrame = 0.f;
 }
 
 CPlayer* CPlayer::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel)
