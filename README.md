@@ -88,63 +88,76 @@ https://drive.google.com/drive/folders/1zx3saK3foV18kZLbxc0bIW1SqXbGBRih?usp=dri
 
 - 예시. 플레이어가 보스방 입장 이벤트발생 > 씬이 이벤트확인 > 씬이 보스전 진입 이벤트 발생 > 해당 이벤트를 구독중인 모든 오브젝트는 상호작용.
 
-- 코드 참조
+## 업데이트 사항
+### 2025 12 17 업데이트
 
-        public:
-	    typedef struct tagEvent
-	    {
-		    wstring strType;
-            OBJID   eOBJID;
-		    unordered_map<wstring, any> hmapData;
+#### 1. 알파소팅 추가
 
-		    tagEvent(const wstring& strEventType)
-			    : strType(strEventType), eOBJID(OID_END) {}
-	    }EVENT;
-        // 인터페이스 클래스 내부에 있는 구조체
-        // 1. 이벤트 명(타입)
-        // 2. 해당 이벤트를 적용시킬 오브젝트의 ID인데 자세한 사용법은 내부코드 참조
-        // 3. 추가 기입 데이터 {데미지발생, 발생한 데미지 수치} 같은 형식으로 사용
-        // 4. 생성자 (이벤트 명) 편의성을위함
+- 수업코드랑 동일
+
+#### 2. 빌보드 추가
+
+- 수업코드에서의 변경점 -> 객체 내부에서 계산하지않고 Transform 컴포넌트에 Compute_Bilboard 함수 추가
+
+```cpp
+void CTransform::Compute_Bilboard(BILBOARD Axis)
+{
+    _matrix	matView, matBill;
+    m_pGraphicDev->GetTransform(D3DTS_VIEW, &matView);
+    D3DXMatrixIdentity(&matBill);
+
+    switch (Axis) {
+    case BBD_X:
+        matBill._22 = matView._22;
+        matBill._23 = matView._23;
+        matBill._32 = matView._32;
+        matBill._33 = matView._33;
+        break;
+    case BBD_Y:
+        matBill._11 = matView._11;
+        matBill._13 = matView._13;
+        matBill._31 = matView._31;
+        matBill._33 = matView._33;
+        break;
+    case BBD_Z:
+        matBill._11 = matView._11;
+        matBill._12 = matView._12;
+        matBill._21 = matView._21;
+        matBill._22 = matView._22;
+        break;
+    }
+
+    D3DXMatrixInverse(&matBill, 0, &matBill);
+
+    m_matWorld = matBill * m_matWorld;
+}
+```
+
+- 해당 함수는 __꼭 객체의 Late_Update 에서 호출 할 것__ 매 프레임마다 Transform의 Update에서 월드행렬을 갱신하기때문
+
+- 렌더 최상단에서 월드 행렬 적용시에 그냥 기존과 동일하게 Transform의 월드행렬 받아와서 적용하면됨 (월드행렬의 소유, 생성, 저장은 Transform이 독점 [단일책임])
+
+#### 3. TestEffect 클래스 추가
+
+- 그냥 뭐 수업코드입니다 네
+
+#### 4. Layer 내부 수정
+
+- 수업코드에서는 Layer에 동일한 키값의 오브젝트를 삽입하기위해 멀티맵을 사용
+
+- 저는 ``` map<const _tchar*, vector<GameObject*>> ```로 수정했습니다.
+
+- 수정에 따른 내부 Update, Late_Update, Free 수정 (한 번 쯤 보세용)
+
+- ```Layer->Get_Component``` 내부가 조금 수정됐는데, 기존에 키값으로 접근해서 벨류의 게터를 호출했다면 지금은 키값에접근해서 벨류(vector)의 front의 게터를 호출하고있습니다.
+
+- 따라서 묶음으로 관리하는 오브젝트 키값이 있는데 내부의 특정오브젝트의 컴포넌트가 필요하면 내부 벡터를 원하는 조건으로 정렬 시켜야되기 때문에 정렬기능 필요하면 말해주세요.
+
+#### 5. LightMgr, Light 추가
+
+- 수업코드랑 동일
 
 
-        private:
-        unordered_map<wstring, vector<function<void(const EVENT&)>>> hmapHandlers;
-        // 인터페이스를 상속받은 구현 클래스의 내부 멤버 (해시맵 <키값, 벡터<펑터(함수포인터)>>)
-        // 이벤트가 발생했을때에 내부에 보관중인 펑터를 호출하는방식
 
-        void CStageMessage::Subscribe(const wstring& strEventType, function<void(const EVENT&)> fcHandler)
-        {
-	        auto [iter, inserted] = hmapHandlers.try_emplace(strEventType);
-
-	        if (inserted) {
-		        iter->second.reserve(16);
-	        }
-
-	        iter->second.push_back(fcHandler);
-            // 구독함수
-            // 발생하는 이벤트명을 키값으로 해쉬맵에 해당 이벤트가 발생하였을때에 실행 하고자 하는 함수 포인터 저장(람다도 가능)
-        }
-
-        void CStageMessage::Publish(const EVENT& Event)
-        {
-    	    auto iter = hmapHandlers.find(Event.strType);
-
-	        if (iter != hmapHandlers.end()) {
-                // 원본 벡터를 복사해서 순회하는 이유
-                // 순회 도중에 벡터가 수정될 가능성을 방지하기 위함
-                // 예시. 벡터의 첫번째 펑터에서 구독을 해지하라고 명령
-                //      벡터의 첫번째 요소가 삭제되면서 에러
-    		    auto CopyHandlers = iter->second;
-		        for (auto& functor : CopyHandlers) 
-		        {
-    			    functor(Event);
-		        }
-	        }
-
-            // 이벤트 발생 함수
-            // 해당 함수 호출시 해당 이벤트명으로 해쉬맵을 탐색
-            // 이벤트를 구독중인 객체가 하나라도 있다면 (키값이 이미 있으면)
-            // 해당 키값에 해당하는 벡터<펑터> 를 전체 순회하며 펑터 호출
-        }
 
 

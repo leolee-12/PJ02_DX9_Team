@@ -13,7 +13,7 @@ class CPlayer : public CGameObject
 {
 private:
 	explicit CPlayer(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel);
-	explicit CPlayer(const CGameObject& rhs);
+	explicit CPlayer(const CPlayer& rhs);
 	virtual ~CPlayer();
 
 public:
@@ -33,6 +33,8 @@ private:
 	Engine::CTransform*		m_pTransformCom;
 	Engine::CTexture*		m_pTextureCom;
 	Engine::CCalculator*	m_pCalculatorCom;
+
+	_vec3					m_vPos;
 
 public:
 	static CPlayer* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel);

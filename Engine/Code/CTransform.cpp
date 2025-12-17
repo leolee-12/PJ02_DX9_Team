@@ -90,6 +90,38 @@ void CTransform::LateUpdate_Component()
 {
 }
 
+void CTransform::Compute_Bilboard(BILBOARD Axis)
+{
+    _matrix	matView, matBill;
+    m_pGraphicDev->GetTransform(D3DTS_VIEW, &matView);
+    D3DXMatrixIdentity(&matBill);
+
+    switch (Axis) {
+    case BBD_X:
+        matBill._22 = matView._22;
+        matBill._23 = matView._23;
+        matBill._32 = matView._32;
+        matBill._33 = matView._33;
+        break;
+    case BBD_Y:
+        matBill._11 = matView._11;
+        matBill._13 = matView._13;
+        matBill._31 = matView._31;
+        matBill._33 = matView._33;
+        break;
+    case BBD_Z:
+        matBill._11 = matView._11;
+        matBill._12 = matView._12;
+        matBill._21 = matView._21;
+        matBill._22 = matView._22;
+        break;
+    }
+
+    D3DXMatrixInverse(&matBill, 0, &matBill);
+
+    m_matWorld = matBill * m_matWorld;
+}
+
 void CTransform::Chase_Target(const _vec3* pTargetPos, const _float& fTimeDelta, const _float& fSpeed)
 {
     _vec3   vDir = *pTargetPos - m_vInfo[INFO_POS];

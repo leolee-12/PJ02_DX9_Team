@@ -4,6 +4,8 @@
 #include "CProtoMgr.h"
 #include "CDynamicCamera.h"
 #include "CSkyBox.h"
+#include "CTestEffect.h"
+#include "CLightMgr.h"
 
 CStage::CStage(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -17,6 +19,9 @@ CStage::~CStage()
 HRESULT CStage::Ready_Scene()
 {
 	m_pMessageChannel = CStageMessage::Create();
+
+	if (FAILED(Ready_Light()))
+		return E_FAIL;
 
 	if (FAILED(Ready_Environment_Layer(L"Environment_Layer")))
 		return E_FAIL;
@@ -86,8 +91,6 @@ HRESULT CStage::Ready_Environment_Layer(const _tchar* pLayerTag)
 	if (FAILED(pLayer->Add_GameObject(L"DynamicCamera", pGameObject)))
 		return E_FAIL;
 
-	
-	
 	m_mapLayer.insert({ pLayerTag , pLayer });
 
 	return S_OK;
@@ -150,8 +153,39 @@ HRESULT CStage::Ready_UI_Layer(const _tchar* pLayerTag)
 
 	CGameObject* pGameObject = nullptr;
 
+	for (_int i = 0; i < 50; ++i)
+	{
+		pGameObject = CTestEffect::Create(m_pGraphicDev);
+
+		if (nullptr == pGameObject)
+			return E_FAIL;
+
+		if (FAILED(pLayer->Add_GameObject(L"Effect", pGameObject)))
+			return E_FAIL;
+	}
+
 
 	m_mapLayer.insert({ pLayerTag , pLayer });
+
+	return S_OK;
+}
+
+HRESULT CStage::Ready_Light()
+{
+	D3DLIGHT9	tLightInfo;
+	ZeroMemory(&tLightInfo, sizeof(D3DLIGHT9));
+
+	tLightInfo.Type = D3DLIGHT_DIRECTIONAL;
+
+	tLightInfo.Diffuse = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
+	tLightInfo.Specular = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
+	tLightInfo.Ambient = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
+
+	tLightInfo.Direction = { 1.f, -1.f, 1.f };
+
+	if (FAILED(CLightMgr::GetInstance()->Ready_Light(m_pGraphicDev, &tLightInfo, 0)))
+		return E_FAIL;
+
 
 	return S_OK;
 }
