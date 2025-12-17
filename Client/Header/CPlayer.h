@@ -34,7 +34,6 @@ private:
 
 	void			Check_Frame();
 	void			Move_Frame(const _float& fTimeDelta);
-	void			BillBoard(ROTATION eAxis);
 
 private:
 	Engine::CRcTex* m_pBufferCom;
@@ -42,7 +41,7 @@ private:
 	Engine::CTexture* m_pTextureCom;
 	Engine::CCalculator* m_pCalculatorCom;
 
-	// 스프라이트 관련 변수
+	// 스프라이트 관련
 	PLAYERSTATE		m_ePreState;
 	PLAYERSTATE		m_eCurState;
 	_float			m_fFrame;
@@ -50,11 +49,12 @@ private:
 	_float			m_fFrameEnd[PS_END];
 	_vec3			m_vNormDir[DIR_END];
 
-	// 캐릭터 스테이터스 관련 변수
+	// 캐릭터 스테이터스 관련
 	_float			m_fSpeed;
 	_int			m_iAttack;
 
-	_vec3					m_vPos;
+	// 알파 소팅 관련
+	_vec3			m_vPos;
 
 public:
 	static CPlayer* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel);

@@ -80,7 +80,7 @@ _int CPlayer::Update_GameObject(const _float& fTimeDelta)
 void CPlayer::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	Key_Input(fTimeDelta);
-	Compute_BillBoard(BBD_X);
+	m_pTransformCom->Compute_Bilboard(BBD_X);
 	m_pTransformCom->Get_Info(INFO_POS, &m_vPos);
 	Compute_ViewDepth(&m_vPos);
 
@@ -225,7 +225,6 @@ void CPlayer::Set_OnTerrain()
 	_matrix matInvTerrainWorld;
 	_vec3   vLocalPos;
 
-	// ���� ���庯ȯ �߰��� ���� �÷��̾� ��ǥ�� ���÷� �������
 	D3DXMatrixInverse(&matInvTerrainWorld, 0, pTerrainTransformCom->Get_World());
 	D3DXVec3TransformCoord(&vLocalPos, &vPos, &matInvTerrainWorld);
 
@@ -276,45 +275,6 @@ void CPlayer::Move_Frame(const _float& fTimeDelta)
 
 	if (m_fFrame > m_fFrameEnd[m_eCurState])
 		m_fFrame = 0.f;
-}
-
-void CPlayer::BillBoard(ROTATION eAxis)
-{
-	_matrix matWorld, matView, matBill;
-
-	matWorld = *m_pTransformCom->Get_World();
-	m_pGraphicDev->GetTransform(D3DTS_VIEW, &matView);
-	D3DXMatrixIdentity(&matBill);
-
-	switch (eAxis)
-	{
-	case ROT_X:
-		matBill._22 = matView._22;
-		matBill._23 = matView._23;
-		matBill._32 = matView._32;
-		matBill._33 = matView._33;
-		break;
-
-	case ROT_Y:
-		matBill._11 = matView._11;
-		matBill._13 = matView._13;
-		matBill._31 = matView._31;
-		matBill._33 = matView._33;
-		break;
-
-	case ROT_Z:
-		matBill._11 = matView._11;
-		matBill._12 = matView._12;
-		matBill._21 = matView._21;
-		matBill._22 = matView._22;
-		break;
-	}
-
-	D3DXMatrixInverse(&matBill, 0, &matBill);
-
-	matWorld = matBill * matWorld;
-
-	m_pTransformCom->m_matWorld = matWorld;
 }
 
 CPlayer* CPlayer::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel)
