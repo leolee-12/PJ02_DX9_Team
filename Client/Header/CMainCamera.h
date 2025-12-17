@@ -16,6 +16,9 @@ private:
 	virtual ~CMainCamera();
 
 public:
+	inline void	Set_TargetTransform(CTransform* pTargetTrans);
+
+public:
 	HRESULT		Ready_GameObject(const _vec3* pEye,
 		const _vec3* pAt,
 		const _vec3* pUp,

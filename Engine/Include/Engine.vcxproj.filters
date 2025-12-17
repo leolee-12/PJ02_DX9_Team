@@ -97,6 +97,12 @@
     <Filter Include="06. MessageChannel\00. StageMessage">
       <UniqueIdentifier>{d946424b-f838-4a68-8e8e-8d1022ff0e3a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="00. Manager\07. LightMgr">
+      <UniqueIdentifier>{ab5773e4-307a-40ed-b262-8403374f70cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00. Manager\07. LightMgr\Light">
+      <UniqueIdentifier>{25e80d9c-7588-47cc-9892-b12489e65da5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\CGraphicDev.cpp">
@@ -179,6 +185,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\CStageMessage.cpp">
       <Filter>06. MessageChannel\00. StageMessage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CLightMgr.cpp">
+      <Filter>00. Manager\07. LightMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CLight.cpp">
+      <Filter>00. Manager\07. LightMgr\Light</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -286,6 +298,12 @@
     </ClInclude>
     <ClInclude Include="..\Header\Engine_MsgChannel.h">
       <Filter>99. Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CLightMgr.h">
+      <Filter>00. Manager\07. LightMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CLight.h">
+      <Filter>00. Manager\07. LightMgr\Light</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

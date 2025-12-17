@@ -24,7 +24,8 @@ CPlayer::CPlayer(const CPlayer& rhs)
 		m_fFrame(0.f),
 		m_fFrameSpeed(0.f),
 		m_fSpeed(rhs.m_fSpeed),
-		m_iAttack(rhs.m_iAttack)
+		m_iAttack(rhs.m_iAttack),
+		m_vPos(rhs.m_vPos)
 {
 	memcpy(m_fFrameEnd, rhs.m_fFrameEnd, sizeof(m_fFrameEnd));
 }
@@ -79,7 +80,10 @@ _int CPlayer::Update_GameObject(const _float& fTimeDelta)
 void CPlayer::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	Key_Input(fTimeDelta);
-	BillBoard(ROT_X);
+	Compute_BillBoard(BBD_X);
+	m_pTransformCom->Get_Info(INFO_POS, &m_vPos);
+	Compute_ViewDepth(&m_vPos);
+
 
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
 }
@@ -221,7 +225,7 @@ void CPlayer::Set_OnTerrain()
 	_matrix matInvTerrainWorld;
 	_vec3   vLocalPos;
 
-	// ÁöÇü ¿ùµåº¯È¯ Ãß°¡·Î ÀÎÇÑ ÇÃ·¹ÀÌ¾î ÁÂÇ¥°è ·ÎÄÃ·Î ²ø¾î³»¸®±â
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½åº¯È¯ ï¿½ß°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½Ç¥ï¿½ï¿½ ï¿½ï¿½ï¿½Ã·ï¿½ ï¿½ï¿½ï¿½î³»ï¿½ï¿½ï¿½ï¿½
 	D3DXMatrixInverse(&matInvTerrainWorld, 0, pTerrainTransformCom->Get_World());
 	D3DXVec3TransformCoord(&vLocalPos, &vPos, &matInvTerrainWorld);
 

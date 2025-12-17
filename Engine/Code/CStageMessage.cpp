@@ -11,7 +11,7 @@ CStageMessage::~CStageMessage()
 }
 
 void CStageMessage::Free()
-{
+{ 
 }
 
 IMessageChannel::SUBHANDLE CStageMessage::Subscribe(const wstring& strEventType, function<void(const EVENT&)> func)

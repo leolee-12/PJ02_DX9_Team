@@ -55,8 +55,8 @@
     <Filter Include="02. GameObject\06. TerrainWall">
       <UniqueIdentifier>{52de0396-bdc9-4e24-8949-59503af9d2c0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\07. MainCamera">
-      <UniqueIdentifier>{83ab4c9a-c628-4d9f-b99d-7d1d8e212d8e}</UniqueIdentifier>
+    <Filter Include="02. GameObject\08. TestEffect">
+      <UniqueIdentifier>{37f31870-dba2-4668-ad76-b1d69d78c68f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -111,8 +111,8 @@
     <ClInclude Include="..\Header\CTerrainWall.h">
       <Filter>02. GameObject\06. TerrainWall</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\CMainCamera.h">
-      <Filter>02. GameObject\07. MainCamera</Filter>
+    <ClInclude Include="..\Header\CTestEffect.h">
+      <Filter>02. GameObject\08. TestEffect</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -158,8 +158,8 @@
     <ClCompile Include="..\Code\CTerrainWall.cpp">
       <Filter>02. GameObject\06. TerrainWall</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\CMainCamera.cpp">
-      <Filter>02. GameObject\07. MainCamera</Filter>
+    <ClCompile Include="..\Code\CTestEffect.cpp">
+      <Filter>02. GameObject\08. TestEffect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

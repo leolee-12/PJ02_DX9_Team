@@ -2,12 +2,14 @@
 
 CGameObject::CGameObject(LPDIRECT3DDEVICE9 pGraphicDev)
     : m_pGraphicDev(pGraphicDev), m_pMessageChannel(nullptr), m_eOBJID(OID_END)
+    , m_fDepth(0.f)
 {
     m_pGraphicDev->AddRef();
 }
 
 CGameObject::CGameObject(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* SceneChannel)
     : m_pGraphicDev(pGraphicDev), m_pMessageChannel(SceneChannel), m_eOBJID(OID_END)
+    , m_fDepth(0.f)
 {
     m_pGraphicDev->AddRef();
     m_pMessageChannel->AddRef();
@@ -15,6 +17,7 @@ CGameObject::CGameObject(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* SceneCh
 
 CGameObject::CGameObject(const CGameObject& rhs)
     : m_pGraphicDev(rhs.m_pGraphicDev), m_pMessageChannel(rhs.m_pMessageChannel), m_eOBJID(rhs.m_eOBJID)
+    , m_fDepth(rhs.m_fDepth)
 {
     m_pGraphicDev->AddRef();
     if (m_pMessageChannel != nullptr) { m_pMessageChannel->AddRef(); }
@@ -58,6 +61,20 @@ void CGameObject::LateUpdate_GameObject(const _float& fTimeDelta)
 
 void CGameObject::Render_GameObject()
 {
+}
+
+void CGameObject::Compute_ViewDepth(const _vec3* pPos)
+{
+    _matrix     matCamWorld;
+    m_pGraphicDev->GetTransform(D3DTS_VIEW, &matCamWorld);
+    D3DXMatrixInverse(&matCamWorld, 0, &matCamWorld);
+
+    _vec3   vCamPos;
+    memcpy(&vCamPos, &matCamWorld.m[3][0], sizeof(_vec3));
+
+    _vec3      vDir = vCamPos - *pPos;
+
+    m_fDepth = D3DXVec3Length(&vDir);
 }
 
 CComponent* CGameObject::Find_Component(COMPONENTID eID, const _tchar* pComponentTag)

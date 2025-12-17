@@ -4,13 +4,21 @@
 #include "CManagement.h"
 #include "CRenderer.h"
 
+CMonster::CMonster(LPDIRECT3DDEVICE9 pGraphicDev)
+	: CGameObject(pGraphicDev)
+{
+	ZeroMemory(&m_vPos, sizeof(_vec3));
+}
+
 CMonster::CMonster(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel)
 	: CGameObject(pGraphicDev, StageChannel)
 {
+	ZeroMemory(&m_vPos, sizeof(_vec3));
 }
 
-CMonster::CMonster(const CGameObject& rhs)
-	: CGameObject(rhs)
+
+CMonster::CMonster(const CMonster& rhs)
+	: CGameObject(rhs), m_vPos(rhs.m_vPos)
 {
 }
 
@@ -45,6 +53,9 @@ _int CMonster::Update_GameObject(const _float& fTimeDelta)
 
 void CMonster::LateUpdate_GameObject(const _float& fTimeDelta)
 {
+	m_pTransformCom->Get_Info(INFO_POS, &m_vPos);
+	Compute_ViewDepth(&m_vPos);
+
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
 
 	/*Engine::CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()->

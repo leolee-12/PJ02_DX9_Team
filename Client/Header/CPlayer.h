@@ -54,6 +54,8 @@ private:
 	_float			m_fSpeed;
 	_int			m_iAttack;
 
+	_vec3					m_vPos;
+
 public:
 	static CPlayer* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel);
 
