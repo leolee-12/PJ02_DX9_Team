@@ -3,8 +3,6 @@
 
 namespace Engine
 {
-	// ¿ø·¡´Â 800 600
-
 	#define	WINCX		800
 	#define	WINCY		600
 
