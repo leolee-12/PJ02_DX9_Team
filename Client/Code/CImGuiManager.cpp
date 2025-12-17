@@ -26,15 +26,15 @@ CImGuiManager::~CImGuiManager()
 
 void CImGuiManager::ImGui_Setup(HWND hWnd, LPDIRECT3DDEVICE9 pDevice)
 {
-    m_pGraphicDev = pDevice;
-    m_pGraphicDev->AddRef();
+    //m_pGraphicDev = pDevice;
+    //m_pGraphicDev->AddRef();
 
-    //// Initialize Direct3D
-    //if (!CreateDeviceD3D(g_hWnd))
-    //{
-    //    CleanupDeviceD3D();
-    //    ::UnregisterClassW(wc.lpszClassName, wc.hInstance);
-    //}
+    // Initialize Direct3D
+    if (!CreateDeviceD3D(g_hWnd))
+    {
+        CleanupDeviceD3D();
+        ::UnregisterClassW(wc.lpszClassName, wc.hInstance);
+    }
 
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
@@ -61,32 +61,27 @@ void CImGuiManager::ImGui_Tick()
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
 
 
-    //// Handle lost D3D9 device
-    //if (g_DeviceLost)
-    //{
-    //    HRESULT hr = m_pGraphicDev->TestCooperativeLevel();
-    //    if (hr == D3DERR_DEVICELOST)
-    //    {
-    //        ::Sleep(10);
-    //        return;
-    //    }
-    //    if (hr == D3DERR_DEVICENOTRESET)
-    //        ResetDevice();
-    //    g_DeviceLost = false;
-    //}
+    // Handle lost D3D9 device
+    if (g_DeviceLost)
+    {
+        HRESULT hr = m_pGraphicDev->TestCooperativeLevel();
+        if (hr == D3DERR_DEVICELOST)
+        {
+            ::Sleep(10);
+            return;
+        }
+        if (hr == D3DERR_DEVICENOTRESET)
+            ResetDevice();
+        g_DeviceLost = false;
+    }
 
     // Handle window resize (we don't resize directly in the WM_SIZE handler)
     if (g_ResizeWidth != 0 && g_ResizeHeight != 0)
     {
-        //g_d3dpp.BackBufferWidth = g_ResizeWidth;
-        //g_d3dpp.BackBufferHeight = g_ResizeHeight;
-        //g_ResizeWidth = g_ResizeHeight = 0;
-        //ResetDevice();
-        // 
         g_d3dpp.BackBufferWidth = g_ResizeWidth;
         g_d3dpp.BackBufferHeight = g_ResizeHeight;
         g_ResizeWidth = g_ResizeHeight = 0;
-        //ResetDevice();
+        ResetDevice();
     }
 
     // Start the Dear ImGui frame
@@ -154,7 +149,7 @@ void CImGuiManager::ImGui_Render()
 
 void CImGuiManager::ImGui_Shutdown()
 {
-    Free();
+   // Free();
 
     ImGui_ImplDX9_Shutdown();
     ImGui_ImplWin32_Shutdown();
