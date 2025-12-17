@@ -5,7 +5,8 @@ namespace Engine
 {
 	class CRcTex;
 	class CTransform;
-	class CTexture;
+	//class CTexture;
+	class CTextureSet;
 	class CCalculator;
 }
 
@@ -34,20 +35,22 @@ private:
 
 	void			Check_Frame();
 	void			Move_Frame(const _float& fTimeDelta);
+	void			Set_TextureSet();
 
 private:
 	Engine::CRcTex* m_pBufferCom;
 	Engine::CTransform* m_pTransformCom;
-	Engine::CTexture* m_pTextureCom;
+	Engine::CTextureSet* m_pTextureCom;
 	Engine::CCalculator* m_pCalculatorCom;
 
 	// 스프라이트 관련
 	PLAYERSTATE		m_ePreState;
 	PLAYERSTATE		m_eCurState;
 	_float			m_fFrame;
+	_float			m_fFrameEnd;
 	_float			m_fFrameSpeed;
-	_float			m_fFrameEnd[PS_END];
 	_vec3			m_vNormDir[DIR_END];
+	_vec3			m_vDir;
 
 	// 캐릭터 스테이터스 관련
 	_float			m_fSpeed;

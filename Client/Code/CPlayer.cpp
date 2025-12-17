@@ -10,11 +10,11 @@ CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel)
 		m_ePreState(PS_END),
 		m_eCurState(PS_IDLE),
 		m_fFrame(0.f),
+		m_fFrameEnd(0.f),
 		m_fFrameSpeed(0.f),
 		m_fSpeed(0.f),
 		m_iAttack(0)
 {
-	ZeroMemory(m_fFrameEnd, sizeof(m_fFrameEnd));
 }
 
 CPlayer::CPlayer(const CPlayer& rhs)
@@ -22,12 +22,12 @@ CPlayer::CPlayer(const CPlayer& rhs)
 		m_ePreState(PS_END),
 		m_eCurState(PS_IDLE),
 		m_fFrame(0.f),
+		m_fFrameEnd(0.f),
 		m_fFrameSpeed(0.f),
 		m_fSpeed(rhs.m_fSpeed),
 		m_iAttack(rhs.m_iAttack),
 		m_vPos(rhs.m_vPos)
 {
-	memcpy(m_fFrameEnd, rhs.m_fFrameEnd, sizeof(m_fFrameEnd));
 }
 
 CPlayer::~CPlayer()
@@ -93,8 +93,29 @@ void CPlayer::Render_GameObject()
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
 
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
-		
-	m_pTextureCom->Set_Texture(_uint(m_fFrame));
+
+	//if (m_vDir == m_vNormDir[DIR_RU] || m_vDir == m_vNormDir[DIR_RIGHT] || m_vDir == m_vNormDir[DIR_RD])
+	//{
+	//	// 8방향 모두 스프라이트 이미지는 비효율적 -> 좌우반전해서 사용
+	//
+	//	_matrix matScale, matTrans, matFilp;
+	//	D3DXMatrixScaling(&matScale, -1.f, 1.f, 1.f);
+	//	// 1. 텍스처의 u좌표의 부호를 반대로
+	//	// (u,v) : (0.f, 1.f)	-> (0.f, 1.f)	|	(u,v) : (1.f, 1.f)	-> (-1.f, 1.f)
+	//	// (u,v) : (0.f, 0.f)	-> (0.f, 0.f)	|	(u,v) : (1.f, 0.f)	-> (-1.f, 0.f)
+	//
+	//	D3DXMatrixScaling(&matScale, -1.f, 0.f, 0.f);
+	//	// 2. 텍스처의 u축으로 1만큼 이동
+	//	// (u,v) : (0.f, 1.f)	-> (1.f, 1.f)	|	(u,v) : (-1.f, 1.f)	-> (0.f, 1.f)
+	//	// (u,v) : (0.f, 0.f)	-> (1.f, 0.f)	|	(u,v) : (-1.f, 0.f)	-> (0.f, 0.f)
+	//
+	//	matFilp = matScale * matTrans;
+	//
+	//	m_pGraphicDev->SetTransform(D3DTS_TEXTURE0, &matFilp);
+	//}
+
+
+	Set_TextureSet();
 	
 	m_pBufferCom->Render_Buffer();
 
@@ -124,13 +145,16 @@ HRESULT CPlayer::Add_Component()
 	m_mapComponent[ID_DYNAMIC].insert({ L"Com_Transform", pComponent });
 
 	// Texture
-	pComponent = m_pTextureCom = dynamic_cast<Engine::CTexture*>
+	//pComponent = m_pTextureCom = dynamic_cast<Engine::CTexture*>
+	//	(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_PlayerTexture"));
+
+	pComponent = m_pTextureCom = dynamic_cast<Engine::CTextureSet*>
 		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_PlayerTexture"));
 
 	if (nullptr == pComponent)
 		return E_FAIL;
 
-	m_mapComponent[ID_STATIC].insert({ L"Com_Texture", pComponent });
+	m_mapComponent[ID_STATIC].insert({ L"Com_TextureSet", pComponent });
 
 	// Calculator
 	pComponent = m_pCalculatorCom = dynamic_cast<Engine::CCalculator*>
@@ -147,40 +171,44 @@ HRESULT CPlayer::Add_Component()
 
 void CPlayer::Key_Input(const _float& fTimeDelta)
 {
-	_vec3	vDir;
-
 	if (GetAsyncKeyState('W'))
 	{
-		if (GetAsyncKeyState('A')) vDir = m_vNormDir[DIR_LU];
+		m_eCurState = PS_RUN;
 
-		else if (GetAsyncKeyState('D')) vDir = m_vNormDir[DIR_RU];
+		if (GetAsyncKeyState('A')) m_vDir = m_vNormDir[DIR_LU];
 
-		else vDir = m_vNormDir[DIR_UP];
+		else if (GetAsyncKeyState('D')) m_vDir = m_vNormDir[DIR_RU];
 
-		m_pTransformCom->Move_Pos(&vDir, fTimeDelta, m_fSpeed);
+		else m_vDir = m_vNormDir[DIR_UP];
+
+		m_pTransformCom->Move_Pos(&m_vDir, fTimeDelta, m_fSpeed);
 	}
 
 	else if (GetAsyncKeyState('S'))
 	{
-		if (GetAsyncKeyState('A')) vDir = m_vNormDir[DIR_LD];
+		m_eCurState = PS_RUN;
 
-		else if (GetAsyncKeyState('D')) vDir = m_vNormDir[DIR_RD];
+		if (GetAsyncKeyState('A')) m_vDir = m_vNormDir[DIR_LD];
 
-		else vDir = m_vNormDir[DIR_DOWN];
+		else if (GetAsyncKeyState('D')) m_vDir = m_vNormDir[DIR_RD];
 
-		m_pTransformCom->Move_Pos(&vDir, fTimeDelta, m_fSpeed);
+		else m_vDir = m_vNormDir[DIR_DOWN];
+
+		m_pTransformCom->Move_Pos(&m_vDir, fTimeDelta, m_fSpeed);
 	}
 
 	else if (GetAsyncKeyState('A'))
 	{
-		vDir = m_vNormDir[DIR_LEFT];
-		m_pTransformCom->Move_Pos(&vDir, fTimeDelta, m_fSpeed);
+		m_eCurState = PS_RUN;
+		m_vDir = m_vNormDir[DIR_LEFT];
+		m_pTransformCom->Move_Pos(&m_vDir, fTimeDelta, m_fSpeed);
 	}
 
 	else if (GetAsyncKeyState('D'))
 	{
-		vDir = m_vNormDir[DIR_RIGHT];
-		m_pTransformCom->Move_Pos(&vDir, fTimeDelta, m_fSpeed);
+		m_eCurState = PS_RUN;
+		m_vDir = m_vNormDir[DIR_RIGHT];
+		m_pTransformCom->Move_Pos(&m_vDir, fTimeDelta, m_fSpeed);
 	}
 
 	else
@@ -221,7 +249,6 @@ void CPlayer::Set_OnTerrain()
 	if (nullptr == pTerrainTransformCom)
 		return;
 
-
 	_matrix matInvTerrainWorld;
 	_vec3   vLocalPos;
 
@@ -257,14 +284,8 @@ void CPlayer::Check_Frame()
 
 	m_fFrame = 0.f;
 
-	switch (m_eCurState)
-	{
-	case PS_IDLE:
-	{
-		m_fFrameEnd[PS_IDLE] = 180;
-	}
-	break;
-	}
+	if (m_eCurState == PS_IDLE) m_fFrameEnd = _float(m_pTextureCom->Get_TextureEnd(L"idle"));
+	else if (m_eCurState == PS_RUN) m_fFrameEnd = _float(m_pTextureCom->Get_TextureEnd(L"run-up"));
 
 	m_ePreState = m_eCurState;
 }
@@ -273,8 +294,33 @@ void CPlayer::Move_Frame(const _float& fTimeDelta)
 {
 	m_fFrame += m_fFrameSpeed * fTimeDelta;
 
-	if (m_fFrame > m_fFrameEnd[m_eCurState])
+	if (m_fFrame > m_fFrameEnd)
 		m_fFrame = 0.f;
+}
+
+void CPlayer::Set_TextureSet()
+{
+	wstring strTemp = L"";
+
+	switch (m_eCurState)
+	{
+	case PS_IDLE:
+		strTemp = L"idle";
+		break;
+
+	case PS_RUN:
+	{
+		if (m_vDir == m_vNormDir[DIR_UP]) strTemp = L"run-up";
+		else if (m_vDir == m_vNormDir[DIR_DOWN]) strTemp = L"run-down";
+		else if (m_vDir == m_vNormDir[DIR_LU] || m_vDir == m_vNormDir[DIR_RU]) strTemp = L"run-diagonal";
+		else if (m_vDir == m_vNormDir[DIR_LD] || m_vDir == m_vNormDir[DIR_RD]) strTemp = L"run-diagonal";
+		else if (m_vDir == m_vNormDir[DIR_LEFT] || m_vDir == m_vNormDir[DIR_RIGHT]) strTemp = L"run-horizontal";
+	}
+	break;
+	}
+
+	m_pTextureCom->Set_Texture(strTemp, _uint(m_fFrame));
+
 }
 
 CPlayer* CPlayer::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel)

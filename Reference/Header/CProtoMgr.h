@@ -8,6 +8,7 @@
 
 #include "CTransform.h"
 #include "CTexture.h"
+#include "CTextureSet.h"
 #include "CCalculator.h"
 #include "CTerrainWallTex.h"
 
