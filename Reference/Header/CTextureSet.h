@@ -26,8 +26,8 @@ private:
 	virtual ~CTextureSet();
 
 public:
-	virtual HRESULT Ready_Texture(TEXTUREID eID, vector<TEXINFO>& vecTexInfo);
-	HRESULT			Add_Texture(TEXTUREID eID, TEXINFO tTexInfo);
+	virtual HRESULT Ready_Texture(TEXTUREID eID, const vector<TEXINFO>& vecTexInfo);
+	HRESULT			Add_Texture(TEXTUREID eID, const TEXINFO& tTexInfo);
 	void			Set_Texture(wstring strState, const _uint& iIndex = 0);
 
 	_uint			Get_TextureEnd(wstring strState);

@@ -16,7 +16,7 @@
 #include "CMainApp.h"
 
 #define MAX_LOADSTRING 100
-#define IMGUI
+//#define IMGUI
 
 // 전역 변수:
 HINSTANCE g_hInst;                                // 현재 인스턴스입니다.

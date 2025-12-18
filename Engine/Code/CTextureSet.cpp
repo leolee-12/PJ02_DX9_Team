@@ -26,16 +26,14 @@ CTextureSet::CTextureSet(const CTextureSet& rhs)
 			iter->second[j]->AddRef();
 		}
 	}
-
 }
 
 CTextureSet::~CTextureSet()
 {
 }
 
-HRESULT CTextureSet::Ready_Texture(TEXTUREID eID, vector<TEXINFO>& vecTexInfo)
+HRESULT CTextureSet::Ready_Texture(TEXTUREID eID, const vector<TEXINFO>& vecTexInfo)
 {
-
 	_uint iTexNum = vecTexInfo.size();
 
 	for (_uint i = 0; i < iTexNum; ++i)
@@ -47,14 +45,17 @@ HRESULT CTextureSet::Ready_Texture(TEXTUREID eID, vector<TEXINFO>& vecTexInfo)
 	return S_OK;
 }
 
-HRESULT CTextureSet::Add_Texture(TEXTUREID eID, TEXINFO tTexInfo)
+HRESULT CTextureSet::Add_Texture(TEXTUREID eID, const TEXINFO& tTexInfo)
 {
-	if (m_mapTexture.find(tTexInfo.strState) != m_mapTexture.end())
+	auto iter = m_mapTexture.find(tTexInfo.strState);
+
+	if (iter != m_mapTexture.end())
 		return E_FAIL;
 
-	vector<IDirect3DBaseTexture9*> tempVec;
+	// 맵 범위 밖을 접근하면 런타임 에러, 먼저 요소 추가해준 뒤 접근
+	iter = m_mapTexture.emplace(tTexInfo.strState, vector<IDirect3DBaseTexture9*>()).first;
 
-	tempVec.reserve(tTexInfo.iCnt);
+	iter->second.reserve(tTexInfo.iCnt);
 
 	IDirect3DBaseTexture9* pTexture = nullptr;
 
@@ -81,31 +82,33 @@ HRESULT CTextureSet::Add_Texture(TEXTUREID eID, TEXINFO tTexInfo)
 			break;
 		}
 
-		tempVec.push_back(pTexture);
+		iter->second.push_back(pTexture);
 	}
-
-	m_mapTexture.emplace(tTexInfo.strState, tempVec);
 
 	return S_OK;
 }
 
 void CTextureSet::Set_Texture(wstring strState, const _uint& iIndex)
 {
-	if (m_mapTexture.find(strState) == m_mapTexture.end())
+	auto iter = m_mapTexture.find(strState);
+
+	if (iter == m_mapTexture.end())
 		return;
 
-	if (m_mapTexture[strState].size() <= iIndex)
+	if (iter->second.size() <= iIndex)
 		return;
 
-	m_pGraphicDev->SetTexture(0, m_mapTexture[strState][iIndex]);
+	m_pGraphicDev->SetTexture(0, iter->second[iIndex]);
 }
 
 _uint CTextureSet::Get_TextureEnd(wstring strState)
 {
-	if (m_mapTexture.find(strState) == m_mapTexture.end())
+	auto iter = m_mapTexture.find(strState);
+
+	if (iter == m_mapTexture.end())
 		return 0;
 
-	return m_mapTexture[strState].size();
+	return iter->second.size();
 }
 
 CTextureSet* CTextureSet::Create(LPDIRECT3DDEVICE9 pGraphicDev, TEXTUREID eID, vector<TEXINFO>& vecTexInfo)
