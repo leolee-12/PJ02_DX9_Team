@@ -10,6 +10,12 @@
 #include "ImGui_Define.h"
 #include "Engine_Macro.h"
 
+ /* -------------------------------------------
+    CImGuiManager
+ 
+    ImGui을 이식한 맵툴 매니저입니다.
+ -------------------------------------------- */
+
 class CImGuiManager
 {
 public:

@@ -48,8 +48,9 @@ void CImGuiManager::ImGui_Setup(HWND hWnd, LPDIRECT3DDEVICE9 pDevice)
     ImGui_ImplWin32_Init(g_hWnd);
     ImGui_ImplDX9_Init(m_pGraphicDev);
 
+    // 폰트설정
     ImGuiIO& io = ImGui::GetIO();
-    io.Fonts->AddFontFromFileTTF("../Font/arial.ttf", 16.0f);
+    io.Fonts->AddFontFromFileTTF("../Font/arial.ttf", 30.0f);
 
     char buf[128];
     sprintf_s(buf, "ImGui Manager Init HWND = %p\n", g_hWnd);
