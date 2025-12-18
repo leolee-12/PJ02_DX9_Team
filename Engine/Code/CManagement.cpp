@@ -12,12 +12,12 @@ CManagement::~CManagement()
     Free();
 }
 
-CComponent* CManagement::Get_Component(COMPONENTID eID, const _tchar* pLayerTag, const _tchar* pObjTag, const _tchar* pComponentTag)
+CComponent* CManagement::Get_Component(COMPONENTID eID, const wstring& strLayerTag, const wstring& strObjTag, const wstring& strComponentTag)
 {
     if (nullptr == m_pScene)
         return nullptr;
 
-    return m_pScene->Get_Component(eID, pLayerTag, pObjTag, pComponentTag);
+    return m_pScene->Get_Component(eID, strLayerTag, strObjTag, strComponentTag);
 }
 
 HRESULT CManagement::Set_Scene(CScene* pScene)

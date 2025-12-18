@@ -12,8 +12,8 @@ private:
 	virtual ~CLayer();
 
 public:
-	CComponent*		Get_Component(COMPONENTID eID, const _tchar* pObjTag, const _tchar* pComponentTag);
-	HRESULT			Add_GameObject(const _tchar* pObjTag, CGameObject* pGameObject);
+	CComponent*		Get_Component(COMPONENTID eID, const wstring& strObjTag, const wstring& strComponentTag);
+	HRESULT			Add_GameObject(const wstring& strObjTag, CGameObject* pGameObject);
 
 public:
 	HRESULT			Ready_Layer();
@@ -21,7 +21,7 @@ public:
 	void			LateUpdate_Layer(const _float& fTimeDelta);
 
 private:
-	map<const _tchar*, vector<CGameObject*>>			m_mapObject;
+	map<wstring, vector<CGameObject*>>			m_mapObject;
 
 public:
 	static CLayer* Create();

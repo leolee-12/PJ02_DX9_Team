@@ -14,9 +14,9 @@ protected:
 
 public:
 	CComponent* Get_Component(COMPONENTID eID,
-		const _tchar* pLayerTag,
-		const _tchar* pObjTag,
-		const _tchar* pComponentTag);
+		const wstring& strLayerTag,
+		const wstring& strObjTag,
+		const wstring& strComponentTag);
 
 public:
 	virtual			HRESULT		Ready_Scene();
@@ -25,7 +25,7 @@ public:
 	virtual			void		Render_Scene()PURE;
 
 protected:
-	map<const _tchar*, CLayer*>			m_mapLayer;
+	map<wstring, CLayer*>				m_mapLayer;
 	LPDIRECT3DDEVICE9					m_pGraphicDev;
 
 protected:
