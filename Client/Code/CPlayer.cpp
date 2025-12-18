@@ -13,7 +13,9 @@ CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel)
 		m_fFrameEnd(0.f),
 		m_fFrameSpeed(0.f),
 		m_fSpeed(0.f),
-		m_iAttack(0)
+		m_iAttack(0),
+		m_bRoll(false),
+		m_iCombo(0)
 {
 }
 
@@ -26,6 +28,8 @@ CPlayer::CPlayer(const CPlayer& rhs)
 		m_fFrameSpeed(0.f),
 		m_fSpeed(rhs.m_fSpeed),
 		m_iAttack(rhs.m_iAttack),
+		m_bRoll(false),
+		m_iCombo(0),
 		m_vPos(rhs.m_vPos)
 {
 }
@@ -233,7 +237,22 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 		m_pTransformCom->Move_Pos(&m_vDir, fTimeDelta, m_fSpeed);
 	}
 
-	else
+	else if (GetAsyncKeyState(VK_SPACE))
+	{
+		if ((m_bRoll) || (m_iCombo)) return;
+
+		m_eCurState = PS_ROLL;
+		m_pTransformCom->Move_Pos(&m_vDir, fTimeDelta, m_fSpeed + 10.f);
+	}
+
+	else if (GetAsyncKeyState(VK_LBUTTON))
+	{
+		if ((m_bRoll) || (m_iCombo == 3)) return;
+
+		m_eCurState = PS_ATTACK;
+	}
+
+	else if (!m_bRoll && !m_iCombo)
 	{
 		m_eCurState = PS_IDLE;
 	}
@@ -308,6 +327,18 @@ void CPlayer::Check_Frame()
 
 	if (m_eCurState == PS_IDLE) m_fFrameEnd = _float(m_pTextureCom->Get_TextureEnd(L"idle"));
 	else if (m_eCurState == PS_RUN) m_fFrameEnd = _float(m_pTextureCom->Get_TextureEnd(L"run-up"));
+	else if (m_eCurState == PS_ROLL)
+	{
+		if		(m_vDir.z > 0)	m_fFrameEnd = _float(m_pTextureCom->Get_TextureEnd(L"run-up"));
+		else if (m_vDir.z < 0)	m_fFrameEnd = _float(m_pTextureCom->Get_TextureEnd(L"run-down"));
+		else if (m_vDir.z == 0)	m_fFrameEnd = _float(m_pTextureCom->Get_TextureEnd(L"run-horizontal"));
+	}
+	else if (m_eCurState == PS_ATTACK)
+	{
+		if		(m_iCombo == 1)	m_fFrameEnd = _float(m_pTextureCom->Get_TextureEnd(L"attack-combo1"));
+		else if (m_iCombo == 2)	m_fFrameEnd = _float(m_pTextureCom->Get_TextureEnd(L"attack-combo2"));
+		else if	(m_iCombo == 3)	m_fFrameEnd = _float(m_pTextureCom->Get_TextureEnd(L"attack-combo3"));
+	}
 
 	m_ePreState = m_eCurState;
 }
@@ -317,7 +348,21 @@ void CPlayer::Move_Frame(const _float& fTimeDelta)
 	m_fFrame += m_fFrameSpeed * fTimeDelta;
 
 	if (m_fFrame > m_fFrameEnd)
+	{
 		m_fFrame = 0.f;
+		
+		// 구르기 및 공격은 프레임이 끝날 때까지 유지되었다가 종료
+		if (m_eCurState == PS_ROLL)
+		{
+			m_bRoll = false;
+			m_eCurState == PS_IDLE;
+		}
+		else if (m_eCurState == PS_ATTACK)
+		{
+			m_iCombo = 0;
+			m_eCurState == PS_IDLE;
+		}
+	}
 }
 
 void CPlayer::Set_TextureSet()
@@ -332,11 +377,11 @@ void CPlayer::Set_TextureSet()
 
 	case PS_RUN:
 	{
-		if (m_vDir == m_vNormDir[DIR_UP]) strTemp = L"run-up";
-		else if (m_vDir == m_vNormDir[DIR_DOWN]) strTemp = L"run-down";
-		else if (m_vDir == m_vNormDir[DIR_LU] || m_vDir == m_vNormDir[DIR_RU]) strTemp = L"run-diagonal";
-		else if (m_vDir == m_vNormDir[DIR_LD] || m_vDir == m_vNormDir[DIR_RD]) strTemp = L"run-diagonal";
-		else strTemp = L"run-horizontal";
+		if		(m_vDir == m_vNormDir[DIR_UP])										strTemp = L"run-up";
+		else if (m_vDir == m_vNormDir[DIR_DOWN])									strTemp = L"run-down";
+		else if (m_vDir == m_vNormDir[DIR_LU] || m_vDir == m_vNormDir[DIR_RU])		strTemp = L"run-diagonal";
+		else if (m_vDir == m_vNormDir[DIR_LD] || m_vDir == m_vNormDir[DIR_RD])		strTemp = L"run-diagonal";
+		else if (m_vDir == m_vNormDir[DIR_LEFT] || m_vDir == m_vNormDir[DIR_RIGHT])	strTemp = L"run-horizontal";
 	}
 	break;
 	}
@@ -362,7 +407,7 @@ CPlayer* CPlayer::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageCh
 
 void CPlayer::Free()
 {
-	Safe_Release(m_pBufferCom);
+	//Safe_Release(m_pBufferCom);
 	
 	CGameObject::Free();
 }

@@ -57,12 +57,18 @@ _uint CLoading::Loading_ForStage()
     //if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_PlayerTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Player/idle/idle_%04d.png", 180))))
     //    return E_FAIL;
 
-    vector<CTextureSet::TEXINFO> tempVec(5);
-    tempVec[0] = CTextureSet::TEXINFO(L"idle", L"../Bin/Resource/Texture/Player/idle/idle_%04d.png", 180);
-    tempVec[1] = CTextureSet::TEXINFO(L"run-up", L"../Bin/Resource/Texture/Player/run-up/run-up_%04d.png", 22);
-    tempVec[2] = CTextureSet::TEXINFO(L"run-down", L"../Bin/Resource/Texture/Player/run-down/run-down_%04d.png", 22);
-    tempVec[3] = CTextureSet::TEXINFO(L"run-diagonal", L"../Bin/Resource/Texture/Player/run-diagonal/run_%04d.png", 22);
-    tempVec[4] = CTextureSet::TEXINFO(L"run-horizontal", L"../Bin/Resource/Texture/Player/run-horizontal/run-horizontal_%04d.png", 22);
+    vector<CTextureSet::TEXINFO> tempVec(11);
+    tempVec[0]  = CTextureSet::TEXINFO(L"idle", L"../Bin/Resource/Texture/Player/idle/idle_%04d.png", 180);
+    tempVec[1]  = CTextureSet::TEXINFO(L"run-up", L"../Bin/Resource/Texture/Player/run-up/run-up_%04d.png", 22);
+    tempVec[2]  = CTextureSet::TEXINFO(L"run-down", L"../Bin/Resource/Texture/Player/run-down/run-down_%04d.png", 22);
+    tempVec[3]  = CTextureSet::TEXINFO(L"run-diagonal", L"../Bin/Resource/Texture/Player/run-diagonal/run_%04d.png", 22);
+    tempVec[4]  = CTextureSet::TEXINFO(L"run-horizontal", L"../Bin/Resource/Texture/Player/run-horizontal/run-horizontal_%04d.png", 22);
+    tempVec[5]  = CTextureSet::TEXINFO(L"roll-up", L"../Bin/Resource/Texture/Player/roll-up/roll-up_%04d.png", 18);
+    tempVec[6]  = CTextureSet::TEXINFO(L"roll-down", L"../Bin/Resource/Texture/Player/roll-down/roll-down_%04d.png", 18);
+    tempVec[7]  = CTextureSet::TEXINFO(L"roll-horizontal", L"../Bin/Resource/Texture/Player/roll-horizontal/roll_%04d.png", 22);
+    tempVec[8]  = CTextureSet::TEXINFO(L"attack-combo1", L"../Bin/Resource/Texture/Player/attack-combo1/attack-combo1_%04d.png", 36);
+    tempVec[9]  = CTextureSet::TEXINFO(L"attack-combo2", L"../Bin/Resource/Texture/Player/attack-combo2/attack-combo1_%04d.png", 36);
+    tempVec[10] = CTextureSet::TEXINFO(L"attack-combo3", L"../Bin/Resource/Texture/Player/attack-combo3/attack-combo1_%04d.png", 36);
     
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_PlayerTexture", Engine::CTextureSet::Create(m_pGraphicDev, TEX_NORMAL, tempVec))))
         return E_FAIL;
