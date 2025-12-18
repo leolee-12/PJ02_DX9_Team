@@ -14,7 +14,7 @@ protected:
 	virtual ~CGameObject();
 
 public:
-	CComponent* Get_Component(COMPONENTID eID, const _tchar* pComponentTag);
+	CComponent* Get_Component(COMPONENTID eID, const wstring& strComponentTag);
 	OBJID		Get_OBJID() { return m_eOBJID; }
 	_float		Get_Depth() { return m_fDepth; }
 
@@ -27,14 +27,14 @@ public:
 	void			Compute_ViewDepth(const _vec3* pPos);
 
 protected:
-	map<const _tchar*, CComponent*>			m_mapComponent[ID_END];
+	map<wstring, CComponent*>				m_mapComponent[ID_END];
 	LPDIRECT3DDEVICE9						m_pGraphicDev;
 	
 	_float									m_fDepth;
 
 
 private:
-	CComponent* Find_Component(COMPONENTID eID, const _tchar* pComponentTag);
+	CComponent* Find_Component(COMPONENTID eID, const wstring& strComponentTag);
 
 protected:
 	virtual		void		Free();
