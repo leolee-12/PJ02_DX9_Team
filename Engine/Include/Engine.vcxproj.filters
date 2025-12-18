@@ -192,6 +192,9 @@
     <ClCompile Include="..\Code\CLight.cpp">
       <Filter>00. Manager\07. LightMgr\Light</Filter>
     </ClCompile>
+    <ClCompile Include="..\Code\CTextureSet.cpp">
+      <Filter>05. ComponentEx\02. Texture</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Header\CGraphicDev.h">
@@ -304,6 +307,9 @@
     </ClInclude>
     <ClInclude Include="..\Header\CLight.h">
       <Filter>00. Manager\07. LightMgr\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CTextureSet.h">
+      <Filter>05. ComponentEx\02. Texture</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

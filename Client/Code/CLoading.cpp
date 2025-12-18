@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "CLoading.h"
 #include "CProtoMgr.h"
+#include "CPlayer.h"
 
 CLoading::CLoading(LPDIRECT3DDEVICE9 pGraphicDev)
     : m_pGraphicDev(pGraphicDev), m_bFinish(false), m_eLoading(LOADING_END)
@@ -53,7 +54,17 @@ _uint CLoading::Loading_ForStage()
         
     lstrcpy(m_szLoading, L"Texture Loading..............................");
 
-    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_PlayerTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Player/idle/idle_%04d.png", 180))))
+    //if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_PlayerTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Player/idle/idle_%04d.png", 180))))
+    //    return E_FAIL;
+
+    vector<CTextureSet::TEXINFO> tempVec(5);
+    tempVec[0] = CTextureSet::TEXINFO(L"idle", L"../Bin/Resource/Texture/Player/idle/idle_%04d.png", 180);
+    tempVec[1] = CTextureSet::TEXINFO(L"run-up", L"../Bin/Resource/Texture/Player/run-up/run-up_%04d.png", 22);
+    tempVec[2] = CTextureSet::TEXINFO(L"run-down", L"../Bin/Resource/Texture/Player/run-down/run-down_%04d.png", 22);
+    tempVec[3] = CTextureSet::TEXINFO(L"run-diagonal", L"../Bin/Resource/Texture/Player/run-diagonal/run_%04d.png", 22);
+    tempVec[4] = CTextureSet::TEXINFO(L"run-horizontal", L"../Bin/Resource/Texture/Player/run-horizontal/run-horizontal_%04d.png", 22);
+    
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_PlayerTexture", Engine::CTextureSet::Create(m_pGraphicDev, TEX_NORMAL, tempVec))))
         return E_FAIL;
 
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_MonsterTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster0.png", 1))))
