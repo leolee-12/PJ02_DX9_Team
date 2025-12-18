@@ -7,6 +7,9 @@
 #include "CDInputMgr.h"
 #include "CFontMgr.h"
 #include "CLightMgr.h"
+#include "CImGuiManager.h"
+#include "ImGui_Define.h"
+
 
 CMainApp::CMainApp() : m_pDeviceClass(nullptr), m_pGraphicDev(nullptr)
 , m_pManagementClass(CManagement::GetInstance())
@@ -24,17 +27,30 @@ HRESULT CMainApp::Ready_MainApp()
 	if (FAILED(Ready_DefaultSetting(&m_pGraphicDev)))
 		return E_FAIL;
 
+#ifdef IMGUI
+	// CImGuiï¿½ß°ï¿½ ï¿½Úµï¿½
+	CImGuiManager::GetInstance()->ImGui_Setup(g_hWnd, m_pGraphicDev);
+#else
+
 	if (FAILED(Ready_Scene(m_pGraphicDev)))
 		return E_FAIL;
+
+#endif // IMGUI
 
 	return S_OK;
 }
 
 int CMainApp::Update_MainApp(const float& fTimeDelta)
 {
+
+#ifdef IMGUI
+	CImGuiManager::GetInstance()->ImGui_Tick();
+#else
 	CDInputMgr::GetInstance()->Update_InputDev();
 
 	m_pManagementClass->Update_Scene(fTimeDelta);
+#endif // IMGUI
+
 
 	// _ulong dwDst = 0;
 
@@ -48,16 +64,30 @@ int CMainApp::Update_MainApp(const float& fTimeDelta)
 
 void CMainApp::LateUpdate_MainApp(const float& fTimeDelta)
 {
+#ifdef IMGUI
+
+#else
 	m_pManagementClass->LateUpdate_Scene(fTimeDelta);
+#endif // IMGUI
+
 }
 
 void CMainApp::Render_MainApp()
 {
+
+
+#ifdef IMGUI
+	CImGuiManager::GetInstance()->ImGui_Render();
+
+#else
 	m_pDeviceClass->Render_Begin(D3DXCOLOR(0.f, 0.f, 1.f, 1.f));
 
 	m_pManagementClass->Render_Scene(m_pGraphicDev);
 
 	m_pDeviceClass->Render_End();
+#endif // IMGUI
+
+
 }
 
 HRESULT CMainApp::Ready_DefaultSetting(LPDIRECT3DDEVICE9* ppGraphicDev)
@@ -86,12 +116,12 @@ HRESULT CMainApp::Ready_DefaultSetting(LPDIRECT3DDEVICE9* ppGraphicDev)
 	(*ppGraphicDev)->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
 	(*ppGraphicDev)->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
 
-	// ÆùÆ® Ãß°¡
+	// ï¿½ï¿½Æ® ï¿½ß°ï¿½
 
-	if (FAILED(CFontMgr::GetInstance()->Ready_Font((*ppGraphicDev), L"Font_Default", L"°ß¸íÁ¶", 20, 20, FW_HEAVY)))
+	if (FAILED(CFontMgr::GetInstance()->Ready_Font((*ppGraphicDev), L"Font_Default", L"ï¿½ß¸ï¿½ï¿½ï¿½", 20, 20, FW_HEAVY)))
 		return E_FAIL;
 
-	if (FAILED(CFontMgr::GetInstance()->Ready_Font((*ppGraphicDev), L"Font_Jinji", L"±Ã¼­", 20, 15, FW_THIN)))
+	if (FAILED(CFontMgr::GetInstance()->Ready_Font((*ppGraphicDev), L"Font_Jinji", L"ï¿½Ã¼ï¿½", 20, 15, FW_THIN)))
 		return E_FAIL;
 
 	return S_OK;
@@ -116,6 +146,12 @@ HRESULT CMainApp::Ready_Scene(LPDIRECT3DDEVICE9 pGraphicDev)
 
 CMainApp* CMainApp::Create()
 {
+#ifdef IMGUI
+
+#else
+
+#endif // IMGUI
+
 	CMainApp* pMainApp = new CMainApp;
 
 	if (FAILED(pMainApp->Ready_MainApp()))
@@ -124,6 +160,7 @@ CMainApp* CMainApp::Create()
 		MSG_BOX("MainApp Create Failed");
 		return nullptr;
 	}
+
 
 	return pMainApp;
 }
@@ -141,5 +178,9 @@ void CMainApp::Free()
 	CFrameMgr::DestroyInstance();
 	CTimerMgr::DestroyInstance();
 	CManagement::DestroyInstance();
+#ifdef IMGUI
+	CImGuiManager::GetInstance()->ImGui_Shutdown();
+	CImGuiManager::DestroyInstance();
+#endif // IMGUI
 	m_pDeviceClass->DestroyInstance();
 }

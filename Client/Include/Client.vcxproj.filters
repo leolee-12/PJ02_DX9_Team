@@ -58,6 +58,15 @@
     <Filter Include="02. GameObject\08. TestEffect">
       <UniqueIdentifier>{37f31870-dba2-4668-ad76-b1d69d78c68f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="99. ImGui">
+      <UniqueIdentifier>{56232e2c-ffe8-44c3-b9a9-ed7c74f680c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99. ImGui\ImGuiManager">
+      <UniqueIdentifier>{a0bf41c6-5777-4c4e-8447-6c2a2d563956}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99. ImGui\files">
+      <UniqueIdentifier>{9c183ce3-ec11-4903-a741-de3a52c350b4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -114,6 +123,36 @@
     <ClInclude Include="..\Header\CTestEffect.h">
       <Filter>02. GameObject\08. TestEffect</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\ImGui\imconfig.h">
+      <Filter>99. ImGui\files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ImGui\imgui.h">
+      <Filter>99. ImGui\files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ImGui\imgui_impl_dx9.h">
+      <Filter>99. ImGui\files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ImGui\imgui_impl_win32.h">
+      <Filter>99. ImGui\files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ImGui\imgui_internal.h">
+      <Filter>99. ImGui\files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ImGui\imstb_rectpack.h">
+      <Filter>99. ImGui\files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ImGui\imstb_textedit.h">
+      <Filter>99. ImGui\files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ImGui\imstb_truetype.h">
+      <Filter>99. ImGui\files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CImGuiManager.h">
+      <Filter>99. ImGui\ImGuiManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\ImGui_Define.h">
+      <Filter>99. ImGui\ImGuiManager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -160,6 +199,30 @@
     </ClCompile>
     <ClCompile Include="..\Code\CTestEffect.cpp">
       <Filter>02. GameObject\08. TestEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CImGuiManager.cpp">
+      <Filter>99. ImGui\ImGuiManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ImGui\imgui_draw.cpp">
+      <Filter>99. ImGui\files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ImGui\imgui_impl_dx9.cpp">
+      <Filter>99. ImGui\files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ImGui\imgui_impl_win32.cpp">
+      <Filter>99. ImGui\files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ImGui\imgui_tables.cpp">
+      <Filter>99. ImGui\files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ImGui\imgui_widgets.cpp">
+      <Filter>99. ImGui\files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ImGui\imgui.cpp">
+      <Filter>99. ImGui\files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ImGui\imgui_demo.cpp">
+      <Filter>99. ImGui\files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
