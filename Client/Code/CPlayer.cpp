@@ -15,7 +15,9 @@ CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel)
 		m_fSpeed(0.f),
 		m_iAttack(0),
 		m_bRoll(false),
-		m_iCombo(0)
+		m_iCombo(0),
+		m_fLerp(0.2f),
+		m_fRollSpeed(5.f)
 {
 }
 
@@ -30,7 +32,9 @@ CPlayer::CPlayer(const CPlayer& rhs)
 		m_iAttack(rhs.m_iAttack),
 		m_bRoll(false),
 		m_iCombo(0),
-		m_vPos(rhs.m_vPos)
+		m_vPos(rhs.m_vPos),
+		m_fLerp(rhs.m_fRollSpeed),
+		m_fRollSpeed(rhs.m_fRollSpeed)
 {
 }
 
@@ -51,7 +55,7 @@ HRESULT CPlayer::Ready_GameObject()
 	//	}
 	//	}) });
 	m_pTransformCom->Set_Pos(10.f, 0.f, 10.f);
-	m_fFrameSpeed = 90.f;
+	m_fFrameSpeed = 60.f;
 
 	_float fAngle(0.f);
 
@@ -61,6 +65,7 @@ HRESULT CPlayer::Ready_GameObject()
 		fAngle += D3DX_PI * 0.25f;
 	}
 
+	m_vDir = m_vNormDir[DIR_LEFT];
 	m_fSpeed = 10.f;
 	m_iAttack = 1;
 
@@ -83,11 +88,12 @@ _int CPlayer::Update_GameObject(const _float& fTimeDelta)
 void CPlayer::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	Key_Input(fTimeDelta);
+	Move_Roll(fTimeDelta);
 	Check_Frame();
+
 	m_pTransformCom->Compute_Bilboard(BBD_X);
 	m_pTransformCom->Get_Info(INFO_POS, &m_vPos);
 	Compute_ViewDepth(&m_vPos);
-
 
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
 }
@@ -197,64 +203,71 @@ HRESULT CPlayer::Add_Component()
 
 void CPlayer::Key_Input(const _float& fTimeDelta)
 {
-	if (GetAsyncKeyState('W'))
+	if (!m_bRoll && !m_iCombo)
 	{
-		m_eCurState = PS_RUN;
+		if (GetAsyncKeyState('W'))
+		{
+			m_eCurState = PS_RUN;
 
-		if (GetAsyncKeyState('A')) m_vDir = m_vNormDir[DIR_LU];
+			if (GetAsyncKeyState('A')) m_vDir = m_vNormDir[DIR_LU];
 
-		else if (GetAsyncKeyState('D')) m_vDir = m_vNormDir[DIR_RU];
+			else if (GetAsyncKeyState('D')) m_vDir = m_vNormDir[DIR_RU];
 
-		else m_vDir = m_vNormDir[DIR_UP];
+			else m_vDir = m_vNormDir[DIR_UP];
 
-		m_pTransformCom->Move_Pos(&m_vDir, fTimeDelta, m_fSpeed);
+			m_pTransformCom->Move_Pos(&m_vDir, fTimeDelta, m_fSpeed);
+		}
+
+		else if (GetAsyncKeyState('S'))
+		{
+			m_eCurState = PS_RUN;
+
+			if (GetAsyncKeyState('A')) m_vDir = m_vNormDir[DIR_LD];
+
+			else if (GetAsyncKeyState('D')) m_vDir = m_vNormDir[DIR_RD];
+
+			else m_vDir = m_vNormDir[DIR_DOWN];
+
+			m_pTransformCom->Move_Pos(&m_vDir, fTimeDelta, m_fSpeed);
+		}
+
+		else if (GetAsyncKeyState('A'))
+		{
+			m_eCurState = PS_RUN;
+			m_vDir = m_vNormDir[DIR_LEFT];
+			m_pTransformCom->Move_Pos(&m_vDir, fTimeDelta, m_fSpeed);
+		}
+
+		else if (GetAsyncKeyState('D'))
+		{
+			m_eCurState = PS_RUN;
+			m_vDir = m_vNormDir[DIR_RIGHT];
+			m_pTransformCom->Move_Pos(&m_vDir, fTimeDelta, m_fSpeed);
+		}
+
+		else
+		{
+			m_eCurState = PS_IDLE;
+		}
 	}
 
-	else if (GetAsyncKeyState('S'))
-	{
-		m_eCurState = PS_RUN;
-
-		if (GetAsyncKeyState('A')) m_vDir = m_vNormDir[DIR_LD];
-
-		else if (GetAsyncKeyState('D')) m_vDir = m_vNormDir[DIR_RD];
-
-		else m_vDir = m_vNormDir[DIR_DOWN];
-
-		m_pTransformCom->Move_Pos(&m_vDir, fTimeDelta, m_fSpeed);
-	}
-
-	else if (GetAsyncKeyState('A'))
-	{
-		m_eCurState = PS_RUN;
-		m_vDir = m_vNormDir[DIR_LEFT];
-		m_pTransformCom->Move_Pos(&m_vDir, fTimeDelta, m_fSpeed);
-	}
-
-	else if (GetAsyncKeyState('D'))
-	{
-		m_eCurState = PS_RUN;
-		m_vDir = m_vNormDir[DIR_RIGHT];
-		m_pTransformCom->Move_Pos(&m_vDir, fTimeDelta, m_fSpeed);
-	}
-
-	else if (GetAsyncKeyState(VK_SPACE))
+	if (GetAsyncKeyState(VK_SPACE))
 	{
 		if ((m_bRoll) || (m_iCombo)) return;
 
+		m_bRoll = true;
 		m_eCurState = PS_ROLL;
-		m_pTransformCom->Move_Pos(&m_vDir, fTimeDelta, m_fSpeed + 10.f);
+		m_vRollPos = m_vPos + m_vDir * 5.f;
 	}
 
-	else if (GetAsyncKeyState(VK_LBUTTON))
+	if (GetAsyncKeyState(VK_LBUTTON))
 	{
-		if ((m_bRoll) || (m_iCombo == 3)) return;
+		if (m_iCombo == 3) return;
 
+		m_iCombo++;
+		m_bRoll = false;
 		m_eCurState = PS_ATTACK;
-	}
-
-	else if (!m_bRoll && !m_iCombo)
-	{
-		m_eCurState = PS_IDLE;
+		m_pTransformCom->Move_Pos(&m_vDir, fTimeDelta, m_fSpeed - 5.f);
 	}
 
 	//if (CDInputMgr::GetInstance()->Get_DIMouseState(DIM_LB) & 0x80)
@@ -326,13 +339,16 @@ void CPlayer::Check_Frame()
 	m_fFrame = 0.f;
 
 	if (m_eCurState == PS_IDLE) m_fFrameEnd = _float(m_pTextureCom->Get_TextureEnd(L"idle"));
+
 	else if (m_eCurState == PS_RUN) m_fFrameEnd = _float(m_pTextureCom->Get_TextureEnd(L"run-up"));
+
 	else if (m_eCurState == PS_ROLL)
 	{
-		if		(m_vDir.z > 0)	m_fFrameEnd = _float(m_pTextureCom->Get_TextureEnd(L"run-up"));
-		else if (m_vDir.z < 0)	m_fFrameEnd = _float(m_pTextureCom->Get_TextureEnd(L"run-down"));
-		else if (m_vDir.z == 0)	m_fFrameEnd = _float(m_pTextureCom->Get_TextureEnd(L"run-horizontal"));
+		if		(m_vDir == m_vNormDir[DIR_UP] || m_vDir == m_vNormDir[DIR_LU] || m_vDir == m_vNormDir[DIR_RU])		m_fFrameEnd = _float(m_pTextureCom->Get_TextureEnd(L"roll-up"));
+		else if (m_vDir == m_vNormDir[DIR_DOWN] || m_vDir == m_vNormDir[DIR_LD] || m_vDir == m_vNormDir[DIR_RD])	m_fFrameEnd = _float(m_pTextureCom->Get_TextureEnd(L"roll-down"));
+		else if (m_vDir == m_vNormDir[DIR_LEFT] || m_vDir == m_vNormDir[DIR_RIGHT])									m_fFrameEnd = _float(m_pTextureCom->Get_TextureEnd(L"roll-horizontal"));
 	}
+
 	else if (m_eCurState == PS_ATTACK)
 	{
 		if		(m_iCombo == 1)	m_fFrameEnd = _float(m_pTextureCom->Get_TextureEnd(L"attack-combo1"));
@@ -340,6 +356,7 @@ void CPlayer::Check_Frame()
 		else if	(m_iCombo == 3)	m_fFrameEnd = _float(m_pTextureCom->Get_TextureEnd(L"attack-combo3"));
 	}
 
+	m_fFrameEnd -= 0.001f;	// Get_TextureEnd = 벡터의 크기 = 마지막 번호 + 1
 	m_ePreState = m_eCurState;
 }
 
@@ -355,12 +372,12 @@ void CPlayer::Move_Frame(const _float& fTimeDelta)
 		if (m_eCurState == PS_ROLL)
 		{
 			m_bRoll = false;
-			m_eCurState == PS_IDLE;
+			m_eCurState = PS_IDLE;
 		}
 		else if (m_eCurState == PS_ATTACK)
 		{
 			m_iCombo = 0;
-			m_eCurState == PS_IDLE;
+			m_eCurState = PS_IDLE;
 		}
 	}
 }
@@ -372,8 +389,10 @@ void CPlayer::Set_TextureSet()
 	switch (m_eCurState)
 	{
 	case PS_IDLE:
+	{
 		strTemp = L"idle";
-		break;
+	}
+	break;
 
 	case PS_RUN:
 	{
@@ -384,11 +403,36 @@ void CPlayer::Set_TextureSet()
 		else if (m_vDir == m_vNormDir[DIR_LEFT] || m_vDir == m_vNormDir[DIR_RIGHT])	strTemp = L"run-horizontal";
 	}
 	break;
+
+	case PS_ROLL:
+	{
+		if		(m_vDir == m_vNormDir[DIR_UP]	|| m_vDir == m_vNormDir[DIR_LU]	|| m_vDir == m_vNormDir[DIR_RU])	strTemp = L"roll-up";
+		else if (m_vDir == m_vNormDir[DIR_DOWN]	|| m_vDir == m_vNormDir[DIR_LD]	|| m_vDir == m_vNormDir[DIR_RD])	strTemp = L"roll-down";
+		else if (m_vDir == m_vNormDir[DIR_LEFT]	|| m_vDir == m_vNormDir[DIR_RIGHT])									strTemp = L"roll-horizontal";
+	}
+	break;
+
+	case PS_ATTACK:
+	{
+		if		(m_iCombo == 1)	strTemp = L"attack-combo1";
+		else if (m_iCombo == 2)	strTemp = L"attack-combo2";
+		else if (m_iCombo == 3)	strTemp = L"attack-combo3";
+	}
+	break;
 	}
 
 	_uint iCurFrame = min(m_fFrame, m_fFrameEnd);
 
 	m_pTextureCom->Set_Texture(strTemp, iCurFrame);
+}
+
+void CPlayer::Move_Roll(const _float& fTimeDelta)
+{
+	if (!m_bRoll) return;
+	
+	D3DXVec3Lerp(&m_vPos, &m_vPos, &m_vRollPos, m_fLerp);
+
+	m_pTransformCom->Set_Pos(m_vPos.x, m_vPos.y, m_vPos.z);
 }
 
 CPlayer* CPlayer::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel)
