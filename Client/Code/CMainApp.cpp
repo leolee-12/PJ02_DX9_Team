@@ -9,6 +9,7 @@
 #include "CLightMgr.h"
 #include "CImGuiManager.h"
 #include "ImGui_Define.h"
+#include "CCollisionMgr.h"
 
 
 CMainApp::CMainApp() : m_pDeviceClass(nullptr), m_pGraphicDev(nullptr)
@@ -32,6 +33,7 @@ HRESULT CMainApp::Ready_MainApp()
 	CImGuiManager::GetInstance()->ImGui_Setup(g_hWnd, m_pGraphicDev);
 #else
 
+	CCollisionMgr::GetInstance()->Ready_CollisionMgr();
 	if (FAILED(Ready_Scene(m_pGraphicDev)))
 		return E_FAIL;
 
@@ -170,6 +172,7 @@ void CMainApp::Free()
 	Safe_Release(m_pGraphicDev);
 	Safe_Release(m_pDeviceClass);	
 
+
 	CLightMgr::DestroyInstance();
 	CFontMgr::DestroyInstance();
 	CDInputMgr::DestroyInstance();
@@ -178,6 +181,7 @@ void CMainApp::Free()
 	CFrameMgr::DestroyInstance();
 	CTimerMgr::DestroyInstance();
 	CManagement::DestroyInstance();
+	CCollisionMgr::DestroyInstance();
 #ifdef IMGUI
 	CImGuiManager::GetInstance()->ImGui_Shutdown();
 	CImGuiManager::DestroyInstance();

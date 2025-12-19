@@ -39,6 +39,8 @@ HRESULT CPlayer::Ready_GameObject()
 	if (FAILED(Add_Component()))
 		return E_FAIL;
 
+	m_pColliderCom->RegisterToManager(this, CL_PLAYER);
+
 	m_eOBJID = OID_PLAYER;
 
 	//m_hmapSubHandles.insert({ L"StartGame.Move", m_pMessageChannel->Subscribe(L"Start_Game", [this](const IMessageChannel::EVENT& Event) {
@@ -66,6 +68,7 @@ HRESULT CPlayer::Ready_GameObject()
 _int CPlayer::Update_GameObject(const _float& fTimeDelta)
 {
 	Move_Frame(fTimeDelta);
+	m_pColliderCom->UpdateFromTransform(m_pTransformCom);
 
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 	
@@ -186,6 +189,11 @@ HRESULT CPlayer::Add_Component()
 		return E_FAIL;
 
 	m_mapComponent[ID_STATIC].insert({ L"Com_Calculator", pComponent });
+
+	pComponent = m_pColliderCom = dynamic_cast<Engine::CCollider*>
+		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Collider"));
+
+	m_mapComponent[ID_STATIC].insert({ L"Com_Collider", pComponent });
 
 
 	return S_OK;
@@ -346,6 +354,14 @@ void CPlayer::Set_TextureSet()
 	m_pTextureCom->Set_Texture(strTemp, iCurFrame);
 }
 
+void	CPlayer::OnCollision(CGameObject* pObject)
+{
+	if (pObject->Get_OBJID() == OID_MONSTER)
+	{
+		m_pTransformCom->Set_Pos(10.f, 10.f, 10.f);
+	}
+}
+
 CPlayer* CPlayer::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel)
 {
 	CPlayer* pPlayer = new CPlayer(pGraphicDev, StageChannel);
@@ -362,7 +378,5 @@ CPlayer* CPlayer::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageCh
 
 void CPlayer::Free()
 {
-	Safe_Release(m_pBufferCom);
-	
 	CGameObject::Free();
 }

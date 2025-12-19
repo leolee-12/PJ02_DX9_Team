@@ -49,6 +49,12 @@ namespace Engine
 
 	}INDEX32;	
 
+	typedef struct tagAABB
+	{
+		_float x, y, z;
+		_float hx, hy, hz;
+	}AABB;
+
 }
 
 
