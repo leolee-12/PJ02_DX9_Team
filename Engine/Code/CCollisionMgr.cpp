@@ -34,6 +34,9 @@ void CCollisionMgr::Check_Collisions(const _float& fDeltaTime)
 			}
 		}
 	}
+
+	Execute_UnregisterRequests();
+	Execute_Release();
 }
 
 void CCollisionMgr::RegisterCollider(CGameObject* pOwner, const AABB& aabb, COLGROUP Group)
@@ -43,7 +46,7 @@ void CCollisionMgr::RegisterCollider(CGameObject* pOwner, const AABB& aabb, COLG
 	auto [iter, inserted] = m_hmapCollisionGroup.try_emplace(Group);  // 해당 키값이 있는지 없는지 확인후 없으면 삽입, 있으면 아무행동도안함
 	
 	if (inserted) {									// 삽입시 (키값이 없을시)
-		iter->second.push_back({ aabb, pOwner });	// 매개변수로 받는 데이터 저장
+		iter->second.push_back({ pOwner, aabb });	// 매개변수로 받는 데이터 저장
 		pOwner->AddRef();							// 이후 참조카운트 증가
 		return;										
 	}
@@ -59,8 +62,39 @@ void CCollisionMgr::RegisterCollider(CGameObject* pOwner, const AABB& aabb, COLG
 		}
 	}
 													// 키값이 있는데 매개변수로 들어온 오너포인터로 등록된 AABB가 없다면
-	iter->second.push_back({ aabb, pOwner });		// 해당 그룹에 데이터 추가 후
+	iter->second.push_back({ pOwner, aabb });		// 해당 그룹에 데이터 추가 후
 	pOwner->AddRef();								// 참조카운트 증가
+}
+
+inline void CCollisionMgr::Reset_For_SceneChange()
+{
+	Free();
+}
+
+void CCollisionMgr::RequestUnregister(CGameObject* pOwner, COLGROUP Group)
+{
+	if (pOwner == nullptr) { return; }
+	m_vecUnregisterRequestQueue.push_back({ pOwner, Group });
+}
+
+void CCollisionMgr::Execute_UnregisterRequests()
+{
+	if (m_vecUnregisterRequestQueue.empty()) { return; }
+	for (auto& requestinfo : m_vecUnregisterRequestQueue)
+	{
+		UnregisterCollider(requestinfo.pOwner, requestinfo.eGroup);
+	}
+	m_vecUnregisterRequestQueue.clear();
+}
+
+void CCollisionMgr::Execute_Release()
+{
+	if (m_vecReleaseQueue.empty()) { return; }
+	for (auto& pOwner : m_vecReleaseQueue)
+	{
+		Safe_Release(pOwner);
+	}
+	m_vecReleaseQueue.clear();
 }
 
 void CCollisionMgr::UnregisterCollider(CGameObject* pOwner, COLGROUP Group)
@@ -71,23 +105,26 @@ void CCollisionMgr::UnregisterCollider(CGameObject* pOwner, COLGROUP Group)
 
 	auto& vec = iter->second;
 	// remove_if < 알고리즘 함 찾아보세요.
-	auto removeiter = remove_if(vec.begin(), vec.end(), [pOwner](const COLINFO& colinfo) {
-		return colinfo.pOwner == pOwner;
+	auto removeiter = remove_if(vec.begin(), vec.end(), [pOwner, this](const COLINFO& colinfo) {
+		if (colinfo.pOwner == pOwner) {
+			m_vecReleaseQueue.push_back(colinfo.pOwner);			// 우리가 순회중에 객체를 삭제하면 객체의 Free에서 매니저를 다시 호출 할 수도 있음
+			return true;											// 순회중에 삭제가 또 들어오면 이미 순회/수정 중인 컨테이너의 요소에 접근 할 수 있어서 반복자 무효화 발생할 수 있음
+		}															// 해당하는 가능성을 배제하기위해 순회중엔 삭제큐에 담아뒀다가 순회가 끝나면 한번에 삭제처리
+		return false;
 		});
-
+	// 위에 삭제 과정은 remove_if 알고리즘 아시면 이해가 됩니다용
+	
 	if (removeiter != vec.end())
 	{
-		for (auto it = removeiter; it != vec.end(); ++it) 
-		{
-			Safe_Release(it->pOwner);					  
-		}
 		vec.erase(removeiter, vec.end());
 	}
-	// 위에 삭제 과정은 remove_if 알고리즘 아시면 이해가 됩니다용
+	// 삭제 큐를 여기서 실행하지 않는 이유:
+	// Check_Collisions 루프 도중 호출되면 컨테이너 순회 중 삭제가 발생하므로,
+	// 안전하게 프레임 끝(루프 종료 시점)에서 ExecuteUnregister()로 처리한다.
 }
 
 
-vector<CGameObject*> CCollisionMgr::Query_AABB(const AABB& aabb, COLGROUP Groupflag)
+vector<CGameObject*> CCollisionMgr::Test_AABB(const AABB& aabb, COLGROUP Groupflag)
 {
 	vector<CGameObject*> vecTemp;			// 반환할 임시 벡터
 
@@ -114,15 +151,14 @@ vector<CGameObject*> CCollisionMgr::Query_AABB(const AABB& aabb, COLGROUP Groupf
 void CCollisionMgr::Free()
 {
 	// 전체순회하면서 콜라이더정보, 오너포인터 제거
-	for (auto iter = m_hmapCollisionGroup.begin();
-		iter != m_hmapCollisionGroup.end();
-		++iter)
-	{
-		for (auto& vec : iter->second)
-		{
-			Safe_Release(vec.pOwner);
-		}
-		iter->second.clear();
+	for (auto& pair : m_hmapCollisionGroup) {
+		for (auto& colinfo : pair.second) {
+			m_vecReleaseQueue.push_back(colinfo.pOwner);  // 우리가 순회중에 객체를 삭제하면 객체의 Free에서 매니저를 다시 호출 할 수도 있음
+			colinfo.pOwner = nullptr;					  // 순회중에 삭제가 또 들어오면 이미 순회/수정 중인 컨테이너의 요소에 접근 할 수 있어서 반복자 무효화 발생할 수 있음
+		}												  // 해당하는 가능성을 배제하기위해 순회중엔 삭제큐에 담아뒀다가 순회가 끝나면 한번에 삭제처리
+		pair.second.clear();
 	}
 	m_hmapCollisionGroup.clear();
+
+	Execute_Release();
 }
