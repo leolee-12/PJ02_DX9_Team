@@ -378,7 +378,5 @@ CPlayer* CPlayer::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageCh
 
 void CPlayer::Free()
 {
-	Safe_Release(m_pBufferCom);
-	m_pColliderCom->UnregisterFromManager();
 	CGameObject::Free();
 }

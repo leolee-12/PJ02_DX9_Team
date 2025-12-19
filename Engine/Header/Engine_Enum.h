@@ -24,7 +24,7 @@ namespace Engine
 
 	enum OBJID { OID_PLAYER, OID_MONSTER, OID_DCAM, OID_MAINCAM, OID_END };
 
-	enum COLLAYER
+	enum COLGROUP
 	{
 		CL_NONE		= 0,
 		CL_PLAYER	= 1 << 0,
@@ -46,12 +46,12 @@ namespace Engine
 
 		CL_ALL		= 0xFFFF // 1111 1111 1111 1111 16ºñÆ®
 	};
-	inline COLLAYER operator|(COLLAYER lhs, COLLAYER rhs) {
-		return COLLAYER((unsigned int)lhs | (unsigned int)rhs);
+	inline COLGROUP operator|(COLGROUP lhs, COLGROUP rhs) {
+		return COLGROUP((unsigned int)lhs | (unsigned int)rhs);
 	}
 
-	inline COLLAYER operator&(COLLAYER lhs, COLLAYER rhs) {
-		return COLLAYER((unsigned int)lhs & (unsigned int)rhs);
+	inline COLGROUP operator&(COLGROUP lhs, COLGROUP rhs) {
+		return COLGROUP((unsigned int)lhs & (unsigned int)rhs);
 	}
 
 

@@ -6,12 +6,12 @@
 
 
 CCollider::CCollider(LPDIRECT3DDEVICE9 pGraphicDev)
-	: CComponent(pGraphicDev), m_tAABB{ 0,0,0, 0.5f,0.5f,0.5f }, m_pOwner(nullptr), m_Layer(CL_NONE)
+	: CComponent(pGraphicDev), m_tAABB{ 0,0,0, 0.5f,0.5f,0.5f }, m_pOwner(nullptr), m_Group(CL_NONE)
 {
 }
 
 CCollider::CCollider(const CCollider& rhs)
-	: CComponent(rhs), m_tAABB(rhs.m_tAABB), m_pOwner(nullptr), m_Layer(rhs.m_Layer)
+	: CComponent(rhs), m_tAABB(rhs.m_tAABB), m_pOwner(nullptr), m_Group(rhs.m_Group)
 {
 }
 
@@ -39,28 +39,28 @@ void CCollider::UpdateFromTransform(CTransform* pTransform)
 	m_tAABB.y = vPos.y;
 	m_tAABB.z = vPos.z;
 
-	// 매니저에 갱신: 등록된 소유자가 있으면 매니저에 갱신 전달(매니저가 내부에서 기존 엔트리 업데이트)
+	// 매니저에 갱신: 등록된 소유자가 있으면 매니저에 갱신 전달
 	if (m_pOwner)
-		Engine::CCollisionMgr::GetInstance()->RegisterCollider(m_pOwner, m_tAABB, m_Layer);
+		Engine::CCollisionMgr::GetInstance()->RegisterCollider(m_pOwner, m_tAABB, m_Group);
 }
 
-void CCollider::RegisterToManager(CGameObject* pOwner, COLLAYER Layerflag)
+void CCollider::RegisterToManager(CGameObject* pOwner, COLGROUP Layerflag)
 {
 	// 소유자 포인터는 매니저가 AddRef/Release 관리를 담당함
+	// 소유권은 매니저 or 컴포넌트 둘중하나가 책임
+	// 중앙관리자인 매니저가 총괄하는걸 선택함
 	if (pOwner == nullptr) { return; }
 	m_pOwner = pOwner;
-	//m_pOwner->AddRef();
-	m_Layer = Layerflag;
+	m_Group = Layerflag;
 
-	Engine::CCollisionMgr::GetInstance()->RegisterCollider(m_pOwner, m_tAABB, m_Layer);
+	Engine::CCollisionMgr::GetInstance()->RegisterCollider(m_pOwner, m_tAABB, m_Group);
 }
 
 void CCollider::UnregisterFromManager()
 {
 	if (m_pOwner)
 	{
-		Engine::CCollisionMgr::GetInstance()->UnregisterCollider(m_pOwner, m_Layer);
-		//Safe_Release(m_pOwner);
+		Engine::CCollisionMgr::GetInstance()->UnregisterCollider(m_pOwner, m_Group);
 	}
 }
 

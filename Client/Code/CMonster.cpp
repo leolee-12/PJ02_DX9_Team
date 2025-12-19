@@ -144,7 +144,5 @@ CMonster* CMonster::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* Stage
 
 void CMonster::Free()
 {
-	Safe_Release(m_pBufferCom);
-	m_pColliderCom->UnregisterFromManager();
 	CGameObject::Free();
 }
