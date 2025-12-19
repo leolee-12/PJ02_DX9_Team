@@ -8,6 +8,7 @@ namespace Engine
 	//class CTexture;
 	class CTextureSet;
 	class CCalculator;
+	class CCollider;
 }
 
 class CPlayer : public CGameObject
@@ -26,6 +27,7 @@ public:
 	virtual			_int		Update_GameObject(const _float& fTimeDelta);
 	virtual			void		LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual			void		Render_GameObject();
+	virtual			void		OnCollision(CGameObject* pObject);
 
 private:
 	HRESULT			Add_Component();
@@ -42,6 +44,7 @@ private:
 	Engine::CTransform* m_pTransformCom;
 	Engine::CTextureSet* m_pTextureCom;
 	Engine::CCalculator* m_pCalculatorCom;
+	Engine::CCollider*	m_pColliderCom;
 
 	// 스프라이트 관련
 	PLAYERSTATE		m_ePreState;

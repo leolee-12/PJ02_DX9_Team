@@ -109,6 +109,12 @@
     <Filter Include="05. ComponentEx\04. Collider">
       <UniqueIdentifier>{0ca364cc-fd15-49fb-999a-c6a12b100f1f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="00. Manager\09. StaticChannelMgr">
+      <UniqueIdentifier>{9dcef9b4-d2a9-4da4-bdff-640a4797888d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00. Manager\09. StaticChannelMgr\99. CollisionChannel">
+      <UniqueIdentifier>{06a0c12a-ab29-4659-8164-b46f9223ad21}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\CGraphicDev.cpp">
@@ -206,6 +212,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\CCollider.cpp">
       <Filter>05. ComponentEx\04. Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CStaticChannelMgr.cpp">
+      <Filter>00. Manager\09. StaticChannelMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CCollisionChannel.cpp">
+      <Filter>00. Manager\09. StaticChannelMgr\99. CollisionChannel</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -328,6 +340,12 @@
     </ClInclude>
     <ClInclude Include="..\Header\CCollider.h">
       <Filter>05. ComponentEx\04. Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CStaticChannelMgr.h">
+      <Filter>00. Manager\09. StaticChannelMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CCollisionChannel.h">
+      <Filter>00. Manager\09. StaticChannelMgr\99. CollisionChannel</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

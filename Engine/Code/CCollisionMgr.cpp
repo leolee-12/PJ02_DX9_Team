@@ -1,71 +1,124 @@
 #include "CCollisionMgr.h"
+#include "CGameObject.h"
 
 
 IMPLEMENT_SINGLETON(CCollisionMgr)
 
 CCollisionMgr::CCollisionMgr()
+	: m_bRoof(false)
 {
 }
 
 CCollisionMgr::~CCollisionMgr()
 {
+	Free();
 }
 
 HRESULT CCollisionMgr::Ready_CollisionMgr()
 {
-	m_vColliders.clear();
+	m_vecCollisionPool.push_back({ CL_PLAYER, CL_MONSTER });
 	return S_OK;
 }
 
-void CCollisionMgr::Update(const _float& fDeltaTime)
+void CCollisionMgr::Check_Collisions(const _float& fDeltaTime)
 {
-	// 델타타임으로 특정시간마다 전체검사 같은 로직 구현 가능성있음
-	// 현재는 Query 기반 사용 권장. 자동 검사 필요시 여기에 구현.
+	for (auto& vec : m_vecCollisionPool)
+	{
+		for (auto& Layer1 : m_hmapCollisionLayer[vec.first]) {
+			for (auto& Layer2 : m_hmapCollisionLayer[vec.second]) {
+				if (IntersectAABB(Layer1.tAABB, Layer2.tAABB))
+				{
+					Layer1.pOwner->OnCollision(Layer2.pOwner);
+					Layer2.pOwner->OnCollision(Layer1.pOwner);
+				}
+			}
+		}
+	}
 }
 
-void CCollisionMgr::RegisterCollider(CBase* pOwner, const AABB& aabb, COLLAYER Layer, COLLISION_CALLBACK pCallback)
+void CCollisionMgr::RegisterCollider(CGameObject* pOwner, const AABB& aabb, COLLAYER Layer)
 {
-	for (auto& sc : m_vColliders)
+	if (pOwner == nullptr) { return; }
+
+	auto [iter, inserted] = m_hmapCollisionLayer.try_emplace(Layer);
+	
+	if (inserted) {
+		iter->second.push_back({ aabb, pOwner });
+		pOwner->AddRef();
+		return;
+	}
+
+	for (auto& vec : iter->second)
 	{
-		if (sc.pOwner == pOwner)
-		{
-			sc.AABB = aabb;
-			sc.Layer = Layer;
-			sc.Callback = pCallback;
+		if (vec.pOwner == pOwner) {
+			vec.tAABB.x = aabb.x;
+			vec.tAABB.y = aabb.y;
+			vec.tAABB.z = aabb.z;
 			return;
 		}
 	}
 
-	COLLIDER s;
-	s.pOwner = pOwner;
-	s.AABB = aabb;
-	s.Layer = Layer;
-	s.Callback = pCallback;
-	m_vColliders.push_back(s);
+	iter->second.push_back({ aabb, pOwner });
+	pOwner->AddRef();
 }
 
-void CCollisionMgr::UnregisterCollider(CBase* pOwner)
+void CCollisionMgr::UnregisterCollider(CGameObject* pOwner, COLLAYER Layer)
 {
-	m_vColliders.erase(
-		remove_if(m_vColliders.begin(), m_vColliders.end(), [&](const COLLIDER& s) { return s.pOwner == pOwner; }),
-		m_vColliders.end());
-}
+	if (pOwner == nullptr) { return; }
+	auto iter = m_hmapCollisionLayer.find(Layer);
+	if (iter == m_hmapCollisionLayer.end()) { return; }
 
-vector<CBase*> CCollisionMgr::Query_AABB(const AABB& aabb, COLLAYER Layer)
-{
-	vector<CBase*> result;
-	for (const auto& sc : m_vColliders)
+	auto& vec = iter->second;
+	auto removeiter = remove_if(vec.begin(), vec.end(), [pOwner](const COLINFO& colinfo) {
+		return colinfo.pOwner == pOwner;
+		});
+
+	if (removeiter != vec.end())
 	{
-		if (Layer != CL_ALL && sc.Layer != Layer)
+		for (auto it = removeiter; it != vec.end(); ++it)
+		{
+			Safe_Release(it->pOwner);
+		}
+		vec.erase(removeiter, vec.end());
+	}
+}
+
+
+vector<CGameObject*> CCollisionMgr::Query_AABB(const AABB& aabb, COLLAYER Layerflag)
+{
+	vector<CGameObject*> vecTemp;
+
+	for (auto& pair : m_hmapCollisionLayer)
+	{
+		COLLAYER layer = pair.first;
+
+		// 요청한 레이어 플래그에 해당 레이어가 포함되어 있지 않으면 건너뜀
+		if ((Layerflag & layer) == 0)
 			continue;
 
-		if (IntersectAABB(sc.AABB, aabb))
-			result.push_back(sc.pOwner);
+		for (const auto& colinfo : pair.second)
+		{
+			if (IntersectAABB(aabb, colinfo.tAABB))
+			{
+				vecTemp.push_back(colinfo.pOwner);
+			}
+		}
 	}
-	return result;
+
+	return vecTemp;
 }
 
 void CCollisionMgr::Free()
 {
-	m_vColliders.clear();
+	for (auto iter = m_hmapCollisionLayer.begin();
+		iter != m_hmapCollisionLayer.end();
+		++iter)
+	{
+		for (auto& vec : iter->second)
+		{
+			Safe_Release(vec.pOwner);
+		}
+		iter->second.clear();
+	}
+	m_hmapCollisionLayer.clear();
 }

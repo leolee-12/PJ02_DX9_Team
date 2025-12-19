@@ -46,6 +46,14 @@ namespace Engine
 
 		CL_ALL		= 0xFFFF // 1111 1111 1111 1111 16∫Ò∆Æ
 	};
+	inline COLLAYER operator|(COLLAYER lhs, COLLAYER rhs) {
+		return COLLAYER((unsigned int)lhs | (unsigned int)rhs);
+	}
+
+	inline COLLAYER operator&(COLLAYER lhs, COLLAYER rhs) {
+		return COLLAYER((unsigned int)lhs & (unsigned int)rhs);
+	}
+
 
 }
 #endif // Engine_Enum_h__

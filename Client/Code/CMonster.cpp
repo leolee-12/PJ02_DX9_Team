@@ -31,6 +31,8 @@ HRESULT CMonster::Ready_GameObject()
 	m_eOBJID = OID_MONSTER;
 	if (FAILED(Add_Component()))
 		return E_FAIL;
+
+	m_pColliderCom->RegisterToManager(this, CL_MONSTER);
 	
 	m_hmapSubHandles.insert({ L"Monster_Rotate", m_pMessageChannel->Subscribe(L"Monster.Move", [this](const IMessageChannel::EVENT& Event) {
 		if (Event.eOBJID == this->Get_OBJID()) {
@@ -44,6 +46,7 @@ HRESULT CMonster::Ready_GameObject()
 
 _int CMonster::Update_GameObject(const _float& fTimeDelta)
 {
+	m_pColliderCom->UpdateFromTransform(m_pTransformCom);
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
 	CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHA, this);
@@ -116,6 +119,11 @@ HRESULT CMonster::Add_Component()
 
 	m_mapComponent[ID_STATIC].insert({ L"Com_Texture", pComponent });
 
+	pComponent = m_pColliderCom = dynamic_cast<Engine::CCollider*>
+		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Collider"));
+
+	m_mapComponent[ID_STATIC].insert({ L"Com_Collider", pComponent });
+
 
 	return S_OK;
 }
@@ -137,6 +145,6 @@ CMonster* CMonster::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* Stage
 void CMonster::Free()
 {
 	Safe_Release(m_pBufferCom);
-	
+	m_pColliderCom->UnregisterFromManager();
 	CGameObject::Free();
 }
