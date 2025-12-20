@@ -16,11 +16,9 @@ CGameObject::CGameObject(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* SceneCh
 }
 
 CGameObject::CGameObject(const CGameObject& rhs)
-    : m_pGraphicDev(rhs.m_pGraphicDev), m_pMessageChannel(rhs.m_pMessageChannel), m_eOBJID(rhs.m_eOBJID)
+    : m_pGraphicDev(rhs.m_pGraphicDev), m_pMessageChannel(nullptr), m_eOBJID(rhs.m_eOBJID)
     , m_fDepth(rhs.m_fDepth)
 {
-    m_pGraphicDev->AddRef();
-    if (m_pMessageChannel != nullptr) { m_pMessageChannel->AddRef(); }
 }
 
 CGameObject::~CGameObject()
@@ -60,6 +58,10 @@ void CGameObject::LateUpdate_GameObject(const _float& fTimeDelta)
 }
 
 void CGameObject::Render_GameObject()
+{
+}
+
+void CGameObject::OnCollision(CGameObject* pObject)
 {
 }
 

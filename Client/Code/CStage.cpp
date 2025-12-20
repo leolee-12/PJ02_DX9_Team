@@ -6,6 +6,7 @@
 #include "CSkyBox.h"
 #include "CTestEffect.h"
 #include "CLightMgr.h"
+#include "CCollisionMgr.h"
 
 CStage::CStage(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -56,6 +57,8 @@ void CStage::LateUpdate_Scene(const _float& fTimeDelta)
 	EventTest.eOBJID = Engine::OID_MONSTER;
 
 	m_pMessageChannel->Publish(EventTest);
+
+	CCollisionMgr::GetInstance()->Check_Collisions(fTimeDelta);
 }
 
 void CStage::Render_Scene()
@@ -166,6 +169,7 @@ HRESULT CStage::Ready_UI_Layer(const _tchar* pLayerTag)
 
 
 	m_mapLayer.insert({ pLayerTag , pLayer });
+
 
 	return S_OK;
 }

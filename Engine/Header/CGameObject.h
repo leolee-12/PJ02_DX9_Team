@@ -23,6 +23,7 @@ public:
 	virtual			_int		Update_GameObject(const _float& fTimeDelta);
 	virtual			void		LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual			void		Render_GameObject();
+	virtual			void		OnCollision(CGameObject* pObject);
 
 	void			Compute_ViewDepth(const _vec3* pPos);
 
