@@ -47,7 +47,7 @@ public:
 	HRESULT			Add_Texture(TEXTUREID eID, const TEXINFO& tTexInfo);
 	void			Set_Texture(wstring strState, const _uint& iIndex = 0);
 
-	_uint			Get_TextureEnd(wstring strState);
+	_float			Get_TextureEnd(wstring strState);
 
 private:
 	unordered_map<wstring, vector<IDirect3DBaseTexture9*>>		m_mapTexture;

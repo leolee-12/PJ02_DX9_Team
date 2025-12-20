@@ -80,6 +80,7 @@ private:
 	_float			m_fSpeed;
 	_int			m_iAttack;
 	_bool			m_bRoll;	// 구르기 중인지?
+	_bool			m_bClick;
 	_int			m_iCombo;	// 공격 중인지? + 몇번째 콤보상태인지?
 
 	// 알파 소팅 관련

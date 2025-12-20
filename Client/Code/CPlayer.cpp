@@ -57,7 +57,8 @@ HRESULT CPlayer::Ready_GameObject()
 	//	}
 	//	}) });
 	m_pTransformCom->Set_Pos(10.f, 0.f, 10.f);
-	m_fFrameSpeed = 60.f;
+	m_pTransformCom->Set_Scale(5.f, 5.f, 5.f);
+	m_fFrameSpeed = 24.f;
 
 	_float fAngle(0.f);
 
@@ -268,12 +269,13 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 		m_vRollPos = m_vPos + m_vDir * 5.f;
 	}
 
-	if (GetAsyncKeyState(VK_LBUTTON))
-	{
+	if (GetAsyncKeyState(VK_LBUTTON) & 0x0001)	// 눌렀을 때 한 번만 true
+	{			
 		if (m_iCombo == 3) return;
 
 		m_iCombo++;
 		m_bRoll = false;
+		m_fFrame = 0.f;
 		m_eCurState = PS_ATTACK;
 		m_pTransformCom->Move_Pos(&m_vDir, fTimeDelta, m_fSpeed - 5.f);
 	}
@@ -346,25 +348,35 @@ void CPlayer::Check_Frame()
 
 	m_fFrame = 0.f;
 
-	if (m_eCurState == PS_IDLE) m_fFrameEnd = _float(m_pTextureCom->Get_TextureEnd(L"idle"));
-
-	else if (m_eCurState == PS_RUN) m_fFrameEnd = _float(m_pTextureCom->Get_TextureEnd(L"run-up"));
-
-	else if (m_eCurState == PS_ROLL)
+	switch (m_eCurState)
 	{
-		if		(m_vDir == m_vNormDir[DIR_UP] || m_vDir == m_vNormDir[DIR_LU] || m_vDir == m_vNormDir[DIR_RU])		m_fFrameEnd = _float(m_pTextureCom->Get_TextureEnd(L"roll-up"));
-		else if (m_vDir == m_vNormDir[DIR_DOWN] || m_vDir == m_vNormDir[DIR_LD] || m_vDir == m_vNormDir[DIR_RD])	m_fFrameEnd = _float(m_pTextureCom->Get_TextureEnd(L"roll-down"));
-		else if (m_vDir == m_vNormDir[DIR_LEFT] || m_vDir == m_vNormDir[DIR_RIGHT])									m_fFrameEnd = _float(m_pTextureCom->Get_TextureEnd(L"roll-horizontal"));
+	case PS_IDLE:
+	{
+		m_fFrameEnd = _float(m_pTextureCom->Get_TextureEnd(L"idle"));
+	}
+	break;
+
+	case PS_RUN:
+	{
+		m_fFrameEnd = m_pTextureCom->Get_TextureEnd(L"run-up");
+	}
+	break;
+
+	case PS_ROLL:
+	{
+		if		(m_vDir == m_vNormDir[DIR_UP]	|| m_vDir == m_vNormDir[DIR_LU] || m_vDir == m_vNormDir[DIR_RU])	m_fFrameEnd = m_pTextureCom->Get_TextureEnd(L"roll-up");
+		else if (m_vDir == m_vNormDir[DIR_DOWN] || m_vDir == m_vNormDir[DIR_LD] || m_vDir == m_vNormDir[DIR_RD])	m_fFrameEnd = m_pTextureCom->Get_TextureEnd(L"roll-down");
+		else if (m_vDir == m_vNormDir[DIR_LEFT] || m_vDir == m_vNormDir[DIR_RIGHT])									m_fFrameEnd = m_pTextureCom->Get_TextureEnd(L"roll-horizontal");
+	}
+	break;
+
+	case PS_ATTACK:
+	{
+		m_fFrameEnd = m_pTextureCom->Get_TextureEnd(L"attack-combo1");
+	}
+	break;
 	}
 
-	else if (m_eCurState == PS_ATTACK)
-	{
-		if		(m_iCombo == 1)	m_fFrameEnd = _float(m_pTextureCom->Get_TextureEnd(L"attack-combo1"));
-		else if (m_iCombo == 2)	m_fFrameEnd = _float(m_pTextureCom->Get_TextureEnd(L"attack-combo2"));
-		else if	(m_iCombo == 3)	m_fFrameEnd = _float(m_pTextureCom->Get_TextureEnd(L"attack-combo3"));
-	}
-
-	m_fFrameEnd -= 0.001f;	// Get_TextureEnd = 벡터의 크기 = 마지막 번호 + 1
 	m_ePreState = m_eCurState;
 }
 
@@ -398,7 +410,8 @@ void CPlayer::Set_TextureSet()
 	{
 	case PS_IDLE:
 	{
-		strTemp = L"idle";
+		if (m_vDir == m_vNormDir[DIR_UP] || m_vDir == m_vNormDir[DIR_LU] || m_vDir == m_vNormDir[DIR_RU] ) strTemp = L"idle-up";
+		else strTemp = L"idle";
 	}
 	break;
 
@@ -406,9 +419,9 @@ void CPlayer::Set_TextureSet()
 	{
 		if		(m_vDir == m_vNormDir[DIR_UP])										strTemp = L"run-up";
 		else if (m_vDir == m_vNormDir[DIR_DOWN])									strTemp = L"run-down";
-		else if (m_vDir == m_vNormDir[DIR_LU] || m_vDir == m_vNormDir[DIR_RU])		strTemp = L"run-diagonal";
 		else if (m_vDir == m_vNormDir[DIR_LD] || m_vDir == m_vNormDir[DIR_RD])		strTemp = L"run-diagonal";
 		else if (m_vDir == m_vNormDir[DIR_LEFT] || m_vDir == m_vNormDir[DIR_RIGHT])	strTemp = L"run-horizontal";
+		else if (m_vDir == m_vNormDir[DIR_LU] || m_vDir == m_vNormDir[DIR_RU])		strTemp = L"run-up-diagonal";
 	}
 	break;
 
@@ -416,22 +429,37 @@ void CPlayer::Set_TextureSet()
 	{
 		if		(m_vDir == m_vNormDir[DIR_UP]	|| m_vDir == m_vNormDir[DIR_LU]	|| m_vDir == m_vNormDir[DIR_RU])	strTemp = L"roll-up";
 		else if (m_vDir == m_vNormDir[DIR_DOWN]	|| m_vDir == m_vNormDir[DIR_LD]	|| m_vDir == m_vNormDir[DIR_RD])	strTemp = L"roll-down";
-		else if (m_vDir == m_vNormDir[DIR_LEFT]	|| m_vDir == m_vNormDir[DIR_RIGHT])									strTemp = L"roll-horizontal";
+		else if (m_vDir == m_vNormDir[DIR_LEFT] || m_vDir == m_vNormDir[DIR_RIGHT])
+		{
+			strTemp = L"roll-horizontal";
+			m_fFrameEnd = m_pTextureCom->Get_TextureEnd(strTemp);
+		}
 	}
 	break;
 
 	case PS_ATTACK:
 	{
-		if		(m_iCombo == 1)	strTemp = L"attack-combo1";
-		else if (m_iCombo == 2)	strTemp = L"attack-combo2";
-		else if (m_iCombo == 3)	strTemp = L"attack-combo3";
+		if (m_iCombo == 1)
+		{
+			strTemp = L"attack-combo1";
+		}
+		else if (m_iCombo == 2)
+		{
+			strTemp = L"attack-combo2";
+			m_fFrameEnd = m_pTextureCom->Get_TextureEnd(strTemp);
+		}
+		else if (m_iCombo == 3)
+		{
+			strTemp = L"attack-combo3";
+			m_fFrameEnd = m_pTextureCom->Get_TextureEnd(strTemp);
+		}
 	}
 	break;
 	}
 
-	_uint iCurFrame = min(m_fFrame, m_fFrameEnd);
+	//_uint iCurFrame = min(m_fFrame, m_fFrameEnd);
 
-	m_pTextureCom->Set_Texture(strTemp, iCurFrame);
+	m_pTextureCom->Set_Texture(strTemp, _uint(m_fFrame));
 }
 
 void CPlayer::Move_Roll(const _float& fTimeDelta)
