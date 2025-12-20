@@ -60,7 +60,7 @@ void CCollider::UnregisterFromManager()
 {
 	if (m_pOwner)
 	{
-		Engine::CCollisionMgr::GetInstance()->UnregisterCollider(m_pOwner, m_Group);
+		Engine::CCollisionMgr::GetInstance()->RequestUnregister(m_pOwner, m_Group);
 	}
 }
 
