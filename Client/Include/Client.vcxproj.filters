@@ -67,6 +67,9 @@
     <Filter Include="99. ImGui\files">
       <UniqueIdentifier>{9c183ce3-ec11-4903-a741-de3a52c350b4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Scene\99. Loading\LoadingThread">
+      <UniqueIdentifier>{bec13d5c-cc47-4d5b-a2eb-0fb3bafdcfdd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -104,9 +107,6 @@
     </ClInclude>
     <ClInclude Include="..\Header\CTerrain.h">
       <Filter>02. GameObject\03. Terrain</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Header\CLoading.h">
-      <Filter>01. Scene\99. Loading</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CDynamicCamera.h">
       <Filter>02. GameObject\04. DynamicCamera</Filter>
@@ -153,6 +153,12 @@
     <ClInclude Include="..\Header\ImGui_Define.h">
       <Filter>99. ImGui\ImGuiManager</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CLoadingThread.h">
+      <Filter>01. Scene\99. Loading\LoadingThread</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CLoading.h">
+      <Filter>01. Scene\99. Loading</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -181,9 +187,6 @@
     </ClCompile>
     <ClCompile Include="..\Code\CTerrain.cpp">
       <Filter>02. GameObject\03. Terrain</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\CLoading.cpp">
-      <Filter>01. Scene\99. Loading</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CDynamicCamera.cpp">
       <Filter>02. GameObject\04. DynamicCamera</Filter>
@@ -223,6 +226,12 @@
     </ClCompile>
     <ClCompile Include="..\..\ImGui\imgui_demo.cpp">
       <Filter>99. ImGui\files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CLoadingThread.cpp">
+      <Filter>01. Scene\99. Loading\LoadingThread</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CLoading.cpp">
+      <Filter>01. Scene\99. Loading</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

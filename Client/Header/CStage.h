@@ -6,7 +6,7 @@
 #include "CMonster.h"
 #include "CTerrain.h"
 #include "CTerrainWall.h"
-#include "CLoading.h"
+//#include "CLoadingThread.h"
 
 class CStage : public CScene
 {
@@ -35,6 +35,6 @@ private:
 
 private:
 	// 테스트용
-	CLoading* m_pLoading;
+	//CLoadingThread* m_pLoading;
 };
 

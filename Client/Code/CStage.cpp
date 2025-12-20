@@ -7,7 +7,7 @@
 #include "CTestEffect.h"
 #include "CLightMgr.h"
 #include "CCollisionMgr.h"
-#include "CTest.h"
+#include "CLoading.h"
 #include "CManagement.h"
 
 CStage::CStage(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -40,7 +40,7 @@ HRESULT CStage::Ready_Scene()
 
 	// 테스트용
 
-	/*m_pLoading = CLoading::Create(m_pGraphicDev, CLoading::LOADING_STAGE);
+	/*m_pLoading = CLoadingThread::Create(m_pGraphicDev, CLoadingThread::LOADING_STAGE);
 
 	if (nullptr == m_pLoading)
 		return E_FAIL;*/
@@ -56,15 +56,25 @@ _int CStage::Update_Scene(const _float& fTimeDelta)
 	{*/
 		if (GetAsyncKeyState('M'))
 		{
-			auto iter = m_mapLayer.find(L"Const_Layer");
+			/*auto iter = m_mapLayer.find(L"Const_Layer");
 			if (iter == m_mapLayer.end()) { return -1; }
 
 			Engine::CScene* pTest = CTest::Create(m_pGraphicDev, iter->second);
 			iter->second->AddRef();
 			if (nullptr == pTest)
+				return -1;*/
+
+			/*if (FAILED(CManagement::GetInstance()->Set_Scene(pTest)))
+			{
+				MSG_BOX("Stage Scene Failed");
+				return -1;
+			}*/
+			Engine::CScene* pLoading = CLoading::Create(m_pGraphicDev, LOADING_TEST);
+			
+			if (nullptr == pLoading)
 				return -1;
 
-			if (FAILED(CManagement::GetInstance()->Set_Scene(pTest)))
+			if (FAILED(CManagement::GetInstance()->Set_Scene(pLoading)))
 			{
 				MSG_BOX("Stage Scene Failed");
 				return -1;

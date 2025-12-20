@@ -1,175 +1,156 @@
 #include "pch.h"
 #include "CLoading.h"
+#include "CBackGround.h"
 #include "CProtoMgr.h"
-#include "CPlayer.h"
+#include "CStage.h"
+#include "CManagement.h"
+#include "CFontMgr.h"
+#include "CTest.h"
 
-CLoading::CLoading(LPDIRECT3DDEVICE9 pGraphicDev)
-    : m_pGraphicDev(pGraphicDev), m_bFinish(false), m_eLoading(LOADING_END)
+
+CLoading::CLoading(LPDIRECT3DDEVICE9 pGraphicDev, LOADINGID ChangeID)
+	: CScene(pGraphicDev), m_pLoading(nullptr), m_eChangeID(ChangeID)
 {
-    ZeroMemory(m_szLoading, sizeof(m_szLoading));
-    m_pGraphicDev->AddRef();
 }
 
 CLoading::~CLoading()
 {
 }
 
-HRESULT CLoading::Ready_Loading(LOADINGID eID)
+HRESULT CLoading::Ready_Scene()
 {
-    InitializeCriticalSection(&m_Crt);
+	//테스트용
+	m_pMessageChannel = CStageMessage::Create();
 
-    m_eLoading = eID;
+	if (FAILED(Ready_Prototype()))
+		return E_FAIL;
 
-    int iNumber = 10;
+	if (FAILED(Ready_Environment_Layer(L"Environment_Layer")))
+		return E_FAIL;
 
-    m_hThread = (HANDLE)_beginthreadex(NULL,    // 보안속성(핸들의 상속 여부, null인 경우 상속에서 제외)
-                                        0,      // 디폴트 스택 사이즈(1 바이트)
-                                        Thread_Main,      // 쓰레드 함수
-                                        this,   // 쓰레드 함수를 이용하여 가공할 데이터 주소    
-                                        0,      // 쓰레드 생성 및 실행을 조정하기 옵션(flag)
-                                        NULL);  // 쓰레드 id
+	m_pLoading = CLoadingThread::Create(m_pGraphicDev, m_eChangeID);
 
+	if (nullptr == m_pLoading)
+		return E_FAIL;
 
-    return S_OK;
+	/*_matrix matIdentity;
+	D3DXMatrixIdentity(&matIdentity);
+	m_pGraphicDev->SetTransform(D3DTS_VIEW, &matIdentity);
+
+	D3DXMatrixOrthoLH(&matIdentity, (float)WINCX, (float)WINCY, 0.f, 1.f);
+	m_pGraphicDev->SetTransform(D3DTS_PROJECTION, &matIdentity);*/
+	return S_OK;
 }
 
-_uint CLoading::Loading_ForStage()
+_int CLoading::Update_Scene(const _float& fTimeDelta)
 {
-    lstrcpy(m_szLoading, L"Buffer Loading..............................");
+	_int iExit = Engine::CScene::Update_Scene(fTimeDelta);
 
-    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_TriCol", Engine::CTriCol::Create(m_pGraphicDev))))
-        return E_FAIL;
+	if (true == m_pLoading->Get_Finish())
+	{
+		if (GetAsyncKeyState(VK_RETURN))
+		{
+			Engine::CScene* pScene = nullptr;
+			switch (m_pLoading->Get_Loading())
+			{
+			case LOADING_STAGE:
+				pScene = CStage::Create(m_pGraphicDev);
 
-    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_RcCol", Engine::CRcCol::Create(m_pGraphicDev))))
-        return E_FAIL;
- 
-    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_TerrainTex", Engine::CTerrainTex::Create(m_pGraphicDev, VTXCNTX, VTXCNTZ, VTXITV, L"../Bin/Resource/Texture/Terrain/Height.bmp"))))
-        return E_FAIL;
+				if (nullptr == pScene)
+					return -1;
+				break;
 
-    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_TerrainWallTex", Engine::CTerrainWallTex::Create(m_pGraphicDev, 51, 51, VTXITV))))
-        return E_FAIL;
+			case LOADING_TEST:
+				pScene = CTest::Create(m_pGraphicDev);
 
-    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_CubeTex", Engine::CCubeTex::Create(m_pGraphicDev))))
-        return E_FAIL;
+				if (nullptr == pScene)
+					return -1;
+				break;
 
-    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Collider", Engine::CCollider::Create(m_pGraphicDev))))
-        return E_FAIL;
-        
-    lstrcpy(m_szLoading, L"Texture Loading..............................");
+			case LOADING_BOSS:
+				break;
+			}
+			
+			if (FAILED(CManagement::GetInstance()->Set_Scene(pScene)))
+			{
+				MSG_BOX("Stage Scene Failed");
+				return -1;
+			}
+		}
+	}
 
-    //if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_PlayerTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Player/idle/idle_%04d.png", 180))))
-    //    return E_FAIL;
-
-    vector<CTextureSet::TEXINFO> tempVec(13);
-    tempVec[0]  = CTextureSet::TEXINFO(L"idle", L"../Bin/Resource/Texture/Player/idle/idle_%04d.png", 72);
-    tempVec[1]  = CTextureSet::TEXINFO(L"idle-up", L"../Bin/Resource/Texture/Player/idle-up/idle-up_%04d.png", 72);
-    tempVec[2]  = CTextureSet::TEXINFO(L"run-up", L"../Bin/Resource/Texture/Player/run-up/run-up_%04d.png", 9);
-    tempVec[3]  = CTextureSet::TEXINFO(L"run-down", L"../Bin/Resource/Texture/Player/run-down/run-down_%04d.png", 9);
-    tempVec[4]  = CTextureSet::TEXINFO(L"run-diagonal", L"../Bin/Resource/Texture/Player/run/run_%04d.png", 9);
-    tempVec[5]  = CTextureSet::TEXINFO(L"run-horizontal", L"../Bin/Resource/Texture/Player/run-horizontal/run-horizontal_%04d.png", 9);
-    tempVec[6]  = CTextureSet::TEXINFO(L"run-up-diagonal", L"../Bin/Resource/Texture/Player/run-up-diagonal/run-up-diagonal_%04d.png", 9);
-    tempVec[7]  = CTextureSet::TEXINFO(L"roll-up", L"../Bin/Resource/Texture/Player/roll-up/roll-up_%04d.png", 8);
-    tempVec[8]  = CTextureSet::TEXINFO(L"roll-down", L"../Bin/Resource/Texture/Player/roll-down/roll-down_%04d.png", 8);
-    tempVec[9]  = CTextureSet::TEXINFO(L"roll-horizontal", L"../Bin/Resource/Texture/Player/roll/roll_%04d.png", 9);
-    tempVec[10] = CTextureSet::TEXINFO(L"attack-combo1", L"../Bin/Resource/Texture/Player/attack-combo1/attack-combo1_%04d.png", 15);
-    tempVec[11] = CTextureSet::TEXINFO(L"attack-combo2", L"../Bin/Resource/Texture/Player/attack-combo2/attack-combo2_%04d.png", 19);
-    tempVec[12] = CTextureSet::TEXINFO(L"attack-combo3", L"../Bin/Resource/Texture/Player/attack-combo3/attack-combo3_%04d.png", 19);
-    
-    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_PlayerTexture", Engine::CTextureSet::Create(m_pGraphicDev, TEX_NORMAL, tempVec))))
-        return E_FAIL;
-
-    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_MonsterTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster0.png", 1))))
-        return E_FAIL;
-
-    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_TerrainTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Terrain/Grass_%d.tga", 2))))
-        return E_FAIL;
-
-    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_TerrainWallTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Terrain/Grass_%d.tga", 2))))
-        return E_FAIL;
-
-    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_SkyTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_CUBE, L"../Bin/Resource/Texture/SkyBox/burger%d.dds", 4))))
-        return E_FAIL;
-
-    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_EffectTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Explosion/Explosion%d.png", 90))))
-        return E_FAIL;
-   
-    //if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_SkyTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_CUBE, L"../Bin/Resource/Texture/159.dds", 1))))
-    //    return E_FAIL;
-
-    lstrcpy(m_szLoading, L"Etc Loading..............................");
-
-    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Transform", Engine::CTransform::Create(m_pGraphicDev))))
-        return E_FAIL;
-
-    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Calculator", Engine::CCalculator::Create(m_pGraphicDev))))
-        return E_FAIL;
-
-
-    m_bFinish = true;
-
-    lstrcpy(m_szLoading, L"Loading Complete!!");
-
-    return 0;
+	return iExit;
 }
 
-_uint CLoading::Loading_ForTest()
+void CLoading::LateUpdate_Scene(const _float& fTimeDelta)
 {
-
-    m_bFinish = true;
-
-    return _uint();
+	Engine::CScene::LateUpdate_Scene(fTimeDelta);
 }
 
-unsigned int CLoading::Thread_Main(void* pArg)
+void CLoading::Render_Scene()
 {
-    CLoading* pLoading = reinterpret_cast<CLoading*>(pArg);
+	// debug 용
 
-    _uint iFlag(0);
+	_vec2		vPos{ 100.f, 100.f };
 
-    EnterCriticalSection(pLoading->Get_Crt());
+	CFontMgr::GetInstance()->Render_Font(L"Font_Default", m_pLoading->Get_String(), &vPos, D3DXCOLOR(1.f, 0.f, 0.f, 1.f));
 
-    switch (pLoading->Get_Loading())
-    {
-    case LOADING_STAGE:
-        iFlag = pLoading->Loading_ForStage();
-        break;
-
-    case LOADING_TEST:
-        iFlag = pLoading->Loading_ForTest();
-        break;
-
-    case LOADING_BOSS:
-        break;        
-    }
-
-    LeaveCriticalSection(pLoading->Get_Crt());
-
-    // _endthreadex(0);
-
-    return iFlag;
 }
 
-CLoading* CLoading::Create(LPDIRECT3DDEVICE9 pGraphicDev, LOADINGID eID)
+
+HRESULT CLoading::Ready_Environment_Layer(const _tchar* pLayerTag)
 {
-    CLoading* pLoading = new CLoading(pGraphicDev);
+	CLayer* pLayer = CLayer::Create();
+	if (nullptr == pLayer)
+		return E_FAIL;
 
-    if (FAILED(pLoading->Ready_Loading(eID)))
-    {
-        Safe_Release(pLoading);
-        MSG_BOX("Loading Create Failed");
-        return nullptr;
-    }
+	CGameObject* pGameObject = nullptr;
 
-    return pLoading;
+	// BackGround
+	pGameObject = CBackGround::Create(m_pGraphicDev);
+
+	if (nullptr == pGameObject)
+		return E_FAIL;
+
+	if (FAILED(pLayer->Add_GameObject(L"BackGround", pGameObject)))
+		return E_FAIL;
+
+
+	m_mapLayer.insert({ pLayerTag , pLayer });
+
+	return S_OK;
+}
+
+HRESULT CLoading::Ready_Prototype()
+{
+
+	/*if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_RcTex", Engine::CRcTex::Create(m_pGraphicDev))))
+		return E_FAIL;*/
+
+	/*if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_LogoTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Logo/jang.jpg", 1))))
+		return E_FAIL;*/
+
+
+	return S_OK;
+}
+
+CLoading* CLoading::Create(LPDIRECT3DDEVICE9 pGraphicDev, LOADINGID ChangeID)
+{
+	CLoading* pLoading = new CLoading(pGraphicDev, ChangeID);
+
+	if (FAILED(pLoading->Ready_Scene()))
+	{
+		Safe_Release(pLoading);
+		MSG_BOX("pLoading Create Failed");
+		return nullptr;
+	}
+
+	return pLoading;
 }
 
 void CLoading::Free()
 {
-    WaitForSingleObject(m_hThread, INFINITE);
+	Safe_Release(m_pLoading);
 
-    CloseHandle(m_hThread);
-
-    DeleteCriticalSection(&m_Crt);
-
-    Safe_Release(m_pGraphicDev);
+	CScene::Free();
 }

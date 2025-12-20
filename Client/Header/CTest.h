@@ -27,7 +27,7 @@ private:
 	HRESULT			Ready_Const_Layer(CLayer* pConstLayer);
 
 public:
-	static CTest* Create(LPDIRECT3DDEVICE9 pGraphicDev, CLayer* pConstLayer);
+	static CTest* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 private:
 	virtual void Free();
 

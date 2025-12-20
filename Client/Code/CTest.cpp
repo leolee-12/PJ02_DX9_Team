@@ -16,6 +16,8 @@ CTest::~CTest()
 
 HRESULT CTest::Ready_Scene()
 {
+	m_pMessageChannel = CStageMessage::Create();
+
 	if (FAILED(Ready_Environment_Layer(L"Environment_Layer")))
 		return E_FAIL;
 
@@ -98,13 +100,13 @@ HRESULT CTest::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 		return E_FAIL;
 
 	// Player
-	/*pGameObject = CPlayer::Create(m_pGraphicDev);
+	pGameObject = CPlayer::Create(m_pGraphicDev, m_pMessageChannel);
 
 	if (nullptr == pGameObject)
 		return E_FAIL;
 
 	if (FAILED(pLayer->Add_GameObject(L"Player", pGameObject)))
-		return E_FAIL;*/
+		return E_FAIL;
 
 	m_mapLayer.insert({ pLayerTag , pLayer });
 
@@ -144,7 +146,7 @@ HRESULT CTest::Ready_Const_Layer(CLayer* pConstLayer)
 	return S_OK;
 }
 
-CTest* CTest::Create(LPDIRECT3DDEVICE9 pGraphicDev, CLayer* pConstLayer)
+CTest* CTest::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 {
 	CTest* pTest = new CTest(pGraphicDev);
 
@@ -155,12 +157,12 @@ CTest* CTest::Create(LPDIRECT3DDEVICE9 pGraphicDev, CLayer* pConstLayer)
 		return nullptr;
 	}
 
-	if (FAILED(pTest->Ready_Const_Layer(pConstLayer)))
+	/*if (FAILED(pTest->Ready_Const_Layer(pConstLayer)))
 	{
 		Safe_Release(pTest);
 		MSG_BOX("pTest Create Failed");
 		return nullptr;
-	}
+	}*/
 
 	return pTest;
 }
