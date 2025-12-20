@@ -111,4 +111,13 @@ void CGameObject::Unsubscribe_Handles()
     }
 }
 
+void CGameObject::Requst_Unsubscribe(const wstring& strEventType)
+{
+    auto iter = m_hmapSubHandles.find(strEventType);
+    if (iter == m_hmapSubHandles.end()) { return; }
+
+    m_pMessageChannel->Unsubscribe(iter->second);
+    m_hmapSubHandles.erase(iter);
+}
+
 

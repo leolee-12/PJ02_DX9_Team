@@ -24,6 +24,8 @@ namespace Engine
 
 	enum OBJID { OID_PLAYER, OID_MONSTER, OID_DCAM, OID_MAINCAM, OID_END };
 
+	enum SCENEID { SC_STAGE, SC_TEST, SC_END };
+
 	enum COLGROUP
 	{
 		CL_NONE		= 0,

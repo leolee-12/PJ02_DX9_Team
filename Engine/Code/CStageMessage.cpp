@@ -20,12 +20,28 @@ IMessageChannel::SUBHANDLE CStageMessage::Subscribe(const wstring& strEventType,
 	// [c++17] pair<iterator, bool> try_emplace(키값) : 특정키가 없으면 true를 반환하고 새요소를 삽입, 키가 이미 존재하면 false를 반환하고 아무런 행동X
 	// [c++17] structured binding 문법 : 여러 값을 반환하는 객체를 (pair,구조체등) 분해해서 각각의 요소에 바인딩할 수 있는 문법
 
+	auto& vec = iter->second;
+
 	if (inserted) {					// 키값이 없어서 새 요소 삽입을 실행했다면
-		iter->second.reserve(16);	// 해당 요소(벡터)의 카파시티의 크기를 16으로 할당해라
+		vec.reserve(16);	// 해당 요소(벡터)의 카파시티의 크기를 16으로 할당해라
 	}
 
-	_uint uiIndex = (_uint)iter->second.size(); // 반환할 핸들내부의 인덱스 변수설정
-	_uint uiVersion = 1;						// 반환할 핸들내부, 보관할 핸들러슬롯 구조체의 버전 설정
+	_uint uiIndex(0), uiVersion(0);
+
+	for (_uint i = 0; i < (_uint)vec.size(); ++i)
+	{
+		if (vec[i].bAlive == false)
+		{
+			uiIndex = i;
+			uiVersion = vec[i].uiVersion;
+			vec[i].bAlive = true;
+			vec[i].func = move(func);
+			return { strEventType, uiIndex, uiVersion };
+		}
+	}
+
+	uiIndex = (_uint)vec.size();			// 반환할 핸들내부의 인덱스 변수설정
+	uiVersion = 1;							// 반환할 핸들내부, 보관할 핸들러슬롯 구조체의 버전 설정
 
 	iter->second.push_back({ move(func), uiVersion, true }); // 핸들러 삽입
 

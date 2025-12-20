@@ -7,6 +7,8 @@
 #include "CTestEffect.h"
 #include "CLightMgr.h"
 #include "CCollisionMgr.h"
+#include "CTest.h"
+#include "CManagement.h"
 
 CStage::CStage(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -33,12 +35,42 @@ HRESULT CStage::Ready_Scene()
 	if (FAILED(Ready_UI_Layer(L"UI_Layer")))
 		return E_FAIL;
 
+	if (FAILED(Ready_Const_Layer()))
+		return E_FAIL;
+
+	// 테스트용
+
+	/*m_pLoading = CLoading::Create(m_pGraphicDev, CLoading::LOADING_STAGE);
+
+	if (nullptr == m_pLoading)
+		return E_FAIL;*/
+
 	return S_OK;
 }
 
 _int CStage::Update_Scene(const _float& fTimeDelta)
 {
 	_int iExit = Engine::CScene::Update_Scene(fTimeDelta);
+
+	/*if (true == m_pLoading->Get_Finish())
+	{*/
+		if (GetAsyncKeyState('M'))
+		{
+			auto iter = m_mapLayer.find(L"Const_Layer");
+			if (iter == m_mapLayer.end()) { return -1; }
+
+			Engine::CScene* pTest = CTest::Create(m_pGraphicDev, iter->second);
+			iter->second->AddRef();
+			if (nullptr == pTest)
+				return -1;
+
+			if (FAILED(CManagement::GetInstance()->Set_Scene(pTest)))
+			{
+				MSG_BOX("Stage Scene Failed");
+				return -1;
+			}
+		}
+	//}
 
 	return iExit;
 }
@@ -124,15 +156,7 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 
 	if (FAILED(pLayer->Add_GameObject(L"TerrainWall", pGameObject)))
 		return E_FAIL;
-
-	// Player
-	pGameObject = CPlayer::Create(m_pGraphicDev, m_pMessageChannel);
-
-	if (nullptr == pGameObject)
-		return E_FAIL;
-
-	if (FAILED(pLayer->Add_GameObject(L"Player", pGameObject)))
-		return E_FAIL;
+	
 
 	//TestMonster
 	pGameObject = CMonster::Create(m_pGraphicDev, m_pMessageChannel);
@@ -174,6 +198,27 @@ HRESULT CStage::Ready_UI_Layer(const _tchar* pLayerTag)
 	return S_OK;
 }
 
+HRESULT CStage::Ready_Const_Layer()
+{
+	CLayer* pLayer = CLayer::Create();
+	if (nullptr == pLayer)
+		return E_FAIL;
+
+	CGameObject* pGameObject = nullptr;
+
+	pGameObject = CPlayer::Create(m_pGraphicDev, m_pMessageChannel);
+
+	if (nullptr == pGameObject)
+		return E_FAIL;
+
+	if (FAILED(pLayer->Add_GameObject(L"Player", pGameObject)))
+		return E_FAIL;
+
+
+	m_mapLayer.insert({ L"Const_Layer" , pLayer});
+	return S_OK;
+}
+
 HRESULT CStage::Ready_Light()
 {
 	D3DLIGHT9	tLightInfo;
@@ -210,5 +255,7 @@ CStage* CStage::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 
 void CStage::Free()
 {
+	//Safe_Release(m_pLoading);
+	CCollisionMgr::GetInstance()->Reset_For_SceneChange();
 	CScene::Free();
 }

@@ -105,6 +105,14 @@ _uint CLoading::Loading_ForStage()
     return 0;
 }
 
+_uint CLoading::Loading_ForTest()
+{
+
+    m_bFinish = true;
+
+    return _uint();
+}
+
 unsigned int CLoading::Thread_Main(void* pArg)
 {
     CLoading* pLoading = reinterpret_cast<CLoading*>(pArg);
@@ -117,6 +125,10 @@ unsigned int CLoading::Thread_Main(void* pArg)
     {
     case LOADING_STAGE:
         iFlag = pLoading->Loading_ForStage();
+        break;
+
+    case LOADING_TEST:
+        iFlag = pLoading->Loading_ForTest();
         break;
 
     case LOADING_BOSS:

@@ -33,13 +33,15 @@ protected:
 	
 	_float									m_fDepth;
 
+protected:
+	virtual		void		Free();
+	virtual     void		Unsubscribe_Handles();
+
+	void		Requst_Unsubscribe(const wstring& strEventType);
 
 private:
 	CComponent* Find_Component(COMPONENTID eID, const wstring& strComponentTag);
 
-protected:
-	virtual		void		Free();
-	virtual     void		Unsubscribe_Handles();
 
 protected:
 	IMessageChannel* m_pMessageChannel;

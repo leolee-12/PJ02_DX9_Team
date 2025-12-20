@@ -5,7 +5,7 @@
 class CLoading :    public CBase
 {
 public:
-	enum LOADINGID { LOADING_STAGE, LOADING_BOSS, LOADING_END };
+	enum LOADINGID { LOADING_STAGE, LOADING_BOSS, LOADING_TEST, LOADING_END };
 
 public:
 	explicit CLoading(LPDIRECT3DDEVICE9 pGraphicDev);
@@ -21,6 +21,7 @@ public:
 public:
 	HRESULT		Ready_Loading(LOADINGID eID);
 	_uint		Loading_ForStage();
+	_uint		Loading_ForTest();
 
 public:
 	static unsigned int CALLBACK Thread_Main(void* pArg);

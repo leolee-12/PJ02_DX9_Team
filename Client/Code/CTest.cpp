@@ -98,13 +98,13 @@ HRESULT CTest::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 		return E_FAIL;
 
 	// Player
-	pGameObject = CPlayer::Create(m_pGraphicDev);
+	/*pGameObject = CPlayer::Create(m_pGraphicDev);
 
 	if (nullptr == pGameObject)
 		return E_FAIL;
 
 	if (FAILED(pLayer->Add_GameObject(L"Player", pGameObject)))
-		return E_FAIL;
+		return E_FAIL;*/
 
 	m_mapLayer.insert({ pLayerTag , pLayer });
 
@@ -125,18 +125,44 @@ HRESULT CTest::Ready_UI_Layer(const _tchar* pLayerTag)
 	return S_OK;
 }
 
-CTest* CTest::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+HRESULT CTest::Ready_Const_Layer(CLayer* pConstLayer)
 {
-	CTest* pLogo = new CTest(pGraphicDev);
+	if (nullptr == pConstLayer)
+		return E_FAIL;
 
-	if (FAILED(pLogo->Ready_Scene()))
+	auto [iter, inserted] = m_mapLayer.try_emplace(L"Const_Layer");
+
+	if (inserted)
 	{
-		Safe_Release(pLogo);
-		MSG_BOX("pLogo Create Failed");
+		iter->second = pConstLayer;
+		return S_OK;
+	}
+
+	Safe_Release(iter->second);
+	iter->second = pConstLayer;
+
+	return S_OK;
+}
+
+CTest* CTest::Create(LPDIRECT3DDEVICE9 pGraphicDev, CLayer* pConstLayer)
+{
+	CTest* pTest = new CTest(pGraphicDev);
+
+	if (FAILED(pTest->Ready_Scene()))
+	{
+		Safe_Release(pTest);
+		MSG_BOX("pTest Create Failed");
 		return nullptr;
 	}
 
-	return pLogo;
+	if (FAILED(pTest->Ready_Const_Layer(pConstLayer)))
+	{
+		Safe_Release(pTest);
+		MSG_BOX("pTest Create Failed");
+		return nullptr;
+	}
+
+	return pTest;
 }
 
 void CTest::Free()
