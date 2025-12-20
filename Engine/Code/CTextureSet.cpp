@@ -101,14 +101,14 @@ void CTextureSet::Set_Texture(wstring strState, const _uint& iIndex)
 	m_pGraphicDev->SetTexture(0, iter->second[iIndex]);
 }
 
-_uint CTextureSet::Get_TextureEnd(wstring strState)
+_float CTextureSet::Get_TextureEnd(wstring strState)
 {
 	auto iter = m_mapTexture.find(strState);
 
 	if (iter == m_mapTexture.end())
-		return 0;
-
-	return iter->second.size();
+		return 0.f;
+	// Get_TextureEnd = 벡터의 크기 = 마지막 이미지 번호 + 1 : 텍스처 탐색 미싱이 날 수 있으므로 작은 수를 빼준다
+	return iter->second.size() - 0.001f;
 }
 
 CTextureSet* CTextureSet::Create(LPDIRECT3DDEVICE9 pGraphicDev, TEXTUREID eID, vector<TEXINFO>& vecTexInfo)

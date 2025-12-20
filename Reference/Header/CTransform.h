@@ -25,6 +25,11 @@ public:
 		m_vInfo[INFO_POS] = { _fX, _fY, _fZ };
 	}
 
+	void		Set_Scale(_float _fX, _float _fY, _float _fZ)
+	{
+		m_vScale = { _fX, _fY, _fZ };
+	}
+
 	void		Move_Pos(const _vec3* pDir, const _float& fTimeDelta, const _float& fSpeed)
 	{
 		m_vInfo[INFO_POS] += *pDir * fTimeDelta * fSpeed;
@@ -47,7 +52,7 @@ public:
 
 
 
-public:
+private:
 	_vec3		m_vInfo[INFO_END];
 	_vec3		m_vScale;
 	_vec3		m_vAngle;
