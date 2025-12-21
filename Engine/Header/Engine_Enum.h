@@ -26,6 +26,11 @@ namespace Engine
 
 	enum LOADINGID { LOADING_STAGE, LOADING_BOSS, LOADING_TEST, LOADING_END };
 
+	typedef enum GLOBALOBJECTID
+	{
+		GOBJ_PLAYER, GOBJ_END
+	}GOBJID;
+
 	enum COLGROUP
 	{
 		CL_NONE		= 0,

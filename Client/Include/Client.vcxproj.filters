@@ -70,6 +70,9 @@
     <Filter Include="01. Scene\99. Loading\LoadingThread">
       <UniqueIdentifier>{bec13d5c-cc47-4d5b-a2eb-0fb3bafdcfdd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="09. CPersistentMgr">
+      <UniqueIdentifier>{153d294d-a813-4bb7-9dee-2e2680526024}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -159,6 +162,9 @@
     <ClInclude Include="..\Header\CLoading.h">
       <Filter>01. Scene\99. Loading</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CPersistentMgr.h">
+      <Filter>09. CPersistentMgr</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -232,6 +238,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CLoading.cpp">
       <Filter>01. Scene\99. Loading</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CPersistentMgr.cpp">
+      <Filter>09. CPersistentMgr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

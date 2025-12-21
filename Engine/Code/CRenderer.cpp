@@ -13,7 +13,7 @@ CRenderer::~CRenderer()
 
 void CRenderer::Add_RenderGroup(RENDERID eType, CGameObject* pGameObject)
 {
-	if (RENDER_END <= eType || nullptr == pGameObject)
+	if (RENDER_END <= eType || nullptr == pGameObject || eType < 0)
 		return;
 
 	m_RenderGroup[eType].push_back(pGameObject);
