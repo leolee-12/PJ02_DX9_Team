@@ -58,8 +58,8 @@
     <Filter Include="02. GameObject\08. TestEffect">
       <UniqueIdentifier>{37f31870-dba2-4668-ad76-b1d69d78c68f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\imgui">
-      <UniqueIdentifier>{2498f428-806a-4ae8-a383-79de106573ce}</UniqueIdentifier>
+    <Filter Include="02. GameObject\99. TestObject">
+      <UniqueIdentifier>{5e8c73c1-37da-4a24-b395-d8e294c4be3f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -117,29 +117,8 @@
     <ClInclude Include="..\Header\CTestEffect.h">
       <Filter>02. GameObject\08. TestEffect</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\ImGui\imgui_impl_win32.h">
-      <Filter>소스 파일\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ImGui\imgui_internal.h">
-      <Filter>소스 파일\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ImGui\imstb_rectpack.h">
-      <Filter>소스 파일\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ImGui\imstb_textedit.h">
-      <Filter>소스 파일\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ImGui\imstb_truetype.h">
-      <Filter>소스 파일\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ImGui\imconfig.h">
-      <Filter>소스 파일\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ImGui\imgui.h">
-      <Filter>소스 파일\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ImGui\imgui_impl_dx9.h">
-      <Filter>소스 파일\imgui</Filter>
+    <ClInclude Include="..\Header\TestCube.h">
+      <Filter>02. GameObject\99. TestObject</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -188,26 +167,8 @@
     <ClCompile Include="..\Code\CTestEffect.cpp">
       <Filter>02. GameObject\08. TestEffect</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\ImGui\imgui_impl_win32.cpp">
-      <Filter>소스 파일\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ImGui\imgui_tables.cpp">
-      <Filter>소스 파일\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ImGui\imgui_widgets.cpp">
-      <Filter>소스 파일\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ImGui\imgui.cpp">
-      <Filter>소스 파일\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ImGui\imgui_demo.cpp">
-      <Filter>소스 파일\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ImGui\imgui_draw.cpp">
-      <Filter>소스 파일\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ImGui\imgui_impl_dx9.cpp">
-      <Filter>소스 파일\imgui</Filter>
+    <ClCompile Include="..\Code\TestCube.cpp">
+      <Filter>02. GameObject\99. TestObject</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -1,8 +1,12 @@
 #include "CImGuiMgr.h"
-
-#include <Windows.h>
-
 #include <ImGui_Define.h>
+#include "imgui_impl_dx9.h"
+#include "imgui_impl_win32.h"
+
+#include "imgui.h"
+#include <d3d9.h>
+#include <d3dx9.h>
+
 
 using namespace Engine;
 using namespace std;
@@ -28,6 +32,13 @@ void CImGuiMgr::Free()
 {
 }
 
+float CImGuiMgr::ImGui_Init()
+{
+    ImGui_ImplWin32_EnableDpiAwareness();
+    float main_scale = ImGui_ImplWin32_GetDpiScaleForMonitor(::MonitorFromPoint(POINT{ 0, 0 }, MONITOR_DEFAULTTOPRIMARY));
+    
+    return main_scale;
+}
 
 void CImGuiMgr::ImGui_Setup(HWND hWnd, LPDIRECT3DDEVICE9 pDevice, WNDCLASSEXW& wndclass)
 {
@@ -129,6 +140,7 @@ void CImGuiMgr::ImGui_Tick()
         ImGui::Checkbox("Demo Window", &m_show_demo_window);      // Edit bools storing our window open/close state
         ImGui::Checkbox("Another Window", &m_show_another_window);
 
+        ImVec4 m_clear_color = ImVec4(m_color_r, m_color_g, m_color_b, m_color_a);
         ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
         ImGui::ColorEdit3("clear color", (float*)&m_clear_color); // Edit 3 floats representing a color
 
@@ -159,6 +171,8 @@ void CImGuiMgr::ImGui_Render()
     m_pGraphicDev->SetRenderState(D3DRS_ZENABLE, FALSE);
     m_pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
     m_pGraphicDev->SetRenderState(D3DRS_SCISSORTESTENABLE, FALSE);
+
+    ImVec4 m_clear_color = ImVec4(m_color_r, m_color_g, m_color_b, m_color_a);
     D3DCOLOR clear_col_dx = D3DCOLOR_RGBA((int)(m_clear_color.x * m_clear_color.w * 255.0f), (int)(m_clear_color.y * m_clear_color.w * 255.0f), (int)(m_clear_color.z * m_clear_color.w * 255.0f), (int)(m_clear_color.w * 255.0f));
     m_pGraphicDev->Clear(0, nullptr, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, clear_col_dx, 1.0f, 0);
     if (m_pGraphicDev->BeginScene() >= 0)

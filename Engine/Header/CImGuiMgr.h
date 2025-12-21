@@ -4,13 +4,7 @@
 
 #include <d3d9.h>
 #include <d3dx9.h>
-
-#include "imgui.h"
-
-//#include "imgui_demo.cpp"
-#include "imgui_impl_dx9.h"
-#include "imgui_impl_win32.h"
-//#include "imgui_internal.h"
+#include <functional>
 
  /* -------------------------------------------
     CImGuiManager
@@ -32,6 +26,8 @@ private:
     virtual void Free();
 
 public:
+    float ImGui_Init();
+
     void ImGui_Setup(HWND hWnd, LPDIRECT3DDEVICE9 pDevice, WNDCLASSEXW& wndclass);
     void ImGui_Tick();
     void ImGui_Render();
@@ -52,7 +48,12 @@ private:
     // ImGui state variables
     bool m_show_demo_window = true;
     bool m_show_another_window = false;
-    ImVec4 m_clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+
+    float m_color_r = 0.45f;
+    float m_color_g = 0.45f;
+    float m_color_b = 0.45f;
+    float m_color_a = 0.45f;
+
     bool g_DeviceLost = false;
     int m_counter = 0;
     float m_f = 0.0f;

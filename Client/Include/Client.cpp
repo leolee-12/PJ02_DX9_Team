@@ -1,12 +1,10 @@
 ﻿// Client.cpp : 애플리케이션에 대한 진입점을 정의합니다.
 
-
 #include "pch.h"
 #include "framework.h"
 #include "Client.h"
 #include "../Client/Header/CMainApp.h"
 #include "CImGuiMgr.h"
-//#include "imgui_impl_win32.cpp"
 
 #define MAX_LOADSTRING 100
 #define IMGUI
@@ -163,8 +161,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
     
 #ifdef IMGUI
-   ImGui_ImplWin32_EnableDpiAwareness();
-   float main_scale = ImGui_ImplWin32_GetDpiScaleForMonitor(::MonitorFromPoint(POINT{ 0, 0 }, MONITOR_DEFAULTTOPRIMARY));
+   float main_scale = CImGuiMgr::GetInstance()->ImGui_Init();
 
    wc = { sizeof(wc), CS_CLASSDC, WndProc, 0L, 0L, GetModuleHandle(nullptr), nullptr, nullptr, nullptr, nullptr, L"ImGui Example", nullptr };
    ::RegisterClassExW(&wc);
@@ -176,9 +173,6 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    ::ShowWindow(g_hWnd, SW_SHOWDEFAULT);
    ::UpdateWindow(g_hWnd);
 
-   char buf[128];
-   sprintf_s(buf, "ImGui Init HWND = %p\n", g_hWnd);
-   OutputDebugStringA(buf);
 #else 
    HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
        CW_USEDEFAULT, 0,
@@ -196,8 +190,6 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    UpdateWindow(hWnd);
 #endif // IMGUI
 
-
-
    return TRUE;
 }
 
@@ -212,7 +204,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 //
 // 
 
-extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+//extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
