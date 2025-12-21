@@ -6,6 +6,7 @@
 CLoadingBack::CLoadingBack(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CUi(pGraphicDev), m_pBufferCom(nullptr), m_pTransformCom(nullptr)
 {
+	ZeroMemory(&m_vPos, sizeof(_vec3));
 }
 
 CLoadingBack::~CLoadingBack()
@@ -35,6 +36,8 @@ _int CLoadingBack::Update_GameObject(const _float& fTimeDelta)
 void CLoadingBack::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
+	m_pTransformCom->Get_Info(INFO_POS, &m_vPos);
+	Compute_ViewDepth_Ortho(&m_vPos);
 }
 
 void CLoadingBack::Render_GameObject()

@@ -70,8 +70,11 @@
     <Filter Include="09. CPersistentMgr">
       <UniqueIdentifier>{153d294d-a813-4bb7-9dee-2e2680526024}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\06. UI">
+    <Filter Include="02. GameObject\07. UI">
       <UniqueIdentifier>{0320c609-d491-42cf-96f0-e94adb951d41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. UI\00. LoadingBack">
+      <UniqueIdentifier>{ae049520-ab2e-4676-bf1c-57c1cb41b6f4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -142,7 +145,7 @@
       <Filter>09. CPersistentMgr</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CLoadingBack.h">
-      <Filter>02. GameObject\06. UI</Filter>
+      <Filter>02. GameObject\07. UI\00. LoadingBack</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -204,7 +207,7 @@
       <Filter>09. CPersistentMgr</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CLoadingBack.cpp">
-      <Filter>02. GameObject\06. UI</Filter>
+      <Filter>02. GameObject\07. UI\00. LoadingBack</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
