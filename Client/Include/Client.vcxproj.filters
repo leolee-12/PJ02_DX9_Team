@@ -58,14 +58,11 @@
     <Filter Include="02. GameObject\08. TestEffect">
       <UniqueIdentifier>{37f31870-dba2-4668-ad76-b1d69d78c68f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="99. ImGui">
-      <UniqueIdentifier>{56232e2c-ffe8-44c3-b9a9-ed7c74f680c1}</UniqueIdentifier>
+    <Filter Include="02. GameObject\99. TestObject">
+      <UniqueIdentifier>{5e8c73c1-37da-4a24-b395-d8e294c4be3f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="99. ImGui\ImGuiManager">
-      <UniqueIdentifier>{a0bf41c6-5777-4c4e-8447-6c2a2d563956}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="99. ImGui\files">
-      <UniqueIdentifier>{9c183ce3-ec11-4903-a741-de3a52c350b4}</UniqueIdentifier>
+    <Filter Include="01. Scene\04. EditScene">
+      <UniqueIdentifier>{ff5bb01d-db75-499d-ae0b-be1f8fb58ee7}</UniqueIdentifier>
     </Filter>
     <Filter Include="01. Scene\99. Loading\LoadingThread">
       <UniqueIdentifier>{bec13d5c-cc47-4d5b-a2eb-0fb3bafdcfdd}</UniqueIdentifier>
@@ -126,35 +123,11 @@
     <ClInclude Include="..\Header\CTestEffect.h">
       <Filter>02. GameObject\08. TestEffect</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\ImGui\imconfig.h">
-      <Filter>99. ImGui\files</Filter>
+    <ClInclude Include="..\Header\TestCube.h">
+      <Filter>02. GameObject\99. TestObject</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\ImGui\imgui.h">
-      <Filter>99. ImGui\files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ImGui\imgui_impl_dx9.h">
-      <Filter>99. ImGui\files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ImGui\imgui_impl_win32.h">
-      <Filter>99. ImGui\files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ImGui\imgui_internal.h">
-      <Filter>99. ImGui\files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ImGui\imstb_rectpack.h">
-      <Filter>99. ImGui\files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ImGui\imstb_textedit.h">
-      <Filter>99. ImGui\files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ImGui\imstb_truetype.h">
-      <Filter>99. ImGui\files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Header\CImGuiManager.h">
-      <Filter>99. ImGui\ImGuiManager</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Header\ImGui_Define.h">
-      <Filter>99. ImGui\ImGuiManager</Filter>
+    <ClInclude Include="..\Header\CEditScene.h">
+      <Filter>01. Scene\04. EditScene</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CLoadingThread.h">
       <Filter>01. Scene\99. Loading\LoadingThread</Filter>
@@ -209,29 +182,11 @@
     <ClCompile Include="..\Code\CTestEffect.cpp">
       <Filter>02. GameObject\08. TestEffect</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\CImGuiManager.cpp">
-      <Filter>99. ImGui\ImGuiManager</Filter>
+    <ClCompile Include="..\Code\TestCube.cpp">
+      <Filter>02. GameObject\99. TestObject</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\ImGui\imgui_draw.cpp">
-      <Filter>99. ImGui\files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ImGui\imgui_impl_dx9.cpp">
-      <Filter>99. ImGui\files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ImGui\imgui_impl_win32.cpp">
-      <Filter>99. ImGui\files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ImGui\imgui_tables.cpp">
-      <Filter>99. ImGui\files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ImGui\imgui_widgets.cpp">
-      <Filter>99. ImGui\files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ImGui\imgui.cpp">
-      <Filter>99. ImGui\files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ImGui\imgui_demo.cpp">
-      <Filter>99. ImGui\files</Filter>
+    <ClCompile Include="..\Code\CEditScene.cpp">
+      <Filter>01. Scene\04. EditScene</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CLoadingThread.cpp">
       <Filter>01. Scene\99. Loading\LoadingThread</Filter>
@@ -255,5 +210,8 @@
     <Image Include="Client.ico">
       <Filter>리소스 파일</Filter>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>
