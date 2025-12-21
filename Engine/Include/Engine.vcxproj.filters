@@ -114,6 +114,15 @@
     </Filter>
     <Filter Include="00. Manager\09. StaticChannelMgr\99. CollisionChannel">
       <UniqueIdentifier>{06a0c12a-ab29-4659-8164-b46f9223ad21}</UniqueIdentifier>
+	</Filter>	
+    <Filter Include="00. Manager\08. ImGuiMgr">
+      <UniqueIdentifier>{7d84f3d7-230e-4df1-9c30-d17dd44282d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00. Manager\09. SaveLoadMgr">
+      <UniqueIdentifier>{dfc8c9ff-7a73-48d1-a270-ba71869943d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00. Manager\08. ImGuiMgr\ImGui_files">
+      <UniqueIdentifier>{b537a219-ec5e-4adb-bb9f-aca263a5a4cd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -218,6 +227,33 @@
     </ClCompile>
     <ClCompile Include="..\Code\CCollisionChannel.cpp">
       <Filter>00. Manager\09. StaticChannelMgr\99. CollisionChannel</Filter>
+	</ClCompile>
+	<ClCompile Include="..\Code\CSaveLoadMgr.cpp">
+      <Filter>00. Manager\09. SaveLoadMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ImGui\imgui.cpp">
+      <Filter>00. Manager\08. ImGuiMgr\ImGui_files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ImGui\imgui_demo.cpp">
+      <Filter>00. Manager\08. ImGuiMgr\ImGui_files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ImGui\imgui_draw.cpp">
+      <Filter>00. Manager\08. ImGuiMgr\ImGui_files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ImGui\imgui_impl_dx9.cpp">
+      <Filter>00. Manager\08. ImGuiMgr\ImGui_files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ImGui\imgui_impl_win32.cpp">
+      <Filter>00. Manager\08. ImGuiMgr\ImGui_files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ImGui\imgui_tables.cpp">
+      <Filter>00. Manager\08. ImGuiMgr\ImGui_files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ImGui\imgui_widgets.cpp">
+      <Filter>00. Manager\08. ImGuiMgr\ImGui_files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CImGuiMgr.cpp">
+      <Filter>00. Manager\08. ImGuiMgr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -347,5 +383,42 @@
     <ClInclude Include="..\Header\CCollisionChannel.h">
       <Filter>00. Manager\09. StaticChannelMgr\99. CollisionChannel</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CSaveLoadMgr.h">
+      <Filter>00. Manager\09. SaveLoadMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CImGuiMgr.h">
+      <Filter>00. Manager\08. ImGuiMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\ImGui_Define.h">
+      <Filter>00. Manager\08. ImGuiMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ImGui\imconfig.h">
+      <Filter>00. Manager\08. ImGuiMgr\ImGui_files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ImGui\imgui.h">
+      <Filter>00. Manager\08. ImGuiMgr\ImGui_files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ImGui\imgui_impl_dx9.h">
+      <Filter>00. Manager\08. ImGuiMgr\ImGui_files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ImGui\imgui_impl_win32.h">
+      <Filter>00. Manager\08. ImGuiMgr\ImGui_files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ImGui\imgui_internal.h">
+      <Filter>00. Manager\08. ImGuiMgr\ImGui_files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ImGui\imstb_rectpack.h">
+      <Filter>00. Manager\08. ImGuiMgr\ImGui_files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ImGui\imstb_textedit.h">
+      <Filter>00. Manager\08. ImGuiMgr\ImGui_files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ImGui\imstb_truetype.h">
+      <Filter>00. Manager\08. ImGuiMgr\ImGui_files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cpp.hint" />
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>

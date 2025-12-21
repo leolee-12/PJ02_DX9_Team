@@ -1,67 +1,101 @@
-#include "pch.h"
-#include "CImGuiManager.h"
-//#include "imgui_demo.cpp"
-#include <iostream>
+#include "CImGuiMgr.h"
+#include <ImGui_Define.h>
+#include "imgui_impl_dx9.h"
+#include "imgui_impl_win32.h"
 
-CImGuiManager* CImGuiManager::Instance = nullptr;
-LPDIRECT3DDEVICE9 CImGuiManager::m_pGraphicDev = nullptr;
+#include "imgui.h"
+#include <d3d9.h>
+#include <d3dx9.h>
+
+
+using namespace Engine;
+using namespace std;
+
+IMPLEMENT_SINGLETON(CImGuiMgr)
 
 static LPDIRECT3D9              g_pD3D = nullptr;
 
 static D3DPRESENT_PARAMETERS    g_d3dpp = {};
 
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
-// ==========================
-//	CImGuiManager functions
-// ==========================
-
-CImGuiManager::CImGuiManager()
+CImGuiMgr::CImGuiMgr()
 {
 }
 
-CImGuiManager::~CImGuiManager()
+CImGuiMgr::~CImGuiMgr()
 {
-
+    Free();
 }
 
-void CImGuiManager::ImGui_Setup(HWND hWnd, LPDIRECT3DDEVICE9 pDevice)
+void CImGuiMgr::Free()
 {
-    //m_pGraphicDev = pDevice;
-    //m_pGraphicDev->AddRef();
+}
 
-    // Initialize Direct3D
-    if (!CreateDeviceD3D(g_hWnd))
+float CImGuiMgr::ImGui_Init()
+{
+    ImGui_ImplWin32_EnableDpiAwareness();
+    float main_scale = ImGui_ImplWin32_GetDpiScaleForMonitor(::MonitorFromPoint(POINT{ 0, 0 }, MONITOR_DEFAULTTOPRIMARY));
+    
+    return main_scale;
+}
+
+void CImGuiMgr::ImGui_Setup(HWND hWnd, LPDIRECT3DDEVICE9 pDevice, WNDCLASSEXW& wndclass)
+{
+    m_pGraphicDev = pDevice;
+    m_pGraphicDev->AddRef();
+    m_hWnd = hWnd;
+    wc = wndclass;
+
+    // CRITICAL: D3DPRESENT_PARAMETERS 초기화
+    ZeroMemory(&g_d3dpp, sizeof(g_d3dpp));
+
+    // 현재 디바이스의 Present Parameters 가져오기
+    IDirect3DSwapChain9* pSwapChain = nullptr;
+    if (SUCCEEDED(m_pGraphicDev->GetSwapChain(0, &pSwapChain)))
     {
-        CleanupDeviceD3D();
-        ::UnregisterClassW(wc.lpszClassName, wc.hInstance);
+        pSwapChain->GetPresentParameters(&g_d3dpp);
+        pSwapChain->Release();
+    }
+    else
+    {
+        // 기본값으로 초기화
+        RECT rect;
+        GetClientRect(hWnd, &rect);
+
+        g_d3dpp.Windowed = TRUE;
+        g_d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;
+        g_d3dpp.BackBufferFormat = D3DFMT_UNKNOWN;
+        g_d3dpp.BackBufferWidth = rect.right - rect.left;
+        g_d3dpp.BackBufferHeight = rect.bottom - rect.top;
+        g_d3dpp.EnableAutoDepthStencil = TRUE;
+        g_d3dpp.AutoDepthStencilFormat = D3DFMT_D16;
+        g_d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_ONE;
     }
 
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
 
-    // Setup Dear ImGui style
-    ImGui::StyleColorsDark();
-    //ImGui::StyleColorsLight();
-
-    // Setup Platform/Renderer backends
-    ImGui_ImplWin32_Init(g_hWnd);
-    ImGui_ImplDX9_Init(m_pGraphicDev);
-
-    ImGuiIO& io = ImGui::GetIO();
-    io.Fonts->AddFontFromFileTTF("../Font/arial.ttf", 16.0f);
-
-    char buf[128];
-    sprintf_s(buf, "ImGui Manager Init HWND = %p\n", g_hWnd);
-    OutputDebugStringA(buf);
-}
-
-void CImGuiManager::ImGui_Tick()
-{
     ImGuiIO& io = ImGui::GetIO(); (void)io;
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
 
+    // Setup Dear ImGui style
+    ImGui::StyleColorsDark();
+
+    // Setup Platform/Renderer backends
+    ImGui_ImplWin32_Init(hWnd);
+    ImGui_ImplDX9_Init(m_pGraphicDev);
+
+    // 폰트설정
+
+    io.Fonts->AddFontFromFileTTF("../Font/arial.ttf", 30.0f);
+}
+
+void CImGuiMgr::ImGui_Tick()
+{
+    ImGuiIO& io = ImGui::GetIO();
 
     // Handle lost D3D9 device
     if (g_DeviceLost)
@@ -78,11 +112,11 @@ void CImGuiManager::ImGui_Tick()
     }
 
     // Handle window resize (we don't resize directly in the WM_SIZE handler)
-    if (g_ResizeWidth != 0 && g_ResizeHeight != 0)
+    if (m_ResizeWidth != 0 && m_ResizeHeight != 0)
     {
-        g_d3dpp.BackBufferWidth = g_ResizeWidth;
-        g_d3dpp.BackBufferHeight = g_ResizeHeight;
-        g_ResizeWidth = g_ResizeHeight = 0;
+        g_d3dpp.BackBufferWidth = m_ResizeWidth;
+        g_d3dpp.BackBufferHeight = m_ResizeHeight;
+        m_ResizeWidth = m_ResizeHeight = 0;
         ResetDevice();
     }
 
@@ -106,6 +140,7 @@ void CImGuiManager::ImGui_Tick()
         ImGui::Checkbox("Demo Window", &m_show_demo_window);      // Edit bools storing our window open/close state
         ImGui::Checkbox("Another Window", &m_show_another_window);
 
+        ImVec4 m_clear_color = ImVec4(m_color_r, m_color_g, m_color_b, m_color_a);
         ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
         ImGui::ColorEdit3("clear color", (float*)&m_clear_color); // Edit 3 floats representing a color
 
@@ -129,13 +164,15 @@ void CImGuiManager::ImGui_Tick()
     }
 }
 
-void CImGuiManager::ImGui_Render()
+void CImGuiMgr::ImGui_Render()
 {
     // Rendering
     ImGui::EndFrame();
     m_pGraphicDev->SetRenderState(D3DRS_ZENABLE, FALSE);
     m_pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
     m_pGraphicDev->SetRenderState(D3DRS_SCISSORTESTENABLE, FALSE);
+
+    ImVec4 m_clear_color = ImVec4(m_color_r, m_color_g, m_color_b, m_color_a);
     D3DCOLOR clear_col_dx = D3DCOLOR_RGBA((int)(m_clear_color.x * m_clear_color.w * 255.0f), (int)(m_clear_color.y * m_clear_color.w * 255.0f), (int)(m_clear_color.z * m_clear_color.w * 255.0f), (int)(m_clear_color.w * 255.0f));
     m_pGraphicDev->Clear(0, nullptr, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, clear_col_dx, 1.0f, 0);
     if (m_pGraphicDev->BeginScene() >= 0)
@@ -149,7 +186,7 @@ void CImGuiManager::ImGui_Render()
         g_DeviceLost = true;
 }
 
-void CImGuiManager::ImGui_Shutdown()
+void CImGuiMgr::ImGui_Shutdown()
 {
    // Free();
 
@@ -158,27 +195,12 @@ void CImGuiManager::ImGui_Shutdown()
     ImGui::DestroyContext();
 }
 
-unsigned long CImGuiManager::Free()
-{
-    unsigned long		dwRefCnt = 0;
-
-    if (nullptr != m_pGraphicDev)
-    {
-        dwRefCnt = m_pGraphicDev->Release();
-
-        if (0 == dwRefCnt)
-            m_pGraphicDev = NULL;
-    }
-
-    return dwRefCnt;
-}
-
 
 // ==========================
 //	ImGui helper functions
 // ==========================
 
-bool CImGuiManager::CreateDeviceD3D(HWND hWnd)
+bool CImGuiMgr::CreateDeviceD3D(HWND hWnd)
 {
     if ((g_pD3D = Direct3DCreate9(D3D_SDK_VERSION)) == nullptr)
         return false;
@@ -198,17 +220,48 @@ bool CImGuiManager::CreateDeviceD3D(HWND hWnd)
     return true;
 }
 
-void CImGuiManager::CleanupDeviceD3D()
+void CImGuiMgr::CleanupDeviceD3D()
 {
     if (m_pGraphicDev) { m_pGraphicDev->Release(); m_pGraphicDev = nullptr; }
     if (g_pD3D) { g_pD3D->Release(); g_pD3D = nullptr; }
 }
 
-void CImGuiManager::ResetDevice()
+void CImGuiMgr::ResetDevice()
 {
     ImGui_ImplDX9_InvalidateDeviceObjects();
     HRESULT hr = m_pGraphicDev->Reset(&g_d3dpp);
     if (hr == D3DERR_INVALIDCALL)
         IM_ASSERT(0);
     ImGui_ImplDX9_CreateDeviceObjects();
+}
+
+LRESULT __stdcall CImGuiMgr::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
+{
+    if (ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam))
+        return true;
+
+    switch (msg)
+    {
+    case WM_SIZE:
+        if (wParam == SIZE_MINIMIZED)
+            return 0;
+        m_ResizeWidth = (UINT)LOWORD(lParam); // Queue resize
+        m_ResizeHeight = (UINT)HIWORD(lParam);
+        return 0;
+    case WM_SYSCOMMAND:
+        if ((wParam & 0xfff0) == SC_KEYMENU) // Disable ALT application menu
+            return 0;
+        break;
+    case WM_DESTROY:
+        ::PostQuitMessage(0);
+        return 0;
+    }
+    return ::DefWindowProcW(hWnd, msg, wParam, lParam);
+
+}
+
+void CImGuiMgr::Set_Resize(UINT width, UINT height)
+{
+    m_ResizeWidth = width;
+    m_ResizeHeight = height;
 }
