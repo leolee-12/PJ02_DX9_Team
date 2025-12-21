@@ -9,8 +9,9 @@
 #include "CLightMgr.h"
 #include "CImGuiMgr.h"
 #include "CCollisionMgr.h"
+#include "CPersistentMgr.h"
 
-#define IMGUI
+//#define IMGUI
 
 CMainApp::CMainApp() : m_pDeviceClass(nullptr), m_pGraphicDev(nullptr)
 , m_pManagementClass(CManagement::GetInstance())
@@ -172,7 +173,7 @@ void CMainApp::Free()
 	Safe_Release(m_pGraphicDev);
 	Safe_Release(m_pDeviceClass);	
 
-
+	CPersistentMgr::DestroyInstance();
 	CLightMgr::DestroyInstance();
 	CFontMgr::DestroyInstance();
 	CDInputMgr::DestroyInstance();

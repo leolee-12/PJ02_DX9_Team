@@ -4,6 +4,7 @@
 #include "CProtoMgr.h"
 #include "CDynamicCamera.h"
 #include "CSkyBox.h"
+#include "CPersistentMgr.h"
 
 CTest::CTest(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -100,13 +101,15 @@ HRESULT CTest::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 		return E_FAIL;
 
 	// Player
-	pGameObject = CPlayer::Create(m_pGraphicDev, m_pMessageChannel);
+	pGameObject = CPersistentMgr::GetInstance()->Get_GlobalObjects(GOBJ_PLAYER);
 
 	if (nullptr == pGameObject)
 		return E_FAIL;
 
 	if (FAILED(pLayer->Add_GameObject(L"Player", pGameObject)))
 		return E_FAIL;
+
+	pGameObject->AddRef();
 
 	m_mapLayer.insert({ pLayerTag , pLayer });
 

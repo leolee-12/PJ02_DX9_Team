@@ -9,6 +9,8 @@
 #include "CCollisionMgr.h"
 #include "CLoading.h"
 #include "CManagement.h"
+#include "CPersistentMgr.h"
+
 
 CStage::CStage(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -33,9 +35,6 @@ HRESULT CStage::Ready_Scene()
 		return E_FAIL;
 
 	if (FAILED(Ready_UI_Layer(L"UI_Layer")))
-		return E_FAIL;
-
-	if (FAILED(Ready_Const_Layer()))
 		return E_FAIL;
 
 	// 테스트용
@@ -177,6 +176,16 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	if (FAILED(pLayer->Add_GameObject(L"Monster", pGameObject)))
 		return E_FAIL;
 
+	pGameObject = CPersistentMgr::GetInstance()->Get_GlobalObjects(GOBJ_PLAYER);
+
+	if (nullptr == pGameObject)
+		return E_FAIL;
+
+	if (FAILED(pLayer->Add_GameObject(L"Player", pGameObject)))
+		return E_FAIL;
+
+	pGameObject->AddRef();
+	
 	m_mapLayer.insert({ pLayerTag , pLayer });
 
 	return S_OK;
@@ -212,16 +221,6 @@ HRESULT CStage::Ready_Const_Layer()
 {
 	CLayer* pLayer = CLayer::Create();
 	if (nullptr == pLayer)
-		return E_FAIL;
-
-	CGameObject* pGameObject = nullptr;
-
-	pGameObject = CPlayer::Create(m_pGraphicDev, m_pMessageChannel);
-
-	if (nullptr == pGameObject)
-		return E_FAIL;
-
-	if (FAILED(pLayer->Add_GameObject(L"Player", pGameObject)))
 		return E_FAIL;
 
 

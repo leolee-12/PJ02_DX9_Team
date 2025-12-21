@@ -2,6 +2,7 @@
 #include "CLoadingThread.h"
 #include "CProtoMgr.h"
 #include "CPlayer.h"
+#include "CPersistentMgr.h"
 
 CLoadingThread::CLoadingThread(LPDIRECT3DDEVICE9 pGraphicDev)
     : m_pGraphicDev(pGraphicDev), m_bFinish(false), m_eLoading(LOADING_END)
@@ -102,6 +103,10 @@ _uint CLoadingThread::Loading_ForStage()
         return E_FAIL;
 
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Calculator", Engine::CCalculator::Create(m_pGraphicDev))))
+        return E_FAIL;
+
+    
+    if (FAILED(CPersistentMgr::GetInstance()->Ready_GlobalObjects(m_pGraphicDev)))
         return E_FAIL;
 
 
