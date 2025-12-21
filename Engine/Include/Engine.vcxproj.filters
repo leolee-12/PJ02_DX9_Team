@@ -114,6 +114,7 @@
     </Filter>
     <Filter Include="00. Manager\09. StaticChannelMgr\99. CollisionChannel">
       <UniqueIdentifier>{06a0c12a-ab29-4659-8164-b46f9223ad21}</UniqueIdentifier>
+	</Filter>	
     <Filter Include="00. Manager\08. ImGuiMgr">
       <UniqueIdentifier>{7d84f3d7-230e-4df1-9c30-d17dd44282d6}</UniqueIdentifier>
     </Filter>
@@ -226,7 +227,8 @@
     </ClCompile>
     <ClCompile Include="..\Code\CCollisionChannel.cpp">
       <Filter>00. Manager\09. StaticChannelMgr\99. CollisionChannel</Filter>
-    <ClCompile Include="..\Code\CSaveLoadMgr.cpp">
+	</ClCompile>
+	<ClCompile Include="..\Code\CSaveLoadMgr.cpp">
       <Filter>00. Manager\09. SaveLoadMgr</Filter>
     </ClCompile>
     <ClCompile Include="..\..\ImGui\imgui.cpp">

@@ -4,6 +4,7 @@
 
 #include <d3d9.h>
 #include <d3dx9.h>
+#include <functional>
 
  /* -------------------------------------------
     CImGuiManager
@@ -26,6 +27,7 @@ private:
 
 public:
     float ImGui_Init();
+
     void ImGui_Setup(HWND hWnd, LPDIRECT3DDEVICE9 pDevice, WNDCLASSEXW& wndclass);
     void ImGui_Tick();
     void ImGui_Render();

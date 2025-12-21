@@ -27,6 +27,7 @@ public:
 	HRESULT			Ready_Prototype(const _tchar* pComponentTag, CComponent* pComponent);
 	CComponent* Clone_Prototype(const _tchar* pComponentTag);
 
+
 private:
 	CComponent* Find_Prototype(const _tchar* pComponentTag);
 
