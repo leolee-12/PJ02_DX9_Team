@@ -4,6 +4,7 @@
 namespace Engine
 {
 	class CCubeTex;
+	class CTransform;
 }
 
 
@@ -25,6 +26,7 @@ private:
 	HRESULT			Add_Component();
 
 private:
+	Engine::CTransform* m_pTransformCom;
 	Engine::CCubeTex* m_pCubeTexCom;
 
 	_vec3			  m_vPos;
