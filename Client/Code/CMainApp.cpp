@@ -8,6 +8,7 @@
 #include "CFontMgr.h"
 #include "CLightMgr.h"
 #include "CImGuiMgr.h"
+#include "CCollisionMgr.h"
 
 #define IMGUI
 
@@ -32,6 +33,7 @@ HRESULT CMainApp::Ready_MainApp()
 
 #else
 
+	CCollisionMgr::GetInstance()->Ready_CollisionMgr();
 	if (FAILED(Ready_Scene(m_pGraphicDev)))
 		return E_FAIL;
 
@@ -170,6 +172,7 @@ void CMainApp::Free()
 	Safe_Release(m_pGraphicDev);
 	Safe_Release(m_pDeviceClass);	
 
+
 	CLightMgr::DestroyInstance();
 	CFontMgr::DestroyInstance();
 	CDInputMgr::DestroyInstance();
@@ -178,6 +181,7 @@ void CMainApp::Free()
 	CFrameMgr::DestroyInstance();
 	CTimerMgr::DestroyInstance();
 	CManagement::DestroyInstance();
+	CCollisionMgr::DestroyInstance();
 #ifdef IMGUI
 	CImGuiMgr::GetInstance()->ImGui_Shutdown();
 	CImGuiMgr::DestroyInstance();

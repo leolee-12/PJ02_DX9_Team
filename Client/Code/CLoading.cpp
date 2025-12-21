@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "CLoading.h"
 #include "CProtoMgr.h"
+#include "CPlayer.h"
 
 CLoading::CLoading(LPDIRECT3DDEVICE9 pGraphicDev)
     : m_pGraphicDev(pGraphicDev), m_bFinish(false), m_eLoading(LOADING_END)
@@ -50,10 +51,31 @@ _uint CLoading::Loading_ForStage()
 
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_CubeTex", Engine::CCubeTex::Create(m_pGraphicDev))))
         return E_FAIL;
+
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Collider", Engine::CCollider::Create(m_pGraphicDev))))
+        return E_FAIL;
         
     lstrcpy(m_szLoading, L"Texture Loading..............................");
 
-    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_PlayerTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Player/idle/idle_%04d.png", 180))))
+    //if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_PlayerTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Player/idle/idle_%04d.png", 180))))
+    //    return E_FAIL;
+
+    vector<CTextureSet::TEXINFO> tempVec(13);
+    tempVec[0]  = CTextureSet::TEXINFO(L"idle", L"../Bin/Resource/Texture/Player/idle/idle_%04d.png", 72);
+    tempVec[1]  = CTextureSet::TEXINFO(L"idle-up", L"../Bin/Resource/Texture/Player/idle-up/idle-up_%04d.png", 72);
+    tempVec[2]  = CTextureSet::TEXINFO(L"run-up", L"../Bin/Resource/Texture/Player/run-up/run-up_%04d.png", 9);
+    tempVec[3]  = CTextureSet::TEXINFO(L"run-down", L"../Bin/Resource/Texture/Player/run-down/run-down_%04d.png", 9);
+    tempVec[4]  = CTextureSet::TEXINFO(L"run-diagonal", L"../Bin/Resource/Texture/Player/run/run_%04d.png", 9);
+    tempVec[5]  = CTextureSet::TEXINFO(L"run-horizontal", L"../Bin/Resource/Texture/Player/run-horizontal/run-horizontal_%04d.png", 9);
+    tempVec[6]  = CTextureSet::TEXINFO(L"run-up-diagonal", L"../Bin/Resource/Texture/Player/run-up-diagonal/run-up-diagonal_%04d.png", 9);
+    tempVec[7]  = CTextureSet::TEXINFO(L"roll-up", L"../Bin/Resource/Texture/Player/roll-up/roll-up_%04d.png", 8);
+    tempVec[8]  = CTextureSet::TEXINFO(L"roll-down", L"../Bin/Resource/Texture/Player/roll-down/roll-down_%04d.png", 8);
+    tempVec[9]  = CTextureSet::TEXINFO(L"roll-horizontal", L"../Bin/Resource/Texture/Player/roll/roll_%04d.png", 9);
+    tempVec[10] = CTextureSet::TEXINFO(L"attack-combo1", L"../Bin/Resource/Texture/Player/attack-combo1/attack-combo1_%04d.png", 15);
+    tempVec[11] = CTextureSet::TEXINFO(L"attack-combo2", L"../Bin/Resource/Texture/Player/attack-combo2/attack-combo2_%04d.png", 19);
+    tempVec[12] = CTextureSet::TEXINFO(L"attack-combo3", L"../Bin/Resource/Texture/Player/attack-combo3/attack-combo3_%04d.png", 19);
+    
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_PlayerTexture", Engine::CTextureSet::Create(m_pGraphicDev, TEX_NORMAL, tempVec))))
         return E_FAIL;
 
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_MonsterTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster0.png", 1))))
@@ -73,7 +95,6 @@ _uint CLoading::Loading_ForStage()
    
     //if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_SkyTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_CUBE, L"../Bin/Resource/Texture/159.dds", 1))))
     //    return E_FAIL;
-
 
     lstrcpy(m_szLoading, L"Etc Loading..............................");
 

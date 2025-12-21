@@ -16,20 +16,18 @@ CGameObject::CGameObject(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* SceneCh
 }
 
 CGameObject::CGameObject(const CGameObject& rhs)
-    : m_pGraphicDev(rhs.m_pGraphicDev), m_pMessageChannel(rhs.m_pMessageChannel), m_eOBJID(rhs.m_eOBJID)
+    : m_pGraphicDev(rhs.m_pGraphicDev), m_pMessageChannel(nullptr), m_eOBJID(rhs.m_eOBJID)
     , m_fDepth(rhs.m_fDepth)
 {
-    m_pGraphicDev->AddRef();
-    if (m_pMessageChannel != nullptr) { m_pMessageChannel->AddRef(); }
 }
 
 CGameObject::~CGameObject()
 {
 }
 
-CComponent* CGameObject::Get_Component(COMPONENTID eID, const _tchar* pComponentTag)
+CComponent* CGameObject::Get_Component(COMPONENTID eID, const wstring& strComponentTag)
 {
-    CComponent* pComponent = Find_Component(eID, pComponentTag);
+    CComponent* pComponent = Find_Component(eID, strComponentTag);
 
     if (nullptr == pComponent)
         return nullptr;
@@ -63,6 +61,10 @@ void CGameObject::Render_GameObject()
 {
 }
 
+void CGameObject::OnCollision(CGameObject* pObject)
+{
+}
+
 void CGameObject::Compute_ViewDepth(const _vec3* pPos)
 {
     _matrix     matCamWorld;
@@ -77,11 +79,9 @@ void CGameObject::Compute_ViewDepth(const _vec3* pPos)
     m_fDepth = D3DXVec3Length(&vDir);
 }
 
-CComponent* CGameObject::Find_Component(COMPONENTID eID, const _tchar* pComponentTag)
+CComponent* CGameObject::Find_Component(COMPONENTID eID, const wstring& strComponentTag)
 {
-    auto        iter = find_if(m_mapComponent[eID].begin(),
-                                m_mapComponent[eID].end(), 
-                                 CTag_Finder(pComponentTag));
+    auto iter = m_mapComponent[eID].find(strComponentTag);
 
     if (iter == m_mapComponent[eID].end())
         return nullptr;

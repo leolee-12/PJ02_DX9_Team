@@ -6,6 +6,7 @@ namespace Engine
 	class CRcTex;
 	class CTransform;
 	class CTexture;
+	class CCollider;
 }
 
 class CMonster : public CGameObject
@@ -21,6 +22,7 @@ public:
 	virtual			_int		Update_GameObject(const _float& fTimeDelta);
 	virtual			void		LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual			void		Render_GameObject();
+	virtual			void		OnCollision(CGameObject* pObject) {};
 
 private:
 	HRESULT			Add_Component();
@@ -29,6 +31,7 @@ private:
 	Engine::CRcTex* m_pBufferCom;
 	Engine::CTransform* m_pTransformCom;
 	Engine::CTexture* m_pTextureCom;
+	Engine::CCollider* m_pColliderCom;
 
 	_vec3			  m_vPos;
 

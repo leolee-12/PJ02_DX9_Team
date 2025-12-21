@@ -8,22 +8,20 @@ CLayer::~CLayer()
 {
 }
 
-CComponent* CLayer::Get_Component(COMPONENTID eID, const _tchar* pObjTag, const _tchar* pComponentTag)
+CComponent* CLayer::Get_Component(COMPONENTID eID, const wstring& strObjTag, const wstring& strComponentTag)
 {
-	auto iter = m_mapObject.find(pObjTag);
+	auto iter = m_mapObject.find(strObjTag);
 	if (iter == m_mapObject.end()) { return nullptr; }
 
-	return iter->second.front()->Get_Component(eID, pComponentTag);
+	return iter->second.front()->Get_Component(eID, strComponentTag);
 }
 
-HRESULT CLayer::Add_GameObject(const _tchar* pObjTag, CGameObject* pGameObject)
+HRESULT CLayer::Add_GameObject(const wstring& pObjTag, CGameObject* pGameObject)
 {
 	if (nullptr == pGameObject)
 		return E_FAIL;
 
-	auto& vec = m_mapObject[pObjTag];
-
-	vec.push_back(pGameObject);
+	m_mapObject[pObjTag].push_back(pGameObject);
 
 	return S_OK;
 }

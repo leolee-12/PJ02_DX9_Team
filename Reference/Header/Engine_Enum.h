@@ -24,5 +24,36 @@ namespace Engine
 
 	enum OBJID { OID_PLAYER, OID_MONSTER, OID_DCAM, OID_MAINCAM, OID_TEST, OID_END };
 
+	enum COLGROUP
+	{
+		CL_NONE		= 0,
+		CL_PLAYER	= 1 << 0,
+		CL_MONSTER	= 1 << 1,
+		CL_3		= 1 << 2,
+		CL_4		= 1 << 3,
+		CL_5		= 1 << 4,
+		CL_6		= 1 << 5,
+		CL_7		= 1 << 6,
+		CL_8		= 1 << 7,
+		CL_9		= 1 << 8,
+		CL_10		= 1 << 9,
+		CL_11		= 1 << 10,
+		CL_12		= 1 << 11,
+		CL_13		= 1 << 12,
+		CL_14		= 1 << 13,
+		CL_15		= 1 << 14,
+		CL_16		= 1 << 15,
+
+		CL_ALL		= 0xFFFF // 1111 1111 1111 1111 16ºñÆ®
+	};
+	inline COLGROUP operator|(COLGROUP lhs, COLGROUP rhs) {
+		return COLGROUP((unsigned int)lhs | (unsigned int)rhs);
+	}
+
+	inline COLGROUP operator&(COLGROUP lhs, COLGROUP rhs) {
+		return COLGROUP((unsigned int)lhs & (unsigned int)rhs);
+	}
+
+
 }
 #endif // Engine_Enum_h__
