@@ -76,8 +76,35 @@ void CRenderer::Render_Alpha(LPDIRECT3DDEVICE9& pGraphicDev)
 
 void CRenderer::Render_UI(LPDIRECT3DDEVICE9& pGraphicDev)
 {
+	pGraphicDev->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
+	pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+	pGraphicDev->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+	pGraphicDev->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+
+	_matrix matOldView, matOldProj;
+	pGraphicDev->GetTransform(D3DTS_VIEW, &matOldView);
+	pGraphicDev->GetTransform(D3DTS_PROJECTION, &matOldProj);
+
+	_matrix matView, matProj;
+	D3DXMatrixIdentity(&matView);
+	D3DXMatrixOrthoLH(&matProj, (_float)WINCX, (_float)WINCY, 0.f, 1.f);
+
+	pGraphicDev->SetTransform(D3DTS_VIEW, &matView);
+	pGraphicDev->SetTransform(D3DTS_PROJECTION, &matProj);
+
+	m_RenderGroup[RENDER_UI].sort([](CGameObject* pDst, CGameObject* pSrc)->bool
+		{
+			return pDst->Get_Depth() > pSrc->Get_Depth();
+		});
+
 	for (auto& pObj : m_RenderGroup[RENDER_UI])
 		pObj->Render_GameObject();
+
+	pGraphicDev->SetTransform(D3DTS_VIEW, &matOldView);
+	pGraphicDev->SetTransform(D3DTS_PROJECTION, &matOldProj);
+
+	pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
+	pGraphicDev->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
 }
 
 void CRenderer::Free()

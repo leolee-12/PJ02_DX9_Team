@@ -70,6 +70,9 @@
     <Filter Include="09. CPersistentMgr">
       <UniqueIdentifier>{153d294d-a813-4bb7-9dee-2e2680526024}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\06. UI">
+      <UniqueIdentifier>{0320c609-d491-42cf-96f0-e94adb951d41}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -138,6 +141,9 @@
     <ClInclude Include="..\Header\CPersistentMgr.h">
       <Filter>09. CPersistentMgr</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CLoadingBack.h">
+      <Filter>02. GameObject\06. UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -196,6 +202,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CPersistentMgr.cpp">
       <Filter>09. CPersistentMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CLoadingBack.cpp">
+      <Filter>02. GameObject\06. UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

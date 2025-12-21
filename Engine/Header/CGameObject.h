@@ -35,7 +35,7 @@ protected:
 
 protected:
 	virtual		void		Free();
-	virtual     void		Unsubscribe_Handles();
+	void		Unsubscribe_Handles();
 
 	void		Requst_Unsubscribe(const wstring& strEventType);
 
