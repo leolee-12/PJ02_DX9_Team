@@ -1,14 +1,16 @@
 #pragma once
+#include "CBase.h"
+#include "Engine_Macro.h"
 
-#include <windows.h>
+#include <d3d9.h>
+#include <d3dx9.h>
+
 #include "imgui.h"
+
+//#include "imgui_demo.cpp"
 #include "imgui_impl_dx9.h"
 #include "imgui_impl_win32.h"
-#include <d3d9.h>
-#include <d3d9types.h>
-#include <tchar.h>
-#include "ImGui_Define.h"
-#include "Engine_Macro.h"
+//#include "imgui_internal.h"
 
  /* -------------------------------------------
     CImGuiManager
@@ -16,41 +18,28 @@
     ImGui을 이식한 맵툴 매니저입니다.
  -------------------------------------------- */
 
-class CImGuiManager
+BEGIN(Engine)
+
+class ENGINE_DLL CImGuiMgr : public CBase
 {
-public:
-    static CImGuiManager* Instance;
+    DECLARE_SINGLETON(CImGuiMgr)
+
+private:
+    explicit  CImGuiMgr();
+    virtual ~CImGuiMgr();
+
+private:
+    virtual void Free();
 
 public:
-    static CImGuiManager* GetInstance()
-    {
-        if (nullptr == Instance)
-            Instance = new CImGuiManager;
-        return Instance;
-    }
-    static void DestroyInstance()
-    {
-        if (nullptr != Instance)
-        {
-            delete Instance;
-            Instance = nullptr;
-        }
-    }
-
-public:
-    void ImGui_Setup(HWND hWnd, LPDIRECT3DDEVICE9 pDevice);
+    void ImGui_Setup(HWND hWnd, LPDIRECT3DDEVICE9 pDevice, WNDCLASSEXW& wndclass);
     void ImGui_Tick();
     void ImGui_Render();
     void ImGui_Shutdown();
 
-    unsigned long Free();
-
 private:
-    CImGuiManager();
-    ~CImGuiManager();
-
-private:
-    static LPDIRECT3DDEVICE9 m_pGraphicDev;
+    LPDIRECT3DDEVICE9 m_pGraphicDev = nullptr;
+    HWND m_hWnd;
 
 public:
     /* imgui helper function */
@@ -67,4 +56,13 @@ private:
     bool g_DeviceLost = false;
     int m_counter = 0;
     float m_f = 0.0f;
+
+public:
+    void Set_Resize(UINT width, UINT height);
+    // ImGui
+    UINT                     m_ResizeWidth = 0, m_ResizeHeight = 0;
+    WNDCLASSEXW wc;
+
 };
+
+END

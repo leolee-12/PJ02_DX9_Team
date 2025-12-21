@@ -111,7 +111,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;ENGINE_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../Header; ../../Base;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../Header;../../Base;../../ImGui</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -147,6 +147,14 @@ call Copy.bat</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\ImGui\imconfig.h" />
+    <ClInclude Include="..\..\ImGui\imgui.h" />
+    <ClInclude Include="..\..\ImGui\imgui_impl_dx9.h" />
+    <ClInclude Include="..\..\ImGui\imgui_impl_win32.h" />
+    <ClInclude Include="..\..\ImGui\imgui_internal.h" />
+    <ClInclude Include="..\..\ImGui\imstb_rectpack.h" />
+    <ClInclude Include="..\..\ImGui\imstb_textedit.h" />
+    <ClInclude Include="..\..\ImGui\imstb_truetype.h" />
     <ClInclude Include="..\Header\CCalculator.h" />
     <ClInclude Include="..\Header\CCamera.h" />
     <ClInclude Include="..\Header\CComponent.h" />
@@ -158,6 +166,7 @@ call Copy.bat</Command>
     <ClInclude Include="..\Header\CFrameMgr.h" />
     <ClInclude Include="..\Header\CGameObject.h" />
     <ClInclude Include="..\Header\CGraphicDev.h" />
+    <ClInclude Include="..\Header\CImGuiMgr.h" />
     <ClInclude Include="..\Header\CLayer.h" />
     <ClInclude Include="..\Header\CLight.h" />
     <ClInclude Include="..\Header\CLightMgr.h" />
@@ -166,6 +175,7 @@ call Copy.bat</Command>
     <ClInclude Include="..\Header\CRcCol.h" />
     <ClInclude Include="..\Header\CRcTex.h" />
     <ClInclude Include="..\Header\CRenderer.h" />
+    <ClInclude Include="..\Header\CSaveLoadMgr.h" />
     <ClInclude Include="..\Header\CScene.h" />
     <ClInclude Include="..\Header\CStageMessage.h" />
     <ClInclude Include="..\Header\CTerrainTex.h" />
@@ -184,8 +194,16 @@ call Copy.bat</Command>
     <ClInclude Include="..\Header\Engine_Struct.h" />
     <ClInclude Include="..\Header\Engine_Typedef.h" />
     <ClInclude Include="..\Header\IMessageChannel.h" />
+    <ClInclude Include="..\Header\ImGui_Define.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\ImGui\imgui.cpp" />
+    <ClCompile Include="..\..\ImGui\imgui_demo.cpp" />
+    <ClCompile Include="..\..\ImGui\imgui_draw.cpp" />
+    <ClCompile Include="..\..\ImGui\imgui_impl_dx9.cpp" />
+    <ClCompile Include="..\..\ImGui\imgui_impl_win32.cpp" />
+    <ClCompile Include="..\..\ImGui\imgui_tables.cpp" />
+    <ClCompile Include="..\..\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="..\Code\CCalculator.cpp" />
     <ClCompile Include="..\Code\CCamera.cpp" />
     <ClCompile Include="..\Code\CComponent.cpp" />
@@ -197,6 +215,7 @@ call Copy.bat</Command>
     <ClCompile Include="..\Code\CFrameMgr.cpp" />
     <ClCompile Include="..\Code\CGameObject.cpp" />
     <ClCompile Include="..\Code\CGraphicDev.cpp" />
+    <ClCompile Include="..\Code\CImGuiMgr.cpp" />
     <ClCompile Include="..\Code\CLayer.cpp" />
     <ClCompile Include="..\Code\CLight.cpp" />
     <ClCompile Include="..\Code\CLightMgr.cpp" />
@@ -205,6 +224,7 @@ call Copy.bat</Command>
     <ClCompile Include="..\Code\CRcCol.cpp" />
     <ClCompile Include="..\Code\CRcTex.cpp" />
     <ClCompile Include="..\Code\CRenderer.cpp" />
+    <ClCompile Include="..\Code\CSaveLoadMgr.cpp" />
     <ClCompile Include="..\Code\CScene.cpp" />
     <ClCompile Include="..\Code\CStageMessage.cpp" />
     <ClCompile Include="..\Code\CTerrainTex.cpp" />
@@ -215,6 +235,9 @@ call Copy.bat</Command>
     <ClCompile Include="..\Code\CTransform.cpp" />
     <ClCompile Include="..\Code\CTriCol.cpp" />
     <ClCompile Include="..\Code\CVIBuffer.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cpp.hint" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

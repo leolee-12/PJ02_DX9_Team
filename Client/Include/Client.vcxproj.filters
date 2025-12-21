@@ -58,20 +58,8 @@
     <Filter Include="02. GameObject\08. TestEffect">
       <UniqueIdentifier>{37f31870-dba2-4668-ad76-b1d69d78c68f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="99. MapTool">
-      <UniqueIdentifier>{56232e2c-ffe8-44c3-b9a9-ed7c74f680c1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="99. MapTool\ImGui_Files">
-      <UniqueIdentifier>{9c183ce3-ec11-4903-a741-de3a52c350b4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="99. MapTool\00. Manager">
-      <UniqueIdentifier>{eb914859-fa9a-494e-bff0-4a60e8d03284}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="99. MapTool\00. Manager\ImGuiManager">
-      <UniqueIdentifier>{a0bf41c6-5777-4c4e-8447-6c2a2d563956}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="99. MapTool\00. Manager\SaveLoadMananger">
-      <UniqueIdentifier>{65071c67-0c76-4af0-ae94-33354375b4cf}</UniqueIdentifier>
+    <Filter Include="소스 파일\imgui">
+      <UniqueIdentifier>{2498f428-806a-4ae8-a383-79de106573ce}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -129,41 +117,29 @@
     <ClInclude Include="..\Header\CTestEffect.h">
       <Filter>02. GameObject\08. TestEffect</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\ImGui\imconfig.h">
-      <Filter>99. MapTool\ImGui_Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ImGui\imgui.h">
-      <Filter>99. MapTool\ImGui_Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ImGui\imgui_impl_dx9.h">
-      <Filter>99. MapTool\ImGui_Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\ImGui\imgui_impl_win32.h">
-      <Filter>99. MapTool\ImGui_Files</Filter>
+      <Filter>소스 파일\imgui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\ImGui\imgui_internal.h">
-      <Filter>99. MapTool\ImGui_Files</Filter>
+      <Filter>소스 파일\imgui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\ImGui\imstb_rectpack.h">
-      <Filter>99. MapTool\ImGui_Files</Filter>
+      <Filter>소스 파일\imgui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\ImGui\imstb_textedit.h">
-      <Filter>99. MapTool\ImGui_Files</Filter>
+      <Filter>소스 파일\imgui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\ImGui\imstb_truetype.h">
-      <Filter>99. MapTool\ImGui_Files</Filter>
+      <Filter>소스 파일\imgui</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\CImGuiManager.h">
-      <Filter>99. MapTool\00. Manager\ImGuiManager</Filter>
+    <ClInclude Include="..\..\ImGui\imconfig.h">
+      <Filter>소스 파일\imgui</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\SaveLoad.h">
-      <Filter>99. MapTool</Filter>
+    <ClInclude Include="..\..\ImGui\imgui.h">
+      <Filter>소스 파일\imgui</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\CSaveLoadManager.h">
-      <Filter>99. MapTool\00. Manager\SaveLoadMananger</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Header\ImGui_Define.h">
-      <Filter>99. MapTool\00. Manager\ImGuiManager</Filter>
+    <ClInclude Include="..\..\ImGui\imgui_impl_dx9.h">
+      <Filter>소스 파일\imgui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -212,32 +188,26 @@
     <ClCompile Include="..\Code\CTestEffect.cpp">
       <Filter>02. GameObject\08. TestEffect</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\CImGuiManager.cpp">
-      <Filter>99. MapTool\00. Manager\ImGuiManager</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ImGui\imgui_draw.cpp">
-      <Filter>99. MapTool\ImGui_Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ImGui\imgui_impl_dx9.cpp">
-      <Filter>99. MapTool\ImGui_Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\ImGui\imgui_impl_win32.cpp">
-      <Filter>99. MapTool\ImGui_Files</Filter>
+      <Filter>소스 파일\imgui</Filter>
     </ClCompile>
     <ClCompile Include="..\..\ImGui\imgui_tables.cpp">
-      <Filter>99. MapTool\ImGui_Files</Filter>
+      <Filter>소스 파일\imgui</Filter>
     </ClCompile>
     <ClCompile Include="..\..\ImGui\imgui_widgets.cpp">
-      <Filter>99. MapTool\ImGui_Files</Filter>
+      <Filter>소스 파일\imgui</Filter>
     </ClCompile>
     <ClCompile Include="..\..\ImGui\imgui.cpp">
-      <Filter>99. MapTool\ImGui_Files</Filter>
+      <Filter>소스 파일\imgui</Filter>
     </ClCompile>
     <ClCompile Include="..\..\ImGui\imgui_demo.cpp">
-      <Filter>99. MapTool\ImGui_Files</Filter>
+      <Filter>소스 파일\imgui</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\CSaveLoadManager.cpp">
-      <Filter>99. MapTool\00. Manager\SaveLoadMananger</Filter>
+    <ClCompile Include="..\..\ImGui\imgui_draw.cpp">
+      <Filter>소스 파일\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ImGui\imgui_impl_dx9.cpp">
+      <Filter>소스 파일\imgui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

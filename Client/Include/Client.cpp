@@ -1,19 +1,12 @@
 ﻿// Client.cpp : 애플리케이션에 대한 진입점을 정의합니다.
-//
 
-//// ImGui
-#include "imgui.h"
-#include "imgui_impl_win32.h"
-#include "imgui_impl_dx9.h"
-#include "imgui_impl_win32.cpp"
-#include "CImGuiManager.h"
-#include "ImGui_Define.h"
-#include <WinUser.h>
 
 #include "pch.h"
 #include "framework.h"
 #include "Client.h"
-#include "CMainApp.h"
+#include "../Client/Header/CMainApp.h"
+#include "CImGuiMgr.h"
+//#include "imgui_impl_win32.cpp"
 
 #define MAX_LOADSTRING 100
 #define IMGUI
@@ -23,6 +16,7 @@ HINSTANCE g_hInst;                                // 현재 인스턴스입니�
 WCHAR szTitle[MAX_LOADSTRING];                  // 제목 표시줄 텍스트입니다.
 WCHAR szWindowClass[MAX_LOADSTRING];            // 기본 창 클래스 이름입니다.
 HWND    g_hWnd;
+WNDCLASSEXW wndclass;
 
 // ImGui
 UINT                     g_ResizeWidth = 0, g_ResizeHeight = 0;
@@ -174,6 +168,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
    wc = { sizeof(wc), CS_CLASSDC, WndProc, 0L, 0L, GetModuleHandle(nullptr), nullptr, nullptr, nullptr, nullptr, L"ImGui Example", nullptr };
    ::RegisterClassExW(&wc);
+   wndclass = wc;
 
    g_hWnd = ::CreateWindowW(wc.lpszClassName, L"Dear ImGui DirectX9 Example", WS_OVERLAPPEDWINDOW, 100, 100, (int)(1280 * main_scale), (int)(800 * main_scale), nullptr, nullptr, wc.hInstance, nullptr);
 
@@ -184,7 +179,6 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    char buf[128];
    sprintf_s(buf, "ImGui Init HWND = %p\n", g_hWnd);
    OutputDebugStringA(buf);
-
 #else 
    HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
        CW_USEDEFAULT, 0,
@@ -223,37 +217,13 @@ extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 #ifdef IMGUI
-    if (ImGui_ImplWin32_WndProcHandler(hWnd, message, wParam, lParam))
-        return true;
+    CImGuiMgr::GetInstance()->WndProc(g_hWnd, message, wParam, lParam);
 
-    switch (message)
-    {
-    case WM_SIZE:
-        if (wParam == SIZE_MINIMIZED)
-            return 0;
-        g_ResizeWidth = (UINT)LOWORD(lParam); // Queue resize
-        g_ResizeHeight = (UINT)HIWORD(lParam);
-        return 0;
-    case WM_SYSCOMMAND:
-        if ((wParam & 0xfff0) == SC_KEYMENU) // Disable ALT application menu
-            return 0;
-        break;
-    case WM_DESTROY:
-        ::PostQuitMessage(0);
-        return 0;
-    }
     return ::DefWindowProcW(hWnd, message, wParam, lParam);
 
 #else 
     switch (message)
     {
-        ////case WM_SIZE:
-        ////    if (wParam == SIZE_MINIMIZED)
-        ////        return 0;
-        ////    g_ResizeWidth = (UINT)LOWORD(lParam); // Queue resize
-        ////    g_ResizeHeight = (UINT)HIWORD(lParam);
-        ////    return 0;
-
     case WM_COMMAND:
     {
         int wmId = LOWORD(wParam);
@@ -301,7 +271,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 #endif
 
-
+    return 0;
 }
 
 // 정보 대화 상자의 메시지 처리기입니다.

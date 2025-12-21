@@ -7,9 +7,9 @@
 #include "CDInputMgr.h"
 #include "CFontMgr.h"
 #include "CLightMgr.h"
-#include "CImGuiManager.h"
-#include "ImGui_Define.h"
+#include "CImGuiMgr.h"
 
+#define IMGUI
 
 CMainApp::CMainApp() : m_pDeviceClass(nullptr), m_pGraphicDev(nullptr)
 , m_pManagementClass(CManagement::GetInstance())
@@ -28,8 +28,8 @@ HRESULT CMainApp::Ready_MainApp()
 		return E_FAIL;
 
 #ifdef IMGUI
-	// CImGui�߰� �ڵ�
-	CImGuiManager::GetInstance()->ImGui_Setup(g_hWnd, m_pGraphicDev);
+	CImGuiMgr::GetInstance()->ImGui_Setup(g_hWnd, m_pGraphicDev, wndclass);
+
 #else
 
 	if (FAILED(Ready_Scene(m_pGraphicDev)))
@@ -44,7 +44,7 @@ int CMainApp::Update_MainApp(const float& fTimeDelta)
 {
 
 #ifdef IMGUI
-	CImGuiManager::GetInstance()->ImGui_Tick();
+	CImGuiMgr::GetInstance()->ImGui_Tick();
 #else
 	CDInputMgr::GetInstance()->Update_InputDev();
 
@@ -77,7 +77,7 @@ void CMainApp::Render_MainApp()
 
 
 #ifdef IMGUI
-	CImGuiManager::GetInstance()->ImGui_Render();
+	CImGuiMgr::GetInstance()->ImGui_Render();
 
 #else
 	m_pDeviceClass->Render_Begin(D3DXCOLOR(0.f, 0.f, 1.f, 1.f));
@@ -179,8 +179,8 @@ void CMainApp::Free()
 	CTimerMgr::DestroyInstance();
 	CManagement::DestroyInstance();
 #ifdef IMGUI
-	CImGuiManager::GetInstance()->ImGui_Shutdown();
-	CImGuiManager::DestroyInstance();
+	CImGuiMgr::GetInstance()->ImGui_Shutdown();
+	CImGuiMgr::DestroyInstance();
 #endif // IMGUI
 	m_pDeviceClass->DestroyInstance();
 }
