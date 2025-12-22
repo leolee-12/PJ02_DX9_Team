@@ -14,7 +14,7 @@ namespace Engine
 class CPlayer : public CGameObject
 {
 public:
-	enum PLAYERSTATE { PS_IDLE, PS_RUN, PS_ROLL, PS_ATTACK, PS_ACTION, PS_TALK, PS_INTROIDLE, PS_INTRORUN, PS_INTROKNEE, PS_END };
+	enum PLAYERSTATE { PS_IDLE, PS_RUN, PS_ROLL, PS_ATTACK, PS_CHARGE, PS_HIT, PS_ACTION, PS_TALK, PS_INTROIDLE, PS_INTRORUN, PS_INTROKNEE, PS_END };
 	enum DIRECTIONID { DIR_RIGHT, DIR_RD, DIR_DOWN, DIR_LD, DIR_LEFT, DIR_LU, DIR_UP, DIR_RU, DIR_END };
 
 	// ==========================
@@ -56,6 +56,7 @@ private:
 	// ==========================
 
 	void			Move_Roll(const _float& fTimeDelta);
+	void			Charge(const _float& fTimeDelta);
 
 	// ==========================
 	//	Move_Roll : 구르기 상태일 때 현재 위치를 Lerp를 적용하여 계산 및 이동
@@ -71,6 +72,7 @@ private:
 	// 스프라이트 관련
 	PLAYERSTATE		m_ePreState;
 	PLAYERSTATE		m_eCurState;
+	wstring			m_strFrameKey;
 	_float			m_fFrame;
 	_float			m_fFrameEnd;
 	_float			m_fFrameSpeed;
@@ -91,6 +93,10 @@ private:
 	_vec3			m_vRollPos;		// Lerp용 위치
 	_float			m_fLerp;		// Lerp용 값
 	_float			m_fRollSpeed;
+
+	// 차지 공격 관련
+	_float			m_fCharge;
+	_float			m_fChargeMax;
 
 public:
 	static CPlayer* Create(LPDIRECT3DDEVICE9 pGraphicDev);

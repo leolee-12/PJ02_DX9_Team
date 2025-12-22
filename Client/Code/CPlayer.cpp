@@ -17,7 +17,9 @@ CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
 	m_bRoll(false),
 	m_iCombo(0),
 	m_fLerp(0.2f),
-	m_fRollSpeed(5.f)
+	m_fRollSpeed(5.f),
+	m_fCharge(0.f),
+	m_fChargeMax(3.f)
 {
 }
 
@@ -33,7 +35,9 @@ CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel)
 		m_bRoll(false),
 		m_iCombo(0),
 		m_fLerp(0.2f),
-		m_fRollSpeed(5.f)
+		m_fRollSpeed(5.f),
+		m_fCharge(0.f),
+		m_fChargeMax(3.f)
 {
 }
 
@@ -50,7 +54,9 @@ CPlayer::CPlayer(const CPlayer& rhs)
 		m_iCombo(0),
 		m_vPos(rhs.m_vPos),
 		m_fLerp(rhs.m_fRollSpeed),
-		m_fRollSpeed(rhs.m_fRollSpeed)
+		m_fRollSpeed(rhs.m_fRollSpeed),
+		m_fCharge(0.f),
+		m_fChargeMax(rhs.m_fChargeMax)
 {
 }
 
@@ -109,8 +115,8 @@ void CPlayer::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	Key_Input(fTimeDelta);
 	Move_Roll(fTimeDelta);
+	Charge(fTimeDelta);
 	Check_Frame();
-
 	m_pTransformCom->Compute_Bilboard(BBD_X);
 	m_pTransformCom->Get_Info(INFO_POS, &m_vPos);
 	Compute_ViewDepth(&m_vPos);
@@ -134,7 +140,7 @@ void CPlayer::Render_GameObject()
 
 #pragma region 스프라이트 반전 도입 - 버텍스/인덱스 버퍼 미사용
 	// 8방향 모두 스프라이트 이미지는 비효율적 -> 좌우반전해서 사용
-	bool bFlipH = (m_vDir.x > 0.f);
+	bool bFlipH = (m_vDir == m_vNormDir[DIR_RU] || m_vDir == m_vNormDir[DIR_RIGHT] || m_vDir == m_vNormDir[DIR_RD]);
 	_float u1 = bFlipH ? 1.f : 0.f;
 	_float u2 = bFlipH ? 0.f : 1.f;
 	
@@ -228,7 +234,7 @@ HRESULT CPlayer::Add_Component()
 
 void CPlayer::Key_Input(const _float& fTimeDelta)
 {
-	if (!m_bRoll && !m_iCombo)
+	if (!m_bRoll && !m_iCombo && !m_fCharge)
 	{
 		if (GetAsyncKeyState('W'))
 		{
@@ -276,7 +282,7 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 		}
 	}
 
-	if (GetAsyncKeyState(VK_SPACE))
+	if (GetAsyncKeyState(VK_SPACE) & 0x0001)
 	{
 		if ((m_bRoll) || (m_iCombo)) return;
 
@@ -294,6 +300,22 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 		m_fFrame = 0.f;
 		m_eCurState = PS_ATTACK;
 		m_pTransformCom->Move_Pos(&m_vDir, fTimeDelta, m_fSpeed - 5.f);
+	}
+
+	if (GetAsyncKeyState(VK_RBUTTON) & 0x0001)	// 눌렀을 때 한 번만 true
+	{
+		if (!m_fCharge)
+		{
+			m_eCurState = PS_CHARGE;
+			m_strFrameKey = L"charge-start";
+			m_fCharge += fTimeDelta;
+		}
+		else
+		{
+			m_fFrame = 0.f;
+			m_fChargeMax = m_fCharge;
+			m_strFrameKey = L"charge-end";
+		}
 	}
 
 	//if (CDInputMgr::GetInstance()->Get_DIMouseState(DIM_LB) & 0x80)
@@ -380,15 +402,19 @@ void CPlayer::Check_Frame()
 
 	case PS_ROLL:
 	{
-		if		(m_vDir == m_vNormDir[DIR_UP]	|| m_vDir == m_vNormDir[DIR_LU] || m_vDir == m_vNormDir[DIR_RU])	m_fFrameEnd = m_pTextureCom->Get_TextureEnd(L"roll-up");
-		else if (m_vDir == m_vNormDir[DIR_DOWN] || m_vDir == m_vNormDir[DIR_LD] || m_vDir == m_vNormDir[DIR_RD])	m_fFrameEnd = m_pTextureCom->Get_TextureEnd(L"roll-down");
-		else if (m_vDir == m_vNormDir[DIR_LEFT] || m_vDir == m_vNormDir[DIR_RIGHT])									m_fFrameEnd = m_pTextureCom->Get_TextureEnd(L"roll-horizontal");
+		m_fFrameEnd = m_pTextureCom->Get_TextureEnd(L"roll-up");
 	}
 	break;
 
 	case PS_ATTACK:
 	{
 		m_fFrameEnd = m_pTextureCom->Get_TextureEnd(L"attack-combo1");
+	}
+	break;
+
+	case PS_CHARGE:
+	{
+		m_fFrameEnd = m_pTextureCom->Get_TextureEnd(L"charge-start");
 	}
 	break;
 	}
@@ -408,74 +434,74 @@ void CPlayer::Move_Frame(const _float& fTimeDelta)
 		if (m_eCurState == PS_ROLL)
 		{
 			m_bRoll = false;
-			m_eCurState = PS_IDLE;
 		}
 		else if (m_eCurState == PS_ATTACK)
 		{
 			m_iCombo = 0;
-			m_eCurState = PS_IDLE;
+		}
+		else if (m_eCurState == PS_CHARGE)
+		{
+			if (m_strFrameKey == L"charge-start") m_strFrameKey = L"charge-loop";
+			else if (m_strFrameKey == L"charge-end")
+			{
+				m_fCharge = 0.f;
+				m_fChargeMax = 3.f;
+			}
 		}
 	}
 }
 
 void CPlayer::Set_TextureSet()
 {
-	wstring strTemp = L"";
+	wstring strPreKey = m_strFrameKey;
 
 	switch (m_eCurState)
 	{
 	case PS_IDLE:
 	{
-		if (m_vDir == m_vNormDir[DIR_UP] || m_vDir == m_vNormDir[DIR_LU] || m_vDir == m_vNormDir[DIR_RU] ) strTemp = L"idle-up";
-		else strTemp = L"idle";
+		if (m_vDir == m_vNormDir[DIR_UP] || m_vDir == m_vNormDir[DIR_LU] || m_vDir == m_vNormDir[DIR_RU] ) m_strFrameKey = L"idle-up";
+		else m_strFrameKey = L"idle";
 	}
 	break;
 
 	case PS_RUN:
 	{
-		if		(m_vDir == m_vNormDir[DIR_UP])										strTemp = L"run-up";
-		else if (m_vDir == m_vNormDir[DIR_DOWN])									strTemp = L"run-down";
-		else if (m_vDir == m_vNormDir[DIR_LD] || m_vDir == m_vNormDir[DIR_RD])		strTemp = L"run-diagonal";
-		else if (m_vDir == m_vNormDir[DIR_LEFT] || m_vDir == m_vNormDir[DIR_RIGHT])	strTemp = L"run-horizontal";
-		else if (m_vDir == m_vNormDir[DIR_LU] || m_vDir == m_vNormDir[DIR_RU])		strTemp = L"run-up-diagonal";
+		if		(m_vDir == m_vNormDir[DIR_UP])										m_strFrameKey = L"run-up";
+		else if (m_vDir == m_vNormDir[DIR_DOWN])									m_strFrameKey = L"run-down";
+		else if (m_vDir == m_vNormDir[DIR_LD] || m_vDir == m_vNormDir[DIR_RD])		m_strFrameKey = L"run-diagonal";
+		else if (m_vDir == m_vNormDir[DIR_LEFT] || m_vDir == m_vNormDir[DIR_RIGHT])	m_strFrameKey = L"run-horizontal";
+		else if (m_vDir == m_vNormDir[DIR_LU] || m_vDir == m_vNormDir[DIR_RU])		m_strFrameKey = L"run-up-diagonal";
 	}
 	break;
 
 	case PS_ROLL:
 	{
-		if		(m_vDir == m_vNormDir[DIR_UP]	|| m_vDir == m_vNormDir[DIR_LU]	|| m_vDir == m_vNormDir[DIR_RU])	strTemp = L"roll-up";
-		else if (m_vDir == m_vNormDir[DIR_DOWN]	|| m_vDir == m_vNormDir[DIR_LD]	|| m_vDir == m_vNormDir[DIR_RD])	strTemp = L"roll-down";
-		else if (m_vDir == m_vNormDir[DIR_LEFT] || m_vDir == m_vNormDir[DIR_RIGHT])
-		{
-			strTemp = L"roll-horizontal";
-			m_fFrameEnd = m_pTextureCom->Get_TextureEnd(strTemp);
-		}
+		if		(m_vDir == m_vNormDir[DIR_UP]	|| m_vDir == m_vNormDir[DIR_LU]	|| m_vDir == m_vNormDir[DIR_RU])	m_strFrameKey = L"roll-up";
+		else if (m_vDir == m_vNormDir[DIR_DOWN]	|| m_vDir == m_vNormDir[DIR_LD]	|| m_vDir == m_vNormDir[DIR_RD])	m_strFrameKey = L"roll-down";
+		else if (m_vDir == m_vNormDir[DIR_LEFT] || m_vDir == m_vNormDir[DIR_RIGHT])									m_strFrameKey = L"roll-horizontal";
 	}
 	break;
 
 	case PS_ATTACK:
 	{
-		if (m_iCombo == 1)
-		{
-			strTemp = L"attack-combo1";
-		}
-		else if (m_iCombo == 2)
-		{
-			strTemp = L"attack-combo2";
-			m_fFrameEnd = m_pTextureCom->Get_TextureEnd(strTemp);
-		}
-		else if (m_iCombo == 3)
-		{
-			strTemp = L"attack-combo3";
-			m_fFrameEnd = m_pTextureCom->Get_TextureEnd(strTemp);
-		}
+		if		(m_iCombo == 1)	m_strFrameKey = L"attack-combo1";
+		else if (m_iCombo == 2)	m_strFrameKey = L"attack-combo2";
+		else if (m_iCombo == 3)	m_strFrameKey = L"attack-combo3";
+	}
+	break;
+
+	case PS_CHARGE:
+	{
+		// 키인풋 & Move_Frame에서 관리
 	}
 	break;
 	}
 
-	//_uint iCurFrame = min(m_fFrame, m_fFrameEnd);
+	if (m_strFrameKey != strPreKey) m_fFrame = 0.f;
 
-	m_pTextureCom->Set_Texture(strTemp, _uint(m_fFrame));
+	m_fFrameEnd = m_pTextureCom->Get_TextureEnd(m_strFrameKey); 
+
+	m_pTextureCom->Set_Texture(m_strFrameKey, _uint(m_fFrame));
 }
 
 void CPlayer::Move_Roll(const _float& fTimeDelta)
@@ -485,6 +511,13 @@ void CPlayer::Move_Roll(const _float& fTimeDelta)
 	D3DXVec3Lerp(&m_vPos, &m_vPos, &m_vRollPos, m_fLerp);
 
 	m_pTransformCom->Set_Pos(m_vPos.x, m_vPos.y, m_vPos.z);
+}
+
+void CPlayer::Charge(const _float& fTimeDelta)
+{
+	if (!m_fCharge) return;
+
+	m_fCharge += fTimeDelta;
 }
 
 void	CPlayer::OnCollision(CGameObject* pObject)
