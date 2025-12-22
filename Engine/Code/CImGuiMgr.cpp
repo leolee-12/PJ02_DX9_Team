@@ -1,5 +1,4 @@
 #include "CImGuiMgr.h"
-#include <ImGui_Define.h>
 #include "imgui_impl_dx9.h"
 #include "imgui_impl_win32.h"
 
@@ -7,6 +6,9 @@
 #include <d3d9.h>
 #include <d3dx9.h>
 
+#include "ImGuizmo.h"
+
+#include "Engine_Define.h"
 
 using namespace Engine;
 using namespace std;
@@ -89,8 +91,7 @@ void CImGuiMgr::ImGui_Setup(HWND hWnd, LPDIRECT3DDEVICE9 pDevice, WNDCLASSEXW& w
     ImGui_ImplDX9_Init(m_pGraphicDev);
 
     // 폰트설정
-
-    io.Fonts->AddFontFromFileTTF("../Font/arial.ttf", 30.0f);
+    io.Fonts->AddFontFromFileTTF("../Font/arial.ttf", m_font_size);
 }
 
 void CImGuiMgr::ImGui_Tick()
@@ -125,43 +126,11 @@ void CImGuiMgr::ImGui_Tick()
     ImGui_ImplWin32_NewFrame();
     ImGui::NewFrame();
 
-    // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
-    if (m_show_demo_window)
-        ImGui::ShowDemoWindow(&m_show_demo_window);
+    ImGuizmo::BeginFrame();
 
-    // 2. Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
-    {
-        static float f = 0.0f;
-        static int counter = 0;
+    ImGui::SetNextWindowSize(ImVec2(800, 300), ImGuiCond_Always);
+    Tick_EditorWindow();
 
-        ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
-
-        ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
-        ImGui::Checkbox("Demo Window", &m_show_demo_window);      // Edit bools storing our window open/close state
-        ImGui::Checkbox("Another Window", &m_show_another_window);
-
-        ImVec4 m_clear_color = ImVec4(m_color_r, m_color_g, m_color_b, m_color_a);
-        ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-        ImGui::ColorEdit3("clear color", (float*)&m_clear_color); // Edit 3 floats representing a color
-
-        if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
-            counter++;
-        ImGui::SameLine();
-        ImGui::Text("counter = %d", counter);
-
-        ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
-        ImGui::End();
-    }
-
-    // 3. Show another simple window.
-    if (m_show_another_window)
-    {
-        ImGui::Begin("Another Window", &m_show_another_window);   // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
-        ImGui::Text("Hello from another window!");
-        if (ImGui::Button("Close Me"))
-            m_show_another_window = false;
-        ImGui::End();
-    }
 }
 
 void CImGuiMgr::ImGui_Render()
@@ -172,15 +141,12 @@ void CImGuiMgr::ImGui_Render()
     m_pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
     m_pGraphicDev->SetRenderState(D3DRS_SCISSORTESTENABLE, FALSE);
 
-    ImVec4 m_clear_color = ImVec4(m_color_r, m_color_g, m_color_b, m_color_a);
-    D3DCOLOR clear_col_dx = D3DCOLOR_RGBA((int)(m_clear_color.x * m_clear_color.w * 255.0f), (int)(m_clear_color.y * m_clear_color.w * 255.0f), (int)(m_clear_color.z * m_clear_color.w * 255.0f), (int)(m_clear_color.w * 255.0f));
-    m_pGraphicDev->Clear(0, nullptr, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, clear_col_dx, 1.0f, 0);
-    if (m_pGraphicDev->BeginScene() >= 0)
-    {
-        ImGui::Render();
-        ImGui_ImplDX9_RenderDrawData(ImGui::GetDrawData());
-        m_pGraphicDev->EndScene();
-    }
+    Render_Grid();
+
+    ImGui::Render();
+    ImGui_ImplDX9_RenderDrawData(ImGui::GetDrawData());
+    m_pGraphicDev->EndScene();
+
     HRESULT result = m_pGraphicDev->Present(nullptr, nullptr, nullptr, nullptr);
     if (result == D3DERR_DEVICELOST)
         g_DeviceLost = true;
@@ -189,12 +155,118 @@ void CImGuiMgr::ImGui_Render()
 void CImGuiMgr::ImGui_Shutdown()
 {
    // Free();
+    Safe_Release(m_pGraphicDev);
 
     ImGui_ImplDX9_Shutdown();
     ImGui_ImplWin32_Shutdown();
     ImGui::DestroyContext();
 }
 
+void CImGuiMgr::Tick_EditorWindow()
+{
+    ImGuiIO& io = ImGui::GetIO();
+    ImGuiStyle& style = ImGui::GetStyle();
+    static ImGuiStyle ref_saved_style;
+
+    // 2. Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
+    {
+        static float f = 0.0f;
+        static int counter = 0;
+
+        ImGui::Begin("Editor");                          // Create a window called "Hello, world!" and append into it.
+
+        //ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
+
+        if (ImGui::DragFloat("FontSizeBase", &style.FontSizeBase, 0.20f, 5.0f, 100.0f, "%.0f"))
+            style._NextFrameFontSizeBase = style.FontSizeBase; // FIXME: Temporary hack until we finish remaining work.
+        ImGui::SameLine(0.0f, 0.0f); ImGui::Text(" (out %.2f)", ImGui::GetFontSize());
+
+        // object type 드롭박스 (콤보박스)
+        ImGui::Combo("Select Object Type", (int*)&objectType, object_type_str, IM_ARRAYSIZE(object_type_str));
+
+        // object id 드롭박스 (콤보박스)
+        if (objectType == TYPE_OBJECT)
+        {
+            ImGui::Combo("Select Object Id", (int*)&objectId, object_id_str, IM_ARRAYSIZE(object_id_str));
+        }
+
+        // light id 드롭박스 (콤보박스)
+        if (objectType == TYPE_LIGHT)
+        {
+            ImGui::Combo("Select Light Id", (int*)&lightId, light_id_str, IM_ARRAYSIZE(light_id_str));
+        }
+
+        if (ImGui::Button("Create"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
+            counter++;
+        ImGui::SameLine();
+        ImGui::Text("counter = %d", counter);
+
+        ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
+
+        // 마우스 위치 표시
+        ImVec2 mousePos = ImGui::GetMousePos();
+        ImGui::Text("Mouse Position: (%.1f, %.1f)", mousePos.x, mousePos.y);
+
+        ImGui::End();
+    }
+}
+
+void CImGuiMgr::Tick_ObjectWindow(CGameObject* pObject)
+{
+    // TODO: 선택한 오브젝트의 값을 띄워주는 윈도우
+}
+
+void CImGuiMgr::Render_Grid()
+{
+    ImGuiIO& io = ImGui::GetIO();
+
+    // 전체 화면 영역 설정
+    ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
+
+    // 카메라 행렬 (예시 - 실제 카메라 행렬로 교체 필요)
+
+    float cameraView[16] ;
+    float cameraProjection[16];
+
+    _matrix matView, matProj;
+    m_pGraphicDev->GetTransform(D3DTS_VIEW, &matView);
+    m_pGraphicDev->GetTransform(D3DTS_PROJECTION, &matProj);
+
+    for (int i = 0; i < 4; ++i)
+    {
+        cameraView[4 * i] = matView.m[i][0];
+        cameraView[4 * i + 1] = matView.m[i][1];
+        cameraView[4 * i + 2] = matView.m[i][2];
+        cameraView[4 * i + 3] = matView.m[i][3];
+
+        cameraProjection[4 * i] = matProj.m[i][0];
+        cameraProjection[4 * i + 1] = matProj.m[i][1];
+        cameraProjection[4 * i + 2] = matProj.m[i][2];
+        cameraProjection[4 * i + 3] = matProj.m[i][3];
+    }
+
+    _matrix matWorld;
+    D3DXMatrixInverse(&matWorld, nullptr, &matView);
+
+    float cameraX = matWorld.m[3][0];
+    float cameraZ = matWorld.m[3][2];
+    
+    // 격자 크기 단위로 반내림 (격자에 정렬)
+    float gridPosX = floorf(cameraX / m_grid_size) * m_grid_size;
+    float gridPosZ = floorf(cameraZ / m_grid_size) * m_grid_size;
+
+    // 카메라 X, Z 위치로 이동하는 행렬 (Y는 0으로 고정 - 바닥에 격자)
+    float gridPositionMatrix[16] = {
+        1.f, 0.f, 0.f, 0.f,
+        0.f, 1.f, 0.f, 0.f,
+        0.f, 0.f, 1.f, 0.f,
+        0.f, 0.f, 0.f, 1.f  // 마지막 행에 위치 정보
+    };
+
+    // 격자 그리기
+    // 파라미터: view 행렬, projection 행렬, 중심 행렬, 격자 크기
+    ImGuizmo::DrawGrid(cameraView, cameraProjection, gridPositionMatrix, m_grid_size);
+}
 
 // ==========================
 //	ImGui helper functions

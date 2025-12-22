@@ -111,7 +111,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;ENGINE_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../Header;../../Base;../../ImGui; ../../Maps</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../Header;../../Base;../../ImGui; ../../Maps; ../../ImGuizmo</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -147,6 +147,12 @@ call Copy.bat</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\ImGuizmo\GraphEditor.h" />
+    <ClInclude Include="..\..\ImGuizmo\ImCurveEdit.h" />
+    <ClInclude Include="..\..\ImGuizmo\ImGradient.h" />
+    <ClInclude Include="..\..\ImGuizmo\ImGuizmo.h" />
+    <ClInclude Include="..\..\ImGuizmo\ImSequencer.h" />
+    <ClInclude Include="..\..\ImGuizmo\ImZoomSlider.h" />
     <ClInclude Include="..\..\ImGui\imconfig.h" />
     <ClInclude Include="..\..\ImGui\imgui.h" />
     <ClInclude Include="..\..\ImGui\imgui_impl_dx9.h" />
@@ -200,9 +206,14 @@ call Copy.bat</Command>
     <ClInclude Include="..\Header\Engine_Struct.h" />
     <ClInclude Include="..\Header\Engine_Typedef.h" />
     <ClInclude Include="..\Header\IMessageChannel.h" />
-    <ClInclude Include="..\Header\ImGui_Define.h" />
+    <ClInclude Include="..\Header\Edit_Define.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\ImGuizmo\GraphEditor.cpp" />
+    <ClCompile Include="..\..\ImGuizmo\ImCurveEdit.cpp" />
+    <ClCompile Include="..\..\ImGuizmo\ImGradient.cpp" />
+    <ClCompile Include="..\..\ImGuizmo\ImGuizmo.cpp" />
+    <ClCompile Include="..\..\ImGuizmo\ImSequencer.cpp" />
     <ClCompile Include="..\..\ImGui\imgui.cpp" />
     <ClCompile Include="..\..\ImGui\imgui_demo.cpp" />
     <ClCompile Include="..\..\ImGui\imgui_draw.cpp" />
