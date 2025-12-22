@@ -1,4 +1,5 @@
 #include "pch.h"
+#include "CLoadingThread.h"
 #include "CLoading.h"
 #include "CProtoMgr.h"
 #include "CStage.h"
@@ -10,6 +11,7 @@
 #include "CLoadingFG.h"
 #include "CLoadingCircle.h"
 #include "CLoadingLogo.h"
+
 
 
 CLoading::CLoading(LPDIRECT3DDEVICE9 pGraphicDev, LOADINGID ChangeID)
@@ -92,6 +94,8 @@ void CLoading::Render_Scene()
 	_vec2		vPos{ 150.f, WINCY - 100.f };
 
 	CFontMgr::GetInstance()->Render_Font(L"Font_Lapture40", L"·ÎµùÁß...", &vPos, D3DXCOLOR(0.75f, 0.75f, 0.75f, 1.f));
+
+	//CFontMgr::GetInstance()->Render_Font(L"Font_Lapture40", m_pLoading->Get_String(), &vPos, D3DXCOLOR(0.75f, 0.75f, 0.75f, 1.f));
 
 }
 

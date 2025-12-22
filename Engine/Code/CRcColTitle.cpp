@@ -1,24 +1,24 @@
-#include "CRcCol.h"
+#include "CRcColTitle.h"
 
-CRcCol::CRcCol()
+CRcColTitle::CRcColTitle()
 {
 }
 
-CRcCol::CRcCol(LPDIRECT3DDEVICE9 pGraphicDev)
+CRcColTitle::CRcColTitle(LPDIRECT3DDEVICE9 pGraphicDev)
 	:CVIBuffer(pGraphicDev)
 {
 }
 
-CRcCol::CRcCol(const CRcCol& rhs)
+CRcColTitle::CRcColTitle(const CRcColTitle& rhs)
 	: CVIBuffer(rhs)
 {
 }
 
-CRcCol::~CRcCol()
+CRcColTitle::~CRcColTitle()
 {
 }
 
-HRESULT CRcCol::Ready_Buffer()
+HRESULT CRcColTitle::Ready_Buffer()
 {
 	//m_dwVtxSize = sizeof(VTXCOL);
 	//m_dwVtxCnt = 6;
@@ -75,16 +75,16 @@ HRESULT CRcCol::Ready_Buffer()
 
 	// 오른쪽 위
 	pVertex[0].vPosition = { -0.5f, 0.5f, 0.f };
-	pVertex[0].dwColor = D3DXCOLOR(0.f, 0.f, 0.f, 1.f);
+	pVertex[0].dwColor = D3DXCOLOR(0.9921875f, 0.9375f, 0.82421875f, 1.f);
 
 	pVertex[1].vPosition = { 0.5f, 0.5f, 0.f };
-	pVertex[1].dwColor = D3DXCOLOR(0.f, 0.f, 0.f, 1.f);
+	pVertex[1].dwColor = D3DXCOLOR(0.9921875f, 0.9375f, 0.82421875f, 1.f);
 
 	pVertex[2].vPosition = { 0.5f, -0.5f, 0.f };
-	pVertex[2].dwColor = D3DXCOLOR(0.f, 0.f, 0.f, 1.f);
+	pVertex[2].dwColor = D3DXCOLOR(0.9921875f, 0.9375f, 0.82421875f, 1.f);
 
 	pVertex[3].vPosition = { -0.5f, -0.5f, 0.f };
-	pVertex[3].dwColor = D3DXCOLOR(0.f, 0.f, 0.f, 1.f);
+	pVertex[3].dwColor = D3DXCOLOR(0.9921875f, 0.9375f, 0.82421875f, 1.f);
 
 	m_pVB->Unlock();
 
@@ -108,14 +108,14 @@ HRESULT CRcCol::Ready_Buffer()
 	return S_OK;
 }
 
-void CRcCol::Render_Buffer()
+void CRcColTitle::Render_Buffer()
 {
 	CVIBuffer::Render_Buffer();
 }
 
-CRcCol* CRcCol::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+CRcColTitle* CRcColTitle::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 {
-	CRcCol* pRcCol = new CRcCol(pGraphicDev);
+	CRcColTitle* pRcCol = new CRcColTitle(pGraphicDev);
 
 	if (FAILED(pRcCol->Ready_Buffer()))
 	{
@@ -127,12 +127,12 @@ CRcCol* CRcCol::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 	return pRcCol;
 }
 
-CComponent* CRcCol::Clone()
+CComponent* CRcColTitle::Clone()
 {
-	return new CRcCol(*this);
+	return new CRcColTitle(*this);
 }
 
-void CRcCol::Free()
+void CRcColTitle::Free()
 {
 	CVIBuffer::Free();
 }

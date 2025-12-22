@@ -126,6 +126,7 @@
     </Filter>
     <Filter Include="01. Structure\03. GameObject\UI">
       <UniqueIdentifier>{57d7cb2f-399e-4ad3-b654-274f7700c5b7}</UniqueIdentifier>
+    </Filter>
     <Filter Include="00. Manager\08. ImGuiMgr\ImGuizmo_files">
       <UniqueIdentifier>{ca8e5568-b45f-4eed-9c49-71683bff61f0}</UniqueIdentifier>
     </Filter>
@@ -164,7 +165,7 @@
     <ClCompile Include="..\Code\CVIBuffer.cpp">
       <Filter>05. ComponentEx\00. VIBuffer</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\CTriCol.cpp">
+    <ClCompile Include="..\Code\CRcColTitle.cpp">
       <Filter>05. ComponentEx\00. VIBuffer\00. TriCol</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CProtoMgr.cpp">
@@ -227,12 +228,6 @@
     <ClCompile Include="..\Code\CCollider.cpp">
       <Filter>05. ComponentEx\04. Collider</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\CStaticChannelMgr.cpp">
-      <Filter>00. Manager\09. StaticChannelMgr</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\CCollisionChannel.cpp">
-      <Filter>00. Manager\09. StaticChannelMgr\99. CollisionChannel</Filter>
-    </ClCompile>
     <ClCompile Include="..\Code\CSaveLoadMgr.cpp">
       <Filter>00. Manager\09. SaveLoadMgr</Filter>
     </ClCompile>
@@ -262,6 +257,7 @@
     </ClCompile>
     <ClCompile Include="..\Code\CUi.cpp">
       <Filter>01. Structure\03. GameObject\UI</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\ImGuizmo\GraphEditor.cpp">
       <Filter>00. Manager\08. ImGuiMgr\ImGuizmo_files</Filter>
     </ClCompile>
@@ -330,7 +326,7 @@
     <ClInclude Include="..\Header\CVIBuffer.h">
       <Filter>05. ComponentEx\00. VIBuffer</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\CTriCol.h">
+    <ClInclude Include="..\Header\CRcColTitle.h">
       <Filter>05. ComponentEx\00. VIBuffer\00. TriCol</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CProtoMgr.h">
@@ -434,6 +430,7 @@
     </ClInclude>
     <ClInclude Include="..\Header\CUi.h">
       <Filter>01. Structure\03. GameObject\UI</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\ImGuizmo\GraphEditor.h">
       <Filter>00. Manager\08. ImGuiMgr\ImGuizmo_files</Filter>
     </ClInclude>
