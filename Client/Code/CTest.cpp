@@ -4,6 +4,7 @@
 #include "CProtoMgr.h"
 #include "CDynamicCamera.h"
 #include "CSkyBox.h"
+#include "CPersistentMgr.h"
 
 CTest::CTest(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -16,6 +17,8 @@ CTest::~CTest()
 
 HRESULT CTest::Ready_Scene()
 {
+	m_pMessageChannel = CStageMessage::Create();
+
 	if (FAILED(Ready_Environment_Layer(L"Environment_Layer")))
 		return E_FAIL;
 
@@ -98,13 +101,15 @@ HRESULT CTest::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 		return E_FAIL;
 
 	// Player
-	pGameObject = CPlayer::Create(m_pGraphicDev);
+	pGameObject = CPersistentMgr::GetInstance()->Get_GlobalObjects(GOBJ_PLAYER);
 
 	if (nullptr == pGameObject)
 		return E_FAIL;
 
 	if (FAILED(pLayer->Add_GameObject(L"Player", pGameObject)))
 		return E_FAIL;
+
+	pGameObject->AddRef();
 
 	m_mapLayer.insert({ pLayerTag , pLayer });
 
@@ -125,18 +130,44 @@ HRESULT CTest::Ready_UI_Layer(const _tchar* pLayerTag)
 	return S_OK;
 }
 
+HRESULT CTest::Ready_Const_Layer(CLayer* pConstLayer)
+{
+	if (nullptr == pConstLayer)
+		return E_FAIL;
+
+	auto [iter, inserted] = m_mapLayer.try_emplace(L"Const_Layer");
+
+	if (inserted)
+	{
+		iter->second = pConstLayer;
+		return S_OK;
+	}
+
+	Safe_Release(iter->second);
+	iter->second = pConstLayer;
+
+	return S_OK;
+}
+
 CTest* CTest::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 {
-	CTest* pLogo = new CTest(pGraphicDev);
+	CTest* pTest = new CTest(pGraphicDev);
 
-	if (FAILED(pLogo->Ready_Scene()))
+	if (FAILED(pTest->Ready_Scene()))
 	{
-		Safe_Release(pLogo);
-		MSG_BOX("pLogo Create Failed");
+		Safe_Release(pTest);
+		MSG_BOX("pTest Create Failed");
 		return nullptr;
 	}
 
-	return pLogo;
+	/*if (FAILED(pTest->Ready_Const_Layer(pConstLayer)))
+	{
+		Safe_Release(pTest);
+		MSG_BOX("pTest Create Failed");
+		return nullptr;
+	}*/
+
+	return pTest;
 }
 
 void CTest::Free()

@@ -15,11 +15,13 @@ HRESULT CFont::Ready_Font(const _tchar* pFontType, const _uint& iWidth, const _u
 	D3DXFONT_DESC			tFont_Desc;
 	ZeroMemory(&tFont_Desc, sizeof(D3DXFONT_DESC));
 
-	tFont_Desc.CharSet = HANGUL_CHARSET;
+	tFont_Desc.CharSet = DEFAULT_CHARSET;
 	tFont_Desc.Width = iWidth;
 	tFont_Desc.Height = iHeight;
 	tFont_Desc.Weight = iWeight;
-	lstrcpy(tFont_Desc.FaceName, pFontType);
+	
+	wstring strTmp = pFontType;
+	wcscpy_s(tFont_Desc.FaceName, LF_FACESIZE, strTmp.c_str());
 
 	if (FAILED(D3DXCreateFontIndirect(m_pGraphicDev, &tFont_Desc, &m_pFont)))
 	{

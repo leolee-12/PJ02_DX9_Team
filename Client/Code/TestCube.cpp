@@ -28,7 +28,7 @@ TestCube::~TestCube()
 
 HRESULT TestCube::Ready_GameObject()
 {
-	m_eOBJID = OID_TEST;
+	//m_eOBJID = OID_TEST;
 	if (FAILED(Add_Component()))
 		return E_FAIL;
 

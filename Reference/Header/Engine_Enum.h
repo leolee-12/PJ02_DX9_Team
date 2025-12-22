@@ -5,7 +5,7 @@ namespace Engine
 {
 	enum WINMODE { MODE_FULL, MODE_WIN };
 
-	// Dynamic ÄÄÆ÷³ÍÆ® °æ¿ì ¸Å ÇÁ·¹ÀÓ¸¶´Ù °»½ÅÇØ¾ßÇÏ´Â ÄÄÆ÷³ÍÆ® Áý´Ü
+	// Dynamic ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ó¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ø¾ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½
 	enum COMPONENTID { ID_DYNAMIC, ID_STATIC, ID_END };
 
 	enum INFO {	INFO_RIGHT, INFO_UP, INFO_LOOK, INFO_POS, INFO_END };
@@ -23,6 +23,13 @@ namespace Engine
 	enum MOUSEMOVESTATE {	DIMS_X, DIMS_Y, DIMS_Z, DIMS_END };
 
 	enum OBJID { OID_PLAYER, OID_MONSTER, OID_DCAM, OID_MAINCAM, OID_END };
+
+	enum LOADINGID { LOADING_STAGE, LOADING_BOSS, LOADING_TEST, OID_TEST, LOADING_END };
+
+	typedef enum GLOBALOBJECTID
+	{
+		GOBJ_PLAYER, GOBJ_END
+	}GOBJID;
 
 	enum COLGROUP
 	{
@@ -44,7 +51,7 @@ namespace Engine
 		CL_15		= 1 << 14,
 		CL_16		= 1 << 15,
 
-		CL_ALL		= 0xFFFF // 1111 1111 1111 1111 16ºñÆ®
+		CL_ALL		= 0xFFFF // 1111 1111 1111 1111 16ï¿½ï¿½Æ®
 	};
 	inline COLGROUP operator|(COLGROUP lhs, COLGROUP rhs) {
 		return COLGROUP((unsigned int)lhs | (unsigned int)rhs);
