@@ -28,14 +28,14 @@ HRESULT CMainApp::Ready_MainApp()
 	if (FAILED(Ready_DefaultSetting(&m_pGraphicDev)))
 		return E_FAIL;
 
+	if (FAILED(Ready_Scene(m_pGraphicDev)))
+		return E_FAIL;
+
 #ifdef IMGUI
 	CImGuiMgr::GetInstance()->ImGui_Setup(g_hWnd, m_pGraphicDev, wndclass);
 
 #else
-
 	CCollisionMgr::GetInstance()->Ready_CollisionMgr();
-	if (FAILED(Ready_Scene(m_pGraphicDev)))
-		return E_FAIL;
 
 #endif // IMGUI
 
@@ -46,13 +46,10 @@ int CMainApp::Update_MainApp(const float& fTimeDelta)
 {
 
 #ifdef IMGUI
-	CImGuiMgr::GetInstance()->ImGui_Tick();
-#else
-	CDInputMgr::GetInstance()->Update_InputDev();
-
 	m_pManagementClass->Update_Scene(fTimeDelta);
 #endif // IMGUI
-
+	CImGuiMgr::GetInstance()->ImGui_Tick();
+	CDInputMgr::GetInstance()->Update_InputDev();
 
 	// _ulong dwDst = 0;
 
@@ -66,29 +63,27 @@ int CMainApp::Update_MainApp(const float& fTimeDelta)
 
 void CMainApp::LateUpdate_MainApp(const float& fTimeDelta)
 {
+	m_pManagementClass->LateUpdate_Scene(fTimeDelta);
 #ifdef IMGUI
 
 #else
-	m_pManagementClass->LateUpdate_Scene(fTimeDelta);
 #endif // IMGUI
 
 }
 
 void CMainApp::Render_MainApp()
 {
+	m_pDeviceClass->Render_Begin(D3DXCOLOR(0.f, 0.f, 1.f, 1.f));
 
+	m_pManagementClass->Render_Scene(m_pGraphicDev);
 
 #ifdef IMGUI
 	CImGuiMgr::GetInstance()->ImGui_Render();
 
 #else
-	m_pDeviceClass->Render_Begin(D3DXCOLOR(0.f, 0.f, 1.f, 1.f));
-
-	m_pManagementClass->Render_Scene(m_pGraphicDev);
-
-	m_pDeviceClass->Render_End();
 #endif // IMGUI
 
+	m_pDeviceClass->Render_End();
 
 }
 

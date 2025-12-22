@@ -114,7 +114,7 @@
     </Filter>
     <Filter Include="00. Manager\09. StaticChannelMgr\99. CollisionChannel">
       <UniqueIdentifier>{06a0c12a-ab29-4659-8164-b46f9223ad21}</UniqueIdentifier>
-	</Filter>	
+    </Filter>
     <Filter Include="00. Manager\08. ImGuiMgr">
       <UniqueIdentifier>{7d84f3d7-230e-4df1-9c30-d17dd44282d6}</UniqueIdentifier>
     </Filter>
@@ -123,6 +123,9 @@
     </Filter>
     <Filter Include="00. Manager\08. ImGuiMgr\ImGui_files">
       <UniqueIdentifier>{b537a219-ec5e-4adb-bb9f-aca263a5a4cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00. Manager\08. ImGuiMgr\ImGuizmo_files">
+      <UniqueIdentifier>{ca8e5568-b45f-4eed-9c49-71683bff61f0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -227,8 +230,8 @@
     </ClCompile>
     <ClCompile Include="..\Code\CCollisionChannel.cpp">
       <Filter>00. Manager\09. StaticChannelMgr\99. CollisionChannel</Filter>
-	</ClCompile>
-	<ClCompile Include="..\Code\CSaveLoadMgr.cpp">
+    </ClCompile>
+    <ClCompile Include="..\Code\CSaveLoadMgr.cpp">
       <Filter>00. Manager\09. SaveLoadMgr</Filter>
     </ClCompile>
     <ClCompile Include="..\..\ImGui\imgui.cpp">
@@ -254,6 +257,21 @@
     </ClCompile>
     <ClCompile Include="..\Code\CImGuiMgr.cpp">
       <Filter>00. Manager\08. ImGuiMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ImGuizmo\GraphEditor.cpp">
+      <Filter>00. Manager\08. ImGuiMgr\ImGuizmo_files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ImGuizmo\ImCurveEdit.cpp">
+      <Filter>00. Manager\08. ImGuiMgr\ImGuizmo_files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ImGuizmo\ImGradient.cpp">
+      <Filter>00. Manager\08. ImGuiMgr\ImGuizmo_files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ImGuizmo\ImGuizmo.cpp">
+      <Filter>00. Manager\08. ImGuiMgr\ImGuizmo_files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ImGuizmo\ImSequencer.cpp">
+      <Filter>00. Manager\08. ImGuiMgr\ImGuizmo_files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -389,7 +407,7 @@
     <ClInclude Include="..\Header\CImGuiMgr.h">
       <Filter>00. Manager\08. ImGuiMgr</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\ImGui_Define.h">
+    <ClInclude Include="..\Header\Edit_Define.h">
       <Filter>00. Manager\08. ImGuiMgr</Filter>
     </ClInclude>
     <ClInclude Include="..\..\ImGui\imconfig.h">
@@ -415,6 +433,24 @@
     </ClInclude>
     <ClInclude Include="..\..\ImGui\imstb_truetype.h">
       <Filter>00. Manager\08. ImGuiMgr\ImGui_files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ImGuizmo\GraphEditor.h">
+      <Filter>00. Manager\08. ImGuiMgr\ImGuizmo_files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ImGuizmo\ImCurveEdit.h">
+      <Filter>00. Manager\08. ImGuiMgr\ImGuizmo_files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ImGuizmo\ImGradient.h">
+      <Filter>00. Manager\08. ImGuiMgr\ImGuizmo_files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ImGuizmo\ImGuizmo.h">
+      <Filter>00. Manager\08. ImGuiMgr\ImGuizmo_files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ImGuizmo\ImSequencer.h">
+      <Filter>00. Manager\08. ImGuiMgr\ImGuizmo_files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ImGuizmo\ImZoomSlider.h">
+      <Filter>00. Manager\08. ImGuiMgr\ImGuizmo_files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
