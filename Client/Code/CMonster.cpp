@@ -42,7 +42,13 @@ HRESULT CMonster::Ready_GameObject()
 
 	m_hmapSubHandles.insert({ L"Monster_Damaged", m_pMessageChannel->Subscribe(L"Monster.Attacked", [this](const IMessageChannel::EVENT& Event) {
 	if (Event.eOBJID == this->Get_OBJID()) {
-		m_iHp -= any_cast<_int>(Event.hmapData.find(L"Attack")->second);
+		for (auto& Target : any_cast<vector<CGameObject*>>(Event.hmapData.find(L"Target")->second))
+		{
+			if (Target == this)
+			{
+				m_iHp -= any_cast<_int>(Event.hmapData.find(L"Attack")->second);
+			}
+		}
 	}
 	}) });
 

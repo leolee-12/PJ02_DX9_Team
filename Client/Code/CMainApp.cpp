@@ -51,7 +51,6 @@ int CMainApp::Update_MainApp(const float& fTimeDelta)
 	CImGuiMgr::GetInstance()->ImGui_Tick();
 #endif // IMGUI
 	CDInputMgr::GetInstance()->Update_InputDev();
-#endif // IMGUI
 
 	// _ulong dwDst = 0;
 

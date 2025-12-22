@@ -100,8 +100,6 @@ HRESULT CPlayer::Ready_GameObject()
 
 _int CPlayer::Update_GameObject(const _float& fTimeDelta)
 {
-	if(!m_pMessageChannel) 
-
 	Move_Frame(fTimeDelta);
 
 	m_pColliderCom->UpdateFromTransform(m_pTransformCom);
@@ -530,15 +528,16 @@ void CPlayer::Charge(const _float& fTimeDelta)
 void CPlayer::HitBox()
 {
 	AABB tAABB = { m_vPos.x, m_vPos.y, m_vPos.z,
-					0.5f, 0.5f, 0.5f };
+					1.f, 0.5f, 1.f };
 
 	vector<CGameObject*> tempVec = CCollisionMgr::GetInstance()->Test_AABB(tAABB, CL_MONSTER);
 
 	IMessageChannel::EVENT EAttack;
 	EAttack.strType = L"Monster.Attacked";
 	EAttack.eOBJID = Engine::OID_MONSTER;
-	any iAttack = m_iAttack;
-	EAttack.hmapData.emplace(L"Attack", iAttack);
+	//any iAttack = m_iAttack;
+	EAttack.hmapData.emplace(L"Attack", m_iAttack);
+	EAttack.hmapData.emplace(L"Target", tempVec);
 	m_pMessageChannel->Publish(EAttack);
 }
 
