@@ -13,7 +13,7 @@ private:
 
 public:
 	HRESULT		 Ready_GlobalObjects(LPDIRECT3DDEVICE9 pGraphicDev);
-	CGameObject* Get_GlobalObjects(GOBJID eGOBJID);
+	Engine::CGameObject* Get_GlobalObjects(GOBJID eGOBJID);
 
 public:
 	static CPersistentMgr* GetInstance()
@@ -34,8 +34,8 @@ public:
 	}
 
 private:
-	unordered_map<GOBJID, CGameObject*>  m_hmapGlobalObjects;
-	vector<CGameObject*>				 m_vecReleaseQueue;
+	unordered_map<GOBJID, Engine::CGameObject*>  m_hmapGlobalObjects;
+	vector<Engine::CGameObject*>				 m_vecReleaseQueue;
 
 private:										
 	static CPersistentMgr* m_pInstance;

@@ -45,11 +45,11 @@ HRESULT CMainApp::Ready_MainApp()
 
 int CMainApp::Update_MainApp(const float& fTimeDelta)
 {
+	m_pManagementClass->Update_Scene(fTimeDelta);
 
 #ifdef IMGUI
-	m_pManagementClass->Update_Scene(fTimeDelta);
-#endif // IMGUI
 	CImGuiMgr::GetInstance()->ImGui_Tick();
+#endif // IMGUI
 	CDInputMgr::GetInstance()->Update_InputDev();
 
 	// _ulong dwDst = 0;

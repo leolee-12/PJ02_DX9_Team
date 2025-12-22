@@ -30,6 +30,34 @@ public:
 		return *(((_long*)&m_tMouseState) + eMouseState);
 	}
 
+	_bool	Key_Down(_ubyte byKeyID)
+	{
+		if (!(m_byPreKeyState[byKeyID] & 0x80) && (m_byKeyState[byKeyID] & 0x80))
+		{ 
+			return true;
+		}
+		return false;
+	}
+
+	_bool Key_Pressing(_ubyte byKeyID)
+	{
+		if (m_byKeyState[byKeyID] & 0x80)
+		{
+			return true;
+		}
+		return false;
+	}
+
+	_bool Key_Up(_ubyte byKeyID)
+	{
+		if ((m_byPreKeyState[byKeyID] & 0x80) && !(m_byKeyState[byKeyID] & 0x80)) 
+		{
+			return true;
+		}
+		return false;
+	}
+
+
 public:
 	HRESULT Ready_InputDev(HINSTANCE hInst, HWND hWnd);
 	void	Update_InputDev(void);
@@ -43,6 +71,7 @@ private:
 
 private:
 	_byte					m_byKeyState[256];		// 키보드에 있는 모든 키값을 저장하기 위한 변수
+	_byte					m_byPreKeyState[256];
 	DIMOUSESTATE			m_tMouseState;
 
 public:

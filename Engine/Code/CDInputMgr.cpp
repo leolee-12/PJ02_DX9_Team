@@ -58,7 +58,7 @@ HRESULT Engine::CDInputMgr::Ready_InputDev(HINSTANCE hInst, HWND hWnd)
 
 void Engine::CDInputMgr::Update_InputDev(void)
 {
-	*m_byPreKeyState = *m_byKeyState;
+	memcpy(m_byPreKeyState, m_byKeyState, 256);
 	m_pKeyBoard->GetDeviceState(256, m_byKeyState);
 	m_pMouse->GetDeviceState(sizeof(m_tMouseState), &m_tMouseState);
 }
