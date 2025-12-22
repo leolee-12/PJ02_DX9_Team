@@ -14,6 +14,7 @@ protected:
 	virtual ~CGameObject();
 
 public:
+	void		Set_MessageChannel(IMessageChannel* pChannel) { m_pMessageChannel = pChannel; }
 	CComponent* Get_Component(COMPONENTID eID, const wstring& strComponentTag);
 	OBJID		Get_OBJID() { return m_eOBJID; }
 	_float		Get_Depth() { return m_fDepth; }

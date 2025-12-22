@@ -57,6 +57,7 @@ private:
 
 	void			Move_Roll(const _float& fTimeDelta);
 	void			Charge(const _float& fTimeDelta);
+	void			HitBox();
 
 	// ==========================
 	//	Move_Roll : 구르기 상태일 때 현재 위치를 Lerp를 적용하여 계산 및 이동

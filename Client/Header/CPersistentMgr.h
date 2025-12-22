@@ -3,6 +3,8 @@
 #include "CGameObject.h"
 #include "Engine_Define.h"
 
+BEGIN(Engine)
+
 class CPersistentMgr : public CBase
 {
 private:
@@ -44,3 +46,4 @@ private:
 	virtual void		Free();
 };
 
+END

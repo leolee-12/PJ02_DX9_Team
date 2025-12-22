@@ -4,6 +4,7 @@
 #include "CManagement.h"
 #include "CRenderer.h"
 #include "CDInputMgr.h"
+#include "CCollisionMgr.h"
 
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev),
@@ -99,7 +100,10 @@ HRESULT CPlayer::Ready_GameObject()
 
 _int CPlayer::Update_GameObject(const _float& fTimeDelta)
 {
+	if(!m_pMessageChannel) 
+
 	Move_Frame(fTimeDelta);
+
 	m_pColliderCom->UpdateFromTransform(m_pTransformCom);
 
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
@@ -236,40 +240,40 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 {
 	if (!m_bRoll && !m_iCombo && !m_fCharge)
 	{
-		if (GetAsyncKeyState('W'))
+		if (CDInputMgr::GetInstance()->Key_Pressing(DIK_W))
 		{
 			m_eCurState = PS_RUN;
 
-			if (GetAsyncKeyState('A')) m_vDir = m_vNormDir[DIR_LU];
+			if (CDInputMgr::GetInstance()->Key_Pressing(DIK_A)) m_vDir = m_vNormDir[DIR_LU];
 
-			else if (GetAsyncKeyState('D')) m_vDir = m_vNormDir[DIR_RU];
+			else if (CDInputMgr::GetInstance()->Key_Pressing(DIK_D)) m_vDir = m_vNormDir[DIR_RU];
 
 			else m_vDir = m_vNormDir[DIR_UP];
 
 			m_pTransformCom->Move_Pos(&m_vDir, fTimeDelta, m_fSpeed);
 		}
 
-		else if (GetAsyncKeyState('S'))
+		else if (CDInputMgr::GetInstance()->Key_Pressing(DIK_S))
 		{
 			m_eCurState = PS_RUN;
 
-			if (GetAsyncKeyState('A')) m_vDir = m_vNormDir[DIR_LD];
+			if (CDInputMgr::GetInstance()->Key_Pressing(DIK_A)) m_vDir = m_vNormDir[DIR_LD];
 
-			else if (GetAsyncKeyState('D')) m_vDir = m_vNormDir[DIR_RD];
+			else if (CDInputMgr::GetInstance()->Key_Pressing(DIK_D)) m_vDir = m_vNormDir[DIR_RD];
 
 			else m_vDir = m_vNormDir[DIR_DOWN];
 
 			m_pTransformCom->Move_Pos(&m_vDir, fTimeDelta, m_fSpeed);
 		}
 
-		else if (GetAsyncKeyState('A'))
+		else if (CDInputMgr::GetInstance()->Key_Pressing(DIK_A))
 		{
 			m_eCurState = PS_RUN;
 			m_vDir = m_vNormDir[DIR_LEFT];
 			m_pTransformCom->Move_Pos(&m_vDir, fTimeDelta, m_fSpeed);
 		}
 
-		else if (GetAsyncKeyState('D'))
+		else if (CDInputMgr::GetInstance()->Key_Pressing(DIK_D))
 		{
 			m_eCurState = PS_RUN;
 			m_vDir = m_vNormDir[DIR_RIGHT];
@@ -282,9 +286,9 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 		}
 	}
 
-	if (GetAsyncKeyState(VK_SPACE) & 0x0001)
+	if (CDInputMgr::GetInstance()->Key_Down(DIK_SPACE))
 	{
-		if ((m_bRoll) || (m_iCombo)) return;
+		if ((m_bRoll) || (m_iCombo) || (m_fCharge)) return;
 
 		m_bRoll = true;
 		m_eCurState = PS_ROLL;
@@ -293,24 +297,27 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 
 	if (GetAsyncKeyState(VK_LBUTTON) & 0x0001)	// 눌렀을 때 한 번만 true
 	{			
-		if (m_iCombo == 3) return;
+		if ((m_iCombo == 3) || (m_fCharge)) return;
 
 		m_iCombo++;
 		m_bRoll = false;
 		m_fFrame = 0.f;
 		m_eCurState = PS_ATTACK;
 		m_pTransformCom->Move_Pos(&m_vDir, fTimeDelta, m_fSpeed - 5.f);
+		HitBox();
 	}
 
 	if (GetAsyncKeyState(VK_RBUTTON) & 0x0001)	// 눌렀을 때 한 번만 true
 	{
+		if ((m_bRoll) || (m_iCombo)) return;
+	
 		if (!m_fCharge)
 		{
 			m_eCurState = PS_CHARGE;
 			m_strFrameKey = L"charge-start";
 			m_fCharge += fTimeDelta;
 		}
-		else
+		else if(m_strFrameKey == L"charge-loop")
 		{
 			m_fFrame = 0.f;
 			m_fChargeMax = m_fCharge;
@@ -518,6 +525,21 @@ void CPlayer::Charge(const _float& fTimeDelta)
 	if (!m_fCharge) return;
 
 	m_fCharge += fTimeDelta;
+}
+
+void CPlayer::HitBox()
+{
+	AABB tAABB = { m_vPos.x, m_vPos.y, m_vPos.z,
+					0.5f, 0.5f, 0.5f };
+
+	vector<CGameObject*> tempVec = CCollisionMgr::GetInstance()->Test_AABB(tAABB, CL_MONSTER);
+
+	IMessageChannel::EVENT EAttack;
+	EAttack.strType = L"Monster.Attacked";
+	EAttack.eOBJID = Engine::OID_MONSTER;
+	any iAttack = m_iAttack;
+	EAttack.hmapData.emplace(L"Attack", iAttack);
+	m_pMessageChannel->Publish(EAttack);
 }
 
 void	CPlayer::OnCollision(CGameObject* pObject)

@@ -94,6 +94,7 @@ HRESULT TestCube::Add_Component()
 
 	m_mapComponent[ID_STATIC].insert({ L"Com_Buffer", pComponent });
 
+	return S_OK;
 }
 
 TestCube* TestCube::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel)

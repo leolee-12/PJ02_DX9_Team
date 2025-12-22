@@ -181,6 +181,9 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	if (nullptr == pGameObject)
 		return E_FAIL;
 
+	pGameObject->Set_MessageChannel(m_pMessageChannel);
+	m_pMessageChannel->AddRef();
+
 	if (FAILED(pLayer->Add_GameObject(L"Player", pGameObject)))
 		return E_FAIL;
 

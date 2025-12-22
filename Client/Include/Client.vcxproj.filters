@@ -88,9 +88,6 @@
     <Filter Include="02. GameObject\07. UI\04. LoadingCircle">
       <UniqueIdentifier>{9506c82b-1421-464c-8228-53ab398c8982}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\09. Weapon">
-      <UniqueIdentifier>{56761645-4dfe-4d20-b5be-8c1c66a33109}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
