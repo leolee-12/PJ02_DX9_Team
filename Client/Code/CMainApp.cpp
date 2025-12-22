@@ -7,10 +7,11 @@
 #include "CDInputMgr.h"
 #include "CFontMgr.h"
 #include "CLightMgr.h"
-#include "CImGuiManager.h"
-#include "ImGui_Define.h"
+#include "CImGuiMgr.h"
 #include "CCollisionMgr.h"
+#include "CPersistentMgr.h"
 
+//#define IMGUI
 
 CMainApp::CMainApp() : m_pDeviceClass(nullptr), m_pGraphicDev(nullptr)
 , m_pManagementClass(CManagement::GetInstance())
@@ -29,8 +30,8 @@ HRESULT CMainApp::Ready_MainApp()
 		return E_FAIL;
 
 #ifdef IMGUI
-	// CImGui�߰� �ڵ�
-	CImGuiManager::GetInstance()->ImGui_Setup(g_hWnd, m_pGraphicDev);
+	CImGuiMgr::GetInstance()->ImGui_Setup(g_hWnd, m_pGraphicDev, wndclass);
+
 #else
 
 	CCollisionMgr::GetInstance()->Ready_CollisionMgr();
@@ -46,7 +47,7 @@ int CMainApp::Update_MainApp(const float& fTimeDelta)
 {
 
 #ifdef IMGUI
-	CImGuiManager::GetInstance()->ImGui_Tick();
+	CImGuiMgr::GetInstance()->ImGui_Tick();
 #else
 	CDInputMgr::GetInstance()->Update_InputDev();
 
@@ -79,7 +80,7 @@ void CMainApp::Render_MainApp()
 
 
 #ifdef IMGUI
-	CImGuiManager::GetInstance()->ImGui_Render();
+	CImGuiMgr::GetInstance()->ImGui_Render();
 
 #else
 	m_pDeviceClass->Render_Begin(D3DXCOLOR(0.f, 0.f, 1.f, 1.f));
@@ -120,10 +121,13 @@ HRESULT CMainApp::Ready_DefaultSetting(LPDIRECT3DDEVICE9* ppGraphicDev)
 
 	// ��Ʈ �߰�
 
-	if (FAILED(CFontMgr::GetInstance()->Ready_Font((*ppGraphicDev), L"Font_Default", L"�߸���", 20, 20, FW_HEAVY)))
+	if (FAILED(CFontMgr::GetInstance()->Ready_Font((*ppGraphicDev), L"Font_Default", L"Malgun Gothic", 0, 20, FW_HEAVY)))
 		return E_FAIL;
 
-	if (FAILED(CFontMgr::GetInstance()->Ready_Font((*ppGraphicDev), L"Font_Jinji", L"�ü�", 20, 15, FW_THIN)))
+	if (FAILED(CFontMgr::GetInstance()->Ready_Font((*ppGraphicDev), L"Font_Lapture20", L"LaptureDisplay", 0, 20, FW_THIN)))
+		return E_FAIL;
+
+	if (FAILED(CFontMgr::GetInstance()->Ready_Font((*ppGraphicDev), L"Font_Lapture40", L"LaptureDisplay", 0, 40, FW_THIN)))
 		return E_FAIL;
 
 	return S_OK;
@@ -172,7 +176,7 @@ void CMainApp::Free()
 	Safe_Release(m_pGraphicDev);
 	Safe_Release(m_pDeviceClass);	
 
-
+	CPersistentMgr::DestroyInstance();
 	CLightMgr::DestroyInstance();
 	CFontMgr::DestroyInstance();
 	CDInputMgr::DestroyInstance();
@@ -183,8 +187,8 @@ void CMainApp::Free()
 	CManagement::DestroyInstance();
 	CCollisionMgr::DestroyInstance();
 #ifdef IMGUI
-	CImGuiManager::GetInstance()->ImGui_Shutdown();
-	CImGuiManager::DestroyInstance();
+	CImGuiMgr::GetInstance()->ImGui_Shutdown();
+	CImGuiMgr::DestroyInstance();
 #endif // IMGUI
 	m_pDeviceClass->DestroyInstance();
 }

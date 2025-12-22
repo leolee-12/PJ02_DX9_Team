@@ -20,26 +20,32 @@
 
 #include <process.h>
 
-// ImGui
-#include "imgui.h"
-#include "imgui_impl_dx9.h"
-#include "imgui_impl_win32.h"
-
 #ifdef _DEBUG
+
+//#define IMGUI
 
 #define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>
 #include <crtdbg.h>
 
-#ifndef DBG_NEW 
-#define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ ) 
-#define new DBG_NEW 
 
-#endif
+#ifdef  IMGUI
+
+#else
+//#ifndef DBG_NEW 
+//#define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ ) 
+//#define new DBG_NEW 
+
+//#endif
+
+#endif //  IMGUI
+
+
 #endif
 
 extern HINSTANCE g_hInst;
 extern HWND g_hWnd;
+extern WNDCLASSEXW wndclass;
 
 using namespace std;
 

@@ -6,6 +6,7 @@
 #include "CMonster.h"
 #include "CTerrain.h"
 #include "CTerrainWall.h"
+//#include "CLoadingThread.h"
 
 class CStage : public CScene
 {
@@ -23,6 +24,7 @@ private:
 	HRESULT			Ready_Environment_Layer(const _tchar* pLayerTag);
 	HRESULT			Ready_GameLogic_Layer(const _tchar* pLayerTag);
 	HRESULT			Ready_UI_Layer(const _tchar* pLayerTag);
+	HRESULT			Ready_Const_Layer();
 
 	HRESULT			Ready_Light();
 
@@ -30,5 +32,9 @@ public:
 	static CStage* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 private:
 	virtual void Free();
+
+private:
+	// 테스트용
+	//CLoadingThread* m_pLoading;
 };
 

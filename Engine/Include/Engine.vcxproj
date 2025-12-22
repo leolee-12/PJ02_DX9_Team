@@ -111,7 +111,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;ENGINE_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../Header; ../../Base;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../Header;../../Base;../../ImGui; ../../Maps</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -147,12 +147,17 @@ call Copy.bat</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\ImGui\imconfig.h" />
+    <ClInclude Include="..\..\ImGui\imgui.h" />
+    <ClInclude Include="..\..\ImGui\imgui_impl_dx9.h" />
+    <ClInclude Include="..\..\ImGui\imgui_impl_win32.h" />
+    <ClInclude Include="..\..\ImGui\imgui_internal.h" />
+    <ClInclude Include="..\..\ImGui\imstb_rectpack.h" />
+    <ClInclude Include="..\..\ImGui\imstb_textedit.h" />
+    <ClInclude Include="..\..\ImGui\imstb_truetype.h" />
     <ClInclude Include="..\Header\CCalculator.h" />
     <ClInclude Include="..\Header\CCamera.h" />
     <ClInclude Include="..\Header\CCollider.h" />
-    <ClInclude Include="..\Header\CCollisionChannel.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClInclude>
     <ClInclude Include="..\Header\CCollisionMgr.h" />
     <ClInclude Include="..\Header\CComponent.h" />
     <ClInclude Include="..\Header\CCubeTex.h" />
@@ -163,13 +168,11 @@ call Copy.bat</Command>
     <ClInclude Include="..\Header\CFrameMgr.h" />
     <ClInclude Include="..\Header\CGameObject.h" />
     <ClInclude Include="..\Header\CGraphicDev.h" />
+    <ClInclude Include="..\Header\CImGuiMgr.h" />
     <ClInclude Include="..\Header\CLayer.h" />
     <ClInclude Include="..\Header\CLight.h" />
     <ClInclude Include="..\Header\CLightMgr.h" />
     <ClInclude Include="..\Header\CManagement.h" />
-    <ClInclude Include="..\Header\CStaticChannelMgr.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClInclude>
     <ClInclude Include="..\Header\CTextureSet.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClInclude>
@@ -177,6 +180,7 @@ call Copy.bat</Command>
     <ClInclude Include="..\Header\CRcCol.h" />
     <ClInclude Include="..\Header\CRcTex.h" />
     <ClInclude Include="..\Header\CRenderer.h" />
+    <ClInclude Include="..\Header\CSaveLoadMgr.h" />
     <ClInclude Include="..\Header\CScene.h" />
     <ClInclude Include="..\Header\CStageMessage.h" />
     <ClInclude Include="..\Header\CTerrainTex.h" />
@@ -186,6 +190,7 @@ call Copy.bat</Command>
     <ClInclude Include="..\Header\CTimerMgr.h" />
     <ClInclude Include="..\Header\CTransform.h" />
     <ClInclude Include="..\Header\CTriCol.h" />
+    <ClInclude Include="..\Header\CUi.h" />
     <ClInclude Include="..\Header\CVIBuffer.h" />
     <ClInclude Include="..\Header\Engine_Define.h" />
     <ClInclude Include="..\Header\Engine_Enum.h" />
@@ -195,14 +200,19 @@ call Copy.bat</Command>
     <ClInclude Include="..\Header\Engine_Struct.h" />
     <ClInclude Include="..\Header\Engine_Typedef.h" />
     <ClInclude Include="..\Header\IMessageChannel.h" />
+    <ClInclude Include="..\Header\ImGui_Define.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\ImGui\imgui.cpp" />
+    <ClCompile Include="..\..\ImGui\imgui_demo.cpp" />
+    <ClCompile Include="..\..\ImGui\imgui_draw.cpp" />
+    <ClCompile Include="..\..\ImGui\imgui_impl_dx9.cpp" />
+    <ClCompile Include="..\..\ImGui\imgui_impl_win32.cpp" />
+    <ClCompile Include="..\..\ImGui\imgui_tables.cpp" />
+    <ClCompile Include="..\..\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="..\Code\CCalculator.cpp" />
     <ClCompile Include="..\Code\CCamera.cpp" />
     <ClCompile Include="..\Code\CCollider.cpp" />
-    <ClCompile Include="..\Code\CCollisionChannel.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="..\Code\CCollisionMgr.cpp" />
     <ClCompile Include="..\Code\CComponent.cpp" />
     <ClCompile Include="..\Code\CCubeTex.cpp" />
@@ -213,13 +223,11 @@ call Copy.bat</Command>
     <ClCompile Include="..\Code\CFrameMgr.cpp" />
     <ClCompile Include="..\Code\CGameObject.cpp" />
     <ClCompile Include="..\Code\CGraphicDev.cpp" />
+    <ClCompile Include="..\Code\CImGuiMgr.cpp" />
     <ClCompile Include="..\Code\CLayer.cpp" />
     <ClCompile Include="..\Code\CLight.cpp" />
     <ClCompile Include="..\Code\CLightMgr.cpp" />
     <ClCompile Include="..\Code\CManagement.cpp" />
-    <ClCompile Include="..\Code\CStaticChannelMgr.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="..\Code\CTextureSet.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
@@ -227,6 +235,7 @@ call Copy.bat</Command>
     <ClCompile Include="..\Code\CRcCol.cpp" />
     <ClCompile Include="..\Code\CRcTex.cpp" />
     <ClCompile Include="..\Code\CRenderer.cpp" />
+    <ClCompile Include="..\Code\CSaveLoadMgr.cpp" />
     <ClCompile Include="..\Code\CScene.cpp" />
     <ClCompile Include="..\Code\CStageMessage.cpp" />
     <ClCompile Include="..\Code\CTerrainTex.cpp" />
@@ -236,9 +245,21 @@ call Copy.bat</Command>
     <ClCompile Include="..\Code\CTimerMgr.cpp" />
     <ClCompile Include="..\Code\CTransform.cpp" />
     <ClCompile Include="..\Code\CTriCol.cpp" />
+    <ClCompile Include="..\Code\CUi.cpp" />
     <ClCompile Include="..\Code\CVIBuffer.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cpp.hint" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
+    <Import Project="..\..\packages\JsonCpp.Windows.1.9.2\build\JsonCpp.Windows.targets" Condition="Exists('..\..\packages\JsonCpp.Windows.1.9.2\build\JsonCpp.Windows.targets')" />
   </ImportGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>이 프로젝트는 이 컴퓨터에 없는 NuGet 패키지를 참조합니다. 해당 패키지를 다운로드하려면 NuGet 패키지 복원을 사용하십시오. 자세한 내용은 http://go.microsoft.com/fwlink/?LinkID=322105를 참조하십시오. 누락된 파일은 {0}입니다.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\packages\JsonCpp.Windows.1.9.2\build\JsonCpp.Windows.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\JsonCpp.Windows.1.9.2\build\JsonCpp.Windows.targets'))" />
+  </Target>
 </Project>

@@ -26,7 +26,7 @@ HRESULT CLogo::Ready_Scene()
 	if (FAILED(Ready_Environment_Layer(L"Environment_Layer")))
 		return E_FAIL;
 
-	m_pLoading = CLoading::Create(m_pGraphicDev, CLoading::LOADING_STAGE);
+	m_pLoading = CLoadingThread::Create(m_pGraphicDev, LOADING_STAGE);
 	
 	if (nullptr == m_pLoading)
 		return E_FAIL;

@@ -23,6 +23,7 @@ public:
 	// ==========================
 
 private:
+	explicit CPlayer(LPDIRECT3DDEVICE9 pGraphicDev);
 	explicit CPlayer(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel);
 	explicit CPlayer(const CPlayer& rhs);
 	virtual ~CPlayer();
@@ -98,6 +99,7 @@ private:
 	_float			m_fChargeMax;
 
 public:
+	static CPlayer* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 	static CPlayer* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel);
 
 private:

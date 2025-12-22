@@ -5,6 +5,22 @@
 #include "CRenderer.h"
 #include "CDInputMgr.h"
 
+CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
+	: CGameObject(pGraphicDev),
+	m_ePreState(PS_END),
+	m_eCurState(PS_IDLE),
+	m_fFrame(0.f),
+	m_fFrameEnd(0.f),
+	m_fFrameSpeed(0.f),
+	m_fSpeed(0.f),
+	m_iAttack(0),
+	m_bRoll(false),
+	m_iCombo(0),
+	m_fLerp(0.2f),
+	m_fRollSpeed(5.f)
+{
+}
+
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel)
 	:	CGameObject(pGraphicDev, StageChannel),
 		m_ePreState(PS_END),
@@ -516,6 +532,20 @@ void	CPlayer::OnCollision(CGameObject* pObject)
 CPlayer* CPlayer::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel)
 {
 	CPlayer* pPlayer = new CPlayer(pGraphicDev, StageChannel);
+
+	if (FAILED(pPlayer->Ready_GameObject()))
+	{
+		Safe_Release(pPlayer);
+		MSG_BOX("pPlayer Create Failed");
+		return nullptr;
+	}
+
+	return pPlayer;
+}
+
+CPlayer* CPlayer::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+{
+	CPlayer* pPlayer = new CPlayer(pGraphicDev);
 
 	if (FAILED(pPlayer->Ready_GameObject()))
 	{
