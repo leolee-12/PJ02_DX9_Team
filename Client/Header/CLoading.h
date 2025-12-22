@@ -3,6 +3,8 @@
 #include "CLoadingThread.h"
 
 
+class CLoadingFG;
+
 class CLoading : public CScene
 {
 private:
@@ -26,6 +28,7 @@ private:
 private:
 	CLoadingThread* m_pLoading;
 	LOADINGID		m_eChangeID;
+	CLoadingFG*		m_pLoadingFG;
 
 public:
 	static CLoading* Create(LPDIRECT3DDEVICE9 pGraphicDev, LOADINGID ChangeID);

@@ -5,7 +5,7 @@
 #include "CPersistentMgr.h"
 
 CLoadingThread::CLoadingThread(LPDIRECT3DDEVICE9 pGraphicDev)
-    : m_pGraphicDev(pGraphicDev), m_bFinish(false), m_eLoading(LOADING_END)
+    : m_pGraphicDev(pGraphicDev), m_bFinish(false), m_eLoading(LOADING_END), m_fPercent(0.f)
 {
     ZeroMemory(m_szLoading, sizeof(m_szLoading));
     m_pGraphicDev->AddRef();
@@ -93,6 +93,18 @@ _uint CLoadingThread::Loading_ForStage()
 
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_EffectTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Explosion/Explosion%d.png", 90))))
         return E_FAIL;
+
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_LoadingCenterTex", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Loading/LoadingCenter.png", 1))))
+        return E_FAIL;
+
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_LoadingFGTex", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Loading/LoadingFG.png", 1))))
+        return E_FAIL;
+
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_LoadingLogoTex", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Loading/LoadingLogo.png", 1))))
+        return E_FAIL;
+
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_LoadingCircleTex", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Loading/LoadingCircle.png", 1))))
+        return E_FAIL;
    
     //if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_SkyTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_CUBE, L"../Bin/Resource/Texture/159.dds", 1))))
     //    return E_FAIL;
@@ -112,15 +124,23 @@ _uint CLoadingThread::Loading_ForStage()
 
     m_bFinish = true;
 
-    lstrcpy(m_szLoading, L"Loading Complete!!");
+    lstrcpy(m_szLoading, L"Å×½ºÆ®");
 
     return 0;
 }
 
 _uint CLoadingThread::Loading_ForTest()
 {
+    Sleep(1000);
+
+    m_fPercent += 50.f;
+
+    Sleep(2000);
+
     lstrcpy(m_szLoading, L"Loading Complete!!");
 
+    m_fPercent += 50.f;
+    
     m_bFinish = true;
 
     return _uint();

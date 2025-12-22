@@ -12,6 +12,7 @@ public:
 	CRITICAL_SECTION*		Get_Crt() { return &m_Crt; }
 	LOADINGID				Get_Loading() { return m_eLoading; }
 	_bool					Get_Finish() { return m_bFinish; }
+	_float					Get_Clamp_Percent() { return m_fPercent / 100.f; }
 
 	const _tchar* Get_String() { return m_szLoading; }
 
@@ -31,6 +32,7 @@ private:
 	LOADINGID			m_eLoading;
 
 	CRITICAL_SECTION	m_Crt;
+	_float				m_fPercent;
 	_bool				m_bFinish;
 
 	_tchar				m_szLoading[128];

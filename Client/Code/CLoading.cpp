@@ -6,6 +6,10 @@
 #include "CFontMgr.h"
 #include "CTest.h"
 #include "CLoadingBack.h"
+#include "CLoadingCenter.h"
+#include "CLoadingFG.h"
+#include "CLoadingCircle.h"
+#include "CLoadingLogo.h"
 
 
 CLoading::CLoading(LPDIRECT3DDEVICE9 pGraphicDev, LOADINGID ChangeID)
@@ -35,11 +39,13 @@ HRESULT CLoading::Ready_Scene()
 
 _int CLoading::Update_Scene(const _float& fTimeDelta)
 {
+	m_pLoadingFG->Update_Pos(m_pLoading->Get_Clamp_Percent());
+
 	_int iExit = Engine::CScene::Update_Scene(fTimeDelta);
 
 	if (true == m_pLoading->Get_Finish())
 	{
-		if (GetAsyncKeyState(VK_RETURN))
+		//if (GetAsyncKeyState(VK_RETURN))
 		{
 			Engine::CScene* pScene = nullptr;
 			switch (m_pLoading->Get_Loading())
@@ -82,9 +88,10 @@ void CLoading::Render_Scene()
 {
 	// debug 용
 
-	_vec2		vPos{ 100.f, 100.f };
 
-	CFontMgr::GetInstance()->Render_Font(L"Font_Default", m_pLoading->Get_String(), &vPos, D3DXCOLOR(1.f, 0.f, 0.f, 1.f));
+	_vec2		vPos{ 150.f, WINCY - 100.f };
+
+	CFontMgr::GetInstance()->Render_Font(L"Font_Lapture40", L"로딩중...", &vPos, D3DXCOLOR(0.75f, 0.75f, 0.75f, 1.f));
 
 }
 
@@ -115,6 +122,38 @@ HRESULT CLoading::Ready_UI_Layer(const _tchar* pLayerTag)
 		return E_FAIL;
 
 	if (FAILED(pLayer->Add_GameObject(L"LoadingBack", pGameObject)))
+		return E_FAIL;
+
+	pGameObject = CLoadingCenter::Create(m_pGraphicDev);
+
+	if (nullptr == pGameObject)
+		return E_FAIL;
+
+	if (FAILED(pLayer->Add_GameObject(L"LoadingCenter", pGameObject)))
+		return E_FAIL;
+
+	pGameObject = m_pLoadingFG = CLoadingFG::Create(m_pGraphicDev);
+
+	if (nullptr == pGameObject)
+		return E_FAIL;
+
+	if (FAILED(pLayer->Add_GameObject(L"LoadingFG", pGameObject)))
+		return E_FAIL;
+
+	pGameObject =  CLoadingLogo::Create(m_pGraphicDev);
+
+	if (nullptr == pGameObject)
+		return E_FAIL;
+
+	if (FAILED(pLayer->Add_GameObject(L"LoadingFG", pGameObject)))
+		return E_FAIL;
+
+	pGameObject = CLoadingCircle::Create(m_pGraphicDev);
+
+	if (nullptr == pGameObject)
+		return E_FAIL;
+
+	if (FAILED(pLayer->Add_GameObject(L"LoadingFG", pGameObject)))
 		return E_FAIL;
 
 	m_mapLayer.insert({ pLayerTag , pLayer });

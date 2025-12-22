@@ -151,6 +151,10 @@
     <ClInclude Include="..\Header\CDynamicCamera.h" />
     <ClInclude Include="..\Header\CEditScene.h" />
     <ClInclude Include="..\Header\CLoading.h" />
+    <ClInclude Include="..\Header\CLoadingCenter.h" />
+    <ClInclude Include="..\Header\CLoadingCircle.h" />
+    <ClInclude Include="..\Header\CLoadingFG.h" />
+    <ClInclude Include="..\Header\CLoadingLogo.h" />
     <ClInclude Include="..\Header\CLoadingThread.h" />
     <ClInclude Include="..\Header\CLoadingBack.h" />
     <ClInclude Include="..\Header\CLogo.h" />
@@ -178,6 +182,10 @@
     <ClCompile Include="..\Code\CDynamicCamera.cpp" />
     <ClCompile Include="..\Code\CEditScene.cpp" />
     <ClCompile Include="..\Code\CLoading.cpp" />
+    <ClCompile Include="..\Code\CLoadingCenter.cpp" />
+    <ClCompile Include="..\Code\CLoadingCircle.cpp" />
+    <ClCompile Include="..\Code\CLoadingFG.cpp" />
+    <ClCompile Include="..\Code\CLoadingLogo.cpp" />
     <ClCompile Include="..\Code\CLoadingThread.cpp" />
     <ClCompile Include="..\Code\CLoadingBack.cpp" />
     <ClCompile Include="..\Code\CLogo.cpp" />
