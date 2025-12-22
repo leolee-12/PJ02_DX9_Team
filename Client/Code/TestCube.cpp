@@ -93,7 +93,7 @@ HRESULT TestCube::Add_Component()
 		return E_FAIL;
 
 	m_mapComponent[ID_STATIC].insert({ L"Com_Buffer", pComponent });
-
+	
 	return S_OK;
 }
 

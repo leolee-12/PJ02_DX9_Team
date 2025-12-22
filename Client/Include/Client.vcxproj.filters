@@ -88,6 +88,39 @@
     <Filter Include="02. GameObject\07. UI\04. LoadingCircle">
       <UniqueIdentifier>{9506c82b-1421-464c-8228-53ab398c8982}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\09. Weapon">
+      <UniqueIdentifier>{56761645-4dfe-4d20-b5be-8c1c66a33109}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. UI\00. LoadingUI">
+      <UniqueIdentifier>{b8ae79d9-84c6-485b-8fa1-5ca2361e4338}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. UI\00. LoadingUI\04. LoadingCircle">
+      <UniqueIdentifier>{9506c82b-1421-464c-8228-53ab398c8982}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. UI\00. LoadingUI\03. LoadingLogo">
+      <UniqueIdentifier>{afe12694-f308-4f3b-9d71-5360441de4ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. UI\00. LoadingUI\02. LoadingFG">
+      <UniqueIdentifier>{9689bbf7-b8dc-485d-be1d-1acab77d1648}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. UI\00. LoadingUI\01. LoadingCenter">
+      <UniqueIdentifier>{23ec9675-0f43-486e-92bb-df0d8c3fc775}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. UI\00. LoadingUI\00. LoadingBack">
+      <UniqueIdentifier>{ae049520-ab2e-4676-bf1c-57c1cb41b6f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. UI\01. TitleUI">
+      <UniqueIdentifier>{fc414d98-3728-4c2b-bfd0-aa6254c074e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. UI\01. TitleUI\00. TitleBack">
+      <UniqueIdentifier>{e5978b17-8776-40d2-9c8c-804973b11aed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. UI\01. TitleUI\01. TitleCenter">
+      <UniqueIdentifier>{51e4fa44-a242-44f9-b6b2-e62ea6a61be6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. UI\01. TitleUI\02. TitleLogo">
+      <UniqueIdentifier>{f3297bde-6a24-42a0-a777-4049f60b9657}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -157,19 +190,28 @@
       <Filter>09. CPersistentMgr</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CLoadingBack.h">
-      <Filter>02. GameObject\07. UI\00. LoadingBack</Filter>
+      <Filter>02. GameObject\07. UI\00. LoadingUI\00. LoadingBack</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CLoadingCenter.h">
-      <Filter>02. GameObject\07. UI\01. LoadingCenter</Filter>
+      <Filter>02. GameObject\07. UI\00. LoadingUI\01. LoadingCenter</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CLoadingFG.h">
-      <Filter>02. GameObject\07. UI\02. LoadingFG</Filter>
+      <Filter>02. GameObject\07. UI\00. LoadingUI\02. LoadingFG</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CLoadingLogo.h">
-      <Filter>02. GameObject\07. UI\03. LoadingLogo</Filter>
+      <Filter>02. GameObject\07. UI\00. LoadingUI\03. LoadingLogo</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CLoadingCircle.h">
-      <Filter>02. GameObject\07. UI\04. LoadingCircle</Filter>
+      <Filter>02. GameObject\07. UI\00. LoadingUI\04. LoadingCircle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CTitleBack.h">
+      <Filter>02. GameObject\07. UI\01. TitleUI\00. TitleBack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CTitleCenter.h">
+      <Filter>02. GameObject\07. UI\01. TitleUI\01. TitleCenter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CTitleLogo.h">
+      <Filter>02. GameObject\07. UI\01. TitleUI\02. TitleLogo</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -231,19 +273,28 @@
       <Filter>09. CPersistentMgr</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CLoadingBack.cpp">
-      <Filter>02. GameObject\07. UI\00. LoadingBack</Filter>
+      <Filter>02. GameObject\07. UI\00. LoadingUI\00. LoadingBack</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CLoadingCenter.cpp">
-      <Filter>02. GameObject\07. UI\01. LoadingCenter</Filter>
+      <Filter>02. GameObject\07. UI\00. LoadingUI\01. LoadingCenter</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CLoadingFG.cpp">
-      <Filter>02. GameObject\07. UI\02. LoadingFG</Filter>
+      <Filter>02. GameObject\07. UI\00. LoadingUI\02. LoadingFG</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CLoadingLogo.cpp">
-      <Filter>02. GameObject\07. UI\03. LoadingLogo</Filter>
+      <Filter>02. GameObject\07. UI\00. LoadingUI\03. LoadingLogo</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CLoadingCircle.cpp">
-      <Filter>02. GameObject\07. UI\04. LoadingCircle</Filter>
+      <Filter>02. GameObject\07. UI\00. LoadingUI\04. LoadingCircle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CTitleBack.cpp">
+      <Filter>02. GameObject\07. UI\01. TitleUI\00. TitleBack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CTitleCenter.cpp">
+      <Filter>02. GameObject\07. UI\01. TitleUI\01. TitleCenter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CTitleLogo.cpp">
+      <Filter>02. GameObject\07. UI\01. TitleUI\02. TitleLogo</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

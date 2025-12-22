@@ -1,10 +1,10 @@
 #pragma once
 
-#include "CTriCol.h"
 #include "CRcCol.h"
 #include "CRcTex.h"
 #include "CTerrainTex.h"
 #include "CCubeTex.h"
+#include "CRcColTitle.h"
 
 #include "CTransform.h"
 #include "CTexture.h"

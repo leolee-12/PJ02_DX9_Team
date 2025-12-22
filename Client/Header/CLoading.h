@@ -1,9 +1,8 @@
 #pragma once
 #include "CScene.h"
-#include "CLoadingThread.h"
-
 
 class CLoadingFG;
+class CLoadingThread;
 
 class CLoading : public CScene
 {

@@ -37,12 +37,6 @@ HRESULT CLoadingThread::Ready_Loading(LOADINGID eID)
 _uint CLoadingThread::Loading_ForStage()
 {
     lstrcpy(m_szLoading, L"Buffer Loading..............................");
-
-    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_TriCol", Engine::CTriCol::Create(m_pGraphicDev))))
-        return E_FAIL;
-
-    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_RcCol", Engine::CRcCol::Create(m_pGraphicDev))))
-        return E_FAIL;
  
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_TerrainTex", Engine::CTerrainTex::Create(m_pGraphicDev, VTXCNTX, VTXCNTZ, VTXITV, L"../Bin/Resource/Texture/Terrain/Height.bmp"))))
         return E_FAIL;
@@ -55,6 +49,8 @@ _uint CLoadingThread::Loading_ForStage()
 
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Collider", Engine::CCollider::Create(m_pGraphicDev))))
         return E_FAIL;
+
+    m_fPercent += 20.f;
         
     lstrcpy(m_szLoading, L"Texture Loading..............................");
 
@@ -79,6 +75,8 @@ _uint CLoadingThread::Loading_ForStage()
     tempVec[14] = CTextureSet::TEXINFO(L"charge-loop", L"../Bin/Resource/Texture/Player/cast-spell2-loop/cast-spell2-loop_%04d.png", 13);
     tempVec[15] = CTextureSet::TEXINFO(L"charge-end", L"../Bin/Resource/Texture/Player/cast-spell/cast-spell_%04d.png", 16);
 
+    m_fPercent += 20.f;
+
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_PlayerTexture", Engine::CTextureSet::Create(m_pGraphicDev, TEX_NORMAL, tempVec))))
         return E_FAIL;
 
@@ -97,25 +95,12 @@ _uint CLoadingThread::Loading_ForStage()
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_EffectTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Explosion/Explosion%d.png", 90))))
         return E_FAIL;
 
-    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_LoadingCenterTex", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Loading/LoadingCenter.png", 1))))
-        return E_FAIL;
-
-    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_LoadingFGTex", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Loading/LoadingFG.png", 1))))
-        return E_FAIL;
-
-    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_LoadingLogoTex", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Loading/LoadingLogo.png", 1))))
-        return E_FAIL;
-
-    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_LoadingCircleTex", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Loading/LoadingCircle.png", 1))))
-        return E_FAIL;
+    m_fPercent += 20.f;
    
     //if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_SkyTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_CUBE, L"../Bin/Resource/Texture/159.dds", 1))))
     //    return E_FAIL;
 
     lstrcpy(m_szLoading, L"Etc Loading..............................");
-
-    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Transform", Engine::CTransform::Create(m_pGraphicDev))))
-        return E_FAIL;
 
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Calculator", Engine::CCalculator::Create(m_pGraphicDev))))
         return E_FAIL;
@@ -123,6 +108,10 @@ _uint CLoadingThread::Loading_ForStage()
     
     if (FAILED(CPersistentMgr::GetInstance()->Ready_GlobalObjects(m_pGraphicDev)))
         return E_FAIL;
+
+    m_fPercent += 20.f;
+
+    m_fPercent += 20.f;
 
 
     m_bFinish = true;

@@ -41,15 +41,19 @@ HRESULT CRcTex::Ready_Buffer()
 	// 오른쪽 위
 	pVertex[0].vPosition = { -0.5f, 0.5f, 0.f };
 	pVertex[0].vTexUV = { 0.f, 0.f };
+	pVertex[0].vNormal = { 0.f, 0.f, -1.f };
 
 	pVertex[1].vPosition = { 0.5f, 0.5f, 0.f };
 	pVertex[1].vTexUV = { 1.f, 0.f };
+	pVertex[1].vNormal = { 0.f, 0.f, -1.f };
 
 	pVertex[2].vPosition = { 0.5f, -0.5f, 0.f };
 	pVertex[2].vTexUV = { 1.f, 1.f };
+	pVertex[2].vNormal = { 0.f, 0.f, -1.f };
 
 	pVertex[3].vPosition = { -0.5f, -0.5f, 0.f };
 	pVertex[3].vTexUV = { 0.f, 1.f };
+	pVertex[3].vNormal = { 0.f, 0.f, -1.f };
 
 	m_pVB->Unlock();
 
