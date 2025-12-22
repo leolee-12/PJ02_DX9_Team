@@ -60,7 +60,7 @@ _uint CLoading::Loading_ForStage()
     //if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_PlayerTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Player/idle/idle_%04d.png", 180))))
     //    return E_FAIL;
 
-    vector<CTextureSet::TEXINFO> tempVec(13);
+    vector<CTextureSet::TEXINFO> tempVec(16);
     tempVec[0]  = CTextureSet::TEXINFO(L"idle", L"../Bin/Resource/Texture/Player/idle/idle_%04d.png", 72);
     tempVec[1]  = CTextureSet::TEXINFO(L"idle-up", L"../Bin/Resource/Texture/Player/idle-up/idle-up_%04d.png", 72);
     tempVec[2]  = CTextureSet::TEXINFO(L"run-up", L"../Bin/Resource/Texture/Player/run-up/run-up_%04d.png", 9);
@@ -74,6 +74,9 @@ _uint CLoading::Loading_ForStage()
     tempVec[10] = CTextureSet::TEXINFO(L"attack-combo1", L"../Bin/Resource/Texture/Player/attack-combo1/attack-combo1_%04d.png", 15);
     tempVec[11] = CTextureSet::TEXINFO(L"attack-combo2", L"../Bin/Resource/Texture/Player/attack-combo2/attack-combo2_%04d.png", 19);
     tempVec[12] = CTextureSet::TEXINFO(L"attack-combo3", L"../Bin/Resource/Texture/Player/attack-combo3/attack-combo3_%04d.png", 19);
+    tempVec[13] = CTextureSet::TEXINFO(L"charge-start", L"../Bin/Resource/Texture/Player/cast-spell2/cast-spell2_%04d.png", 16);
+    tempVec[14] = CTextureSet::TEXINFO(L"charge-loop", L"../Bin/Resource/Texture/Player/cast-spell2-loop/cast-spell2-loop_%04d.png", 13);
+    tempVec[15] = CTextureSet::TEXINFO(L"charge-end", L"../Bin/Resource/Texture/Player/cast-spell/cast-spell_%04d.png", 16);
     
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_PlayerTexture", Engine::CTextureSet::Create(m_pGraphicDev, TEX_NORMAL, tempVec))))
         return E_FAIL;
