@@ -69,50 +69,50 @@ void CDynamicCamera::Key_Input(const _float& fTimeDelta)
 	_matrix		matCamWorld;
 	D3DXMatrixInverse(&matCamWorld, 0, &m_matView);
 
-	//if (GetAsyncKeyState('D') & 0x8000)
-	//{
-	//	_vec3		vRight;
-	//	memcpy(&vRight, &matCamWorld.m[0][0], sizeof(_vec3));
+	if (GetAsyncKeyState('D') & 0x8000)
+	{
+		_vec3		vRight;
+		memcpy(&vRight, &matCamWorld.m[0][0], sizeof(_vec3));
 
-	//	_vec3		vLength = *D3DXVec3Normalize(&vRight, &vRight) * fTimeDelta * m_fSpeed;
+		_vec3		vLength = *D3DXVec3Normalize(&vRight, &vRight) * fTimeDelta * m_fSpeed;
 
-	//	m_vEye += vLength;
-	//	m_vAt  += vLength;
-	//}
+		m_vEye += vLength;
+		m_vAt  += vLength;
+	}
 
-	//if (GetAsyncKeyState('A') & 0x8000)
-	//{
-	//	_vec3		vRight;
-	//	memcpy(&vRight, &matCamWorld.m[0][0], sizeof(_vec3));
+	if (GetAsyncKeyState('A') & 0x8000)
+	{
+		_vec3		vRight;
+		memcpy(&vRight, &matCamWorld.m[0][0], sizeof(_vec3));
 
-	//	_vec3		vLength = *D3DXVec3Normalize(&vRight, &vRight) * fTimeDelta * m_fSpeed;
+		_vec3		vLength = *D3DXVec3Normalize(&vRight, &vRight) * fTimeDelta * m_fSpeed;
 
-	//	m_vEye -= vLength;
-	//	m_vAt  -= vLength;
-	//}
+		m_vEye -= vLength;
+		m_vAt  -= vLength;
+	}
 
 
-	//if (GetAsyncKeyState('W') & 0x8000)
-	//{
-	//	_vec3		vLook;
-	//	memcpy(&vLook, &matCamWorld.m[2][0], sizeof(_vec3));
+	if (GetAsyncKeyState('W') & 0x8000)
+	{
+		_vec3		vLook;
+		memcpy(&vLook, &matCamWorld.m[2][0], sizeof(_vec3));
 
-	//	_vec3		vLength = *D3DXVec3Normalize(&vLook, &vLook) * fTimeDelta * m_fSpeed;
+		_vec3		vLength = *D3DXVec3Normalize(&vLook, &vLook) * fTimeDelta * m_fSpeed;
 
-	//	m_vEye += vLength;
-	//	m_vAt  += vLength;
-	//}
+		m_vEye += vLength;
+		m_vAt  += vLength;
+	}
 
-	//if (GetAsyncKeyState('S') & 0x8000)
-	//{
-	//	_vec3		vLook;
-	//	memcpy(&vLook, &matCamWorld.m[2][0], sizeof(_vec3));
+	if (GetAsyncKeyState('S') & 0x8000)
+	{
+		_vec3		vLook;
+		memcpy(&vLook, &matCamWorld.m[2][0], sizeof(_vec3));
 
-	//	_vec3		vLength = *D3DXVec3Normalize(&vLook, &vLook) * fTimeDelta * m_fSpeed;
+		_vec3		vLength = *D3DXVec3Normalize(&vLook, &vLook) * fTimeDelta * m_fSpeed;
 
-	//	m_vEye -= vLength;
-	//	m_vAt  -= vLength;
-	//}
+		m_vEye -= vLength;
+		m_vAt  -= vLength;
+	}
 
 
 	if (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_TAB) & 0x80)
