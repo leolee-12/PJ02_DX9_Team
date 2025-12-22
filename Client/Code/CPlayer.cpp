@@ -17,7 +17,9 @@ CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
 	m_bRoll(false),
 	m_iCombo(0),
 	m_fLerp(0.2f),
-	m_fRollSpeed(5.f)
+	m_fRollSpeed(5.f),
+	m_fCharge(0.f),
+	m_fChargeMax(3.f)
 {
 }
 
@@ -305,11 +307,14 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 		if (!m_fCharge)
 		{
 			m_eCurState = PS_CHARGE;
+			m_strFrameKey = L"charge-start";
 			m_fCharge += fTimeDelta;
 		}
 		else
 		{
 			m_fFrame = 0.f;
+			m_fChargeMax = m_fCharge;
+			m_strFrameKey = L"charge-end";
 		}
 	}
 
@@ -434,9 +439,14 @@ void CPlayer::Move_Frame(const _float& fTimeDelta)
 		{
 			m_iCombo = 0;
 		}
-		else if (m_eCurState == PS_CHARGE && m_fCharge > m_fChargeMax)
+		else if (m_eCurState == PS_CHARGE)
 		{
-			m_fCharge = 0.f;
+			if (m_strFrameKey == L"charge-start") m_strFrameKey = L"charge-loop";
+			else if (m_strFrameKey == L"charge-end")
+			{
+				m_fCharge = 0.f;
+				m_fChargeMax = 3.f;
+			}
 		}
 	}
 }
@@ -474,33 +484,22 @@ void CPlayer::Set_TextureSet()
 
 	case PS_ATTACK:
 	{
-		if (m_iCombo == 1)
-		{
-			m_strFrameKey = L"attack-combo1";
-		}
-		else if (m_iCombo == 2)
-		{
-			m_strFrameKey = L"attack-combo2";
-		}
-		else if (m_iCombo == 3)
-		{
-			m_strFrameKey = L"attack-combo3";
-		}
+		if		(m_iCombo == 1)	m_strFrameKey = L"attack-combo1";
+		else if (m_iCombo == 2)	m_strFrameKey = L"attack-combo2";
+		else if (m_iCombo == 3)	m_strFrameKey = L"attack-combo3";
 	}
 	break;
 
 	case PS_CHARGE:
 	{
-		if		(m_fCharge < 0.63f)			m_strFrameKey = L"charge-start";
-		else if (m_fCharge < m_fChargeMax)	m_strFrameKey = L"charge-loop";
-		else								m_strFrameKey = L"charge-end";
+		// 키인풋 & Move_Frame에서 관리
 	}
 	break;
 	}
 
 	if (m_strFrameKey != strPreKey) m_fFrame = 0.f;
 
-	m_fFrameEnd = m_pTextureCom->Get_TextureEnd(m_strFrameKey);
+	m_fFrameEnd = m_pTextureCom->Get_TextureEnd(m_strFrameKey); 
 
 	m_pTextureCom->Set_Texture(m_strFrameKey, _uint(m_fFrame));
 }
