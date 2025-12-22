@@ -9,8 +9,9 @@
 #include "CLightMgr.h"
 #include "CImGuiMgr.h"
 #include "CCollisionMgr.h"
+#include "CPersistentMgr.h"
 
-#define IMGUI
+//#define IMGUI
 
 CMainApp::CMainApp() : m_pDeviceClass(nullptr), m_pGraphicDev(nullptr)
 , m_pManagementClass(CManagement::GetInstance())
@@ -120,10 +121,13 @@ HRESULT CMainApp::Ready_DefaultSetting(LPDIRECT3DDEVICE9* ppGraphicDev)
 
 	// ��Ʈ �߰�
 
-	if (FAILED(CFontMgr::GetInstance()->Ready_Font((*ppGraphicDev), L"Font_Default", L"�߸���", 20, 20, FW_HEAVY)))
+	if (FAILED(CFontMgr::GetInstance()->Ready_Font((*ppGraphicDev), L"Font_Default", L"Malgun Gothic", 0, 20, FW_HEAVY)))
 		return E_FAIL;
 
-	if (FAILED(CFontMgr::GetInstance()->Ready_Font((*ppGraphicDev), L"Font_Jinji", L"�ü�", 20, 15, FW_THIN)))
+	if (FAILED(CFontMgr::GetInstance()->Ready_Font((*ppGraphicDev), L"Font_Lapture20", L"LaptureDisplay", 0, 20, FW_THIN)))
+		return E_FAIL;
+
+	if (FAILED(CFontMgr::GetInstance()->Ready_Font((*ppGraphicDev), L"Font_Lapture40", L"LaptureDisplay", 0, 40, FW_THIN)))
 		return E_FAIL;
 
 	return S_OK;
@@ -172,7 +176,7 @@ void CMainApp::Free()
 	Safe_Release(m_pGraphicDev);
 	Safe_Release(m_pDeviceClass);	
 
-
+	CPersistentMgr::DestroyInstance();
 	CLightMgr::DestroyInstance();
 	CFontMgr::DestroyInstance();
 	CDInputMgr::DestroyInstance();

@@ -64,6 +64,30 @@
     <Filter Include="01. Scene\04. EditScene">
       <UniqueIdentifier>{ff5bb01d-db75-499d-ae0b-be1f8fb58ee7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Scene\99. Loading\LoadingThread">
+      <UniqueIdentifier>{bec13d5c-cc47-4d5b-a2eb-0fb3bafdcfdd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="09. CPersistentMgr">
+      <UniqueIdentifier>{153d294d-a813-4bb7-9dee-2e2680526024}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. UI">
+      <UniqueIdentifier>{0320c609-d491-42cf-96f0-e94adb951d41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. UI\00. LoadingBack">
+      <UniqueIdentifier>{ae049520-ab2e-4676-bf1c-57c1cb41b6f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. UI\01. LoadingCenter">
+      <UniqueIdentifier>{23ec9675-0f43-486e-92bb-df0d8c3fc775}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. UI\02. LoadingFG">
+      <UniqueIdentifier>{9689bbf7-b8dc-485d-be1d-1acab77d1648}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. UI\03. LoadingLogo">
+      <UniqueIdentifier>{afe12694-f308-4f3b-9d71-5360441de4ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. UI\04. LoadingCircle">
+      <UniqueIdentifier>{9506c82b-1421-464c-8228-53ab398c8982}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -102,9 +126,6 @@
     <ClInclude Include="..\Header\CTerrain.h">
       <Filter>02. GameObject\03. Terrain</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\CLoading.h">
-      <Filter>01. Scene\99. Loading</Filter>
-    </ClInclude>
     <ClInclude Include="..\Header\CDynamicCamera.h">
       <Filter>02. GameObject\04. DynamicCamera</Filter>
     </ClInclude>
@@ -125,6 +146,30 @@
     </ClInclude>
     <ClInclude Include="..\Header\CEditScene.h">
       <Filter>01. Scene\04. EditScene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CLoadingThread.h">
+      <Filter>01. Scene\99. Loading\LoadingThread</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CLoading.h">
+      <Filter>01. Scene\99. Loading</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CPersistentMgr.h">
+      <Filter>09. CPersistentMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CLoadingBack.h">
+      <Filter>02. GameObject\07. UI\00. LoadingBack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CLoadingCenter.h">
+      <Filter>02. GameObject\07. UI\01. LoadingCenter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CLoadingFG.h">
+      <Filter>02. GameObject\07. UI\02. LoadingFG</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CLoadingLogo.h">
+      <Filter>02. GameObject\07. UI\03. LoadingLogo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CLoadingCircle.h">
+      <Filter>02. GameObject\07. UI\04. LoadingCircle</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -155,9 +200,6 @@
     <ClCompile Include="..\Code\CTerrain.cpp">
       <Filter>02. GameObject\03. Terrain</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\CLoading.cpp">
-      <Filter>01. Scene\99. Loading</Filter>
-    </ClCompile>
     <ClCompile Include="..\Code\CDynamicCamera.cpp">
       <Filter>02. GameObject\04. DynamicCamera</Filter>
     </ClCompile>
@@ -178,6 +220,30 @@
     </ClCompile>
     <ClCompile Include="..\Code\CEditScene.cpp">
       <Filter>01. Scene\04. EditScene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CLoadingThread.cpp">
+      <Filter>01. Scene\99. Loading\LoadingThread</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CLoading.cpp">
+      <Filter>01. Scene\99. Loading</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CPersistentMgr.cpp">
+      <Filter>09. CPersistentMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CLoadingBack.cpp">
+      <Filter>02. GameObject\07. UI\00. LoadingBack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CLoadingCenter.cpp">
+      <Filter>02. GameObject\07. UI\01. LoadingCenter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CLoadingFG.cpp">
+      <Filter>02. GameObject\07. UI\02. LoadingFG</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CLoadingLogo.cpp">
+      <Filter>02. GameObject\07. UI\03. LoadingLogo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CLoadingCircle.cpp">
+      <Filter>02. GameObject\07. UI\04. LoadingCircle</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

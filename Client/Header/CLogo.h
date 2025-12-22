@@ -1,6 +1,6 @@
 #pragma once
 #include "CScene.h"
-#include "CLoading.h"
+#include "CLoadingThread.h"
 
 class CLogo : public CScene
 {
@@ -23,7 +23,7 @@ private:
 	HRESULT			Ready_Prototype();
 
 private:
-	CLoading* m_pLoading;
+	CLoadingThread* m_pLoading;
 
 public:
 	static CLogo* Create(LPDIRECT3DDEVICE9 pGraphicDev);

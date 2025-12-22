@@ -22,7 +22,7 @@
 
 #ifdef _DEBUG
 
-#define IMGUI
+//#define IMGUI
 
 #define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>
@@ -32,11 +32,11 @@
 #ifdef  IMGUI
 
 #else
-#ifndef DBG_NEW 
-#define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ ) 
-#define new DBG_NEW 
+//#ifndef DBG_NEW 
+//#define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ ) 
+//#define new DBG_NEW 
 
-#endif
+//#endif
 
 #endif //  IMGUI
 
