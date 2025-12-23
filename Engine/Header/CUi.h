@@ -7,6 +7,7 @@ class ENGINE_DLL CUi : public CGameObject
 {
 protected:
 	explicit CUi(LPDIRECT3DDEVICE9 pGraphicDev);
+	explicit CUi(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMessageChannel);
 	virtual ~CUi();
 
 public:

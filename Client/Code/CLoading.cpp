@@ -15,7 +15,7 @@
 
 
 CLoading::CLoading(LPDIRECT3DDEVICE9 pGraphicDev, LOADINGID ChangeID)
-	: CScene(pGraphicDev), m_pLoading(nullptr), m_eChangeID(ChangeID)
+	: CScene(pGraphicDev), m_pLoading(nullptr), m_eChangeID(ChangeID), m_fLoadingDelay(0.f)
 {
 }
 
@@ -47,8 +47,7 @@ _int CLoading::Update_Scene(const _float& fTimeDelta)
 
 	if (true == m_pLoading->Get_Finish())
 	{
-		//if (GetAsyncKeyState(VK_RETURN))
-		{
+		if (m_fLoadingDelay >= 2.f) {
 			Engine::CScene* pScene = nullptr;
 			switch (m_pLoading->Get_Loading())
 			{
@@ -69,13 +68,14 @@ _int CLoading::Update_Scene(const _float& fTimeDelta)
 			case LOADING_BOSS:
 				break;
 			}
-			
+
 			if (FAILED(CManagement::GetInstance()->Set_Scene(pScene)))
 			{
 				MSG_BOX("Stage Scene Failed");
 				return -1;
 			}
 		}
+		m_fLoadingDelay += fTimeDelta;
 	}
 
 	return iExit;
@@ -84,6 +84,13 @@ _int CLoading::Update_Scene(const _float& fTimeDelta)
 void CLoading::LateUpdate_Scene(const _float& fTimeDelta)
 {
 	Engine::CScene::LateUpdate_Scene(fTimeDelta);
+
+	if (true == m_pLoading->Get_Finish()) {
+		IMessageChannel::EVENT event; 
+		event.strType = L"Loading_Success";
+
+		m_pMessageChannel->Publish(event);
+	}
 }
 
 void CLoading::Render_Scene()
@@ -93,7 +100,12 @@ void CLoading::Render_Scene()
 
 	_vec2		vPos{ 150.f, WINCY - 100.f };
 
-	CFontMgr::GetInstance()->Render_Font(L"Font_Lapture40", L"로딩중...", &vPos, D3DXCOLOR(0.75f, 0.75f, 0.75f, 1.f));
+	if (true == m_pLoading->Get_Finish()) {
+		CFontMgr::GetInstance()->Render_Font(L"Font_Lapture40", L"로딩 완료!", &vPos, D3DXCOLOR(0.75f, 0.75f, 0.75f, 1.f), DT_NOCLIP);
+	}
+	else {
+		CFontMgr::GetInstance()->Render_Font(L"Font_Lapture40", L"로딩중.....", &vPos, D3DXCOLOR(0.75f, 0.75f, 0.75f, 1.f), DT_NOCLIP);
+	}
 
 	//CFontMgr::GetInstance()->Render_Font(L"Font_Lapture40", m_pLoading->Get_String(), &vPos, D3DXCOLOR(0.75f, 0.75f, 0.75f, 1.f));
 
@@ -152,7 +164,7 @@ HRESULT CLoading::Ready_UI_Layer(const _tchar* pLayerTag)
 	if (FAILED(pLayer->Add_GameObject(L"LoadingFG", pGameObject)))
 		return E_FAIL;
 
-	pGameObject = CLoadingCircle::Create(m_pGraphicDev);
+	pGameObject = CLoadingCircle::Create(m_pGraphicDev, m_pMessageChannel);
 
 	if (nullptr == pGameObject)
 		return E_FAIL;

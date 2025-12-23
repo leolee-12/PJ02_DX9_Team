@@ -106,6 +106,9 @@
     <Filter Include="02. GameObject\07. UI\01. TitleUI\02. TitleLogo">
       <UniqueIdentifier>{f3297bde-6a24-42a0-a777-4049f60b9657}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\07. UI\01. TitleUI\03. TitleTab">
+      <UniqueIdentifier>{75b337c8-aa30-4290-b563-aae3a9aa3104}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -198,6 +201,9 @@
     <ClInclude Include="..\Header\CTitleLogo.h">
       <Filter>02. GameObject\07. UI\01. TitleUI\02. TitleLogo</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CTitleTab.h">
+      <Filter>02. GameObject\07. UI\01. TitleUI\03. TitleTab</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -280,6 +286,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CTitleLogo.cpp">
       <Filter>02. GameObject\07. UI\01. TitleUI\02. TitleLogo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CTitleTab.cpp">
+      <Filter>02. GameObject\07. UI\01. TitleUI\03. TitleTab</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

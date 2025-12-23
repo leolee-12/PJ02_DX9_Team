@@ -173,6 +173,7 @@
     <ClInclude Include="..\Header\CTitleBack.h" />
     <ClInclude Include="..\Header\CTitleCenter.h" />
     <ClInclude Include="..\Header\CTitleLogo.h" />
+    <ClInclude Include="..\Header\CTitleTab.h" />
     <ClInclude Include="..\Header\TestCube.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="framework.h" />
@@ -207,6 +208,7 @@
     <ClCompile Include="..\Code\CTitleBack.cpp" />
     <ClCompile Include="..\Code\CTitleCenter.cpp" />
     <ClCompile Include="..\Code\CTitleLogo.cpp" />
+    <ClCompile Include="..\Code\CTitleTab.cpp" />
     <ClCompile Include="..\Code\TestCube.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="pch.cpp">

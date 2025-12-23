@@ -122,8 +122,12 @@ HRESULT CMainApp::Ready_DefaultSetting(LPDIRECT3DDEVICE9* ppGraphicDev)
 	if (FAILED(CFontMgr::GetInstance()->Ready_Font((*ppGraphicDev), L"Font_Lapture20", L"LaptureDisplay", 0, 20, FW_THIN)))
 		return E_FAIL;
 
+	if (FAILED(CFontMgr::GetInstance()->Ready_Font((*ppGraphicDev), L"Font_Lapture30", L"LaptureDisplay", 0, 30, FW_THIN)))
+		return E_FAIL;
+
 	if (FAILED(CFontMgr::GetInstance()->Ready_Font((*ppGraphicDev), L"Font_Lapture40", L"LaptureDisplay", 0, 40, FW_THIN)))
 		return E_FAIL;
+
 
 	return S_OK;
 }

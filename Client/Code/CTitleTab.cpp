@@ -1,30 +1,30 @@
 #include "pch.h"
-#include "CTitleLogo.h"
+#include "CTitleTab.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
 
-CTitleLogo::CTitleLogo(LPDIRECT3DDEVICE9 pGraphicDev)
+CTitleTab::CTitleTab(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CUi(pGraphicDev), m_pBufferCom(nullptr), m_pTransformCom(nullptr)
 {
 	ZeroMemory(&m_vPos, sizeof(_vec3));
 }
 
-CTitleLogo::~CTitleLogo()
+CTitleTab::~CTitleTab()
 {
 }
 
-HRESULT CTitleLogo::Ready_GameObject()
+HRESULT CTitleTab::Ready_GameObject()
 {
 	if (FAILED(Add_Component()))
 		return E_FAIL;
 
-	m_pTransformCom->Set_Scale((1024.f * 0.35f), (500.f * 0.35f), 1.f);
-	m_pTransformCom->Set_Pos((_float(- WINCX) * 0.5f)+ 220.f , 180.f, 0.f);
+	m_pTransformCom->Set_Scale((600.f * 0.35f), (162.f * 0.35f), 1.f);
+	m_pTransformCom->Set_Pos((_float(-WINCX) * 0.5f) + 220.f, _float(WINCY / 2) - 340.f, 0.f);
 
 	return S_OK;
 }
 
-HRESULT CTitleLogo::Ready_Material()
+HRESULT CTitleTab::Ready_Material()
 {
 	D3DMATERIAL9			tMtrl;
 	ZeroMemory(&tMtrl, sizeof(D3DMATERIAL9));
@@ -33,7 +33,7 @@ HRESULT CTitleLogo::Ready_Material()
 	tMtrl.Specular = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
 	tMtrl.Ambient = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
 
-	tMtrl.Emissive = D3DXCOLOR(1.f, 0.f, 0.f, 1.f);
+	tMtrl.Emissive = D3DXCOLOR(0.7f, 0.7f, 0.7f, 1.f);
 	tMtrl.Power = 50.f;
 
 	m_pGraphicDev->SetMaterial(&tMtrl);
@@ -41,7 +41,7 @@ HRESULT CTitleLogo::Ready_Material()
 	return S_OK;
 }
 
-_int CTitleLogo::Update_GameObject(const _float& fTimeDelta)
+_int CTitleTab::Update_GameObject(const _float& fTimeDelta)
 {
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
@@ -50,14 +50,14 @@ _int CTitleLogo::Update_GameObject(const _float& fTimeDelta)
 	return iExit;
 }
 
-void CTitleLogo::LateUpdate_GameObject(const _float& fTimeDelta)
+void CTitleTab::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
 	m_pTransformCom->Get_Info(INFO_POS, &m_vPos);
 	Compute_ViewDepth_Ortho(&m_vPos);
 }
 
-void CTitleLogo::Render_GameObject()
+void CTitleTab::Render_GameObject()
 {
 	m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, TRUE);
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
@@ -72,12 +72,12 @@ void CTitleLogo::Render_GameObject()
 	m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, FALSE);
 }
 
-void CTitleLogo::OnCollision(CGameObject* pObject)
+void CTitleTab::OnCollision(CGameObject* pObject)
 {
 
 }
 
-HRESULT CTitleLogo::Add_Component()
+HRESULT CTitleTab::Add_Component()
 {
 	Engine::CComponent* pComponent = nullptr;
 
@@ -100,7 +100,7 @@ HRESULT CTitleLogo::Add_Component()
 	m_mapComponent[ID_DYNAMIC].insert({ L"Com_Transform", pComponent });
 
 	pComponent = m_pTextureCom = dynamic_cast<Engine::CTexture*>
-		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_MainLogoTex"));
+		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_MainTabTex"));
 
 	if (nullptr == pComponent)
 		return E_FAIL;
@@ -112,9 +112,9 @@ HRESULT CTitleLogo::Add_Component()
 
 
 
-CTitleLogo* CTitleLogo::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+CTitleTab* CTitleTab::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 {
-	CTitleLogo* pTitleLogo = new CTitleLogo(pGraphicDev);
+	CTitleTab* pTitleLogo = new CTitleTab(pGraphicDev);
 
 	if (FAILED(pTitleLogo->Ready_GameObject()))
 	{
@@ -126,7 +126,17 @@ CTitleLogo* CTitleLogo::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 	return pTitleLogo;
 }
 
-void CTitleLogo::Free()
+void CTitleTab::Move_Down()
+{
+	m_pTransformCom->Set_Pos(m_vPos.x, m_vPos.y - 100.f, m_vPos.z);
+}
+
+void CTitleTab::Move_Up()
+{
+	m_pTransformCom->Set_Pos(m_vPos.x, m_vPos.y + 100.f, m_vPos.z);
+}
+
+void CTitleTab::Free()
 {
 	CUi::Free();
 }

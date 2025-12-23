@@ -29,11 +29,11 @@ HRESULT CFontMgr::Ready_Font(LPDIRECT3DDEVICE9 pGraphicDev, const _tchar* pFontT
 }
 
 void CFontMgr::Render_Font(const _tchar* pFontTag, const _tchar* pString, 
-	const _vec2* pPos, D3DXCOLOR Color)
+	const _vec2* pPos, D3DXCOLOR Color, DWORD FLag)
 {
 	CFont* pFont = Find_Font(pFontTag);
 
-	pFont->Render_Font(pString, pPos, Color);
+	pFont->Render_Font(pString, pPos, Color, FLag);
 }
 
 CFont* CFontMgr::Find_Font(const _tchar* pFontTag)
