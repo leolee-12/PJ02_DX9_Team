@@ -5,6 +5,9 @@
 #include "CDynamicCamera.h"
 #include "CSkyBox.h"
 #include "CPersistentMgr.h"
+#include "CDungeonBack.h"
+#include "CDInputMgr.h"
+#include "CDungeonIcon.h"
 
 CTest::CTest(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -33,6 +36,13 @@ HRESULT CTest::Ready_Scene()
 
 _int CTest::Update_Scene(const _float& fTimeDelta)
 {
+	if (CDInputMgr::GetInstance()->Key_Down(DIK_R))
+	{
+		IMessageChannel::EVENT event;
+		event.strType = L"Select";
+
+		m_pMessageChannel->Publish(event);
+	}
 	_int iExit = Engine::CScene::Update_Scene(fTimeDelta);
 
 	return iExit;
@@ -123,6 +133,22 @@ HRESULT CTest::Ready_UI_Layer(const _tchar* pLayerTag)
 		return E_FAIL;
 
 	CGameObject* pGameObject = nullptr;
+
+	pGameObject = CDungeonBack::Create(m_pGraphicDev, m_pMessageChannel);
+
+	if (nullptr == pGameObject)
+		return E_FAIL;
+	
+	if (FAILED(pLayer->Add_GameObject(L"SelectBack", pGameObject)))
+		return E_FAIL;
+
+	pGameObject = CDungeonIcon::Create(m_pGraphicDev, m_pMessageChannel);
+
+	if (nullptr == pGameObject)
+		return E_FAIL;
+
+	if (FAILED(pLayer->Add_GameObject(L"SelectIcon", pGameObject)))
+		return E_FAIL;
 
 
 	m_mapLayer.insert({ pLayerTag , pLayer });

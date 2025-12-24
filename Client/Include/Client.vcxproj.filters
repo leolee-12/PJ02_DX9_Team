@@ -109,6 +109,15 @@
     <Filter Include="02. GameObject\07. UI\01. TitleUI\03. TitleTab">
       <UniqueIdentifier>{75b337c8-aa30-4290-b563-aae3a9aa3104}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\07. UI\02. DungeonUI">
+      <UniqueIdentifier>{11dcb0cf-3b50-42e4-90b1-bf3b6bd70d12}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. UI\02. DungeonUI\00. CDungeonBack">
+      <UniqueIdentifier>{aa425ee9-42d6-4763-acea-a480d488b6b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. UI\02. DungeonUI\01. CDungeonIcon">
+      <UniqueIdentifier>{b11eb489-f0f9-4354-a5e5-9d489d9845de}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -204,6 +213,12 @@
     <ClInclude Include="..\Header\CTitleTab.h">
       <Filter>02. GameObject\07. UI\01. TitleUI\03. TitleTab</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CDungeonBack.h">
+      <Filter>02. GameObject\07. UI\02. DungeonUI\00. CDungeonBack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CDungeonIcon.h">
+      <Filter>02. GameObject\07. UI\02. DungeonUI\01. CDungeonIcon</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -289,6 +304,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\CTitleTab.cpp">
       <Filter>02. GameObject\07. UI\01. TitleUI\03. TitleTab</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CDungeonBack.cpp">
+      <Filter>02. GameObject\07. UI\02. DungeonUI\00. CDungeonBack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CDungeonIcon.cpp">
+      <Filter>02. GameObject\07. UI\02. DungeonUI\01. CDungeonIcon</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

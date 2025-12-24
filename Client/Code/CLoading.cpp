@@ -47,7 +47,7 @@ _int CLoading::Update_Scene(const _float& fTimeDelta)
 
 	if (true == m_pLoading->Get_Finish())
 	{
-		if (m_fLoadingDelay >= 2.f) {
+		if (m_fLoadingDelay >= 1.f) {
 			Engine::CScene* pScene = nullptr;
 			switch (m_pLoading->Get_Loading())
 			{

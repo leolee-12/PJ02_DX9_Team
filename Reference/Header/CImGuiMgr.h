@@ -7,24 +7,19 @@
 #include <d3dx9.h>
 #include <functional>
 
-class CGameObject;
-class ImTextureData;
-class CCamera;
+/* -------------------------------------------
+   CImGuiManager
 
- /* -------------------------------------------
-    CImGuiManager
- 
-    ImGui을 이식한 맵툴 매니저입니다.
- -------------------------------------------- */
+   ImGui을 이식한 맵툴 매니저입니다.
+-------------------------------------------- */
 
 BEGIN(Engine)
 
 class ENGINE_DLL CImGuiMgr : public CBase
 {
-    DECLARE_SINGLETON(CImGuiMgr)
 
-private:
-    explicit  CImGuiMgr();
+public:
+    CImGuiMgr();
     virtual ~CImGuiMgr();
 
 private:
@@ -37,15 +32,29 @@ public:
     void ImGui_Render();
     void ImGui_Shutdown();
 
+    virtual void Additonal_Tick() {}
+    virtual void Addtional_Render() {}
+
 public:
-    void Tick_EditorWindow();
-    void Tick_ObjectWindow(CGameObject* pObject);
+    virtual void Tick_EditorWindow();
 
     void Render_Grid();
-
     void Set_Resize(UINT width, UINT height);
 
-private:
+
+protected:
+    // imgui 관련 랩핑 함수
+    void ImGuiWindowBegin(const char* windowName);
+    void ImGuiWindowEnd();
+
+    void ImGuiText(const char* text);
+    void ImGuiDragFontSize(const char* text);
+    void ImGuiComboBox(const char* text, int* types, const char* type_str[], int size);
+    bool ImGuiButton(const char* text);
+    void ImGuiSameLine();
+    void ImGuiMouseText();
+
+public:
     LPDIRECT3DDEVICE9 m_pGraphicDev = nullptr;
     HWND m_hWnd;
 
@@ -62,13 +71,13 @@ private:
     OBJECT_ID objectId = OBJECT_TEST;
     LIGHT_ID lightId = LIGHT_TEST;
 
-    ImTextureData* TexData;            // Latest texture.
     float m_font_size = 30.f;
-
     float m_grid_size = 1000.f;
 
     bool g_DeviceLost = false;
     float m_f = 0.0f;
+
+protected:
     UINT                     m_ResizeWidth = 0, m_ResizeHeight = 0;
     WNDCLASSEXW wc;
 };

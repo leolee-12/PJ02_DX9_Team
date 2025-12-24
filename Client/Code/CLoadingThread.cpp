@@ -47,9 +47,6 @@ _uint CLoadingThread::Loading_ForStage()
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_CubeTex", Engine::CCubeTex::Create(m_pGraphicDev))))
         return E_FAIL;
 
-    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Collider", Engine::CCollider::Create(m_pGraphicDev))))
-        return E_FAIL;
-
     m_fPercent += 20.f;
         
     lstrcpy(m_szLoading, L"Texture Loading..............................");
@@ -77,9 +74,6 @@ _uint CLoadingThread::Loading_ForStage()
 
     m_fPercent += 20.f;
 
-    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_PlayerTexture", Engine::CTextureSet::Create(m_pGraphicDev, TEX_NORMAL, tempVec))))
-        return E_FAIL;
-
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_MonsterTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster0.png", 1))))
         return E_FAIL;
 
@@ -102,9 +96,6 @@ _uint CLoadingThread::Loading_ForStage()
 
     lstrcpy(m_szLoading, L"Etc Loading..............................");
 
-    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Calculator", Engine::CCalculator::Create(m_pGraphicDev))))
-        return E_FAIL;
-
     
     if (FAILED(CPersistentMgr::GetInstance()->Ready_GlobalObjects(m_pGraphicDev)))
         return E_FAIL;
@@ -125,11 +116,22 @@ _uint CLoadingThread::Loading_ForTest()
 {
     Sleep(1000);
 
+    if (FAILED(CPersistentMgr::GetInstance()->Ready_GlobalObjects(m_pGraphicDev)))
+        return E_FAIL;
+
     m_fPercent += 50.f;
+
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_DungeonIcon", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Dungeon/Icon.png", 1))))
+        return E_FAIL;
+
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_DungeonBG", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Dungeon/BG.png", 1))))
+        return E_FAIL;
+
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_DungeonMG", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Dungeon/MG2.png", 1))))
+        return E_FAIL;
 
     Sleep(2000);
 
-    lstrcpy(m_szLoading, L"Loading Complete!!");
 
     m_fPercent += 50.f;
     

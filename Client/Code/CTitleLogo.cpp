@@ -19,7 +19,7 @@ HRESULT CTitleLogo::Ready_GameObject()
 		return E_FAIL;
 
 	m_pTransformCom->Set_Scale((1024.f * 0.35f), (500.f * 0.35f), 1.f);
-	m_pTransformCom->Set_Pos((_float(- WINCX) * 0.5f)+ 220.f , 180.f, 0.f);
+	m_pTransformCom->Set_Pos((_float(- WINCX) * 0.5f)+ 220.f , 180.f, 0.f);	
 
 	return S_OK;
 }
@@ -34,7 +34,7 @@ HRESULT CTitleLogo::Ready_Material()
 	tMtrl.Ambient = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
 
 	tMtrl.Emissive = D3DXCOLOR(1.f, 0.f, 0.f, 1.f);
-	tMtrl.Power = 50.f;
+	tMtrl.Power = 0.f;
 
 	m_pGraphicDev->SetMaterial(&tMtrl);
 
