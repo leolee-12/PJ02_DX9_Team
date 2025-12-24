@@ -8,15 +8,14 @@ namespace Engine
 	class CTexture;
 }
 
-class CDungeonIcon :
+class CDungeonLine :
 	public CUi
 {
 public:
-	enum DICONSTATE { DI_STAGE1, DI_STAGE2, DI_STAGE3, DI_END };
+	enum DLINESTATE { DL_1, DL_2, DL_END };
 private:
-	explicit CDungeonIcon(LPDIRECT3DDEVICE9 pGraphicDev);
-	explicit CDungeonIcon(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMessageChannel);
-	virtual ~CDungeonIcon();
+	explicit CDungeonLine(LPDIRECT3DDEVICE9 pGraphicDev);
+	virtual ~CDungeonLine();
 
 public:
 	virtual			HRESULT		Ready_GameObject();
@@ -25,9 +24,8 @@ public:
 	virtual			void		Render_GameObject();
 	virtual			void		OnCollision(CGameObject* pObject);
 
-
 public:
-	static CDungeonIcon* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMessageChannel, DICONSTATE eState);
+	static CDungeonLine* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pChannel, DLINESTATE eState);
 
 private:
 	virtual			void		Free();
@@ -35,17 +33,18 @@ private:
 	HRESULT						Add_Component();
 
 private:
-	CRcTex* m_pBufferCom;
+	CRcTex*		m_pBufferCom;
 	CTransform* m_pTransformCom;
-	CTexture* m_pTextureCom_Icon;
-	CTexture* m_pTextureCom_MG;
-	CTexture* m_pTextureCom_BG;
+	CTexture*	m_pTextureCom;
 
 	_matrix		m_matUV;
 
 	_vec3		m_vPos;
-	_bool		m_bRender;
+	_uint		m_fFrame = 0;
+	_bool		m_bRender = true;
+	_bool		m_bAnim = false;
+	DLINESTATE  m_eState;
 	_vec3		m_vColor;
-	DICONSTATE  m_eState = DI_END;
+	D3DMATERIAL9 m_tMtrl;
 };
 

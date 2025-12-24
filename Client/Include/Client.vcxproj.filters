@@ -118,6 +118,9 @@
     <Filter Include="02. GameObject\07. UI\02. DungeonUI\01. CDungeonIcon">
       <UniqueIdentifier>{b11eb489-f0f9-4354-a5e5-9d489d9845de}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\07. UI\02. DungeonUI\02. CDungeonLine">
+      <UniqueIdentifier>{552d0d28-eb92-4a43-b910-1de82ce2300c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -219,6 +222,9 @@
     <ClInclude Include="..\Header\CDungeonIcon.h">
       <Filter>02. GameObject\07. UI\02. DungeonUI\01. CDungeonIcon</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CDungeonLine.h">
+      <Filter>02. GameObject\07. UI\02. DungeonUI\02. CDungeonLine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -310,6 +316,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CDungeonIcon.cpp">
       <Filter>02. GameObject\07. UI\02. DungeonUI\01. CDungeonIcon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CDungeonLine.cpp">
+      <Filter>02. GameObject\07. UI\02. DungeonUI\02. CDungeonLine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

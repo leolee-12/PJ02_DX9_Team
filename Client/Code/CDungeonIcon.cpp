@@ -9,6 +9,7 @@ CDungeonIcon::CDungeonIcon(LPDIRECT3DDEVICE9 pGraphicDev)
 {
 	ZeroMemory(&m_vPos, sizeof(_vec3));
 	ZeroMemory(&m_vColor, sizeof(_vec3));
+	D3DXMatrixIdentity(&m_matUV);
 }
 
 CDungeonIcon::CDungeonIcon(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMessageChannel)
@@ -16,6 +17,7 @@ CDungeonIcon::CDungeonIcon(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMess
 {
 	ZeroMemory(&m_vPos, sizeof(_vec3));
 	ZeroMemory(&m_vColor, sizeof(_vec3));
+	D3DXMatrixIdentity(&m_matUV);
 }
 
 CDungeonIcon::~CDungeonIcon()
@@ -27,9 +29,8 @@ HRESULT CDungeonIcon::Ready_GameObject()
 	if (FAILED(Add_Component()))
 		return E_FAIL;
 
-	m_pTransformCom->Set_Scale(300.f, 300.f, 1.f);
+	m_pTransformCom->Set_Scale(100.f, 100.f, 1.f);
 	//m_pTransformCom->Set_Pos(_float(-WINCX / 2) + 300.f, _float(-WINCY / 2) + 80.f, 0.f);
-	m_pTransformCom->Set_Pos(0.f, 0.f, 0.f);
 
 	m_hmapSubHandles.insert({ L"Render", m_pMessageChannel->Subscribe(
 		L"Select", [this](const IMessageChannel::EVENT&)
@@ -44,6 +45,35 @@ HRESULT CDungeonIcon::Ready_GameObject()
 	) });
 
 	m_vColor = { 1.f, 1.f, 1.f };
+
+	switch (m_eState) {
+	case DI_STAGE1:
+		m_matUV._11 = 1.f / 8.f;
+		m_matUV._22 = 1.f / 8.f;
+
+		m_matUV._31 = 4.f / 8.f + 0.005f;
+		m_matUV._32 = 5.f / 8.f;
+		m_pTransformCom->Set_Pos(0.f, -200.f, 0.f);
+		break;
+	case DI_STAGE2:
+		m_matUV._11 = 1.f / 8.f;
+		m_matUV._22 = 1.f / 8.f;
+
+		m_matUV._31 = 0.f;
+		m_matUV._32 = 3.f / 8.f;
+		m_pTransformCom->Set_Pos(0.f, 0.f, 0.f);
+		break;
+	case DI_STAGE3:
+		m_matUV._11 = 1.f / 8.f;
+		m_matUV._22 = 1.f / 8.f;
+
+		m_matUV._31 = 3.f / 8.f + 0.004f;
+		m_matUV._32 = 6.f / 8.f;
+		m_pTransformCom->Set_Pos(0.f, 200.f, 0.f);
+		break;
+	default:
+		break;
+	}
 
 	return S_OK;
 }
@@ -93,15 +123,8 @@ void CDungeonIcon::Render_GameObject()
 	m_pTextureCom_MG->Set_Texture();
 	m_pBufferCom->Render_Buffer();
 
-	_matrix matTmp;
-	D3DXMatrixIdentity(&matTmp);
-	matTmp._11 = 1.f / 8.f;
-	matTmp._22 = 1.f / 8.f;
-
-	matTmp._31 = 0.f;
-	matTmp._32 = 7.f / 8.f;
 	m_pGraphicDev->SetTextureStageState(0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_COUNT2);
-	m_pGraphicDev->SetTransform(D3DTS_TEXTURE0, &matTmp);
+	m_pGraphicDev->SetTransform(D3DTS_TEXTURE0, &m_matUV);
 
 	m_pTextureCom_Icon->Set_Texture();
 	m_pBufferCom->Render_Buffer();
@@ -163,18 +186,20 @@ HRESULT CDungeonIcon::Add_Component()
 	return S_OK;
 }
 
-CDungeonIcon* CDungeonIcon::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMessageChannel)
+CDungeonIcon* CDungeonIcon::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMessageChannel, DICONSTATE eState)
 {
-	CDungeonIcon* pLodingBack = new CDungeonIcon(pGraphicDev, pMessageChannel);
+	CDungeonIcon* pDungeonIcon = new CDungeonIcon(pGraphicDev, pMessageChannel);
 
-	if (FAILED(pLodingBack->Ready_GameObject()))
+	pDungeonIcon->m_eState = eState;
+
+	if (FAILED(pDungeonIcon->Ready_GameObject()))
 	{
-		Safe_Release(pLodingBack);
-		MSG_BOX("pLodingBack Create Failed");
+		Safe_Release(pDungeonIcon);
+		MSG_BOX("pDungeonIcon Create Failed");
 		return nullptr;
 	}
 
-	return pLodingBack;
+	return pDungeonIcon;
 }
 
 void CDungeonIcon::Free()

@@ -105,16 +105,16 @@ HRESULT CSkyBox::Add_Component()
 
 CSkyBox* CSkyBox::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 {
-	CSkyBox* pPlayer = new CSkyBox(pGraphicDev);
+	CSkyBox* pSkyBox = new CSkyBox(pGraphicDev);
 
-	if (FAILED(pPlayer->Ready_GameObject()))
+	if (FAILED(pSkyBox->Ready_GameObject()))
 	{
-		Safe_Release(pPlayer);
+		Safe_Release(pSkyBox);
 		MSG_BOX("pPlayer Create Failed");
 		return nullptr;
 	}
 
-	return pPlayer;
+	return pSkyBox;
 }
 
 void CSkyBox::Free()
