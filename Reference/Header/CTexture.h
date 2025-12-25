@@ -16,6 +16,7 @@ private:
 public:
 	virtual HRESULT Ready_Texture(TEXTUREID eID, const _tchar* pPath, const _uint& iCnt);
 	void			Set_Texture(const _uint& iIndex = 0);
+	void			Set_TextureStage(const _uint& Stage, const _uint& iIndex = 0);
 
 private:
 	vector<IDirect3DBaseTexture9*>		m_vecTexture;

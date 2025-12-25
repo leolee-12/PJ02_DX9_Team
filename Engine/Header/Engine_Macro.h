@@ -12,6 +12,7 @@ namespace Engine
 	
 	#define DEAD	-1
 	#define NOEVENT	0
+	#define EXIT	0
 	
 
 	#ifndef			MSG_BOX

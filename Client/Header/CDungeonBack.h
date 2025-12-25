@@ -4,17 +4,16 @@
 namespace Engine
 {
 	class CTransform;
-	class CRcTex;
-	class CTexture;
+	class CRcCol;
 }
 
-class CLoadingCircle :
+class CDungeonBack :
 	public CUi
 {
 private:
-	explicit CLoadingCircle(LPDIRECT3DDEVICE9 pGraphicDev);
-	explicit CLoadingCircle(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMessageChannel);
-	virtual ~CLoadingCircle();
+	explicit CDungeonBack(LPDIRECT3DDEVICE9 pGraphicDev);
+	explicit CDungeonBack(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pChannel);
+	virtual ~CDungeonBack();
 
 public:
 	virtual			HRESULT		Ready_GameObject();
@@ -24,9 +23,7 @@ public:
 	virtual			void		OnCollision(CGameObject* pObject);
 
 public:
-	static CLoadingCircle* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMessageChannel);
-
-	void			   Update_Pos(_float LoadingPercent);
+	static CDungeonBack* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pChannel);
 
 private:
 	virtual			void		Free();
@@ -34,9 +31,8 @@ private:
 	HRESULT						Add_Component();
 
 private:
-	CRcTex* m_pBufferCom;
+	CRcCol* m_pBufferCom;
 	CTransform* m_pTransformCom;
-	CTexture* m_pTextureCom;
 
 	_vec3		m_vPos;
 	_bool		m_bRender;

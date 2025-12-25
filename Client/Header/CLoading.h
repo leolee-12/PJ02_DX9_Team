@@ -29,6 +29,8 @@ private:
 	LOADINGID		m_eChangeID;
 	CLoadingFG*		m_pLoadingFG;
 
+	_float			m_fLoadingDelay;
+
 public:
 	static CLoading* Create(LPDIRECT3DDEVICE9 pGraphicDev, LOADINGID ChangeID);
 private:

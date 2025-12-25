@@ -8,13 +8,12 @@ namespace Engine
 	class CTexture;
 }
 
-class CLoadingCircle :
+class CTitleTab :
 	public CUi
 {
 private:
-	explicit CLoadingCircle(LPDIRECT3DDEVICE9 pGraphicDev);
-	explicit CLoadingCircle(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMessageChannel);
-	virtual ~CLoadingCircle();
+	explicit CTitleTab(LPDIRECT3DDEVICE9 pGraphicDev);
+	virtual ~CTitleTab();
 
 public:
 	virtual			HRESULT		Ready_GameObject();
@@ -24,14 +23,15 @@ public:
 	virtual			void		OnCollision(CGameObject* pObject);
 
 public:
-	static CLoadingCircle* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMessageChannel);
-
-	void			   Update_Pos(_float LoadingPercent);
+	static CTitleTab* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	void			  Move_Down();
+	void			  Move_Up();
 
 private:
 	virtual			void		Free();
 
 	HRESULT						Add_Component();
+	HRESULT						Ready_Material();
 
 private:
 	CRcTex* m_pBufferCom;
@@ -39,6 +39,5 @@ private:
 	CTexture* m_pTextureCom;
 
 	_vec3		m_vPos;
-	_bool		m_bRender;
 };
 

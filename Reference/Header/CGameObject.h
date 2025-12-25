@@ -14,8 +14,14 @@ protected:
 	virtual ~CGameObject();
 
 public:
+<<<<<<< HEAD
 	void		Set_MessageChannel(IMessageChannel* pChannel) 
 	{
+=======
+	void        Set_MessageChannel(IMessageChannel* pChannel)
+	{
+		if (pChannel == nullptr) { return; }
+>>>>>>> main
 		if (m_pMessageChannel) {
 			Safe_Release(m_pMessageChannel);
 		}

@@ -13,8 +13,6 @@
 using namespace Engine;
 using namespace std;
 
-IMPLEMENT_SINGLETON(CImGuiMgr)
-
 static LPDIRECT3D9              g_pD3D = nullptr;
 
 static D3DPRESENT_PARAMETERS    g_d3dpp = {};
@@ -38,7 +36,7 @@ float CImGuiMgr::ImGui_Init()
 {
     ImGui_ImplWin32_EnableDpiAwareness();
     float main_scale = ImGui_ImplWin32_GetDpiScaleForMonitor(::MonitorFromPoint(POINT{ 0, 0 }, MONITOR_DEFAULTTOPRIMARY));
-    
+
     return main_scale;
 }
 
@@ -128,9 +126,10 @@ void CImGuiMgr::ImGui_Tick()
 
     ImGuizmo::BeginFrame();
 
-    ImGui::SetNextWindowSize(ImVec2(800, 300), ImGuiCond_Always);
+    ImGui::SetNextWindowSize(ImVec2(800, 500), ImGuiCond_Always);
     Tick_EditorWindow();
 
+    Additonal_Tick();
 }
 
 void CImGuiMgr::ImGui_Render()
@@ -143,6 +142,8 @@ void CImGuiMgr::ImGui_Render()
 
     Render_Grid();
 
+    Addtional_Render();
+
     ImGui::Render();
     ImGui_ImplDX9_RenderDrawData(ImGui::GetDrawData());
     m_pGraphicDev->EndScene();
@@ -154,7 +155,7 @@ void CImGuiMgr::ImGui_Render()
 
 void CImGuiMgr::ImGui_Shutdown()
 {
-   // Free();
+    // Free();
     Safe_Release(m_pGraphicDev);
 
     ImGui_ImplDX9_Shutdown();
@@ -165,55 +166,6 @@ void CImGuiMgr::ImGui_Shutdown()
 void CImGuiMgr::Tick_EditorWindow()
 {
     ImGuiIO& io = ImGui::GetIO();
-    ImGuiStyle& style = ImGui::GetStyle();
-    static ImGuiStyle ref_saved_style;
-
-    // 2. Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
-    {
-        static float f = 0.0f;
-        static int counter = 0;
-
-        ImGui::Begin("Editor");                          // Create a window called "Hello, world!" and append into it.
-
-        //ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
-
-        if (ImGui::DragFloat("FontSizeBase", &style.FontSizeBase, 0.20f, 5.0f, 100.0f, "%.0f"))
-            style._NextFrameFontSizeBase = style.FontSizeBase; // FIXME: Temporary hack until we finish remaining work.
-        ImGui::SameLine(0.0f, 0.0f); ImGui::Text(" (out %.2f)", ImGui::GetFontSize());
-
-        // object type 드롭박스 (콤보박스)
-        ImGui::Combo("Select Object Type", (int*)&objectType, object_type_str, IM_ARRAYSIZE(object_type_str));
-
-        // object id 드롭박스 (콤보박스)
-        if (objectType == TYPE_OBJECT)
-        {
-            ImGui::Combo("Select Object Id", (int*)&objectId, object_id_str, IM_ARRAYSIZE(object_id_str));
-        }
-
-        // light id 드롭박스 (콤보박스)
-        if (objectType == TYPE_LIGHT)
-        {
-            ImGui::Combo("Select Light Id", (int*)&lightId, light_id_str, IM_ARRAYSIZE(light_id_str));
-        }
-
-        if (ImGui::Button("Create"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
-            counter++;
-        ImGui::SameLine();
-        ImGui::Text("counter = %d", counter);
-
-        ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
-
-        // 마우스 위치 표시
-        ImVec2 mousePos = ImGui::GetMousePos();
-        ImGui::Text("Mouse Position: (%.1f, %.1f)", mousePos.x, mousePos.y);
-
-        ImGui::End();
-    }
-}
-
-void CImGuiMgr::Tick_ObjectWindow(CGameObject* pObject)
-{
-    // TODO: 선택한 오브젝트의 값을 띄워주는 윈도우
 }
 
 void CImGuiMgr::Render_Grid()
@@ -225,7 +177,7 @@ void CImGuiMgr::Render_Grid()
 
     // 카메라 행렬 (예시 - 실제 카메라 행렬로 교체 필요)
 
-    float cameraView[16] ;
+    float cameraView[16];
     float cameraProjection[16];
 
     _matrix matView, matProj;
@@ -250,7 +202,7 @@ void CImGuiMgr::Render_Grid()
 
     float cameraX = matWorld.m[3][0];
     float cameraZ = matWorld.m[3][2];
-    
+
     // 격자 크기 단위로 반내림 (격자에 정렬)
     float gridPosX = floorf(cameraX / m_grid_size) * m_grid_size;
     float gridPosZ = floorf(cameraZ / m_grid_size) * m_grid_size;
@@ -336,4 +288,50 @@ void CImGuiMgr::Set_Resize(UINT width, UINT height)
 {
     m_ResizeWidth = width;
     m_ResizeHeight = height;
+}
+
+void CImGuiMgr::ImGuiWindowBegin(const char* windowName)
+{
+    ImGui::Begin(windowName);
+}
+
+void CImGuiMgr::ImGuiWindowEnd()
+{
+    ImGui::End();
+}
+
+void CImGuiMgr::ImGuiText(const char* text)
+{
+    ImGui::Text(text);
+}
+
+void CImGuiMgr::ImGuiDragFontSize(const char* text)
+{
+    ImGuiStyle& style = ImGui::GetStyle();
+
+    if (ImGui::DragFloat(text, &style.FontSizeBase, 0.20f, 5.0f, 100.f, "%.0f"))
+        style._NextFrameFontSizeBase = style.FontSizeBase;
+}
+
+void CImGuiMgr::ImGuiComboBox(const char* text, int* types, const char* type_str[], int size)
+{
+    ImGui::Combo(text, types, type_str, size);
+}
+
+bool CImGuiMgr::ImGuiButton(const char* text)
+{
+    return ImGui::Button(text);
+}
+
+void CImGuiMgr::ImGuiSameLine()
+{
+    ImGui::SameLine(0.0f, 0.0f);
+}
+
+void CImGuiMgr::ImGuiMouseText()
+{
+    // 마우스 위치 표시
+    ImVec2 mousePos = ImGui::GetMousePos();
+    ImGui::Text("Mouse Position: (%.1f, %.1f)", mousePos.x, mousePos.y);
+
 }

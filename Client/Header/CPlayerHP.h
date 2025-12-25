@@ -3,18 +3,18 @@
 
 namespace Engine
 {
-	class CTransform;
 	class CRcTex;
+	class CTransform;
 	class CTexture;
 }
 
-class CLoadingCircle :
+class CPlayerHP :
 	public CUi
 {
 private:
-	explicit CLoadingCircle(LPDIRECT3DDEVICE9 pGraphicDev);
-	explicit CLoadingCircle(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMessageChannel);
-	virtual ~CLoadingCircle();
+	explicit CPlayerHP(LPDIRECT3DDEVICE9 pGraphicDev);
+	explicit CPlayerHP(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pChannel);
+	virtual ~CPlayerHP();
 
 public:
 	virtual			HRESULT		Ready_GameObject();
@@ -24,9 +24,7 @@ public:
 	virtual			void		OnCollision(CGameObject* pObject);
 
 public:
-	static CLoadingCircle* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMessageChannel);
-
-	void			   Update_Pos(_float LoadingPercent);
+	static CPlayerHP* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pChannel);
 
 private:
 	virtual			void		Free();
@@ -36,9 +34,13 @@ private:
 private:
 	CRcTex* m_pBufferCom;
 	CTransform* m_pTransformCom;
-	CTexture* m_pTextureCom;
+	CTexture* m_pTextureCom_Full;
+	//CTexture* m_pTextureCom_Half;
 
 	_vec3		m_vPos;
 	_bool		m_bRender;
+
+	_int		m_iPlayerHp;
+	_int		m_iPlayerMaxHp;
 };
 

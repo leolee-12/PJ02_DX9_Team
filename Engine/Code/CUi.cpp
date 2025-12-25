@@ -5,6 +5,11 @@ CUi::CUi(LPDIRECT3DDEVICE9 pGraphicDev)
 {
 }
 
+CUi::CUi(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMessageChannel)
+    : CGameObject(pGraphicDev, pMessageChannel)
+{
+}
+
 CUi::~CUi()
 {
 }

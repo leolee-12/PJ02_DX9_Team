@@ -3,7 +3,6 @@
 #include "Engine_Define.h"
 
 
-
 BEGIN(Engine)
 
 class ENGINE_DLL IMessageChannel : public CBase
@@ -35,4 +34,3 @@ public:
 };
 
 END
-
