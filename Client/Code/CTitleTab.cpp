@@ -18,7 +18,7 @@ HRESULT CTitleTab::Ready_GameObject()
 	if (FAILED(Add_Component()))
 		return E_FAIL;
 
-	m_pTransformCom->Set_Scale((600.f * 0.35f), (162.f * 0.35f), 1.f);
+	m_pTransformCom->Set_Scale((607.f * 0.5f), (123.f * 0.5f), 1.f);
 	m_pTransformCom->Set_Pos((_float(-WINCX) * 0.5f) + 220.f, _float(WINCY / 2) - 340.f, 0.f);
 
 	return S_OK;
@@ -59,17 +59,17 @@ void CTitleTab::LateUpdate_GameObject(const _float& fTimeDelta)
 
 void CTitleTab::Render_GameObject()
 {
-	m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, TRUE);
+	//m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, TRUE);
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
 
-	if (FAILED(Ready_Material()))
-		return;
+	/*if (FAILED(Ready_Material()))
+		return;*/
 
 	m_pTextureCom->Set_Texture();
 
 	m_pBufferCom->Render_Buffer();
 
-	m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, FALSE);
+	//m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, FALSE);
 }
 
 void CTitleTab::OnCollision(CGameObject* pObject)

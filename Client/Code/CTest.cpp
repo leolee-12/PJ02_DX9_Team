@@ -10,6 +10,7 @@
 #include "CDungeonIcon.h"
 #include "CLightMgr.h"
 #include "CDungeonLine.h"
+#include "CPlayerHP.h"
 
 CTest::CTest(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -201,6 +202,16 @@ HRESULT CTest::Ready_UI_Layer(const _tchar* pLayerTag)
 
 	if (FAILED(pLayer->Add_GameObject(L"SelectLine", pGameObject)))
 		return E_FAIL;
+
+	pGameObject = CPlayerHP::Create(m_pGraphicDev, m_pMessageChannel);
+
+	if (nullptr == pGameObject)
+		return E_FAIL;
+
+	if (FAILED(pLayer->Add_GameObject(L"PlayerHP", pGameObject)))
+		return E_FAIL;
+
+
 
 
 	m_mapLayer.insert({ pLayerTag , pLayer });
