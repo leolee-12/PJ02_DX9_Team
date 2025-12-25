@@ -5,6 +5,12 @@
 #include "CDynamicCamera.h"
 #include "CSkyBox.h"
 #include "CPersistentMgr.h"
+#include "CDungeonBack.h"
+#include "CDInputMgr.h"
+#include "CDungeonIcon.h"
+#include "CLightMgr.h"
+#include "CDungeonLine.h"
+#include "CPlayerHP.h"
 
 CTest::CTest(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -28,11 +34,36 @@ HRESULT CTest::Ready_Scene()
 	if (FAILED(Ready_UI_Layer(L"UI_Layer")))
 		return E_FAIL;
 
+	Ready_Light();
+
 	return S_OK;
 }
 
 _int CTest::Update_Scene(const _float& fTimeDelta)
 {
+	if (CDInputMgr::GetInstance()->Key_Down(DIK_R))
+	{
+		IMessageChannel::EVENT event;
+		event.strType = L"Select";
+
+		m_pMessageChannel->Publish(event);
+	}
+	if (CDInputMgr::GetInstance()->Key_Down(DIK_U))
+	{
+		IMessageChannel::EVENT event;
+		event.strType = L"Choose";
+		event.hmapData.insert({ L"Look_Stage", CDungeonLine::DL_1 });
+
+		m_pMessageChannel->Publish(event);
+	}
+	if (CDInputMgr::GetInstance()->Key_Down(DIK_I))
+	{
+		IMessageChannel::EVENT event;
+		event.strType = L"Enter";
+		event.hmapData.insert({ L"Look_Stage", CDungeonLine::DL_1 });
+
+		m_pMessageChannel->Publish(event);
+	}
 	_int iExit = Engine::CScene::Update_Scene(fTimeDelta);
 
 	return iExit;
@@ -124,6 +155,64 @@ HRESULT CTest::Ready_UI_Layer(const _tchar* pLayerTag)
 
 	CGameObject* pGameObject = nullptr;
 
+	pGameObject = CDungeonBack::Create(m_pGraphicDev, m_pMessageChannel);
+
+	if (nullptr == pGameObject)
+		return E_FAIL;
+	
+	if (FAILED(pLayer->Add_GameObject(L"SelectBack", pGameObject)))
+		return E_FAIL;
+
+	pGameObject = CDungeonIcon::Create(m_pGraphicDev, m_pMessageChannel, CDungeonIcon::DI_STAGE1);
+
+	if (nullptr == pGameObject)
+		return E_FAIL;
+
+	if (FAILED(pLayer->Add_GameObject(L"SelectIcon", pGameObject)))
+		return E_FAIL;
+
+	pGameObject = CDungeonIcon::Create(m_pGraphicDev, m_pMessageChannel, CDungeonIcon::DI_STAGE2);
+
+	if (nullptr == pGameObject)
+		return E_FAIL;
+
+	if (FAILED(pLayer->Add_GameObject(L"SelectIcon", pGameObject)))
+		return E_FAIL;
+
+	pGameObject = CDungeonIcon::Create(m_pGraphicDev, m_pMessageChannel, CDungeonIcon::DI_STAGE3);
+
+	if (nullptr == pGameObject)
+		return E_FAIL;
+
+	if (FAILED(pLayer->Add_GameObject(L"SelectIcon", pGameObject)))
+		return E_FAIL;
+
+	pGameObject = CDungeonLine::Create(m_pGraphicDev, m_pMessageChannel, CDungeonLine::DL_1);
+
+	if (nullptr == pGameObject)
+		return E_FAIL;
+
+	if (FAILED(pLayer->Add_GameObject(L"SelectLine", pGameObject)))
+		return E_FAIL;
+
+	pGameObject = CDungeonLine::Create(m_pGraphicDev, m_pMessageChannel, CDungeonLine::DL_2);
+
+	if (nullptr == pGameObject)
+		return E_FAIL;
+
+	if (FAILED(pLayer->Add_GameObject(L"SelectLine", pGameObject)))
+		return E_FAIL;
+
+	pGameObject = CPlayerHP::Create(m_pGraphicDev, m_pMessageChannel);
+
+	if (nullptr == pGameObject)
+		return E_FAIL;
+
+	if (FAILED(pLayer->Add_GameObject(L"PlayerHP", pGameObject)))
+		return E_FAIL;
+
+
+
 
 	m_mapLayer.insert({ pLayerTag , pLayer });
 
@@ -145,6 +234,26 @@ HRESULT CTest::Ready_Const_Layer(CLayer* pConstLayer)
 
 	Safe_Release(iter->second);
 	iter->second = pConstLayer;
+
+	return S_OK;
+}
+
+HRESULT CTest::Ready_Light()
+{
+	D3DLIGHT9	tLightInfo;
+	ZeroMemory(&tLightInfo, sizeof(D3DLIGHT9));
+
+	tLightInfo.Type = D3DLIGHT_DIRECTIONAL;
+
+	tLightInfo.Diffuse = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
+	tLightInfo.Specular = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
+	tLightInfo.Ambient = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
+
+	tLightInfo.Direction = { 1.f, -1.f, 1.f };
+
+	if (FAILED(CLightMgr::GetInstance()->Ready_Light(m_pGraphicDev, &tLightInfo, 0)))
+		return E_FAIL;
+
 
 	return S_OK;
 }

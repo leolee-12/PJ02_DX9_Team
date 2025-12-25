@@ -14,6 +14,15 @@ protected:
 	virtual ~CGameObject();
 
 public:
+	void        Set_MessageChannel(IMessageChannel* pChannel)
+	{
+		if (pChannel == nullptr) { return; }
+		if (m_pMessageChannel) {
+			Safe_Release(m_pMessageChannel);
+		}
+		m_pMessageChannel = pChannel;
+		m_pMessageChannel->AddRef();
+	}
 	CComponent* Get_Component(COMPONENTID eID, const wstring& strComponentTag);
 	OBJID		Get_OBJID() { return m_eOBJID; }
 	_float		Get_Depth() { return m_fDepth; }

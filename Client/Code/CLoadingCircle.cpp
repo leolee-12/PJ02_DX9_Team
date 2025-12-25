@@ -4,7 +4,13 @@
 #include "CRenderer.h"
 
 CLoadingCircle::CLoadingCircle(LPDIRECT3DDEVICE9 pGraphicDev)
-	: CUi(pGraphicDev), m_pBufferCom(nullptr), m_pTransformCom(nullptr)
+	: CUi(pGraphicDev), m_pBufferCom(nullptr), m_pTransformCom(nullptr), m_bRender(true)
+{
+	ZeroMemory(&m_vPos, sizeof(_vec3));
+}
+
+CLoadingCircle::CLoadingCircle(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMessageChannel)
+	: CUi(pGraphicDev, pMessageChannel), m_pBufferCom(nullptr), m_pTransformCom(nullptr), m_bRender(true)
 {
 	ZeroMemory(&m_vPos, sizeof(_vec3));
 }
@@ -19,7 +25,15 @@ HRESULT CLoadingCircle::Ready_GameObject()
 		return E_FAIL;
 
 	m_pTransformCom->Set_Scale(25.f, 25.f, 1.f);
-	m_pTransformCom->Set_Pos(_float(-WINCX / 2) + 275.f, _float(-WINCY / 2) + 80.f, 0.f);
+	m_pTransformCom->Set_Pos(_float(-WINCX / 2) + 300.f, _float(-WINCY / 2) + 80.f, 0.f);
+	
+
+	m_hmapSubHandles.insert({ L"Stop_Rander", m_pMessageChannel->Subscribe(L"Loading_Success", [this](const IMessageChannel::EVENT&)
+		{
+			m_bRender = false;
+			auto iter = m_hmapSubHandles.find(L"Stop_Rander");
+			m_pMessageChannel->Unsubscribe(iter->second);
+		}) });
 
 	return S_OK;
 }
@@ -28,7 +42,7 @@ _int CLoadingCircle::Update_GameObject(const _float& fTimeDelta)
 {
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
-	CRenderer::GetInstance()->Add_RenderGroup(RENDER_UI, this);
+	if (m_bRender) { CRenderer::GetInstance()->Add_RenderGroup(RENDER_UI, this); }
 
 	return iExit;
 }
@@ -90,9 +104,9 @@ HRESULT CLoadingCircle::Add_Component()
 
 
 
-CLoadingCircle* CLoadingCircle::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+CLoadingCircle* CLoadingCircle::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMessageChannel)
 {
-	CLoadingCircle* pLodingBack = new CLoadingCircle(pGraphicDev);
+	CLoadingCircle* pLodingBack = new CLoadingCircle(pGraphicDev, pMessageChannel);
 
 	if (FAILED(pLodingBack->Ready_GameObject()))
 	{

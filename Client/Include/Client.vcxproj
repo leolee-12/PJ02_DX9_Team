@@ -148,6 +148,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\Header\CBackGround.h" />
+    <ClInclude Include="..\Header\CDungeonBack.h" />
+    <ClInclude Include="..\Header\CDungeonIcon.h" />
+    <ClInclude Include="..\Header\CDungeonLine.h" />
     <ClInclude Include="..\Header\CDynamicCamera.h" />
     <ClInclude Include="..\Header\CEditScene.h" />
     <ClInclude Include="..\Header\CLoading.h" />
@@ -162,6 +165,7 @@
     <ClInclude Include="..\Header\CMonster.h" />
     <ClInclude Include="..\Header\CPersistentMgr.h" />
     <ClInclude Include="..\Header\CPlayer.h" />
+    <ClInclude Include="..\Header\CPlayerHP.h" />
     <ClInclude Include="..\Header\CSkyBox.h" />
     <ClInclude Include="..\Header\CStage.h" />
     <ClInclude Include="..\Header\CTerrain.h" />
@@ -173,6 +177,7 @@
     <ClInclude Include="..\Header\CTitleBack.h" />
     <ClInclude Include="..\Header\CTitleCenter.h" />
     <ClInclude Include="..\Header\CTitleLogo.h" />
+    <ClInclude Include="..\Header\CTitleTab.h" />
     <ClInclude Include="..\Header\TestCube.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="framework.h" />
@@ -182,6 +187,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\CBackGround.cpp" />
+    <ClCompile Include="..\Code\CDungeonBack.cpp" />
+    <ClCompile Include="..\Code\CDungeonIcon.cpp" />
+    <ClCompile Include="..\Code\CDungeonLine.cpp" />
     <ClCompile Include="..\Code\CDynamicCamera.cpp" />
     <ClCompile Include="..\Code\CEditScene.cpp" />
     <ClCompile Include="..\Code\CLoading.cpp" />
@@ -196,6 +204,7 @@
     <ClCompile Include="..\Code\CMonster.cpp" />
     <ClCompile Include="..\Code\CPersistentMgr.cpp" />
     <ClCompile Include="..\Code\CPlayer.cpp" />
+    <ClCompile Include="..\Code\CPlayerHP.cpp" />
     <ClCompile Include="..\Code\CSkyBox.cpp" />
     <ClCompile Include="..\Code\CStage.cpp" />
     <ClCompile Include="..\Code\CTerrain.cpp" />
@@ -207,6 +216,7 @@
     <ClCompile Include="..\Code\CTitleBack.cpp" />
     <ClCompile Include="..\Code\CTitleCenter.cpp" />
     <ClCompile Include="..\Code\CTitleLogo.cpp" />
+    <ClCompile Include="..\Code\CTitleTab.cpp" />
     <ClCompile Include="..\Code\TestCube.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="pch.cpp">

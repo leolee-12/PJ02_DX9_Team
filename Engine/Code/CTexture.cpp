@@ -35,6 +35,8 @@ HRESULT CTexture::Ready_Texture(TEXTUREID eID, const _tchar* pPath, const _uint&
 
 	IDirect3DBaseTexture9* pTexture = nullptr;
 
+	
+
 	for (_uint i = 0; i < iCnt; ++i)
 	{
 		TCHAR szFileName[128] = L"";
@@ -70,6 +72,14 @@ void CTexture::Set_Texture(const _uint& iIndex)
 		return;
 
 	m_pGraphicDev->SetTexture(0, m_vecTexture[iIndex]);
+}
+
+void CTexture::Set_TextureStage(const _uint& Stage, const _uint& iIndex)
+{
+	if (m_vecTexture.size() <= iIndex)
+		return;
+
+	m_pGraphicDev->SetTexture(Stage, m_vecTexture[iIndex]);
 }
 
 CTexture* CTexture::Create(LPDIRECT3DDEVICE9 pGraphicDev, TEXTUREID eID, const _tchar* pPath, const _uint& iCnt)

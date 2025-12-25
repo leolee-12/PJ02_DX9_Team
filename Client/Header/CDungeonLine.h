@@ -8,13 +8,14 @@ namespace Engine
 	class CTexture;
 }
 
-class CLoadingCircle :
+class CDungeonLine :
 	public CUi
 {
+public:
+	enum DLINESTATE { DL_1, DL_2, DL_END };
 private:
-	explicit CLoadingCircle(LPDIRECT3DDEVICE9 pGraphicDev);
-	explicit CLoadingCircle(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMessageChannel);
-	virtual ~CLoadingCircle();
+	explicit CDungeonLine(LPDIRECT3DDEVICE9 pGraphicDev);
+	virtual ~CDungeonLine();
 
 public:
 	virtual			HRESULT		Ready_GameObject();
@@ -24,9 +25,7 @@ public:
 	virtual			void		OnCollision(CGameObject* pObject);
 
 public:
-	static CLoadingCircle* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMessageChannel);
-
-	void			   Update_Pos(_float LoadingPercent);
+	static CDungeonLine* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pChannel, DLINESTATE eState);
 
 private:
 	virtual			void		Free();
@@ -34,11 +33,18 @@ private:
 	HRESULT						Add_Component();
 
 private:
-	CRcTex* m_pBufferCom;
+	CRcTex*		m_pBufferCom;
 	CTransform* m_pTransformCom;
-	CTexture* m_pTextureCom;
+	CTexture*	m_pTextureCom;
+
+	_matrix		m_matUV;
 
 	_vec3		m_vPos;
-	_bool		m_bRender;
+	_uint		m_fFrame = 0;
+	_bool		m_bRender = true;
+	_bool		m_bAnim = false;
+	DLINESTATE  m_eState;
+	_vec3		m_vColor;
+	D3DMATERIAL9 m_tMtrl;
 };
 

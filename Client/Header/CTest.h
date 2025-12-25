@@ -26,6 +26,8 @@ private:
 	//HRESULT			Ready_Const_Layer();
 	HRESULT			Ready_Const_Layer(CLayer* pConstLayer);
 
+	HRESULT			Ready_Light();
+
 public:
 	static CTest* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 private:

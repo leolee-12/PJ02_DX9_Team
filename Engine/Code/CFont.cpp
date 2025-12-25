@@ -19,9 +19,10 @@ HRESULT CFont::Ready_Font(const _tchar* pFontType, const _uint& iWidth, const _u
 	tFont_Desc.Width = iWidth;
 	tFont_Desc.Height = iHeight;
 	tFont_Desc.Weight = iWeight;
-	
-	wstring strTmp = pFontType;
-	wcscpy_s(tFont_Desc.FaceName, LF_FACESIZE, strTmp.c_str());
+	lstrcpy(tFont_Desc.FaceName, pFontType);
+	//wstring strTmp = pFontType;
+	//wcscpy_s(tFont_Desc.FaceName, LF_FACESIZE, pFontType);
+
 
 	if (FAILED(D3DXCreateFontIndirect(m_pGraphicDev, &tFont_Desc, &m_pFont)))
 	{
@@ -39,13 +40,13 @@ HRESULT CFont::Ready_Font(const _tchar* pFontType, const _uint& iWidth, const _u
 	return S_OK;
 }
 
-void CFont::Render_Font(const _tchar* pString, const _vec2* pPos, D3DXCOLOR Color)
+void CFont::Render_Font(const _tchar* pString, const _vec2* pPos, D3DXCOLOR Color, DWORD Flag)
 {
 	RECT rc {(_long)pPos->x, (_long)pPos->y};
 
 	m_pSprite->Begin(D3DXSPRITE_ALPHABLEND);
 
-	m_pFont->DrawTextW(m_pSprite, pString, lstrlen(pString), &rc, DT_NOCLIP, Color);
+	m_pFont->DrawTextW(m_pSprite, pString, lstrlen(pString), &rc, Flag, Color);
 
 	m_pSprite->End();
 }
