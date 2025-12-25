@@ -473,9 +473,9 @@ void CPlayer::Set_TextureSet()
 	{
 		if		(m_vDir == m_vNormDir[DIR_UP])										m_strFrameKey = L"run-up";
 		else if (m_vDir == m_vNormDir[DIR_DOWN])									m_strFrameKey = L"run-down";
-		else if (m_vDir == m_vNormDir[DIR_LD] || m_vDir == m_vNormDir[DIR_RD])		m_strFrameKey = L"run-diagonal";
+		else if (m_vDir == m_vNormDir[DIR_LD]	|| m_vDir == m_vNormDir[DIR_RD])	m_strFrameKey = L"run-diagonal";
 		else if (m_vDir == m_vNormDir[DIR_LEFT] || m_vDir == m_vNormDir[DIR_RIGHT])	m_strFrameKey = L"run-horizontal";
-		else if (m_vDir == m_vNormDir[DIR_LU] || m_vDir == m_vNormDir[DIR_RU])		m_strFrameKey = L"run-up-diagonal";
+		else if (m_vDir == m_vNormDir[DIR_LU]	|| m_vDir == m_vNormDir[DIR_RU])	m_strFrameKey = L"run-up-diagonal";
 	}
 	break;
 
@@ -528,17 +528,19 @@ void CPlayer::Charge(const _float& fTimeDelta)
 void CPlayer::HitBox()
 {
 	AABB tAABB = { m_vPos.x, m_vPos.y, m_vPos.z,
-					1.f, 0.5f, 1.f };
+					2.f, 1.f, 2.f };
 
 	vector<CGameObject*> tempVec = CCollisionMgr::GetInstance()->Test_AABB(tAABB, CL_MONSTER);
 
-	IMessageChannel::EVENT EAttack;
-	EAttack.strType = L"Monster.Attacked";
-	EAttack.eOBJID = Engine::OID_MONSTER;
-	//any iAttack = m_iAttack;
-	EAttack.hmapData.emplace(L"Attack", m_iAttack);
-	EAttack.hmapData.emplace(L"Target", tempVec);
-	m_pMessageChannel->Publish(EAttack);
+	if (!tempVec.empty())
+	{
+		IMessageChannel::EVENT EAttack;
+		EAttack.strType = L"Monster.Attacked";
+		EAttack.eOBJID = Engine::OID_MONSTER;
+		EAttack.hmapData.emplace(L"Attack", m_iAttack);
+		EAttack.hmapData.emplace(L"Target", tempVec);
+		m_pMessageChannel->Publish(EAttack);
+	}
 }
 
 void	CPlayer::OnCollision(CGameObject* pObject)

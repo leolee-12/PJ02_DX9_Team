@@ -15,7 +15,6 @@ class CPlayer : public CGameObject
 {
 public:
 	enum PLAYERSTATE { PS_IDLE, PS_RUN, PS_ROLL, PS_ATTACK, PS_CHARGE, PS_HIT, PS_ACTION, PS_TALK, PS_INTROIDLE, PS_INTRORUN, PS_INTROKNEE, PS_END };
-	enum DIRECTIONID { DIR_RIGHT, DIR_RD, DIR_DOWN, DIR_LD, DIR_LEFT, DIR_LU, DIR_UP, DIR_RU, DIR_END };
 
 	// ==========================
 	//	PLAYERSTATE : 플레이어 상태 관리용 enum
@@ -84,7 +83,6 @@ private:
 	_float			m_fSpeed;
 	_int			m_iAttack;
 	_bool			m_bRoll;	// 구르기 중인지?
-	_bool			m_bClick;
 	_int			m_iCombo;	// 공격 중인지? + 몇번째 콤보상태인지?
 
 	// 알파 소팅 관련

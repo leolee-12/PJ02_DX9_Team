@@ -11,23 +11,23 @@ namespace Engine
 
 class CMonster : public CGameObject
 {
-private:
+protected:
 	explicit CMonster(LPDIRECT3DDEVICE9 pGraphicDev);
 	explicit CMonster(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel);
 	explicit CMonster(const CMonster& rhs);
 	virtual ~CMonster();
 
 public:
-	virtual			HRESULT		Ready_GameObject();
-	virtual			_int		Update_GameObject(const _float& fTimeDelta);
-	virtual			void		LateUpdate_GameObject(const _float& fTimeDelta);
-	virtual			void		Render_GameObject();
-	virtual			void		OnCollision(CGameObject* pObject) {};
+	virtual HRESULT		Ready_GameObject();
+	virtual _int		Update_GameObject(const _float& fTimeDelta);
+	virtual void		LateUpdate_GameObject(const _float& fTimeDelta);
+	virtual void		Render_GameObject();
+	virtual void		OnCollision(CGameObject* pObject) {};
 
-private:
+protected:
 	HRESULT			Add_Component();
 
-private:
+protected:
 	Engine::CRcTex* m_pBufferCom;
 	Engine::CTransform* m_pTransformCom;
 	Engine::CTexture* m_pTextureCom;
@@ -38,8 +38,7 @@ private:
 public:
 	static CMonster* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel);
 
-private:
+protected:
 	virtual void Free();
-
 };
 
