@@ -10,6 +10,7 @@
 #include "CImGuiMgr.h"
 #include "CCollisionMgr.h"
 #include "CPersistentMgr.h"
+#include "CSoundMgr.h"
 
 //#define IMGUI
 
@@ -39,6 +40,7 @@ HRESULT CMainApp::Ready_MainApp()
 	CCollisionMgr::GetInstance()->Ready_CollisionMgr();
 
 #endif // IMGUI
+	CSoundMgr::GetInstance()->Ready_SoundMgr();
 
 	return S_OK;
 }
@@ -68,8 +70,10 @@ void CMainApp::LateUpdate_MainApp(const float& fTimeDelta)
 #ifdef IMGUI
 
 #else
+	CCollisionMgr::GetInstance()->Check_Collisions(fTimeDelta);
 #endif // IMGUI
 
+	CSoundMgr::GetInstance()->Update();
 }
 
 void CMainApp::Render_MainApp()
@@ -185,6 +189,7 @@ void CMainApp::Free()
 	CTimerMgr::DestroyInstance();
 	CManagement::DestroyInstance();
 	CCollisionMgr::DestroyInstance();
+	CSoundMgr::DestroyInstance();
 #ifdef IMGUI
 	CImGuiMgr::GetInstance()->ImGui_Shutdown();
 	CImGuiMgr::DestroyInstance();

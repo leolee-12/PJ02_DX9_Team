@@ -11,6 +11,7 @@
 #include "CLightMgr.h"
 #include "CDungeonLine.h"
 #include "CPlayerHP.h"
+#include "CSoundMgr.h"
 
 CTest::CTest(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -47,6 +48,8 @@ _int CTest::Update_Scene(const _float& fTimeDelta)
 		event.strType = L"Select";
 
 		m_pMessageChannel->Publish(event);
+
+		//CSoundMgr::GetInstance()->Play(L"AAAK.wav", SOUND_EFFECT, 0.5f);
 	}
 	if (CDInputMgr::GetInstance()->Key_Down(DIK_U))
 	{
