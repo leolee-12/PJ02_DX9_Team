@@ -2,6 +2,8 @@
 #define Engine_Function_h__
 
 #include "Engine_Typedef.h"
+#include "perlin_jitter.h"
+//#include "RandomEngine.cpp"
 
 namespace Engine
 {
@@ -102,6 +104,15 @@ namespace Engine
 				Pair.second = NULL;
 		}
 	};
+
+	extern ENGINE_DLL std::mt19937 rng;
+	extern ENGINE_DLL PerlinJitter g_Jitter;
+
+	ENGINE_DLL int Get_Rand_Int(int min, int max);
+
+	ENGINE_DLL float Get_Rand_Float(float min, float max);
+
+	ENGINE_DLL Vec2 Get_Offset(float fTime);
 
 }
 

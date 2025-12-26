@@ -12,6 +12,8 @@
 #include "CDungeonLine.h"
 #include "CPlayerHP.h"
 #include "CSoundMgr.h"
+#include "CMainCamera.h"
+#include "CMonsterN1.h"
 
 CTest::CTest(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -102,12 +104,20 @@ HRESULT CTest::Ready_Environment_Layer(const _tchar* pLayerTag)
 	_vec3   vUp{ 0.f, 1.f, 0.f };
 
 	// DynamicCamera
-	pGameObject = CDynamicCamera::Create(m_pGraphicDev, &vEye, &vAt, &vUp);
+	/*pGameObject = CDynamicCamera::Create(m_pGraphicDev, &vEye, &vAt, &vUp);
 
 	if (nullptr == pGameObject)
 		return E_FAIL;
 
 	if (FAILED(pLayer->Add_GameObject(L"DynamicCamera", pGameObject)))
+		return E_FAIL;*/
+
+	pGameObject = CMainCamera::Create(m_pGraphicDev, m_pMessageChannel);
+
+	if (nullptr == pGameObject)
+		return E_FAIL;
+
+	if (FAILED(pLayer->Add_GameObject(L"MainCamera", pGameObject)))
 		return E_FAIL;
 
 
@@ -140,10 +150,23 @@ HRESULT CTest::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	if (nullptr == pGameObject)
 		return E_FAIL;
 
+	pGameObject->Set_MessageChannel(m_pMessageChannel);
+
 	if (FAILED(pLayer->Add_GameObject(L"Player", pGameObject)))
 		return E_FAIL;
 
 	pGameObject->AddRef();
+
+	for (_uint i = 0; i < 20; ++i)
+	{
+		pGameObject = CMonsterN1::Create(m_pGraphicDev, m_pMessageChannel);
+
+		if (nullptr == pGameObject)
+			return E_FAIL;
+
+		if (FAILED(pLayer->Add_GameObject(L"Monster", pGameObject)))
+			return E_FAIL;
+	}
 
 	m_mapLayer.insert({ pLayerTag , pLayer });
 
