@@ -4,13 +4,13 @@
 #include "CRenderer.h"
 
 CDungeonBack::CDungeonBack(LPDIRECT3DDEVICE9 pGraphicDev)
-	: CUi(pGraphicDev), m_pBufferCom(nullptr), m_pTransformCom(nullptr)
+	: CUi(pGraphicDev), m_pBufferCom(nullptr), m_pTransformCom(nullptr), m_bRender(false)
 {
 	ZeroMemory(&m_vPos, sizeof(_vec3));
 }
 
 CDungeonBack::CDungeonBack(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pChannel)
-	: CUi(pGraphicDev, pChannel), m_pBufferCom(nullptr), m_pTransformCom(nullptr)
+	: CUi(pGraphicDev, pChannel), m_pBufferCom(nullptr), m_pTransformCom(nullptr), m_bRender(false)
 {
 	ZeroMemory(&m_vPos, sizeof(_vec3));
 }

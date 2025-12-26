@@ -37,9 +37,6 @@
     <Filter Include="02. GameObject\03. Terrain">
       <UniqueIdentifier>{8d635b76-59e8-4b1b-94c9-608c92cd7cb1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\04. DynamicCamera">
-      <UniqueIdentifier>{90a409f8-1b96-4329-9023-b52d183d047c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObject\05. SkyBox">
       <UniqueIdentifier>{71bfc506-8050-40b0-98aa-429602465e7d}</UniqueIdentifier>
     </Filter>
@@ -69,21 +66,6 @@
     </Filter>
     <Filter Include="02. GameObject\07. UI">
       <UniqueIdentifier>{0320c609-d491-42cf-96f0-e94adb951d41}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\07. UI\00. LoadingBack">
-      <UniqueIdentifier>{ae049520-ab2e-4676-bf1c-57c1cb41b6f4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\07. UI\01. LoadingCenter">
-      <UniqueIdentifier>{23ec9675-0f43-486e-92bb-df0d8c3fc775}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\07. UI\02. LoadingFG">
-      <UniqueIdentifier>{9689bbf7-b8dc-485d-be1d-1acab77d1648}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\07. UI\03. LoadingLogo">
-      <UniqueIdentifier>{afe12694-f308-4f3b-9d71-5360441de4ae}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\07. UI\04. LoadingCircle">
-      <UniqueIdentifier>{9506c82b-1421-464c-8228-53ab398c8982}</UniqueIdentifier>
     </Filter>
     <Filter Include="02. GameObject\07. UI\00. LoadingUI">
       <UniqueIdentifier>{b8ae79d9-84c6-485b-8fa1-5ca2361e4338}</UniqueIdentifier>
@@ -120,7 +102,7 @@
     </Filter>
     <Filter Include="02. GameObject\02. Monster\Normal1">
       <UniqueIdentifier>{a8173e77-340e-468f-9aa7-00e8cd1ad765}</UniqueIdentifier>
-	</Filter>
+    </Filter>
     <Filter Include="02. GameObject\07. UI\01. TitleUI\03. TitleTab">
       <UniqueIdentifier>{75b337c8-aa30-4290-b563-aae3a9aa3104}</UniqueIdentifier>
     </Filter>
@@ -141,6 +123,15 @@
     </Filter>
     <Filter Include="02. GameObject\07. UI\03. PlayerUI\00. PlayerHP">
       <UniqueIdentifier>{0725e0bd-c9d2-46c7-8aaf-d8ffc0b97dd6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\04. Camera">
+      <UniqueIdentifier>{238f4029-df65-4760-af60-aac3d4766c58}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\04. Camera\01. DynamicCamera">
+      <UniqueIdentifier>{90a409f8-1b96-4329-9023-b52d183d047c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\04. Camera\00. MainCamera">
+      <UniqueIdentifier>{034c96cf-6932-41a4-9e6e-cbbb742ea410}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -181,7 +172,7 @@
       <Filter>02. GameObject\03. Terrain</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CDynamicCamera.h">
-      <Filter>02. GameObject\04. DynamicCamera</Filter>
+      <Filter>02. GameObject\04. Camera\01. DynamicCamera</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CSkyBox.h">
       <Filter>02. GameObject\05. SkyBox</Filter>
@@ -236,7 +227,7 @@
     </ClInclude>
     <ClInclude Include="..\Header\CMonsterN1.h">
       <Filter>02. GameObject\02. Monster\Normal1</Filter>
-	</ClInclude>
+    </ClInclude>
     <ClInclude Include="..\Header\CTitleTab.h">
       <Filter>02. GameObject\07. UI\01. TitleUI\03. TitleTab</Filter>
     </ClInclude>
@@ -251,6 +242,9 @@
     </ClInclude>
     <ClInclude Include="..\Header\CPlayerHP.h">
       <Filter>02. GameObject\07. UI\03. PlayerUI\00. PlayerHP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CMainCamera.h">
+      <Filter>02. GameObject\04. Camera\00. MainCamera</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -282,7 +276,7 @@
       <Filter>02. GameObject\03. Terrain</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CDynamicCamera.cpp">
-      <Filter>02. GameObject\04. DynamicCamera</Filter>
+      <Filter>02. GameObject\04. Camera\01. DynamicCamera</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CSkyBox.cpp">
       <Filter>02. GameObject\05. SkyBox</Filter>
@@ -337,7 +331,7 @@
     </ClCompile>
     <ClCompile Include="..\Code\CMonsterN1.cpp">
       <Filter>02. GameObject\02. Monster\Normal1</Filter>
-	</ClCompile>
+    </ClCompile>
     <ClCompile Include="..\Code\CTitleTab.cpp">
       <Filter>02. GameObject\07. UI\01. TitleUI\03. TitleTab</Filter>
     </ClCompile>
@@ -352,6 +346,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CPlayerHP.cpp">
       <Filter>02. GameObject\07. UI\03. PlayerUI\00. PlayerHP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CMainCamera.cpp">
+      <Filter>02. GameObject\04. Camera\00. MainCamera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

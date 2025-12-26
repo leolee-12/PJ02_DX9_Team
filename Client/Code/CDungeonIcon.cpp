@@ -5,7 +5,7 @@
 #include "CDInputMgr.h"
 
 CDungeonIcon::CDungeonIcon(LPDIRECT3DDEVICE9 pGraphicDev)
-	: CUi(pGraphicDev), m_pBufferCom(nullptr), m_pTransformCom(nullptr), m_bRender(true)
+	: CUi(pGraphicDev), m_pBufferCom(nullptr), m_pTransformCom(nullptr), m_bRender(false)
 {
 	ZeroMemory(&m_vPos, sizeof(_vec3));
 	ZeroMemory(&m_vColor, sizeof(_vec3));
@@ -13,7 +13,7 @@ CDungeonIcon::CDungeonIcon(LPDIRECT3DDEVICE9 pGraphicDev)
 }
 
 CDungeonIcon::CDungeonIcon(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMessageChannel)
-	: CUi(pGraphicDev, pMessageChannel), m_pBufferCom(nullptr), m_pTransformCom(nullptr), m_bRender(true)
+	: CUi(pGraphicDev, pMessageChannel), m_pBufferCom(nullptr), m_pTransformCom(nullptr), m_bRender(false)
 {
 	ZeroMemory(&m_vPos, sizeof(_vec3));
 	ZeroMemory(&m_vColor, sizeof(_vec3));

@@ -41,8 +41,8 @@ private:
 
 	_vec3		m_vPos;
 	_uint		m_fFrame = 0;
-	_bool		m_bRender = true;
-	_bool		m_bAnim = false;
+	_bool		m_bRender;
+	_bool		m_bAnim;
 	DLINESTATE  m_eState;
 	_vec3		m_vColor;
 	D3DMATERIAL9 m_tMtrl;
