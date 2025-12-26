@@ -3,5 +3,5 @@
 xcopy			/y		.\Engine\Header\*.h			.\Reference\Header
 xcopy			/y		.\Engine\Bin\Engine.dll		.\Client\Bin
 xcopy			/y		.\Engine\Bin\Engine.lib		.\Reference\Library
-xcopy			/y		.\fmod\x64\fmodL.dll		.\Client\Bin
-xcopy			/y		.\fmod\x64\fmod.dll			.\Client\Bin
+xcopy			/y		.\fmod\Library\fmodL.dll		.\Client\Bin
+xcopy			/y		.\fmod\Library\fmod.dll			.\Client\Bin
