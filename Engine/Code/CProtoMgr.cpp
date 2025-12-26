@@ -15,8 +15,10 @@ HRESULT CProtoMgr::Ready_Prototype(const _tchar* pComponentTag, CComponent* pCom
 {
     CComponent* pInstance = Find_Prototype(pComponentTag);
 
-    if (nullptr != pInstance)
+    if (nullptr != pInstance) {
+        Safe_Release(pComponent);
         return E_FAIL;
+    }
 
     m_mapPrototype.insert({ pComponentTag ,pComponent });
 

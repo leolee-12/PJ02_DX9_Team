@@ -99,8 +99,6 @@ void CStage::LateUpdate_Scene(const _float& fTimeDelta)
 	EventTest.eOBJID = Engine::OID_MONSTER;
 
 	m_pMessageChannel->Publish(EventTest);
-
-	CCollisionMgr::GetInstance()->Check_Collisions(fTimeDelta);
 }
 
 void CStage::Render_Scene()
