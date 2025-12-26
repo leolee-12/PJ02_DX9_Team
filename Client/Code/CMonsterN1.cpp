@@ -3,6 +3,7 @@
 #include "CProtoMgr.h"
 #include "CManagement.h"
 #include "CRenderer.h"
+#include <CPersistentMgr.h>
 
 CMonsterN1::CMonsterN1(LPDIRECT3DDEVICE9 pGraphicDev)
 	:	CMonster(pGraphicDev),
@@ -80,6 +81,19 @@ _int CMonsterN1::Update_GameObject(const _float& fTimeDelta)
 
 void CMonsterN1::LateUpdate_GameObject(const _float& fTimeDelta)
 {
+	m_pTarget = CPersistentMgr::GetInstance()->Get_PlayerTransform();
+
+	if (m_pTarget != nullptr)
+	{
+		_vec3 vTargetPos;
+		m_pTarget->Get_Info(INFO_POS, &vTargetPos);
+		m_vDir = vTargetPos - m_vPos;
+		D3DXVec3Normalize(&m_vDir, &m_vDir);
+		m_pTransformCom->Move_Pos(&m_vDir, fTimeDelta, m_fSpeed);
+		m_eCurState = N1S_RUN;
+	}
+	else m_eCurState = N1S_IDLE;
+
 	Check_Frame();
 	m_pTransformCom->Compute_Bilboard(BBD_X);
 	m_pTransformCom->Get_Info(INFO_POS, &m_vPos);
@@ -160,7 +174,7 @@ void CMonsterN1::Ready_Variable()
 	m_vDir = m_vNormDir[DIR_LEFT];
 	D3DXMatrixIdentity(&m_matTex);
 
-	m_fSpeed = 10.f;
+	m_fSpeed = 1.f;
 	m_iAttack = 1;
 }
 

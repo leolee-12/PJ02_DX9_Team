@@ -70,30 +70,8 @@ HRESULT CPlayer::Ready_GameObject()
 	if (FAILED(Add_Component()))
 		return E_FAIL;
 
-	m_pColliderCom->RegisterToManager(this, CL_PLAYER);
-
-	m_eOBJID = OID_PLAYER;
-
-	//m_hmapSubHandles.insert({ L"StartGame.Move", m_pMessageChannel->Subscribe(L"Start_Game", [this](const IMessageChannel::EVENT& Event) {
-	//	if (Event.eOBJID == this->Get_OBJID()) {
-	//		m_pTransformCom->Set_Pos(10.f, 10.f, 10.f);
-	//	}
-	//	}) });
-	m_pTransformCom->Set_Pos(10.f, 0.f, 10.f);
-	m_pTransformCom->Set_Scale(5.f, 5.f, 5.f);
-	m_fFrameSpeed = 24.f;
-
-	_float fAngle(0.f);
-
-	for (_uint i = 0; i < DIR_END; ++i)
-	{
-		m_vNormDir[i] = { cosf(fAngle), 0.f, -sinf(fAngle) };
-		fAngle += D3DX_PI * 0.25f;
-	}
-
-	m_vDir = m_vNormDir[DIR_LEFT];
-	m_fSpeed = 10.f;
-	m_iAttack = 1;
+	Ready_Variable();
+	Ready_Event();
 
 	return S_OK;
 }
@@ -180,6 +158,38 @@ void CPlayer::Render_GameObject()
 	
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 #pragma endregion
+}
+
+void CPlayer::Ready_Variable()
+{
+	m_pColliderCom->RegisterToManager(this, CL_PLAYER);
+
+	m_eOBJID = OID_PLAYER;
+
+	m_pTransformCom->Set_Pos(10.f, 0.f, 10.f);
+	m_pTransformCom->Set_Scale(5.f, 5.f, 5.f);
+	m_fFrameSpeed = 24.f;
+
+	_float fAngle(0.f);
+
+	for (_uint i = 0; i < DIR_END; ++i)
+	{
+		m_vNormDir[i] = { cosf(fAngle), 0.f, -sinf(fAngle) };
+		fAngle += D3DX_PI * 0.25f;
+	}
+
+	m_vDir = m_vNormDir[DIR_LEFT];
+	m_fSpeed = 10.f;
+	m_iAttack = 1;
+}
+
+void CPlayer::Ready_Event()
+{
+	//m_hmapSubHandles.insert({ L"StartGame.Move", m_pMessageChannel->Subscribe(L"Start_Game", [this](const IMessageChannel::EVENT& Event) {
+	//	if (Event.eOBJID == this->Get_OBJID()) {
+	//		m_pTransformCom->Set_Pos(10.f, 10.f, 10.f);
+	//	}
+	//	}) });
 }
 
 HRESULT CPlayer::Add_Component()

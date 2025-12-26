@@ -35,6 +35,9 @@ public:
 	virtual			void		OnCollision(CGameObject* pObject);
 
 private:
+	void			Ready_Variable();
+	void			Ready_Event();
+
 	HRESULT			Add_Component();
 	void			Key_Input(const _float& fTimeDelta);
 	void			Set_OnTerrain();

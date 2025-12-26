@@ -55,6 +55,9 @@ private:
 	_int				m_iAttack;
 	_bool				m_bAttack;
 
+	// AI ฐüทร
+	CTransform*			m_pTarget;
+
 public:
 	static CMonsterN1*	Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel);
 

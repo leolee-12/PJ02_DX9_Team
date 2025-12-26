@@ -3,8 +3,10 @@
 #include "CGameObject.h"
 #include "Engine_Define.h"
 
-BEGIN(Engine)
-
+namespace Engine
+{
+	class CTransform;
+}
 class CPersistentMgr : public CBase
 {
 private:
@@ -16,6 +18,8 @@ private:
 public:
 	HRESULT		 Ready_GlobalObjects(LPDIRECT3DDEVICE9 pGraphicDev);
 	Engine::CGameObject* Get_GlobalObjects(GOBJID eGOBJID);
+	Engine::CTransform* Get_PlayerTransform();
+
 
 public:
 	static CPersistentMgr* GetInstance()
@@ -29,9 +33,9 @@ public:
 	static void DestroyInstance()
 	{
 		if (nullptr != m_pInstance) {
-			
-				delete m_pInstance;
-				m_pInstance = nullptr;
+
+			delete m_pInstance;
+			m_pInstance = nullptr;
 		}
 	}
 
@@ -39,11 +43,9 @@ private:
 	unordered_map<GOBJID, Engine::CGameObject*>  m_hmapGlobalObjects;
 	vector<Engine::CGameObject*>				 m_vecReleaseQueue;
 
-private:										
+private:
 	static CPersistentMgr* m_pInstance;
 
 private:
 	virtual void		Free();
 };
-
-END
