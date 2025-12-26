@@ -33,7 +33,7 @@ public:
 	_bool	Key_Down(_ubyte byKeyID)
 	{
 		if (!(m_byPreKeyState[byKeyID] & 0x80) && (m_byKeyState[byKeyID] & 0x80))
-		{ 
+		{
 			return true;
 		}
 		return false;
@@ -50,7 +50,7 @@ public:
 
 	_bool Key_Up(_ubyte byKeyID)
 	{
-		if ((m_byPreKeyState[byKeyID] & 0x80) && !(m_byKeyState[byKeyID] & 0x80)) 
+		if ((m_byPreKeyState[byKeyID] & 0x80) && !(m_byKeyState[byKeyID] & 0x80))
 		{
 			return true;
 		}

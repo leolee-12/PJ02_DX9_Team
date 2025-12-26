@@ -66,6 +66,7 @@ void CDynamicCamera::LateUpdate_GameObject(const _float& fTimeDelta)
 
 void CDynamicCamera::Key_Input(const _float& fTimeDelta)
 {
+#ifdef IMGUI
 	_matrix		matCamWorld;
 	D3DXMatrixInverse(&matCamWorld, 0, &m_matView);
 
@@ -113,7 +114,7 @@ void CDynamicCamera::Key_Input(const _float& fTimeDelta)
 		m_vEye -= vLength;
 		m_vAt  -= vLength;
 	}
-
+#endif
 
 	if (CDInputMgr::GetInstance()->Get_DIKeyState(DIK_TAB) & 0x80)
 	{

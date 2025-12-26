@@ -139,7 +139,7 @@ void CTransform::Chase_Target(const _vec3* pTargetPos, const _float& fTimeDelta,
     matRot = *Compute_LookAtTarget(pTargetPos);
 
 
-    m_matWorld = matScale * matRot * matTrans;
+    //m_matWorld = matScale * matRot * matTrans;
 
 }
 

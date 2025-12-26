@@ -31,9 +31,6 @@
     <Filter Include="02. GameObject\01. Player">
       <UniqueIdentifier>{ae4c5383-56a8-4b14-85a9-74fedfb3ccfe}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\02. Monster">
-      <UniqueIdentifier>{38405f32-dfc2-465f-b792-d975bcf71c8f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01. Scene\01. Stage">
       <UniqueIdentifier>{f40be6c5-f78e-4629-9f22-c05f63c86d1a}</UniqueIdentifier>
     </Filter>
@@ -73,8 +70,20 @@
     <Filter Include="02. GameObject\07. UI">
       <UniqueIdentifier>{0320c609-d491-42cf-96f0-e94adb951d41}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\09. Weapon">
-      <UniqueIdentifier>{56761645-4dfe-4d20-b5be-8c1c66a33109}</UniqueIdentifier>
+    <Filter Include="02. GameObject\07. UI\00. LoadingBack">
+      <UniqueIdentifier>{ae049520-ab2e-4676-bf1c-57c1cb41b6f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. UI\01. LoadingCenter">
+      <UniqueIdentifier>{23ec9675-0f43-486e-92bb-df0d8c3fc775}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. UI\02. LoadingFG">
+      <UniqueIdentifier>{9689bbf7-b8dc-485d-be1d-1acab77d1648}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. UI\03. LoadingLogo">
+      <UniqueIdentifier>{afe12694-f308-4f3b-9d71-5360441de4ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. UI\04. LoadingCircle">
+      <UniqueIdentifier>{9506c82b-1421-464c-8228-53ab398c8982}</UniqueIdentifier>
     </Filter>
     <Filter Include="02. GameObject\07. UI\00. LoadingUI">
       <UniqueIdentifier>{b8ae79d9-84c6-485b-8fa1-5ca2361e4338}</UniqueIdentifier>
@@ -106,6 +115,12 @@
     <Filter Include="02. GameObject\07. UI\01. TitleUI\02. TitleLogo">
       <UniqueIdentifier>{f3297bde-6a24-42a0-a777-4049f60b9657}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\02. Monster">
+      <UniqueIdentifier>{38405f32-dfc2-465f-b792-d975bcf71c8f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\02. Monster\Normal1">
+      <UniqueIdentifier>{a8173e77-340e-468f-9aa7-00e8cd1ad765}</UniqueIdentifier>
+	</Filter>
     <Filter Include="02. GameObject\07. UI\01. TitleUI\03. TitleTab">
       <UniqueIdentifier>{75b337c8-aa30-4290-b563-aae3a9aa3104}</UniqueIdentifier>
     </Filter>
@@ -219,6 +234,9 @@
     <ClInclude Include="..\Header\CTitleLogo.h">
       <Filter>02. GameObject\07. UI\01. TitleUI\02. TitleLogo</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CMonsterN1.h">
+      <Filter>02. GameObject\02. Monster\Normal1</Filter>
+	</ClInclude>
     <ClInclude Include="..\Header\CTitleTab.h">
       <Filter>02. GameObject\07. UI\01. TitleUI\03. TitleTab</Filter>
     </ClInclude>
@@ -317,6 +335,9 @@
     <ClCompile Include="..\Code\CTitleLogo.cpp">
       <Filter>02. GameObject\07. UI\01. TitleUI\02. TitleLogo</Filter>
     </ClCompile>
+    <ClCompile Include="..\Code\CMonsterN1.cpp">
+      <Filter>02. GameObject\02. Monster\Normal1</Filter>
+	</ClCompile>
     <ClCompile Include="..\Code\CTitleTab.cpp">
       <Filter>02. GameObject\07. UI\01. TitleUI\03. TitleTab</Filter>
     </ClCompile>

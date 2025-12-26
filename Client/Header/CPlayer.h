@@ -15,7 +15,6 @@ class CPlayer : public CGameObject
 {
 public:
 	enum PLAYERSTATE { PS_IDLE, PS_RUN, PS_ROLL, PS_ATTACK, PS_CHARGE, PS_HIT, PS_ACTION, PS_TALK, PS_INTROIDLE, PS_INTRORUN, PS_INTROKNEE, PS_END };
-	enum DIRECTIONID { DIR_RIGHT, DIR_RD, DIR_DOWN, DIR_LD, DIR_LEFT, DIR_LU, DIR_UP, DIR_RU, DIR_END };
 
 	// ==========================
 	//	PLAYERSTATE : 플레이어 상태 관리용 enum
@@ -36,6 +35,9 @@ public:
 	virtual			void		OnCollision(CGameObject* pObject);
 
 private:
+	void			Ready_Variable();
+	void			Ready_Event();
+
 	HRESULT			Add_Component();
 	void			Key_Input(const _float& fTimeDelta);
 	void			Set_OnTerrain();
@@ -57,6 +59,7 @@ private:
 
 	void			Move_Roll(const _float& fTimeDelta);
 	void			Charge(const _float& fTimeDelta);
+	void			HitBox();
 
 	// ==========================
 	//	Move_Roll : 구르기 상태일 때 현재 위치를 Lerp를 적용하여 계산 및 이동
@@ -83,7 +86,6 @@ private:
 	_float			m_fSpeed;
 	_int			m_iAttack;
 	_bool			m_bRoll;	// 구르기 중인지?
-	_bool			m_bClick;
 	_int			m_iCombo;	// 공격 중인지? + 몇번째 콤보상태인지?
 
 	// 알파 소팅 관련

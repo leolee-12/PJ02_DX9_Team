@@ -10,6 +10,7 @@
 #include "CLoading.h"
 #include "CManagement.h"
 #include "CPersistentMgr.h"
+#include <CMonsterN1.h>
 
 
 CStage::CStage(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -174,10 +175,23 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	if (FAILED(pLayer->Add_GameObject(L"Monster", pGameObject)))
 		return E_FAIL;
 
+	for (_uint i = 0; i < 20; ++i)
+	{
+		pGameObject = CMonsterN1::Create(m_pGraphicDev, m_pMessageChannel);
+
+		if (nullptr == pGameObject)
+			return E_FAIL;
+
+		if (FAILED(pLayer->Add_GameObject(L"Monster", pGameObject)))
+			return E_FAIL;
+	}
+
 	pGameObject = CPersistentMgr::GetInstance()->Get_GlobalObjects(GOBJ_PLAYER);
 
 	if (nullptr == pGameObject)
 		return E_FAIL;
+
+	pGameObject->Set_MessageChannel(m_pMessageChannel);
 
 	if (FAILED(pLayer->Add_GameObject(L"Player", pGameObject)))
 		return E_FAIL;
@@ -195,19 +209,18 @@ HRESULT CStage::Ready_UI_Layer(const _tchar* pLayerTag)
 	if (nullptr == pLayer)
 		return E_FAIL;
 
-	CGameObject* pGameObject = nullptr;
-
-	for (_int i = 0; i < 50; ++i)
-	{
-		pGameObject = CTestEffect::Create(m_pGraphicDev);
-
-		if (nullptr == pGameObject)
-			return E_FAIL;
-
-		if (FAILED(pLayer->Add_GameObject(L"Effect", pGameObject)))
-			return E_FAIL;
-	}
-
+	//CGameObject* pGameObject = nullptr;
+	//
+	//for (_int i = 0; i < 50; ++i)
+	//{
+	//	pGameObject = CTestEffect::Create(m_pGraphicDev);
+	//
+	//	if (nullptr == pGameObject)
+	//		return E_FAIL;
+	//
+	//	if (FAILED(pLayer->Add_GameObject(L"Effect", pGameObject)))
+	//		return E_FAIL;
+	//}
 
 	m_mapLayer.insert({ pLayerTag , pLayer });
 

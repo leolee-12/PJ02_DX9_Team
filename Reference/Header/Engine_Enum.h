@@ -63,6 +63,6 @@ namespace Engine
 		return COLGROUP((unsigned int)lhs & (unsigned int)rhs);
 	}
 
-
+	enum DIRECTIONID { DIR_RIGHT, DIR_RD, DIR_DOWN, DIR_LD, DIR_LEFT, DIR_LU, DIR_UP, DIR_RU, DIR_END };
 }
 #endif // Engine_Enum_h__

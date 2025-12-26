@@ -49,7 +49,7 @@ _int CTest::Update_Scene(const _float& fTimeDelta)
 
 		m_pMessageChannel->Publish(event);
 
-		//CSoundMgr::GetInstance()->Play(L"AAAK.wav", SOUND_EFFECT, 0.5f);
+		CSoundMgr::GetInstance()->Play(L"AAAK.wav", SOUND_EFFECT, 0.1f);	
 	}
 	if (CDInputMgr::GetInstance()->Key_Down(DIK_U))
 	{

@@ -63,6 +63,14 @@ CGameObject* CPersistentMgr::Get_GlobalObjects(GOBJID eGOBJID)
     return iter->second;
 }
 
+Engine::CTransform* CPersistentMgr::Get_PlayerTransform()
+{
+    unordered_map<GOBJID, CGameObject*>::iterator iter = m_hmapGlobalObjects.find(GOBJ_PLAYER);
+    if (iter == m_hmapGlobalObjects.end()) { return nullptr; }
+
+    return static_cast<CTransform*>(iter->second->Get_Component(ID_DYNAMIC, L"Com_Transform"));
+}
+
 void CPersistentMgr::Free()
 {
     for (auto& hmap : m_hmapGlobalObjects)

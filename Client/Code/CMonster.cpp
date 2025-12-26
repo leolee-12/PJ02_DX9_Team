@@ -40,6 +40,15 @@ HRESULT CMonster::Ready_GameObject()
 		}
 		}) });
 
+	m_hmapSubHandles.insert({ L"Monster_Damaged", m_pMessageChannel->Subscribe(L"Monster.Attacked", [this](const IMessageChannel::EVENT& Event) {
+		for (auto& Target : any_cast<vector<CGameObject*>>(Event.hmapData.find(L"Target")->second))
+		{
+			if (Target == this)
+			{
+				m_iHp -= any_cast<_int>(Event.hmapData.find(L"Attack")->second);
+			}
+		}
+	}) });
 
 	return S_OK;
 }
@@ -48,6 +57,12 @@ _int CMonster::Update_GameObject(const _float& fTimeDelta)
 {
 	m_pColliderCom->UpdateFromTransform(m_pTransformCom);
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
+
+	if (iExit == DEAD)
+	{
+		m_pColliderCom->UnregisterFromManager();
+		return iExit;
+	}
 
 	CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHA, this);
 
