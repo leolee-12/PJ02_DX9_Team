@@ -30,6 +30,9 @@ public:
 private:
 	HRESULT				Add_Component();
 
+	void				Ready_Variable();
+	void				Ready_Event();
+
 	void				Check_Frame();
 	void				Move_Frame(const _float& fTimeDelta);
 	void				Set_Texture();

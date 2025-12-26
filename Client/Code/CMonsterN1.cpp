@@ -53,35 +53,9 @@ HRESULT CMonsterN1::Ready_GameObject()
 	if (FAILED(Add_Component()))
 		return E_FAIL;
 
-	m_pColliderCom->RegisterToManager(this, CL_MONSTER);
+	Ready_Variable();
 
-	m_hmapSubHandles.insert({ L"Monster_Damaged", m_pMessageChannel->Subscribe(L"Monster.Attacked", [this](const IMessageChannel::EVENT& Event) {
-		for (auto& Target : any_cast<vector<CGameObject*>>(Event.hmapData.find(L"Target")->second))
-		{
-			if (Target == this)
-			{
-				m_iHp -= any_cast<_int>(Event.hmapData.find(L"Attack")->second);
-			}
-		}
-	}) });
-
-	m_pTransformCom->Set_Pos(_float(rand() % 20), 1.f, _float(rand() % 20));
-	m_pTransformCom->Set_Scale(3.f, 3.f, 3.f);
-	m_fFrameSpeed = 24.f;
-
-	_float fAngle(0.f);
-
-	for (_uint i = 0; i < DIR_END; ++i)
-	{
-		m_vNormDir[i] = { cosf(fAngle), 0.f, -sinf(fAngle) };
-		fAngle += D3DX_PI * 0.25f;
-	}
-
-	m_vDir = m_vNormDir[DIR_LEFT];
-	D3DXMatrixIdentity(&m_matTex);
-
-	m_fSpeed = 10.f;
-	m_iAttack = 1;
+	Ready_Event();
 
 	return S_OK;
 }
@@ -165,6 +139,42 @@ HRESULT CMonsterN1::Add_Component()
 
 
 	return S_OK;
+}
+
+void CMonsterN1::Ready_Variable()
+{
+	m_pColliderCom->RegisterToManager(this, CL_MONSTER);
+
+	m_pTransformCom->Set_Pos(_float(rand() % 20), 1.f, _float(rand() % 20));
+	m_pTransformCom->Set_Scale(3.f, 3.f, 3.f);
+	m_fFrameSpeed = 24.f;
+
+	_float fAngle(0.f);
+
+	for (_uint i = 0; i < DIR_END; ++i)
+	{
+		m_vNormDir[i] = { cosf(fAngle), 0.f, -sinf(fAngle) };
+		fAngle += D3DX_PI * 0.25f;
+	}
+
+	m_vDir = m_vNormDir[DIR_LEFT];
+	D3DXMatrixIdentity(&m_matTex);
+
+	m_fSpeed = 10.f;
+	m_iAttack = 1;
+}
+
+void CMonsterN1::Ready_Event()
+{
+	m_hmapSubHandles.insert({ L"Monster_Damaged", m_pMessageChannel->Subscribe(L"Monster.Attacked", [this](const IMessageChannel::EVENT& Event) {
+	for (auto& Target : any_cast<vector<CGameObject*>>(Event.hmapData.find(L"Target")->second))
+	{
+		if (Target == this)
+		{
+			m_iHp -= any_cast<_int>(Event.hmapData.find(L"Attack")->second);
+		}
+	}
+	}) });
 }
 
 void CMonsterN1::Check_Frame()
