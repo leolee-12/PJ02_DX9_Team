@@ -9,6 +9,8 @@ namespace Engine
 	class CCollider;
 }
 
+class CN1_AI;
+
 class CMonsterN1 : public CMonster 
 {
 public:
@@ -38,6 +40,7 @@ private:
 	void				Set_Texture();
 
 	void				HitBox() {};
+	void				Update_State();
 
 private:
 	// 스프라이트 관련
@@ -57,6 +60,7 @@ private:
 
 	// AI 관련
 	CTransform*			m_pTarget;
+	CN1_AI*				m_pAICom;
 
 public:
 	static CMonsterN1*	Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel);

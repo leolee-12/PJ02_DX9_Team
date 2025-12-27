@@ -3,6 +3,7 @@
 #include "CProtoMgr.h"
 #include "CPlayer.h"
 #include "CPersistentMgr.h"
+#include "CN1_AI.h"
 
 CLoadingThread::CLoadingThread(LPDIRECT3DDEVICE9 pGraphicDev)
     : m_pGraphicDev(pGraphicDev), m_bFinish(false), m_eLoading(LOADING_END), m_fPercent(0.f)
@@ -99,7 +100,9 @@ _uint CLoadingThread::Loading_ForStage()
 
     lstrcpy(m_szLoading, L"Etc Loading..............................");
 
-    
+    if(FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_N1_AI", CN1_AI::Create(m_pGraphicDev, 10.f, 5.f))))
+		return E_FAIL;
+
     if (FAILED(CPersistentMgr::GetInstance()->Ready_GlobalObjects(m_pGraphicDev)))
         return E_FAIL;
 

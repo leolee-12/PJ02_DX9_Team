@@ -4,6 +4,7 @@
 #include "CManagement.h"
 #include "CRenderer.h"
 #include <CPersistentMgr.h>
+#include "CN1_AI.h"
 
 CMonsterN1::CMonsterN1(LPDIRECT3DDEVICE9 pGraphicDev)
 	:	CMonster(pGraphicDev),
@@ -54,6 +55,9 @@ HRESULT CMonsterN1::Ready_GameObject()
 	if (FAILED(Add_Component()))
 		return E_FAIL;
 
+	m_pAICom->Set_OwnerTransform(m_pTransformCom);
+	m_pAICom->Set_State<MONSTER_N1_STATE>(N1S_SPAWN);
+	
 	Ready_Variable();
 
 	Ready_Event();
@@ -81,18 +85,20 @@ _int CMonsterN1::Update_GameObject(const _float& fTimeDelta)
 
 void CMonsterN1::LateUpdate_GameObject(const _float& fTimeDelta)
 {
-	m_pTarget = CPersistentMgr::GetInstance()->Get_PlayerTransform();
+	//m_pTarget = CPersistentMgr::GetInstance()->Get_PlayerTransform();
+	//
+	//if (m_pTarget != nullptr)
+	//{
+	//	_vec3 vTargetPos;
+	//	m_pTarget->Get_Info(INFO_POS, &vTargetPos);
+	//	m_vDir = vTargetPos - m_vPos;
+	//	D3DXVec3Normalize(&m_vDir, &m_vDir);
+	//	m_pTransformCom->Move_Pos(&m_vDir, fTimeDelta, m_fSpeed);
+	//	m_eCurState = N1S_RUN;
+	//}
+	//else m_eCurState = N1S_IDLE;
 
-	if (m_pTarget != nullptr)
-	{
-		_vec3 vTargetPos;
-		m_pTarget->Get_Info(INFO_POS, &vTargetPos);
-		m_vDir = vTargetPos - m_vPos;
-		D3DXVec3Normalize(&m_vDir, &m_vDir);
-		m_pTransformCom->Move_Pos(&m_vDir, fTimeDelta, m_fSpeed);
-		m_eCurState = N1S_RUN;
-	}
-	else m_eCurState = N1S_IDLE;
+	Update_State();
 
 	Check_Frame();
 	m_pTransformCom->Compute_Bilboard(BBD_X);
@@ -146,11 +152,23 @@ HRESULT CMonsterN1::Add_Component()
 
 	m_mapComponent[ID_STATIC].insert({ L"Com_Texture", pComponent });
 
+	// Collider
 	pComponent = m_pColliderCom = dynamic_cast<Engine::CCollider*>
 		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Collider"));
 
+	if (nullptr == pComponent)
+		return E_FAIL;
+
 	m_mapComponent[ID_STATIC].insert({ L"Com_Collider", pComponent });
 
+	// AI
+	pComponent = m_pAICom = dynamic_cast<CN1_AI*>
+		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_N1_AI"));
+
+	if (nullptr == pComponent)
+		return E_FAIL;
+
+	m_mapComponent[ID_DYNAMIC].insert({ L"Com_AI", pComponent });
 
 	return S_OK;
 }
@@ -326,6 +344,17 @@ void CMonsterN1::Set_Texture()
 	m_pGraphicDev->SetTransform(D3DTS_TEXTURE0, &m_matTex);
 
 	m_pTextureCom->Set_Texture(_uint(m_eCurState));
+}
+
+void CMonsterN1::Update_State()
+{
+	if (m_eCurState == N1S_SPAWN || m_eCurState == N1S_HIT)
+		return;
+
+	if (m_eCurState == N1S_ATTACK && m_fFrame < m_fFrameEnd)
+		return;
+
+	m_eCurState = m_pAICom->Get_RecommendState<MONSTER_N1_STATE>();
 }
 
 CMonsterN1* CMonsterN1::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel)
