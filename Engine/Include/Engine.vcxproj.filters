@@ -127,6 +127,9 @@
     <Filter Include="00. Manager\99. SoundMgr">
       <UniqueIdentifier>{4da2600e-4e72-40e2-b10b-f43d18f1aeee}</UniqueIdentifier>
     </Filter>
+    <Filter Include="05. ComponentEx\05. AIController">
+      <UniqueIdentifier>{44c36844-bc71-4e78-bb68-298bcd87982d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\CGraphicDev.cpp">
@@ -272,6 +275,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CSoundMgr.cpp">
       <Filter>00. Manager\99. SoundMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CAIController.cpp">
+      <Filter>05. ComponentEx\05. AIController</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -451,6 +457,9 @@
     </ClInclude>
     <ClInclude Include="..\Header\CSoundMgr.h">
       <Filter>00. Manager\99. SoundMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CAIController.h">
+      <Filter>05. ComponentEx\05. AIController</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

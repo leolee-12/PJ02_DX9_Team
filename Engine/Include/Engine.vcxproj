@@ -180,6 +180,7 @@ call Copy.bat</Command>
     <ClInclude Include="..\Header\CLight.h" />
     <ClInclude Include="..\Header\CLightMgr.h" />
     <ClInclude Include="..\Header\CManagement.h" />
+    <ClInclude Include="..\Header\CAIController.h" />
     <ClInclude Include="..\Header\CSoundMgr.h" />
     <ClInclude Include="..\Header\CTextureSet.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
@@ -241,6 +242,7 @@ call Copy.bat</Command>
     <ClCompile Include="..\Code\CLight.cpp" />
     <ClCompile Include="..\Code\CLightMgr.cpp" />
     <ClCompile Include="..\Code\CManagement.cpp" />
+    <ClCompile Include="..\Code\CAIController.cpp" />
     <ClCompile Include="..\Code\CSoundMgr.cpp" />
     <ClCompile Include="..\Code\CTextureSet.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>

@@ -39,6 +39,9 @@ HRESULT CPersistentMgr::Ready_GlobalObjects(LPDIRECT3DDEVICE9 pGraphicDev)
         if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_PlayerTexture", Engine::CTextureSet::Create(pGraphicDev, TEX_NORMAL, tempVec))))
             return E_FAIL;
 
+        if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_PlayerTexture2", Engine::CTexture::Create(pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Player/Player1_%02d.png", 1))))
+            return E_FAIL;
+
         if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Collider", Engine::CCollider::Create(pGraphicDev))))
             return E_FAIL;
 

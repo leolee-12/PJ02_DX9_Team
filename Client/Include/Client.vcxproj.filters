@@ -120,7 +120,7 @@
     </Filter>
     <Filter Include="02. GameObject\02. Monster\Normal1">
       <UniqueIdentifier>{a8173e77-340e-468f-9aa7-00e8cd1ad765}</UniqueIdentifier>
-	</Filter>
+    </Filter>
     <Filter Include="02. GameObject\07. UI\01. TitleUI\03. TitleTab">
       <UniqueIdentifier>{75b337c8-aa30-4290-b563-aae3a9aa3104}</UniqueIdentifier>
     </Filter>
@@ -236,7 +236,7 @@
     </ClInclude>
     <ClInclude Include="..\Header\CMonsterN1.h">
       <Filter>02. GameObject\02. Monster\Normal1</Filter>
-	</ClInclude>
+    </ClInclude>
     <ClInclude Include="..\Header\CTitleTab.h">
       <Filter>02. GameObject\07. UI\01. TitleUI\03. TitleTab</Filter>
     </ClInclude>
@@ -251,6 +251,9 @@
     </ClInclude>
     <ClInclude Include="..\Header\CPlayerHP.h">
       <Filter>02. GameObject\07. UI\03. PlayerUI\00. PlayerHP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CN1_AI.h">
+      <Filter>02. GameObject\02. Monster\Normal1</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -337,7 +340,7 @@
     </ClCompile>
     <ClCompile Include="..\Code\CMonsterN1.cpp">
       <Filter>02. GameObject\02. Monster\Normal1</Filter>
-	</ClCompile>
+    </ClCompile>
     <ClCompile Include="..\Code\CTitleTab.cpp">
       <Filter>02. GameObject\07. UI\01. TitleUI\03. TitleTab</Filter>
     </ClCompile>
@@ -352,6 +355,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CPlayerHP.cpp">
       <Filter>02. GameObject\07. UI\03. PlayerUI\00. PlayerHP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CN1_AI.cpp">
+      <Filter>02. GameObject\02. Monster\Normal1</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
