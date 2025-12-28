@@ -5,7 +5,7 @@
 #include "CDInputMgr.h"
 
 CDungeonLine::CDungeonLine(LPDIRECT3DDEVICE9 pGraphicDev)
-	: CUi(pGraphicDev), m_pBufferCom(nullptr), m_pTransformCom(nullptr), m_fFrame(0.f)
+	: CUi(pGraphicDev), m_pBufferCom(nullptr), m_pTransformCom(nullptr), m_fFrame(0.f), m_bRender(false), m_bAnim(false)
 {
 	ZeroMemory(&m_vPos, sizeof(_vec3));
 	ZeroMemory(&m_tMtrl, sizeof(_vec3));

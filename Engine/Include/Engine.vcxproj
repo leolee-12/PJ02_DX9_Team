@@ -210,6 +210,7 @@ call Copy.bat</Command>
     <ClInclude Include="..\Header\Engine_Typedef.h" />
     <ClInclude Include="..\Header\IMessageChannel.h" />
     <ClInclude Include="..\Header\Edit_Define.h" />
+    <ClInclude Include="..\Header\perlin_jitter.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\ImGuizmo\GraphEditor.cpp" />
@@ -263,6 +264,7 @@ call Copy.bat</Command>
     <ClCompile Include="..\Code\CRcColTitle.cpp" />
     <ClCompile Include="..\Code\CUi.cpp" />
     <ClCompile Include="..\Code\CVIBuffer.cpp" />
+    <ClCompile Include="..\Code\RandomEngine.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />

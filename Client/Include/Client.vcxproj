@@ -162,6 +162,7 @@
     <ClInclude Include="..\Header\CLoadingBack.h" />
     <ClInclude Include="..\Header\CLogo.h" />
     <ClInclude Include="..\Header\CMainApp.h" />
+    <ClInclude Include="..\Header\CMainCamera.h" />
     <ClInclude Include="..\Header\CMonster.h" />
     <ClInclude Include="..\Header\CMonsterN1.h" />
     <ClInclude Include="..\Header\CN1_AI.h" />
@@ -203,6 +204,7 @@
     <ClCompile Include="..\Code\CLoadingBack.cpp" />
     <ClCompile Include="..\Code\CLogo.cpp" />
     <ClCompile Include="..\Code\CMainApp.cpp" />
+    <ClCompile Include="..\Code\CMainCamera.cpp" />
     <ClCompile Include="..\Code\CMonster.cpp" />
     <ClCompile Include="..\Code\CMonsterN1.cpp" />
     <ClCompile Include="..\Code\CN1_AI.cpp" />

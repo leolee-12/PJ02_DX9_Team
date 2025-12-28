@@ -195,6 +195,7 @@ void CN1_AI::Update_Run(const _float& fTimeDelta)
 		if (m_fDistance <= m_fDetectRange)
 		{	// 타겟이 감지 범위 내로 진입 시 발견
 			m_bChase = true;
+			Compute_TargetDir();
 		}
 		else if (m_fAcmlTime > 3.f)
 		{	// 타겟이 감지 범위 내에 없을 때는 순찰하다 대기 상태로 전환

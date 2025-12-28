@@ -34,7 +34,7 @@ CTextureSet::~CTextureSet()
 
 HRESULT CTextureSet::Ready_Texture(TEXTUREID eID, const vector<TEXINFO>& vecTexInfo)
 {
-	_uint iTexNum = vecTexInfo.size();
+	_uint iTexNum = _uint(vecTexInfo.size());
 
 	for (_uint i = 0; i < iTexNum; ++i)
 	{
