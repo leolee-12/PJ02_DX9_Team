@@ -5,7 +5,7 @@ namespace Engine
 {
 	class CRcTex;
 	class CTransform;
-	class CTexture;
+	//class CTexture;
 	class CTextureSet;
 	class CCalculator;
 	class CCollider;
@@ -69,7 +69,7 @@ private:
 private:
 	Engine::CRcTex* m_pBufferCom;
 	Engine::CTransform* m_pTransformCom;
-	Engine::CTexture* m_pTextureCom2;
+	//Engine::CTexture* m_pTextureCom2;
 	Engine::CTextureSet* m_pTextureCom;
 	Engine::CCalculator* m_pCalculatorCom;
 	Engine::CCollider*	m_pColliderCom;

@@ -107,59 +107,66 @@ void CPlayer::LateUpdate_GameObject(const _float& fTimeDelta)
 void CPlayer::Render_GameObject()
 {
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
-	m_pGraphicDev->SetTextureStageState(0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_COUNT2);
-
-	Set_Texture();
-	//Set_TextureSet();
 
 #pragma region 기존 (반전X)
 
-	m_pBufferCom->Render_Buffer();
+	//Set_TextureSet();
+	//m_pBufferCom->Render_Buffer();
 
 #pragma endregion
 
 #pragma region 스프라이트 반전 도입 - 버텍스/인덱스 버퍼 미사용
-	//// 8방향 모두 스프라이트 이미지는 비효율적 -> 좌우반전해서 사용
-	//bool bFlipH = (m_vDir == m_vNormDir[DIR_RU] || m_vDir == m_vNormDir[DIR_RIGHT] || m_vDir == m_vNormDir[DIR_RD]);
-	//_float u1 = bFlipH ? 1.f : 0.f;
-	//_float u2 = bFlipH ? 0.f : 1.f;
-	//
-	//// bFlipH = false (반전X)
-	////(u,v) : (0.f, 1.f)	|	(1.f, 1.f)
-	////(u,v) : (0.f, 0.f)	|	(1.f, 0.f)
-	//
-	//// bFlipH = true (반전)
-	////(u,v) : (1.f, 1.f)	|	(0.f, 1.f)
-	////(u,v) : (1.f, 0.f)	|	(0.f, 0.f)
-	//
-	//// 문제는 버텍스 버퍼를 동적으로 수정하면 오버헤드 심함
-	//// - 버텍스/인덱스 버퍼를 사용하지 않고 그리기 : DrawPrimitiveUP
-	//// - 인덱스버퍼 없으므로 D3DPT_TRIANGLELIST 사용 불가 : D3DPT_TRIANGLESTRIP으로 그리면 (0-1-2), (2-1-3) 으로 그려짐
-	//// 0 1 > 0 1
-	//// 3 2 > 2 3
-	//
-	//VTXTEX pVertex[4];
-	//
-	//pVertex[0].vPosition = { -1.f, 1.f, 0.f };
-	//pVertex[0].vTexUV = { u1, 0.f };
-	//
-	//pVertex[1].vPosition = { 1.f, 1.f, 0.f };
-	//pVertex[1].vTexUV = { u2, 0.f };
-	//
-	//pVertex[3].vPosition = { 1.f, -1.f, 0.f };
-	//pVertex[3].vTexUV = { u2, 1.f };
-	//
-	//pVertex[2].vPosition = { -1.f, -1.f, 0.f };
-	//pVertex[2].vTexUV = { u1, 1.f };
-	//
-	//m_pGraphicDev->SetFVF(Engine::FVF_TEX);
-	//
-	//m_pGraphicDev->DrawPrimitiveUP(D3DPT_TRIANGLESTRIP, 2, pVertex, sizeof(VTXTEX));
-	//
-	//m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
+
+	Set_TextureSet();
+	// 8방향 모두 스프라이트 이미지는 비효율적 -> 좌우반전해서 사용
+	bool bFlipH = (m_vDir == m_vNormDir[DIR_RU] || m_vDir == m_vNormDir[DIR_RIGHT] || m_vDir == m_vNormDir[DIR_RD]);
+	_float u1 = bFlipH ? 1.f : 0.f;
+	_float u2 = bFlipH ? 0.f : 1.f;
+	
+	// bFlipH = false (반전X)
+	//(u,v) : (0.f, 1.f)	|	(1.f, 1.f)
+	//(u,v) : (0.f, 0.f)	|	(1.f, 0.f)
+	
+	// bFlipH = true (반전)
+	//(u,v) : (1.f, 1.f)	|	(0.f, 1.f)
+	//(u,v) : (1.f, 0.f)	|	(0.f, 0.f)
+	
+	// 문제는 버텍스 버퍼를 동적으로 수정하면 오버헤드 심함
+	// - 버텍스/인덱스 버퍼를 사용하지 않고 그리기 : DrawPrimitiveUP
+	// - 인덱스버퍼 없으므로 D3DPT_TRIANGLELIST 사용 불가 : D3DPT_TRIANGLESTRIP으로 그리면 (0-1-2), (2-1-3) 으로 그려짐
+	// 0 1 > 0 1
+	// 3 2 > 2 3
+	
+	VTXTEX pVertex[4];
+	
+	pVertex[0].vPosition = { -1.f, 1.f, 0.f };
+	pVertex[0].vTexUV = { u1, 0.f };
+	
+	pVertex[1].vPosition = { 1.f, 1.f, 0.f };
+	pVertex[1].vTexUV = { u2, 0.f };
+	
+	pVertex[3].vPosition = { 1.f, -1.f, 0.f };
+	pVertex[3].vTexUV = { u2, 1.f };
+	
+	pVertex[2].vPosition = { -1.f, -1.f, 0.f };
+	pVertex[2].vTexUV = { u1, 1.f };
+	
+	m_pGraphicDev->SetFVF(Engine::FVF_TEX);
+	
+	m_pGraphicDev->DrawPrimitiveUP(D3DPT_TRIANGLESTRIP, 2, pVertex, sizeof(VTXTEX));
+	
+	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
+
 #pragma endregion
 
-	m_pGraphicDev->SetTextureStageState(0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE);
+#pragma region 스프라이트 시트
+
+	//m_pGraphicDev->SetTextureStageState(0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_COUNT2);
+	//Set_Texture();
+	//m_pBufferCom->Render_Buffer();
+	//m_pGraphicDev->SetTextureStageState(0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE);
+
+#pragma endregion
 }
 
 void CPlayer::Ready_Variable()
@@ -169,7 +176,8 @@ void CPlayer::Ready_Variable()
 	m_eOBJID = OID_PLAYER;
 
 	m_pTransformCom->Set_Pos(10.f, 0.f, 10.f);
-	m_pTransformCom->Set_Scale(7.f, 7.f, 7.f);
+	m_pTransformCom->Set_Scale(5.f, 5.f, 5.f);
+	//m_pTransformCom->Set_Scale(7.f, 7.f, 7.f);	// Tex2
 	m_fFrameSpeed = 24.f;
 
 	_float fAngle(0.f);
@@ -217,13 +225,13 @@ HRESULT CPlayer::Add_Component()
 	m_mapComponent[ID_DYNAMIC].insert({ L"Com_Transform", pComponent });
 
 	// Texture
-	pComponent = m_pTextureCom2 = dynamic_cast<Engine::CTexture*>
-		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_PlayerTexture2"));
-
-	if (nullptr == pComponent)
-		return E_FAIL;
-
-	m_mapComponent[ID_STATIC].insert({ L"Com_Texture", pComponent });
+	//pComponent = m_pTextureCom2 = dynamic_cast<Engine::CTexture*>
+	//	(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_PlayerTexture2"));
+	//
+	//if (nullptr == pComponent)
+	//	return E_FAIL;
+	//
+	//m_mapComponent[ID_STATIC].insert({ L"Com_Texture", pComponent });
 
 	pComponent = m_pTextureCom = dynamic_cast<Engine::CTextureSet*>
 		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_PlayerTexture"));
@@ -522,7 +530,7 @@ void CPlayer::Set_Texture()
 
 	m_pGraphicDev->SetTransform(D3DTS_TEXTURE0, &m_matTex);
 
-	m_pTextureCom2->Set_Texture(_uint(m_eCurState));
+	//m_pTextureCom2->Set_Texture(_uint(m_eCurState));
 }
 
 void CPlayer::Set_TextureSet()

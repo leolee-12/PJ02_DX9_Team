@@ -1,7 +1,7 @@
 # 플레이어-이펙트 작업 기록
 
 - 담당자 : 이우영
-- 최신 업데이트 : 25.12.25
+- 최신 업데이트 : 25.12.28
 
 ### 25.12.16 작업 내용
 
@@ -23,6 +23,35 @@
  (프레임워크에서 Transform 컴포넌트에 추가한 빌보드 기능으로 변경 적용 및 플레이어 자체 빌보드 기능 삭제)
 
 - 상태 별 텍스처 이미지 일괄 관리용 컴포넌트(CTextureSet) 도입 : 상태 별 '스프라이트 이미지 벡터'를 '해시맵'으로 관리
+ (Why? 빠른 접근 및 문자열 기반 탐색이 필요, 정렬할 필요 없음, 매 프레임 호출이 아니어서 해시 연산의 부하 적음)
+
+```cpp
+class ENGINE_DLL CTextureSet : public CComponent
+{
+public:
+    // 컴포넌트 생성에 용이하도록 텍스처정보 구조체 정의 -> 벡터로
+	typedef struct tagTextureInfo
+	{
+		wstring			strState;
+		const _tchar*	pPath;
+		_uint			iCnt;
+
+		tagTextureInfo() : strState(L""), pPath(nullptr), iCnt(0) {}
+		tagTextureInfo(wstring _strState, const _tchar* _pPath, _uint _iCnt)
+			: strState(_strState), pPath(_pPath), iCnt(_iCnt) {}
+	}TEXINFO;
+// ...
+public:
+    // TEXINFO의 벡터를 받아 컴포넌트 생성
+	static CTextureSet* Create(LPDIRECT3DDEVICE9 pGraphicDev, TEXTUREID eID, vector<TEXINFO>& vecTexInfo);
+
+private:
+    // 텍스처 COM객체를 해시맵으로 관리
+	unordered_map<wstring, vector<IDirect3DBaseTexture9*>>		m_mapTexture;
+};
+
+
+```
 
 ### 25.12.18 작업 내용
 
@@ -35,6 +64,17 @@
 - ATTACK(기본공격) 및 ROLL(구르기) 상태 구현을 위한 변수 추가
 
 - 구르기 방향 별 스프라이트 도입, 자연스러운 움직임 표현을 위해 위치 계산에 Lerp 적용
+
+```cpp
+void CPlayer::Move_Roll(const _float& fTimeDelta)
+{
+	if (!m_bRoll) return;
+	
+	D3DXVec3Lerp(&m_vPos, &m_vPos, &m_vRollPos, m_fLerp);
+
+	m_pTransformCom->Set_Pos(m_vPos.x, m_vPos.y, m_vPos.z);
+}
+```
 
 ### 25.12.20 작업 내용
 
@@ -60,6 +100,26 @@
 
 - 충돌한 대상이 존재 시 "Monster.Attacked"이벤트 발생, 플레이어 공격력 및 충돌한 객체의 목록인 vector<CMonster*>를 전달하여 충돌한 몬스터는 공격력 만큼의 체력 감소
 
+```cpp
+void CPlayer::HitBox()
+{
+    // 임시 충돌체의 크기 관련 변수
+	AABB tAABB = { m_vPos.x, m_vPos.y, m_vPos.z,
+					2.f, 1.f, 2.f };
+
+    // Test_AABB를 통해 충돌한 물체의 목록을 받아옴
+	vector<CGameObject*> tempVec = CCollisionMgr::GetInstance()->Test_AABB(tAABB, CL_MONSTER);
+
+    // 공격 이벤트 발생
+	IMessageChannel::EVENT EAttack;
+	EAttack.strType = L"Monster.Attacked";
+	EAttack.eOBJID = Engine::OID_MONSTER;
+	EAttack.hmapData.emplace(L"Attack", m_iAttack);
+	EAttack.hmapData.emplace(L"Target", tempVec);
+	m_pMessageChannel->Publish(EAttack);
+}
+```
+
 ### 25.12.24 작업 내용
 
 - HitBox 함수 이벤트 발생을 조건문으로 래핑 (매번 이벤트 발생은 비효율적, 반환받은 vector<CMonster*>가 비어있지 않을 때만 이벤트 발생)
@@ -76,3 +136,238 @@
 
 - SPAWN, IDLE 상태 애니메이션 구현 완료
 
+```cpp
+void CMonsterN1::Set_Texture()
+{
+	_uint iFrame = m_fFrame;
+
+	D3DXMatrixIdentity(&m_matTex);
+	_uint iU = iFrame % 16;
+	_uint iV = iFrame / 16;
+
+	m_matTex._11 = 0.0625f;	// 가로는 16칸 고정
+	m_matTex._22 = 0.25f;	// 세로는 4칸 고정(MonsterN1)
+    // 한 객체의 이미지는 모두 통일된 크기로 사용할 것 (ex. player : 4096 x 4096, MonsterN1 : 4096 x 1024, ...)
+
+	switch (m_eCurState)
+	{
+	case N1S_IDLE:
+	{
+		if (m_vDir == m_vNormDir[DIR_UP] || m_vDir == m_vNormDir[DIR_LU] || m_vDir == m_vNormDir[DIR_RU]) iU += 2;
+	}
+	break;
+
+	case N1S_ATTACK:
+	{
+		switch (m_eAttackPhase)
+		{
+			case EXECUTE:
+			{
+				iV += 2;
+			}	
+			break;
+        }
+    }
+    // ... 나머지 상태&방향 별 텍스처 좌표 설정
+	break;
+	}
+
+    // 텍스처는 2차원 벡터 -> 변환 행렬의 _31, _32이 이동 관련 요소
+	m_matTex._31 = _float(iU) * 0.0625f;
+	m_matTex._32 = _float(iV) * 0.25f;
+
+	m_pGraphicDev->SetTransform(D3DTS_TEXTURE0, &m_matTex);
+
+    // 상태 enum값과 텍스처 순서를 동기화하여 사용
+	m_pTextureCom->Set_Texture(_uint(m_eCurState));
+}
+```
+
+### 25.12.27 작업 내용
+
+- 몬스터 패턴 도입을 위해 AI Component 설계 : 몬스터는 상태에 따른 애니메이션만 그리기 수행하며, AI Component가 상태 관리 및 상태 별 동작 로직 캡슐화
+
+- 중간 추상층으로 CAIController class 제작, 상태 진입/갱신/이탈 함수 및 상태 전환 함수 보유
+
+- CAIController의 하위 클래스로 각 몬스터마다의 AI 컴포넌트를 만들어서 사용
+
+- enum 및 switch문을 이용해 상태별 동작 관리
+
+- Tranform의 월드행렬은 빌보드가 적용되어 있어 방향으로 사용하기에는 부적절하므로, 움직임용 방향을 AI Component에서 관리
+ (몬스터는 AI에게서 방향을 받아와 스프라이트 반영하도록 할 예정)
+
+```cpp
+class ENGINE_DLL CAIController : public CComponent
+{
+    // ... 생성자
+public:
+	void		Set_ActiveAI(_bool bActive)						{ m_bActiveAI = bActive; }
+	void		Set_OwnerTransform(CTransform* pTransformCom)	{ m_pOwnerTC = pTransformCom; }
+	void		Set_TargetTransform(CTransform* pTransformCom)	{ m_pTargetTC = pTransformCom; }
+
+	_float		Get_DetectRange() const { return m_fDetectRange; }
+	_vec3*		Get_Dir() { return &m_vDir; }
+
+    // 상태 enum은 몬스터마다 다름 -> Template을 통해 확장성 부여
+	template <typename T>
+	void		Set_State(T eState) { m_iCurState = _uint(eState); }
+	template <typename T>
+	T			Get_RecommendState() const { return static_cast<T>(m_iRcmState); }
+
+protected:  // 필수 인터페이스
+	virtual HRESULT		Ready_AI(const _float& fDetectRange, const _float& fInteractRange, const _uint& iInitState)	PURE;
+	virtual void		Enter_State(const _uint& pState)	PURE;
+	virtual void		Exit_State(const _uint& pState)		PURE;
+	
+    void				Change_State(const _uint& pState);
+
+protected:
+	// AI 활성화 여부
+	_bool			m_bActiveAI;
+
+	// 상태 관련
+	_uint			m_iPreState;	// 이전 상태
+	_uint			m_iCurState;	// 현재 AI 상태
+	_uint			m_iRcmState;	// Owner에게 추천할 상태
+
+	// 탐색 관련
+	CTransform*		m_pOwnerTC;         // 소유자의 Transform
+	CTransform*		m_pTargetTC;        // 타겟의 Transform
+	_float			m_fDetectRange;		// 탐지 거리
+	_float			m_fInteractRange;	// 상호작용을 시도하는 거리
+	_float			m_fDistance;		// 현재 타겟과의 거리
+	_vec3			m_vDir;				// 현재 타겟으로의 방향
+};
+```
+
+- 몬스터는 AI 컴포넌트에 의해 강제로 상태가 변경되는 것이 아닌, 상태 추천을 받아 상태 변화가 가능할 때 적용하도록 하여 부자연스러운 상태 변경을 방지
+
+- ATTACK 상태와 같이 공격 준비/공격 집행으로 세부 상태가 나뉜 경우는 몬스터가 관리하도록 함
+ (상태를 세분화 시 복잡도 증가하며, 애니메이션에 따른 상태 조작을 위해서는 AI 컴포넌트가 애니메이션 관련 정보까지 알아야 하므로)
+
+```cpp
+void CMonsterN1::Update_State()
+{
+    // SPAWN, HIT 상태는 도중에 상태 변경할 수 없음
+	if (m_eCurState == N1S_SPAWN || m_eCurState == N1S_HIT)
+		return;
+
+    // ATTACK 상태는 실제 공격이 진행 중인 세부 상태에서는 상태 변경할 수 없음
+	if (m_eCurState == N1S_ATTACK && m_eAttackPhase == EXECUTE && m_fFrame < m_fFrameEnd)
+		return;
+
+	m_eCurState = m_pAICom->Get_RecommendState<MONSTER_N1_STATE>();
+}
+
+void CMonsterN1::Move_Frame(const _float& fTimeDelta)
+{
+	m_fFrame += m_fFrameSpeed * fTimeDelta;
+
+	if (m_fFrame >= m_fFrameEnd)
+	{
+		m_fFrame = 0.f;
+
+		switch (m_eCurState)
+		{
+		case N1S_ATTACK:
+		{
+			if (m_eAttackPhase == PREPARE)
+			{
+				m_eAttackPhase = EXECUTE;
+				m_pAICom->Set_Speed(0.1f);
+				m_fFrameEnd = 27.f;
+			}
+			else if (m_eAttackPhase == EXECUTE)
+			{	// 상태 유지가 애니메이션에 종속적인 경우(Update에서 상태 전환을 하지 않음)
+				//  : 애니메이션 종료를 AI 컴포넌트에게 알리며 상태 변경
+				m_pAICom->Anim_End(m_eCurState);
+				m_eCurState = N1S_RUN;
+			}
+		}
+		break;
+
+		case N1S_HIT:
+			m_pAICom->Anim_End(m_eCurState);
+			m_eCurState = N1S_RUN;
+			break;
+
+		case N1S_SPAWN:
+			m_pAICom->Anim_End(m_eCurState);
+			m_eCurState = N1S_IDLE;
+			break;
+		}
+	}
+}
+
+```
+
+### 25.12.28 작업 내용
+
+- 일반 몬스터 1종 전용 AI(CN1_AI) 구현 일부 완료
+
+- SPAWN, IDLE, RUN, ATTACK 상태 로직 추가
+
+- 시간 축적용 변수(m_AcmlTime)를 이용하여 세부적인 동작 수행(쿨타임을 통한 반복 공격 및 IDLE/RUN 상태의 장기 체류 방지)
+
+- 타겟을 탐지한 경우(m_bChase == true), RUN 상태로 추적, 타겟이 상호작용 범위 내로 들어오면 ATTACK 후 다시 RUN 상태로 복귀
+
+```cpp
+void CN1_AI::Update_Idle(const _float& fTimeDelta)
+{
+	if (!m_pTargetTC) return;
+
+	if (m_bChase)
+	{	// 타겟을 이미 발견했을 때
+		if (m_fDistance <= m_fInteractRange)
+		{	// 타겟이 상호작용 범위 내에 있을 시 공격 상태로 전환
+			Change_State(CMonsterN1::N1S_ATTACK);
+			return;
+		}
+		else
+		{	// 타겟이 상호작용 범위 내에 없을 시 이동 상태로 전환하여 추적
+			Change_State(CMonsterN1::N1S_RUN);
+		}
+	}
+	else
+	{	
+		if (m_fDistance <= m_fDetectRange)
+		{	// 타겟이 감지 범위 내로 진입 시 발견 후 이동 상태로 전환하여 추적
+			m_bChase = true;
+			Change_State(CMonsterN1::N1S_RUN);
+		}
+		else if (m_fAcmlTime > 3.f)
+		{	// 타겟이 감지 범위 내에 없을 때는 대기하다 이동 상태로 전환하여 순찰
+			Change_State(CMonsterN1::N1S_RUN);
+		}
+	}
+}
+
+void CN1_AI::Update_Run(const _float& fTimeDelta)
+{
+	if (!m_pTargetTC) Change_State(CMonsterN1::N1S_IDLE);
+
+	if (m_bChase)
+	{	// 타겟을 이미 발견했을 때
+		if (m_fDistance <= m_fInteractRange)
+		{	
+			if ((m_iPreState != CMonsterN1::N1S_ATTACK) || (m_iPreState == CMonsterN1::N1S_ATTACK && m_fAcmlTime >= 5.f))
+				Change_State(CMonsterN1::N1S_ATTACK);
+		}
+	}
+	else
+	{	// 타겟을 발견하지 못했을 때
+		if (m_fDistance <= m_fDetectRange)
+		{	// 타겟이 감지 범위 내로 진입 시 발견
+			m_bChase = true;
+		}
+		else if (m_fAcmlTime > 3.f)
+		{	// 타겟이 감지 범위 내에 없을 때는 순찰하다 대기 상태로 전환
+			Change_State(CMonsterN1::N1S_IDLE);
+			return;
+		}
+	}
+	if (m_fAcmlTime > 3.f) Compute_TargetDir();
+
+	m_pOwnerTC->Move_Pos(&m_vDir, fTimeDelta, m_fSpeed);
+}
+```

@@ -24,6 +24,9 @@ private:
 	virtual		~CMonsterN1();
 
 public:
+	void				Set_Dir(_vec3* pDir)	{ m_vDir = *pDir; }
+	const _vec3*		Get_Dir()				{ return &m_vDir; }
+
 	virtual HRESULT		Ready_GameObject();
 	virtual _int		Update_GameObject(const _float& fTimeDelta);
 	virtual void		LateUpdate_GameObject(const _float& fTimeDelta);
@@ -56,12 +59,9 @@ private:
 	ATTACK_PHASE		m_eAttackPhase;
 
 	// 스테이터스 관련
-	_float				m_fSpeed;
 	_int				m_iAttack;
-	_bool				m_bAttack;
 
 	// AI 관련
-	CTransform*			m_pTarget;
 	CN1_AI*				m_pAICom;
 
 public:

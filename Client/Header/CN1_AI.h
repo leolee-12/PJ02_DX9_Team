@@ -28,8 +28,9 @@ private:
 	void		Update_Jeer(const _float& fTimeDelta);
 	void		Update_Pray(const _float& fTimeDelta);
 
-	_float		Compute_Distance();
-	_vec3*		Randomize_Dir(_vec3* pOut);
+	void		Compute_Distance();
+	void		Compute_TargetDir();
+	void		Randomize_Dir();
 
 private:
 	_float		m_fSpeed;

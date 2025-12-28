@@ -17,9 +17,6 @@
 // - Texture 삽입을 위해 먼저 vector<TEXINFO>를 구성한 다음 매개변수로 넣어줄 것
 // ==========================
 
-
-
-
 BEGIN(Engine)
 
 class ENGINE_DLL CTextureSet : public CComponent
@@ -58,7 +55,6 @@ public:
 
 private:
 	virtual void Free();
-
 };
 
 
