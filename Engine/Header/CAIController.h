@@ -3,6 +3,7 @@
 
 BEGIN(Engine)
 
+class CGameObject;
 class CTransform;
 
 class ENGINE_DLL CAIController : public CComponent
@@ -19,7 +20,7 @@ public:
 	void		Set_DetectRange(_float fRange)					{ m_fDetectRange = fRange; }
 	void		Set_InteractRange(_float fRange)				{ m_fInteractRange = fRange; }
 	template <typename T>
-	void		Set_State(T eState) const { m_iCurState = _uint(eState); }
+	void		Set_State(T eState) { m_iCurState = _uint(eState); }
 
 	_float		Get_DetectRange() const { return m_fDetectRange; }
 

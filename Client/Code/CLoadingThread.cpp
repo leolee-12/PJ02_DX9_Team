@@ -100,7 +100,7 @@ _uint CLoadingThread::Loading_ForStage()
 
     lstrcpy(m_szLoading, L"Etc Loading..............................");
 
-    if(FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_N1_AI", CN1_AI::Create(m_pGraphicDev, 10.f, 5.f))))
+    if(FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_N1_AI", CN1_AI::Create(m_pGraphicDev, 5.f, 1.f))))
 		return E_FAIL;
 
     if (FAILED(CPersistentMgr::GetInstance()->Ready_GlobalObjects(m_pGraphicDev)))

@@ -70,7 +70,7 @@ void CMainApp::LateUpdate_MainApp(const float& fTimeDelta)
 #ifdef IMGUI
 
 #else
-	CCollisionMgr::GetInstance()->Check_Collisions(fTimeDelta);
+	//CCollisionMgr::GetInstance()->Check_Collisions(fTimeDelta);
 #endif // IMGUI
 
 	CSoundMgr::GetInstance()->Update();

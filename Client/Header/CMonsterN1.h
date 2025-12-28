@@ -15,6 +15,7 @@ class CMonsterN1 : public CMonster
 {
 public:
 	enum MONSTER_N1_STATE { N1S_IDLE, N1S_RUN, N1S_ATTACK, N1S_HIT, N1S_SPAWN, N1S_JEER, N1S_PRAY, N1S_END };
+	enum ATTACK_PHASE { PREPARE, EXECUTE };
 
 private:
 	explicit	CMonsterN1(LPDIRECT3DDEVICE9 pGraphicDev);
@@ -52,6 +53,7 @@ private:
 	_vec3				m_vNormDir[DIR_END];
 	_vec3				m_vDir;
 	_matrix				m_matTex;
+	ATTACK_PHASE		m_eAttackPhase;
 
 	// 스테이터스 관련
 	_float				m_fSpeed;

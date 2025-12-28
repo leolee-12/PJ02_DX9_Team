@@ -3,6 +3,7 @@
 
 BEGIN(Engine)
 
+class CGameObject;
 class CTransform;
 
 class ENGINE_DLL CAIController : public CComponent

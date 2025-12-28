@@ -56,6 +56,7 @@ HRESULT CMonsterN1::Ready_GameObject()
 		return E_FAIL;
 
 	m_pAICom->Set_OwnerTransform(m_pTransformCom);
+	m_pAICom->Set_TargetTransform(CPersistentMgr::GetInstance()->Get_PlayerTransform());
 	m_pAICom->Set_State<MONSTER_N1_STATE>(N1S_SPAWN);
 	
 	Ready_Variable();
@@ -232,6 +233,7 @@ void CMonsterN1::Check_Frame()
 
 	case N1S_ATTACK:
 	{
+		m_eAttackPhase = PREPARE;
 		m_fFrameEnd = 18.f;
 	}
 	break;
@@ -272,18 +274,33 @@ void CMonsterN1::Move_Frame(const _float& fTimeDelta)
 	{
 		m_fFrame = 0.f;
 
-		if ((m_eCurState == N1S_SPAWN) || (m_eCurState == N1S_HIT))
+		switch (m_eCurState)
 		{
-			m_eCurState = N1S_IDLE;
-		}
-		else if (m_eCurState == N1S_ATTACK)
+		case N1S_ATTACK:
 		{
-			if (m_bAttack) m_eCurState = N1S_IDLE;
-			else
+			if (m_eAttackPhase == PREPARE)
 			{
-				m_bAttack = true;
-				// 공격 메시지 발송
+				m_eAttackPhase = EXECUTE;
+				m_pAICom->Set_Speed(0.1f);
+				m_fFrameEnd = 27.f;
 			}
+			else if (m_eAttackPhase == EXECUTE)
+			{
+				m_pAICom->Anim_End(m_eCurState);
+				m_eCurState = N1S_RUN;
+			}
+		}
+		break;
+
+		case N1S_HIT:
+			m_pAICom->Anim_End(m_eCurState);
+			m_eCurState = N1S_RUN;
+			break;
+
+		case N1S_SPAWN:
+			m_pAICom->Anim_End(m_eCurState);
+			m_eCurState = N1S_IDLE;
+			break;
 		}
 	}
 }
@@ -303,7 +320,7 @@ void CMonsterN1::Set_Texture()
 	{
 	case N1S_IDLE:
 	{
-		//if (m_vDir == m_vNormDir[DIR_UP] || m_vDir == m_vNormDir[DIR_LU] || m_vDir == m_vNormDir[DIR_RU]) iU += 2;
+		if (m_vDir == m_vNormDir[DIR_UP] || m_vDir == m_vNormDir[DIR_LU] || m_vDir == m_vNormDir[DIR_RU]) iU += 2;
 	}
 	break;
 
@@ -314,6 +331,17 @@ void CMonsterN1::Set_Texture()
 
 	case N1S_ATTACK:
 	{
+		switch (m_eAttackPhase)
+		{
+			case EXECUTE:
+			{
+				iV += 2;
+			}	
+			break;
+
+			default:
+				break;
+		}
 	}
 	break;
 
@@ -351,7 +379,7 @@ void CMonsterN1::Update_State()
 	if (m_eCurState == N1S_SPAWN || m_eCurState == N1S_HIT)
 		return;
 
-	if (m_eCurState == N1S_ATTACK && m_fFrame < m_fFrameEnd)
+	if (m_eCurState == N1S_ATTACK && m_eAttackPhase == EXECUTE && m_fFrame < m_fFrameEnd)
 		return;
 
 	m_eCurState = m_pAICom->Get_RecommendState<MONSTER_N1_STATE>();
