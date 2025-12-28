@@ -108,17 +108,16 @@ void CPlayer::Render_GameObject()
 {
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
 
-	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
-
-	Set_TextureSet();
-
 #pragma region 기존 (반전X)
 
+	//Set_TextureSet();
 	//m_pBufferCom->Render_Buffer();
 
 #pragma endregion
 
 #pragma region 스프라이트 반전 도입 - 버텍스/인덱스 버퍼 미사용
+
+	Set_TextureSet();
 	// 8방향 모두 스프라이트 이미지는 비효율적 -> 좌우반전해서 사용
 	bool bFlipH = (m_vDir == m_vNormDir[DIR_RU] || m_vDir == m_vNormDir[DIR_RIGHT] || m_vDir == m_vNormDir[DIR_RD]);
 	_float u1 = bFlipH ? 1.f : 0.f;
@@ -157,6 +156,16 @@ void CPlayer::Render_GameObject()
 	m_pGraphicDev->DrawPrimitiveUP(D3DPT_TRIANGLESTRIP, 2, pVertex, sizeof(VTXTEX));
 	
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
+
+#pragma endregion
+
+#pragma region 스프라이트 시트
+
+	//m_pGraphicDev->SetTextureStageState(0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_COUNT2);
+	//Set_Texture();
+	//m_pBufferCom->Render_Buffer();
+	//m_pGraphicDev->SetTextureStageState(0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE);
+
 #pragma endregion
 }
 
@@ -168,6 +177,7 @@ void CPlayer::Ready_Variable()
 
 	m_pTransformCom->Set_Pos(10.f, 0.f, 10.f);
 	m_pTransformCom->Set_Scale(5.f, 5.f, 5.f);
+	//m_pTransformCom->Set_Scale(7.f, 7.f, 7.f);	// Tex2
 	m_fFrameSpeed = 24.f;
 
 	_float fAngle(0.f);
@@ -215,8 +225,13 @@ HRESULT CPlayer::Add_Component()
 	m_mapComponent[ID_DYNAMIC].insert({ L"Com_Transform", pComponent });
 
 	// Texture
-	//pComponent = m_pTextureCom = dynamic_cast<Engine::CTexture*>
-	//	(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_PlayerTexture"));
+	//pComponent = m_pTextureCom2 = dynamic_cast<Engine::CTexture*>
+	//	(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_PlayerTexture2"));
+	//
+	//if (nullptr == pComponent)
+	//	return E_FAIL;
+	//
+	//m_mapComponent[ID_STATIC].insert({ L"Com_Texture", pComponent });
 
 	pComponent = m_pTextureCom = dynamic_cast<Engine::CTextureSet*>
 		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_PlayerTexture"));
@@ -239,7 +254,6 @@ HRESULT CPlayer::Add_Component()
 		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Collider"));
 
 	m_mapComponent[ID_STATIC].insert({ L"Com_Collider", pComponent });
-
 
 	return S_OK;
 }
@@ -464,6 +478,59 @@ void CPlayer::Move_Frame(const _float& fTimeDelta)
 			}
 		}
 	}
+}
+
+void CPlayer::Set_Texture()
+{
+	_uint iFrame = m_fFrame;
+
+	D3DXMatrixIdentity(&m_matTex);
+	_uint iU = iFrame % 16;
+	_uint iV = iFrame / 16;
+
+	m_matTex._11 = 0.0625f;	// 가로는 16칸 고정
+	m_matTex._22 = 0.0625f;	// 세로는 16칸 고정(Player)
+
+	switch (m_eCurState)
+	{
+	case PS_IDLE:
+	{
+		//if (m_vDir == m_vNormDir[DIR_UP] || m_vDir == m_vNormDir[DIR_LU] || m_vDir == m_vNormDir[DIR_RU]) iU += 2;
+	}
+	break;
+
+	case PS_RUN:
+	{
+	}
+	break;
+
+	case PS_ROLL:
+	{
+	}
+	break;
+
+	case PS_ATTACK:
+	{
+	}
+	break;
+
+	case PS_CHARGE:
+	{
+	}
+	break;
+
+	case PS_ACTION:
+	{
+	}
+	break;
+	}
+
+	m_matTex._31 = _float(iU) * 0.0625f;
+	m_matTex._32 = _float(iV) * 0.0625f;
+
+	m_pGraphicDev->SetTransform(D3DTS_TEXTURE0, &m_matTex);
+
+	//m_pTextureCom2->Set_Texture(_uint(m_eCurState));
 }
 
 void CPlayer::Set_TextureSet()

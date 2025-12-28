@@ -9,10 +9,13 @@ namespace Engine
 	class CCollider;
 }
 
+class CN1_AI;
+
 class CMonsterN1 : public CMonster 
 {
 public:
 	enum MONSTER_N1_STATE { N1S_IDLE, N1S_RUN, N1S_ATTACK, N1S_HIT, N1S_SPAWN, N1S_JEER, N1S_PRAY, N1S_END };
+	enum ATTACK_PHASE { PREPARE, EXECUTE };
 
 private:
 	explicit	CMonsterN1(LPDIRECT3DDEVICE9 pGraphicDev);
@@ -21,6 +24,9 @@ private:
 	virtual		~CMonsterN1();
 
 public:
+	void				Set_Dir(_vec3* pDir)	{ m_vDir = *pDir; }
+	const _vec3*		Get_Dir()				{ return &m_vDir; }
+
 	virtual HRESULT		Ready_GameObject();
 	virtual _int		Update_GameObject(const _float& fTimeDelta);
 	virtual void		LateUpdate_GameObject(const _float& fTimeDelta);
@@ -38,6 +44,7 @@ private:
 	void				Set_Texture();
 
 	void				HitBox() {};
+	void				Update_State();
 
 private:
 	// 스프라이트 관련
@@ -49,14 +56,13 @@ private:
 	_vec3				m_vNormDir[DIR_END];
 	_vec3				m_vDir;
 	_matrix				m_matTex;
+	ATTACK_PHASE		m_eAttackPhase;
 
 	// 스테이터스 관련
-	_float				m_fSpeed;
 	_int				m_iAttack;
-	_bool				m_bAttack;
 
 	// AI 관련
-	CTransform*			m_pTarget;
+	CN1_AI*				m_pAICom;
 
 public:
 	static CMonsterN1*	Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel);

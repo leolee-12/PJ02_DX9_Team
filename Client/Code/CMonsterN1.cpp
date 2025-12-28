@@ -4,6 +4,7 @@
 #include "CManagement.h"
 #include "CRenderer.h"
 #include <CPersistentMgr.h>
+#include "CN1_AI.h"
 
 CMonsterN1::CMonsterN1(LPDIRECT3DDEVICE9 pGraphicDev)
 	:	CMonster(pGraphicDev),
@@ -12,7 +13,6 @@ CMonsterN1::CMonsterN1(LPDIRECT3DDEVICE9 pGraphicDev)
 		m_fFrame(0.f),
 		m_fFrameEnd(0.f),
 		m_fFrameSpeed(0.f),
-		m_fSpeed(0.f),
 		m_iAttack(0)
 {
 	ZeroMemory(&m_vPos, sizeof(_vec3));
@@ -25,7 +25,6 @@ CMonsterN1::CMonsterN1(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChan
 		m_fFrame(0.f),
 		m_fFrameEnd(0.f),
 		m_fFrameSpeed(0.f),
-		m_fSpeed(0.f),
 		m_iAttack(0)
 {
 	ZeroMemory(&m_vPos, sizeof(_vec3));
@@ -39,7 +38,6 @@ CMonsterN1::CMonsterN1(const CMonsterN1& rhs)
 		m_fFrame(0.f),
 		m_fFrameEnd(0.f),
 		m_fFrameSpeed(0.f),
-		m_fSpeed(rhs.m_fSpeed),
 		m_iAttack(rhs.m_iAttack)
 {
 }
@@ -53,7 +51,7 @@ HRESULT CMonsterN1::Ready_GameObject()
 	m_eOBJID = OID_MONSTER;
 	if (FAILED(Add_Component()))
 		return E_FAIL;
-
+	
 	Ready_Variable();
 
 	Ready_Event();
@@ -66,6 +64,7 @@ _int CMonsterN1::Update_GameObject(const _float& fTimeDelta)
 	Move_Frame(fTimeDelta);
 
 	m_pColliderCom->UpdateFromTransform(m_pTransformCom);
+
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
 	if (iExit == DEAD)
@@ -81,20 +80,10 @@ _int CMonsterN1::Update_GameObject(const _float& fTimeDelta)
 
 void CMonsterN1::LateUpdate_GameObject(const _float& fTimeDelta)
 {
-	m_pTarget = CPersistentMgr::GetInstance()->Get_PlayerTransform();
-
-	if (m_pTarget != nullptr)
-	{
-		_vec3 vTargetPos;
-		m_pTarget->Get_Info(INFO_POS, &vTargetPos);
-		m_vDir = vTargetPos - m_vPos;
-		D3DXVec3Normalize(&m_vDir, &m_vDir);
-		m_pTransformCom->Move_Pos(&m_vDir, fTimeDelta, m_fSpeed);
-		m_eCurState = N1S_RUN;
-	}
-	else m_eCurState = N1S_IDLE;
+	Update_State();
 
 	Check_Frame();
+
 	m_pTransformCom->Compute_Bilboard(BBD_X);
 	m_pTransformCom->Get_Info(INFO_POS, &m_vPos);
 	Compute_ViewDepth(&m_vPos);
@@ -123,8 +112,7 @@ HRESULT CMonsterN1::Add_Component()
 	pComponent = m_pBufferCom = dynamic_cast<Engine::CRcTex*>
 		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_RcTex"));
 
-	if (nullptr == pComponent)
-		return E_FAIL;
+	NULL_CHECK_RETURN(pComponent, E_FAIL)
 
 	m_mapComponent[ID_STATIC].insert({ L"Com_Buffer", pComponent });
 
@@ -132,8 +120,7 @@ HRESULT CMonsterN1::Add_Component()
 	pComponent = m_pTransformCom = dynamic_cast<Engine::CTransform*>
 		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Transform"));
 
-	if (nullptr == pComponent)
-		return E_FAIL;
+	NULL_CHECK_RETURN(pComponent, E_FAIL)
 
 	m_mapComponent[ID_DYNAMIC].insert({ L"Com_Transform", pComponent });
 
@@ -141,28 +128,44 @@ HRESULT CMonsterN1::Add_Component()
 	pComponent = m_pTextureCom = dynamic_cast<Engine::CTexture*>
 		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_MonsterN1Texture"));
 
-	if (nullptr == pComponent)
-		return E_FAIL;
+	NULL_CHECK_RETURN(pComponent, E_FAIL)
 
 	m_mapComponent[ID_STATIC].insert({ L"Com_Texture", pComponent });
 
+	// Collider
 	pComponent = m_pColliderCom = dynamic_cast<Engine::CCollider*>
 		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Collider"));
 
+	NULL_CHECK_RETURN(pComponent, E_FAIL)
+
 	m_mapComponent[ID_STATIC].insert({ L"Com_Collider", pComponent });
 
+	// AI
+	pComponent = m_pAICom = dynamic_cast<CN1_AI*>
+		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_N1_AI"));
+
+	NULL_CHECK_RETURN(pComponent, E_FAIL)
+
+	m_mapComponent[ID_DYNAMIC].insert({ L"Com_AI", pComponent });
 
 	return S_OK;
 }
 
 void CMonsterN1::Ready_Variable()
 {
-	m_pColliderCom->RegisterToManager(this, CL_MONSTER);
-
+	// Transform 세팅
 	m_pTransformCom->Set_Pos(_float(rand() % 20), 1.f, _float(rand() % 20));
 	m_pTransformCom->Set_Scale(3.f, 3.f, 3.f);
-	m_fFrameSpeed = 24.f;
 
+	// Collider 세팅
+	m_pColliderCom->RegisterToManager(this, CL_MONSTER);
+
+	// AI 세팅
+	m_pAICom->Set_OwnerTransform(m_pTransformCom);
+	m_pAICom->Set_TargetTransform(CPersistentMgr::GetInstance()->Get_PlayerTransform());
+	m_pAICom->Set_State<MONSTER_N1_STATE>(N1S_SPAWN);
+
+	// 단위벡터 세팅
 	_float fAngle(0.f);
 
 	for (_uint i = 0; i < DIR_END; ++i)
@@ -172,9 +175,12 @@ void CMonsterN1::Ready_Variable()
 	}
 
 	m_vDir = m_vNormDir[DIR_LEFT];
+
+	// Anim 관련 세팅
+	m_fFrameSpeed = 24.f;
 	D3DXMatrixIdentity(&m_matTex);
 
-	m_fSpeed = 1.f;
+	// 게임로직 변수 세팅
 	m_iAttack = 1;
 }
 
@@ -214,6 +220,7 @@ void CMonsterN1::Check_Frame()
 
 	case N1S_ATTACK:
 	{
+		m_eAttackPhase = PREPARE;
 		m_fFrameEnd = 18.f;
 	}
 	break;
@@ -254,18 +261,34 @@ void CMonsterN1::Move_Frame(const _float& fTimeDelta)
 	{
 		m_fFrame = 0.f;
 
-		if ((m_eCurState == N1S_SPAWN) || (m_eCurState == N1S_HIT))
+		switch (m_eCurState)
 		{
-			m_eCurState = N1S_IDLE;
-		}
-		else if (m_eCurState == N1S_ATTACK)
+		case N1S_ATTACK:
 		{
-			if (m_bAttack) m_eCurState = N1S_IDLE;
-			else
+			if (m_eAttackPhase == PREPARE)
 			{
-				m_bAttack = true;
-				// 공격 메시지 발송
+				m_eAttackPhase = EXECUTE;
+				m_pAICom->Set_Speed(0.1f);
+				m_fFrameEnd = 27.f;
 			}
+			else if (m_eAttackPhase == EXECUTE)
+			{	// 상태 유지가 애니메이션에 종속적인 경우(Update에서 상태 전환을 하지 않음)
+				//  : 애니메이션 종료를 AI 컴포넌트에게 알리며 상태 변경
+				m_pAICom->Anim_End(m_eCurState);
+				m_eCurState = N1S_RUN;
+			}
+		}
+		break;
+
+		case N1S_HIT:
+			m_pAICom->Anim_End(m_eCurState);
+			m_eCurState = N1S_RUN;
+			break;
+
+		case N1S_SPAWN:
+			m_pAICom->Anim_End(m_eCurState);
+			m_eCurState = N1S_IDLE;
+			break;
 		}
 	}
 }
@@ -285,7 +308,7 @@ void CMonsterN1::Set_Texture()
 	{
 	case N1S_IDLE:
 	{
-		//if (m_vDir == m_vNormDir[DIR_UP] || m_vDir == m_vNormDir[DIR_LU] || m_vDir == m_vNormDir[DIR_RU]) iU += 2;
+		if (m_vDir == m_vNormDir[DIR_UP] || m_vDir == m_vNormDir[DIR_LU] || m_vDir == m_vNormDir[DIR_RU]) iU += 2;
 	}
 	break;
 
@@ -296,6 +319,17 @@ void CMonsterN1::Set_Texture()
 
 	case N1S_ATTACK:
 	{
+		switch (m_eAttackPhase)
+		{
+			case EXECUTE:
+			{
+				iV += 2;
+			}	
+			break;
+
+			default:
+				break;
+		}
 	}
 	break;
 
@@ -326,6 +360,17 @@ void CMonsterN1::Set_Texture()
 	m_pGraphicDev->SetTransform(D3DTS_TEXTURE0, &m_matTex);
 
 	m_pTextureCom->Set_Texture(_uint(m_eCurState));
+}
+
+void CMonsterN1::Update_State()
+{
+	if (m_eCurState == N1S_SPAWN || m_eCurState == N1S_HIT)
+		return;
+
+	if (m_eCurState == N1S_ATTACK && m_eAttackPhase == EXECUTE && m_fFrame < m_fFrameEnd)
+		return;
+
+	m_eCurState = m_pAICom->Get_RecommendState<MONSTER_N1_STATE>();
 }
 
 CMonsterN1* CMonsterN1::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel)

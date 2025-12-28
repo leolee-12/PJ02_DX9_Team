@@ -165,6 +165,7 @@
     <ClInclude Include="..\Header\CMainCamera.h" />
     <ClInclude Include="..\Header\CMonster.h" />
     <ClInclude Include="..\Header\CMonsterN1.h" />
+    <ClInclude Include="..\Header\CN1_AI.h" />
     <ClInclude Include="..\Header\CPersistentMgr.h" />
     <ClInclude Include="..\Header\CPlayer.h" />
     <ClInclude Include="..\Header\CPlayerHP.h" />
@@ -206,6 +207,7 @@
     <ClCompile Include="..\Code\CMainCamera.cpp" />
     <ClCompile Include="..\Code\CMonster.cpp" />
     <ClCompile Include="..\Code\CMonsterN1.cpp" />
+    <ClCompile Include="..\Code\CN1_AI.cpp" />
     <ClCompile Include="..\Code\CPersistentMgr.cpp" />
     <ClCompile Include="..\Code\CPlayer.cpp" />
     <ClCompile Include="..\Code\CPlayerHP.cpp" />

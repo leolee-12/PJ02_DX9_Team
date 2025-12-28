@@ -243,10 +243,13 @@
     <ClInclude Include="..\Header\CPlayerHP.h">
       <Filter>02. GameObject\07. UI\03. PlayerUI\00. PlayerHP</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CN1_AI.h">
+      <Filter>02. GameObject\02. Monster\Normal1</Filter>
+	</ClInclude>
     <ClInclude Include="..\Header\CMainCamera.h">
       <Filter>02. GameObject\04. Camera\00. MainCamera</Filter>
-    </ClInclude>
-  </ItemGroup>
+	</ClInclude>
+</ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
       <Filter>소스 파일</Filter>
@@ -347,6 +350,9 @@
     <ClCompile Include="..\Code\CPlayerHP.cpp">
       <Filter>02. GameObject\07. UI\03. PlayerUI\00. PlayerHP</Filter>
     </ClCompile>
+    <ClCompile Include="..\Code\CN1_AI.cpp">
+      <Filter>02. GameObject\02. Monster\Normal1</Filter>
+	</ClCompile>
     <ClCompile Include="..\Code\CMainCamera.cpp">
       <Filter>02. GameObject\04. Camera\00. MainCamera</Filter>
     </ClCompile>

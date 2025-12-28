@@ -127,6 +127,9 @@
     <Filter Include="00. Manager\99. SoundMgr">
       <UniqueIdentifier>{4da2600e-4e72-40e2-b10b-f43d18f1aeee}</UniqueIdentifier>
     </Filter>
+    <Filter Include="05. ComponentEx\05. AIController">
+      <UniqueIdentifier>{44c36844-bc71-4e78-bb68-298bcd87982d}</UniqueIdentifier>
+	</Filter>
     <Filter Include="98. RandomEngine">
       <UniqueIdentifier>{f2411de5-f429-4004-b3bc-57dc98b74f54}</UniqueIdentifier>
     </Filter>
@@ -276,6 +279,9 @@
     <ClCompile Include="..\Code\CSoundMgr.cpp">
       <Filter>00. Manager\99. SoundMgr</Filter>
     </ClCompile>
+    <ClCompile Include="..\Code\CAIController.cpp">
+      <Filter>05. ComponentEx\05. AIController</Filter>
+	</ClCompile>
     <ClCompile Include="..\Code\RandomEngine.cpp">
       <Filter>98. RandomEngine</Filter>
     </ClCompile>
@@ -458,6 +464,9 @@
     <ClInclude Include="..\Header\CSoundMgr.h">
       <Filter>00. Manager\99. SoundMgr</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CAIController.h">
+      <Filter>05. ComponentEx\05. AIController</Filter>
+	</ClInclude>
     <ClInclude Include="..\Header\perlin_jitter.h">
       <Filter>98. RandomEngine</Filter>
     </ClInclude>

@@ -139,7 +139,6 @@ HRESULT CMonster::Add_Component()
 
 	m_mapComponent[ID_STATIC].insert({ L"Com_Collider", pComponent });
 
-
 	return S_OK;
 }
 

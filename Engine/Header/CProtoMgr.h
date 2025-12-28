@@ -12,6 +12,7 @@
 #include "CCalculator.h"
 #include "CTerrainWallTex.h"
 #include "CCollider.h"
+#include "CAIController.h"
 
 BEGIN(Engine)
 
