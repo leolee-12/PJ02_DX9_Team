@@ -43,7 +43,7 @@ private:
 	void				Move_Frame(const _float& fTimeDelta);
 	void				Set_Texture();
 
-	void				HitBox() {};
+	void				Attack_HitBox();
 	void				Update_State();
 
 private:

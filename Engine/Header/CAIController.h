@@ -21,7 +21,7 @@ public:
 	void		Set_InteractRange(_float fRange)				{ m_fInteractRange = fRange; }
 
 	_float		Get_DetectRange() const { return m_fDetectRange; }
-	_vec3*		Get_Dir() { return &m_vDir; }
+	const _vec3*	Get_Dir() { return &m_vDir; }
 	// 일단 만들어놨으나, 필요없는 Set/Get 함수는 지울 예정
 
 	template <typename T>
