@@ -50,9 +50,18 @@ void CN1_AI::Enter_State(const _uint& iState)
 	}
 		break;
 	case CMonsterN1::N1S_ATTACK:
-		m_fSpeed = 0.5f;
+	{
+		m_fSpeed = 0.f;
+		m_pOwnerTC->Get_Info(INFO_POS, &m_vLerpPos);
+		m_vLerpPos += m_vDir * 3.f;
+	}
 		break;
 	case CMonsterN1::N1S_HIT:
+	{
+		m_fSpeed = 0.1f;
+		m_pOwnerTC->Get_Info(INFO_POS, &m_vLerpPos);
+		m_vLerpPos -= m_vDir * 2.f;
+	}
 		break;
 	case CMonsterN1::N1S_SPAWN:
 		m_bActiveAI = false;
@@ -212,11 +221,22 @@ void CN1_AI::Update_Attack(const _float& fTimeDelta)
 {
 	if (!m_pTargetTC) Change_State(CMonsterN1::N1S_IDLE);
 
-	m_pOwnerTC->Move_Pos(&m_vDir, fTimeDelta, m_fSpeed);
+	_vec3 vPos;
+	m_pOwnerTC->Get_Info(INFO_POS, &vPos);
+
+	D3DXVec3Lerp(&vPos, &vPos, &m_vLerpPos, m_fSpeed);
+
+	m_pOwnerTC->Set_Pos(vPos.x, vPos.y, vPos.z);
 }
 
 void CN1_AI::Update_Hit(const _float& fTimeDelta)
 {
+	_vec3 vPos;
+	m_pOwnerTC->Get_Info(INFO_POS, &vPos);
+
+	D3DXVec3Lerp(&vPos, &vPos, &m_vLerpPos, m_fSpeed);
+
+	m_pOwnerTC->Set_Pos(vPos.x, vPos.y, vPos.z);
 }
 
 void CN1_AI::Update_Spawn(const _float& fTimeDelta)

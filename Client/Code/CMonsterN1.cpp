@@ -3,7 +3,8 @@
 #include "CProtoMgr.h"
 #include "CManagement.h"
 #include "CRenderer.h"
-#include <CPersistentMgr.h>
+#include "CPersistentMgr.h"
+#include "CCollisionMgr.h"
 #include "CN1_AI.h"
 
 CMonsterN1::CMonsterN1(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -182,6 +183,7 @@ void CMonsterN1::Ready_Variable()
 
 	// 게임로직 변수 세팅
 	m_iAttack = 1;
+	m_iHp = 10;
 }
 
 void CMonsterN1::Ready_Event()
@@ -191,7 +193,8 @@ void CMonsterN1::Ready_Event()
 	{
 		if (Target == this)
 		{
-			m_iHp -= any_cast<_int>(Event.hmapData.find(L"Attack")->second);
+			Attacked(any_cast<_int>(Event.hmapData.find(L"Attack")->second));
+			break;
 		}
 	}
 	}) });
@@ -268,14 +271,16 @@ void CMonsterN1::Move_Frame(const _float& fTimeDelta)
 			if (m_eAttackPhase == PREPARE)
 			{
 				m_eAttackPhase = EXECUTE;
-				m_pAICom->Set_Speed(0.1f);
+				m_pAICom->Set_Speed(0.2f);
 				m_fFrameEnd = 27.f;
+				Attack_HitBox();
 			}
 			else if (m_eAttackPhase == EXECUTE)
 			{	// 상태 유지가 애니메이션에 종속적인 경우(Update에서 상태 전환을 하지 않음)
 				//  : 애니메이션 종료를 AI 컴포넌트에게 알리며 상태 변경
 				m_pAICom->Anim_End(m_eCurState);
 				m_eCurState = N1S_RUN;
+				m_eAttackPhase = PREPARE;
 			}
 		}
 		break;
@@ -295,7 +300,9 @@ void CMonsterN1::Move_Frame(const _float& fTimeDelta)
 
 void CMonsterN1::Set_Texture()
 {
-	_uint iFrame = m_fFrame;
+	_vec3 vDir = *(m_pAICom->Get_Dir());		// AI로부터 받아온 방향
+	_bool bFilpX = vDir.x > 0.f ? true : false;	// 반전 여부
+	_uint iFrame = m_fFrame;					// 현재 프레임
 
 	D3DXMatrixIdentity(&m_matTex);
 	_uint iU = iFrame % 16;
@@ -308,12 +315,13 @@ void CMonsterN1::Set_Texture()
 	{
 	case N1S_IDLE:
 	{
-		if (m_vDir == m_vNormDir[DIR_UP] || m_vDir == m_vNormDir[DIR_LU] || m_vDir == m_vNormDir[DIR_RU]) iU += 2;
+		if (vDir.z > 0.f) iV += 2;
 	}
 	break;
 
 	case N1S_RUN:
 	{
+		if (vDir.z > 0.f) iV += 1;
 	}
 	break;
 
@@ -354,12 +362,57 @@ void CMonsterN1::Set_Texture()
 	break;
 	}
 
-	m_matTex._31 = _float(iU) * 0.0625f;
+	if (bFilpX)
+	{
+		m_matTex._11 *= -1.f;
+		m_matTex._31 = _float(iU + 1) * 0.0625f;	// 반전 O : 오른쪽에서 왼쪽으로 읽음
+	}
+	else
+	{
+		m_matTex._31 = _float(iU) * 0.0625f;	// 반전 X : 왼쪽에서 오른쪽으로 읽음
+	}
+
 	m_matTex._32 = _float(iV) * 0.25f;
 
 	m_pGraphicDev->SetTransform(D3DTS_TEXTURE0, &m_matTex);
 
 	m_pTextureCom->Set_Texture(_uint(m_eCurState));
+}
+
+void CMonsterN1::Attack_HitBox()
+{
+	AABB tAABB = { m_vPos.x, m_vPos.y, m_vPos.z,
+					2.f, 1.f, 2.f };
+
+	vector<CGameObject*> tempVec = CCollisionMgr::GetInstance()->Test_AABB(tAABB, CL_PLAYER);
+
+	if (!tempVec.empty())
+	{
+		IMessageChannel::EVENT EAttack;
+		EAttack.strType = L"Player.Attacked";
+		EAttack.eOBJID = Engine::OID_PLAYER;
+		EAttack.hmapData.emplace(L"Attack", m_iAttack);
+		EAttack.hmapData.emplace(L"Target", tempVec);
+		m_pMessageChannel->Publish(EAttack);
+	}
+}
+
+void CMonsterN1::Attacked(const _int& iAttack)
+{
+	m_iHp -= iAttack;
+
+	if (m_eAttackPhase != EXECUTE)
+	{
+		if (m_eCurState == N1S_HIT)
+		{
+			m_fFrame = 0.f;
+		}
+		else
+		{
+			m_eCurState = N1S_HIT;
+			m_pAICom->Set_State<MONSTER_N1_STATE>(N1S_HIT);
+		}
+	}
 }
 
 void CMonsterN1::Update_State()

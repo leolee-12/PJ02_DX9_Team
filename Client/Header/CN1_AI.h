@@ -36,6 +36,7 @@ private:
 	_float		m_fSpeed;
 	_float		m_fAcmlTime;
 	_bool		m_bChase;
+	_vec3		m_vLerpPos;		// Lerp¿ë À§Ä¡
 
 public:
 	static CN1_AI*		Create(LPDIRECT3DDEVICE9 pGraphicDev, const _float& fDetectRange, const _float& fInteractRange, const _uint& iInitState = 0);

@@ -20,7 +20,8 @@ CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
 	m_fLerp(0.2f),
 	m_fRollSpeed(5.f),
 	m_fCharge(0.f),
-	m_fChargeMax(3.f)
+	m_fChargeMax(3.f),
+	m_bMsgRegistered(false)
 {
 }
 
@@ -38,7 +39,8 @@ CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel)
 		m_fLerp(0.2f),
 		m_fRollSpeed(5.f),
 		m_fCharge(0.f),
-		m_fChargeMax(3.f)
+		m_fChargeMax(3.f),
+		m_bMsgRegistered(false)
 {
 }
 
@@ -57,7 +59,8 @@ CPlayer::CPlayer(const CPlayer& rhs)
 		m_fLerp(rhs.m_fRollSpeed),
 		m_fRollSpeed(rhs.m_fRollSpeed),
 		m_fCharge(0.f),
-		m_fChargeMax(rhs.m_fChargeMax)
+		m_fChargeMax(rhs.m_fChargeMax),
+		m_bMsgRegistered(rhs.m_bMsgRegistered)
 {
 }
 
@@ -78,6 +81,9 @@ HRESULT CPlayer::Ready_GameObject()
 
 _int CPlayer::Update_GameObject(const _float& fTimeDelta)
 {
+	if(!m_pMessageChannel) m_bMsgRegistered = false;
+	else if (!m_bMsgRegistered) Ready_Event();
+
 	Move_Frame(fTimeDelta);
 
 	m_pColliderCom->UpdateFromTransform(m_pTransformCom);
@@ -191,15 +197,32 @@ void CPlayer::Ready_Variable()
 	m_vDir = m_vNormDir[DIR_LEFT];
 	m_fSpeed = 10.f;
 	m_iAttack = 1;
+	m_iHp = 10;
 }
 
 void CPlayer::Ready_Event()
 {
+	if (m_pMessageChannel == nullptr) return;
+	if (m_bMsgRegistered) return;
+
 	//m_hmapSubHandles.insert({ L"StartGame.Move", m_pMessageChannel->Subscribe(L"Start_Game", [this](const IMessageChannel::EVENT& Event) {
 	//	if (Event.eOBJID == this->Get_OBJID()) {
 	//		m_pTransformCom->Set_Pos(10.f, 10.f, 10.f);
 	//	}
 	//	}) });
+
+	m_hmapSubHandles.insert({ L"Player_Damaged", m_pMessageChannel->Subscribe(L"Player.Attacked", [this](const IMessageChannel::EVENT& Event) {
+	for (auto& Target : any_cast<vector<CGameObject*>>(Event.hmapData.find(L"Target")->second))
+	{
+		if (Target == this)
+		{
+			m_iHp -= any_cast<_int>(Event.hmapData.find(L"Attack")->second);
+		}
+
+	}
+	}) });
+
+	m_bMsgRegistered = true;
 }
 
 HRESULT CPlayer::Add_Component()
@@ -326,7 +349,7 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 		m_fFrame = 0.f;
 		m_eCurState = PS_ATTACK;
 		m_pTransformCom->Move_Pos(&m_vDir, fTimeDelta, m_fSpeed - 5.f);
-		HitBox();
+		Attack_HitBox();
 	}
 
 	if (GetAsyncKeyState(VK_RBUTTON) & 0x0001)	// 눌렀을 때 한 번만 true
@@ -602,7 +625,7 @@ void CPlayer::Charge(const _float& fTimeDelta)
 	m_fCharge += fTimeDelta;
 }
 
-void CPlayer::HitBox()
+void CPlayer::Attack_HitBox()
 {
 	AABB tAABB = { m_vPos.x, m_vPos.y, m_vPos.z,
 					2.f, 1.f, 2.f };

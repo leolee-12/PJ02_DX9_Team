@@ -60,7 +60,7 @@ private:
 
 	void			Move_Roll(const _float& fTimeDelta);
 	void			Charge(const _float& fTimeDelta);
-	void			HitBox();
+	void			Attack_HitBox();
 
 	// ==========================
 	//	Move_Roll : 구르기 상태일 때 현재 위치를 Lerp를 적용하여 계산 및 이동
@@ -102,6 +102,9 @@ private:
 	// 차지 공격 관련
 	_float			m_fCharge;
 	_float			m_fChargeMax;
+
+	// 메시지 채널 관련
+	_bool 			m_bMsgRegistered;
 
 public:
 	static CPlayer* Create(LPDIRECT3DDEVICE9 pGraphicDev);
