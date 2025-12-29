@@ -145,6 +145,15 @@
     <Filter Include="02. GameObject\07. UI\03. KBUI\01. KBTutorial">
       <UniqueIdentifier>{271f78e8-fe0b-44e2-b16b-b8f98cddafb9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\07. UI\03. KBUI\02. KBCenter">
+      <UniqueIdentifier>{dcbd4b36-95fd-4b35-a3e3-1a71de4cbdd6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. UI\03. KBUI\03. KBTab">
+      <UniqueIdentifier>{c6f0bb55-24bf-4d79-8de3-9005fb22da19}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. UI\03. KBUI\04. Divider">
+      <UniqueIdentifier>{2712e418-d62f-4210-b14d-d87d009f78c8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -270,6 +279,15 @@
     <ClInclude Include="..\Header\CKBTutorial.h">
       <Filter>02. GameObject\07. UI\03. KBUI\01. KBTutorial</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CKBCenter.h">
+      <Filter>02. GameObject\07. UI\03. KBUI\02. KBCenter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CKBTab.h">
+      <Filter>02. GameObject\07. UI\03. KBUI\03. KBTab</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CDivider.h">
+      <Filter>02. GameObject\07. UI\03. KBUI\04. Divider</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -385,6 +403,15 @@
     </ClCompile>
     <ClCompile Include="..\Code\CKBTutorial.cpp">
       <Filter>02. GameObject\07. UI\03. KBUI\01. KBTutorial</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CKBCenter.cpp">
+      <Filter>02. GameObject\07. UI\03. KBUI\02. KBCenter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CKBTab.cpp">
+      <Filter>02. GameObject\07. UI\03. KBUI\03. KBTab</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CDivider.cpp">
+      <Filter>02. GameObject\07. UI\03. KBUI\04. Divider</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

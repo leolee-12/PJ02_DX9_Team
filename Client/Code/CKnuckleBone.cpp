@@ -7,7 +7,10 @@
 #include "CTest.h"
 #include "CKBBack.h"
 #include "CKBTutorial.h"
-#include "CFontMgr.h"
+#include "CLightMgr.h"
+#include "CKBCenter.h"
+#include "CKBTab.h"
+#include "CDivider.h"
 
 
 
@@ -63,7 +66,7 @@ void CKnuckleBone::Render_Scene()
 	rc = { 505, WINCY / 2,  WINCX, (WINCY / 2) + 125 };
 	CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans40", L"상대 파괴", rc, FontRed, DT_CENTER | DT_BOTTOM);
 	rc.bottom += 75;
-	CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans30", L"상대방의 주사위와 같은 값을 맞춰 상대방의\n주사위를 파괴하세요", rc, FontColor, DT_CENTER | DT_BOTTOM);
+	CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans30", L"상대방의 주사위와 같은 값을 맞춰 상대방의\n주사위를 파괴하세요.", rc, FontColor, DT_CENTER | DT_BOTTOM);
 
 	rc = { 0, 0, LONG(WINCX), WINCY - 75 };
 	CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans30", L"확인", rc, FontColor, DT_CENTER | DT_BOTTOM);
@@ -95,7 +98,7 @@ HRESULT CKnuckleBone::Ready_UI_Layer(const _tchar* pLayerTag)
 	if (nullptr == pGameObject)
 		return E_FAIL;
 
-	if (FAILED(pLayer->Add_GameObject(L"LoadingBack", pGameObject)))
+	if (FAILED(pLayer->Add_GameObject(L"KBBack", pGameObject)))
 		return E_FAIL;
 
 
@@ -104,7 +107,7 @@ HRESULT CKnuckleBone::Ready_UI_Layer(const _tchar* pLayerTag)
 	if (nullptr == pGameObject)
 		return E_FAIL;
 
-	if (FAILED(pLayer->Add_GameObject(L"LoadingBack", pGameObject)))
+	if (FAILED(pLayer->Add_GameObject(L"KBTutorial", pGameObject)))
 		return E_FAIL;
 
 
@@ -113,10 +116,67 @@ HRESULT CKnuckleBone::Ready_UI_Layer(const _tchar* pLayerTag)
 	if (nullptr == pGameObject)
 		return E_FAIL;
 
-	if (FAILED(pLayer->Add_GameObject(L"LoadingBack", pGameObject)))
+	if (FAILED(pLayer->Add_GameObject(L"KBTutorial", pGameObject)))
+		return E_FAIL;
+
+
+	pGameObject = CKBCenter::Create(m_pGraphicDev);
+
+	if (nullptr == pGameObject)
+		return E_FAIL;
+
+	if (FAILED(pLayer->Add_GameObject(L"KBCenter", pGameObject)))
+		return E_FAIL;
+
+	pGameObject = CKBTab::Create(m_pGraphicDev);
+
+	if (nullptr == pGameObject)
+		return E_FAIL;
+
+	if (FAILED(pLayer->Add_GameObject(L"KBTab", pGameObject)))
+		return E_FAIL;
+
+	_vec3 DividerPos = _vec3(-160.f, 290.f, 0.25f);
+
+	pGameObject = CDivider::Create(m_pGraphicDev, 0, DividerPos);
+
+	if (nullptr == pGameObject)
+		return E_FAIL;
+
+	if (FAILED(pLayer->Add_GameObject(L"KBTab", pGameObject)))
+		return E_FAIL;
+
+	DividerPos.x += 320.f;
+
+	pGameObject = CDivider::Create(m_pGraphicDev, 1, DividerPos);
+
+	if (nullptr == pGameObject)
+		return E_FAIL;
+
+	if (FAILED(pLayer->Add_GameObject(L"KBTab", pGameObject)))
 		return E_FAIL;
 
 	m_mapLayer.insert({ pLayerTag , pLayer });
+
+	return S_OK;
+}
+
+HRESULT CKnuckleBone::Ready_Light()
+{
+	D3DLIGHT9	tLightInfo;
+	ZeroMemory(&tLightInfo, sizeof(D3DLIGHT9));
+
+	tLightInfo.Type = D3DLIGHT_DIRECTIONAL;
+
+	tLightInfo.Diffuse = D3DXCOLOR(0.f, 0.f, 0.f, 1.f);
+	tLightInfo.Specular = D3DXCOLOR(0.f, 0.f, 0.f, 1.f);
+	tLightInfo.Ambient = D3DXCOLOR(0.f, 0.f, 0.f, 1.f);
+
+	tLightInfo.Direction = { 0.f, 0.f, 1.f };
+
+	if (FAILED(CLightMgr::GetInstance()->Ready_Light(m_pGraphicDev, &tLightInfo, 0)))
+		return E_FAIL;
+
 
 	return S_OK;
 }

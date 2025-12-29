@@ -19,6 +19,8 @@ private:
 	HRESULT			Ready_GameLogic_Layer(const _tchar* pLayerTag) { return S_OK; }
 	HRESULT			Ready_UI_Layer(const _tchar* pLayerTag);
 
+	HRESULT			Ready_Light();
+
 public:
 	static CKnuckleBone* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 
