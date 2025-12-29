@@ -132,6 +132,19 @@ HRESULT CMainApp::Ready_DefaultSetting(LPDIRECT3DDEVICE9* ppGraphicDev)
 	if (FAILED(CFontMgr::GetInstance()->Ready_Font((*ppGraphicDev), L"Font_Lapture40", L"LaptureDisplay", 0, 40, FW_THIN)))
 		return E_FAIL;
 
+	if (FAILED(CFontMgr::GetInstance()->Ready_Font((*ppGraphicDev), L"Font_Lapture60", L"LaptureDisplay", 0, 60, FW_THIN)))
+		return E_FAIL;
+
+
+	if (FAILED(CFontMgr::GetInstance()->Ready_Font((*ppGraphicDev), L"Font_NotoSans30", L"Noto Sans KR Regular", 0, 30, FW_REGULAR)))
+		return E_FAIL;
+
+	if (FAILED(CFontMgr::GetInstance()->Ready_Font((*ppGraphicDev), L"Font_NotoSans40", L"Noto Sans KR Regular", 0, 40, FW_REGULAR)))
+		return E_FAIL;
+
+	if (FAILED(CFontMgr::GetInstance()->Ready_Font((*ppGraphicDev), L"Font_NotoSans60", L"Noto Sans KR Regular", 0, 60, FW_REGULAR)))
+		return E_FAIL;
+
 
 	return S_OK;
 }

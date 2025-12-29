@@ -38,7 +38,6 @@ private:
 	CTransform* m_pTransformCom;
 	CTexture* m_pTextureCom;
 
-	_vec3		m_vPos;
 	_bool		m_bRender;
 };
 

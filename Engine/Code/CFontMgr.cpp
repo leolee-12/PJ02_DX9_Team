@@ -36,6 +36,13 @@ void CFontMgr::Render_Font(const _tchar* pFontTag, const _tchar* pString,
 	pFont->Render_Font(pString, pPos, Color, FLag);
 }
 
+void CFontMgr::Render_Font(const _tchar* pFontTag, const _tchar* pString, const RECT& Rect, D3DXCOLOR Color, DWORD FLag)
+{
+	CFont* pFont = Find_Font(pFontTag);
+
+	pFont->Render_Font(pString, Rect, Color, FLag);
+}
+
 CFont* CFontMgr::Find_Font(const _tchar* pFontTag)
 {
 	auto	iter = find_if(m_mapFont.begin(), m_mapFont.end(), CTag_Finder(pFontTag));

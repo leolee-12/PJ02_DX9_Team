@@ -72,7 +72,7 @@ _int CLogo::Update_Scene(const _float& fTimeDelta)
 				break;
 			case LS_EDIT:
 				// 임시입니다.
-				LSTmp = LOADING_TEST;
+				LSTmp = LOADING_KNUCKLEBONE;
 				break;
 			case LS_EXIT:
 				DestroyWindow(g_hWnd);
@@ -112,7 +112,7 @@ void CLogo::Render_Scene()
 
 	switch (m_eLogoState) {
 	case LS_START:
-		CFontMgr::GetInstance()->Render_Font(L"Font_Lapture40", L"플레이", &vPlay, D3DXCOLOR(1.f, 1.f, 1.f, 1.f), DT_CENTER | DT_TOP | DT_NOCLIP);
+		CFontMgr::GetInstance()->Render_Font(L"Font_Lapture40", L"플레이", &vPlay, D3DXCOLOR(1.f, 1.f, 1.f, 1.f), DT_CENTER | DT_NOCLIP);
 		CFontMgr::GetInstance()->Render_Font(L"Font_Lapture40", L"개발자 모드", &vEdit, D3DXCOLOR(0.f, 0.f, 0.f, 1.f), DT_CENTER | DT_NOCLIP);
 		CFontMgr::GetInstance()->Render_Font(L"Font_Lapture40", L"종료", &vExit, D3DXCOLOR(0.f, 0.f, 0.f, 1.f), DT_CENTER | DT_NOCLIP);
 		break;

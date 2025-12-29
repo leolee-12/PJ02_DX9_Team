@@ -22,7 +22,8 @@ protected:
 
 	void					Compute_ViewDepth_Ortho(const _vec3* pPos);
 
-
+protected:
+	_vec3		m_vPos;
 };
 
 END

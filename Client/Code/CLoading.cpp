@@ -11,6 +11,7 @@
 #include "CLoadingFG.h"
 #include "CLoadingCircle.h"
 #include "CLoadingLogo.h"
+#include "CKnuckleBone.h"
 
 
 
@@ -60,6 +61,13 @@ _int CLoading::Update_Scene(const _float& fTimeDelta)
 
 			case LOADING_TEST:
 				pScene = CTest::Create(m_pGraphicDev);
+
+				if (nullptr == pScene)
+					return -1;
+				break;
+
+			case LOADING_KNUCKLEBONE:
+				pScene = CKnuckleBone::Create(m_pGraphicDev);
 
 				if (nullptr == pScene)
 					return -1;

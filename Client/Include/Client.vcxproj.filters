@@ -133,6 +133,18 @@
     <Filter Include="02. GameObject\04. Camera\00. MainCamera">
       <UniqueIdentifier>{034c96cf-6932-41a4-9e6e-cbbb742ea410}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Scene\05. KnuckleBone">
+      <UniqueIdentifier>{fbdfd1c6-2a58-45e4-970b-5fac37bacfcb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. UI\03. KBUI">
+      <UniqueIdentifier>{41fa98cd-1415-4315-904c-4273008d3aab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. UI\03. KBUI\00. KBBack">
+      <UniqueIdentifier>{361ac797-f26e-4d74-843b-11dc7fd5c6c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. UI\03. KBUI\01. KBTutorial">
+      <UniqueIdentifier>{271f78e8-fe0b-44e2-b16b-b8f98cddafb9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -245,11 +257,20 @@
     </ClInclude>
     <ClInclude Include="..\Header\CN1_AI.h">
       <Filter>02. GameObject\02. Monster\Normal1</Filter>
-	</ClInclude>
+    </ClInclude>
     <ClInclude Include="..\Header\CMainCamera.h">
       <Filter>02. GameObject\04. Camera\00. MainCamera</Filter>
-	</ClInclude>
-</ItemGroup>
+    </ClInclude>
+    <ClInclude Include="..\Header\CKnuckleBone.h">
+      <Filter>01. Scene\05. KnuckleBone</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CKBBack.h">
+      <Filter>02. GameObject\07. UI\03. KBUI\00. KBBack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CKBTutorial.h">
+      <Filter>02. GameObject\07. UI\03. KBUI\01. KBTutorial</Filter>
+    </ClInclude>
+  </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
       <Filter>소스 파일</Filter>
@@ -352,9 +373,18 @@
     </ClCompile>
     <ClCompile Include="..\Code\CN1_AI.cpp">
       <Filter>02. GameObject\02. Monster\Normal1</Filter>
-	</ClCompile>
+    </ClCompile>
     <ClCompile Include="..\Code\CMainCamera.cpp">
       <Filter>02. GameObject\04. Camera\00. MainCamera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CKnuckleBone.cpp">
+      <Filter>01. Scene\05. KnuckleBone</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CKBBack.cpp">
+      <Filter>02. GameObject\07. UI\03. KBUI\00. KBBack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CKBTutorial.cpp">
+      <Filter>02. GameObject\07. UI\03. KBUI\01. KBTutorial</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
