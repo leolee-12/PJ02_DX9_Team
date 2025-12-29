@@ -25,7 +25,7 @@ public:
 	// 일단 만들어놨으나, 필요없는 Set/Get 함수는 지울 예정
 
 	template <typename T>
-	void		Set_State(T eState) { m_iCurState = _uint(eState); }
+	void		Set_State(T eState) { Change_State(eState); }
 	template <typename T>
 	T			Get_RecommendState() const { return static_cast<T>(m_iRcmState); }
 

@@ -183,6 +183,7 @@ void CMonsterN1::Ready_Variable()
 
 	// 게임로직 변수 세팅
 	m_iAttack = 1;
+	m_iHp = 10;
 }
 
 void CMonsterN1::Ready_Event()
@@ -192,7 +193,8 @@ void CMonsterN1::Ready_Event()
 	{
 		if (Target == this)
 		{
-			m_iHp -= any_cast<_int>(Event.hmapData.find(L"Attack")->second);
+			Attacked(any_cast<_int>(Event.hmapData.find(L"Attack")->second));
+			break;
 		}
 	}
 	}) });
@@ -269,7 +271,7 @@ void CMonsterN1::Move_Frame(const _float& fTimeDelta)
 			if (m_eAttackPhase == PREPARE)
 			{
 				m_eAttackPhase = EXECUTE;
-				m_pAICom->Set_Speed(0.1f);
+				m_pAICom->Set_Speed(0.2f);
 				m_fFrameEnd = 27.f;
 				Attack_HitBox();
 			}
@@ -278,6 +280,7 @@ void CMonsterN1::Move_Frame(const _float& fTimeDelta)
 				//  : 애니메이션 종료를 AI 컴포넌트에게 알리며 상태 변경
 				m_pAICom->Anim_End(m_eCurState);
 				m_eCurState = N1S_RUN;
+				m_eAttackPhase = PREPARE;
 			}
 		}
 		break;
@@ -362,11 +365,11 @@ void CMonsterN1::Set_Texture()
 	if (bFilpX)
 	{
 		m_matTex._11 *= -1.f;
-		m_matTex._31 = _float(iU + 1) * 0.0625f;
+		m_matTex._31 = _float(iU + 1) * 0.0625f;	// 반전 O : 오른쪽에서 왼쪽으로 읽음
 	}
 	else
 	{
-		m_matTex._31 = _float(iU) * 0.0625f;
+		m_matTex._31 = _float(iU) * 0.0625f;	// 반전 X : 왼쪽에서 오른쪽으로 읽음
 	}
 
 	m_matTex._32 = _float(iV) * 0.25f;
@@ -391,6 +394,24 @@ void CMonsterN1::Attack_HitBox()
 		EAttack.hmapData.emplace(L"Attack", m_iAttack);
 		EAttack.hmapData.emplace(L"Target", tempVec);
 		m_pMessageChannel->Publish(EAttack);
+	}
+}
+
+void CMonsterN1::Attacked(const _int& iAttack)
+{
+	m_iHp -= iAttack;
+
+	if (m_eAttackPhase != EXECUTE)
+	{
+		if (m_eCurState == N1S_HIT)
+		{
+			m_fFrame = 0.f;
+		}
+		else
+		{
+			m_eCurState = N1S_HIT;
+			m_pAICom->Set_State<MONSTER_N1_STATE>(N1S_HIT);
+		}
 	}
 }
 
