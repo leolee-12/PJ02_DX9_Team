@@ -32,7 +32,5 @@ private:
 private:
 	CRcColTitle* m_pBufferCom;
 	CTransform* m_pTransformCom;
-
-	_vec3		m_vPos;
 };
 

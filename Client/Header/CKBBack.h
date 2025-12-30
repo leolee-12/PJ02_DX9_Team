@@ -4,16 +4,15 @@
 namespace Engine
 {
 	class CTransform;
-	class CRcTex;
-	class CTexture;
+	class CRcCol;
 }
 
-class CLoadingLogo :
+class CKBBack :
 	public CUi
 {
 private:
-	explicit CLoadingLogo(LPDIRECT3DDEVICE9 pGraphicDev);
-	virtual ~CLoadingLogo();
+	explicit CKBBack(LPDIRECT3DDEVICE9 pGraphicDev);
+	virtual ~CKBBack();
 
 public:
 	virtual			HRESULT		Ready_GameObject();
@@ -23,9 +22,7 @@ public:
 	virtual			void		OnCollision(CGameObject* pObject);
 
 public:
-	static CLoadingLogo* Create(LPDIRECT3DDEVICE9 pGraphicDev);
-
-	void			   Update_Pos(_float LoadingPercent);
+	static CKBBack* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 
 private:
 	virtual			void		Free();
@@ -33,8 +30,9 @@ private:
 	HRESULT						Add_Component();
 
 private:
-	CRcTex* m_pBufferCom;
+	CRcCol* m_pBufferCom;
 	CTransform* m_pTransformCom;
-	CTexture* m_pTextureCom;
+
+
 };
 

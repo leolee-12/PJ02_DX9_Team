@@ -8,12 +8,12 @@ namespace Engine
 	class CTexture;
 }
 
-class CLoadingLogo :
+class CKBTutorial :
 	public CUi
 {
 private:
-	explicit CLoadingLogo(LPDIRECT3DDEVICE9 pGraphicDev);
-	virtual ~CLoadingLogo();
+	explicit CKBTutorial(LPDIRECT3DDEVICE9 pGraphicDev);
+	virtual ~CKBTutorial();
 
 public:
 	virtual			HRESULT		Ready_GameObject();
@@ -23,9 +23,7 @@ public:
 	virtual			void		OnCollision(CGameObject* pObject);
 
 public:
-	static CLoadingLogo* Create(LPDIRECT3DDEVICE9 pGraphicDev);
-
-	void			   Update_Pos(_float LoadingPercent);
+	static CKBTutorial* Create(LPDIRECT3DDEVICE9 pGraphicDev, _uint iPage);
 
 private:
 	virtual			void		Free();
@@ -36,5 +34,7 @@ private:
 	CRcTex* m_pBufferCom;
 	CTransform* m_pTransformCom;
 	CTexture* m_pTextureCom;
+
+	_uint m_iPage;
 };
 

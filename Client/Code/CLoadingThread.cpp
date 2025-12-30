@@ -153,16 +153,34 @@ _uint CLoadingThread::Loading_ForTest()
 
     //CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_PlayerHalfHP", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Player/Health_Half_%d.png", 2));
     
-    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_MonsterN1Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal1/MonsterN1_%02d.png", 7))))
-        return E_FAIL;
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_MonsterN1Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal1/MonsterN1_%02d.png", 7));
 
-    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_N1_AI", CN1_AI::Create(m_pGraphicDev, 5.f, 1.f))))
-        return E_FAIL;
+
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_N1_AI", CN1_AI::Create(m_pGraphicDev, 5.f, 1.f));
+
 
     //Sleep(2000);
 
     m_fPercent += 50.f;
     
+    m_bFinish = true;
+
+    return _uint();
+}
+
+_uint CLoadingThread::Loading_ForKnuckleBone()
+{
+
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_TTutorial", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/TTutorial_%d.png", 2));
+
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_KBCenter", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/KnucklebonesIcon.png", 1));
+
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Divider", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/TileDivider_%d.png", 2));
+    
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_KBMask", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/Knucklebones_BW_MASK.png", 2));
+
+    m_fPercent = 100.f;
+
     m_bFinish = true;
 
     return _uint();
@@ -184,6 +202,10 @@ unsigned int CLoadingThread::Thread_Main(void* pArg)
 
     case LOADING_TEST:
         iFlag = pLoading->Loading_ForTest();
+        break;
+
+    case LOADING_KNUCKLEBONE:
+        iFlag = pLoading->Loading_ForKnuckleBone();
         break;
 
     case LOADING_BOSS:

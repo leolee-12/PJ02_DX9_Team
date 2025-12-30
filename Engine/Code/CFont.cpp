@@ -16,6 +16,7 @@ HRESULT CFont::Ready_Font(const _tchar* pFontType, const _uint& iWidth, const _u
 	ZeroMemory(&tFont_Desc, sizeof(D3DXFONT_DESC));
 
 	tFont_Desc.CharSet = DEFAULT_CHARSET;
+	//tFont_Desc.CharSet = HANGUL_CHARSET;
 	tFont_Desc.Width = iWidth;
 	tFont_Desc.Height = iHeight;
 	tFont_Desc.Weight = iWeight;
@@ -44,6 +45,16 @@ void CFont::Render_Font(const _tchar* pString, const _vec2* pPos, D3DXCOLOR Colo
 {
 	RECT rc {(_long)pPos->x, (_long)pPos->y};
 
+	m_pSprite->Begin(D3DXSPRITE_ALPHABLEND);
+
+	m_pFont->DrawTextW(m_pSprite, pString, lstrlen(pString), &rc, Flag, Color);
+
+	m_pSprite->End();
+}
+
+void CFont::Render_Font(const _tchar* pString, const RECT& Rect, D3DXCOLOR Color, DWORD Flag)
+{
+	RECT rc = Rect;
 	m_pSprite->Begin(D3DXSPRITE_ALPHABLEND);
 
 	m_pFont->DrawTextW(m_pSprite, pString, lstrlen(pString), &rc, Flag, Color);

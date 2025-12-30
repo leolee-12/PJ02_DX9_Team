@@ -35,7 +35,5 @@ private:
 	CRcTex* m_pBufferCom;
 	CTransform* m_pTransformCom;
 	CTexture* m_pTextureCom;
-
-	_vec3		m_vPos;
 };
 

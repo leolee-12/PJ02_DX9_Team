@@ -5,7 +5,7 @@
 #include "CPersistentMgr.h"
 
 CMainCamera::CMainCamera(LPDIRECT3DDEVICE9 pGraphicDev)
-	: CCamera(pGraphicDev), m_bFix(true), m_bCheck(true), m_fLerpSpeed(0.f), m_bShaking(false)
+	: CCamera(pGraphicDev), m_bFix(true), m_bCheck(true), m_fLerpSpeed(0.f), m_bShaking(false), m_fZoom(0.f)
 {
 	ZeroMemory(&m_vLook, sizeof(_vec3));
 	ZeroMemory(&m_vUp, sizeof(_vec3));
@@ -13,7 +13,7 @@ CMainCamera::CMainCamera(LPDIRECT3DDEVICE9 pGraphicDev)
 }
 
 CMainCamera::CMainCamera(const CMainCamera& rhs)
-	: CCamera(rhs), m_bFix(true), m_bCheck(true), m_fLerpSpeed(0.f), m_bShaking(false)
+	: CCamera(rhs), m_bFix(true), m_bCheck(true), m_fLerpSpeed(0.f), m_bShaking(false), m_fZoom(0.f)
 {
 	ZeroMemory(&m_vLook, sizeof(_vec3));
 	ZeroMemory(&m_vUp, sizeof(_vec3));
@@ -76,6 +76,8 @@ HRESULT CMainCamera::Ready_GameObject(
 	D3DXVec3Cross(&m_vDirUp, &m_vLook, &m_vRight);
 	D3DXVec3Normalize(&m_vDirUp, &m_vDirUp);
 
+	m_fZoom = 15.f;
+
 
 	return S_OK;
 }
@@ -98,13 +100,13 @@ void CMainCamera::LateUpdate_GameObject(const _float& fTimeDelta)
 
 void CMainCamera::Default_CameraSetting(const _float& fTimeDelta)
 {
-	if (m_bShaking == true) { return; }
+	//if (m_bShaking == true) { return; }
 
 	_vec3 vTargetPos;
 	m_pTargetTransformCom->Get_Info(INFO_POS, &vTargetPos);
 	D3DXVec3Lerp(&m_vAt, &m_vAt, &vTargetPos, fTimeDelta * m_fLerpSpeed);
-	vTargetPos.z -= 15.f;
-	vTargetPos.y += 15.f;
+	vTargetPos.z -= m_fZoom;
+	vTargetPos.y += m_fZoom;
 	D3DXVec3Lerp(&m_vEye, &m_vEye, &vTargetPos, fTimeDelta * m_fLerpSpeed);
 }
 
@@ -153,6 +155,16 @@ void CMainCamera::Set_Shake(_float fStrength, _float fTime, _float fTempo)
 	m_fShakeTempo = fTempo;
 	m_vOriginPos = m_vEye;
 	m_vOriginAt = m_vAt;
+}
+
+void CMainCamera::Set_Zoom(_float fZoom)
+{
+	m_fZoom /= fZoom;
+}
+
+void CMainCamera::Reset_Zoom()
+{
+	m_fZoom = 15.f;
 }
 
 

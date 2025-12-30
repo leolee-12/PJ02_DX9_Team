@@ -148,11 +148,18 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\Header\CBackGround.h" />
+    <ClInclude Include="..\Header\CDivider.h" />
     <ClInclude Include="..\Header\CDungeonBack.h" />
     <ClInclude Include="..\Header\CDungeonIcon.h" />
     <ClInclude Include="..\Header\CDungeonLine.h" />
     <ClInclude Include="..\Header\CDynamicCamera.h" />
     <ClInclude Include="..\Header\CEditScene.h" />
+    <ClInclude Include="..\Header\CKBBack.h" />
+    <ClInclude Include="..\Header\CKBCenter.h" />
+    <ClInclude Include="..\Header\CKBMask.h" />
+    <ClInclude Include="..\Header\CKBTab.h" />
+    <ClInclude Include="..\Header\CKBTutorial.h" />
+    <ClInclude Include="..\Header\CKnuckleBone.h" />
     <ClInclude Include="..\Header\CLoading.h" />
     <ClInclude Include="..\Header\CLoadingCenter.h" />
     <ClInclude Include="..\Header\CLoadingCircle.h" />
@@ -190,11 +197,18 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\CBackGround.cpp" />
+    <ClCompile Include="..\Code\CDivider.cpp" />
     <ClCompile Include="..\Code\CDungeonBack.cpp" />
     <ClCompile Include="..\Code\CDungeonIcon.cpp" />
     <ClCompile Include="..\Code\CDungeonLine.cpp" />
     <ClCompile Include="..\Code\CDynamicCamera.cpp" />
     <ClCompile Include="..\Code\CEditScene.cpp" />
+    <ClCompile Include="..\Code\CKBBack.cpp" />
+    <ClCompile Include="..\Code\CKBCenter.cpp" />
+    <ClCompile Include="..\Code\CKBMask.cpp" />
+    <ClCompile Include="..\Code\CKBTab.cpp" />
+    <ClCompile Include="..\Code\CKBTutorial.cpp" />
+    <ClCompile Include="..\Code\CKnuckleBone.cpp" />
     <ClCompile Include="..\Code\CLoading.cpp" />
     <ClCompile Include="..\Code\CLoadingCenter.cpp" />
     <ClCompile Include="..\Code\CLoadingCircle.cpp" />

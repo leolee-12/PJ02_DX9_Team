@@ -39,7 +39,6 @@ private:
 
 	_matrix		m_matUV;
 
-	_vec3		m_vPos;
 	_uint		m_fFrame = 0;
 	_bool		m_bRender;
 	_bool		m_bAnim;

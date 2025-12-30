@@ -37,7 +37,6 @@ private:
 	CTexture* m_pTextureCom_Full;
 	//CTexture* m_pTextureCom_Half;
 
-	_vec3		m_vPos;
 	_bool		m_bRender;
 
 	_int		m_iPlayerHp;

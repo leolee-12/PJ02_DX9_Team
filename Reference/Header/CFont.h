@@ -26,6 +26,11 @@ public:
 								D3DXCOLOR Color,
 								DWORD Flag);
 
+	void			Render_Font(const _tchar* pString,
+								const RECT& Rect,
+								D3DXCOLOR Color,
+								DWORD Flag);
+
 
 public:
 	static CFont* Create(LPDIRECT3DDEVICE9 pGraphicDev,

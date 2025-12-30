@@ -34,6 +34,8 @@ private:
 	void		Shaking_CameraSetting(const _float& fTimeDelta);
 	void		Ready_Event_MainCam();
 	void		Set_Shake(_float fStrength, _float fTime, _float fTempo);
+	void		Set_Zoom(_float fZoom);
+	void		Reset_Zoom();
 
 
 private:
@@ -55,6 +57,10 @@ private:
 	_vec3		m_vRight;
 	_vec3		m_vDirUp;
 	_vec3		m_vLook;
+
+	// 카메라 줌 관련 변수
+	_float		m_fZoom;
+
 
 	Engine::CTransform* m_pTargetTransformCom;
 

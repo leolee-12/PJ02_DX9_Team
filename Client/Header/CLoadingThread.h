@@ -20,6 +20,7 @@ public:
 	HRESULT		Ready_Loading(LOADINGID eID);
 	_uint		Loading_ForStage();
 	_uint		Loading_ForTest();
+	_uint		Loading_ForKnuckleBone();
 
 public:
 	static unsigned int CALLBACK Thread_Main(void* pArg);
