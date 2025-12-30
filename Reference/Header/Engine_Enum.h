@@ -22,7 +22,7 @@ namespace Engine
 
 	enum MOUSEMOVESTATE {	DIMS_X, DIMS_Y, DIMS_Z, DIMS_END };
 
-	enum OBJID { OID_PLAYER, OID_MONSTER, OID_DCAM, OID_MAINCAM, OID_END };
+	enum OBJID { OID_PLAYER, OID_MONSTER, OID_ITEM, OID_WEAPON, OID_DCAM, OID_MAINCAM, OID_END };
 
 	enum LOADINGID { LOADING_STAGE, LOADING_BOSS, LOADING_TEST, OID_TEST, LOADING_END };
 
@@ -38,7 +38,7 @@ namespace Engine
 		CL_NONE		= 0,
 		CL_PLAYER	= 1 << 0,
 		CL_MONSTER	= 1 << 1,
-		CL_3		= 1 << 2,
+		CL_ITEM		= 1 << 2,
 		CL_4		= 1 << 3,
 		CL_5		= 1 << 4,
 		CL_6		= 1 << 5,

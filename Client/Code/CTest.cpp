@@ -14,6 +14,7 @@
 #include "CSoundMgr.h"
 #include "CMainCamera.h"
 #include "CMonsterN1.h"
+#include <CItem.h>
 
 CTest::CTest(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -165,6 +166,14 @@ HRESULT CTest::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 			return E_FAIL;
 
 		if (FAILED(pLayer->Add_GameObject(L"Monster", pGameObject)))
+			return E_FAIL;
+
+		pGameObject = CItem::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ _float(rand() % 20), 1.f, _float(rand() % 20) }, CItem::ITEMID(rand() % 8));
+
+		if (nullptr == pGameObject)
+			return E_FAIL;
+
+		if (FAILED(pLayer->Add_GameObject(L"Item", pGameObject)))
 			return E_FAIL;
 	}
 

@@ -1,7 +1,7 @@
 # 플레이어-이펙트 작업 기록
 
 - 담당자 : 이우영
-- 최신 업데이트 : 25.12.28
+- 최신 업데이트 : 25.12.29
 
 ### 25.12.16 작업 내용
 
@@ -128,7 +128,7 @@ void CPlayer::HitBox()
 
 ### 25.12.25 작업 내용
 
-- 일반 몬스터 1종 구현 시작, 기존 CMonster 클래스의 자식 클래스로 제작
+- 기본 몬스터 1종 구현 시작, 기존 CMonster 클래스의 자식 클래스로 제작
 
 - 플레이어 유사하게 상태 별 스프라이트 도입하나, 이미지 개수를 줄이는 것이 효율적이므로 스프라이트 시트 방식 사용 (동일 상태는 단일 이미지)
 
@@ -201,11 +201,9 @@ class ENGINE_DLL CAIController : public CComponent
 {
     // ... 생성자
 public:
-	void		Set_ActiveAI(_bool bActive)						{ m_bActiveAI = bActive; }
 	void		Set_OwnerTransform(CTransform* pTransformCom)	{ m_pOwnerTC = pTransformCom; }
 	void		Set_TargetTransform(CTransform* pTransformCom)	{ m_pTargetTC = pTransformCom; }
 
-	_float		Get_DetectRange() const { return m_fDetectRange; }
 	_vec3*		Get_Dir() { return &m_vDir; }
 
     // 상태 enum은 몬스터마다 다름 -> Template을 통해 확장성 부여
@@ -303,7 +301,7 @@ void CMonsterN1::Move_Frame(const _float& fTimeDelta)
 
 ### 25.12.28 작업 내용
 
-- 일반 몬스터 1종 전용 AI(CN1_AI) 구현 일부 완료
+- 기본 몬스터 1종 전용 AI(CN1_AI) 구현 일부 완료
 
 - SPAWN, IDLE, RUN, ATTACK 상태 로직 추가
 
@@ -371,3 +369,91 @@ void CN1_AI::Update_Run(const _float& fTimeDelta)
 	m_pOwnerTC->Move_Pos(&m_vDir, fTimeDelta, m_fSpeed);
 }
 ```
+
+### 25.12.29 작업 내용
+
+- 기본 몬스터 1종(CMonsterN1) 게임 로직 구현 완료 (인트로 전용 모션 제외)
+
+- 몬스터의 방향 정보 관련 로직 정리 (그리기용&움직임용 이원화)
+-> CTransform - INFO_LOOK : 그리기용 방향, 빌보드 적용되어 움직임에 사용하기는 부적합
+-> CAIController - m_vDir : 몬스터의 방향 정보를 총괄, AI가 방향을 결정하면 몬스터는 정보를 받아와 알맞는 스프라이트 송출
+
+- AI컴포넌트의 방향을 받아와 상/하 스프라이트 적용(스프라이트 시트), 좌/우 스프라이트 반전(텍스처 좌표 변환)
+
+```cpp
+void CMonsterN1::Set_Texture()
+{
+	_vec3 vDir = *(m_pAICom->Get_Dir());		// AI로부터 받아온 방향
+	_bool bFilpX = vDir.x > 0.f ? true : false;	// 반전 여부
+	_uint iFrame = m_fFrame;					// 현재 프레임
+
+	D3DXMatrixIdentity(&m_matTex);
+	_uint iU = iFrame % 16;
+	_uint iV = iFrame / 16;
+
+	m_matTex._11 = 0.0625f;	// 가로는 16칸 고정
+	m_matTex._22 = 0.25f;	// 세로는 4칸 고정(MonsterN1)
+
+	switch (m_eCurState)
+	{
+	case N1S_IDLE:
+	{
+		if (vDir.z > 0.f) iV += 2;
+	}
+	break;
+
+	case N1S_RUN:
+	{
+		if (vDir.z > 0.f) iV += 1;
+	}
+	break;
+	// ... 나머지 상태&방향 별 텍스처 좌표 설정
+	}
+
+	if (bFilpX)
+	{
+		m_matTex._11 *= -1.f;
+		m_matTex._31 = _float(iU + 1) * 0.0625f;	// 반전 O : 오른쪽에서 왼쪽으로 읽음
+	}
+	else
+	{
+		m_matTex._31 = _float(iU) * 0.0625f;	// 반전 X : 왼쪽에서 오른쪽으로 읽음
+	}
+
+	m_matTex._32 = _float(iV) * 0.25f;
+
+	m_pGraphicDev->SetTransform(D3DTS_TEXTURE0, &m_matTex);
+
+	m_pTextureCom->Set_Texture(_uint(m_eCurState));
+}
+```
+
+- ATTACK-EXECUTE 상태 진입 시 1프레임 히트박스 적용, ATTACK-EXECUTE 상태에서 돌진(Lerp) 구현
+ (플레이어 피격 이벤트 도입하여 정상 동작 확인)
+
+- ATTACK-EXECUTE 상태가 아닐 때 피격 시 HIT 상태 돌입, 넉백(Lerp) 구현
+
+```cpp
+// Monster.Attacked 이벤트를 통해 Attacked 함수 호출
+void CMonsterN1::Attacked(const _int& iAttack)
+{
+	m_iHp -= iAttack;
+
+	if (m_eAttackPhase != EXECUTE)
+	{
+		if (m_eCurState == N1S_HIT)
+		{
+			m_fFrame = 0.f;
+		}
+		else
+		{
+			m_eCurState = N1S_HIT;
+			m_pAICom->Set_State<MONSTER_N1_STATE>(N1S_HIT);
+		}
+	}
+}
+```
+
+### 25.12.30 작업 내용
+
+- 아이템 구현 시작, 무기와는 로직이 많이 달라 아예 다른 클래스로 제작할 예정

@@ -18,7 +18,6 @@ CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
 	m_bRoll(false),
 	m_iCombo(0),
 	m_fLerp(0.2f),
-	m_fRollSpeed(5.f),
 	m_fCharge(0.f),
 	m_fChargeMax(3.f),
 	m_bMsgRegistered(false)
@@ -37,7 +36,6 @@ CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel)
 		m_bRoll(false),
 		m_iCombo(0),
 		m_fLerp(0.2f),
-		m_fRollSpeed(5.f),
 		m_fCharge(0.f),
 		m_fChargeMax(3.f),
 		m_bMsgRegistered(false)
@@ -56,8 +54,7 @@ CPlayer::CPlayer(const CPlayer& rhs)
 		m_bRoll(false),
 		m_iCombo(0),
 		m_vPos(rhs.m_vPos),
-		m_fLerp(rhs.m_fRollSpeed),
-		m_fRollSpeed(rhs.m_fRollSpeed),
+		m_fLerp(rhs.m_fLerp),
 		m_fCharge(0.f),
 		m_fChargeMax(rhs.m_fChargeMax),
 		m_bMsgRegistered(rhs.m_bMsgRegistered)
