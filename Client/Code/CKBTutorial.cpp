@@ -22,6 +22,8 @@ HRESULT CKBTutorial::Ready_GameObject()
 	case 0:
 		m_pTransformCom->Set_Scale(256.f, 256.f, 1.f);
 		m_pTransformCom->Set_Pos(-250.f, 40.f, 0.25f);
+		//m_pTransformCom->Set_Scale(256.f, 256.f, 1.f);
+		//m_pTransformCom->Set_Pos(-(_float(WINCX) * 0.4f), 40.f, 0.25f);
 		break;
 	case 1:
 		m_pTransformCom->Set_Scale(389.f * 0.5f, 464.f * 0.5f, 1.f);
