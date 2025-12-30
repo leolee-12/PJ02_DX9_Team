@@ -13,11 +13,13 @@
 #include "CDivider.h"
 #include "CKBMask.h"
 #include "CDInputMgr.h"
+#include "CSoundMgr.h"
+#include "CKBSix.h"
 
 
 
 CKnuckleBone::CKnuckleBone(LPDIRECT3DDEVICE9 pGraphicDev)
-	: CScene(pGraphicDev), m_eKBState(KB_END)
+	: CScene(pGraphicDev), m_eCurKBState(KB_END), m_ePreKBState(KB_END), m_eTitleOption(KBT_PLAY)
 {
 }
 
@@ -30,40 +32,43 @@ HRESULT CKnuckleBone::Ready_Scene()
 	//테스트용
 	m_pMessageChannel = CStageMessage::Create();
 
+	if (FAILED(Ready_Environment_Layer(L"Environment_Layer")))
+		return E_FAIL;
+
+	if (FAILED(Ready_Title_Layer(L"Title_Layer")))
+		return E_FAIL;
+
 	if (FAILED(Ready_Tutorial_Layer(L"Tutorial_Layer")))
 		return E_FAIL;
 
 	if (FAILED(Ready_Light()))
 		return E_FAIL;
 
+	m_pTitleTab->Move_Title();
+
 	// 테스트용
 
-	m_eKBState = KB_TITLE;
+	m_eCurKBState = KB_TITLE;
+
+	CSoundMgr::GetInstance()->PlayBGM(L"KB_BGM.mp3", 0.2f);
 
 	return S_OK;
 }
 
 _int CKnuckleBone::Update_Scene(const _float& fTimeDelta)
 {
-	if (CDInputMgr::GetInstance()->Key_Down(DIK_0))
-	{
-		m_eKBState = KB_TUTO;
-	}
+	Key_Input_KB();
+	State_machine();
 
 	map<wstring, CLayer*>::iterator iter;
-	switch (m_eKBState)
-	{
-	case KB_TITLE:
-		break;
-	case KB_TUTO:
-		iter = m_mapLayer.find(L"Tutorial_Layer");
-		if (iter == m_mapLayer.end()) { return NOEVENT; }
-		return iter->second->Update_Layer(fTimeDelta);
-	case KB_MAIN:
-		break;
-	case KB_END:
-		break;
-	}
+	iter = m_mapLayer.find(L"Environment_Layer");
+	if (iter == m_mapLayer.end()) { return NOEVENT; }
+	iter->second->Update_Layer(fTimeDelta);
+
+	iter = m_mapLayer.find(m_strLayerTag);
+	if (iter == m_mapLayer.end()) { return NOEVENT; }
+	return iter->second->Update_Layer(fTimeDelta);
+
 
 	return NOEVENT;
 }
@@ -71,28 +76,21 @@ _int CKnuckleBone::Update_Scene(const _float& fTimeDelta)
 void CKnuckleBone::LateUpdate_Scene(const _float& fTimeDelta)
 {
 	map<wstring, CLayer*>::iterator iter;
+	iter = m_mapLayer.find(L"Environment_Layer");
+	if (iter == m_mapLayer.end()) { return; }
+	iter->second->LateUpdate_Layer(fTimeDelta);
 
-	switch (m_eKBState)
-	{
-	case KB_TITLE:
-		break;
-	case KB_TUTO:
-		iter = m_mapLayer.find(L"Tutorial_Layer");
-		if (iter == m_mapLayer.end()) { return; }
-		iter->second->LateUpdate_Layer(fTimeDelta);
-		break;
-	case KB_MAIN:
-		break;
-	case KB_END:
-		break;
-	}
+	iter = m_mapLayer.find(m_strLayerTag);
+	if (iter == m_mapLayer.end()) { return; }
+	iter->second->LateUpdate_Layer(fTimeDelta);
 }
 
 void CKnuckleBone::Render_Scene()
 {
-	switch (m_eKBState)
+	switch (m_eCurKBState)
 	{
 	case KB_TITLE:
+		Render_Font_Title();
 		break;
 	case KB_TUTO:
 		Render_Font_Tutorial();
@@ -104,18 +102,6 @@ void CKnuckleBone::Render_Scene()
 	}
 }
 
-
-HRESULT CKnuckleBone::Ready_Environment_Layer(const _tchar* pLayerTag)
-{
-	CLayer* pLayer = CLayer::Create();
-	if (nullptr == pLayer)
-		return E_FAIL;
-
-	m_mapLayer.insert({ pLayerTag , pLayer });
-
-	return S_OK;
-}
-
 HRESULT CKnuckleBone::Ready_Tutorial_Layer(const _tchar* pLayerTag)
 {
 
@@ -124,15 +110,6 @@ HRESULT CKnuckleBone::Ready_Tutorial_Layer(const _tchar* pLayerTag)
 		return E_FAIL;
 
 	CGameObject* pGameObject = nullptr;
-
-	pGameObject = CKBBack::Create(m_pGraphicDev);
-
-	if (nullptr == pGameObject)
-		return E_FAIL;
-
-	if (FAILED(pLayer->Add_GameObject(L"KBBack", pGameObject)))
-		return E_FAIL;
-
 
 	pGameObject = CKBTutorial::Create(m_pGraphicDev, 0);
 
@@ -152,7 +129,7 @@ HRESULT CKnuckleBone::Ready_Tutorial_Layer(const _tchar* pLayerTag)
 		return E_FAIL;
 
 
-	pGameObject = CKBCenter::Create(m_pGraphicDev);
+	pGameObject = CKBCenter::Create(m_pGraphicDev, D3DXCOLOR(0.7f, 0.f, 0.f, 1.f));
 
 	if (nullptr == pGameObject)
 		return E_FAIL;
@@ -170,7 +147,7 @@ HRESULT CKnuckleBone::Ready_Tutorial_Layer(const _tchar* pLayerTag)
 
 	_vec3 DividerPos = _vec3(-160.f, 290.f, 0.25f);
 
-	pGameObject = CDivider::Create(m_pGraphicDev, 0, DividerPos);
+	pGameObject = CDivider::Create(m_pGraphicDev, 0, DividerPos, 0.7f);
 
 	if (nullptr == pGameObject)
 		return E_FAIL;
@@ -180,7 +157,7 @@ HRESULT CKnuckleBone::Ready_Tutorial_Layer(const _tchar* pLayerTag)
 
 	DividerPos.x += 320.f;
 
-	pGameObject = CDivider::Create(m_pGraphicDev, 1, DividerPos);
+	pGameObject = CDivider::Create(m_pGraphicDev, 1, DividerPos, 0.7f);
 
 	if (nullptr == pGameObject)
 		return E_FAIL;
@@ -188,13 +165,91 @@ HRESULT CKnuckleBone::Ready_Tutorial_Layer(const _tchar* pLayerTag)
 	if (FAILED(pLayer->Add_GameObject(L"KBTab", pGameObject)))
 		return E_FAIL;
 
-	/*pGameObject = CKBMask::Create(m_pGraphicDev);
+	m_mapLayer.insert({ pLayerTag , pLayer });
+
+	return S_OK;
+}
+
+HRESULT CKnuckleBone::Ready_Title_Layer(const _tchar* pLayerTag)
+{
+	CLayer* pLayer = CLayer::Create();
+	if (nullptr == pLayer)
+		return E_FAIL;
+
+	CGameObject* pGameObject = nullptr;
+
+	pGameObject = CKBCenter::Create(m_pGraphicDev, D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
 
 	if (nullptr == pGameObject)
 		return E_FAIL;
 
-	if (FAILED(pLayer->Add_GameObject(L"KBMask", pGameObject)))
-		return E_FAIL;*/
+	if (FAILED(pLayer->Add_GameObject(L"KBCenter", pGameObject)))
+		return E_FAIL;
+
+	pGameObject = m_pTitleTab = CKBTab::Create(m_pGraphicDev);
+
+	if (nullptr == pGameObject)
+		return E_FAIL;
+
+	if (FAILED(pLayer->Add_GameObject(L"KBTab", pGameObject)))
+		return E_FAIL;
+
+	_vec3 SixPos = { -40.f, 200.f, 0.25f };
+
+	for (_uint i = 0; i < 3; ++i) 
+	{
+		pGameObject = CKBSix::Create(m_pGraphicDev, SixPos);
+
+		if (nullptr == pGameObject)
+			return E_FAIL;
+
+		if (FAILED(pLayer->Add_GameObject(L"KBSix", pGameObject)))
+			return E_FAIL;
+
+		SixPos.x += 40.f;
+	}
+
+	_vec3 DividerPos = _vec3(-100.f, 200.f, 0.25f);
+
+	pGameObject = CDivider::Create(m_pGraphicDev, 0, DividerPos, 0.5f);
+
+	if (nullptr == pGameObject)
+		return E_FAIL;
+
+	if (FAILED(pLayer->Add_GameObject(L"KBTab", pGameObject)))
+		return E_FAIL;
+
+	DividerPos.x += 200.f;
+
+	pGameObject = CDivider::Create(m_pGraphicDev, 1, DividerPos, 0.5f);
+
+	if (nullptr == pGameObject)
+		return E_FAIL;
+
+	if (FAILED(pLayer->Add_GameObject(L"KBTab", pGameObject)))
+		return E_FAIL;
+
+
+	m_mapLayer.insert({ pLayerTag , pLayer });
+
+	return S_OK;
+}
+
+HRESULT CKnuckleBone::Ready_Environment_Layer(const _tchar* pLayerTag)
+{
+	CLayer* pLayer = CLayer::Create();
+	if (nullptr == pLayer)
+		return E_FAIL;
+
+	CGameObject* pGameObject = nullptr;
+
+	pGameObject = CKBBack::Create(m_pGraphicDev);
+
+	if (nullptr == pGameObject)
+		return E_FAIL;
+
+	if (FAILED(pLayer->Add_GameObject(L"KBBack", pGameObject)))
+		return E_FAIL;
 
 	m_mapLayer.insert({ pLayerTag , pLayer });
 
@@ -244,6 +299,114 @@ void CKnuckleBone::Render_Font_Tutorial()
 
 	rc = { 0, 0, LONG(WINCX), WINCY - 75 };
 	CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans30", L"확인", rc, FontColor, DT_CENTER | DT_BOTTOM);
+}
+
+void CKnuckleBone::Render_Font_Title()
+{
+	D3DXCOLOR FontColor = D3DXCOLOR(240.f / 256.f, 240.f / 256.f, 240.f / 256.f, 1.f);
+
+	D3DXCOLOR FontGray = D3DXCOLOR(0.5f, 0.5f, 0.5f, 1.f);
+
+	RECT rc = { 0, 0, LONG(WINCX), 270 };
+	CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans100", L"너 클 본", rc, FontColor, DT_CENTER | DT_BOTTOM);
+	rc.bottom += 150;
+	CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans40", L"위험과 보상이 있는 주사위 게임", rc, FontColor, DT_CENTER | DT_BOTTOM);
+
+	switch (m_eTitleOption) {
+	case KBT_PLAY:
+		rc = { 0, 0, LONG(WINCX), WINCY - 75 };
+		CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans30", L"종료", rc, FontGray, DT_CENTER | DT_BOTTOM);
+		rc.bottom -= 60;
+		CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans30", L"플레이 방법", rc, FontGray, DT_CENTER | DT_BOTTOM);
+		rc.bottom -= 60;
+		CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans30", L"플레이", rc, FontColor, DT_CENTER | DT_BOTTOM);
+		break;
+	case KBT_HOWTOPLAY:
+		rc = { 0, 0, LONG(WINCX), WINCY - 75 };
+		CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans30", L"종료", rc, FontGray, DT_CENTER | DT_BOTTOM);
+		rc.bottom -= 60;
+		CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans30", L"플레이 방법", rc, FontColor, DT_CENTER | DT_BOTTOM);
+		rc.bottom -= 60;
+		CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans30", L"플레이", rc, FontGray, DT_CENTER | DT_BOTTOM);
+		break;
+	case KBT_EXIT:
+		rc = { 0, 0, LONG(WINCX), WINCY - 75 };
+		CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans30", L"종료", rc, FontColor, DT_CENTER | DT_BOTTOM);
+		rc.bottom -= 60;
+		CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans30", L"플레이 방법", rc, FontGray, DT_CENTER | DT_BOTTOM);
+		rc.bottom -= 60;
+		CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans30", L"플레이", rc, FontGray, DT_CENTER | DT_BOTTOM);
+		break;
+	}
+}
+
+void CKnuckleBone::State_machine()
+{
+	if (m_eCurKBState != m_ePreKBState)
+	{
+		switch (m_eCurKBState)
+		{
+		case KB_TITLE:
+			m_strLayerTag = L"Title_Layer";
+			break;
+		case KB_TUTO:
+			m_strLayerTag = L"Tutorial_Layer";
+			break;
+		case KB_MAIN:
+			m_strLayerTag = L"Main_Layer";
+			break;
+		case KB_END:
+			break;
+		}
+
+		m_ePreKBState = m_eCurKBState;
+	}
+}
+
+void CKnuckleBone::Key_Input_KB()
+{
+	if (CDInputMgr::GetInstance()->Key_Down(DIK_DOWN))
+	{
+		if (m_eTitleOption < 0 || m_eTitleOption >= (KBT_END - 1)) { return; }
+
+		_uint uiTmp = (_uint)m_eTitleOption;
+		++uiTmp;
+		m_eTitleOption = (KBTITLEOPTION)uiTmp;
+
+		m_pTitleTab->Move_Down();
+	}
+
+	if (CDInputMgr::GetInstance()->Key_Down(DIK_UP))
+	{
+		if (m_eTitleOption <= 0 || m_eTitleOption > KBT_END) { return; }
+
+		_uint uiTmp = (_uint)m_eTitleOption;
+		--uiTmp;
+		m_eTitleOption = (KBTITLEOPTION)uiTmp;
+
+		m_pTitleTab->Move_Up();
+	}
+
+	if (CDInputMgr::GetInstance()->Key_Down(DIK_RETURN))
+	{
+		switch (m_eTitleOption)
+		{
+		case KBT_PLAY:
+			if (m_eCurKBState == KB_MAIN) { break; }
+			m_eCurKBState = KB_MAIN;
+			break;
+		case KBT_HOWTOPLAY:
+			if (m_eCurKBState != KB_TUTO) {
+				m_eCurKBState = KB_TUTO;
+				break;
+			}
+			m_eCurKBState = KB_TITLE;
+			break;
+		case KBT_EXIT:
+			DestroyWindow(g_hWnd);
+			break;
+		}
+	}
 }
 
 CKnuckleBone* CKnuckleBone::Create(LPDIRECT3DDEVICE9 pGraphicDev)

@@ -18,8 +18,9 @@ HRESULT CKBTab::Ready_GameObject()
 	if (FAILED(Add_Component()))
 		return E_FAIL;
 
-	m_pTransformCom->Set_Scale((607.f * 0.44f), (123.f * 0.5f), 1.f);
+	m_pTransformCom->Set_Scale((413.f * 0.5f), (100.f * 0.5f), 1.f);
 	m_pTransformCom->Set_Pos(0.f, -272.f, 0.f);
+	m_pTransformCom->Get_Info(INFO_POS, &m_vPos);
 
 	return S_OK;
 }
@@ -42,31 +43,31 @@ void CKBTab::LateUpdate_GameObject(const _float& fTimeDelta)
 
 void CKBTab::Render_GameObject()
 {
-	m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, TRUE);
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
-
-	D3DMATERIAL9			tMtrl;
-	ZeroMemory(&tMtrl, sizeof(D3DMATERIAL9));
-
-	tMtrl.Diffuse = D3DXCOLOR(1.f, 0.f, 0.f, 1.f);
-	tMtrl.Specular = D3DXCOLOR(1.f, 0.f, 0.f, 1.f);
-	tMtrl.Ambient = D3DXCOLOR(1.f, 0.f, 0.f, 1.f);
-
-	tMtrl.Emissive = D3DXCOLOR(1.f, 0.f, 0.f, 1.f);
-	tMtrl.Power = 100.f;
-
-	m_pGraphicDev->SetMaterial(&tMtrl);
 
 	m_pTextureCom->Set_Texture();
 
 	m_pBufferCom->Render_Buffer();
-
-	m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, FALSE);
 }
 
 void CKBTab::OnCollision(CGameObject* pObject)
 {
 
+}
+
+void CKBTab::Move_Down()
+{
+	m_pTransformCom->Set_Pos(m_vPos.x, m_vPos.y - 60.f, m_vPos.z);
+}
+
+void CKBTab::Move_Up()
+{
+	m_pTransformCom->Set_Pos(m_vPos.x, m_vPos.y + 60.f, m_vPos.z);
+}
+
+void CKBTab::Move_Title()
+{
+	m_pTransformCom->Set_Pos(0.f, -152.f, 0.f);
 }
 
 HRESULT CKBTab::Add_Component()
@@ -92,7 +93,7 @@ HRESULT CKBTab::Add_Component()
 	m_mapComponent[ID_DYNAMIC].insert({ L"Com_Transform", pComponent });
 
 	pComponent = m_pTextureCom = dynamic_cast<Engine::CTexture*>
-		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_MainTabTex"));
+		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_KBTab"));
 
 	if (nullptr == pComponent)
 		return E_FAIL;

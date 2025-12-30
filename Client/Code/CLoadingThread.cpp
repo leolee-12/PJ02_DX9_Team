@@ -179,6 +179,12 @@ _uint CLoadingThread::Loading_ForKnuckleBone()
     
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_KBMask", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/Knucklebones_BW_MASK.png", 2));
 
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_KBTab", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/TabRed.png", 1));
+
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_KBSix", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/Six.png", 1));
+
+
+
     m_fPercent = 100.f;
 
     m_bFinish = true;
