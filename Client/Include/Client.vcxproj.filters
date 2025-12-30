@@ -166,6 +166,9 @@
     <Filter Include="02. GameObject\07. UI\03. KBUI\01. Title\00. KBSix">
       <UniqueIdentifier>{240585be-6895-460e-aa92-90c1e3b29e91}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\07. UI\03. KBUI\02. Main">
+      <UniqueIdentifier>{68d8a63d-3ca8-4ea2-9066-5cc0c2551589}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -306,6 +309,9 @@
     <ClInclude Include="..\Header\CKBSix.h">
       <Filter>02. GameObject\07. UI\03. KBUI\01. Title\00. KBSix</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CKBDice.h">
+      <Filter>02. GameObject\07. UI\03. KBUI\02. Main</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -436,6 +442,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CKBSix.cpp">
       <Filter>02. GameObject\07. UI\03. KBUI\01. Title\00. KBSix</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CKBDice.cpp">
+      <Filter>02. GameObject\07. UI\03. KBUI\02. Main</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

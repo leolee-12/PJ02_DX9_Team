@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "CKnuckleBone.h"
 #include "CProtoMgr.h"
 #include "CStage.h"
@@ -15,6 +15,7 @@
 #include "CDInputMgr.h"
 #include "CSoundMgr.h"
 #include "CKBSix.h"
+#include "CKBDice.h"
 
 
 
@@ -29,7 +30,6 @@ CKnuckleBone::~CKnuckleBone()
 
 HRESULT CKnuckleBone::Ready_Scene()
 {
-	//Å×½ºÆ®¿ë
 	m_pMessageChannel = CStageMessage::Create();
 
 	if (FAILED(Ready_Environment_Layer(L"Environment_Layer")))
@@ -41,12 +41,14 @@ HRESULT CKnuckleBone::Ready_Scene()
 	if (FAILED(Ready_Tutorial_Layer(L"Tutorial_Layer")))
 		return E_FAIL;
 
+	if (FAILED(Ready_Main_Layer(L"Main_Layer")))
+		return E_FAIL;
+
 	if (FAILED(Ready_Light()))
 		return E_FAIL;
 
 	m_pTitleTab->Move_Title();
 
-	// Å×½ºÆ®¿ë
 
 	m_eCurKBState = KB_TITLE;
 
@@ -256,6 +258,28 @@ HRESULT CKnuckleBone::Ready_Environment_Layer(const _tchar* pLayerTag)
 	return S_OK;
 }
 
+HRESULT CKnuckleBone::Ready_Main_Layer(const _tchar* pLayerTag)
+{
+	CLayer* pLayer = CLayer::Create();
+	if (nullptr == pLayer)
+		return E_FAIL;
+
+	CGameObject* pGameObject = nullptr;
+
+	_vec3 vDicePos = { -200.f, -200.f, 0.f };
+	pGameObject = m_pCurDice = CKBDice::Create(m_pGraphicDev, vDicePos);
+
+	if (nullptr == pGameObject)
+		return E_FAIL;
+
+	if (FAILED(pLayer->Add_GameObject(L"KBDice", pGameObject)))
+		return E_FAIL;
+
+	m_mapLayer.insert({ pLayerTag , pLayer });
+
+	return S_OK;
+}
+
 HRESULT CKnuckleBone::Ready_Light()
 {
 	D3DLIGHT9	tLightInfo;
@@ -283,22 +307,22 @@ void CKnuckleBone::Render_Font_Tutorial()
 	D3DXCOLOR FontRed = D3DXCOLOR(1.f, 0.1f, 0.1f, 1.f);
 
 	RECT rc = { 0, 0, LONG(WINCX), 100 };
-	CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans60", L"ÇÃ·¹ÀÌ  ¹æ¹ý", rc, FontColor, DT_CENTER | DT_BOTTOM);
+	CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans60", L"í”Œë ˆì´  ë°©ë²•", rc, FontColor, DT_CENTER | DT_BOTTOM);
 	rc.bottom = 150;
-	CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans30", L"ÇÃ·¹ÀÌ¾îÀÇ Á¡¼ö´Â ¸ðµç ÁÖ»çÀ§ÀÇ °ªÀ» ÇÕÇÑ °ÍÀÔ´Ï´Ù.", rc, FontColor, DT_CENTER | DT_BOTTOM);
+	CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans30", L"í”Œë ˆì´ì–´ì˜ ì ìˆ˜ëŠ” ëª¨ë“  ì£¼ì‚¬ìœ„ì˜ ê°’ì„ í•©í•œ ê²ƒìž…ë‹ˆë‹¤.", rc, FontColor, DT_CENTER | DT_BOTTOM);
 
 	rc = { 0, WINCY / 2,  790, (WINCY / 2) + 125 };
-	CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans40", L"ÁÖ»çÀ§ ÀÏÄ¡", rc, FontRed, DT_CENTER | DT_BOTTOM);
+	CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans40", L"ì£¼ì‚¬ìœ„ ì¼ì¹˜", rc, FontRed, DT_CENTER | DT_BOTTOM);
 	rc.bottom += 75;
-	CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans30", L"°°Àº ¿­¿¡ °°Àº ÁÖ»çÀ§ ´«ÀÌ ³ª¿À´Â °æ¿ì,\n±× °ªÀ» °öÇÕ´Ï´Ù.", rc, FontColor, DT_CENTER | DT_BOTTOM);
+	CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans30", L"ê°™ì€ ì—´ì— ê°™ì€ ì£¼ì‚¬ìœ„ ëˆˆì´ ë‚˜ì˜¤ëŠ” ê²½ìš°,\nê·¸ ê°’ì„ ê³±í•©ë‹ˆë‹¤.", rc, FontColor, DT_CENTER | DT_BOTTOM);
 
 	rc = { 505, WINCY / 2,  WINCX, (WINCY / 2) + 125 };
-	CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans40", L"»ó´ë ÆÄ±«", rc, FontRed, DT_CENTER | DT_BOTTOM);
+	CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans40", L"ìƒëŒ€ íŒŒê´´", rc, FontRed, DT_CENTER | DT_BOTTOM);
 	rc.bottom += 75;
-	CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans30", L"»ó´ë¹æÀÇ ÁÖ»çÀ§¿Í °°Àº °ªÀ» ¸ÂÃç »ó´ë¹æÀÇ\nÁÖ»çÀ§¸¦ ÆÄ±«ÇÏ¼¼¿ä.", rc, FontColor, DT_CENTER | DT_BOTTOM);
+	CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans30", L"ìƒëŒ€ë°©ì˜ ì£¼ì‚¬ìœ„ì™€ ê°™ì€ ê°’ì„ ë§žì¶° ìƒëŒ€ë°©ì˜\nì£¼ì‚¬ìœ„ë¥¼ íŒŒê´´í•˜ì„¸ìš”.", rc, FontColor, DT_CENTER | DT_BOTTOM);
 
 	rc = { 0, 0, LONG(WINCX), WINCY - 75 };
-	CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans30", L"È®ÀÎ", rc, FontColor, DT_CENTER | DT_BOTTOM);
+	CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans30", L"í™•ì¸", rc, FontColor, DT_CENTER | DT_BOTTOM);
 }
 
 void CKnuckleBone::Render_Font_Title()
@@ -308,34 +332,34 @@ void CKnuckleBone::Render_Font_Title()
 	D3DXCOLOR FontGray = D3DXCOLOR(0.5f, 0.5f, 0.5f, 1.f);
 
 	RECT rc = { 0, 0, LONG(WINCX), 270 };
-	CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans100", L"³Ê Å¬ º»", rc, FontColor, DT_CENTER | DT_BOTTOM);
+	CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans100", L"ë„ˆí´ë³¸", rc, FontColor, DT_CENTER | DT_BOTTOM);
 	rc.bottom += 150;
-	CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans40", L"À§Çè°ú º¸»óÀÌ ÀÖ´Â ÁÖ»çÀ§ °ÔÀÓ", rc, FontColor, DT_CENTER | DT_BOTTOM);
+	CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans40", L"ìœ„í—˜ê³¼ ë³´ìƒì´ ìžˆëŠ” ì£¼ì‚¬ìœ„ ê²Œìž„", rc, FontColor, DT_CENTER | DT_BOTTOM);
 
 	switch (m_eTitleOption) {
 	case KBT_PLAY:
 		rc = { 0, 0, LONG(WINCX), WINCY - 75 };
-		CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans30", L"Á¾·á", rc, FontGray, DT_CENTER | DT_BOTTOM);
+		CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans30", L"ì¢…ë£Œ", rc, FontGray, DT_CENTER | DT_BOTTOM);
 		rc.bottom -= 60;
-		CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans30", L"ÇÃ·¹ÀÌ ¹æ¹ý", rc, FontGray, DT_CENTER | DT_BOTTOM);
+		CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans30", L"í”Œë ˆì´ ë°©ë²•", rc, FontGray, DT_CENTER | DT_BOTTOM);
 		rc.bottom -= 60;
-		CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans30", L"ÇÃ·¹ÀÌ", rc, FontColor, DT_CENTER | DT_BOTTOM);
+		CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans30", L"í”Œë ˆì´", rc, FontColor, DT_CENTER | DT_BOTTOM);
 		break;
 	case KBT_HOWTOPLAY:
 		rc = { 0, 0, LONG(WINCX), WINCY - 75 };
-		CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans30", L"Á¾·á", rc, FontGray, DT_CENTER | DT_BOTTOM);
+		CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans30", L"ì¢…ë£Œ", rc, FontGray, DT_CENTER | DT_BOTTOM);
 		rc.bottom -= 60;
-		CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans30", L"ÇÃ·¹ÀÌ ¹æ¹ý", rc, FontColor, DT_CENTER | DT_BOTTOM);
+		CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans30", L"í”Œë ˆì´ ë°©ë²•", rc, FontColor, DT_CENTER | DT_BOTTOM);
 		rc.bottom -= 60;
-		CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans30", L"ÇÃ·¹ÀÌ", rc, FontGray, DT_CENTER | DT_BOTTOM);
+		CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans30", L"í”Œë ˆì´", rc, FontGray, DT_CENTER | DT_BOTTOM);
 		break;
 	case KBT_EXIT:
 		rc = { 0, 0, LONG(WINCX), WINCY - 75 };
-		CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans30", L"Á¾·á", rc, FontColor, DT_CENTER | DT_BOTTOM);
+		CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans30", L"ì¢…ë£Œ", rc, FontColor, DT_CENTER | DT_BOTTOM);
 		rc.bottom -= 60;
-		CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans30", L"ÇÃ·¹ÀÌ ¹æ¹ý", rc, FontGray, DT_CENTER | DT_BOTTOM);
+		CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans30", L"í”Œë ˆì´ ë°©ë²•", rc, FontGray, DT_CENTER | DT_BOTTOM);
 		rc.bottom -= 60;
-		CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans30", L"ÇÃ·¹ÀÌ", rc, FontGray, DT_CENTER | DT_BOTTOM);
+		CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans30", L"í”Œë ˆì´", rc, FontGray, DT_CENTER | DT_BOTTOM);
 		break;
 	}
 }
@@ -389,10 +413,16 @@ void CKnuckleBone::Key_Input_KB()
 
 	if (CDInputMgr::GetInstance()->Key_Down(DIK_RETURN))
 	{
+		if (m_eCurKBState == KB_MAIN)
+		{
+			m_pCurDice->MoveTo(_vec3(200.f, 200.f, 0.f));
+			return;
+		}
+
+
 		switch (m_eTitleOption)
 		{
 		case KBT_PLAY:
-			if (m_eCurKBState == KB_MAIN) { break; }
 			m_eCurKBState = KB_MAIN;
 			break;
 		case KBT_HOWTOPLAY:

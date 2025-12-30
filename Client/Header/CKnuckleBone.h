@@ -2,6 +2,7 @@
 #include "CScene.h"
 
 class CKBTab;
+class CKBDice;
 
 class CKnuckleBone : public CScene
 {
@@ -23,6 +24,7 @@ private:
 	HRESULT			Ready_GameLogic_Layer(const _tchar* pLayerTag) { return S_OK; }
 	HRESULT			Ready_Tutorial_Layer(const _tchar* pLayerTag);
 	HRESULT			Ready_Title_Layer(const _tchar* pLayerTag);
+	HRESULT			Ready_Main_Layer(const _tchar* pLayerTag);
 
 	HRESULT			Ready_Light();
 	void			Render_Font_Tutorial();
@@ -45,5 +47,7 @@ private:
 	CKBTab*		m_pTitleTab;
 
 	KBTITLEOPTION m_eTitleOption;
+
+	CKBDice*	m_pCurDice;
 };
 
