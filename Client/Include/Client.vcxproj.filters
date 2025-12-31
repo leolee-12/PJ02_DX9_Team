@@ -169,6 +169,12 @@
     <Filter Include="02. GameObject\07. UI\03. KBUI\02. Main">
       <UniqueIdentifier>{68d8a63d-3ca8-4ea2-9066-5cc0c2551589}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\07. UI\03. KBUI\02. Main\00. Dice">
+      <UniqueIdentifier>{da8a9377-1ab7-4a0c-9da0-9537c6a0790e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. UI\03. KBUI\02. Main\01. Board">
+      <UniqueIdentifier>{af97486c-18ef-4f9c-962b-970463bcc69b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -310,7 +316,10 @@
       <Filter>02. GameObject\07. UI\03. KBUI\01. Title\00. KBSix</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CKBDice.h">
-      <Filter>02. GameObject\07. UI\03. KBUI\02. Main</Filter>
+      <Filter>02. GameObject\07. UI\03. KBUI\02. Main\00. Dice</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CKBBoardSlot.h">
+      <Filter>02. GameObject\07. UI\03. KBUI\02. Main\01. Board</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -444,7 +453,10 @@
       <Filter>02. GameObject\07. UI\03. KBUI\01. Title\00. KBSix</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CKBDice.cpp">
-      <Filter>02. GameObject\07. UI\03. KBUI\02. Main</Filter>
+      <Filter>02. GameObject\07. UI\03. KBUI\02. Main\00. Dice</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CKBBoardSlot.cpp">
+      <Filter>02. GameObject\07. UI\03. KBUI\02. Main\01. Board</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

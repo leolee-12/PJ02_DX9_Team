@@ -77,7 +77,7 @@ _int CLogo::Update_Scene(const _float& fTimeDelta)
 			case LS_EXIT:
 				DestroyWindow(g_hWnd);
 				return EXIT;
-		}
+			}
 
 			Engine::CScene* pLoading = CLoading::Create(m_pGraphicDev, LSTmp);
 

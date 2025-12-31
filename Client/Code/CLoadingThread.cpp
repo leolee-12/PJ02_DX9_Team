@@ -185,6 +185,7 @@ _uint CLoadingThread::Loading_ForKnuckleBone()
 
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_KBDice", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/Dice_%d.png", 6));
 
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_KBBoardSlot", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/Knucklebones_WhiteSquare.png", 1));
 
     m_fPercent = 100.f;
 

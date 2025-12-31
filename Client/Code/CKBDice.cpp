@@ -16,6 +16,7 @@ CKBDice::CKBDice(LPDIRECT3DDEVICE9 pGraphicDev)
 	, m_fRollAccum(0.f)
 	, m_fMoveTime(0.f)
 	, m_fMoveDuration(1.f)
+	, m_bDead(false)
 {
 	ZeroMemory(&m_vPos, sizeof(_vec3));
 	ZeroMemory(&m_vStartPos, sizeof(_vec3));
@@ -41,6 +42,10 @@ HRESULT CKBDice::Ready_GameObject()
 
 _int CKBDice::Update_GameObject(const _float& fTimeDelta)
 {
+	// 삭제 플래그가 설정되면 DEAD 반환
+	if (m_bDead)
+		return DEAD;
+
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
 	switch (m_eState)
@@ -115,13 +120,13 @@ void CKBDice::Update_Rolling(const _float& fTimeDelta)
 	if (m_fRollAccum >= m_fRollInterval)
 	{
 		m_fRollAccum = 0.f;
-		m_iValue = (rand() % 6) + 1;
+		m_iValue = Engine::Get_Rand_Int(1, 6);
 	}
 
 	// Auto stop after duration (2 sec)
 	if (m_fRollTime >= m_fRollDuration)
 	{
-		m_iValue = (rand() % 6) + 1;
+		m_iValue = Engine::Get_Rand_Int(1, 6);
 		m_eState = DS_SHOWING;
 	}
 }

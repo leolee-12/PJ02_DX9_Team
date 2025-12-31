@@ -35,6 +35,7 @@ public:
 	void			ShowResult(_int iFinalValue);		// Show result (DS_SHOWING)
 	void			MoveTo(const _vec3& vTargetPos);	// Start moving to target (DS_MOVING)
 	void			SetPosition(const _vec3& vPos);		// Set position immediately
+	void			SetDead() { m_bDead = true; }		// Mark for deletion
 
 public:
 	static CKBDice* Create(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vPos);
@@ -67,5 +68,8 @@ private:
 	_vec3			m_vTargetPos;		// 도착 위치
 	_float			m_fMoveTime;		// 이동 경과 시간
 	_float			m_fMoveDuration;	// 이동 총 시간 (0.5초)
+
+	// 삭제 플래그
+	_bool			m_bDead;			// true면 다음 Update에서 삭제
 };
 
