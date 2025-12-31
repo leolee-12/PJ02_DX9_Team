@@ -46,9 +46,6 @@
     <Filter Include="05. ComponentEx\00. VIBuffer">
       <UniqueIdentifier>{1ff1177d-76b2-453d-80ef-cadbab7dc2b4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="05. ComponentEx\00. VIBuffer\00. TriCol">
-      <UniqueIdentifier>{f9cb6132-9715-4fc9-8c9b-0eb29381c88f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="00. Manager\03. ProtoMgr">
       <UniqueIdentifier>{8224c9bf-97b7-4c89-b54c-c2f5f156b8f7}</UniqueIdentifier>
     </Filter>
@@ -129,9 +126,12 @@
     </Filter>
     <Filter Include="05. ComponentEx\05. AIController">
       <UniqueIdentifier>{44c36844-bc71-4e78-bb68-298bcd87982d}</UniqueIdentifier>
-	</Filter>
+    </Filter>
     <Filter Include="98. RandomEngine">
       <UniqueIdentifier>{f2411de5-f429-4004-b3bc-57dc98b74f54}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05. ComponentEx\00. VIBuffer\00. RcColTitle">
+      <UniqueIdentifier>{f9cb6132-9715-4fc9-8c9b-0eb29381c88f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -169,7 +169,7 @@
       <Filter>05. ComponentEx\00. VIBuffer</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CRcColTitle.cpp">
-      <Filter>05. ComponentEx\00. VIBuffer\00. TriCol</Filter>
+      <Filter>05. ComponentEx\00. VIBuffer\00. RcColTitle</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CProtoMgr.cpp">
       <Filter>00. Manager\03. ProtoMgr</Filter>
@@ -281,7 +281,7 @@
     </ClCompile>
     <ClCompile Include="..\Code\CAIController.cpp">
       <Filter>05. ComponentEx\05. AIController</Filter>
-	</ClCompile>
+    </ClCompile>
     <ClCompile Include="..\Code\RandomEngine.cpp">
       <Filter>98. RandomEngine</Filter>
     </ClCompile>
@@ -339,7 +339,7 @@
       <Filter>05. ComponentEx\00. VIBuffer</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CRcColTitle.h">
-      <Filter>05. ComponentEx\00. VIBuffer\00. TriCol</Filter>
+      <Filter>05. ComponentEx\00. VIBuffer\00. RcColTitle</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CProtoMgr.h">
       <Filter>00. Manager\03. ProtoMgr</Filter>
@@ -466,7 +466,7 @@
     </ClInclude>
     <ClInclude Include="..\Header\CAIController.h">
       <Filter>05. ComponentEx\05. AIController</Filter>
-	</ClInclude>
+    </ClInclude>
     <ClInclude Include="..\Header\perlin_jitter.h">
       <Filter>98. RandomEngine</Filter>
     </ClInclude>

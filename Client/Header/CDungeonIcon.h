@@ -43,7 +43,6 @@ private:
 
 	_matrix		m_matUV;
 
-	_vec3		m_vPos;
 	_bool		m_bRender;
 	_vec3		m_vColor;
 	DICONSTATE  m_eState = DI_END;

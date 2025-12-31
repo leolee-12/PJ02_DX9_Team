@@ -28,6 +28,12 @@ public:
 									D3DXCOLOR Color,
 									DWORD FLag);
 
+	void				Render_Font(const _tchar* pFontTag,
+									const _tchar* pString,
+									const RECT& Rect,
+									D3DXCOLOR Color,
+									DWORD FLag);
+
 private:
 	CFont* Find_Font(const _tchar* pFontTag);
 

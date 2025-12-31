@@ -172,6 +172,24 @@ _uint CLoadingThread::Loading_ForTest()
     return _uint();
 }
 
+_uint CLoadingThread::Loading_ForKnuckleBone()
+{
+
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_TTutorial", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/TTutorial_%d.png", 2));
+
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_KBCenter", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/KnucklebonesIcon.png", 1));
+
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Divider", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/TileDivider_%d.png", 2));
+    
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_KBMask", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/Knucklebones_BW_MASK.png", 2));
+
+    m_fPercent = 100.f;
+
+    m_bFinish = true;
+
+    return _uint();
+}
+
 unsigned int CLoadingThread::Thread_Main(void* pArg)
 {
     CLoadingThread* pLoading = reinterpret_cast<CLoadingThread*>(pArg);
@@ -188,6 +206,10 @@ unsigned int CLoadingThread::Thread_Main(void* pArg)
 
     case LOADING_TEST:
         iFlag = pLoading->Loading_ForTest();
+        break;
+
+    case LOADING_KNUCKLEBONE:
+        iFlag = pLoading->Loading_ForKnuckleBone();
         break;
 
     case LOADING_BOSS:
