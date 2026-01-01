@@ -60,6 +60,7 @@ void CN1_AI::Enter_State(const _uint& iState)
 	case CMonsterN1::N1S_HIT:
 	{
 		m_fSpeed = 0.1f;
+		Compute_TargetDir();
 		m_pOwnerTC->Get_Info(INFO_POS, &m_vLerpPos);
 		m_vLerpPos -= m_vDir * 2.f;
 	}

@@ -59,6 +59,7 @@ protected:
 	_vec3				m_vSpeed;
 	_float				m_fGravity;
 	_float				m_fBounceDamp;
+	_float				m_fGroundY;
 
 public:
 	static CItem* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, const _vec3& vPos, ITEMID eID);

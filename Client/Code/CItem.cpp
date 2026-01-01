@@ -2,14 +2,16 @@
 #include "CItem.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
+#include <CPersistentMgr.h>
 
 CItem::CItem(LPDIRECT3DDEVICE9 pGraphicDev)
 	:	CGameObject(pGraphicDev),
 		m_ePreState(IS_END),
 		m_eCurState(IS_SPAWN),
 		m_fAcmlTime(0.f),
-		m_fGravity(9.8f),
-		m_fBounceDamp(0.6f)
+		m_fGravity(0.f),
+		m_fBounceDamp(0.f),
+		m_fGroundY(0.f)
 {
 }
 
@@ -18,8 +20,9 @@ CItem::CItem(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel)
 		m_ePreState(IS_END),
 		m_eCurState(IS_SPAWN),
 		m_fAcmlTime(0.f),
-		m_fGravity(9.8f),
-		m_fBounceDamp(0.6f)
+		m_fGravity(0.f),
+		m_fBounceDamp(0.f),
+		m_fGroundY(0.f)
 {
 }
 
@@ -29,7 +32,8 @@ CItem::CItem(const CItem& rhs)
 		m_eCurState(rhs.m_eCurState),
 		m_fAcmlTime(rhs.m_fAcmlTime),
 		m_fGravity(rhs.m_fGravity),
-		m_fBounceDamp(rhs.m_fBounceDamp)
+		m_fBounceDamp(rhs.m_fBounceDamp),
+		m_fGroundY(rhs.m_fGroundY)
 {
 }
 
@@ -146,6 +150,8 @@ void CItem::Ready_Variable()
 
 	// 게임로직 변수 세팅
 	m_vSpeed = { (rand() % 10 - 5.f), 10.f, -1.f };
+	m_fGravity = -9.8f;
+	m_fBounceDamp = 0.9f;
 }
 
 void CItem::Ready_Event()
@@ -172,6 +178,8 @@ void CItem::Check_State()
 	case IS_SPAWN:
 		break;
 	case IS_IDLE:
+		m_vSpeed = { 0.f, 0.f, 0.f };
+		m_fAcmlTime = 0.f;
 		break;
 	case IS_CHASE:
 		break;
@@ -187,14 +195,46 @@ void CItem::Set_Texture()
 
 void CItem::Update_Spawn(const _float& fTimeDelta)
 {
+	m_vSpeed.y += m_fGravity * fTimeDelta;
+	m_pTransformCom->Move_Pos(&m_vSpeed, fTimeDelta, 1.f);
+
+	_vec3 vPos;
+
+	m_pTransformCom->Get_Info(INFO_POS, &vPos);
+
+	if (vPos.y <= m_fGroundY)
+	{
+		m_pTransformCom->Set_Pos(vPos.x, m_fGroundY, vPos.z);
+		m_vSpeed.y = -m_vSpeed.y * m_fBounceDamp;
+
+		if (fabsf(m_vSpeed.y) < 0.1f)
+			m_eCurState = IS_IDLE;
+	}
 }
 
 void CItem::Update_Idle(const _float& fTimeDelta)
 {
+	m_fAcmlTime += fTimeDelta;
+
+	if(m_fAcmlTime >= 1.f)
+	{
+		m_eCurState = IS_CHASE;
+	}
 }
 
 void CItem::Update_Chase(const _float& fTimeDelta)
 {
+	CTransform* pTransformCom = CPersistentMgr::GetInstance()->Get_PlayerTransform();
+	
+	NULL_CHECK(pTransformCom);
+
+	_vec3 vTargetPos;
+
+	pTransformCom->Get_Info(INFO_POS, &vTargetPos);
+
+	m_vSpeed = vTargetPos - m_vPos;
+
+	m_pTransformCom->Chase_Target(&vTargetPos, fTimeDelta, D3DXVec3Length(&m_vSpeed));
 }
 
 CItem* CItem::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, const _vec3& vPos, ITEMID eID)
