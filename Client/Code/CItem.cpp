@@ -149,9 +149,13 @@ void CItem::Ready_Variable()
 	m_pColliderCom->RegisterToManager(this, CL_ITEM);
 
 	// 게임로직 변수 세팅
-	m_vSpeed = { (rand() % 10 - 5.f), 10.f, -1.f };
+
+	_float fX = (rand() % 10 - 5.f) * 0.3f;
+	_float fZ = (rand() % 10 - 5.f) * 0.3f;
+	m_vSpeed = { fX, 10.f, fZ};
 	m_fGravity = -9.8f;
-	m_fBounceDamp = 0.9f;
+	m_fBounceDamp = 0.6f;
+	m_fGroundY = 1.f;
 }
 
 void CItem::Ready_Event()
@@ -195,19 +199,20 @@ void CItem::Set_Texture()
 
 void CItem::Update_Spawn(const _float& fTimeDelta)
 {
-	m_vSpeed.y += m_fGravity * fTimeDelta;
+	m_vSpeed.y += m_fGravity * 3.f * fTimeDelta;
 	m_pTransformCom->Move_Pos(&m_vSpeed, fTimeDelta, 1.f);
 
 	_vec3 vPos;
 
 	m_pTransformCom->Get_Info(INFO_POS, &vPos);
 
-	if (vPos.y <= m_fGroundY)
+	if ((vPos.y <= m_fGroundY) && (m_vSpeed.y < 0.f))
 	{
 		m_pTransformCom->Set_Pos(vPos.x, m_fGroundY, vPos.z);
 		m_vSpeed.y = -m_vSpeed.y * m_fBounceDamp;
-
-		if (fabsf(m_vSpeed.y) < 0.1f)
+		m_vSpeed.x = m_vSpeed.x * m_fBounceDamp;
+		
+		if (fabsf(m_vSpeed.y) < 1.f)
 			m_eCurState = IS_IDLE;
 	}
 }
@@ -234,7 +239,7 @@ void CItem::Update_Chase(const _float& fTimeDelta)
 
 	m_vSpeed = vTargetPos - m_vPos;
 
-	m_pTransformCom->Chase_Target(&vTargetPos, fTimeDelta, D3DXVec3Length(&m_vSpeed));
+	m_pTransformCom->Chase_Target(&vTargetPos, fTimeDelta, 5.f * D3DXVec3Length(&m_vSpeed));
 }
 
 CItem* CItem::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, const _vec3& vPos, ITEMID eID)

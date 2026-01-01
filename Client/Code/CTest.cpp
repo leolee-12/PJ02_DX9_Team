@@ -168,7 +168,7 @@ HRESULT CTest::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 		if (FAILED(pLayer->Add_GameObject(L"Monster", pGameObject)))
 			return E_FAIL;
 
-		pGameObject = CItem::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ _float(rand() % 20), 1.f, _float(rand() % 20) }, CItem::ITEMID(rand() % 8));
+		pGameObject = CItem::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ _float(rand() % 20), 1.1f, _float(rand() % 20) }, CItem::ITEMID(rand() % 8));
 
 		if (nullptr == pGameObject)
 			return E_FAIL;
