@@ -12,7 +12,7 @@ namespace Engine
 class CItem : public CGameObject
 {
 public:
-	enum ITEMSTATE { IS_SPAWN, IS_IDLE, IS_CHASE, IS_END };
+	enum ITEMSTATE { IS_SPAWN, IS_IDLE, IS_CHASE, IS_SUMMON, IS_END };
 	enum ITEMID {	IG_GOLD, IG_WOOD, IG_STONE, IG_BERRY, IG_FERTILIZER, IG_FERVOR,
 					FD_GFOOD, FD_BFOOD,
 					WP_SWORD, WP_GAUNTLET, WP_FIREBALL, WP_TENTACLE,
@@ -26,22 +26,17 @@ protected:
 
 public:
 	virtual HRESULT		Ready_GameObject();
-	virtual _int		Update_GameObject(const _float& fTimeDelta);
-	virtual void		LateUpdate_GameObject(const _float& fTimeDelta);
-	virtual void		Render_GameObject();
-	virtual void		OnCollision(CGameObject* pObject) {};
-
-protected:
-	HRESULT				Add_Component();
+	virtual void		LateUpdate_GameObject(const _float& fTimeDelta);	// 아직은 동일하므로 추상클래스에 넣었으나, 달라지면 각자 override하여 사용
+	virtual void		Render_GameObject();								// 아직은 동일하므로 추상클래스에 넣었으나, 달라지면 각자 override하여 사용
+	virtual void		OnCollision(CGameObject* pObject) PURE;				// 하위클래스에 구현 강제
 
 	void				Ready_Variable();
 	void				Ready_Event();
 	void				Check_State();
-	void				Set_Texture();
-
 	void				Update_Spawn(const _float& fTimeDelta);
-	void				Update_Idle(const _float& fTimeDelta);
-	void				Update_Chase(const _float& fTimeDelta);
+
+protected:
+	HRESULT				Add_Component();
 
 protected:
 	Engine::CRcTex*		m_pBufferCom;
@@ -50,7 +45,6 @@ protected:
 	Engine::CCollider*	m_pColliderCom;
 
 	_vec3				m_vPos;
-	_vec3				m_vDir;
 
 	// 상태 관련
 	ITEMSTATE			m_ePreState;
@@ -65,7 +59,7 @@ protected:
 	_float				m_fGroundY;
 
 public:
-	static CItem* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, const _vec3& vPos, ITEMID eID);
+	static CItem* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, const _vec3& vPos, ITEMID eID, _bool isActive);
 
 protected:
 	virtual void Free();

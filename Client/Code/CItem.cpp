@@ -2,38 +2,40 @@
 #include "CItem.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
-#include <CPersistentMgr.h>
+#include "CPersistentMgr.h"
+#include "CActiveItem.h"
+#include "CPassiveItem.h"
 
 CItem::CItem(LPDIRECT3DDEVICE9 pGraphicDev)
-	:	CGameObject(pGraphicDev),
-		m_ePreState(IS_END),
-		m_eCurState(IS_SPAWN),
-		m_fAcmlTime(0.f),
-		m_fGravity(0.f),
-		m_fBounceDamp(0.f),
-		m_fGroundY(0.f)
+	: CGameObject(pGraphicDev),
+	m_ePreState(IS_END),
+	m_eCurState(IS_SPAWN),
+	m_fAcmlTime(0.f),
+	m_fGravity(0.f),
+	m_fBounceDamp(0.f),
+	m_fGroundY(0.f)
 {
 }
 
 CItem::CItem(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel)
-	:	CGameObject(pGraphicDev, StageChannel),
-		m_ePreState(IS_END),
-		m_eCurState(IS_SPAWN),
-		m_fAcmlTime(0.f),
-		m_fGravity(0.f),
-		m_fBounceDamp(0.f),
-		m_fGroundY(0.f)
+	: CGameObject(pGraphicDev, StageChannel),
+	m_ePreState(IS_END),
+	m_eCurState(IS_SPAWN),
+	m_fAcmlTime(0.f),
+	m_fGravity(0.f),
+	m_fBounceDamp(0.f),
+	m_fGroundY(0.f)
 {
 }
 
 CItem::CItem(const CItem& rhs)
-	:	CGameObject(rhs),
-		m_ePreState(rhs.m_ePreState),
-		m_eCurState(rhs.m_eCurState),
-		m_fAcmlTime(rhs.m_fAcmlTime),
-		m_fGravity(rhs.m_fGravity),
-		m_fBounceDamp(rhs.m_fBounceDamp),
-		m_fGroundY(rhs.m_fGroundY)
+	: CGameObject(rhs),
+	m_ePreState(rhs.m_ePreState),
+	m_eCurState(rhs.m_eCurState),
+	m_fAcmlTime(rhs.m_fAcmlTime),
+	m_fGravity(rhs.m_fGravity),
+	m_fBounceDamp(rhs.m_fBounceDamp),
+	m_fGroundY(rhs.m_fGroundY)
 {
 }
 
@@ -54,36 +56,6 @@ HRESULT CItem::Ready_GameObject()
 	return S_OK;
 }
 
-_int CItem::Update_GameObject(const _float& fTimeDelta)
-{
-	m_pColliderCom->UpdateFromTransform(m_pTransformCom);
-
-	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
-
-	if (iExit == DEAD)
-	{
-		m_pColliderCom->UnregisterFromManager();
-		return iExit;
-	}
-
-	switch (m_eCurState)
-	{
-	case IS_SPAWN:
-		Update_Spawn(fTimeDelta);
-		break;
-	case IS_IDLE:
-		Update_Idle(fTimeDelta);
-		break;
-	case IS_CHASE:
-		Update_Chase(fTimeDelta);
-		break;
-	}
-
-	CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHA, this);
-
-	return iExit;
-}
-
 void CItem::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	Check_State();
@@ -98,7 +70,6 @@ void CItem::Render_GameObject()
 {
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
 
-	//Set_Texture();
 	m_pTextureCom->Set_Texture(_uint(m_eItemID));
 
 	m_pBufferCom->Render_Buffer();
@@ -150,9 +121,9 @@ void CItem::Ready_Variable()
 
 	// 게임로직 변수 세팅
 
-	_float fX = (rand() % 10 - 5.f) * 0.3f;
-	_float fZ = (rand() % 10 - 5.f) * 0.3f;
-	m_vSpeed = { fX, 10.f, fZ};
+	_float fX = (rand() % 20 - 10.f) * 0.3f;
+	_float fZ = (rand() % 20 - 10.f) * 0.3f;
+	m_vSpeed = { fX, 10.f, fZ };
 	m_fGravity = -9.8f;
 	m_fBounceDamp = 0.6f;
 	m_fGroundY = 1.f;
@@ -187,14 +158,11 @@ void CItem::Check_State()
 		break;
 	case IS_CHASE:
 		break;
+	case IS_SUMMON:
+		break;
 	}
 
 	m_ePreState = m_eCurState;
-}
-
-void CItem::Set_Texture()
-{
-
 }
 
 void CItem::Update_Spawn(const _float& fTimeDelta)
@@ -211,47 +179,26 @@ void CItem::Update_Spawn(const _float& fTimeDelta)
 		m_pTransformCom->Set_Pos(vPos.x, m_fGroundY, vPos.z);
 		m_vSpeed.y = -m_vSpeed.y * m_fBounceDamp;
 		m_vSpeed.x = m_vSpeed.x * m_fBounceDamp;
-		
+
 		if (fabsf(m_vSpeed.y) < 1.f)
 			m_eCurState = IS_IDLE;
 	}
 }
 
-void CItem::Update_Idle(const _float& fTimeDelta)
+CItem* CItem::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, const _vec3& vPos, ITEMID eID, _bool isActive)
 {
-	m_fAcmlTime += fTimeDelta;
-
-	if(m_fAcmlTime >= 1.f)
+	if (eID < IG_GOLD || ID_END <= eID)
 	{
-		m_eCurState = IS_CHASE;
-	}
-}
-
-void CItem::Update_Chase(const _float& fTimeDelta)
-{
-	CTransform* pTransformCom = CPersistentMgr::GetInstance()->Get_PlayerTransform();
-	
-	NULL_CHECK(pTransformCom);
-
-	_vec3 vTargetPos;
-
-	pTransformCom->Get_Info(INFO_POS, &vTargetPos);
-
-	m_vSpeed = vTargetPos - m_vPos;
-
-	m_pTransformCom->Chase_Target(&vTargetPos, fTimeDelta, 5.f * D3DXVec3Length(&m_vSpeed));
-}
-
-CItem* CItem::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, const _vec3& vPos, ITEMID eID)
-{
-	CItem* pItem = new CItem(pGraphicDev, StageChannel);
-
-	if(FAILED(pItem->Ready_GameObject()))
-	{
-		MSG_BOX("CItem Create Failed");
-		Safe_Release(pItem);
+		MSG_BOX("CItem Create Failed : ItemID out of Range");
 		return nullptr;
 	}
+
+	CItem* pItem = nullptr;
+
+	if (isActive)	pItem = CActiveItem::Create(pGraphicDev, StageChannel);
+	else			pItem = CPassiveItem::Create(pGraphicDev, StageChannel);
+
+	NULL_CHECK_RETURN(pItem, nullptr);
 
 	pItem->m_pTransformCom->Set_Pos(vPos.x, vPos.y, vPos.z);
 	pItem->m_eItemID = eID;
