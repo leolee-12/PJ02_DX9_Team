@@ -160,6 +160,18 @@
     <Filter Include="02. GameObject\07. UI\03. KBUI\00. TTutorial\00. KBBack">
       <UniqueIdentifier>{361ac797-f26e-4d74-843b-11dc7fd5c6c5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\02. Monster\Normal2">
+      <UniqueIdentifier>{7afa2db1-0b9b-45dd-add7-b4436ab26da5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\02. Monster\Normal3">
+      <UniqueIdentifier>{c750db87-30b0-461e-be3c-7188c009816e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\02. Monster\Boss1">
+      <UniqueIdentifier>{4835642c-34bd-4f07-9943-87d66889933e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\02. Monster\Boss2">
+      <UniqueIdentifier>{a2bf76f1-004d-4e27-ad5f-a12e80a7f38a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -297,6 +309,30 @@
     <ClInclude Include="..\Header\CKBMask.h">
       <Filter>02. GameObject\07. UI\03. KBUI\01. Test</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CB1_AI.h">
+      <Filter>02. GameObject\02. Monster\Boss1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CMonsterB1.h">
+      <Filter>02. GameObject\02. Monster\Boss1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CB2_AI.h">
+      <Filter>02. GameObject\02. Monster\Boss2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CMonsterB2.h">
+      <Filter>02. GameObject\02. Monster\Boss2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CMonsterN2.h">
+      <Filter>02. GameObject\02. Monster\Normal2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CN2_AI.h">
+      <Filter>02. GameObject\02. Monster\Normal2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CN3_AI.h">
+      <Filter>02. GameObject\02. Monster\Normal3</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CMonsterN3.h">
+      <Filter>02. GameObject\02. Monster\Normal3</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -424,6 +460,30 @@
     </ClCompile>
     <ClCompile Include="..\Code\CKBMask.cpp">
       <Filter>02. GameObject\07. UI\03. KBUI\01. Test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CMonsterB1.cpp">
+      <Filter>02. GameObject\02. Monster\Boss1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CB1_AI.cpp">
+      <Filter>02. GameObject\02. Monster\Boss1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CMonsterB2.cpp">
+      <Filter>02. GameObject\02. Monster\Boss2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CB2_AI.cpp">
+      <Filter>02. GameObject\02. Monster\Boss2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CMonsterN2.cpp">
+      <Filter>02. GameObject\02. Monster\Normal2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CN2_AI.cpp">
+      <Filter>02. GameObject\02. Monster\Normal2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CN3_AI.cpp">
+      <Filter>02. GameObject\02. Monster\Normal3</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CMonsterN3.cpp">
+      <Filter>02. GameObject\02. Monster\Normal3</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
