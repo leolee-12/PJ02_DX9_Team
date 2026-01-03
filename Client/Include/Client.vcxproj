@@ -181,6 +181,7 @@
     <ClInclude Include="..\Header\CN1_AI.h" />
     <ClInclude Include="..\Header\CN2_AI.h" />
     <ClInclude Include="..\Header\CN3_AI.h" />
+    <ClInclude Include="..\Header\CNode.h" />
     <ClInclude Include="..\Header\CPersistentMgr.h" />
     <ClInclude Include="..\Header\CPlayer.h" />
     <ClInclude Include="..\Header\CPlayerHP.h" />
@@ -238,6 +239,7 @@
     <ClCompile Include="..\Code\CN1_AI.cpp" />
     <ClCompile Include="..\Code\CN2_AI.cpp" />
     <ClCompile Include="..\Code\CN3_AI.cpp" />
+    <ClCompile Include="..\Code\CNode.cpp" />
     <ClCompile Include="..\Code\CPersistentMgr.cpp" />
     <ClCompile Include="..\Code\CPlayer.cpp" />
     <ClCompile Include="..\Code\CPlayerHP.cpp" />

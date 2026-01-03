@@ -333,6 +333,9 @@
     <ClInclude Include="..\Header\CMonsterN3.h">
       <Filter>02. GameObject\02. Monster\Normal3</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CNode.h">
+      <Filter>02. GameObject\02. Monster</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -484,6 +487,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CMonsterN3.cpp">
       <Filter>02. GameObject\02. Monster\Normal3</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CNode.cpp">
+      <Filter>02. GameObject\02. Monster</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
