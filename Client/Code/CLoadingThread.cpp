@@ -24,12 +24,12 @@ HRESULT CLoadingThread::Ready_Loading(LOADINGID eID)
 
     int iNumber = 10;
 
-    m_hThread = (HANDLE)_beginthreadex(NULL,    // º¸¾È¼Ó¼º(ÇÚµéÀÇ »ó¼Ó ¿©ºÎ, nullÀÎ °æ¿ì »ó¼Ó¿¡¼­ Á¦¿Ü)
-                                        0,      // µðÆúÆ® ½ºÅÃ »çÀÌÁî(1 ¹ÙÀÌÆ®)
-                                        Thread_Main,      // ¾²·¹µå ÇÔ¼ö
-                                        this,   // ¾²·¹µå ÇÔ¼ö¸¦ ÀÌ¿ëÇÏ¿© °¡°øÇÒ µ¥ÀÌÅÍ ÁÖ¼Ò    
-                                        0,      // ¾²·¹µå »ý¼º ¹× ½ÇÇàÀ» Á¶Á¤ÇÏ±â ¿É¼Ç(flag)
-                                        NULL);  // ¾²·¹µå id
+    m_hThread = (HANDLE)_beginthreadex(NULL,    // ï¿½ï¿½ï¿½È¼Ó¼ï¿½(ï¿½Úµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½, nullï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½Ó¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
+                                        0,      // ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(1 ï¿½ï¿½ï¿½ï¿½Æ®)
+                                        Thread_Main,      // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ô¼ï¿½
+                                        this,   // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ô¼ï¿½ï¿½ï¿½ ï¿½Ì¿ï¿½ï¿½Ï¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö¼ï¿½    
+                                        0,      // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï±ï¿½ ï¿½É¼ï¿½(flag)
+                                        NULL);  // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ id
 
 
     return S_OK;
@@ -93,6 +93,25 @@ _uint CLoadingThread::Loading_ForStage()
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_EffectTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Explosion/Explosion%d.png", 90))))
         return E_FAIL;
 
+    // Map Tile Textures (í˜„ìž¬ Tile_00.pngë§Œ ì¡´ìž¬)
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_TileTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../../Maps/Texture/Tile/Tile_%02d.png", 1))))
+        return E_FAIL;
+
+    // Map Tile Mask Textures
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_TileMask_Down", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../../Maps/Texture/TileMasking/DirtOutlineThin_Down.png", 1));
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_TileMask_Left", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../../Maps/Texture/TileMasking/DirtOutlineThin_Left.png", 1));
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_TileMask_Right", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../../Maps/Texture/TileMasking/DirtOutlineThin_Right.png", 1));
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_TileMask_Up", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../../Maps/Texture/TileMasking/DirtOutlineThin_Up.png", 1));
+
+    // Map Object Textures (Category-based)
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_RockTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../../Maps/Texture/Object/Rock/Rock_%02d.png", 36));
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_TreeTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../../Maps/Texture/Object/Tree/Tree_%02d.png", 6));
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_FireTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../../Maps/Texture/Object/Fire/Fire_%02d.png", 1));
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_TentTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../../Maps/Texture/Object/Tent/Tent_%02d.png", 3));
+
+    // Grass Texture
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_GrassTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../../Maps/Texture/Object/Grass/Grass_%02d.png", 7));
+
     m_fPercent += 20.f;
    
     //if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_SkyTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_CUBE, L"../Bin/Resource/Texture/159.dds", 1))))
@@ -113,7 +132,7 @@ _uint CLoadingThread::Loading_ForStage()
 
     m_bFinish = true;
 
-    lstrcpy(m_szLoading, L"Å×½ºÆ®");
+    lstrcpy(m_szLoading, L"ï¿½×½ï¿½Æ®");
 
     return 0;
 }
@@ -158,11 +177,28 @@ _uint CLoadingThread::Loading_ForTest()
 
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_N1_AI", CN1_AI::Create(m_pGraphicDev, 5.f, 1.f));
 
+    // Map Tile Textures (í˜„ìž¬ Tile_00.pngë§Œ ì¡´ìž¬)
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_TileTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../../Maps/Texture/Tile/Tile_%02d.png", 1));
+
+    // Map Tile Mask Textures
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_TileMask_Down", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../../Maps/Texture/TileMasking/DirtOutlineThin_Down.png", 1));
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_TileMask_Left", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../../Maps/Texture/TileMasking/DirtOutlineThin_Left.png", 1));
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_TileMask_Right", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../../Maps/Texture/TileMasking/DirtOutlineThin_Right.png", 1));
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_TileMask_Up", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../../Maps/Texture/TileMasking/DirtOutlineThin_Up.png", 1));
+
+    // Map Object Textures (Category-based)
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_RockTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../../Maps/Texture/Object/Rock/Rock_%02d.png", 36));
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_TreeTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../../Maps/Texture/Object/Tree/Tree_%02d.png", 6));
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_FireTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../../Maps/Texture/Object/Fire/Fire_%02d.png", 1));
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_TentTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../../Maps/Texture/Object/Tent/Tent_%02d.png", 3));
+
+    // Grass Texture
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_GrassTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../../Maps/Texture/Object/Grass/Grass_%02d.png", 7));
 
     //Sleep(2000);
 
     m_fPercent += 50.f;
-    
+
     m_bFinish = true;
 
     return _uint();

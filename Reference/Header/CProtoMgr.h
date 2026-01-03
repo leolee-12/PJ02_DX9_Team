@@ -2,6 +2,7 @@
 
 #include "CRcCol.h"
 #include "CRcTex.h"
+#include "CRcTexXZ.h"
 #include "CTerrainTex.h"
 #include "CCubeTex.h"
 #include "CRcColTitle.h"

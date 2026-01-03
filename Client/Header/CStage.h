@@ -6,6 +6,7 @@
 #include "CMonster.h"
 #include "CTerrain.h"
 #include "CTerrainWall.h"
+#include "CTileMgr.h"
 //#include "CLoadingThread.h"
 
 class CStage : public CScene
@@ -34,7 +35,7 @@ private:
 	virtual void Free();
 
 private:
-	// ев╫╨ф╝©К
+	// О©╫в╫О©╫ф╝О©╫О©╫
 	//CLoadingThread* m_pLoading;
 };
 

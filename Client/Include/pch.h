@@ -22,26 +22,18 @@
 
 #ifdef _DEBUG
 
-//#define IMGUI
-
 #define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>
 #include <crtdbg.h>
 
+#endif
 
-#ifdef  IMGUI
-
-#else
-//#ifndef DBG_NEW 
-//#define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ ) 
-//#define new DBG_NEW 
-
+//#ifndef DBG_NEW
+//#define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
+//#define new DBG_NEW
+//
 //#endif
 
-#endif //  IMGUI
-
-
-#endif
 
 extern HINSTANCE g_hInst;
 extern HWND g_hWnd;

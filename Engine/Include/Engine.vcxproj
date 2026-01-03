@@ -188,6 +188,7 @@ call Copy.bat</Command>
     <ClInclude Include="..\Header\CProtoMgr.h" />
     <ClInclude Include="..\Header\CRcCol.h" />
     <ClInclude Include="..\Header\CRcTex.h" />
+    <ClInclude Include="..\Header\CRcTexXZ.h" />
     <ClInclude Include="..\Header\CRenderer.h" />
     <ClInclude Include="..\Header\CSaveLoadMgr.h" />
     <ClInclude Include="..\Header\CScene.h" />
@@ -211,6 +212,7 @@ call Copy.bat</Command>
     <ClInclude Include="..\Header\IMessageChannel.h" />
     <ClInclude Include="..\Header\Edit_Define.h" />
     <ClInclude Include="..\Header\perlin_jitter.h" />
+    <ClInclude Include="..\Header\CMapLoader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\ImGuizmo\GraphEditor.cpp" />
@@ -251,6 +253,7 @@ call Copy.bat</Command>
     <ClCompile Include="..\Code\CProtoMgr.cpp" />
     <ClCompile Include="..\Code\CRcCol.cpp" />
     <ClCompile Include="..\Code\CRcTex.cpp" />
+    <ClCompile Include="..\Code\CRcTexXZ.cpp" />
     <ClCompile Include="..\Code\CRenderer.cpp" />
     <ClCompile Include="..\Code\CSaveLoadMgr.cpp" />
     <ClCompile Include="..\Code\CScene.cpp" />
@@ -265,6 +268,7 @@ call Copy.bat</Command>
     <ClCompile Include="..\Code\CUi.cpp" />
     <ClCompile Include="..\Code\CVIBuffer.cpp" />
     <ClCompile Include="..\Code\RandomEngine.cpp" />
+    <ClCompile Include="..\Code\CMapLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />

@@ -11,6 +11,11 @@
 #include "CManagement.h"
 #include "CPersistentMgr.h"
 #include <CMonsterN1.h>
+#include "CMapLoader.h"
+#include "CTile.h"
+#include "CTileMgr.h"
+#include "CMapObject.h"
+#include "CGrass.h"
 
 
 CStage::CStage(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -38,7 +43,7 @@ HRESULT CStage::Ready_Scene()
 	if (FAILED(Ready_UI_Layer(L"UI_Layer")))
 		return E_FAIL;
 
-	// ев╫╨ф╝©К
+	// О©╫в╫О©╫ф╝О©╫О©╫
 
 	/*m_pLoading = CLoadingThread::Create(m_pGraphicDev, CLoadingThread::LOADING_STAGE);
 
@@ -147,43 +152,90 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 
 	CGameObject* pGameObject = nullptr;
 
-	// Terrain
-	pGameObject = CTerrain::Create(m_pGraphicDev);
-
-	if (nullptr == pGameObject)
-		return E_FAIL;
-
-	if (FAILED(pLayer->Add_GameObject(L"Terrain", pGameObject)))
-		return E_FAIL;
-
-
-	pGameObject = CTerrainWall::Create(m_pGraphicDev);
-
-	if (nullptr == pGameObject)
-		return E_FAIL;
-
-	if (FAILED(pLayer->Add_GameObject(L"TerrainWall", pGameObject)))
-		return E_FAIL;
-	
-
-	//TestMonster
-	pGameObject = CMonster::Create(m_pGraphicDev, m_pMessageChannel);
-
-	if (nullptr == pGameObject)
-		return E_FAIL;
-
-	if (FAILED(pLayer->Add_GameObject(L"Monster", pGameObject)))
-		return E_FAIL;
-
-	for (_uint i = 0; i < 20; ++i)
+	// Load Map Data
+	Engine::MAPDATA mapData;
+	if (SUCCEEDED(Engine::CMapLoader::GetInstance()->LoadMapA("../../Maps/MapData/Tutorial_test.txt", mapData)))
 	{
-		pGameObject = CMonsterN1::Create(m_pGraphicDev, m_pMessageChannel);
+		// Initialize Tile Manager
+		if (FAILED(CTileMgr::GetInstance()->Initialize(m_pGraphicDev, mapData)))
+		{
+			MSG_BOX("Failed to initialize TileMgr");
+		}
 
+		// Process Spawns
+		for (const auto& spawn : mapData.spawns)
+		{
+			if (spawn.type == 0) // Player spawn
+			{
+				// Set player position later
+			}
+			else if (spawn.type == 1) // Monster spawn
+			{
+				pGameObject = CMonsterN1::Create(m_pGraphicDev, m_pMessageChannel);
+				if (pGameObject)
+				{
+					Engine::CTransform* pTransform = dynamic_cast<Engine::CTransform*>(
+						pGameObject->Get_Component(ID_DYNAMIC, L"Com_Transform"));
+					if (pTransform)
+					{
+						pTransform->Set_Pos(spawn.x, 0.f, spawn.z);
+					}
+					pLayer->Add_GameObject(L"Monster", pGameObject);
+				}
+			}
+		}
+
+		// Process Objects
+		for (const auto& obj : mapData.objects)
+		{
+			if (obj.category == "Grass")
+			{
+				pGameObject = CGrass::Create(m_pGraphicDev, obj);
+				if (pGameObject)
+				{
+					pLayer->Add_GameObject(L"Grass", pGameObject);
+				}
+			}
+			else
+			{
+				pGameObject = CMapObject::Create(m_pGraphicDev, obj);
+				if (pGameObject)
+				{
+					pLayer->Add_GameObject(L"MapObject", pGameObject);
+				}
+			}
+		}
+	}
+	else
+	{
+		// Fallback: Use original terrain if map loading fails
+		pGameObject = CTerrain::Create(m_pGraphicDev);
 		if (nullptr == pGameObject)
 			return E_FAIL;
+		if (FAILED(pLayer->Add_GameObject(L"Terrain", pGameObject)))
+			return E_FAIL;
 
+		pGameObject = CTerrainWall::Create(m_pGraphicDev);
+		if (nullptr == pGameObject)
+			return E_FAIL;
+		if (FAILED(pLayer->Add_GameObject(L"TerrainWall", pGameObject)))
+			return E_FAIL;
+
+		// Original monster spawning
+		pGameObject = CMonster::Create(m_pGraphicDev, m_pMessageChannel);
+		if (nullptr == pGameObject)
+			return E_FAIL;
 		if (FAILED(pLayer->Add_GameObject(L"Monster", pGameObject)))
 			return E_FAIL;
+
+		for (_uint i = 0; i < 20; ++i)
+		{
+			pGameObject = CMonsterN1::Create(m_pGraphicDev, m_pMessageChannel);
+			if (nullptr == pGameObject)
+				return E_FAIL;
+			if (FAILED(pLayer->Add_GameObject(L"Monster", pGameObject)))
+				return E_FAIL;
+		}
 	}
 
 	pGameObject = CPersistentMgr::GetInstance()->Get_GlobalObjects(GOBJ_PLAYER);
@@ -197,7 +249,7 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 		return E_FAIL;
 
 	pGameObject->AddRef();
-	
+
 	m_mapLayer.insert({ pLayerTag , pLayer });
 
 	return S_OK;

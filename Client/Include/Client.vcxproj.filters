@@ -160,6 +160,18 @@
     <Filter Include="02. GameObject\07. UI\03. KBUI\00. TTutorial\00. KBBack">
       <UniqueIdentifier>{361ac797-f26e-4d74-843b-11dc7fd5c6c5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\10. Tile">
+      <UniqueIdentifier>{fd9114e4-ed18-4e95-93eb-47e4ebc69072}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\12. MapObject">
+      <UniqueIdentifier>{c73a576f-744b-4160-90e9-ca0038f8a214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\11. Grass">
+      <UniqueIdentifier>{20638477-cadd-4aa2-94a1-d3b5098d0639}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="10. TileMgr">
+      <UniqueIdentifier>{01b64606-77a6-499b-92aa-0bad3eff8f84}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -297,6 +309,21 @@
     <ClInclude Include="..\Header\CKBMask.h">
       <Filter>02. GameObject\07. UI\03. KBUI\01. Test</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\SaveLoad.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CTile.h">
+      <Filter>02. GameObject\10. Tile</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CGrass.h">
+      <Filter>02. GameObject\11. Grass</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CMapObject.h">
+      <Filter>02. GameObject\12. MapObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CTileMgr.h">
+      <Filter>10. TileMgr</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -424,6 +451,18 @@
     </ClCompile>
     <ClCompile Include="..\Code\CKBMask.cpp">
       <Filter>02. GameObject\07. UI\03. KBUI\01. Test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CGrass.cpp">
+      <Filter>02. GameObject\11. Grass</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CMapObject.cpp">
+      <Filter>02. GameObject\12. MapObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CTileMgr.cpp">
+      <Filter>10. TileMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CTile.cpp">
+      <Filter>02. GameObject\10. Tile</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
