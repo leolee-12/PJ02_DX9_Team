@@ -14,9 +14,11 @@ CMonsterN2::CMonsterN2(LPDIRECT3DDEVICE9 pGraphicDev)
 		m_fFrame(0.f),
 		m_fFrameEnd(0.f),
 		m_fFrameSpeed(0.f),
-		m_iAttack(0)
+		m_iAttack(0),
+		m_fNodeFrameEnd(0.f),
+		m_fWaveTime(0.f)
 {
-	ZeroMemory(&m_vPos, sizeof(_vec3));
+	ZeroMemory(m_vNodePos, sizeof(m_vNodePos));
 }
 
 CMonsterN2::CMonsterN2(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel)
@@ -26,9 +28,11 @@ CMonsterN2::CMonsterN2(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChan
 		m_fFrame(0.f),
 		m_fFrameEnd(0.f),
 		m_fFrameSpeed(0.f),
-		m_iAttack(0)
+		m_iAttack(0),
+		m_fNodeFrameEnd(0.f),
+		m_fWaveTime(0.f)
 {
-	ZeroMemory(&m_vPos, sizeof(_vec3));
+	ZeroMemory(m_vNodePos, sizeof(m_vNodePos));
 }
 
 
@@ -39,8 +43,11 @@ CMonsterN2::CMonsterN2(const CMonsterN2& rhs)
 		m_fFrame(0.f),
 		m_fFrameEnd(0.f),
 		m_fFrameSpeed(0.f),
-		m_iAttack(rhs.m_iAttack)
+		m_iAttack(rhs.m_iAttack),
+		m_fNodeFrameEnd(rhs.m_fNodeFrameEnd),
+		m_fWaveTime(0.f)
 {
+	memcpy(m_vNodePos, rhs.m_vNodePos, sizeof(m_vNodePos));
 }
 
 CMonsterN2::~CMonsterN2()
@@ -50,6 +57,7 @@ CMonsterN2::~CMonsterN2()
 HRESULT CMonsterN2::Ready_GameObject()
 {
 	m_eOBJID = OID_MONSTER;
+
 	if (FAILED(Add_Component()))
 		return E_FAIL;
 	
@@ -62,6 +70,8 @@ HRESULT CMonsterN2::Ready_GameObject()
 
 _int CMonsterN2::Update_GameObject(const _float& fTimeDelta)
 {
+	m_fWaveTime += fTimeDelta;
+
 	Move_Frame(fTimeDelta);
 
 	m_pColliderCom->UpdateFromTransform(m_pTransformCom);
@@ -166,18 +176,8 @@ void CMonsterN2::Ready_Variable()
 	m_pAICom->Set_TargetTransform(CPersistentMgr::GetInstance()->Get_PlayerTransform());
 	m_pAICom->Set_State<MONSTER_N2_STATE>(N2S_SPAWN);
 
-	// 단위벡터 세팅
-	_float fAngle(0.f);
-
-	for (_uint i = 0; i < DIR_END; ++i)
-	{
-		m_vNormDir[i] = { cosf(fAngle), 0.f, -sinf(fAngle) };
-		fAngle += D3DX_PI * 0.25f;
-	}
-
-	m_vDir = m_vNormDir[DIR_LEFT];
-
 	// Anim 관련 세팅
+	m_fNodeFrameEnd = 16.f;
 	m_fFrameSpeed = 24.f;
 	D3DXMatrixIdentity(&m_matTex);
 
@@ -209,46 +209,27 @@ void CMonsterN2::Check_Frame()
 
 	switch (m_eCurState)
 	{
-	case N2S_IDLE:
-	{
-		m_fFrameEnd = 24.f;
-	}
-	break;
-
-	case N2S_RUN:
+	case N2S_CRAWL:
 	{
 		m_fFrameEnd = 14.f;
 	}
 	break;
 
-	case N2S_ATTACK:
+	case N2S_JUMP:
 	{
-		m_eAttackPhase = PREPARE;
-		m_fFrameEnd = 18.f;
+		m_fFrameEnd = 16.f;
 	}
 	break;
 
-	case N2S_HIT:
+	case N2S_LAND:
 	{
-		m_fFrameEnd = 11.f;
+		m_fFrameEnd = 19.f;
 	}
 	break;
 
 	case N2S_SPAWN:
 	{
-		m_fFrameEnd = 36.f;
-	}
-	break;
-
-	case N2S_JEER:
-	{
-		m_fFrameEnd = 48.f;
-	}
-	break;
-
-	case N2S_PRAY:
-	{
-		m_fFrameEnd = 32.f;
+		m_fFrameEnd = 1.f;
 	}
 	break;
 	}
@@ -266,33 +247,19 @@ void CMonsterN2::Move_Frame(const _float& fTimeDelta)
 
 		switch (m_eCurState)
 		{
-		case N2S_ATTACK:
-		{
-			if (m_eAttackPhase == PREPARE)
-			{
-				m_eAttackPhase = EXECUTE;
-				m_pAICom->Set_Speed(0.2f);
-				m_fFrameEnd = 27.f;
-				Attack_HitBox();
-			}
-			else if (m_eAttackPhase == EXECUTE)
-			{	// 상태 유지가 애니메이션에 종속적인 경우(Update에서 상태 전환을 하지 않음)
-				//  : 애니메이션 종료를 AI 컴포넌트에게 알리며 상태 변경
-				m_pAICom->Anim_End(m_eCurState);
-				m_eCurState = N2S_RUN;
-				m_eAttackPhase = PREPARE;
-			}
-		}
-		break;
-
-		case N2S_HIT:
+		case N2S_JUMP:
 			m_pAICom->Anim_End(m_eCurState);
-			m_eCurState = N2S_RUN;
+			m_eCurState = N2S_LAND;
+			break;
+
+		case N2S_LAND:
+			m_pAICom->Anim_End(m_eCurState);
+			m_eCurState = N2S_CRAWL;
 			break;
 
 		case N2S_SPAWN:
 			m_pAICom->Anim_End(m_eCurState);
-			m_eCurState = N2S_IDLE;
+			m_eCurState = N2S_CRAWL;
 			break;
 		}
 	}
@@ -303,6 +270,7 @@ void CMonsterN2::Set_Texture()
 	_vec3 vDir = *(m_pAICom->Get_Dir());		// AI로부터 받아온 방향
 	_bool bFilpX = vDir.x > 0.f ? true : false;	// 반전 여부
 	_uint iFrame = m_fFrame;					// 현재 프레임
+	_uint iTexIdx = _uint(m_eCurState);			// 텍스처 인덱스
 
 	D3DXMatrixIdentity(&m_matTex);
 	_uint iU = iFrame % 16;
@@ -313,51 +281,25 @@ void CMonsterN2::Set_Texture()
 
 	switch (m_eCurState)
 	{
-	case N2S_IDLE:
-	{
-		if (vDir.z > 0.f) iV += 2;
-	}
-	break;
-
-	case N2S_RUN:
+	case N2S_CRAWL:
 	{
 		if (vDir.z > 0.f) iV += 1;
 	}
 	break;
 
-	case N2S_ATTACK:
+	case N2S_JUMP:
 	{
-		switch (m_eAttackPhase)
-		{
-			case EXECUTE:
-			{
-				iV += 2;
-			}	
-			break;
-
-			default:
-				break;
-		}
 	}
 	break;
 
-	case N2S_HIT:
+	case N2S_LAND:
 	{
 	}
 	break;
 
 	case N2S_SPAWN:
 	{
-	}
-	break;
-
-	case N2S_JEER:
-	{
-	}
-	break;
-
-	case N2S_PRAY:
-	{
+		iTexIdx = 0;
 	}
 	break;
 	}
@@ -376,7 +318,7 @@ void CMonsterN2::Set_Texture()
 
 	m_pGraphicDev->SetTransform(D3DTS_TEXTURE0, &m_matTex);
 
-	m_pTextureCom->Set_Texture(_uint(m_eCurState));
+	m_pTextureCom->Set_Texture(iTexIdx);
 }
 
 void CMonsterN2::Attack_HitBox()
@@ -400,28 +342,11 @@ void CMonsterN2::Attack_HitBox()
 void CMonsterN2::Attacked(const _int& iAttack)
 {
 	m_iHp -= iAttack;
-
-	if (m_eAttackPhase != EXECUTE)
-	{
-		if (m_eCurState == N2S_HIT)
-		{
-			m_fFrame = 0.f;
-		}
-		else
-		{
-			m_eCurState = N2S_HIT;
-			m_pAICom->Set_State<MONSTER_N2_STATE>(N2S_HIT);
-		}
-	}
 }
 
 void CMonsterN2::Update_State()
 {
-	if (m_eCurState == N2S_SPAWN || m_eCurState == N2S_HIT)
-		return;
-
-	if (m_eCurState == N2S_ATTACK && m_eAttackPhase == EXECUTE && m_fFrame < m_fFrameEnd)
-		return;
+	if (m_eCurState == N2S_SPAWN) return;
 
 	m_eCurState = m_pAICom->Get_RecommendState<MONSTER_N2_STATE>();
 }

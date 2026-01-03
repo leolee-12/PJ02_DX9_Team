@@ -20,13 +20,10 @@ public:
 
 private:
 	_int		Update_Component(const _float& fTimeDelta)	override;
-	void		Update_Idle(const _float& fTimeDelta);
-	void		Update_Run(const _float& fTimeDelta);
-	void		Update_Attack(const _float& fTimeDelta);
-	void		Update_Hit(const _float& fTimeDelta);
+	void		Update_Crawl(const _float& fTimeDelta);
+	void		Update_Jump(const _float& fTimeDelta);
+	void		Update_Land(const _float& fTimeDelta);
 	void		Update_Spawn(const _float& fTimeDelta);
-	void		Update_Jeer(const _float& fTimeDelta);
-	void		Update_Pray(const _float& fTimeDelta);
 
 	void		Compute_Distance();
 	void		Compute_TargetDir();

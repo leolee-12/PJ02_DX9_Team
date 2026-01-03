@@ -14,8 +14,7 @@ class CN2_AI;
 class CMonsterN2 : public CMonster 
 {
 public:
-	enum MONSTER_N2_STATE { N2S_IDLE, N2S_RUN, N2S_ATTACK, N2S_HIT, N2S_SPAWN, N2S_JEER, N2S_PRAY, N2S_END };
-	enum ATTACK_PHASE { PREPARE, EXECUTE };
+	enum MONSTER_N2_STATE { N2S_CRAWL, N2S_JUMP, N2S_LAND, N2S_SPAWN, N2S_END };
 
 private:
 	explicit	CMonsterN2(LPDIRECT3DDEVICE9 pGraphicDev);
@@ -24,9 +23,6 @@ private:
 	virtual		~CMonsterN2();
 
 public:
-	void				Set_Dir(_vec3* pDir)	{ m_vDir = *pDir; }
-	const _vec3*		Get_Dir()				{ return &m_vDir; }
-
 	virtual HRESULT		Ready_GameObject();
 	virtual _int		Update_GameObject(const _float& fTimeDelta);
 	virtual void		LateUpdate_GameObject(const _float& fTimeDelta);
@@ -54,16 +50,18 @@ private:
 	_float				m_fFrame;
 	_float				m_fFrameEnd;
 	_float				m_fFrameSpeed;
-	_vec3				m_vNormDir[DIR_END];
-	_vec3				m_vDir;
 	_matrix				m_matTex;
-	ATTACK_PHASE		m_eAttackPhase;
 
 	// 스테이터스 관련
 	_int				m_iAttack;
 
 	// AI 관련
 	CN2_AI*				m_pAICom;
+
+	// 마디 관련
+	_float				m_fNodeFrameEnd;	// 마디 스프라이트 끝번호
+	_vec3				m_vNodePos[3];		// CMonsterN2 마디 3개 (머리 제외)
+	_float				m_fWaveTime;		// 움직임 디테일 용
 
 public:
 	static CMonsterN2*	Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel);
