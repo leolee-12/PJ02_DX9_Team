@@ -18,6 +18,8 @@
 #include "CKBDice.h"
 #include "CKBBoardSlot.h"
 #include "CLoading.h"
+#include "CKBBoardBack.h"
+#include "CKBDiceBox.h"
 
 
 
@@ -27,6 +29,7 @@ CKnuckleBone::CKnuckleBone(LPDIRECT3DDEVICE9 pGraphicDev)
 	, m_eMainState(MS_END), m_iSelectedCol(1), m_iCurTurn(0)
 	, m_fNPCThinkTime(0.f)
 	, m_fResultTime(0.f), m_iWinner(-1)
+	, m_fShowTime(0.f)
 {
 	ZeroMemory(m_iBoard, sizeof(m_iBoard));
 	ZeroMemory(m_pBoardDice, sizeof(m_pBoardDice));
@@ -57,10 +60,9 @@ HRESULT CKnuckleBone::Ready_Scene()
 
 	m_pTitleTab->Move_Title();
 
-
 	m_eCurKBState = KB_TITLE;
 
-	CSoundMgr::GetInstance()->PlayBGM(L"KB_BGM.mp3", 0.2f);
+	//CSoundMgr::GetInstance()->PlayBGM(L"KB_BGM.mp3", 0.2f);
 
 	return S_OK;
 }
@@ -308,15 +310,24 @@ HRESULT CKnuckleBone::Ready_Main_Layer(const _tchar* pLayerTag)
 		}
 	}
 
-	// 테스트용 주사위
-	_vec3 vDicePos = { -200.f, -200.f, 0.f };
-	pGameObject = m_pCurDice = CKBDice::Create(m_pGraphicDev, vDicePos);
+	// 선택창
+	pGameObject = m_pBoardBack = CKBBoardBack::Create(m_pGraphicDev);
 
 	if (nullptr == pGameObject)
 		return E_FAIL;
 
-	if (FAILED(pLayer->Add_GameObject(L"KBDice", pGameObject)))
+	if (FAILED(pLayer->Add_GameObject(L"KBBoardBack", pGameObject)))
 		return E_FAIL;
+
+	for (_int i = 0; i < 2; ++i) {
+		pGameObject = CKBDiceBox::Create(m_pGraphicDev, i);
+
+		if (nullptr == pGameObject)
+			return E_FAIL;
+
+		if (FAILED(pLayer->Add_GameObject(L"KBDiceBox", pGameObject)))
+			return E_FAIL;
+	}
 
 	m_mapLayer.insert({ pLayerTag , pLayer });
 
@@ -422,8 +433,7 @@ void CKnuckleBone::State_machine()
 		case KB_MAIN:
 			m_strLayerTag = L"Main_Layer";
 			// 게임 시작: 주사위 굴리기
-			m_iCurTurn = 0;		// 플레이어 먼저
-			m_iSelectedCol = 1;	// 중앙 열 선택
+			Ready_MainGame();
 			Start_Roll();
 			break;
 		case KB_END:
@@ -436,22 +446,26 @@ void CKnuckleBone::State_machine()
 
 void CKnuckleBone::Key_Input_KB()
 {
-	// 메인 게임 입력 처리
-	if (m_eCurKBState == KB_MAIN)
+	switch (m_eCurKBState)
 	{
+	case KB_MAIN:
 		// 열 선택 중일 때만 입력 처리
 		if (m_eMainState == MS_SELECT && m_iCurTurn == 0)	// 플레이어 턴
 		{
 			// 좌우 키로 열 선택
 			if (CDInputMgr::GetInstance()->Key_Down(DIK_LEFT))
 			{
-				if (m_iSelectedCol > 0)
+				if (m_iSelectedCol > 0) {
 					--m_iSelectedCol;
+					m_pBoardBack->Move_Left();
+				}
 			}
 			if (CDInputMgr::GetInstance()->Key_Down(DIK_RIGHT))
 			{
-				if (m_iSelectedCol < 2)
+				if (m_iSelectedCol < 2) {
 					++m_iSelectedCol;
+					m_pBoardBack->Move_Right();
+				}
 			}
 
 			// Enter로 주사위 배치
@@ -466,51 +480,79 @@ void CKnuckleBone::Key_Input_KB()
 			}
 		}
 		return;
-	}
 
-	// 타이틀/튜토리얼 입력 처리
-	if (CDInputMgr::GetInstance()->Key_Down(DIK_DOWN))
-	{
-		if (m_eTitleOption < 0 || m_eTitleOption >= (KBT_END - 1)) { return; }
-
-		_uint uiTmp = (_uint)m_eTitleOption;
-		++uiTmp;
-		m_eTitleOption = (KBTITLEOPTION)uiTmp;
-
-		m_pTitleTab->Move_Down();
-	}
-
-	if (CDInputMgr::GetInstance()->Key_Down(DIK_UP))
-	{
-		if (m_eTitleOption <= 0 || m_eTitleOption > KBT_END) { return; }
-
-		_uint uiTmp = (_uint)m_eTitleOption;
-		--uiTmp;
-		m_eTitleOption = (KBTITLEOPTION)uiTmp;
-
-		m_pTitleTab->Move_Up();
-	}
-
-	if (CDInputMgr::GetInstance()->Key_Down(DIK_RETURN))
-	{
-		switch (m_eTitleOption)
+	case KB_TITLE:
+		if (CDInputMgr::GetInstance()->Key_Down(DIK_DOWN))
 		{
-		case KBT_PLAY:
-			m_eCurKBState = KB_MAIN;
-			break;
-		case KBT_HOWTOPLAY:
-			if (m_eCurKBState != KB_TUTO) {
-				m_eCurKBState = KB_TUTO;
+			if (m_eTitleOption < 0 || m_eTitleOption >= (KBT_END - 1)) { return; }
+
+			_uint uiTmp = (_uint)m_eTitleOption;
+			++uiTmp;
+			m_eTitleOption = (KBTITLEOPTION)uiTmp;
+
+			m_pTitleTab->Move_Down();
+		}
+
+		if (CDInputMgr::GetInstance()->Key_Down(DIK_UP))
+		{
+			if (m_eTitleOption <= 0 || m_eTitleOption > KBT_END) { return; }
+
+			_uint uiTmp = (_uint)m_eTitleOption;
+			--uiTmp;
+			m_eTitleOption = (KBTITLEOPTION)uiTmp;
+
+			m_pTitleTab->Move_Up();
+		}
+
+		if (CDInputMgr::GetInstance()->Key_Down(DIK_RETURN))
+		{
+			switch (m_eTitleOption)
+			{
+			case KBT_PLAY:
+				m_eCurKBState = KB_MAIN;
+				break;
+			case KBT_HOWTOPLAY:
+				if (m_eCurKBState != KB_TUTO) {
+					m_eCurKBState = KB_TUTO;
+					break;
+				}
+				m_eCurKBState = KB_TITLE;
+				break;
+			case KBT_EXIT:
+				DestroyWindow(g_hWnd);
 				break;
 			}
-			m_eCurKBState = KB_TITLE;
-			break;
-		case KBT_EXIT:
-			DestroyWindow(g_hWnd);
-			break;
 		}
+		return;
+
+	case KB_TUTO:
+		if (CDInputMgr::GetInstance()->Key_Down(DIK_RETURN))
+		{
+			switch (m_eTitleOption)
+			{
+			case KBT_PLAY:
+				m_eCurKBState = KB_MAIN;
+				break;
+			case KBT_HOWTOPLAY:
+				if (m_eCurKBState != KB_TUTO) {
+					m_eCurKBState = KB_TUTO;
+					break;
+				}
+				m_eCurKBState = KB_TITLE;
+				break;
+			case KBT_EXIT:
+				DestroyWindow(g_hWnd);
+				break;
+			}
+		}
+		return;
+
+	default:
+		return;
 	}
 }
+
+	
 
 CKnuckleBone* CKnuckleBone::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 {
@@ -544,7 +586,15 @@ _bool CKnuckleBone::Update_MainGame(const _float& fTimeDelta)
 		// 주사위 굴리기 중 - 주사위가 DS_SHOWING이 되면 선택 단계로
 		if (m_pCurDice->GetState() == DS_SHOWING)
 		{
-			m_eMainState = MS_SELECT;
+			if (m_fShowTime > 0.3f)
+			{
+				m_eMainState = MS_SELECT;
+				if (m_iCurTurn == 0) {
+					m_pBoardBack->Set_Select(true);
+					m_pBoardBack->Move_Center();
+				}
+			}
+			m_fShowTime += fTimeDelta;
 		}
 		break;
 
@@ -565,7 +615,6 @@ _bool CKnuckleBone::Update_MainGame(const _float& fTimeDelta)
 				m_fNPCThinkTime = 0.f;
 			}
 		}
-		// 플레이어 턴은 Key_Input_KB()에서 처리
 		break;
 
 	case MS_PLACE:
@@ -585,8 +634,7 @@ _bool CKnuckleBone::Update_MainGame(const _float& fTimeDelta)
 			Switch_Turn();
 
 			// 새로운 주사위 생성
-			_vec3 vRollPos = { -200.f, -200.f, 0.f };
-			CKBDice* pNewDice = CKBDice::Create(m_pGraphicDev, vRollPos);
+			CKBDice* pNewDice = CKBDice::Create(m_pGraphicDev, m_iCurTurn);
 			if (pNewDice)
 			{
 				// 레이어에 추가
@@ -623,8 +671,8 @@ void CKnuckleBone::Start_Roll()
 		return;
 
 	// 주사위를 굴리기 위치로 이동
-	_vec3 vRollPos = { -200.f, -200.f, 0.f };
-	m_pCurDice->SetPosition(vRollPos);
+	/*_vec3 vRollPos = { -200.f, -200.f, 0.f };
+	m_pCurDice->SetPosition(vRollPos);*/
 
 	// 주사위 굴리기 시작
 	m_pCurDice->Roll();
@@ -886,6 +934,10 @@ _int CKnuckleBone::NPC_Select_Column()
 // 턴 교대
 void CKnuckleBone::Switch_Turn()
 {
+	if (m_iCurTurn == 0)
+	{
+		m_pBoardBack->Set_Select(false);
+	}
 	// 턴 교대: 0 → 1, 1 → 0
 	m_iCurTurn = (m_iCurTurn + 1) % 2;
 
@@ -996,4 +1048,23 @@ _int CKnuckleBone::Get_Winner()
 		return 1;	// NPC 승리
 	else
 		return -1;	// 무승부
+}
+
+HRESULT CKnuckleBone::Ready_MainGame()
+{
+	m_iCurTurn = Get_Rand_Int(0, 1);
+	m_iSelectedCol = 1;
+
+	map<wstring, CLayer*>::iterator iter = m_mapLayer.find(L"Main_Layer");
+	if (iter == m_mapLayer.end()) { return E_FAIL; }
+
+	CGameObject* pGameObject = nullptr;
+
+	pGameObject = m_pCurDice = CKBDice::Create(m_pGraphicDev, m_iCurTurn);
+
+	if (nullptr == pGameObject)
+		return E_FAIL;
+
+	if (FAILED(iter->second->Add_GameObject(L"KBDice", pGameObject)))
+		return E_FAIL;
 }

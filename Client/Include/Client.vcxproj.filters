@@ -175,6 +175,15 @@
     <Filter Include="02. GameObject\07. UI\03. KBUI\02. Main\01. Board">
       <UniqueIdentifier>{af97486c-18ef-4f9c-962b-970463bcc69b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\07. UI\03. KBUI\02. Main\01. Board\BoardSlot">
+      <UniqueIdentifier>{048de530-4f9a-466c-baea-13e2ae66c7e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. UI\03. KBUI\02. Main\01. Board\BoardBack">
+      <UniqueIdentifier>{2a194916-5ec0-48cd-924d-1df392cff05f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. UI\03. KBUI\02. Main\01. Board\DiceBox">
+      <UniqueIdentifier>{38dd812d-ccbf-4dbf-b3a4-5232669d9e66}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -319,7 +328,13 @@
       <Filter>02. GameObject\07. UI\03. KBUI\02. Main\00. Dice</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CKBBoardSlot.h">
-      <Filter>02. GameObject\07. UI\03. KBUI\02. Main\01. Board</Filter>
+      <Filter>02. GameObject\07. UI\03. KBUI\02. Main\01. Board\BoardSlot</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CKBBoardBack.h">
+      <Filter>02. GameObject\07. UI\03. KBUI\02. Main\01. Board\BoardBack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CKBDiceBox.h">
+      <Filter>02. GameObject\07. UI\03. KBUI\02. Main\01. Board\DiceBox</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -456,7 +471,13 @@
       <Filter>02. GameObject\07. UI\03. KBUI\02. Main\00. Dice</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CKBBoardSlot.cpp">
-      <Filter>02. GameObject\07. UI\03. KBUI\02. Main\01. Board</Filter>
+      <Filter>02. GameObject\07. UI\03. KBUI\02. Main\01. Board\BoardSlot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CKBBoardBack.cpp">
+      <Filter>02. GameObject\07. UI\03. KBUI\02. Main\01. Board\BoardBack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CKBDiceBox.cpp">
+      <Filter>02. GameObject\07. UI\03. KBUI\02. Main\01. Board\DiceBox</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

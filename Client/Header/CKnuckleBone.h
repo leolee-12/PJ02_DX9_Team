@@ -3,6 +3,7 @@
 
 class CKBTab;
 class CKBDice;
+class CKBBoardBack;
 
 class CKnuckleBone : public CScene
 {
@@ -66,6 +67,8 @@ private:
 	_bool			Check_GameEnd();				// 게임 종료 여부 (한 쪽 9칸 채움)
 	_int			Get_Winner();					// 승자 반환 (0=플레이어, 1=NPC, -1=무승부)
 
+	HRESULT			Ready_MainGame();				// 게임 초기화
+
 public:
 	static CKnuckleBone* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 
@@ -78,6 +81,7 @@ private:
 	wstring		m_strLayerTag;
 
 	CKBTab*		m_pTitleTab;
+	CKBBoardBack* m_pBoardBack;
 
 	KBTITLEOPTION m_eTitleOption;
 
@@ -101,5 +105,8 @@ private:
 	// 게임 결과
 	_float		m_fResultTime;		// 결과 표시 시간 누적
 	_int		m_iWinner;			// 승자 (0=플레이어, 1=NPC, -1=무승부)
+
+	// 보드선택창 ShowTime
+	_float		m_fShowTime;
 };
 

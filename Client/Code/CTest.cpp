@@ -14,6 +14,7 @@
 #include "CSoundMgr.h"
 #include "CMainCamera.h"
 #include "CMonsterN1.h"
+#include "CCollisionMgr.h"
 
 CTest::CTest(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -77,6 +78,7 @@ _int CTest::Update_Scene(const _float& fTimeDelta)
 void CTest::LateUpdate_Scene(const _float& fTimeDelta)
 {
 	Engine::CScene::LateUpdate_Scene(fTimeDelta);
+	CCollisionMgr::GetInstance()->Check_Collisions(fTimeDelta);
 }
 
 void CTest::Render_Scene()

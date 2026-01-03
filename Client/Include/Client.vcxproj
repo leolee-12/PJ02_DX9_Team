@@ -155,9 +155,13 @@
     <ClInclude Include="..\Header\CDynamicCamera.h" />
     <ClInclude Include="..\Header\CEditScene.h" />
     <ClInclude Include="..\Header\CKBBack.h" />
+    <ClInclude Include="..\Header\CKBBoardBack.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="..\Header\CKBBoardSlot.h" />
     <ClInclude Include="..\Header\CKBCenter.h" />
     <ClInclude Include="..\Header\CKBDice.h" />
+    <ClInclude Include="..\Header\CKBDiceBox.h" />
     <ClInclude Include="..\Header\CKBMask.h" />
     <ClInclude Include="..\Header\CKBSix.h" />
     <ClInclude Include="..\Header\CKBTab.h" />
@@ -207,9 +211,13 @@
     <ClCompile Include="..\Code\CDynamicCamera.cpp" />
     <ClCompile Include="..\Code\CEditScene.cpp" />
     <ClCompile Include="..\Code\CKBBack.cpp" />
+    <ClCompile Include="..\Code\CKBBoardBack.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\Code\CKBBoardSlot.cpp" />
     <ClCompile Include="..\Code\CKBCenter.cpp" />
     <ClCompile Include="..\Code\CKBDice.cpp" />
+    <ClCompile Include="..\Code\CKBDiceBox.cpp" />
     <ClCompile Include="..\Code\CKBMask.cpp" />
     <ClCompile Include="..\Code\CKBSix.cpp" />
     <ClCompile Include="..\Code\CKBTab.cpp" />

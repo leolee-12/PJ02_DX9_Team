@@ -45,12 +45,6 @@ public:
 	virtual			void		OnCollision(CGameObject* pObject);
 
 public:
-	// 슬롯 정보 접근자
-	_int			Get_Owner() const { return m_iOwner; }		// 0: 플레이어, 1: NPC
-	_int			Get_Col() const { return m_iCol; }			// 열 (0~2)
-	_int			Get_Row() const { return m_iRow; }			// 행 (0~2)
-
-public:
 	// iOwner: 0=플레이어, 1=NPC / iCol: 열(0~2) / iRow: 행(0~2)
 	static CKBBoardSlot* Create(LPDIRECT3DDEVICE9 pGraphicDev, _int iOwner, _int iCol, _int iRow);
 

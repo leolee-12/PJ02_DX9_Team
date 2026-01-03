@@ -2,6 +2,7 @@
 #include "CKBDice.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
+#include "CSoundMgr.h"
 
 CKBDice::CKBDice(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CUi(pGraphicDev)
@@ -11,12 +12,17 @@ CKBDice::CKBDice(LPDIRECT3DDEVICE9 pGraphicDev)
 	, m_iValue(1)
 	, m_eState(DS_IDLE)
 	, m_fRollTime(0.f)
-	, m_fRollDuration(1.f)
+	, m_fRollDuration(0.5f)
 	, m_fRollInterval(0.1f)
 	, m_fRollAccum(0.f)
 	, m_fMoveTime(0.f)
 	, m_fMoveDuration(1.f)
 	, m_bDead(false)
+	, m_fBounceAccel(0.f)
+	, m_fBounceSpeed(0.f)
+	, m_fBounceDemp(0.8f)
+	, m_iTurn(0)
+	, m_fBounceGoal(0.f)
 {
 	ZeroMemory(&m_vPos, sizeof(_vec3));
 	ZeroMemory(&m_vStartPos, sizeof(_vec3));
@@ -33,6 +39,20 @@ HRESULT CKBDice::Ready_GameObject()
 		return E_FAIL;
 
 	m_pTransformCom->Set_Scale(50.f, 50.f, 1.f);
+	switch (m_iTurn)
+	{
+	case 0: // 플레이어
+		m_vPos = _vec3((_float(-WINCX) * 0.5f) + 220.f, _float(-WINCY / 2) + 140.f, 0.f);
+		m_fBounceAccel = 9.8f;
+		m_fBounceGoal = m_vPos.x + 50.f;
+		break;
+	case 1: // NPC
+		m_vPos = _vec3((_float(WINCX) * 0.5f) - 220.f, _float(WINCY / 2) - 140.f, 0.f);
+		m_fBounceAccel = -9.8f;
+		m_fBounceGoal = m_vPos.x - 50.f;
+		break;
+	}
+
 	m_pTransformCom->Set_Pos(m_vPos.x, m_vPos.y, m_vPos.z);
 
 	Roll();
@@ -46,7 +66,7 @@ _int CKBDice::Update_GameObject(const _float& fTimeDelta)
 	if (m_bDead)
 		return DEAD;
 
-	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
+	_int iExit = CUi::Update_GameObject(fTimeDelta);
 
 	switch (m_eState)
 	{
@@ -65,8 +85,8 @@ _int CKBDice::Update_GameObject(const _float& fTimeDelta)
 
 void CKBDice::LateUpdate_GameObject(const _float& fTimeDelta)
 {
-	CGameObject::LateUpdate_GameObject(fTimeDelta);
-	m_pTransformCom->Get_Info(INFO_POS, &m_vPos);
+	CUi::LateUpdate_GameObject(fTimeDelta);
+	//m_pTransformCom->Get_Info(INFO_POS, &m_vPos);
 	Compute_ViewDepth_Ortho(&m_vPos);
 }
 
@@ -87,8 +107,12 @@ void CKBDice::OnCollision(CGameObject* pObject)
 void CKBDice::Roll()
 {
 	m_eState = DS_ROLLING;
+	Set_Rolling_Motion();
 	m_fRollTime = 0.f;
 	m_fRollAccum = 0.f;
+	wchar_t szSound[32];
+	swprintf_s(szSound, L"kb_dice_%d.wav", Get_Rand_Int(1, 8));
+	CSoundMgr::GetInstance()->Play(szSound, CHANNELID::SOUND_EFFECT, 1.f);
 }
 
 void CKBDice::ShowResult(_int iFinalValue)
@@ -129,6 +153,7 @@ void CKBDice::Update_Rolling(const _float& fTimeDelta)
 		m_iValue = Engine::Get_Rand_Int(1, 6);
 		m_eState = DS_SHOWING;
 	}
+	Rolling_Motion(fTimeDelta);
 }
 
 void CKBDice::Update_Moving(const _float& fTimeDelta)
@@ -146,6 +171,49 @@ void CKBDice::Update_Moving(const _float& fTimeDelta)
 	D3DXVec3Lerp(&m_vStartPos, &m_vStartPos, &m_vTargetPos, fRatio);
 
 	m_pTransformCom->Set_Pos(m_vStartPos.x, m_vStartPos.y, m_vStartPos.z);
+}
+
+void CKBDice::Set_Rolling_Motion()
+{
+	m_vStartPos = m_vPos;
+	m_vTargetPos = m_vStartPos;
+	switch (m_iTurn)
+	{
+		case 0: // 플레이어
+			m_vTargetPos.x += 50.f;
+			break;
+		case 1: // NPC
+			m_vTargetPos.x -= 50.f;
+			break;
+	}
+}
+
+void CKBDice::Rolling_Motion(const _float& fTimeDelta)
+{
+	m_fBounceSpeed += m_fBounceAccel * fTimeDelta * 8.f;
+	m_vPos.x += m_fBounceSpeed;
+	m_pTransformCom->Set_Pos(m_vPos.x, m_vPos.y, m_vPos.z);
+
+	switch (m_iTurn)
+	{
+		case 0: // 플레이어
+		if (m_vPos.x >= m_fBounceGoal)
+		{
+			m_vPos.x = m_fBounceGoal;
+			m_fBounceSpeed = -m_fBounceSpeed * m_fBounceDemp;
+		}
+		break;
+		case 1: // NPC
+		if (m_vPos.x <= m_fBounceGoal)
+		{
+			m_vPos.x = m_fBounceGoal;
+			m_fBounceSpeed = -m_fBounceSpeed * m_fBounceDemp;
+		}
+		break;
+	}
+
+	m_pTransformCom->Set_Pos(m_vPos.x, m_vPos.y, m_vPos.z);
+	//m_pTransformCom->Update_Component(fTimeDelta);
 }
 
 HRESULT CKBDice::Add_Component()
@@ -182,10 +250,10 @@ HRESULT CKBDice::Add_Component()
 	return S_OK;
 }
 
-CKBDice* CKBDice::Create(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vPos)
+CKBDice* CKBDice::Create(LPDIRECT3DDEVICE9 pGraphicDev, _int iTurn)
 {
 	CKBDice* pDice = new CKBDice(pGraphicDev);
-	pDice->m_vPos = vPos;
+	pDice->m_iTurn = iTurn;
 
 	if (FAILED(pDice->Ready_GameObject()))
 	{

@@ -38,7 +38,7 @@ public:
 	void			SetDead() { m_bDead = true; }		// Mark for deletion
 
 public:
-	static CKBDice* Create(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vPos);
+	static CKBDice* Create(LPDIRECT3DDEVICE9 pGraphicDev, _int iTurn);
 
 private:
 	virtual			void		Free();
@@ -46,6 +46,8 @@ private:
 	HRESULT						Add_Component();
 	void						Update_Rolling(const _float& fTimeDelta);
 	void						Update_Moving(const _float& fTimeDelta);
+	void						Set_Rolling_Motion();
+	void						Rolling_Motion(const _float& fTimeDelta);
 
 private:
 	// 컴포넌트
@@ -71,5 +73,14 @@ private:
 
 	// 삭제 플래그
 	_bool			m_bDead;			// true면 다음 Update에서 삭제
+
+	// 굴린 사람
+	_int			m_iTurn;			// 0=플레이어, 1=NPC
+
+	// 통통튀는 애니매이션 관련
+	_float          m_fBounceDemp;      // 감쇠 계수
+	_float          m_fBounceSpeed;     // 튀는 속도
+	_float          m_fBounceAccel;     // 가속도
+	_float 			m_fBounceGoal;      // 도착지점
 };
 
