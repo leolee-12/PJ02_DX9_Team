@@ -9,6 +9,7 @@ namespace Engine
 	class CCollider;
 }
 
+class CNode;
 class CN2_AI;
 
 class CMonsterN2 : public CMonster 
@@ -53,15 +54,14 @@ private:
 	_matrix				m_matTex;
 
 	// 스테이터스 관련
-	_int				m_iAttack;
+	_int		m_iAttack;
 
 	// AI 관련
-	CN2_AI*				m_pAICom;
+	CN2_AI*		m_pAICom;
 
 	// 마디 관련
-	_float				m_fNodeFrameEnd;	// 마디 스프라이트 끝번호
-	_vec3				m_vNodePos[3];		// CMonsterN2 마디 3개 (머리 제외)
-	_float				m_fWaveTime;		// 움직임 디테일 용
+	_float		m_fWaveTime;	// 움직임 디테일 용
+	CNode*		m_pNode[3];
 
 public:
 	static CMonsterN2*	Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel);

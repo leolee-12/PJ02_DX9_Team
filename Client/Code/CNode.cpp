@@ -106,7 +106,7 @@ HRESULT CNode::Add_Component()
 
 	// Texture
 	pComponent = m_pTextureCom = dynamic_cast<Engine::CTexture*>
-		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_MonsterN2Texture"));
+		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(m_pProtoTexKey));
 
 	NULL_CHECK_RETURN(pComponent, E_FAIL)
 
@@ -139,28 +139,31 @@ void CNode::Move_Frame(const _float& fTimeDelta)
 
 void CNode::Set_Texture()
 {
-	_bool bFilpX = vDir.x > 0.f ? true : false;	// 반전 여부
 	_uint iFrame = m_fFrame;					// 현재 프레임
-	_uint iTexIdx = _uint(m_eCurState);			// 텍스처 인덱스
 
 	D3DXMatrixIdentity(&m_matTex);
 	_uint iU = iFrame % 16;
 	_uint iV = iFrame / 16;
 
 	m_matTex._11 = 0.0625f;	// 가로는 16칸 고정
-	m_matTex._22 = 0.25f;	// 세로는 4칸 고정(MonsterN2)
-
-
-	m_matTex._32 = _float(iV) * 0.25f;
+	m_matTex._22 = 1.f;		// 세로는 1칸 고정(Node)
+	m_matTex._31 = _float(iU) * 0.0625f;
 
 	m_pGraphicDev->SetTransform(D3DTS_TEXTURE0, &m_matTex);
 
-	m_pTextureCom->Set_Texture(iTexIdx);
+	m_pTextureCom->Set_Texture(0);
 }
 
-CNode* CNode::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, CTransform* pOwnerTC)
+void CNode::Set_NodePos(const _vec3& vPos)
+{
+	m_pTransformCom->Set_Pos(vPos.x, vPos.y, vPos.z);
+}
+
+CNode* CNode::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, CTransform* pOwnerTC, const _tchar* pProtoTexKey)
 {
 	CNode* pNode = new CNode(pGraphicDev, StageChannel);
+
+	pNode->m_pProtoTexKey = pProtoTexKey;	// Ready에 필요
 
 	if (FAILED(pNode->Ready_GameObject()))
 	{
@@ -169,7 +172,7 @@ CNode* CNode::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChanne
 		return nullptr;
 	}
 
-	pNode->m_pOwnerTC = pOwnerTC;
+	pNode->m_pOwnerTC = pOwnerTC;	// Ready 도중 조작될 위험 제거
 
 	return pNode;
 }

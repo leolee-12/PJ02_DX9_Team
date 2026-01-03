@@ -5,6 +5,7 @@
 #include "CRenderer.h"
 #include "CPersistentMgr.h"
 #include "CCollisionMgr.h"
+#include "CNode.h"
 #include "CN2_AI.h"
 
 CMonsterN2::CMonsterN2(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -15,10 +16,9 @@ CMonsterN2::CMonsterN2(LPDIRECT3DDEVICE9 pGraphicDev)
 		m_fFrameEnd(0.f),
 		m_fFrameSpeed(0.f),
 		m_iAttack(0),
-		m_fNodeFrameEnd(0.f),
 		m_fWaveTime(0.f)
 {
-	ZeroMemory(m_vNodePos, sizeof(m_vNodePos));
+	ZeroMemory(m_pNode, sizeof(m_pNode));
 }
 
 CMonsterN2::CMonsterN2(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel)
@@ -29,10 +29,9 @@ CMonsterN2::CMonsterN2(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChan
 		m_fFrameEnd(0.f),
 		m_fFrameSpeed(0.f),
 		m_iAttack(0),
-		m_fNodeFrameEnd(0.f),
 		m_fWaveTime(0.f)
 {
-	ZeroMemory(m_vNodePos, sizeof(m_vNodePos));
+	ZeroMemory(m_pNode, sizeof(m_pNode));
 }
 
 
@@ -44,10 +43,9 @@ CMonsterN2::CMonsterN2(const CMonsterN2& rhs)
 		m_fFrameEnd(0.f),
 		m_fFrameSpeed(0.f),
 		m_iAttack(rhs.m_iAttack),
-		m_fNodeFrameEnd(rhs.m_fNodeFrameEnd),
 		m_fWaveTime(0.f)
 {
-	memcpy(m_vNodePos, rhs.m_vNodePos, sizeof(m_vNodePos));
+	memcpy(m_pNode, rhs.m_pNode, sizeof(m_pNode));
 }
 
 CMonsterN2::~CMonsterN2()
@@ -177,13 +175,17 @@ void CMonsterN2::Ready_Variable()
 	m_pAICom->Set_State<MONSTER_N2_STATE>(N2S_SPAWN);
 
 	// Anim 관련 세팅
-	m_fNodeFrameEnd = 16.f;
 	m_fFrameSpeed = 24.f;
 	D3DXMatrixIdentity(&m_matTex);
 
 	// 게임로직 변수 세팅
 	m_iAttack = 1;
 	m_iHp = 10;
+
+	// 마디 세팅
+	m_pNode[0] = CNode::Create(m_pGraphicDev, m_pMessageChannel, m_pTransformCom, L"Proto_N2Node1Texture");
+	m_pNode[1] = CNode::Create(m_pGraphicDev, m_pMessageChannel, m_pTransformCom, L"Proto_N2Node2Texture");
+	m_pNode[2] = CNode::Create(m_pGraphicDev, m_pMessageChannel, m_pTransformCom, L"Proto_N2Node3Texture");
 }
 
 void CMonsterN2::Ready_Event()
@@ -367,5 +369,10 @@ CMonsterN2* CMonsterN2::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* S
 
 void CMonsterN2::Free()
 {
+	for (_uint i = 0; i < 3; ++i)
+	{
+		Safe_Release(m_pNode[i]);
+	}
+
 	CGameObject::Free();
 }

@@ -14,6 +14,7 @@
 #include "CSoundMgr.h"
 #include "CMainCamera.h"
 #include "CMonsterN1.h"
+#include "CMonsterN2.h"
 
 CTest::CTest(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -157,9 +158,20 @@ HRESULT CTest::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 
 	pGameObject->AddRef();
 
-	for (_uint i = 0; i < 20; ++i)
+	//for (_uint i = 0; i < 20; ++i)
+	//{
+	//	pGameObject = CMonsterN1::Create(m_pGraphicDev, m_pMessageChannel);
+	//
+	//	if (nullptr == pGameObject)
+	//		return E_FAIL;
+	//
+	//	if (FAILED(pLayer->Add_GameObject(L"Monster", pGameObject)))
+	//		return E_FAIL;
+	//}
+
+	for (_uint i = 0; i < 3; ++i)
 	{
-		pGameObject = CMonsterN1::Create(m_pGraphicDev, m_pMessageChannel);
+		pGameObject = CMonsterN2::Create(m_pGraphicDev, m_pMessageChannel);
 
 		if (nullptr == pGameObject)
 			return E_FAIL;

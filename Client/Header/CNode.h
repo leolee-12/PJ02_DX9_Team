@@ -32,16 +32,16 @@ private:
 	HRESULT				Add_Component();
 
 	void				Ready_Variable();
-
 	void				Move_Frame(const _float& fTimeDelta);
 	void				Set_Texture();
+	void				Set_NodePos(const _vec3& vPos);
 
 private:
-	Engine::CRcTex* m_pBufferCom;
+	Engine::CRcTex*		m_pBufferCom;
 	Engine::CTransform* m_pTransformCom;
-	Engine::CTexture* m_pTextureCom;
+	Engine::CTexture*	m_pTextureCom;
 
-	_vec3			  m_vPos;
+	_vec3				m_vPos;
 
 	// 스프라이트 관련
 	_float				m_fFrame;
@@ -49,9 +49,10 @@ private:
 	_float				m_fFrameSpeed;
 	_matrix				m_matTex;
 	CTransform*			m_pOwnerTC;
+	const _tchar*		m_pProtoTexKey;
 
 public:
-	static CNode* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, CTransform* pOwnerTC);
+	static CNode* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, CTransform* pOwnerTC, const _tchar* pProtoTexKey);
 
 private:
 	virtual void		Free();
