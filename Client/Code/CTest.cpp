@@ -2,6 +2,7 @@
 #include "CTest.h"
 #include "CBackGround.h"
 #include "CProtoMgr.h"
+#include "CCollisionMgr.h"
 #include "CDynamicCamera.h"
 #include "CSkyBox.h"
 #include "CPersistentMgr.h"
@@ -78,6 +79,7 @@ _int CTest::Update_Scene(const _float& fTimeDelta)
 
 void CTest::LateUpdate_Scene(const _float& fTimeDelta)
 {
+	CCollisionMgr::GetInstance()->Check_Collisions(fTimeDelta);
 	Engine::CScene::LateUpdate_Scene(fTimeDelta);
 	CCollisionMgr::GetInstance()->Check_Collisions(fTimeDelta);
 }
@@ -162,12 +164,20 @@ HRESULT CTest::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 
 	for (_uint i = 0; i < 20; ++i)
 	{
-		pGameObject = CMonsterN1::Create(m_pGraphicDev, m_pMessageChannel);
+		//pGameObject = CMonsterN1::Create(m_pGraphicDev, m_pMessageChannel);
+		//
+		//if (nullptr == pGameObject)
+		//	return E_FAIL;
+		//
+		//if (FAILED(pLayer->Add_GameObject(L"Monster", pGameObject)))
+		//	return E_FAIL;
+
+		pGameObject = CItem::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ _float(rand() % 20), 1.1f, _float(rand() % 20) }, CItem::ITEMID(rand() % 6), true);
 
 		if (nullptr == pGameObject)
 			return E_FAIL;
 
-		if (FAILED(pLayer->Add_GameObject(L"Monster", pGameObject)))
+		if (FAILED(pLayer->Add_GameObject(L"Item", pGameObject)))
 			return E_FAIL;
 	}
 

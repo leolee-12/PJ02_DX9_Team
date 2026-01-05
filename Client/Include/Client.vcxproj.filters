@@ -16,12 +16,6 @@
     <Filter Include="00. MainApp">
       <UniqueIdentifier>{21f60bca-e0f3-45e8-a17c-6be69ba5f684}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. Scene">
-      <UniqueIdentifier>{60ad0de0-adf1-440e-987a-796e2ff8332f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Scene\00. Logo">
-      <UniqueIdentifier>{0d271025-e384-4299-bf6d-972bbc338575}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObject">
       <UniqueIdentifier>{51b52b49-f21d-4d34-bf24-26f7774a4f3b}</UniqueIdentifier>
     </Filter>
@@ -31,20 +25,11 @@
     <Filter Include="02. GameObject\01. Player">
       <UniqueIdentifier>{ae4c5383-56a8-4b14-85a9-74fedfb3ccfe}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. Scene\01. Stage">
-      <UniqueIdentifier>{f40be6c5-f78e-4629-9f22-c05f63c86d1a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObject\03. Terrain">
       <UniqueIdentifier>{8d635b76-59e8-4b1b-94c9-608c92cd7cb1}</UniqueIdentifier>
     </Filter>
     <Filter Include="02. GameObject\05. SkyBox">
       <UniqueIdentifier>{71bfc506-8050-40b0-98aa-429602465e7d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Scene\99. Loading">
-      <UniqueIdentifier>{162da509-93eb-497c-bb4b-016c0b3d5fae}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Scene\03. Test">
-      <UniqueIdentifier>{7bf09d6b-5222-4361-bb6b-3e27ea739fa2}</UniqueIdentifier>
     </Filter>
     <Filter Include="02. GameObject\06. TerrainWall">
       <UniqueIdentifier>{52de0396-bdc9-4e24-8949-59503af9d2c0}</UniqueIdentifier>
@@ -54,12 +39,6 @@
     </Filter>
     <Filter Include="02. GameObject\99. TestObject">
       <UniqueIdentifier>{5e8c73c1-37da-4a24-b395-d8e294c4be3f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Scene\04. EditScene">
-      <UniqueIdentifier>{ff5bb01d-db75-499d-ae0b-be1f8fb58ee7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Scene\99. Loading\LoadingThread">
-      <UniqueIdentifier>{bec13d5c-cc47-4d5b-a2eb-0fb3bafdcfdd}</UniqueIdentifier>
     </Filter>
     <Filter Include="09. CPersistentMgr">
       <UniqueIdentifier>{153d294d-a813-4bb7-9dee-2e2680526024}</UniqueIdentifier>
@@ -132,6 +111,30 @@
     </Filter>
     <Filter Include="02. GameObject\04. Camera\00. MainCamera">
       <UniqueIdentifier>{034c96cf-6932-41a4-9e6e-cbbb742ea410}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\09. Item">
+      <UniqueIdentifier>{5daaea79-d1ec-46ae-a481-80a46217e916}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene">
+      <UniqueIdentifier>{60ad0de0-adf1-440e-987a-796e2ff8332f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\00. Logo">
+      <UniqueIdentifier>{0d271025-e384-4299-bf6d-972bbc338575}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\01. Stage">
+      <UniqueIdentifier>{f40be6c5-f78e-4629-9f22-c05f63c86d1a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\99. Loading">
+      <UniqueIdentifier>{162da509-93eb-497c-bb4b-016c0b3d5fae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\99. Loading\LoadingThread">
+      <UniqueIdentifier>{bec13d5c-cc47-4d5b-a2eb-0fb3bafdcfdd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\03. Test">
+      <UniqueIdentifier>{7bf09d6b-5222-4361-bb6b-3e27ea739fa2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\04. EditScene">
+      <UniqueIdentifier>{ff5bb01d-db75-499d-ae0b-be1f8fb58ee7}</UniqueIdentifier>
     </Filter>
     <Filter Include="01. Scene\05. KnuckleBone">
       <UniqueIdentifier>{fbdfd1c6-2a58-45e4-970b-5fac37bacfcb}</UniqueIdentifier>
@@ -300,6 +303,9 @@
     <ClInclude Include="..\Header\CMainCamera.h">
       <Filter>02. GameObject\04. Camera\00. MainCamera</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CItem.h">
+      <Filter>02. GameObject\09. Item</Filter>
+    </ClInclude>
     <ClInclude Include="..\Header\CKnuckleBone.h">
       <Filter>01. Scene\05. KnuckleBone</Filter>
     </ClInclude>
@@ -374,6 +380,12 @@
     </ClInclude>
     <ClInclude Include="..\Header\CKBBack2.h">
       <Filter>02. GameObject\07. UI\03. KBUI\00. TTutorial</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CActiveItem.h">
+      <Filter>02. GameObject\09. Item</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CPassiveItem.h">
+      <Filter>02. GameObject\09. Item</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -482,6 +494,9 @@
     <ClCompile Include="..\Code\CMainCamera.cpp">
       <Filter>02. GameObject\04. Camera\00. MainCamera</Filter>
     </ClCompile>
+    <ClCompile Include="..\Code\CItem.cpp">
+      <Filter>02. GameObject\09. Item</Filter>
+    </ClCompile>
     <ClCompile Include="..\Code\CKnuckleBone.cpp">
       <Filter>01. Scene\05. KnuckleBone</Filter>
     </ClCompile>
@@ -556,6 +571,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\CKBBack2.cpp">
       <Filter>02. GameObject\07. UI\03. KBUI\00. TTutorial</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CActiveItem.cpp">
+      <Filter>02. GameObject\09. Item</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CPassiveItem.cpp">
+      <Filter>02. GameObject\09. Item</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
