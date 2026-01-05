@@ -1088,4 +1088,6 @@ HRESULT CKnuckleBone::Ready_MainGame()
 
 	if (FAILED(iter->second->Add_GameObject(L"KBDice", pGameObject)))
 		return E_FAIL;
+
+	return S_OK;
 }

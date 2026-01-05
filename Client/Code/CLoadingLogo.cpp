@@ -108,7 +108,7 @@ void CLoadingLogo::Update_Pos(_float LoadingPercent)
 {
 	_float fScaleY = m_pTransformCom->Get_World()->m[1][1];
 	_float fTargetY = LoadingPercent * fScaleY;
-	_float flerpY = m_vPos.y + (fTargetY - m_vPos.y) * 0.1;
+	_float flerpY = m_vPos.y + (fTargetY - m_vPos.y) * 0.1f;
 	m_pTransformCom->Set_Pos(m_vPos.x, flerpY, m_vPos.z);
 }
 

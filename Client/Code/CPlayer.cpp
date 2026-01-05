@@ -502,7 +502,7 @@ void CPlayer::Move_Frame(const _float& fTimeDelta)
 
 void CPlayer::Set_Texture()
 {
-	_uint iFrame = m_fFrame;
+	_uint iFrame = _uint(m_fFrame);
 
 	D3DXMatrixIdentity(&m_matTex);
 	_uint iU = iFrame % 16;
