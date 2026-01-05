@@ -23,7 +23,7 @@ HRESULT CKBBoardBack::Ready_GameObject()
 	if (FAILED(Add_Component()))
 		return E_FAIL;
 
-	m_pTransformCom->Set_Pos(0.f, -185.f, 0.5f);
+	m_pTransformCom->Set_Pos(0.f, -185.f, 0.255f);
 	m_pTransformCom->Set_Scale(110.f, 210.f, 1.f);
 
 	return S_OK;

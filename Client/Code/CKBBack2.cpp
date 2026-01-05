@@ -1,49 +1,46 @@
 #include "pch.h"
-#include "CKBMask.h"
+#include "CKBBack2.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
 
-CKBMask::CKBMask(LPDIRECT3DDEVICE9 pGraphicDev)
+CKBBack2::CKBBack2(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CUi(pGraphicDev), m_pBufferCom(nullptr), m_pTransformCom(nullptr)
-	, m_bRender(false) , m_iIndex(0)
 {
 	ZeroMemory(&m_vPos, sizeof(_vec3));
 }
 
-CKBMask::~CKBMask()
+CKBBack2::~CKBBack2()
 {
 }
 
-HRESULT CKBMask::Ready_GameObject()
+HRESULT CKBBack2::Ready_GameObject()
 {
 	if (FAILED(Add_Component()))
 		return E_FAIL;
 
 	m_pTransformCom->Set_Scale(_float(WINCX), _float(WINCY), 1.f);
-	m_pTransformCom->Set_Pos(0.f, 0.f, 0.3f);
+	m_pTransformCom->Set_Pos(0.f, 0.f, 0.75f);
 
 	return S_OK;
 }
 
-_int CKBMask::Update_GameObject(const _float& fTimeDelta)
+_int CKBBack2::Update_GameObject(const _float& fTimeDelta)
 {
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
-	if (m_bRender) {
-		CRenderer::GetInstance()->Add_RenderGroup(RENDER_UI, this);
-	}
+	CRenderer::GetInstance()->Add_RenderGroup(RENDER_UI, this);
 
 	return iExit;
 }
 
-void CKBMask::LateUpdate_GameObject(const _float& fTimeDelta)
+void CKBBack2::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
 	m_pTransformCom->Get_Info(INFO_POS, &m_vPos);
 	Compute_ViewDepth_Ortho(&m_vPos);
 }
 
-void CKBMask::Render_GameObject()
+void CKBBack2::Render_GameObject()
 {
 	m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, TRUE);
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
@@ -51,40 +48,28 @@ void CKBMask::Render_GameObject()
 	D3DMATERIAL9			tMtrl;
 	ZeroMemory(&tMtrl, sizeof(D3DMATERIAL9));
 
-	tMtrl.Diffuse = D3DXCOLOR(0.f, 0.f, 0.f, 1.f);
-	tMtrl.Specular = D3DXCOLOR(0.f, 0.f, 0.f, 1.f);
-	tMtrl.Ambient = D3DXCOLOR(0.f, 0.f, 0.f, 1.f);
+	tMtrl.Diffuse = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
+	tMtrl.Specular = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
+	tMtrl.Ambient = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
 
-	tMtrl.Emissive = D3DXCOLOR(0.f, 0.f, 0.f, 1.f);
+	tMtrl.Emissive = D3DXCOLOR(0.3f, 0.3f, 0.3f, 1.f);
 	tMtrl.Power = 0.f;
 
 	m_pGraphicDev->SetMaterial(&tMtrl);
 
-	// 텍스처 알파 × 전체 알파만 계산
-	DWORD oldAlphaOp; 
-	m_pGraphicDev->GetTextureStageState(0, D3DTSS_ALPHAOP, &oldAlphaOp);
-	m_pGraphicDev->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
-	m_pGraphicDev->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_TFACTOR);
-	m_pGraphicDev->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
-
-	// 전체 알파값 지정
-	m_pGraphicDev->SetRenderState(D3DRS_TEXTUREFACTOR, D3DCOLOR_ARGB(128, 255, 255, 255));
-
-	m_pTextureCom->Set_Texture(m_iIndex);
+	m_pTextureCom->Set_Texture();
 
 	m_pBufferCom->Render_Buffer();
-
-	m_pGraphicDev->SetTextureStageState(0, D3DTSS_ALPHAOP, oldAlphaOp);
 
 	m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, FALSE);
 }
 
-void CKBMask::OnCollision(CGameObject* pObject)
+void CKBBack2::OnCollision(CGameObject* pObject)
 {
 
 }
 
-HRESULT CKBMask::Add_Component()
+HRESULT CKBBack2::Add_Component()
 {
 	Engine::CComponent* pComponent = nullptr;
 
@@ -107,7 +92,7 @@ HRESULT CKBMask::Add_Component()
 	m_mapComponent[ID_DYNAMIC].insert({ L"Com_Transform", pComponent });
 
 	pComponent = m_pTextureCom = dynamic_cast<Engine::CTexture*>
-		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_KBMask"));
+		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_KBBack"));
 
 	if (nullptr == pComponent)
 		return E_FAIL;
@@ -119,9 +104,9 @@ HRESULT CKBMask::Add_Component()
 
 
 
-CKBMask* CKBMask::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+CKBBack2* CKBBack2::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 {
-	CKBMask* pKBCenter = new CKBMask(pGraphicDev);
+	CKBBack2* pKBCenter = new CKBBack2(pGraphicDev);
 
 	if (FAILED(pKBCenter->Ready_GameObject()))
 	{
@@ -133,7 +118,7 @@ CKBMask* CKBMask::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 	return pKBCenter;
 }
 
-void CKBMask::Free()
+void CKBBack2::Free()
 {
 	CUi::Free();
 }

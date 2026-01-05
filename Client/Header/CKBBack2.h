@@ -8,12 +8,12 @@ namespace Engine
 	class CTexture;
 }
 
-class CKBMask :
+class CKBBack2 :
 	public CUi
 {
 private:
-	explicit CKBMask(LPDIRECT3DDEVICE9 pGraphicDev);
-	virtual ~CKBMask();
+	explicit CKBBack2(LPDIRECT3DDEVICE9 pGraphicDev);
+	virtual ~CKBBack2();
 
 public:
 	virtual			HRESULT		Ready_GameObject();
@@ -22,11 +22,8 @@ public:
 	virtual			void		Render_GameObject();
 	virtual			void		OnCollision(CGameObject* pObject);
 
-	void			Set_Index(_int iIndex) { m_iIndex = iIndex; }
-	void            Show_Mask() { m_bRender = true; }
-
 public:
-	static CKBMask* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	static CKBBack2* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 
 private:
 	virtual			void		Free();
@@ -37,8 +34,5 @@ private:
 	CRcTex* m_pBufferCom;
 	CTransform* m_pTransformCom;
 	CTexture* m_pTextureCom;
-
-	_int      m_iIndex;
-	_bool     m_bRender;
 };
 

@@ -4,6 +4,7 @@
 class CKBTab;
 class CKBDice;
 class CKBBoardBack;
+class CKBMask;
 
 class CKnuckleBone : public CScene
 {
@@ -80,8 +81,9 @@ private:
 	KBSTATE		m_ePreKBState;
 	wstring		m_strLayerTag;
 
-	CKBTab*		m_pTitleTab;
+	CKBTab*		  m_pTitleTab;
 	CKBBoardBack* m_pBoardBack;
+	CKBMask*	  m_pKBMask;
 
 	KBTITLEOPTION m_eTitleOption;
 

@@ -155,6 +155,7 @@
     <ClInclude Include="..\Header\CDynamicCamera.h" />
     <ClInclude Include="..\Header\CEditScene.h" />
     <ClInclude Include="..\Header\CKBBack.h" />
+    <ClInclude Include="..\Header\CKBBack2.h" />
     <ClInclude Include="..\Header\CKBBoardBack.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClInclude>
@@ -211,6 +212,7 @@
     <ClCompile Include="..\Code\CDynamicCamera.cpp" />
     <ClCompile Include="..\Code\CEditScene.cpp" />
     <ClCompile Include="..\Code\CKBBack.cpp" />
+    <ClCompile Include="..\Code\CKBBack2.cpp" />
     <ClCompile Include="..\Code\CKBBoardBack.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>

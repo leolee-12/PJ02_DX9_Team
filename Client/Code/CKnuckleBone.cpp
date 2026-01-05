@@ -20,6 +20,7 @@
 #include "CLoading.h"
 #include "CKBBoardBack.h"
 #include "CKBDiceBox.h"
+#include "CKBBack2.h"
 
 
 
@@ -62,7 +63,7 @@ HRESULT CKnuckleBone::Ready_Scene()
 
 	m_eCurKBState = KB_TITLE;
 
-	//CSoundMgr::GetInstance()->PlayBGM(L"KB_BGM.mp3", 0.2f);
+	CSoundMgr::GetInstance()->PlayBGM(L"KB_BGM.mp3", 0.2f);
 
 	return S_OK;
 }
@@ -271,7 +272,15 @@ HRESULT CKnuckleBone::Ready_Environment_Layer(const _tchar* pLayerTag)
 
 	CGameObject* pGameObject = nullptr;
 
-	pGameObject = CKBBack::Create(m_pGraphicDev);
+	/*pGameObject = CKBBack::Create(m_pGraphicDev);
+
+	if (nullptr == pGameObject)
+		return E_FAIL;
+
+	if (FAILED(pLayer->Add_GameObject(L"KBBack", pGameObject)))
+		return E_FAIL;*/
+
+	pGameObject = CKBBack2::Create(m_pGraphicDev);
 
 	if (nullptr == pGameObject)
 		return E_FAIL;
@@ -328,6 +337,14 @@ HRESULT CKnuckleBone::Ready_Main_Layer(const _tchar* pLayerTag)
 		if (FAILED(pLayer->Add_GameObject(L"KBDiceBox", pGameObject)))
 			return E_FAIL;
 	}
+
+	pGameObject = m_pKBMask = CKBMask::Create(m_pGraphicDev);
+
+	if (nullptr == pGameObject)
+		return E_FAIL;
+
+	if (FAILED(pLayer->Add_GameObject(L"KBMask", pGameObject)))
+		return E_FAIL;
 
 	m_mapLayer.insert({ pLayerTag , pLayer });
 
@@ -775,12 +792,12 @@ void CKnuckleBone::Render_Font_Main()
 	}
 
 	// 선택된 열 표시 (열 선택 중일 때만)
-	if (m_eMainState == MS_SELECT && m_iCurTurn == 0)
-	{
-		const wchar_t* strCol[] = { L"왼쪽", L"중앙", L"오른쪽" };
-		RECT rc = { 0, WINCY - 100, WINCX, WINCY - 50 };
-		CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans30", strCol[m_iSelectedCol], rc, FontYellow, DT_CENTER | DT_TOP);
-	}
+	//if (m_eMainState == MS_SELECT && m_iCurTurn == 0)
+	//{
+	//	const wchar_t* strCol[] = { L"왼쪽", L"중앙", L"오른쪽" };
+	//	RECT rc = { 0, WINCY - 100, WINCX, WINCY - 50 };
+	//	CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans30", strCol[m_iSelectedCol], rc, FontYellow, DT_CENTER | DT_TOP);
+	//}
 
 	// 점수 표시
 	_int iPlayerScore = Calc_TotalScore(0);
@@ -790,13 +807,13 @@ void CKnuckleBone::Render_Font_Main()
 
 	// 플레이어 총점 (화면 중앙 왼쪽)
 	swprintf_s(szScore, L"Player: %d", iPlayerScore);
-	RECT rcPlayer = { 0, (WINCY / 2) - 20, WINCX / 2 - 100, (WINCY / 2) + 20 };
-	CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans30", szScore, rcPlayer, FontColor, DT_CENTER | DT_VCENTER);
+	RECT rcPlayer = { 0, (WINCY / 2) - 20, WINCX / 2 - 100, (WINCY / 2) + 100 };
+	CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans30", szScore, rcPlayer, FontColor, DT_CENTER | DT_BOTTOM);
 
 	// NPC 총점 (화면 중앙 오른쪽)
 	swprintf_s(szScore, L"NPC: %d", iNPCScore);
-	RECT rcNPC = { WINCX / 2 + 100, (WINCY / 2) - 20, WINCX, (WINCY / 2) + 20 };
-	CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans30", szScore, rcNPC, FontColor, DT_CENTER | DT_VCENTER);
+	RECT rcNPC = { WINCX / 2 + 100, (WINCY / 2) - 20, WINCX, (WINCY / 2) + 100 };
+	CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans30", szScore, rcNPC, FontColor, DT_CENTER | DT_BOTTOM);
 
 	// 열별 점수 표시 (두 보드 사이에 표시)
 	using namespace KBBoard;
@@ -941,6 +958,8 @@ void CKnuckleBone::Switch_Turn()
 	// 턴 교대: 0 → 1, 1 → 0
 	m_iCurTurn = (m_iCurTurn + 1) % 2;
 
+	m_pKBMask->Set_Index(m_iCurTurn);
+
 	// 열 선택 초기화
 	m_iSelectedCol = 1;
 }
@@ -1053,6 +1072,8 @@ _int CKnuckleBone::Get_Winner()
 HRESULT CKnuckleBone::Ready_MainGame()
 {
 	m_iCurTurn = Get_Rand_Int(0, 1);
+	m_pKBMask->Set_Index(m_iCurTurn);
+	m_pKBMask->Show_Mask();
 	m_iSelectedCol = 1;
 
 	map<wstring, CLayer*>::iterator iter = m_mapLayer.find(L"Main_Layer");

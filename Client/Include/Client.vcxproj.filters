@@ -336,6 +336,9 @@
     <ClInclude Include="..\Header\CKBDiceBox.h">
       <Filter>02. GameObject\07. UI\03. KBUI\02. Main\01. Board\DiceBox</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CKBBack2.h">
+      <Filter>02. GameObject\07. UI\03. KBUI\00. TTutorial</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -478,6 +481,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CKBDiceBox.cpp">
       <Filter>02. GameObject\07. UI\03. KBUI\02. Main\01. Board\DiceBox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CKBBack2.cpp">
+      <Filter>02. GameObject\07. UI\03. KBUI\00. TTutorial</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
