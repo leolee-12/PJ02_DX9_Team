@@ -43,16 +43,12 @@ void CN2_AI::Enter_State(const _uint& iState)
 		break;
 	case CMonsterN2::N2S_JUMP:
 	{
-		m_fSpeed = 0.f;
-		m_pOwnerTC->Get_Info(INFO_POS, &m_vLerpPos);
-		m_vLerpPos += m_vDir * 3.f;
+		m_fSpeed = 1.f;
 	}
 		break;
 	case CMonsterN2::N2S_LAND:
 	{
-		m_fSpeed = 0.1f;
-		m_pOwnerTC->Get_Info(INFO_POS, &m_vLerpPos);
-		m_vLerpPos -= m_vDir * 2.f;
+		m_fSpeed = 1.f;
 	}
 		break;
 	case CMonsterN2::N2S_SPAWN:
@@ -78,15 +74,17 @@ void CN2_AI::Exit_State(const _uint& iState)
 
 	case CMonsterN2::N2S_JUMP:
 	{
+	}
+	break;
+
+	case CMonsterN2::N2S_LAND:
+	{
 		if (!m_pTargetTC) m_bChase = false;
 
 		_vec3 vDir;
 
 		Randomize_Dir();
 	}
-	break;
-
-	case CMonsterN2::N2S_LAND:
 		break;
 
 	case CMonsterN2::N2S_SPAWN:
