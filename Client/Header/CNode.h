@@ -28,13 +28,18 @@ public:
 	virtual void		Render_GameObject();
 	virtual void		OnCollision(CGameObject* pObject) {};
 
+	void				Set_NodeScale(const _vec3& vScale);
+	void				Set_NodePos(const _vec3& vPos);
+	void				Set_NodeDir(const _vec3& vDir) { D3DXVec3Normalize(&m_vDir, &vDir); }
+	_vec3& const		Get_NodePos() { return m_vPos; }
+	_vec3& const		Get_NodeDir() { return m_vDir; }
+
 private:
 	HRESULT				Add_Component();
 
 	void				Ready_Variable();
 	void				Move_Frame(const _float& fTimeDelta);
 	void				Set_Texture();
-	void				Set_NodePos(const _vec3& vPos);
 
 private:
 	Engine::CRcTex*		m_pBufferCom;
@@ -42,6 +47,7 @@ private:
 	Engine::CTexture*	m_pTextureCom;
 
 	_vec3				m_vPos;
+	_vec3				m_vDir;
 
 	// 스프라이트 관련
 	_float				m_fFrame;

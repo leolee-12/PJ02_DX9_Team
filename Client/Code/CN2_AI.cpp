@@ -26,11 +26,10 @@ HRESULT CN2_AI::Ready_AI(const _float& fDetectRange, const _float& fInteractRang
 {
 	if (FAILED(CAIController::Ready_AI(fDetectRange, fInteractRange, iInitState)))
 		return E_FAIL;
-
-	m_fSpeed = 0.5f;
+	
+	m_fSpeed = 1.f;
 	m_fAcmlTime = 0.f;
 	m_iRcmState = _uint(CMonsterN2::N2S_SPAWN);
-	Randomize_Dir();
 
 	return S_OK;
 }
@@ -40,7 +39,25 @@ void CN2_AI::Enter_State(const _uint& iState)
 	switch (iState)
 	{
 	case CMonsterN2::N2S_CRAWL:
+	{
 		m_fAcmlTime = 0.f;
+
+		_vec3 vPrevPos, vDesiredDir;
+		if (!m_bChase)
+		{
+			vDesiredDir = Randomize_Dir();
+			m_fSpeed = 0.05f;
+		}
+		else
+		{
+			vDesiredDir = Compute_TargetDir();
+			m_fSpeed = 0.1f;
+		}
+
+		m_pOwnerTC->Get_Info(INFO_POS, &vPrevPos);
+		m_vDir = Compute_LimitedDir(90.f, m_vDir, vDesiredDir);
+		m_vLerpPos = vPrevPos + m_vDir * 3.f;
+	}
 		break;
 	case CMonsterN2::N2S_JUMP:
 	{
@@ -55,6 +72,9 @@ void CN2_AI::Enter_State(const _uint& iState)
 	case CMonsterN2::N2S_SPAWN:
 		m_bActiveAI = false;
 		break;
+	case CMonsterN2::N2S_STOP:
+		m_fAcmlTime = 0.f;
+		break;
 	}
 }
 
@@ -65,11 +85,6 @@ void CN2_AI::Exit_State(const _uint& iState)
 	case CMonsterN2::N2S_CRAWL:
 	{
 		if (!m_pTargetTC) m_bChase = false;
-
-		_vec3 vDir;
-
-		if (!m_bChase)	Randomize_Dir();
-		else			Compute_TargetDir();
 	}
 	break;
 
@@ -81,16 +96,18 @@ void CN2_AI::Exit_State(const _uint& iState)
 	case CMonsterN2::N2S_LAND:
 	{
 		if (!m_pTargetTC) m_bChase = false;
-
-		_vec3 vDir;
-
-		Randomize_Dir();
 	}
-		break;
+	break;
 
 	case CMonsterN2::N2S_SPAWN:
 		m_bActiveAI = true;
 		break;
+
+	case CMonsterN2::N2S_STOP:
+	{
+		if (!m_pTargetTC) m_bChase = false;
+	}
+	break;
 	}
 }
 
@@ -118,6 +135,9 @@ _int CN2_AI::Update_Component(const _float& fTimeDelta)
 	case CMonsterN2::N2S_SPAWN:
 		Update_Spawn(fTimeDelta);
 		break;
+	case CMonsterN2::N2S_STOP:
+		Update_Stop(fTimeDelta);
+		break;
 	}
 
 	return iExit;
@@ -125,7 +145,27 @@ _int CN2_AI::Update_Component(const _float& fTimeDelta)
 
 void CN2_AI::Update_Crawl(const _float& fTimeDelta)
 {
+	if (m_bChase)
+	{	// 타겟을 이미 발견했을 때
+		if (m_fDistance <= m_fInteractRange)
+		{
+			if ((m_iPreState != CMonsterN2::N2S_LAND) || (m_iPreState == CMonsterN2::N2S_LAND && m_fAcmlTime >= 5.f))
+				Change_State(CMonsterN2::N2S_JUMP);
+		}
+	}
+	else
+	{	// 타겟을 발견하지 못했을 때
+		if (m_fDistance <= m_fDetectRange)
+		{	// 타겟이 감지 범위 내로 진입 시 발견
+			m_bChase = true;
+		}
+	}
 
+	//m_pOwnerTC->Move_Pos(&m_vDir, fTimeDelta, m_fSpeed);
+	_vec3 vPos;
+	m_pOwnerTC->Get_Info(INFO_POS, &vPos);
+	D3DXVec3Lerp(&vPos, &vPos, &m_vLerpPos, m_fSpeed);
+	m_pOwnerTC->Set_Pos(vPos.x, vPos.y, vPos.z);
 }
 
 void CN2_AI::Update_Jump(const _float& fTimeDelta)
@@ -140,6 +180,14 @@ void CN2_AI::Update_Land(const _float& fTimeDelta)
 
 void CN2_AI::Update_Spawn(const _float& fTimeDelta)
 {
+}
+
+void CN2_AI::Update_Stop(const _float& fTimeDelta)
+{
+	if (m_fAcmlTime > 1.f) Change_State(CMonsterN2::N2S_CRAWL);
+
+	if ((!m_bChase) && (m_fDistance <= m_fDetectRange))
+		m_bChase = true;
 }
 
 void CN2_AI::Compute_Distance()
@@ -158,29 +206,61 @@ void CN2_AI::Compute_Distance()
 	m_fDistance = D3DXVec3Length(&vDir);
 }
 
-void CN2_AI::Compute_TargetDir()
+_vec3 CN2_AI::Compute_TargetDir()
 {
-	if (!m_pOwnerTC || !m_pTargetTC) return;
+	if (!m_pOwnerTC || !m_pTargetTC) return _vec3{ 0.f, 0.f, 0.f };
 
-	_vec3 vOwnerPos, vTargetPos;
+	_vec3 vDir, vOwnerPos, vTargetPos;
 	m_pOwnerTC->Get_Info(INFO_POS, &vOwnerPos);
 	m_pTargetTC->Get_Info(INFO_POS, &vTargetPos);
-	m_vDir = vTargetPos - vOwnerPos;
-	D3DXVec3Normalize(&m_vDir, &m_vDir);
+	vDir = vTargetPos - vOwnerPos;
+	D3DXVec3Normalize(&vDir, &vDir);
+
+	return vDir;
 }
 
-void CN2_AI::Randomize_Dir()
+_vec3 CN2_AI::Compute_LimitedDir(const _float& fMaxAngle, const _vec3& vCurDir, const _vec3& vDesiredDir)
 {
+	_vec3 v1, v2;
+	D3DXVec3Normalize(&v1, &vCurDir);
+	D3DXVec3Normalize(&v2, &vDesiredDir);
+
+	_float fDot = max(-1.f, min(1.f, D3DXVec3Dot(&v1, &v2)));
+	_float fRad = acosf(fDot);
+	_float fMaxRad = D3DXToRadian(fMaxAngle);
+
+	if (fRad <= fMaxRad)
+		return v2;	// 최대 회전 각도보다 작으면 그대로 사용
+
+	// 최대 회전 각도보다 크면 최대 회전 각도로 보정
+	fRad = fMaxRad / fRad;
+
+	_vec3 vResult;
+	D3DXVec3Lerp(&vResult, &v1, &v2, fRad);
+	D3DXVec3Normalize(&vResult, &vResult);
+	return vResult;
+}
+
+_vec3 CN2_AI::Randomize_Dir()
+{
+	_vec3 vDir;
+
 	_float fAngle = D3DXToRadian(rand() % 360);
-	m_vDir.x = cosf(fAngle);
-	m_vDir.y = 0.f;
-	m_vDir.z = sinf(fAngle);
+	vDir.x = cosf(fAngle);
+	vDir.y = 0.f;
+	vDir.z = sinf(fAngle);
+
+	return vDir;
 }
 
 void CN2_AI::Anim_End(CMonsterN2::MONSTER_N2_STATE eState)
 {
 	switch (eState)
 	{
+	case CMonsterN2::N2S_CRAWL:
+		Change_State(CMonsterN2::N2S_STOP);
+		break;
+
 	case CMonsterN2::N2S_JUMP:
 		Change_State(CMonsterN2::N2S_LAND);
 		break;

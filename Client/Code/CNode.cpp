@@ -79,9 +79,21 @@ void CNode::Render_GameObject()
 
 	m_pGraphicDev->SetTextureStageState(0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_COUNT2);
 
+	Set_Texture();
+
 	m_pBufferCom->Render_Buffer();
 
 	m_pGraphicDev->SetTextureStageState(0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE);
+}
+
+void CNode::Set_NodeScale(const _vec3& vScale)
+{
+	m_pTransformCom->Set_Scale(vScale.x, vScale.y, vScale.z);
+}
+
+void CNode::Set_NodePos(const _vec3& vPos)
+{
+	m_pTransformCom->Set_Pos(vPos.x, vPos.y, vPos.z);
 }
 
 HRESULT CNode::Add_Component()
@@ -119,7 +131,7 @@ void CNode::Ready_Variable()
 {
 	// Transform 세팅
 	m_pTransformCom->Set_Pos(_float(rand() % 20), 1.f, _float(rand() % 20));
-	m_pTransformCom->Set_Scale(3.f, 3.f, 3.f);
+	m_pTransformCom->Set_Scale(2.f, 2.f, 2.f);
 
 	// Anim 관련 세팅
 	m_fFrameEnd = 16.f;
@@ -152,11 +164,6 @@ void CNode::Set_Texture()
 	m_pGraphicDev->SetTransform(D3DTS_TEXTURE0, &m_matTex);
 
 	m_pTextureCom->Set_Texture(0);
-}
-
-void CNode::Set_NodePos(const _vec3& vPos)
-{
-	m_pTransformCom->Set_Pos(vPos.x, vPos.y, vPos.z);
 }
 
 CNode* CNode::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, CTransform* pOwnerTC, const _tchar* pProtoTexKey)

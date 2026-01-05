@@ -15,7 +15,7 @@ class CN2_AI;
 class CMonsterN2 : public CMonster 
 {
 public:
-	enum MONSTER_N2_STATE { N2S_CRAWL, N2S_JUMP, N2S_LAND, N2S_SPAWN, N2S_END };
+	enum MONSTER_N2_STATE { N2S_CRAWL, N2S_JUMP, N2S_LAND, N2S_SPAWN, N2S_STOP, N2S_END };
 
 private:
 	explicit	CMonsterN2(LPDIRECT3DDEVICE9 pGraphicDev);
@@ -43,6 +43,7 @@ private:
 	void				Attack_HitBox();
 	void				Attacked(const _int& iAttack);
 	void				Update_State();
+	_vec3				Compute_LimitedDir(const _float& fAngle, const _vec3& vCurDir, const _vec3& vDesiredDir);
 
 private:
 	// 스프라이트 관련
@@ -60,7 +61,6 @@ private:
 	CN2_AI*		m_pAICom;
 
 	// 마디 관련
-	_float		m_fWaveTime;	// 움직임 디테일 용
 	CNode*		m_pNode[3];
 
 public:

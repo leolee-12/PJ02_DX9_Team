@@ -15,8 +15,7 @@ CMonsterN2::CMonsterN2(LPDIRECT3DDEVICE9 pGraphicDev)
 		m_fFrame(0.f),
 		m_fFrameEnd(0.f),
 		m_fFrameSpeed(0.f),
-		m_iAttack(0),
-		m_fWaveTime(0.f)
+		m_iAttack(0)
 {
 	ZeroMemory(m_pNode, sizeof(m_pNode));
 }
@@ -28,8 +27,7 @@ CMonsterN2::CMonsterN2(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChan
 		m_fFrame(0.f),
 		m_fFrameEnd(0.f),
 		m_fFrameSpeed(0.f),
-		m_iAttack(0),
-		m_fWaveTime(0.f)
+		m_iAttack(0)
 {
 	ZeroMemory(m_pNode, sizeof(m_pNode));
 }
@@ -42,8 +40,7 @@ CMonsterN2::CMonsterN2(const CMonsterN2& rhs)
 		m_fFrame(0.f),
 		m_fFrameEnd(0.f),
 		m_fFrameSpeed(0.f),
-		m_iAttack(rhs.m_iAttack),
-		m_fWaveTime(0.f)
+		m_iAttack(rhs.m_iAttack)
 {
 	memcpy(m_pNode, rhs.m_pNode, sizeof(m_pNode));
 }
@@ -68,8 +65,6 @@ HRESULT CMonsterN2::Ready_GameObject()
 
 _int CMonsterN2::Update_GameObject(const _float& fTimeDelta)
 {
- 	m_fWaveTime += fTimeDelta;
-
 	Move_Frame(fTimeDelta);
 
 	m_pColliderCom->UpdateFromTransform(m_pTransformCom);
@@ -84,6 +79,23 @@ _int CMonsterN2::Update_GameObject(const _float& fTimeDelta)
 
 	CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHA, this);
 
+	_vec3 vPrevPos = m_vPos;
+	_vec3 vDir = *m_pAICom->Get_Dir();
+
+	for (_uint i = 0; i < 3; ++i)
+	{
+		_vec3 vNewDir = Compute_LimitedDir(180.f * fTimeDelta, m_pNode[i]->Get_NodeDir(), vPrevPos - m_pNode[i]->Get_NodePos());
+		_vec3 vNewPos = vPrevPos - vNewDir * 0.3f;
+
+		if (vDir.z > 0) vNewPos.z -= 0.01f;
+		else			vNewPos.z += 0.01f;
+
+		m_pNode[i]->Set_NodePos(vNewPos);
+		m_pNode[i]->Set_NodeDir(vNewDir);
+		m_pNode[i]->Update_GameObject(fTimeDelta);
+
+		vPrevPos = vNewPos;
+	}
 	return iExit;
 }
 
@@ -98,6 +110,9 @@ void CMonsterN2::LateUpdate_GameObject(const _float& fTimeDelta)
 	Compute_ViewDepth(&m_vPos);
 
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
+
+	for (_uint i = 0; i < 3; ++i)
+		m_pNode[i]->LateUpdate_GameObject(fTimeDelta);
 }
 
 void CMonsterN2::Render_GameObject()
@@ -164,7 +179,8 @@ void CMonsterN2::Ready_Variable()
 {
 	// Transform 세팅
 	m_pTransformCom->Set_Pos(_float(rand() % 10), 1.f, _float(rand() % 10));
-	m_pTransformCom->Set_Scale(3.f, 3.f, 3.f);
+	_vec3 vScale{ 3.f, 3.f, 3.f };
+	m_pTransformCom->Set_Scale(vScale.x, vScale.y, vScale.z);
 
 	// Collider 세팅
 	m_pColliderCom->RegisterToManager(this, CL_MONSTER);
@@ -182,10 +198,19 @@ void CMonsterN2::Ready_Variable()
 	m_iAttack = 1;
 	m_iHp = 10;
 
+
 	// 마디 세팅
+	vScale *= 0.7f;
 	m_pNode[0] = CNode::Create(m_pGraphicDev, m_pMessageChannel, m_pTransformCom, L"Proto_N2Node1Texture");
+	m_pNode[0]->Set_NodeScale(vScale);
+
+	vScale *= 0.7f;
 	m_pNode[1] = CNode::Create(m_pGraphicDev, m_pMessageChannel, m_pTransformCom, L"Proto_N2Node2Texture");
+	m_pNode[1]->Set_NodeScale(vScale);
+
+	vScale *= 0.7f;
 	m_pNode[2] = CNode::Create(m_pGraphicDev, m_pMessageChannel, m_pTransformCom, L"Proto_N2Node3Texture");
+	m_pNode[2]->Set_NodeScale(vScale);
 }
 
 void CMonsterN2::Ready_Event()
@@ -230,8 +255,9 @@ void CMonsterN2::Check_Frame()
 	break;
 
 	case N2S_SPAWN:
+	case N2S_STOP:
 	{
-		m_fFrameEnd = 1.f;
+		m_fFrameEnd = 16.f;
 	}
 	break;
 	}
@@ -249,6 +275,11 @@ void CMonsterN2::Move_Frame(const _float& fTimeDelta)
 
 		switch (m_eCurState)
 		{
+		case N2S_CRAWL:
+			m_pAICom->Anim_End(m_eCurState);
+			m_eCurState = N2S_STOP;
+			break;
+
 		case N2S_JUMP:
 			m_pAICom->Anim_End(m_eCurState);
 			m_eCurState = N2S_LAND;
@@ -285,7 +316,7 @@ void CMonsterN2::Set_Texture()
 	{
 	case N2S_CRAWL:
 	{
-		if (vDir.z > 0.f) iV += 1;
+		if (vDir.z > 0.f) iV += 2;
 	}
 	break;
 
@@ -302,6 +333,13 @@ void CMonsterN2::Set_Texture()
 	case N2S_SPAWN:
 	{
 		iTexIdx = 0;
+	}
+	break;
+
+	case N2S_STOP:
+	{
+		iTexIdx = 0;
+		if (vDir.z > 0.f) iV += 2;
 	}
 	break;
 	}
@@ -351,6 +389,29 @@ void CMonsterN2::Update_State()
 	if (m_eCurState == N2S_SPAWN) return;
 
 	m_eCurState = m_pAICom->Get_RecommendState<MONSTER_N2_STATE>();
+}
+
+_vec3 CMonsterN2::Compute_LimitedDir(const _float& fMaxAngle, const _vec3& vCurDir, const _vec3& vDesiredDir)
+{
+	_vec3 v1, v2;
+	D3DXVec3Normalize(&v1, &vCurDir);
+	D3DXVec3Normalize(&v2, &vDesiredDir);
+
+
+	_float fDot = max(-1.f, min(1.f, D3DXVec3Dot(&v1, &v2)));
+	_float fRad = acosf(fDot);
+	_float fMaxRad = D3DXToRadian(fMaxAngle);
+
+	if (fRad <= fMaxRad)
+		return v2;	// 최대 회전 각도보다 작으면 그대로 사용
+
+	// 최대 회전 각도보다 크면 최대 회전 각도로 보정
+	fRad = fMaxRad / fRad;
+
+	_vec3 vResult;
+	D3DXVec3Lerp(&vResult, &v1, &v2, fRad);
+	D3DXVec3Normalize(&vResult, &vResult);
+	return vResult;
 }
 
 CMonsterN2* CMonsterN2::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel)

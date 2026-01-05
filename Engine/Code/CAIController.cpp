@@ -24,7 +24,8 @@ CAIController::CAIController(const CAIController& rhs)
 		m_pTargetTC(nullptr),
 		m_fDetectRange(rhs.m_fDetectRange),
 		m_fInteractRange(rhs.m_fInteractRange),
-		m_fDistance(rhs.m_fInteractRange)
+		m_fDistance(rhs.m_fDistance),
+		m_vDir(rhs.m_vDir)
 {
 }
 
@@ -37,6 +38,7 @@ HRESULT		CAIController::Ready_AI(const _float& fDetectRange, const _float& fInte
 	m_fDetectRange = fDetectRange;
 	m_fInteractRange = fInteractRange;
 	m_iCurState = iInitState;
+	m_vDir = {0.f, 0.f, 0.f};
 
 	return S_OK;
 }

@@ -24,10 +24,12 @@ private:
 	void		Update_Jump(const _float& fTimeDelta);
 	void		Update_Land(const _float& fTimeDelta);
 	void		Update_Spawn(const _float& fTimeDelta);
+	void		Update_Stop(const _float& fTimeDelta);
 
 	void		Compute_Distance();
-	void		Compute_TargetDir();
-	void		Randomize_Dir();
+	_vec3		Compute_TargetDir();
+	_vec3		Compute_LimitedDir(const _float& fAngle, const _vec3& vCurDir, const _vec3& vDesiredDir);
+	_vec3		Randomize_Dir();
 
 private:
 	_float		m_fSpeed;
