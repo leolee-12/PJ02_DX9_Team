@@ -85,6 +85,9 @@ _int CPlayer::Update_GameObject(const _float& fTimeDelta)
 
 	m_pColliderCom->UpdateFromTransform(m_pTransformCom);
 
+	// 충돌체 디버그용
+	m_pColliderCom->Update_AABBforRender();
+
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 	
 	Set_OnTerrain();
@@ -626,6 +629,8 @@ void CPlayer::Attack_HitBox()
 {
 	AABB tAABB = { m_vPos.x, m_vPos.y, m_vPos.z,
 					2.f, 1.f, 2.f };
+
+	CRenderer::GetInstance()->Add_TestCollider(tAABB, 60);
 
 	vector<CGameObject*> tempVec = CCollisionMgr::GetInstance()->Test_AABB(tAABB, CL_MONSTER);
 
