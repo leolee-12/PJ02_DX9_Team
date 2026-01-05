@@ -30,6 +30,9 @@ public:
 	void RegisterToManager(CGameObject* pOwner, COLGROUP Group);	// 매니저에 콜라이더 정보 등록 함수
 	void UnregisterFromManager();									// 매니저에 콜라이더 정보 등록 해제함수
 
+	void Update_AABBforRender();
+	void Render_Collider();										// 디버그용 콜라이더 렌더링 함수
+
 
 private:
 	HRESULT Ready_Collider(optional<AABB> tInitAABB);  // 콜라이더 셋업함수

@@ -8,12 +8,12 @@ namespace Engine
 	class CTexture;
 }
 
-class CKBTab :
+class CKBSix :
 	public CUi
 {
 private:
-	explicit CKBTab(LPDIRECT3DDEVICE9 pGraphicDev);
-	virtual ~CKBTab();
+	explicit CKBSix(LPDIRECT3DDEVICE9 pGraphicDev);
+	virtual ~CKBSix();
 
 public:
 	virtual			HRESULT		Ready_GameObject();
@@ -22,12 +22,8 @@ public:
 	virtual			void		Render_GameObject();
 	virtual			void		OnCollision(CGameObject* pObject);
 
-	void			  Move_Down();
-	void			  Move_Up();
-	void			  Move_Title();
-
 public:
-	static CKBTab* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	static CKBSix* Create(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vPos);
 
 private:
 	virtual			void		Free();

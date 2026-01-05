@@ -142,9 +142,6 @@
     <Filter Include="02. GameObject\07. UI\03. KBUI">
       <UniqueIdentifier>{41fa98cd-1415-4315-904c-4273008d3aab}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\07. UI\03. KBUI\01. Test">
-      <UniqueIdentifier>{c05846a8-0aa5-450d-bd73-73898a6a4ab8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObject\07. UI\03. KBUI\00. TTutorial">
       <UniqueIdentifier>{9d64cac5-b54a-4657-bd1d-c039bc1b870c}</UniqueIdentifier>
     </Filter>
@@ -162,6 +159,33 @@
     </Filter>
     <Filter Include="02. GameObject\07. UI\03. KBUI\00. TTutorial\00. KBBack">
       <UniqueIdentifier>{361ac797-f26e-4d74-843b-11dc7fd5c6c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. UI\03. KBUI\99. Test">
+      <UniqueIdentifier>{c05846a8-0aa5-450d-bd73-73898a6a4ab8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. UI\03. KBUI\01. Title">
+      <UniqueIdentifier>{57dcc651-c292-431c-8109-8e0dcbaf4cf7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. UI\03. KBUI\01. Title\00. KBSix">
+      <UniqueIdentifier>{240585be-6895-460e-aa92-90c1e3b29e91}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. UI\03. KBUI\02. Main">
+      <UniqueIdentifier>{68d8a63d-3ca8-4ea2-9066-5cc0c2551589}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. UI\03. KBUI\02. Main\00. Dice">
+      <UniqueIdentifier>{da8a9377-1ab7-4a0c-9da0-9537c6a0790e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. UI\03. KBUI\02. Main\01. Board">
+      <UniqueIdentifier>{af97486c-18ef-4f9c-962b-970463bcc69b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. UI\03. KBUI\02. Main\01. Board\BoardSlot">
+      <UniqueIdentifier>{048de530-4f9a-466c-baea-13e2ae66c7e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. UI\03. KBUI\02. Main\01. Board\BoardBack">
+      <UniqueIdentifier>{2a194916-5ec0-48cd-924d-1df392cff05f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. UI\03. KBUI\02. Main\01. Board\DiceBox">
+      <UniqueIdentifier>{38dd812d-ccbf-4dbf-b3a4-5232669d9e66}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -301,7 +325,61 @@
       <Filter>02. GameObject\07. UI\03. KBUI\00. TTutorial\04. Divider</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CKBMask.h">
-      <Filter>02. GameObject\07. UI\03. KBUI\01. Test</Filter>
+      <Filter>02. GameObject\07. UI\03. KBUI\99. Test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CKBSix.h">
+      <Filter>02. GameObject\07. UI\03. KBUI\01. Title\00. KBSix</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CKBDice.h">
+      <Filter>02. GameObject\07. UI\03. KBUI\02. Main\00. Dice</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CKBBoardSlot.h">
+      <Filter>02. GameObject\07. UI\03. KBUI\02. Main\01. Board\BoardSlot</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CKBBoardBack.h">
+      <Filter>02. GameObject\07. UI\03. KBUI\02. Main\01. Board\BoardBack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CKBDiceBox.h">
+      <Filter>02. GameObject\07. UI\03. KBUI\02. Main\01. Board\DiceBox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CKBBack2.h">
+      <Filter>02. GameObject\07. UI\03. KBUI\00. TTutorial</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CKBSix.h">
+      <Filter>02. GameObject\07. UI\03. KBUI\01. Title\00. KBSix</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CKBDice.h">
+      <Filter>02. GameObject\07. UI\03. KBUI\02. Main\00. Dice</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CKBBoardSlot.h">
+      <Filter>02. GameObject\07. UI\03. KBUI\02. Main\01. Board\BoardSlot</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CKBBoardBack.h">
+      <Filter>02. GameObject\07. UI\03. KBUI\02. Main\01. Board\BoardBack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CKBDiceBox.h">
+      <Filter>02. GameObject\07. UI\03. KBUI\02. Main\01. Board\DiceBox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CKBBack2.h">
+      <Filter>02. GameObject\07. UI\03. KBUI\00. TTutorial</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CKBSix.h">
+      <Filter>02. GameObject\07. UI\03. KBUI\01. Title\00. KBSix</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CKBDice.h">
+      <Filter>02. GameObject\07. UI\03. KBUI\02. Main\00. Dice</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CKBBoardSlot.h">
+      <Filter>02. GameObject\07. UI\03. KBUI\02. Main\01. Board\BoardSlot</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CKBBoardBack.h">
+      <Filter>02. GameObject\07. UI\03. KBUI\02. Main\01. Board\BoardBack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CKBDiceBox.h">
+      <Filter>02. GameObject\07. UI\03. KBUI\02. Main\01. Board\DiceBox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CKBBack2.h">
+      <Filter>02. GameObject\07. UI\03. KBUI\00. TTutorial</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CActiveItem.h">
       <Filter>02. GameObject\09. Item</Filter>
@@ -438,7 +516,61 @@
       <Filter>02. GameObject\07. UI\03. KBUI\00. TTutorial\04. Divider</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CKBMask.cpp">
-      <Filter>02. GameObject\07. UI\03. KBUI\01. Test</Filter>
+      <Filter>02. GameObject\07. UI\03. KBUI\99. Test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CKBSix.cpp">
+      <Filter>02. GameObject\07. UI\03. KBUI\01. Title\00. KBSix</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CKBDice.cpp">
+      <Filter>02. GameObject\07. UI\03. KBUI\02. Main\00. Dice</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CKBBoardSlot.cpp">
+      <Filter>02. GameObject\07. UI\03. KBUI\02. Main\01. Board\BoardSlot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CKBBoardBack.cpp">
+      <Filter>02. GameObject\07. UI\03. KBUI\02. Main\01. Board\BoardBack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CKBDiceBox.cpp">
+      <Filter>02. GameObject\07. UI\03. KBUI\02. Main\01. Board\DiceBox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CKBBack2.cpp">
+      <Filter>02. GameObject\07. UI\03. KBUI\00. TTutorial</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CKBSix.cpp">
+      <Filter>02. GameObject\07. UI\03. KBUI\01. Title\00. KBSix</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CKBDice.cpp">
+      <Filter>02. GameObject\07. UI\03. KBUI\02. Main\00. Dice</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CKBBoardSlot.cpp">
+      <Filter>02. GameObject\07. UI\03. KBUI\02. Main\01. Board\BoardSlot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CKBBoardBack.cpp">
+      <Filter>02. GameObject\07. UI\03. KBUI\02. Main\01. Board\BoardBack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CKBDiceBox.cpp">
+      <Filter>02. GameObject\07. UI\03. KBUI\02. Main\01. Board\DiceBox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CKBBack2.cpp">
+      <Filter>02. GameObject\07. UI\03. KBUI\00. TTutorial</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CKBSix.cpp">
+      <Filter>02. GameObject\07. UI\03. KBUI\01. Title\00. KBSix</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CKBDice.cpp">
+      <Filter>02. GameObject\07. UI\03. KBUI\02. Main\00. Dice</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CKBBoardSlot.cpp">
+      <Filter>02. GameObject\07. UI\03. KBUI\02. Main\01. Board\BoardSlot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CKBBoardBack.cpp">
+      <Filter>02. GameObject\07. UI\03. KBUI\02. Main\01. Board\BoardBack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CKBDiceBox.cpp">
+      <Filter>02. GameObject\07. UI\03. KBUI\02. Main\01. Board\DiceBox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CKBBack2.cpp">
+      <Filter>02. GameObject\07. UI\03. KBUI\00. TTutorial</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CActiveItem.cpp">
       <Filter>02. GameObject\09. Item</Filter>

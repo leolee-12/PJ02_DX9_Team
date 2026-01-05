@@ -2,6 +2,7 @@
 #include "CTransform.h"
 #include "CCollisionMgr.h"
 #include "CGameObject.h"
+#include "CRenderer.h"
 
 
 
@@ -62,6 +63,49 @@ void CCollider::UnregisterFromManager()
 	{
 		Engine::CCollisionMgr::GetInstance()->RequestUnregister(m_pOwner, m_Group);
 	}
+}
+
+void CCollider::Update_AABBforRender()
+{
+	CRenderer::GetInstance()->Add_ColliderDebugGroup(this);
+}
+
+void CCollider::Render_Collider()
+{
+	if (!m_pGraphicDev) return; 
+	// AABB 정보에서 center와 half-size 가져오기 
+	D3DXVECTOR3 c = { m_tAABB.x, m_tAABB.y, m_tAABB.z };
+	D3DXVECTOR3 h = { m_tAABB.hx, m_tAABB.hy, m_tAABB.hz };
+	// 8개 꼭짓점 계산 
+	D3DXVECTOR3 v[8] = { 
+		{c.x - h.x, c.y - h.y, c.z - h.z}, 
+		{c.x - h.x, c.y - h.y, c.z + h.z}, 
+		{c.x - h.x, c.y + h.y, c.z - h.z}, 
+		{c.x - h.x, c.y + h.y, c.z + h.z}, 
+		{c.x + h.x, c.y - h.y, c.z - h.z}, 
+		{c.x + h.x, c.y - h.y, c.z + h.z}, 
+		{c.x + h.x, c.y + h.y, c.z - h.z}, 
+		{c.x + h.x, c.y + h.y, c.z + h.z}, 
+	}; 
+	// 12개 엣지를 연결하는 인덱스 
+	WORD indices[24] = 
+	{ 
+		0,1, 0,2, 0,4, 
+		7,6, 7,5, 7,3, 
+		1,5, 1,3, 2,3, 
+		2,6, 4,5, 4,6 
+	}; 
+
+	DebugVertex verts[8]; 
+	for (int i = 0; i < 8; ++i) 
+	{ 
+		verts[i].vPosition = v[i]; 
+		verts[i].dwColor = D3DCOLOR_ARGB(255, 0, 255, 0); 
+	} 
+
+	m_pGraphicDev->SetFVF(FVF_DEBUG);
+	m_pGraphicDev->DrawIndexedPrimitiveUP( D3DPT_LINELIST, 0, 8, 12, indices, D3DFMT_INDEX16, verts, sizeof(DebugVertex) );
+
 }
 
 CCollider* CCollider::Create(LPDIRECT3DDEVICE9 pGraphicDev, optional<AABB> tInitAABB)

@@ -5,7 +5,7 @@
 #include "CDInputMgr.h"
 
 CDungeonLine::CDungeonLine(LPDIRECT3DDEVICE9 pGraphicDev)
-	: CUi(pGraphicDev), m_pBufferCom(nullptr), m_pTransformCom(nullptr), m_fFrame(0.f), m_bRender(false), m_bAnim(false)
+	: CUi(pGraphicDev), m_pBufferCom(nullptr), m_pTransformCom(nullptr), m_fFrame(0), m_bRender(false), m_bAnim(false)
 {
 	ZeroMemory(&m_vPos, sizeof(_vec3));
 	ZeroMemory(&m_tMtrl, sizeof(_vec3));
@@ -114,7 +114,7 @@ void CDungeonLine::Render_GameObject()
 
 	m_pGraphicDev->SetMaterial(&m_tMtrl);
 
-	if (m_bAnim){ m_matUV._32 += 0.003; }
+	if (m_bAnim){ m_matUV._32 += 0.003f; }
 
 	m_pGraphicDev->SetTextureStageState(0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_COUNT2);
 	m_pGraphicDev->SetTransform(D3DTS_TEXTURE0, &m_matUV);

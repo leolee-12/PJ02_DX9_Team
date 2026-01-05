@@ -1,30 +1,30 @@
 #include "pch.h"
-#include "CKBCenter.h"
+#include "CKBSix.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
 
-CKBCenter::CKBCenter(LPDIRECT3DDEVICE9 pGraphicDev)
+CKBSix::CKBSix(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CUi(pGraphicDev), m_pBufferCom(nullptr), m_pTransformCom(nullptr)
 {
 	ZeroMemory(&m_vPos, sizeof(_vec3));
 }
 
-CKBCenter::~CKBCenter()
+CKBSix::~CKBSix()
 {
 }
 
-HRESULT CKBCenter::Ready_GameObject()
+HRESULT CKBSix::Ready_GameObject()
 {
 	if (FAILED(Add_Component()))
 		return E_FAIL;
 
-	m_pTransformCom->Set_Scale(60.f, 60.f, 1.f);
-	m_pTransformCom->Set_Pos(0.f, 40.f, 0.f);
+	m_pTransformCom->Set_Scale(30.f, 30.f, 1.f);
+	m_pTransformCom->Set_Pos(m_vPos.x, m_vPos.y, m_vPos.z);
 
 	return S_OK;
 }
 
-_int CKBCenter::Update_GameObject(const _float& fTimeDelta)
+_int CKBSix::Update_GameObject(const _float& fTimeDelta)
 {
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
@@ -33,43 +33,28 @@ _int CKBCenter::Update_GameObject(const _float& fTimeDelta)
 	return iExit;
 }
 
-void CKBCenter::LateUpdate_GameObject(const _float& fTimeDelta)
+void CKBSix::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
 	m_pTransformCom->Get_Info(INFO_POS, &m_vPos);
 	Compute_ViewDepth_Ortho(&m_vPos);
 }
 
-void CKBCenter::Render_GameObject()
+void CKBSix::Render_GameObject()
 {
-	m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, TRUE);
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
 
-	D3DMATERIAL9			tMtrl;
-	ZeroMemory(&tMtrl, sizeof(D3DMATERIAL9));
-
-	tMtrl.Diffuse = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-	tMtrl.Specular = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-	tMtrl.Ambient = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-
-	tMtrl.Emissive = m_tColor;
-	tMtrl.Power = 0.f;
-
-	m_pGraphicDev->SetMaterial(&tMtrl);
-
-	m_pTextureCom->Set_Texture();
+	m_pTextureCom->Set_Texture(0);
 
 	m_pBufferCom->Render_Buffer();
-
-	m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, FALSE);
 }
 
-void CKBCenter::OnCollision(CGameObject* pObject)
+void CKBSix::OnCollision(CGameObject* pObject)
 {
 
 }
 
-HRESULT CKBCenter::Add_Component()
+HRESULT CKBSix::Add_Component()
 {
 	Engine::CComponent* pComponent = nullptr;
 
@@ -92,7 +77,7 @@ HRESULT CKBCenter::Add_Component()
 	m_mapComponent[ID_DYNAMIC].insert({ L"Com_Transform", pComponent });
 
 	pComponent = m_pTextureCom = dynamic_cast<Engine::CTexture*>
-		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_KBCenter"));
+		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_KBSix"));
 
 	if (nullptr == pComponent)
 		return E_FAIL;
@@ -104,22 +89,22 @@ HRESULT CKBCenter::Add_Component()
 
 
 
-CKBCenter* CKBCenter::Create(LPDIRECT3DDEVICE9 pGraphicDev, const D3DXCOLOR& Color)
+CKBSix* CKBSix::Create(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vPos)
 {
-	CKBCenter* pKBCenter = new CKBCenter(pGraphicDev);
-	pKBCenter->m_tColor = Color;
+	CKBSix* pDivider = new CKBSix(pGraphicDev);
+	pDivider->m_vPos = vPos;
 
-	if (FAILED(pKBCenter->Ready_GameObject()))
+	if (FAILED(pDivider->Ready_GameObject()))
 	{
-		Safe_Release(pKBCenter);
-		MSG_BOX("pKBCenter Create Failed");
+		Safe_Release(pDivider);
+		MSG_BOX("pDivider Create Failed");
 		return nullptr;
 	}
 
-	return pKBCenter;
+	return pDivider;
 }
 
-void CKBCenter::Free()
+void CKBSix::Free()
 {
 	CUi::Free();
 }
