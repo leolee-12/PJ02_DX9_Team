@@ -14,6 +14,7 @@
 #include "CSoundMgr.h"
 #include "CMainCamera.h"
 #include "CMonsterN1.h"
+#include "CItem.h"
 #include "CCollisionMgr.h"
 
 CTest::CTest(LPDIRECT3DDEVICE9 pGraphicDev)
