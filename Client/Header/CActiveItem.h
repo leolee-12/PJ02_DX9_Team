@@ -1,0 +1,28 @@
+#pragma once
+#include "CItem.h"
+
+class CActiveItem : public CItem
+{
+protected:
+	explicit	CActiveItem(LPDIRECT3DDEVICE9 pGraphicDev);
+	explicit	CActiveItem(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel);
+	explicit	CActiveItem(const CActiveItem& rhs);
+	virtual		~CActiveItem();
+
+public:
+	virtual HRESULT		Ready_GameObject();
+	virtual _int		Update_GameObject(const _float& fTimeDelta);
+	virtual void		OnCollision(CGameObject* pObject);
+
+protected:
+	HRESULT				Add_Component();
+
+	void				Update_Idle(const _float& fTimeDelta);
+	void				Update_Chase(const _float& fTimeDelta);
+
+public:
+	static CActiveItem* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel);
+
+protected:
+	virtual void Free();
+};

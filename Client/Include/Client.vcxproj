@@ -149,6 +149,7 @@
   <ItemGroup>
     <ClInclude Include="..\Header\CB1_AI.h" />
     <ClInclude Include="..\Header\CB2_AI.h" />
+    <ClInclude Include="..\Header\CActiveItem.h" />
     <ClInclude Include="..\Header\CBackGround.h" />
     <ClInclude Include="..\Header\CDivider.h" />
     <ClInclude Include="..\Header\CDungeonBack.h" />
@@ -156,6 +157,7 @@
     <ClInclude Include="..\Header\CDungeonLine.h" />
     <ClInclude Include="..\Header\CDynamicCamera.h" />
     <ClInclude Include="..\Header\CEditScene.h" />
+    <ClInclude Include="..\Header\CItem.h" />
     <ClInclude Include="..\Header\CKBBack.h" />
     <ClInclude Include="..\Header\CKBCenter.h" />
     <ClInclude Include="..\Header\CKBMask.h" />
@@ -182,6 +184,7 @@
     <ClInclude Include="..\Header\CN2_AI.h" />
     <ClInclude Include="..\Header\CN3_AI.h" />
     <ClInclude Include="..\Header\CNode.h" />
+    <ClInclude Include="..\Header\CPassiveItem.h" />
     <ClInclude Include="..\Header\CPersistentMgr.h" />
     <ClInclude Include="..\Header\CPlayer.h" />
     <ClInclude Include="..\Header\CPlayerHP.h" />
@@ -207,6 +210,7 @@
   <ItemGroup>
     <ClCompile Include="..\Code\CB1_AI.cpp" />
     <ClCompile Include="..\Code\CB2_AI.cpp" />
+    <ClCompile Include="..\Code\CActiveItem.cpp" />
     <ClCompile Include="..\Code\CBackGround.cpp" />
     <ClCompile Include="..\Code\CDivider.cpp" />
     <ClCompile Include="..\Code\CDungeonBack.cpp" />
@@ -214,6 +218,7 @@
     <ClCompile Include="..\Code\CDungeonLine.cpp" />
     <ClCompile Include="..\Code\CDynamicCamera.cpp" />
     <ClCompile Include="..\Code\CEditScene.cpp" />
+    <ClCompile Include="..\Code\CItem.cpp" />
     <ClCompile Include="..\Code\CKBBack.cpp" />
     <ClCompile Include="..\Code\CKBCenter.cpp" />
     <ClCompile Include="..\Code\CKBMask.cpp" />
@@ -240,6 +245,7 @@
     <ClCompile Include="..\Code\CN2_AI.cpp" />
     <ClCompile Include="..\Code\CN3_AI.cpp" />
     <ClCompile Include="..\Code\CNode.cpp" />
+    <ClCompile Include="..\Code\CPassiveItem.cpp" />
     <ClCompile Include="..\Code\CPersistentMgr.cpp" />
     <ClCompile Include="..\Code\CPlayer.cpp" />
     <ClCompile Include="..\Code\CPlayerHP.cpp" />

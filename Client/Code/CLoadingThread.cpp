@@ -104,6 +104,9 @@ _uint CLoadingThread::Loading_ForStage()
     if(FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_N1_AI", CN1_AI::Create(m_pGraphicDev, 5.f, 1.f))))
 		return E_FAIL;
 
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_ItemTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Item/Item_%02d.png", 8))))
+        return E_FAIL;
+
     if (FAILED(CPersistentMgr::GetInstance()->Ready_GlobalObjects(m_pGraphicDev)))
         return E_FAIL;
 
@@ -153,12 +156,14 @@ _uint CLoadingThread::Loading_ForTest()
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_PlayerHP", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Player/Health_%d.png", 3));
 
     //CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_PlayerHalfHP", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Player/Health_Half_%d.png", 2));
-    
+
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_ItemTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Item/Item_%02d.png", 8));
+
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_MonsterN1Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal1/MonsterN1_%02d.png", 7));
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_MonsterN2Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal2/MonsterN2_%02d.png", 3));
-    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_N2Node1Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal2/N2Node_01.png", 1));
-    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_N2Node2Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal2/N2Node_02.png", 1));
-    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_N2Node3Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal2/N2Node_03.png", 1));
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_N2Node1Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal2/N2Node_00.png", 1));
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_N2Node2Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal2/N2Node_01.png", 1));
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_N2Node3Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal2/N2Node_02.png", 1));
 
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_N1_AI", CN1_AI::Create(m_pGraphicDev, 5.f, 1.f));
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_N2_AI", CN2_AI::Create(m_pGraphicDev, 5.f, 1.f));
