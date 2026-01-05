@@ -81,11 +81,11 @@ private:
 	_float			m_fFrame;
 	_float			m_fFrameEnd;
 	_float			m_fFrameSpeed;
-	_vec3			m_vNormDir[DIR_END];
-	_vec3			m_vDir;
 	_matrix			m_matTex;
 
 	// 캐릭터 스테이터스 관련
+	_vec3			m_vNormDir[DIR_END];
+	_vec3			m_vDir;
 	_float			m_fSpeed;
 	_int			m_iAttack;
 	_bool			m_bRoll;	// 구르기 중인지?
@@ -97,7 +97,6 @@ private:
 	// 구르기 관련
 	_vec3			m_vRollPos;		// Lerp용 위치
 	_float			m_fLerp;		// Lerp용 값
-	_float			m_fRollSpeed;
 
 	// 차지 공격 관련
 	_float			m_fCharge;

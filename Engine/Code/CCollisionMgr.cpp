@@ -16,7 +16,9 @@ CCollisionMgr::~CCollisionMgr()
 
 HRESULT CCollisionMgr::Ready_CollisionMgr()
 {
-	m_vecCollisionPool.push_back({ CL_PLAYER, CL_MONSTER });		// 어떤 그룹끼리 충돌체크를 할지 등록
+	// 어떤 그룹끼리 충돌체크를 할지 등록
+	//m_vecCollisionPool.push_back({ CL_PLAYER, CL_MONSTER });
+	m_vecCollisionPool.push_back({ CL_PLAYER, CL_ITEM });
 	return S_OK;
 }
 
