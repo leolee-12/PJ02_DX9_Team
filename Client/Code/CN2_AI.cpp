@@ -29,7 +29,8 @@ HRESULT CN2_AI::Ready_AI(const _float& fDetectRange, const _float& fInteractRang
 
 	m_fSpeed = 0.5f;
 	m_fAcmlTime = 0.f;
-	m_iRcmState = _uint(CMonsterN2::N2S_CRAWL);
+	m_iRcmState = _uint(CMonsterN2::N2S_SPAWN);
+	Randomize_Dir();
 
 	return S_OK;
 }

@@ -68,7 +68,7 @@ HRESULT CMonsterN2::Ready_GameObject()
 
 _int CMonsterN2::Update_GameObject(const _float& fTimeDelta)
 {
-	m_fWaveTime += fTimeDelta;
+ 	m_fWaveTime += fTimeDelta;
 
 	Move_Frame(fTimeDelta);
 
@@ -163,7 +163,7 @@ HRESULT CMonsterN2::Add_Component()
 void CMonsterN2::Ready_Variable()
 {
 	// Transform 세팅
-	m_pTransformCom->Set_Pos(_float(rand() % 20), 1.f, _float(rand() % 20));
+	m_pTransformCom->Set_Pos(_float(rand() % 10), 1.f, _float(rand() % 10));
 	m_pTransformCom->Set_Scale(3.f, 3.f, 3.f);
 
 	// Collider 세팅
@@ -213,7 +213,7 @@ void CMonsterN2::Check_Frame()
 	{
 	case N2S_CRAWL:
 	{
-		m_fFrameEnd = 14.f;
+		m_fFrameEnd = 16.f;
 	}
 	break;
 

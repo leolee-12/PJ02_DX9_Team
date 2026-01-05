@@ -163,13 +163,13 @@ HRESULT CTest::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 
 	for (_uint i = 0; i < 20; ++i)
 	{
-	//	pGameObject = CMonsterN1::Create(m_pGraphicDev, m_pMessageChannel);
-	//
-	//	if (nullptr == pGameObject)
-	//		return E_FAIL;
-	//
-	//	if (FAILED(pLayer->Add_GameObject(L"Monster", pGameObject)))
-	//		return E_FAIL;
+		//pGameObject = CMonsterN1::Create(m_pGraphicDev, m_pMessageChannel);
+		//
+		//if (nullptr == pGameObject)
+		//	return E_FAIL;
+		//
+		//if (FAILED(pLayer->Add_GameObject(L"Monster", pGameObject)))
+		//	return E_FAIL;
 
 		pGameObject = CItem::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ _float(rand() % 20), 1.1f, _float(rand() % 20) }, CItem::ITEMID(rand() % 6), true);
 
@@ -180,7 +180,7 @@ HRESULT CTest::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 			return E_FAIL;
 	}
 
-	for (_uint i = 0; i < 3; ++i)
+	for (_uint i = 0; i < 20; ++i)
 	{
 		pGameObject = CMonsterN2::Create(m_pGraphicDev, m_pMessageChannel);
 		
