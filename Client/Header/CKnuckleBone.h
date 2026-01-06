@@ -63,6 +63,7 @@ private:
 	// 상대 주사위 제거
 	void			Remove_OpponentDice(_int iOwner, _int iCol, _int iDiceValue);	// 상대 같은 열 같은 눈 제거
 	void			Compact_Column(_int iOwner, _int iCol);							// 열 내 빈 칸 정렬
+	void			Update_ColumnDiceColors(_int iOwner, _int iCol);					// 열 주사위 색상 업데이트
 
 	// 게임 종료 판정
 	_bool			Check_GameEnd();				// 게임 종료 여부 (한 쪽 9칸 채움)
@@ -110,5 +111,8 @@ private:
 
 	// 보드선택창 ShowTime
 	_float		m_fShowTime;
+
+	// 마지막 배치 열 (색상 업데이트용)
+	_int		m_iLastPlacedCol;
 };
 
