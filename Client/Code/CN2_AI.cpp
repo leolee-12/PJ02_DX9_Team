@@ -50,33 +50,28 @@ void CN2_AI::Enter_State(const _uint& iState)
 	{
 	case CMonsterN2::N2S_CRAWL:
 	{
-		m_fAcmlTime = 0.f;
-
+		m_fSpeed = 0.03f;
 		_vec3 vPrevPos, vDesiredDir;
-		if (!m_bChase)
-		{
-			vDesiredDir = Randomize_Dir();
-			m_fSpeed = 0.05f;
-		}
-		else
-		{
-			vDesiredDir = Compute_TargetDir();
-			m_fSpeed = 0.1f;
-		}
+		
+		if		((!m_bChase) || (m_fAcmlTime < 2.f))	vDesiredDir = Randomize_Dir();
+		else if ((m_bChase) && (m_fAcmlTime >= 2.f))	vDesiredDir = Compute_TargetDir();
 
 		m_pOwnerTC->Get_Info(INFO_POS, &vPrevPos);
-		m_vDir = Compute_LimitedDir(90.f, m_vDir, vDesiredDir);
+		m_vDir = Compute_LimitedDir(60.f, m_vDir, vDesiredDir);
 		m_vLerpPos = vPrevPos + m_vDir * 3.f;
+		m_vLerpPos.x += Get_Rand_Int(-5, 5) * 0.3f;	// -1.5f ~ 1.5f 난수
+		m_vLerpPos.z += Get_Rand_Int(-5, 5) * 0.3f;	// -1.5f ~ 1.5f 난수
 	}
 		break;
 	case CMonsterN2::N2S_JUMP:
 	{
 		m_vDir = Compute_TargetDir();
-		m_vSpeed = { m_vDir.x, 10.f, m_vDir.z};
+		m_vSpeed = { m_vDir.x * 3.f, 5.f, m_vDir.z * 3.f };
 	}
 		break;
 	case CMonsterN2::N2S_LAND:
 	{
+		m_fAcmlTime = 0.f;
 		m_fSpeed = 1.f;
 	}
 		break;
@@ -84,7 +79,6 @@ void CN2_AI::Enter_State(const _uint& iState)
 		m_bActiveAI = false;
 		break;
 	case CMonsterN2::N2S_STOP:
-		m_fAcmlTime = 0.f;
 		break;
 	}
 }
@@ -161,7 +155,7 @@ void CN2_AI::Update_Crawl(const _float& fTimeDelta)
 	{	// 타겟을 이미 발견했을 때
 		if (m_fDistance <= m_fInteractRange)
 		{
-			if ((m_iPreState != CMonsterN2::N2S_LAND) || (m_iPreState == CMonsterN2::N2S_LAND && m_fAcmlTime >= 5.f))
+			if (m_fAcmlTime >= 5.f)
 				Change_State(CMonsterN2::N2S_JUMP);
 		}
 	}
@@ -205,13 +199,17 @@ void CN2_AI::Update_Spawn(const _float& fTimeDelta)
 
 void CN2_AI::Update_Stop(const _float& fTimeDelta)
 {
-	if (m_fAcmlTime > 1.f) Change_State(CMonsterN2::N2S_CRAWL);
-
 	if ((!m_bChase) && (m_fDistance <= m_fDetectRange))
+	{
 		m_bChase = true;
-
-	else if ((m_bChase) && (m_fDistance <= m_fInteractRange))
+	}
+	else if ((m_bChase) && (m_fDistance <= m_fInteractRange) && (m_fAcmlTime >= 5.f))
+	{
 		Change_State(CMonsterN2::N2S_JUMP);
+		return;
+	}
+
+	Change_State(CMonsterN2::N2S_CRAWL);
 }
 
 void CN2_AI::Compute_Distance()

@@ -44,6 +44,7 @@ private:
 	void				Attacked(const _int& iAttack);
 	void				Update_State();
 	_vec3				Compute_LimitedDir(const _float& fAngle, const _vec3& vCurDir, const _vec3& vDesiredDir);
+	void				Compute_NodePos(const _float& fTimeDelta);
 
 private:
 	// 스프라이트 관련

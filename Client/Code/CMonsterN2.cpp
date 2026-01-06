@@ -79,39 +79,8 @@ _int CMonsterN2::Update_GameObject(const _float& fTimeDelta)
 
 	CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHA, this);
 
-	_vec3 vCurPos;
-	_vec3 vPrevPos = m_vPos;						// LateUpdate에서 갱신되지 않았으므로 이전 위치
-	m_pTransformCom->Get_Info(INFO_POS, &vCurPos);	// AICom의 Update_Component에서 갱신된 현재 위치
-	_vec3 vDir = *m_pAICom->Get_Dir();
+	Compute_NodePos(fTimeDelta);
 
-	_vec3 vHeadVelocity = vCurPos - m_vPos;
-	_float fHeadSpeed = D3DXVec3Length(&vHeadVelocity) / fTimeDelta;
-	_float fBaseDist = 0.3f;
-	_float fAdaptiveDist = fBaseDist + fHeadSpeed * 0.05f;
-
-	for (_uint i = 0; i < 3; ++i)
-	{
-		_vec3 vDesiredDir = vPrevPos - m_pNode[i]->Get_NodePos();
-		_vec3 vNewDir = Compute_LimitedDir(180.f * fTimeDelta, m_pNode[i]->Get_NodeDir(), vDesiredDir);
-		
-		_float fCurDist = D3DXVec3Length(&vDesiredDir);
-		_float fDistRatio = fCurDist / fAdaptiveDist;
-		_float fLerp = min(1.f, fDistRatio * 0.5f);
-
-		_vec3 vTargetPos = vPrevPos - vNewDir * fAdaptiveDist;
-		_vec3 vCurPos = m_pNode[i]->Get_NodePos();
-		_vec3 vNewPos;
-		D3DXVec3Lerp(&vNewPos, &vCurPos, &vTargetPos, fLerp);
-
-		//if (vDir.z > 0) vNewPos.z -= 0.01f;
-		//else			vNewPos.z += 0.01f;
-
-		m_pNode[i]->Set_NodePos(vNewPos);
-		m_pNode[i]->Set_NodeDir(vNewDir);
-		m_pNode[i]->Update_GameObject(fTimeDelta);
-
-		vPrevPos = vNewPos;
-	}
 	return iExit;
 }
 
@@ -127,8 +96,15 @@ void CMonsterN2::LateUpdate_GameObject(const _float& fTimeDelta)
 
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
 
+	_vec3 vDir = *m_pAICom->Get_Dir();
+
 	for (_uint i = 0; i < 3; ++i)
+	{
 		m_pNode[i]->LateUpdate_GameObject(fTimeDelta);
+		
+		if (vDir.z > 0.f)	m_pNode[i]->Set_Depth(m_fDepth - (i + 1) * 0.001f);
+		else				m_pNode[i]->Set_Depth(m_fDepth + (i + 1) * 0.001f);
+	}
 }
 
 void CMonsterN2::Render_GameObject()
@@ -296,6 +272,10 @@ void CMonsterN2::Move_Frame(const _float& fTimeDelta)
 			m_eCurState = N2S_STOP;
 			break;
 
+		case N2S_JUMP:
+			m_fFrame = m_fFrameEnd - 0.001f;
+			break;
+
 		case N2S_LAND:
 			m_pAICom->Anim_End(m_eCurState);
 			m_eCurState = N2S_CRAWL;
@@ -424,6 +404,42 @@ _vec3 CMonsterN2::Compute_LimitedDir(const _float& fMaxAngle, const _vec3& vCurD
 	D3DXVec3Lerp(&vResult, &v1, &v2, fRad);
 	D3DXVec3Normalize(&vResult, &vResult);
 	return vResult;
+}
+
+void CMonsterN2::Compute_NodePos(const _float& fTimeDelta)
+{	// Update에서 호출할 Node 위치 계산 함수
+	_vec3 vCurPos;
+	_vec3 vPrevPos = m_vPos;						// LateUpdate에서 갱신되지 않았으므로 이전 위치
+	m_pTransformCom->Get_Info(INFO_POS, &vCurPos);	// AICom의 Update_Component에서 갱신된 현재 위치
+	_vec3 vDir = *m_pAICom->Get_Dir();
+
+	_vec3 vHeadVelocity = vCurPos - m_vPos;
+	_float fHeadSpeed = D3DXVec3Length(&vHeadVelocity) / fTimeDelta;
+	_float fBaseDist = 0.2f;
+	_float fAdaptiveDist = fBaseDist + fHeadSpeed * 0.02f;
+
+	for (_uint i = 0; i < 3; ++i)
+	{
+		_vec3 vDesiredDir = vPrevPos - m_pNode[i]->Get_NodePos();
+		_vec3 vNewDir = Compute_LimitedDir(180.f * fTimeDelta, m_pNode[i]->Get_NodeDir(), vDesiredDir);
+
+		_float fCurDist = D3DXVec3Length(&vDesiredDir);
+		_float fDistRatio = fCurDist / fAdaptiveDist;
+		_float fLerp = min(1.f, fDistRatio * 0.5f);
+		_vec3 vTargetPos = vPrevPos - vNewDir * fAdaptiveDist;
+
+		if (m_eCurState != N2S_JUMP && m_eCurState != N2S_LAND) vTargetPos.y = 1.f;
+
+		vCurPos = m_pNode[i]->Get_NodePos();
+		_vec3 vNewPos;
+		D3DXVec3Lerp(&vNewPos, &vCurPos, &vTargetPos, fLerp);
+
+		m_pNode[i]->Set_NodePos(vNewPos);
+		m_pNode[i]->Set_NodeDir(vNewDir);
+		m_pNode[i]->Update_GameObject(fTimeDelta);
+
+		vPrevPos = vNewPos;
+	}
 }
 
 CMonsterN2* CMonsterN2::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel)
