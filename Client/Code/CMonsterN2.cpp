@@ -84,7 +84,7 @@ _int CMonsterN2::Update_GameObject(const _float& fTimeDelta)
 
 	for (_uint i = 0; i < 3; ++i)
 	{
-		_vec3 vNewDir = Compute_LimitedDir(180.f * fTimeDelta, m_pNode[i]->Get_NodeDir(), vPrevPos - m_pNode[i]->Get_NodePos());
+		_vec3 vNewDir = Compute_LimitedDir(270.f * fTimeDelta, m_pNode[i]->Get_NodeDir(), vPrevPos - m_pNode[i]->Get_NodePos());
 		_vec3 vNewPos = vPrevPos - vNewDir * 0.3f;
 
 		if (vDir.z > 0) vNewPos.z -= 0.01f;
@@ -280,11 +280,6 @@ void CMonsterN2::Move_Frame(const _float& fTimeDelta)
 			m_eCurState = N2S_STOP;
 			break;
 
-		case N2S_JUMP:
-			m_pAICom->Anim_End(m_eCurState);
-			m_eCurState = N2S_LAND;
-			break;
-
 		case N2S_LAND:
 			m_pAICom->Anim_End(m_eCurState);
 			m_eCurState = N2S_CRAWL;
@@ -322,11 +317,13 @@ void CMonsterN2::Set_Texture()
 
 	case N2S_JUMP:
 	{
+		if (vDir.z > 0.f) iV += 2;
 	}
 	break;
 
 	case N2S_LAND:
 	{
+		if (vDir.z > 0.f) iV += 2;
 	}
 	break;
 
@@ -396,7 +393,6 @@ _vec3 CMonsterN2::Compute_LimitedDir(const _float& fMaxAngle, const _vec3& vCurD
 	_vec3 v1, v2;
 	D3DXVec3Normalize(&v1, &vCurDir);
 	D3DXVec3Normalize(&v2, &vDesiredDir);
-
 
 	_float fDot = max(-1.f, min(1.f, D3DXVec3Dot(&v1, &v2)));
 	_float fRad = acosf(fDot);

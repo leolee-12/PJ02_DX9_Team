@@ -6,7 +6,10 @@ CN2_AI::CN2_AI(LPDIRECT3DDEVICE9 pGraphicDev)
 	:	CAIController(pGraphicDev),
 		m_fSpeed(0.f),
 		m_fAcmlTime(0.f),
-		m_bChase(false)
+		m_bChase(false),
+		m_fAngle(0.f),
+		m_fGravity(0.f),
+		m_fGroundY(0.f)
 {
 }
 
@@ -14,7 +17,10 @@ CN2_AI::CN2_AI(const CN2_AI& rhs)
 	:	CAIController(rhs),
 		m_fSpeed(rhs.m_fSpeed),
 		m_fAcmlTime(rhs.m_fAcmlTime),
-		m_bChase(false)
+		m_bChase(false),
+		m_fAngle(rhs.m_fAngle),
+		m_fGravity(rhs.m_fGravity),
+		m_fGroundY(rhs.m_fGroundY)
 {
 }
 
@@ -28,6 +34,10 @@ HRESULT CN2_AI::Ready_AI(const _float& fDetectRange, const _float& fInteractRang
 		return E_FAIL;
 	
 	m_fSpeed = 1.f;
+	m_fAngle = 0.f;
+	m_vSpeed = { 0.f, 0.f, 0.f};
+	m_fGravity = -9.8f;
+	m_fGroundY = 1.f;
 	m_fAcmlTime = 0.f;
 	m_iRcmState = _uint(CMonsterN2::N2S_SPAWN);
 
@@ -61,7 +71,8 @@ void CN2_AI::Enter_State(const _uint& iState)
 		break;
 	case CMonsterN2::N2S_JUMP:
 	{
-		m_fSpeed = 1.f;
+		m_vDir = Compute_TargetDir();
+		m_vSpeed = { m_vDir.x, 10.f, m_vDir.z};
 	}
 		break;
 	case CMonsterN2::N2S_LAND:
@@ -90,6 +101,7 @@ void CN2_AI::Exit_State(const _uint& iState)
 
 	case CMonsterN2::N2S_JUMP:
 	{
+		m_vSpeed = { 0.f, 0.f, 0.f };
 	}
 	break;
 
@@ -170,7 +182,16 @@ void CN2_AI::Update_Crawl(const _float& fTimeDelta)
 
 void CN2_AI::Update_Jump(const _float& fTimeDelta)
 {
+	m_vSpeed.y += m_fGravity * fTimeDelta;
+	m_pOwnerTC->Move_Pos(&m_vSpeed, fTimeDelta, 1.f);
 
+	_vec3 vPos;
+	m_pOwnerTC->Get_Info(INFO_POS, &vPos);
+	if (vPos.y < m_fGroundY)
+	{
+		m_pOwnerTC->Set_Pos(vPos.x, m_fGroundY, vPos.z);
+		Change_State(CMonsterN2::N2S_LAND);
+	}
 }
 
 void CN2_AI::Update_Land(const _float& fTimeDelta)
@@ -188,6 +209,9 @@ void CN2_AI::Update_Stop(const _float& fTimeDelta)
 
 	if ((!m_bChase) && (m_fDistance <= m_fDetectRange))
 		m_bChase = true;
+
+	else if ((m_bChase) && (m_fDistance <= m_fInteractRange))
+		Change_State(CMonsterN2::N2S_JUMP);
 }
 
 void CN2_AI::Compute_Distance()
