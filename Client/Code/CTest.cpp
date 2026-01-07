@@ -240,19 +240,6 @@ HRESULT CTest::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 
 	pGameObject->AddRef();
 
-	/*
-	for (_uint i = 0; i < 20; ++i)
-	{
-		pGameObject = CMonsterN1::Create(m_pGraphicDev, m_pMessageChannel);
-
-		if (nullptr == pGameObject)
-			return E_FAIL;
-
-		if (FAILED(pLayer->Add_GameObject(L"Monster", pGameObject)))
-			return E_FAIL;
-	}
-	*/
-
 	m_mapLayer.insert({ pLayerTag , pLayer });
 
 	return S_OK;
@@ -356,9 +343,10 @@ HRESULT CTest::Ready_Light()
 
 	tLightInfo.Type = D3DLIGHT_DIRECTIONAL;
 
-	tLightInfo.Diffuse = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-	tLightInfo.Specular = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-	tLightInfo.Ambient = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
+	// Purple dungeon atmosphere - brighter purple tint
+	tLightInfo.Diffuse = D3DXCOLOR(0.5f, 0.35f, 0.6f, 1.f);
+	tLightInfo.Specular = D3DXCOLOR(0.3f, 0.2f, 0.4f, 1.f);
+	tLightInfo.Ambient = D3DXCOLOR(0.2f, 0.1f, 0.25f, 1.f);
 
 	tLightInfo.Direction = { 1.f, -1.f, 1.f };
 

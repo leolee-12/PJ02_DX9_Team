@@ -7,6 +7,7 @@ class CTile;
 
 class CTileMgr : public CBase
 {
+	// 안녕
 	DECLARE_SINGLETON(CTileMgr)
 
 private:

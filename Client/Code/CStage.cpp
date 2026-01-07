@@ -246,9 +246,9 @@ HRESULT CStage::Ready_Light()
 
 	tLightInfo.Type = D3DLIGHT_DIRECTIONAL;
 
-	tLightInfo.Diffuse = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-	tLightInfo.Specular = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-	tLightInfo.Ambient = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
+	tLightInfo.Diffuse = D3DXCOLOR(0.3f, 0.3f, 0.3f, 1.f);
+	tLightInfo.Specular = D3DXCOLOR(0.1f, 0.1f, 0.1f, 1.f);
+	tLightInfo.Ambient = D3DXCOLOR(0.1f, 0.1f, 0.1f, 1.f);
 
 	tLightInfo.Direction = { 1.f, -1.f, 1.f };
 

@@ -59,6 +59,7 @@ void CTile::LateUpdate_GameObject(const _float& fTimeDelta)
 void CTile::Render_GameObject()
 {
 	m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, TRUE);
+	m_pGraphicDev->SetRenderState(D3DRS_NORMALIZENORMALS, TRUE);
 
 	// Material
 	D3DMATERIAL9 tMtrl;
