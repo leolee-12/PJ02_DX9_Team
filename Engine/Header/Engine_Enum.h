@@ -1,11 +1,11 @@
-ï»¿#ifndef Engine_Enum_h__
+#ifndef Engine_Enum_h__
 #define Engine_Enum_h__
 
 namespace Engine
 {
 	enum WINMODE { MODE_FULL, MODE_WIN };
 
-	// Dynamic ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ó¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ø¾ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½
+	// Dynamic ÄÄÆ÷³ÍÆ® °æ¿ì ¸Å ÇÁ·¹ÀÓ¸¶´Ù °»½ÅÇØ¾ßÇÏ´Â ÄÄÆ÷³ÍÆ® Áý´Ü
 	enum COMPONENTID { ID_DYNAMIC, ID_STATIC, ID_END };
 
 	enum INFO {	INFO_RIGHT, INFO_UP, INFO_LOOK, INFO_POS, INFO_END };
@@ -53,7 +53,7 @@ namespace Engine
 		CL_15		= 1 << 14,
 		CL_16		= 1 << 15,
 
-		CL_ALL		= 0xFFFF // 1111 1111 1111 1111 16ï¿½ï¿½Æ®
+		CL_ALL		= 0xFFFF // 1111 1111 1111 1111 16ºñÆ®
 	};
 	inline COLGROUP operator|(COLGROUP lhs, COLGROUP rhs) {
 		return COLGROUP((unsigned int)lhs | (unsigned int)rhs);

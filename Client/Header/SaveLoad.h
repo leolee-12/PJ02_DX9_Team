@@ -3,8 +3,10 @@
 #include <fstream>
 #include <string>
 
+#include "ImGui_Define.h"
+
 /* -------------------------------------------
-* json ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ìºï¿½/ï¿½Îµï¿½ ï¿½ï¿½ï¿½
+* json ÆÄÀÏ ¼¼ÀÌºê/·Îµù Çì´õ
 -------------------------------------------- */
 
 void SaveData(const char* filePath)

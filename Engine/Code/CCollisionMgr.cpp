@@ -1,4 +1,4 @@
-ï»¿#include "CCollisionMgr.h"
+#include "CCollisionMgr.h"
 #include "CGameObject.h"
 
 
@@ -16,22 +16,22 @@ CCollisionMgr::~CCollisionMgr()
 
 HRESULT CCollisionMgr::Ready_CollisionMgr()
 {
-	m_vecCollisionPool.push_back({ CL_PLAYER, CL_MONSTER });		// ï¿½î¶² ï¿½×·ì³¢ï¿½ï¿½ ï¿½æµ¹Ã¼Å©ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
-	m_vecCollisionPool.push_back({ CL_PLAYER, CL_GRASS });   
-	m_vecCollisionPool.push_back({ CL_MONSTER, CL_GRASS });
+	m_vecCollisionPool.push_back({ CL_PLAYER, CL_MONSTER });		// ¾î¶² ±×·ì³¢¸® Ãæµ¹Ã¼Å©¸¦ ÇÒÁö µî·Ï
+	m_vecCollisionPool.push_back({ CL_PLAYER, CL_GRASS });    // Ãß°¡
+	m_vecCollisionPool.push_back({ CL_MONSTER, CL_GRASS });   // Ãß°¡
 	return S_OK;
 }
 
 void CCollisionMgr::Check_Collisions(const _float& fDeltaTime)
 {
-	for (auto& vec : m_vecCollisionPool)									// ï¿½ï¿½Ïµï¿½ ï¿½×·ï¿½Ç® ï¿½ï¿½Ã¼ï¿½ï¿½È¸
+	for (auto& vec : m_vecCollisionPool)									// µî·ÏµÈ ±×·ìÇ® ÀüÃ¼¼øÈ¸
 	{
-		for (auto& Group1 : m_hmapCollisionGroup[vec.first]) {				// Ã¹ï¿½ï¿½Â°ï¿½×·ï¿½
-			for (auto& Group2 : m_hmapCollisionGroup[vec.second]) {			// ï¿½Î¹ï¿½Â°ï¿½×·ï¿½ 
-				if (IntersectAABB(Group1.tAABB, Group2.tAABB))				// 2ï¿½ï¿½ for ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½æµ¹Ã¼Å©
+		for (auto& Group1 : m_hmapCollisionGroup[vec.first]) {				// Ã¹¹øÂ°±×·ì
+			for (auto& Group2 : m_hmapCollisionGroup[vec.second]) {			// µÎ¹øÂ°±×·ì 
+				if (IntersectAABB(Group1.tAABB, Group2.tAABB))				// 2Áß for ¹®À¸·Î Ãæµ¹Ã¼Å©
 				{
-					Group1.pOwner->OnCollision(Group2.pOwner);				// ï¿½æµ¹ ï¿½ß´Ù¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Í·ï¿½ ï¿½ï¿½ï¿½Ý¸ï¿½ï¿½ï¿½ È£ï¿½ï¿½
-					Group2.pOwner->OnCollision(Group1.pOwner);				// ï¿½Å´ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½æµ¹ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½ß´ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã¼ï¿½ï¿½ï¿½ï¿½ ï¿½Ë¸ï¿½
+					Group1.pOwner->OnCollision(Group2.pOwner);				// Ãæµ¹ Çß´Ù¸é °¢ÀÚÀÇ ¿À³Ê Æ÷ÀÎÅÍ·Î ¿ÂÄÝ¸®Àü È£Ãâ
+					Group2.pOwner->OnCollision(Group1.pOwner);				// ¸Å´ÏÀú´Â Ãæµ¹À» ´©±¸ÇÏ°í Çß´ÂÁö ±îÁö¸¸ °´Ã¼¿¡°Ô ¾Ë¸²
 				}
 			}
 		}
@@ -45,27 +45,27 @@ void CCollisionMgr::RegisterCollider(CGameObject* pOwner, const AABB& aabb, COLG
 {
 	if (pOwner == nullptr) { return; }
 
-	auto [iter, inserted] = m_hmapCollisionGroup.try_emplace(Group);  // ï¿½Ø´ï¿½ Å°ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Æ¹ï¿½ï¿½àµ¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	auto [iter, inserted] = m_hmapCollisionGroup.try_emplace(Group);  // ÇØ´ç Å°°ªÀÌ ÀÖ´ÂÁö ¾ø´ÂÁö È®ÀÎÈÄ ¾øÀ¸¸é »ðÀÔ, ÀÖÀ¸¸é ¾Æ¹«Çàµ¿µµ¾ÈÇÔ
 	
-	if (inserted) {									// ï¿½ï¿½ï¿½Ô½ï¿½ (Å°ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½)
-		iter->second.push_back({ pOwner, aabb });	// ï¿½Å°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Þ´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
-		pOwner->AddRef();							// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ä«ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½
+	if (inserted) {									// »ðÀÔ½Ã (Å°°ªÀÌ ¾øÀ»½Ã)
+		iter->second.push_back({ pOwner, aabb });	// ¸Å°³º¯¼ö·Î ¹Þ´Â µ¥ÀÌÅÍ ÀúÀå
+		pOwner->AddRef();							// ÀÌÈÄ ÂüÁ¶Ä«¿îÆ® Áõ°¡
 		return;										
 	}
 	
-													// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ì·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ (ï¿½Ì¹ï¿½ Å°ï¿½ï¿½ï¿½×·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¸ï¿½)				
-	for (auto& colliderinfo : iter->second)			// ï¿½Ø´ï¿½ Å°ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã¼ï¿½ï¿½È¸
+													// »ðÀÔÀÌ ÀÌ·ïÁöÁö¾ÊÀ¸¸é (ÀÌ¹Ì Å°°ª±×·ìÀÌ Á¸ÀçÇÏ¸é)				
+	for (auto& colliderinfo : iter->second)			// ÇØ´ç Å°°ªÀÇ º¤ÅÍ ÀüÃ¼¼øÈ¸
 	{
-		if (colliderinfo.pOwner == pOwner) {		// ï¿½ï¿½È¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ç¾ï¿½ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Í°ï¿½ ï¿½Å°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-			colliderinfo.tAABB.x = aabb.x;			// AABB ï¿½ß½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+		if (colliderinfo.pOwner == pOwner) {		// ¼øÈ¸Áß ÀúÀåµÇ¾îÀÖ´Â ¿À³Ê Æ÷ÀÎÅÍ°¡ ¸Å°³º¯¼öÀÇ ¿À³ÊÆ÷ÀÎÅÍ¿Í °°À¸¸é
+			colliderinfo.tAABB.x = aabb.x;			// AABB Áß½ÉÁ¡ °»½Å
 			colliderinfo.tAABB.y = aabb.y;
 			colliderinfo.tAABB.z = aabb.z;
 			return;
 		}
 	}
-													// Å°ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´Âµï¿½ ï¿½Å°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í·ï¿½ ï¿½ï¿½Ïµï¿½ AABBï¿½ï¿½ ï¿½ï¿½ï¿½Ù¸ï¿½
-	iter->second.push_back({ pOwner, aabb });		// ï¿½Ø´ï¿½ ï¿½×·ì¿¡ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½ ï¿½ï¿½
-	pOwner->AddRef();								// ï¿½ï¿½ï¿½ï¿½Ä«ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½
+													// Å°°ªÀÌ ÀÖ´Âµ¥ ¸Å°³º¯¼ö·Î µé¾î¿Â ¿À³ÊÆ÷ÀÎÅÍ·Î µî·ÏµÈ AABB°¡ ¾ø´Ù¸é
+	iter->second.push_back({ pOwner, aabb });		// ÇØ´ç ±×·ì¿¡ µ¥ÀÌÅÍ Ãß°¡ ÈÄ
+	pOwner->AddRef();								// ÂüÁ¶Ä«¿îÆ® Áõ°¡
 }
 
 inline void CCollisionMgr::Reset_For_SceneChange()
@@ -106,58 +106,58 @@ void CCollisionMgr::UnregisterCollider(CGameObject* pOwner, COLGROUP Group)
 	if (iter == m_hmapCollisionGroup.end()) { return; }
 
 	auto& vec = iter->second;
-	// remove_if < ï¿½Ë°ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ Ã£ï¿½Æºï¿½ï¿½ï¿½ï¿½ï¿½.
+	// remove_if < ¾Ë°í¸®Áò ÇÔ Ã£¾Æº¸¼¼¿ä.
 	auto removeiter = remove_if(vec.begin(), vec.end(), [pOwner, this](const COLINFO& colinfo) {
 		if (colinfo.pOwner == pOwner) {
-			m_vecReleaseQueue.push_back(colinfo.pOwner);			// ï¿½ì¸®ï¿½ï¿½ ï¿½ï¿½È¸ï¿½ß¿ï¿½ ï¿½ï¿½Ã¼ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¸ï¿½ ï¿½ï¿½Ã¼ï¿½ï¿½ Freeï¿½ï¿½ï¿½ï¿½ ï¿½Å´ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ù½ï¿½ È£ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
-			return true;											// ï¿½ï¿½È¸ï¿½ß¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¹ï¿½ ï¿½ï¿½È¸/ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ì³ï¿½ï¿½ï¿½ ï¿½ï¿½Ò¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½Ö¾î¼­ ï¿½Ýºï¿½ï¿½ï¿½ ï¿½ï¿½È¿È­ ï¿½ß»ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
-		}															// ï¿½Ø´ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½É¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï±ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¸ï¿½ß¿ï¿½ ï¿½ï¿½ï¿½ï¿½Å¥ï¿½ï¿½ ï¿½ï¿½Æµ×´Ù°ï¿½ ï¿½ï¿½È¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ñ¹ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ã³ï¿½ï¿½
+			m_vecReleaseQueue.push_back(colinfo.pOwner);			// ¿ì¸®°¡ ¼øÈ¸Áß¿¡ °´Ã¼¸¦ »èÁ¦ÇÏ¸é °´Ã¼ÀÇ Free¿¡¼­ ¸Å´ÏÀú¸¦ ´Ù½Ã È£Ãâ ÇÒ ¼öµµ ÀÖÀ½
+			return true;											// ¼øÈ¸Áß¿¡ »èÁ¦°¡ ¶Ç µé¾î¿À¸é ÀÌ¹Ì ¼øÈ¸/¼öÁ¤ ÁßÀÎ ÄÁÅ×ÀÌ³ÊÀÇ ¿ä¼Ò¿¡ Á¢±Ù ÇÒ ¼ö ÀÖ¾î¼­ ¹Ýº¹ÀÚ ¹«È¿È­ ¹ß»ýÇÒ ¼ö ÀÖÀ½
+		}															// ÇØ´çÇÏ´Â °¡´É¼ºÀ» ¹èÁ¦ÇÏ±âÀ§ÇØ ¼øÈ¸Áß¿£ »èÁ¦Å¥¿¡ ´ã¾Æµ×´Ù°¡ ¼øÈ¸°¡ ³¡³ª¸é ÇÑ¹ø¿¡ »èÁ¦Ã³¸®
 		return false;
 		});
-	// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ remove_if ï¿½Ë°ï¿½ï¿½ï¿½ï¿½ ï¿½Æ½Ã¸ï¿½ ï¿½ï¿½ï¿½Ø°ï¿½ ï¿½Ë´Ï´Ù¿ï¿½
+	// À§¿¡ »èÁ¦ °úÁ¤Àº remove_if ¾Ë°í¸®Áò ¾Æ½Ã¸é ÀÌÇØ°¡ µË´Ï´Ù¿ë
 	
 	if (removeiter != vec.end())
 	{
 		vec.erase(removeiter, vec.end());
 	}
-	// ï¿½ï¿½ï¿½ï¿½ Å¥ï¿½ï¿½ ï¿½ï¿½ï¿½â¼­ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê´ï¿½ ï¿½ï¿½ï¿½ï¿½:
-	// Check_Collisions ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ È£ï¿½ï¿½Ç¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ì³ï¿½ ï¿½ï¿½È¸ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ß»ï¿½ï¿½Ï¹Ç·ï¿½,
-	// ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)ï¿½ï¿½ï¿½ï¿½ ExecuteUnregister()ï¿½ï¿½ Ã³ï¿½ï¿½ï¿½Ñ´ï¿½.
+	// »èÁ¦ Å¥¸¦ ¿©±â¼­ ½ÇÇàÇÏÁö ¾Ê´Â ÀÌÀ¯:
+	// Check_Collisions ·çÇÁ µµÁß È£ÃâµÇ¸é ÄÁÅ×ÀÌ³Ê ¼øÈ¸ Áß »èÁ¦°¡ ¹ß»ýÇÏ¹Ç·Î,
+	// ¾ÈÀüÇÏ°Ô ÇÁ·¹ÀÓ ³¡(·çÇÁ Á¾·á ½ÃÁ¡)¿¡¼­ ExecuteUnregister()·Î Ã³¸®ÇÑ´Ù.
 }
 
 
 vector<CGameObject*> CCollisionMgr::Test_AABB(const AABB& aabb, COLGROUP Groupflag)
 {
-	vector<CGameObject*> vecTemp;			// ï¿½ï¿½È¯ï¿½ï¿½ ï¿½Ó½ï¿½ ï¿½ï¿½ï¿½ï¿½
+	vector<CGameObject*> vecTemp;			// ¹ÝÈ¯ÇÒ ÀÓ½Ã º¤ÅÍ
 
-	for (auto& pair : m_hmapCollisionGroup)	// ï¿½æµ¹ ï¿½×·ï¿½ ï¿½ï¿½Ã¼ï¿½ï¿½È¸
+	for (auto& pair : m_hmapCollisionGroup)	// Ãæµ¹ ±×·ì ÀüÃ¼¼øÈ¸
 	{
-		COLGROUP group = pair.first;		// ï¿½æµ¹ ï¿½×·ìµ¥ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (ï¿½Ã·ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Æ®ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
+		COLGROUP group = pair.first;		// Ãæµ¹ ±×·ìµ¥ÀÌÅÍ º¹»ç (ÇÃ·¡±×ÀÇ ºñÆ®¿¬»êÀ» À§ÇÔ)
 
-		// ï¿½ï¿½Ã»ï¿½ï¿½ ï¿½ï¿½ï¿½Ì¾ï¿½ ï¿½×·ï¿½ ï¿½Ø´ï¿½ ï¿½×·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ÔµÇ¾ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ç³Ê¶ï¿½
-		if ((Groupflag & group) == 0)		// ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½Å·
+		// ¿äÃ»ÇÑ ·¹ÀÌ¾î ±×·ì ÇØ´ç ±×·ìÀÌ Æ÷ÇÔµÇ¾î ÀÖÁö ¾ÊÀ¸¸é °Ç³Ê¶Ü
+		if ((Groupflag & group) == 0)		// ºñÆ® ¸¶½ºÅ·
 			continue;
 
-		for (const auto& colliderinfo : pair.second)		// ï¿½ï¿½Ã»ï¿½ï¿½ ï¿½×·ï¿½ ï¿½Ã·ï¿½ï¿½×¿ï¿½ ï¿½Ø´ï¿½ ï¿½×·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ÔµÇ¾ï¿½ï¿½Ö´Ù¸ï¿½,
-		{													// ï¿½Ø´ï¿½ ï¿½×·ï¿½ ï¿½ï¿½Ã¼ ï¿½ï¿½È¸
-			if (IntersectAABB(aabb, colliderinfo.tAABB))	// ï¿½æµ¹Ã¼Å©
+		for (const auto& colliderinfo : pair.second)		// ¿äÃ»ÇÑ ±×·ì ÇÃ·¡±×¿¡ ÇØ´ç ±×·ìÀÌ Æ÷ÇÔµÇ¾îÀÖ´Ù¸é,
+		{													// ÇØ´ç ±×·ì ÀüÃ¼ ¼øÈ¸
+			if (IntersectAABB(aabb, colliderinfo.tAABB))	// Ãæµ¹Ã¼Å©
 			{
-				vecTemp.push_back(colliderinfo.pOwner);		// ï¿½æµ¹ï¿½ß´Ù¸ï¿½ ï¿½æµ¹ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ ï¿½Ó½ï¿½ ï¿½ï¿½ï¿½Í¿ï¿½ ï¿½ï¿½ï¿½ï¿½
+				vecTemp.push_back(colliderinfo.pOwner);		// Ãæµ¹Çß´Ù¸é Ãæµ¹ÇÑ ´ë»ó ¿À³ÊÆ÷ÀÎÅÍ¸¦ ÀÓ½Ã º¤ÅÍ¿¡ ÀúÀå
 			}
 		}
 	}
 
-	return vecTemp;			// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½æµ¹Ã¼ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ ï¿½ï¿½È¯
+	return vecTemp;			// ÀúÀåÇÑ ¸ðµç Ãæµ¹Ã¼ÀÇ ¿À³ÊÆ÷ÀÎÅÍ¸¦ ¹ÝÈ¯
 }
 
 void CCollisionMgr::Free()
 {
-	// ï¿½ï¿½Ã¼ï¿½ï¿½È¸ï¿½Ï¸é¼­ ï¿½Ý¶ï¿½ï¿½Ì´ï¿½ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+	// ÀüÃ¼¼øÈ¸ÇÏ¸é¼­ ÄÝ¶óÀÌ´õÁ¤º¸, ¿À³ÊÆ÷ÀÎÅÍ Á¦°Å
 	for (auto& pair : m_hmapCollisionGroup) {
 		for (auto& colinfo : pair.second) {
-			m_vecReleaseQueue.push_back(colinfo.pOwner);  // ï¿½ì¸®ï¿½ï¿½ ï¿½ï¿½È¸ï¿½ß¿ï¿½ ï¿½ï¿½Ã¼ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¸ï¿½ ï¿½ï¿½Ã¼ï¿½ï¿½ Freeï¿½ï¿½ï¿½ï¿½ ï¿½Å´ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ù½ï¿½ È£ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
-			colinfo.pOwner = nullptr;					  // ï¿½ï¿½È¸ï¿½ß¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¹ï¿½ ï¿½ï¿½È¸/ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ì³ï¿½ï¿½ï¿½ ï¿½ï¿½Ò¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½Ö¾î¼­ ï¿½Ýºï¿½ï¿½ï¿½ ï¿½ï¿½È¿È­ ï¿½ß»ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
-		}												  // ï¿½Ø´ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½É¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï±ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¸ï¿½ß¿ï¿½ ï¿½ï¿½ï¿½ï¿½Å¥ï¿½ï¿½ ï¿½ï¿½Æµ×´Ù°ï¿½ ï¿½ï¿½È¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ñ¹ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ã³ï¿½ï¿½
+			m_vecReleaseQueue.push_back(colinfo.pOwner);  // ¿ì¸®°¡ ¼øÈ¸Áß¿¡ °´Ã¼¸¦ »èÁ¦ÇÏ¸é °´Ã¼ÀÇ Free¿¡¼­ ¸Å´ÏÀú¸¦ ´Ù½Ã È£Ãâ ÇÒ ¼öµµ ÀÖÀ½
+			colinfo.pOwner = nullptr;					  // ¼øÈ¸Áß¿¡ »èÁ¦°¡ ¶Ç µé¾î¿À¸é ÀÌ¹Ì ¼øÈ¸/¼öÁ¤ ÁßÀÎ ÄÁÅ×ÀÌ³ÊÀÇ ¿ä¼Ò¿¡ Á¢±Ù ÇÒ ¼ö ÀÖ¾î¼­ ¹Ýº¹ÀÚ ¹«È¿È­ ¹ß»ýÇÒ ¼ö ÀÖÀ½
+		}												  // ÇØ´çÇÏ´Â °¡´É¼ºÀ» ¹èÁ¦ÇÏ±âÀ§ÇØ ¼øÈ¸Áß¿£ »èÁ¦Å¥¿¡ ´ã¾Æµ×´Ù°¡ ¼øÈ¸°¡ ³¡³ª¸é ÇÑ¹ø¿¡ »èÁ¦Ã³¸®
 		pair.second.clear();
 	}
 	m_hmapCollisionGroup.clear();

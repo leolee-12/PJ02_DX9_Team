@@ -1,10 +1,9 @@
-ï»¿#include "pch.h"
+#include "pch.h"
 #include "CLoadingThread.h"
 #include "CProtoMgr.h"
 #include "CPlayer.h"
 #include "CPersistentMgr.h"
 #include "CN1_AI.h"
-#include "CTexture.h"
 
 CLoadingThread::CLoadingThread(LPDIRECT3DDEVICE9 pGraphicDev)
     : m_pGraphicDev(pGraphicDev), m_bFinish(false), m_eLoading(LOADING_END), m_fPercent(0.f)
@@ -25,12 +24,12 @@ HRESULT CLoadingThread::Ready_Loading(LOADINGID eID)
 
     int iNumber = 10;
 
-    m_hThread = (HANDLE)_beginthreadex(NULL,    // ï¿½ï¿½ï¿½È¼Ó¼ï¿½(ï¿½Úµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½, nullï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½Ó¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
-                                        0,      // ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(1 ï¿½ï¿½ï¿½ï¿½Æ®)
-                                        Thread_Main,      // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ô¼ï¿½
-                                        this,   // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ô¼ï¿½ï¿½ï¿½ ï¿½Ì¿ï¿½ï¿½Ï¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö¼ï¿½    
-                                        0,      // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï±ï¿½ ï¿½É¼ï¿½(flag)
-                                        NULL);  // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ id
+    m_hThread = (HANDLE)_beginthreadex(NULL,    // º¸¾È¼Ó¼º(ÇÚµéÀÇ »ó¼Ó ¿©ºÎ, nullÀÎ °æ¿ì »ó¼Ó¿¡¼­ Á¦¿Ü)
+                                        0,      // µðÆúÆ® ½ºÅÃ »çÀÌÁî(1 ¹ÙÀÌÆ®)
+                                        Thread_Main,      // ¾²·¹µå ÇÔ¼ö
+                                        this,   // ¾²·¹µå ÇÔ¼ö¸¦ ÀÌ¿ëÇÏ¿© °¡°øÇÒ µ¥ÀÌÅÍ ÁÖ¼Ò    
+                                        0,      // ¾²·¹µå »ý¼º ¹× ½ÇÇàÀ» Á¶Á¤ÇÏ±â ¿É¼Ç(flag)
+                                        NULL);  // ¾²·¹µå id
 
 
     return S_OK;
@@ -48,10 +47,6 @@ _uint CLoadingThread::Loading_ForStage()
 
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_CubeTex", Engine::CCubeTex::Create(m_pGraphicDev))))
         return E_FAIL;
-
-    //// XZ Plane Buffer for Tiles
-    //if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_RcTexXZ", Engine::CRcTexXZ::Create(m_pGraphicDev))))
-    //    return E_FAIL;
 
     m_fPercent += 20.f;
         
@@ -99,28 +94,7 @@ _uint CLoadingThread::Loading_ForStage()
         return E_FAIL;
 
     m_fPercent += 20.f;
-
-    // Map Tile Textures (folder-based, alphabetically sorted)
-    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_TileTexture",
-        Engine::CTexture::CreateFromFolder(m_pGraphicDev, TEX_NORMAL, L"../../Maps/Texture/Tile"))))
-        return E_FAIL;
-
-    // Map Tile Mask Textures
-    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_TileMaskTexture",
-        Engine::CTexture::CreateFromFolder(m_pGraphicDev, TEX_NORMAL, L"../../Maps/Texture/TileMasking"));
-
-    // Map Object Textures (category folders)
-    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_RockTexture",
-        Engine::CTexture::CreateFromFolder(m_pGraphicDev, TEX_NORMAL, L"../../Maps/Texture/Object/Rock"));
-    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_TreeTexture",
-        Engine::CTexture::CreateFromFolder(m_pGraphicDev, TEX_NORMAL, L"../../Maps/Texture/Object/Tree"));
-    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_FireTexture",
-        Engine::CTexture::CreateFromFolder(m_pGraphicDev, TEX_NORMAL, L"../../Maps/Texture/Object/Fire"));
-    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_TentTexture",
-        Engine::CTexture::CreateFromFolder(m_pGraphicDev, TEX_NORMAL, L"../../Maps/Texture/Object/Tent"));
-    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_GrassTexture",
-        Engine::CTexture::CreateFromFolder(m_pGraphicDev, TEX_NORMAL, L"../../Maps/Texture/Object/Grass"));
-
+   
     //if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_SkyTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_CUBE, L"../Bin/Resource/Texture/159.dds", 1))))
     //    return E_FAIL;
 
@@ -139,7 +113,7 @@ _uint CLoadingThread::Loading_ForStage()
 
     m_bFinish = true;
 
-    lstrcpy(m_szLoading, L"ï¿½×½ï¿½Æ®");
+    lstrcpy(m_szLoading, L"Å×½ºÆ®");
 
     return 0;
 }
@@ -184,31 +158,45 @@ _uint CLoadingThread::Loading_ForTest()
 
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_N1_AI", CN1_AI::Create(m_pGraphicDev, 5.f, 1.f));
 
+    // ===== Å¸ÀÏ °ü·Ã =====
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_RcTexXZ",
+        Engine::CRcTexXZ::Create(m_pGraphicDev));
 
-    // Map Tile Textures
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_TileTexture",
-        Engine::CTexture::CreateFromFolder(m_pGraphicDev, TEX_NORMAL, L"../../Maps/Texture/Tile"));
+        Engine::CTexture::CreateFromFolder(m_pGraphicDev, TEX_NORMAL,
+            L"../../Maps/Texture/Tile"));
 
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_TileMaskTexture",
-        Engine::CTexture::CreateFromFolder(m_pGraphicDev, TEX_NORMAL, L"../../Maps/Texture/TileMasking"));
+        Engine::CTexture::CreateFromFolder(m_pGraphicDev, TEX_NORMAL,
+            L"../../Maps/Texture/TileMasking"));
 
-    // Map Object Textures
-    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_RockTexture",
-        Engine::CTexture::CreateFromFolder(m_pGraphicDev, TEX_NORMAL, L"../../Maps/Texture/Object/Rock"));
-    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_TreeTexture",
-        Engine::CTexture::CreateFromFolder(m_pGraphicDev, TEX_NORMAL, L"../../Maps/Texture/Object/Tree"));
-    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_FireTexture",
-        Engine::CTexture::CreateFromFolder(m_pGraphicDev, TEX_NORMAL, L"../../Maps/Texture/Object/Fire"));
-    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_TentTexture",
-        Engine::CTexture::CreateFromFolder(m_pGraphicDev, TEX_NORMAL, L"../../Maps/Texture/Object/Tent"));
+    // ===== Grass °ü·Ã =====
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_GrassBuffer",
+        Engine::CGrassBuffer::Create(m_pGraphicDev));
+
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_GrassTexture",
-        Engine::CTexture::CreateFromFolder(m_pGraphicDev, TEX_NORMAL, L"../../Maps/Texture/Object/Grass"));
+        Engine::CTexture::CreateFromFolder(m_pGraphicDev, TEX_NORMAL,
+            L"../../Maps/Texture/Object/Grass"));
 
-    // RcTexXZ Buffer
-    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_RcTexXZ", Engine::CRcTexXZ::Create(m_pGraphicDev));
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Collider",
+        Engine::CCollider::Create(m_pGraphicDev));
 
-    // GrassBuffer (dynamic vertex buffer for grass sway effect)
-    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_GrassBuffer", Engine::CGrassBuffer::Create(m_pGraphicDev));
+    // ===== ¸Ê ¿ÀºêÁ§Æ® ÅØ½ºÃ³ =====
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_RockTexture",
+        Engine::CTexture::CreateFromFolder(m_pGraphicDev, TEX_NORMAL,
+            L"../../Maps/Texture/Object/Rock"));
+
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_TreeTexture",
+        Engine::CTexture::CreateFromFolder(m_pGraphicDev, TEX_NORMAL,
+            L"../../Maps/Texture/Object/Tree"));
+
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_FireTexture",
+        Engine::CTexture::CreateFromFolder(m_pGraphicDev, TEX_NORMAL,
+            L"../../Maps/Texture/Object/Fire"));
+
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_TentTexture",
+        Engine::CTexture::CreateFromFolder(m_pGraphicDev, TEX_NORMAL,
+            L"../../Maps/Texture/Object/Tent"));
 
     //Sleep(2000);
 

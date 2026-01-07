@@ -1,4 +1,4 @@
-ï»¿#include "pch.h"
+#include "pch.h"
 #include "CLogo.h"
 #include "CProtoMgr.h"
 #include "CManagement.h"
@@ -22,7 +22,7 @@ CLogo::~CLogo()
 
 HRESULT CLogo::Ready_Scene()
 {
-	//ï¿½×½ï¿½Æ®ï¿½ï¿½
+	//Å×½ºÆ®¿ë
 	m_pMessageChannel = CStageMessage::Create();
 
 	if (FAILED(Ready_Light()))
@@ -71,7 +71,7 @@ _int CLogo::Update_Scene(const _float& fTimeDelta)
 				LSTmp = LOADING_STAGE;
 				break;
 			case LS_EDIT:
-				// ï¿½Ó½ï¿½ï¿½Ô´Ï´ï¿½.
+				// ÀÓ½ÃÀÔ´Ï´Ù.
 				LSTmp = LOADING_TEST;
 				break;
 			case LS_EXIT:
@@ -102,7 +102,7 @@ void CLogo::LateUpdate_Scene(const _float& fTimeDelta)
 
 void CLogo::Render_Scene()
 {
-	// debug ï¿½ï¿½
+	// debug ¿ë
 
 	_vec2		vPlay{ _float(WINCX / 2) - 200.f, 320.f };
 	_vec2		vEdit{ _float(WINCX / 2) - 200.f, 420.f };
@@ -112,19 +112,19 @@ void CLogo::Render_Scene()
 
 	switch (m_eLogoState) {
 	case LS_START:
-		CFontMgr::GetInstance()->Render_Font(L"Font_Lapture40", L"ï¿½Ã·ï¿½ï¿½ï¿½", &vPlay, D3DXCOLOR(1.f, 1.f, 1.f, 1.f), DT_CENTER | DT_NOCLIP);
-		CFontMgr::GetInstance()->Render_Font(L"Font_Lapture40", L"ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½", &vEdit, D3DXCOLOR(0.f, 0.f, 0.f, 1.f), DT_CENTER | DT_NOCLIP);
-		CFontMgr::GetInstance()->Render_Font(L"Font_Lapture40", L"ï¿½ï¿½ï¿½ï¿½", &vExit, D3DXCOLOR(0.f, 0.f, 0.f, 1.f), DT_CENTER | DT_NOCLIP);
+		CFontMgr::GetInstance()->Render_Font(L"Font_Lapture40", L"ÇÃ·¹ÀÌ", &vPlay, D3DXCOLOR(1.f, 1.f, 1.f, 1.f), DT_CENTER | DT_NOCLIP);
+		CFontMgr::GetInstance()->Render_Font(L"Font_Lapture40", L"°³¹ßÀÚ ¸ðµå", &vEdit, D3DXCOLOR(0.f, 0.f, 0.f, 1.f), DT_CENTER | DT_NOCLIP);
+		CFontMgr::GetInstance()->Render_Font(L"Font_Lapture40", L"Á¾·á", &vExit, D3DXCOLOR(0.f, 0.f, 0.f, 1.f), DT_CENTER | DT_NOCLIP);
 		break;
 	case LS_EDIT:
-		CFontMgr::GetInstance()->Render_Font(L"Font_Lapture40", L"ï¿½Ã·ï¿½ï¿½ï¿½", &vPlay, D3DXCOLOR(0.f, 0.f, 0.f, 1.f), DT_CENTER | DT_NOCLIP);
-		CFontMgr::GetInstance()->Render_Font(L"Font_Lapture40", L"ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½", &vEdit, D3DXCOLOR(1.f, 1.f, 1.f, 1.f), DT_CENTER | DT_NOCLIP);
-		CFontMgr::GetInstance()->Render_Font(L"Font_Lapture40", L"ï¿½ï¿½ï¿½ï¿½", &vExit, D3DXCOLOR(0.f, 0.f, 0.f, 1.f), DT_CENTER | DT_NOCLIP);
+		CFontMgr::GetInstance()->Render_Font(L"Font_Lapture40", L"ÇÃ·¹ÀÌ", &vPlay, D3DXCOLOR(0.f, 0.f, 0.f, 1.f), DT_CENTER | DT_NOCLIP);
+		CFontMgr::GetInstance()->Render_Font(L"Font_Lapture40", L"°³¹ßÀÚ ¸ðµå", &vEdit, D3DXCOLOR(1.f, 1.f, 1.f, 1.f), DT_CENTER | DT_NOCLIP);
+		CFontMgr::GetInstance()->Render_Font(L"Font_Lapture40", L"Á¾·á", &vExit, D3DXCOLOR(0.f, 0.f, 0.f, 1.f), DT_CENTER | DT_NOCLIP);
 		break;
 	case LS_EXIT:
-		CFontMgr::GetInstance()->Render_Font(L"Font_Lapture40", L"ï¿½Ã·ï¿½ï¿½ï¿½", &vPlay, D3DXCOLOR(0.f, 0.f, 0.f, 1.f), DT_CENTER | DT_NOCLIP);
-		CFontMgr::GetInstance()->Render_Font(L"Font_Lapture40", L"ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½", &vEdit, D3DXCOLOR(0.f, 0.f, 0.f, 1.f), DT_CENTER | DT_NOCLIP);
-		CFontMgr::GetInstance()->Render_Font(L"Font_Lapture40", L"ï¿½ï¿½ï¿½ï¿½", &vExit, D3DXCOLOR(1.f, 1.f, 1.f, 1.f), DT_CENTER | DT_NOCLIP);
+		CFontMgr::GetInstance()->Render_Font(L"Font_Lapture40", L"ÇÃ·¹ÀÌ", &vPlay, D3DXCOLOR(0.f, 0.f, 0.f, 1.f), DT_CENTER | DT_NOCLIP);
+		CFontMgr::GetInstance()->Render_Font(L"Font_Lapture40", L"°³¹ßÀÚ ¸ðµå", &vEdit, D3DXCOLOR(0.f, 0.f, 0.f, 1.f), DT_CENTER | DT_NOCLIP);
+		CFontMgr::GetInstance()->Render_Font(L"Font_Lapture40", L"Á¾·á", &vExit, D3DXCOLOR(1.f, 1.f, 1.f, 1.f), DT_CENTER | DT_NOCLIP);
 		break;
 	}
 }
@@ -182,9 +182,6 @@ HRESULT CLogo::Ready_Prototype()
 	if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_RcTex", Engine::CRcTex::Create(m_pGraphicDev))))
 		return E_FAIL;
 
-	if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_RcTexXZ", Engine::CRcTexXZ::Create(m_pGraphicDev))))
-		return E_FAIL;
-
 	if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_RcCol", Engine::CRcCol::Create(m_pGraphicDev))))
 		return E_FAIL;
 
@@ -204,7 +201,7 @@ HRESULT CLogo::Ready_Prototype()
 		return E_FAIL;
 
 
-	// ï¿½Îµï¿½ï¿½ï¿½ ï¿½Ì¸ï¿½ ï¿½Îµï¿½
+	// ·Îµù¾À ¹Ì¸® ·Îµù
 
 	if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_LoadingCenterTex", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Loading/LoadingCenter.png", 1))))
 		return E_FAIL;
