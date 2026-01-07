@@ -24,10 +24,7 @@ private:
 	void		Update_Prepare(const _float& fTimeDelta);
 	void		Update_Rush(const _float& fTimeDelta);
 	void		Update_Spawn(const _float& fTimeDelta);
-
-	void		Compute_Distance();
-	void		Compute_TargetDir();
-	void		Randomize_Dir();
+	void		Update_Stop(const _float& fTimeDelta);
 
 private:
 	_float		m_fSpeed;

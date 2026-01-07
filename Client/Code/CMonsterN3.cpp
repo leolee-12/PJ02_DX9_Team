@@ -221,6 +221,12 @@ void CMonsterN3::Check_Frame()
 		m_fFrameEnd = 16.f;
 	}
 	break;
+
+	case N3S_STOP:
+	{
+		m_fFrameEnd = 16.f;
+	}
+	break;
 	}
 
 	m_ePreState = m_eCurState;
@@ -244,6 +250,11 @@ void CMonsterN3::Move_Frame(const _float& fTimeDelta)
 		case N3S_PREPARE:
 			m_pAICom->Anim_End(m_eCurState);
 			m_eCurState = N3S_RUSH;
+			break;
+
+		case N3S_RUSH:
+			m_pAICom->Anim_End(m_eCurState);
+			m_eCurState = N3S_FLY;
 			break;
 		}
 	}
@@ -281,6 +292,12 @@ void CMonsterN3::Set_Texture()
 	break;
 
 	case N3S_SPAWN:
+	{
+		iTexIdx = 0;
+	}
+	break;
+
+	case N3S_STOP:
 	{
 		iTexIdx = 0;
 	}
@@ -329,7 +346,7 @@ void CMonsterN3::Attacked(const _int& iAttack)
 
 void CMonsterN3::Update_State()
 {
-	if (m_eCurState == N3S_SPAWN)
+	if (m_eCurState == N3S_SPAWN || m_eCurState == N3S_PREPARE || m_eCurState == N3S_RUSH)
 		return;
 
 	m_eCurState = m_pAICom->Get_RecommendState<MONSTER_N3_STATE>();

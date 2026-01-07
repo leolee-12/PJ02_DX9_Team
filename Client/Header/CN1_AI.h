@@ -28,10 +28,6 @@ private:
 	void		Update_Jeer(const _float& fTimeDelta);
 	void		Update_Pray(const _float& fTimeDelta);
 
-	void		Compute_Distance();
-	void		Compute_TargetDir();
-	void		Randomize_Dir();
-
 private:
 	_float		m_fSpeed;
 	_float		m_fAcmlTime;

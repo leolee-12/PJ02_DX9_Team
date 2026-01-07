@@ -26,11 +26,6 @@ private:
 	void		Update_Spawn(const _float& fTimeDelta);
 	void		Update_Stop(const _float& fTimeDelta);
 
-	void		Compute_Distance();
-	_vec3		Compute_TargetDir();
-	_vec3		Compute_LimitedDir(const _float& fAngle, const _vec3& vCurDir, const _vec3& vDesiredDir);
-	_vec3		Randomize_Dir();
-
 private:
 	_float		m_fSpeed;
 	_vec3		m_vSpeed;

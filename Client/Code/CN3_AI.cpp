@@ -38,8 +38,39 @@ void CN3_AI::Enter_State(const _uint& iState)
 {
 	switch (iState)
 	{
+	case CMonsterN3::N3S_FLY:
+	{
+		m_fSpeed = 1.f;
+		_vec3 vPrevPos, vDesiredDir;
+
+		if ((!m_bChase) || (m_fAcmlTime < 2.f))			vDesiredDir = Randomize_Dir();
+		else if ((m_bChase) && (m_fAcmlTime >= 2.f))	vDesiredDir = Compute_TargetDir();
+
+		m_pOwnerTC->Get_Info(INFO_POS, &vPrevPos);
+		m_vDir = Compute_LimitedDir(60.f, m_vDir, vDesiredDir);
+		m_vDir.x += Get_Rand_Int(-5, 5) * 0.05f;	// -0.25f ~ 0.25f 난수
+		m_vDir.z += Get_Rand_Int(-5, 5) * 0.05f;	// -0.25f ~ 0.25f 난수
+		D3DXVec3Normalize(&m_vDir, &m_vDir);
+	}
+		break;
+	case CMonsterN3::N3S_PREPARE:
+	{
+		m_fSpeed = 0.3f;
+		m_pOwnerTC->Get_Info(INFO_POS, &m_vLerpPos);
+		m_vLerpPos -= m_vDir * 1.f;
+	}
+		break;
+	case CMonsterN3::N3S_RUSH:
+	{
+		m_fSpeed = 0.3f;
+		m_pOwnerTC->Get_Info(INFO_POS, &m_vLerpPos);
+		m_vLerpPos += m_vDir * 5.f;
+	}
+		break;
 	case CMonsterN3::N3S_SPAWN:
 		m_bActiveAI = false;
+		break;
+	case CMonsterN3::N3S_STOP:
 		break;
 	}
 }
@@ -48,8 +79,20 @@ void CN3_AI::Exit_State(const _uint& iState)
 {
 	switch (iState)
 	{
+	case CMonsterN3::N3S_FLY:
+		if (!m_pTargetTC) m_bChase = false;
+		break;
+	case CMonsterN3::N3S_PREPARE:
+		if (!m_pTargetTC) m_bChase = false;
+		break;
+	case CMonsterN3::N3S_RUSH:
+		if (!m_pTargetTC) m_bChase = false;
+		break;
 	case CMonsterN3::N3S_SPAWN:
 		m_bActiveAI = true;
+		break;
+	case CMonsterN3::N3S_STOP:
+		if (!m_pTargetTC) m_bChase = false;
 		break;
 	}
 }
@@ -66,8 +109,20 @@ _int CN3_AI::Update_Component(const _float& fTimeDelta)
 
 	switch (m_iCurState)
 	{
+	case CMonsterN3::N3S_FLY:
+		Update_Fly(fTimeDelta);
+		break;
+	case CMonsterN3::N3S_PREPARE:
+		Update_Prepare(fTimeDelta);
+		break;
+	case CMonsterN3::N3S_RUSH:
+		Update_Rush(fTimeDelta);
+		break;
 	case CMonsterN3::N3S_SPAWN:
 		Update_Spawn(fTimeDelta);
+		break;
+	case CMonsterN3::N3S_STOP:
+		Update_Stop(fTimeDelta);
 		break;
 	}
 
@@ -78,22 +133,38 @@ void CN3_AI::Update_Fly(const _float& fTimeDelta)
 {
 	if (!m_pTargetTC) return;
 
+	if (m_bChase)
+	{	// 타겟을 이미 발견했을 때
+		if (m_fDistance <= m_fInteractRange)
+		{
+			if (m_fAcmlTime >= 5.f)
+				Change_State(CMonsterN3::N3S_PREPARE);
+		}
+	}
+	else
+	{	// 타겟을 발견하지 못했을 때
+		if (m_fDistance <= m_fDetectRange)
+		{	// 타겟이 감지 범위 내로 진입 시 발견
+			m_bChase = true;
+		}
+	}
+
 	m_pOwnerTC->Move_Pos(&m_vDir, fTimeDelta, m_fSpeed);
 }
 
 void CN3_AI::Update_Prepare(const _float& fTimeDelta)
 {
-	if (m_fAcmlTime > 3.f) Compute_TargetDir();
-
+	_vec3 vPos;
+	m_pOwnerTC->Get_Info(INFO_POS, &vPos);
+	D3DXVec3Lerp(&vPos, &vPos, &m_vLerpPos, m_fSpeed);
+	m_pOwnerTC->Set_Pos(vPos.x, vPos.y, vPos.z);
 }
 
 void CN3_AI::Update_Rush(const _float& fTimeDelta)
 {
 	_vec3 vPos;
 	m_pOwnerTC->Get_Info(INFO_POS, &vPos);
-
 	D3DXVec3Lerp(&vPos, &vPos, &m_vLerpPos, m_fSpeed);
-
 	m_pOwnerTC->Set_Pos(vPos.x, vPos.y, vPos.z);
 }
 
@@ -101,39 +172,19 @@ void CN3_AI::Update_Spawn(const _float& fTimeDelta)
 {
 }
 
-void CN3_AI::Compute_Distance()
+void CN3_AI::Update_Stop(const _float& fTimeDelta)
 {
-	if (!m_pOwnerTC || !m_pTargetTC)
+	if ((!m_bChase) && (m_fDistance <= m_fDetectRange))
 	{
-		m_fDistance = FLT_MAX;
+		m_bChase = true;
+	}
+	else if ((m_bChase) && (m_fDistance <= m_fInteractRange) && (m_fAcmlTime >= 5.f))
+	{
+		Change_State(CMonsterN3::N3S_PREPARE);
 		return;
 	}
 
-	_vec3 vOwnerPos, vTargetPos, vDir;
-	m_pOwnerTC->Get_Info(INFO_POS, &vOwnerPos);
-	m_pTargetTC->Get_Info(INFO_POS, &vTargetPos);
-	vDir = vTargetPos - vOwnerPos;
-
-	m_fDistance = D3DXVec3Length(&vDir);
-}
-
-void CN3_AI::Compute_TargetDir()
-{
-	if (!m_pOwnerTC || !m_pTargetTC) return;
-
-	_vec3 vOwnerPos, vTargetPos;
-	m_pOwnerTC->Get_Info(INFO_POS, &vOwnerPos);
-	m_pTargetTC->Get_Info(INFO_POS, &vTargetPos);
-	m_vDir = vTargetPos - vOwnerPos;
-	D3DXVec3Normalize(&m_vDir, &m_vDir);
-}
-
-void CN3_AI::Randomize_Dir()
-{
-	_float fAngle = D3DXToRadian(rand() % 360);
-	m_vDir.x = cosf(fAngle);
-	m_vDir.y = 0.f;
-	m_vDir.z = sinf(fAngle);
+	Change_State(CMonsterN3::N3S_FLY);
 }
 
 void CN3_AI::Anim_End(CMonsterN3::MONSTER_N3_STATE eState)
@@ -141,6 +192,14 @@ void CN3_AI::Anim_End(CMonsterN3::MONSTER_N3_STATE eState)
 	switch (eState)
 	{
 	case CMonsterN3::N3S_SPAWN:
+		Change_State(CMonsterN3::N3S_FLY);
+		break;
+
+	case CMonsterN3::N3S_PREPARE:
+		Change_State(CMonsterN3::N3S_RUSH);
+		break;
+
+	case CMonsterN3::N3S_RUSH:
 		Change_State(CMonsterN3::N3S_FLY);
 		break;
 	}

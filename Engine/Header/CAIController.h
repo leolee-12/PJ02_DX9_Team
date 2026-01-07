@@ -3,7 +3,6 @@
 
 BEGIN(Engine)
 
-class CGameObject;
 class CTransform;
 
 class ENGINE_DLL CAIController : public CComponent
@@ -34,6 +33,11 @@ protected:
 	virtual void		Enter_State(const _uint& pState)	PURE;
 	virtual void		Exit_State(const _uint& pState)		PURE;
 	void				Change_State(const _uint& pState);
+
+	void				Compute_Distance();
+	_vec3				Compute_TargetDir();
+	_vec3				Compute_LimitedDir(const _float& fAngle, const _vec3& vCurDir, const _vec3& vDesiredDir);
+	_vec3				Randomize_Dir();
 
 protected:
 	// AI 활성화 여부
