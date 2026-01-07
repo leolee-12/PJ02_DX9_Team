@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CMainApp.h"
 #include "CLogo.h"
 #include "CStage.h"
@@ -11,6 +11,7 @@
 #include "CPersistentMgr.h"
 #include "CSoundMgr.h"
 #include "CTileMgr.h"
+#include "CMapLoader.h"
 
 CMainApp::CMainApp() : m_pDeviceClass(nullptr), m_pGraphicDev(nullptr)
 , m_pManagementClass(CManagement::GetInstance())
@@ -169,6 +170,7 @@ void CMainApp::Free()
 	Safe_Release(m_pGraphicDev);
 	Safe_Release(m_pDeviceClass);
 
+	CMapLoader::DestroyInstance();
 	CTileMgr::DestroyInstance();
 	CPersistentMgr::DestroyInstance();
 	CLightMgr::DestroyInstance();

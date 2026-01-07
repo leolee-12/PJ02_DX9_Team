@@ -1,4 +1,4 @@
-#include "CRcTexXZ.h"
+﻿#include "CRcTexXZ.h"
 
 CRcTexXZ::CRcTexXZ()
 {
@@ -20,9 +20,15 @@ CRcTexXZ::~CRcTexXZ()
 
 HRESULT CRcTexXZ::Ready_Buffer()
 {
+
+	// 20x20 grid for better Point Light interpolation
+	const _int GRID_SIZE = 20;
+	const _int VERTEX_COUNT = (GRID_SIZE + 1) * (GRID_SIZE + 1);  // 21x21 = 441
+	const _int TRI_COUNT = GRID_SIZE * GRID_SIZE * 2;  // 800
+
 	m_dwVtxSize = sizeof(VTXTEX);
-	m_dwVtxCnt = 4;
-	m_dwTriCnt = 2;
+	m_dwVtxCnt = VERTEX_COUNT;
+	m_dwTriCnt = TRI_COUNT;
 	m_dwFVF = FVF_TEX;
 
 	m_dwIdxSize = sizeof(INDEX32);
@@ -32,49 +38,57 @@ HRESULT CRcTexXZ::Ready_Buffer()
 		return E_FAIL;
 
 	VTXTEX* pVertex = NULL;
-
 	m_pVB->Lock(0, 0, (void**)&pVertex, 0);
 
-	// XZ plane vertices (Y = 0, lying flat on ground)
-	// Looking from above (top-down view):
-	//   Z+
-	//   ^
-	//   |
-	// [0]---[1]
-	//  |     |
-	// [3]---[2] --> X+
+	_float fStep = 1.f / GRID_SIZE;  // 0.05 step
 
-	pVertex[0].vPosition = { -0.5f, 0.f,  0.5f };  // top-left (X-, Z+)
-	pVertex[0].vTexUV = { 0.f, 0.f };
-	pVertex[0].vNormal = { 0.f, 1.f, 0.f };
+	for (_int z = 0; z <= GRID_SIZE; ++z)
+	{
+		for (_int x = 0; x <= GRID_SIZE; ++x)
+		{
+			_int idx = z * (GRID_SIZE + 1) + x;
 
-	pVertex[1].vPosition = { 0.5f, 0.f,  0.5f };   // top-right (X+, Z+)
-	pVertex[1].vTexUV = { 1.f, 0.f };
-	pVertex[1].vNormal = { 0.f, 1.f, 0.f };
-
-	pVertex[2].vPosition = { 0.5f, 0.f, -0.5f };   // bottom-right (X+, Z-)
-	pVertex[2].vTexUV = { 1.f, 1.f };
-	pVertex[2].vNormal = { 0.f, 1.f, 0.f };
-
-	pVertex[3].vPosition = { -0.5f, 0.f, -0.5f };  // bottom-left (X-, Z-)
-	pVertex[3].vTexUV = { 0.f, 1.f };
-	pVertex[3].vNormal = { 0.f, 1.f, 0.f };
+			pVertex[idx].vPosition = {
+				-0.5f + x * fStep,  // X: -0.5 to 0.5
+				0.f,                 // Y: 0
+				0.5f - z * fStep    // Z: 0.5 to -0.5
+			};
+			pVertex[idx].vTexUV = {
+				x * fStep,          // U: 0 to 1
+				z * fStep           // V: 0 to 1
+			};
+			pVertex[idx].vNormal = { 0.f, 1.f, 0.f };
+		}
+	}
 
 	m_pVB->Unlock();
 
 	INDEX32* pIndex = nullptr;
-
 	m_pIB->Lock(0, 0, (void**)&pIndex, 0);
 
-	// First triangle (top-right)
-	pIndex[0]._0 = 0;
-	pIndex[0]._1 = 1;
-	pIndex[0]._2 = 2;
+	_int triIdx = 0;
+	for (_int z = 0; z < GRID_SIZE; ++z)
+	{
+		for (_int x = 0; x < GRID_SIZE; ++x)
+		{
+			_int topLeft = z * (GRID_SIZE + 1) + x;
+			_int topRight = topLeft + 1;
+			_int bottomLeft = topLeft + (GRID_SIZE + 1);
+			_int bottomRight = bottomLeft + 1;
 
-	// Second triangle (bottom-left)
-	pIndex[1]._0 = 0;
-	pIndex[1]._1 = 2;
-	pIndex[1]._2 = 3;
+			// First triangle
+			pIndex[triIdx]._0 = topLeft;
+			pIndex[triIdx]._1 = topRight;
+			pIndex[triIdx]._2 = bottomRight;
+			++triIdx;
+
+			// Second triangle
+			pIndex[triIdx]._0 = topLeft;
+			pIndex[triIdx]._1 = bottomRight;
+			pIndex[triIdx]._2 = bottomLeft;
+			++triIdx;
+		}
+	}
 
 	m_pIB->Unlock();
 

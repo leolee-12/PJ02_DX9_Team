@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CTile.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
@@ -9,12 +9,12 @@ CTile::CTile(LPDIRECT3DDEVICE9 pGraphicDev)
 	, m_pBufferCom(nullptr)
 	, m_pTransformCom(nullptr)
 	, m_pTextureCom(nullptr)
+	, m_pMaskTextureCom(nullptr)
 	, m_iGridX(0)
 	, m_iGridZ(0)
 	, m_iTextureId(0)
 	, m_iMaskFlags(0)
 {
-	ZeroMemory(m_pMaskTextures, sizeof(m_pMaskTextures));
 }
 
 CTile::CTile(const CTile& rhs)
@@ -22,12 +22,12 @@ CTile::CTile(const CTile& rhs)
 	, m_pBufferCom(nullptr)
 	, m_pTransformCom(nullptr)
 	, m_pTextureCom(nullptr)
+	, m_pMaskTextureCom(nullptr)
 	, m_iGridX(rhs.m_iGridX)
 	, m_iGridZ(rhs.m_iGridZ)
 	, m_iTextureId(rhs.m_iTextureId)
 	, m_iMaskFlags(rhs.m_iMaskFlags)
 {
-	ZeroMemory(m_pMaskTextures, sizeof(m_pMaskTextures));
 }
 
 CTile::~CTile()
@@ -58,7 +58,16 @@ void CTile::LateUpdate_GameObject(const _float& fTimeDelta)
 
 void CTile::Render_GameObject()
 {
-	m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, FALSE);
+	m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, TRUE);
+
+	// Material
+	D3DMATERIAL9 tMtrl;
+	ZeroMemory(&tMtrl, sizeof(D3DMATERIAL9));
+	tMtrl.Diffuse = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
+	tMtrl.Ambient = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
+	m_pGraphicDev->SetMaterial(&tMtrl);
+
+	//m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, FALSE);
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
 
 	// Render base tile
@@ -68,7 +77,7 @@ void CTile::Render_GameObject()
 	// Render masks with alpha blending
 	if (m_iMaskFlags != Engine::MASK_NONE)
 	{
-		//Render_Masks();
+		Render_Masks();
 	}
 }
 
@@ -88,16 +97,25 @@ void CTile::Set_TileData(_int iGridX, _int iGridZ, _int iTextureId, _int iMaskFl
 	_float fCenterX = fPosX + fTileSize * 0.5f;
 	_float fCenterZ = fPosZ + fTileSize * 0.5f;
 
-	m_pTransformCom->Set_Pos(fCenterX, 0.f, fCenterZ);
+	m_pTransformCom->Set_Pos(fCenterX, -2.5f, fCenterZ);
 	m_pTransformCom->Set_Scale(fTileSize, 1.f, fTileSize);  // X, Z scale (XZ plane buffer)
 }
 
 void CTile::Render_Masks()
 {
+	// Check if mask texture is loaded
+	if (nullptr == m_pMaskTextureCom)
+		return;
+
 	// Enable alpha blending (standard settings)
 	m_pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
 	m_pGraphicDev->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 	m_pGraphicDev->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+
+	// Alpha test to remove low-alpha edge artifacts (0x80 = 128, 50% threshold)
+	m_pGraphicDev->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
+	m_pGraphicDev->SetRenderState(D3DRS_ALPHAREF, 0x80);
+	m_pGraphicDev->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
 
 	// Mask color = black (use texture alpha only)
 	m_pGraphicDev->SetRenderState(D3DRS_TEXTUREFACTOR, 0xFF000000);
@@ -106,29 +124,91 @@ void CTile::Render_Masks()
 	m_pGraphicDev->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1);
 	m_pGraphicDev->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
 
-	_matrix matWorld;
+	_matrix matWorld, matScale, matTrans;
 	_float fTileSize = Engine::CMapLoader::TILE_SIZE;
-	_float fPosX = static_cast<_float>(m_iGridX) * fTileSize;
-	_float fPosZ = static_cast<_float>(m_iGridZ) * fTileSize;
+	_float fBaseX = static_cast<_float>(m_iGridX) * fTileSize;
+	_float fBaseZ = static_cast<_float>(m_iGridZ) * fTileSize;
 
-	// Y offset to prevent Z-fighting
-	const _float fYOffsets[4] = { 0.02f, 0.021f, 0.022f, 0.023f };
-	const _int iMaskBits[4] = { Engine::MASK_DOWN, Engine::MASK_LEFT, Engine::MASK_RIGHT, Engine::MASK_UP };
+	// Tile Y position
+	const _float fTileY = -2.5f;
+	const _float fEdgeRatio = 0.25f;  // 25% of tile size
 
-	for (_int i = 0; i < 4; ++i)
+	// Down mask (X: 2 pieces, Z: 25% at bottom)
+	if (m_iMaskFlags & Engine::MASK_DOWN)
 	{
-		if ((m_iMaskFlags & iMaskBits[i]) && m_pMaskTextures[i])
+		_float fScaleX = fTileSize * 0.5f;
+		_float fScaleZ = fTileSize * fEdgeRatio;
+		_float fPosZ = fBaseZ + fScaleZ * 0.5f;
+
+		D3DXMatrixScaling(&matScale, fScaleX, 1.f, fScaleZ);
+		m_pMaskTextureCom->Set_Texture(0);
+
+		for (_int i = 0; i < 2; ++i)
 		{
-			D3DXMatrixIdentity(&matWorld);
-
-			_matrix matScale, matTrans;
-			D3DXMatrixScaling(&matScale, fTileSize, 1.f, fTileSize);  // XZ scale
-			D3DXMatrixTranslation(&matTrans, fPosX + fTileSize * 0.5f, fYOffsets[i], fPosZ + fTileSize * 0.5f);
-
+			_float fPosX = fBaseX + fScaleX * 0.5f + i * fScaleX;
+			D3DXMatrixTranslation(&matTrans, fPosX, fTileY + 0.02f, fPosZ);
 			matWorld = matScale * matTrans;
 			m_pGraphicDev->SetTransform(D3DTS_WORLD, &matWorld);
+			m_pBufferCom->Render_Buffer();
+		}
+	}
 
-			m_pMaskTextures[i]->Set_Texture(0);
+	// Left mask (X: 25% at left, Z: 2 pieces)
+	if (m_iMaskFlags & Engine::MASK_LEFT)
+	{
+		_float fScaleX = fTileSize * fEdgeRatio;
+		_float fScaleZ = fTileSize * 0.5f;
+		_float fPosX = fBaseX + fScaleX * 0.5f;
+
+		D3DXMatrixScaling(&matScale, fScaleX, 1.f, fScaleZ);
+		m_pMaskTextureCom->Set_Texture(1);
+
+		for (_int i = 0; i < 2; ++i)
+		{
+			_float fPosZ = fBaseZ + fScaleZ * 0.5f + i * fScaleZ;
+			D3DXMatrixTranslation(&matTrans, fPosX, fTileY + 0.021f, fPosZ);
+			matWorld = matScale * matTrans;
+			m_pGraphicDev->SetTransform(D3DTS_WORLD, &matWorld);
+			m_pBufferCom->Render_Buffer();
+		}
+	}
+
+	// Right mask (X: 25% at right, Z: 2 pieces)
+	if (m_iMaskFlags & Engine::MASK_RIGHT)
+	{
+		_float fScaleX = fTileSize * fEdgeRatio;
+		_float fScaleZ = fTileSize * 0.5f;
+		_float fPosX = fBaseX + fTileSize - fScaleX * 0.5f;
+
+		D3DXMatrixScaling(&matScale, fScaleX, 1.f, fScaleZ);
+		m_pMaskTextureCom->Set_Texture(2);
+
+		for (_int i = 0; i < 2; ++i)
+		{
+			_float fPosZ = fBaseZ + fScaleZ * 0.5f + i * fScaleZ;
+			D3DXMatrixTranslation(&matTrans, fPosX, fTileY + 0.022f, fPosZ);
+			matWorld = matScale * matTrans;
+			m_pGraphicDev->SetTransform(D3DTS_WORLD, &matWorld);
+			m_pBufferCom->Render_Buffer();
+		}
+	}
+
+	// Up mask (X: 2 pieces, Z: 25% at top)
+	if (m_iMaskFlags & Engine::MASK_UP)
+	{
+		_float fScaleX = fTileSize * 0.5f;
+		_float fScaleZ = fTileSize * fEdgeRatio;
+		_float fPosZ = fBaseZ + fTileSize - fScaleZ * 0.5f;
+
+		D3DXMatrixScaling(&matScale, fScaleX, 1.f, fScaleZ);
+		m_pMaskTextureCom->Set_Texture(3);
+
+		for (_int i = 0; i < 2; ++i)
+		{
+			_float fPosX = fBaseX + fScaleX * 0.5f + i * fScaleX;
+			D3DXMatrixTranslation(&matTrans, fPosX, fTileY + 0.023f, fPosZ);
+			matWorld = matScale * matTrans;
+			m_pGraphicDev->SetTransform(D3DTS_WORLD, &matWorld);
 			m_pBufferCom->Render_Buffer();
 		}
 	}
@@ -139,6 +219,7 @@ void CTile::Render_Masks()
 	m_pGraphicDev->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
 	m_pGraphicDev->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
 	m_pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
+	m_pGraphicDev->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
 }
 
 HRESULT CTile::Add_Component()
@@ -172,20 +253,10 @@ HRESULT CTile::Add_Component()
 
 	m_mapComponent[ID_STATIC].insert({ L"Com_Texture", pComponent });
 
-	// Mask Textures (Down, Left, Right, Up)
-	const _tchar* szMaskProtos[4] = {
-		L"Proto_TileMask_Down",
-		L"Proto_TileMask_Left",
-		L"Proto_TileMask_Right",
-		L"Proto_TileMask_Up"
-	};
-
-	for (_int i = 0; i < 4; ++i)
-	{
-		m_pMaskTextures[i] = dynamic_cast<Engine::CTexture*>
-			(Engine::CProtoMgr::GetInstance()->Clone_Prototype(szMaskProtos[i]));
-		// Mask textures are optional, no error if not found
-	}
+	// Mask Texture (Down=0, Left=1, Right=2, Up=3 in alphabetical order)
+	m_pMaskTextureCom = dynamic_cast<Engine::CTexture*>
+		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_TileMaskTexture"));
+	// Mask texture is optional, no error if not found
 
 	return S_OK;
 }
@@ -208,11 +279,8 @@ CTile* CTile::Create(LPDIRECT3DDEVICE9 pGraphicDev, const Engine::TILEDATA& tile
 
 void CTile::Free()
 {
-	// Mask textures are not in m_mapComponent, so release them separately
-	for (_int i = 0; i < 4; ++i)
-	{
-		Safe_Release(m_pMaskTextures[i]);
-	}
+	// Mask texture is not in m_mapComponent, so release it separately
+	Safe_Release(m_pMaskTextureCom);
 
 	// m_pBufferCom, m_pTransformCom, m_pTextureCom are in m_mapComponent
 	// They will be released by CGameObject::Free()

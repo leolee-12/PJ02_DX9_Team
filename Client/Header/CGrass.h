@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "CGameObject.h"
 #include "Engine_Struct.h"
 
@@ -7,7 +7,13 @@ namespace Engine
 	class CRcTex;
 	class CTransform;
 	class CTexture;
+	class CGrassBuffer;
+	class CCollider;
 }
+
+/* ===================================================
+	CGrass
+ =====================================================*/
 
 class CGrass : public CGameObject
 {
@@ -21,27 +27,35 @@ public:
 	virtual _int		Update_GameObject(const _float& fTimeDelta);
 	virtual void		LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual void		Render_GameObject();
+	virtual void		OnCollision(CGameObject* pObject) override;
 
 public:
 	void	Set_ObjectData(const Engine::OBJECTDATA& objData);
 
 private:
 	HRESULT	Add_Component();
-	void	React_ToPlayer(const _float& fTimeDelta);
+	void	React(const _vec3& vObjPos);
+	void	Update_VertexSway(const _float& fTimeDelta);
 
 private:
-	Engine::CRcTex*		m_pBufferCom;
+	// CRcTex -> CGrassBuffer (vertex sway)
+	// Engine::CRcTex*		m_pBufferCom;
+	Engine::CGrassBuffer*	m_pGrassBuffer;
 	Engine::CTransform*	m_pTransformCom;
 	Engine::CTexture*	m_pTextureCom;
+	Engine::CCollider*	m_pColliderCom;
 
 	_int				m_iTextureIndex;
 	_float				m_fScale;
 	_float				m_fBaseScale;
 
-	// Interaction
-	_float				m_fSwayAngle;
-	_float				m_fSwaySpeed;
-	_bool				m_bIsSwaying;
+	// Vertex sway variables (replaced old Interaction vars)
+	_float				m_fPhase;
+	_float				m_fWindSpeed;
+	_float				m_fWindStrength;
+	_float				m_fAccTime;
+	_float				m_fReactStrength;
+	_vec3				m_vReactDir;
 
 public:
 	static CGrass* Create(LPDIRECT3DDEVICE9 pGraphicDev, const Engine::OBJECTDATA& objData);

@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CMapObject.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
@@ -50,6 +50,10 @@ _int CMapObject::Update_GameObject(const _float& fTimeDelta)
 
 void CMapObject::LateUpdate_GameObject(const _float& fTimeDelta)
 {
+	_vec3 vPos;
+	m_pTransformCom->Get_Info(Engine::INFO_POS, &vPos);
+	Compute_ViewDepth(&vPos);
+
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
 }
 
@@ -58,14 +62,6 @@ void CMapObject::Render_GameObject()
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
 
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
-
-	// Z버퍼 쓰기 비활성화 (알파 오브젝트 앞뒤 문제 해결)
-	m_pGraphicDev->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
-
-	// 알파 블렌딩 활성화
-	m_pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
-	m_pGraphicDev->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-	m_pGraphicDev->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 
 	// 알파 테스트 (완전 투명 픽셀 제거)
 	m_pGraphicDev->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
@@ -77,8 +73,6 @@ void CMapObject::Render_GameObject()
 
 	// 설정 복원
 	m_pGraphicDev->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
-	m_pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
-	m_pGraphicDev->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 }
 

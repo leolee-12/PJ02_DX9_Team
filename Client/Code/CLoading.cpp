@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "CLoadingThread.h"
 #include "CLoading.h"
 #include "CProtoMgr.h"
@@ -26,7 +26,7 @@ CLoading::~CLoading()
 
 HRESULT CLoading::Ready_Scene()
 {
-	//Å×½ºÆ®¿ë
+	//ï¿½×½ï¿½Æ®ï¿½ï¿½
 	m_pMessageChannel = CStageMessage::Create();
 
 	if (FAILED(Ready_UI_Layer(L"UI_Layer")))
@@ -103,16 +103,16 @@ void CLoading::LateUpdate_Scene(const _float& fTimeDelta)
 
 void CLoading::Render_Scene()
 {
-	// debug ¿ë
+	// debug ï¿½ï¿½
 
 
 	_vec2		vPos{ 150.f, WINCY - 100.f };
 
 	if (true == m_pLoading->Get_Finish()) {
-		CFontMgr::GetInstance()->Render_Font(L"Font_Lapture40", L"·Îµù ¿Ï·á!", &vPos, D3DXCOLOR(0.75f, 0.75f, 0.75f, 1.f), DT_NOCLIP);
+		CFontMgr::GetInstance()->Render_Font(L"Font_Lapture40", L"ï¿½Îµï¿½ ï¿½Ï·ï¿½!", &vPos, D3DXCOLOR(0.75f, 0.75f, 0.75f, 1.f), DT_NOCLIP);
 	}
 	else {
-		CFontMgr::GetInstance()->Render_Font(L"Font_Lapture40", L"·ÎµùÁß.....", &vPos, D3DXCOLOR(0.75f, 0.75f, 0.75f, 1.f), DT_NOCLIP);
+		CFontMgr::GetInstance()->Render_Font(L"Font_Lapture40", L"ï¿½Îµï¿½ï¿½ï¿½.....", &vPos, D3DXCOLOR(0.75f, 0.75f, 0.75f, 1.f), DT_NOCLIP);
 	}
 
 	//CFontMgr::GetInstance()->Render_Font(L"Font_Lapture40", m_pLoading->Get_String(), &vPos, D3DXCOLOR(0.75f, 0.75f, 0.75f, 1.f));
@@ -177,7 +177,7 @@ HRESULT CLoading::Ready_UI_Layer(const _tchar* pLayerTag)
 	if (nullptr == pGameObject)
 		return E_FAIL;
 
-	if (FAILED(pLayer->Add_GameObject(L"LoadingFG", pGameObject)))
+	if (FAILED(pLayer->Add_GameObject(L"LoadinfgFG", pGameObject)))
 		return E_FAIL;
 
 	m_mapLayer.insert({ pLayerTag , pLayer });

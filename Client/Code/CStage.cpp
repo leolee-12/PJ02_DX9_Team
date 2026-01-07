@@ -1,9 +1,9 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CStage.h"
 #include "CBackGround.h"
 #include "CProtoMgr.h"
 #include "CDynamicCamera.h"
-#include "CSkyBox.h"
+// #include "CSkyBox.h"  // CMySkyBox로 대체
 #include "CTestEffect.h"
 #include "CLightMgr.h"
 #include "CCollisionMgr.h"
@@ -16,7 +16,7 @@
 #include "CTileMgr.h"
 #include "CMapObject.h"
 #include "CGrass.h"
-
+#include "CMySkyBox.h"
 
 CStage::CStage(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -56,6 +56,7 @@ HRESULT CStage::Ready_Scene()
 _int CStage::Update_Scene(const _float& fTimeDelta)
 {
 	_int iExit = Engine::CScene::Update_Scene(fTimeDelta);
+
 
 	/*if (true == m_pLoading->Get_Finish())
 	{*/
@@ -156,6 +157,13 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	Engine::MAPDATA mapData;
 	if (SUCCEEDED(Engine::CMapLoader::GetInstance()->LoadMapA("../../Maps/MapData/Tutorial_test.txt", mapData)))
 	{
+		// 맵 데이터의 skyType으로 SkyBox 생성
+		pGameObject = CMySkyBox::Create(m_pGraphicDev, mapData.skyType);
+		if (pGameObject)
+		{
+			pLayer->Add_GameObject(L"SkyBox", pGameObject);
+		}
+
 		// Initialize Tile Manager
 		if (FAILED(CTileMgr::GetInstance()->Initialize(m_pGraphicDev, mapData)))
 		{
@@ -205,10 +213,18 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 				}
 			}
 		}
+
 	}
 	else
 	{
-		// Fallback: Use original terrain if map loading fails
+		// 맵 로드 실패 시 기존 Terrain 사용
+		// 기본 SkyBox (Day) 생성
+		pGameObject = CMySkyBox::Create(m_pGraphicDev, 0);
+		if (pGameObject)
+		{
+			pLayer->Add_GameObject(L"SkyBox", pGameObject);
+		}
+
 		pGameObject = CTerrain::Create(m_pGraphicDev);
 		if (nullptr == pGameObject)
 			return E_FAIL;

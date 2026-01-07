@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "CGameObject.h"
 #include "Engine_Struct.h"
 #include <string>
@@ -12,9 +12,15 @@ namespace Engine
 
 enum PLACEMENT_TYPE
 {
-	PLACEMENT_STANDING = 0,	// Billboard
-	PLACEMENT_FLOOR = 1		// Flat on ground
+	PLACEMENT_STANDING = 0,	// �������� ���ִ� ��ü
+	PLACEMENT_FLOOR = 1		// �ٴڿ� ���� ��ü
 };
+
+/* ===================================================
+	CMapObject
+
+	�������� �ϴ� �� ������Ʈ
+ =====================================================*/
 
 class CMapObject : public CGameObject
 {

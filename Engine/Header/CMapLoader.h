@@ -1,8 +1,14 @@
-#pragma once
+﻿#pragma once
 #include "CBase.h"
 #include "Engine_Define.h"
 
 BEGIN(Engine)
+
+/* ===================================================
+	CMapLoader
+
+	�� ������ �ִ� txt ������ �ҷ����� �Ŵ���
+ =====================================================*/
 
 class ENGINE_DLL CMapLoader : public CBase
 {

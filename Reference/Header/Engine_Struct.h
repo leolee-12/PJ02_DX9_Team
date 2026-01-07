@@ -1,4 +1,4 @@
-#ifndef Engine_Struct_h__
+﻿#ifndef Engine_Struct_h__
 #define Engine_Struct_h__
 
 #include "Engine_Typedef.h"
@@ -79,6 +79,12 @@ namespace Engine
 		_int placement;		// 0=Standing(Billboard), 1=Floor
 	}OBJECTDATA;
 
+	typedef struct tagLightData
+	{
+		_float x, y, z;     // World position
+		_int intensity;     // 0=Strong, 1=Medium, 2=Weak
+	}LIGHTDATA;
+
 	typedef struct tagMapData
 	{
 		_int width, height;
@@ -86,6 +92,7 @@ namespace Engine
 		std::vector<SPAWNDATA> spawns;
 		std::vector<OBJECTDATA> objects;
 		_int skyType;
+		std::vector<LIGHTDATA> lights;
 	}MAPDATA;
 
 	// Mask Flags

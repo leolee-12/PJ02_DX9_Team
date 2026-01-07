@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "CGameObject.h"
 #include "Engine_Struct.h"
 
@@ -34,8 +34,8 @@ private:
 	Engine::CTransform*	m_pTransformCom;
 	Engine::CTexture*	m_pTextureCom;
 
-	// Mask Textures (Down, Left, Right, Up)
-	Engine::CTexture*	m_pMaskTextures[4];
+	// Mask Texture (Down=0, Left=1, Right=2, Up=3)
+	Engine::CTexture*	m_pMaskTextureCom;
 
 	_int	m_iGridX;
 	_int	m_iGridZ;

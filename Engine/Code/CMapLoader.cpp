@@ -1,4 +1,4 @@
-#include "CMapLoader.h"
+﻿#include "CMapLoader.h"
 #include <fstream>
 #include <sstream>
 
@@ -6,7 +6,9 @@ USING(Engine)
 
 IMPLEMENT_SINGLETON(CMapLoader)
 
-const _float CMapLoader::TILE_SIZE = 10.0f;
+// 타일 크기 10 -> 5로 변경
+// const _float CMapLoader::TILE_SIZE = 10.0f;
+const _float CMapLoader::TILE_SIZE = 8.0f;
 
 CMapLoader::CMapLoader()
 {
@@ -39,6 +41,7 @@ HRESULT CMapLoader::LoadMapA(const char* pFilePath, MAPDATA& outMap)
 	outMap.tiles.clear();
 	outMap.spawns.clear();
 	outMap.objects.clear();
+	outMap.lights.clear();
 
 	std::string line;
 	std::string currentSection;
@@ -114,7 +117,32 @@ void CMapLoader::ParseSection(const std::string& section, const std::string& lin
 		if (count >= 5)
 		{
 			obj.category = category;
+
+			// 타일 크기 10 → 8 변경에 따른 비율 조정 (0.8)
+			const float SCALE_RATIO = 0.8f;
+			obj.x *= SCALE_RATIO;
+			// obj.y는 높이이므로 유지
+			obj.z *= SCALE_RATIO;
+			obj.scale *= SCALE_RATIO;
+
 			outMap.objects.push_back(obj);
+		}
+	}
+	else if (section == "[Lights]")
+	{
+		LIGHTDATA light;
+		light.intensity = 1;  // Default: Medium
+		int count = sscanf_s(line.c_str(), "%f,%f,%f,%d",
+			&light.x, &light.y, &light.z, &light.intensity);
+		if (count >= 4)
+		{
+			// 타일 크기 10 → 8 변경에 따른 비율 조정 (0.8)
+			const float SCALE_RATIO = 0.8f;
+			light.x *= SCALE_RATIO;
+			// light.y는 높이이므로 유지
+			light.z *= SCALE_RATIO;
+
+			outMap.lights.push_back(light);
 		}
 	}
 	else if (section == "[Sky]")

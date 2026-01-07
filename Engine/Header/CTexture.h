@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CComponent.h"
 #include "Engine_Define.h"
@@ -15,8 +15,10 @@ private:
 
 public:
 	virtual HRESULT Ready_Texture(TEXTUREID eID, const _tchar* pPath, const _uint& iCnt);
+	virtual HRESULT Ready_Texture_FromFolder(TEXTUREID eID, const _tchar* pFolderPath);
 	void			Set_Texture(const _uint& iIndex = 0);
 	void			Set_TextureStage(const _uint& Stage, const _uint& iIndex = 0);
+	_uint			Get_TextureCount() const { return static_cast<_uint>(m_vecTexture.size()); }
 
 private:
 	vector<IDirect3DBaseTexture9*>		m_vecTexture;
@@ -24,6 +26,8 @@ private:
 public:
 	static CTexture* Create(LPDIRECT3DDEVICE9 pGraphicDev, TEXTUREID eID,
 		const _tchar* pPath, const _uint& iCnt = 1);
+	static CTexture* CreateFromFolder(LPDIRECT3DDEVICE9 pGraphicDev, TEXTUREID eID,
+		const _tchar* pFolderPath);
 	virtual CComponent* Clone();
 
 private:

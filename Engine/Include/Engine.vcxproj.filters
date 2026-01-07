@@ -136,6 +136,9 @@
     <Filter Include="07. MapLoader">
       <UniqueIdentifier>{449c9b85-3bb2-4f27-b30d-b65c1a45b0cc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="05. ComponentEx\00. VIBuffer\06. GrassBuffer">
+      <UniqueIdentifier>{c2c4e081-89ff-4935-b3f4-adc9918a7b56}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\CGraphicDev.cpp">
@@ -228,6 +231,9 @@
     <ClCompile Include="..\Code\CLight.cpp">
       <Filter>00. Manager\07. LightMgr\Light</Filter>
     </ClCompile>
+    <ClCompile Include="..\Code\CPointLight.cpp">
+      <Filter>00. Manager\07. LightMgr\Light</Filter>
+    </ClCompile>
     <ClCompile Include="..\Code\CTextureSet.cpp">
       <Filter>05. ComponentEx\02. Texture</Filter>
     </ClCompile>
@@ -293,6 +299,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CMapLoader.cpp">
       <Filter>07. MapLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CGrassBuffer.cpp">
+      <Filter>05. ComponentEx\00. VIBuffer\06. GrassBuffer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -410,6 +419,9 @@
     <ClInclude Include="..\Header\CLight.h">
       <Filter>00. Manager\07. LightMgr\Light</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CPointLight.h">
+      <Filter>00. Manager\07. LightMgr\Light</Filter>
+    </ClInclude>
     <ClInclude Include="..\Header\CTextureSet.h">
       <Filter>05. ComponentEx\02. Texture</Filter>
     </ClInclude>
@@ -484,6 +496,9 @@
     </ClInclude>
     <ClInclude Include="..\Header\CMapLoader.h">
       <Filter>07. MapLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CGrassBuffer.h">
+      <Filter>05. ComponentEx\00. VIBuffer\06. GrassBuffer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

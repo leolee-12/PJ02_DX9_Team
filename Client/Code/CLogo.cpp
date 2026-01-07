@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CLogo.h"
 #include "CProtoMgr.h"
 #include "CManagement.h"
@@ -72,7 +72,7 @@ _int CLogo::Update_Scene(const _float& fTimeDelta)
 				break;
 			case LS_EDIT:
 				// �ӽ��Դϴ�.
-				LSTmp = LOADING_KNUCKLEBONE;
+				LSTmp = LOADING_TEST;
 				break;
 			case LS_EXIT:
 				DestroyWindow(g_hWnd);

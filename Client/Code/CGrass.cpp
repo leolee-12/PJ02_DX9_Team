@@ -1,34 +1,44 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CGrass.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
 #include "CManagement.h"
+#include "CGrassBuffer.h"
+#include "CCollider.h"
 
 CGrass::CGrass(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev)
-	, m_pBufferCom(nullptr)
+	, m_pGrassBuffer(nullptr)
 	, m_pTransformCom(nullptr)
 	, m_pTextureCom(nullptr)
+	, m_pColliderCom(nullptr)
 	, m_iTextureIndex(0)
 	, m_fScale(1.f)
 	, m_fBaseScale(1.f)
-	, m_fSwayAngle(0.f)
-	, m_fSwaySpeed(5.f)
-	, m_bIsSwaying(false)
+	, m_fPhase(0.f)
+	, m_fWindSpeed(3.f)
+	, m_fWindStrength(0.1f)
+	, m_fAccTime(0.f)
+	, m_fReactStrength(0.f)
+	, m_vReactDir(0.f, 0.f, 0.f)
 {
 }
 
 CGrass::CGrass(const CGrass& rhs)
 	: CGameObject(rhs)
-	, m_pBufferCom(nullptr)
+	, m_pGrassBuffer(nullptr)
 	, m_pTransformCom(nullptr)
 	, m_pTextureCom(nullptr)
+	, m_pColliderCom(nullptr)
 	, m_iTextureIndex(rhs.m_iTextureIndex)
 	, m_fScale(rhs.m_fScale)
 	, m_fBaseScale(rhs.m_fBaseScale)
-	, m_fSwayAngle(0.f)
-	, m_fSwaySpeed(5.f)
-	, m_bIsSwaying(false)
+	, m_fPhase(0.f)
+	, m_fWindSpeed(3.f)
+	, m_fWindStrength(0.1f)
+	, m_fAccTime(0.f)
+	, m_fReactStrength(0.f)
+	, m_vReactDir(0.f, 0.f, 0.f)
 {
 }
 
@@ -41,14 +51,24 @@ HRESULT CGrass::Ready_GameObject()
 	if (FAILED(Add_Component()))
 		return E_FAIL;
 
+	m_pColliderCom->RegisterToManager(this, CL_GRASS);
+
 	return S_OK;
 }
 
 _int CGrass::Update_GameObject(const _float& fTimeDelta)
 {
+	m_pColliderCom->UpdateFromTransform(m_pTransformCom);
+
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
-	React_ToPlayer(fTimeDelta);
+	m_fAccTime += fTimeDelta;
+
+	// React is now called via OnCollision callback
+	Update_VertexSway(fTimeDelta);
+
+	// Decay react strength over time
+	m_fReactStrength *= 0.9f;
 
 	CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHA, this);
 
@@ -57,6 +77,10 @@ _int CGrass::Update_GameObject(const _float& fTimeDelta)
 
 void CGrass::LateUpdate_GameObject(const _float& fTimeDelta)
 {
+	_vec3 vPos;
+	m_pTransformCom->Get_Info(Engine::INFO_POS, &vPos);
+	Compute_ViewDepth(&vPos);
+
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
 }
 
@@ -66,26 +90,16 @@ void CGrass::Render_GameObject()
 
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 
-	// Z버퍼 쓰기 비활성화 (알파 오브젝트 앞뒤 문제 해결)
-	m_pGraphicDev->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
-
-	// 알파 블렌딩 활성화
-	m_pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
-	m_pGraphicDev->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-	m_pGraphicDev->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
-
-	// 알파 테스트 (완전 투명 픽셀 제거)
+	// Alpha test (remove fully transparent pixels)
 	m_pGraphicDev->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
 	m_pGraphicDev->SetRenderState(D3DRS_ALPHAREF, 0x10);
 	m_pGraphicDev->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
 
 	m_pTextureCom->Set_Texture(m_iTextureIndex);
-	m_pBufferCom->Render_Buffer();
+	m_pGrassBuffer->Render_Buffer();
 
-	// 설정 복원
+	// Restore
 	m_pGraphicDev->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
-	m_pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
-	m_pGraphicDev->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 }
 
@@ -97,25 +111,31 @@ void CGrass::Set_ObjectData(const Engine::OBJECTDATA& objData)
 
 	m_pTransformCom->Set_Pos(objData.x, objData.y, objData.z);
 	m_pTransformCom->Set_Scale(m_fScale, m_fScale, m_fScale);
+
+	// Position-based phase for individual sway timing
+	m_fPhase = fmodf(objData.x * 12.9898f + objData.z * 78.233f, D3DX_PI * 2.f);
 }
 
-void CGrass::React_ToPlayer(const _float& fTimeDelta)
+void CGrass::OnCollision(CGameObject* pObject)
 {
-	// Get player transform
-	Engine::CTransform* pPlayerTransform = dynamic_cast<Engine::CTransform*>(
-		Engine::CManagement::GetInstance()->Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
+	Engine::CTransform* pTransform = dynamic_cast<Engine::CTransform*>(
+		pObject->Get_Component(ID_DYNAMIC, L"Com_Transform"));
 
-	if (nullptr == pPlayerTransform)
+	if (nullptr == pTransform)
 		return;
 
-	_vec3 vPlayerPos;
-	pPlayerTransform->Get_Info(INFO_POS, &vPlayerPos);
+	_vec3 vObjPos;
+	pTransform->Get_Info(INFO_POS, &vObjPos);
 
+	React(vObjPos);
+}
+
+void CGrass::React(const _vec3& vObjPos)
+{
 	_vec3 vPos;
 	m_pTransformCom->Get_Info(INFO_POS, &vPos);
 
-	// Calculate distance to player
-	_vec3 vDist = vPlayerPos - vPos;
+	_vec3 vDist = vObjPos - vPos;
 	vDist.y = 0.f;
 	_float fDist = D3DXVec3Length(&vDist);
 
@@ -123,43 +143,44 @@ void CGrass::React_ToPlayer(const _float& fTimeDelta)
 
 	if (fDist < fReactDistance)
 	{
-		// Start swaying when player is nearby
-		m_bIsSwaying = true;
+		// Push grass away from object
+		D3DXVec3Normalize(&m_vReactDir, &vDist);
+		m_vReactDir = -m_vReactDir;
 
-		// Calculate sway based on player direction
-		D3DXVec3Normalize(&vDist, &vDist);
-		m_fSwayAngle = sinf(m_fSwaySpeed * fTimeDelta) * D3DXToRadian(15.f) * (1.f - fDist / fReactDistance);
-
-		// Slightly compress the grass
-		m_fScale = m_fBaseScale * (0.8f + 0.2f * (fDist / fReactDistance));
+		// Distance-based strength (closer = stronger)
+		m_fReactStrength = (1.f - fDist / fReactDistance);
 	}
-	else if (m_bIsSwaying)
-	{
-		// Gradually return to normal
-		m_fSwayAngle *= 0.9f;
-		m_fScale += (m_fBaseScale - m_fScale) * 0.1f;
+}
 
-		if (fabsf(m_fSwayAngle) < 0.001f && fabsf(m_fScale - m_fBaseScale) < 0.001f)
-		{
-			m_bIsSwaying = false;
-			m_fSwayAngle = 0.f;
-			m_fScale = m_fBaseScale;
-		}
-	}
+void CGrass::Update_VertexSway(const _float& fTimeDelta)
+{
+	if (nullptr == m_pGrassBuffer)
+		return;
+
+	// 1. Base wind sway (always applied)
+	_float fWindOffset = sinf(m_fAccTime * m_fWindSpeed + m_fPhase) * m_fWindStrength;
+
+	// 2. Player reaction sway
+	_float fReactOffset = m_vReactDir.x * m_fReactStrength * 0.3f;
+
+	// 3. Apply total offset to buffer
+	_float fTotalOffset = fWindOffset + fReactOffset;
+
+	m_pGrassBuffer->Set_TopVertexOffset(fTotalOffset);
 }
 
 HRESULT CGrass::Add_Component()
 {
 	Engine::CComponent* pComponent = nullptr;
 
-	// RcTex Buffer
-	pComponent = m_pBufferCom = dynamic_cast<Engine::CRcTex*>
-		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_RcTex"));
+	// GrassBuffer (dynamic vertex buffer for sway effect)
+	pComponent = m_pGrassBuffer = dynamic_cast<Engine::CGrassBuffer*>
+		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_GrassBuffer"));
 
 	if (nullptr == pComponent)
 		return E_FAIL;
 
-	m_mapComponent[ID_STATIC].insert({ L"Com_Buffer", pComponent });
+	m_mapComponent[ID_DYNAMIC].insert({ L"Com_Buffer", pComponent });
 
 	// Transform
 	pComponent = m_pTransformCom = dynamic_cast<Engine::CTransform*>
@@ -178,6 +199,15 @@ HRESULT CGrass::Add_Component()
 		return E_FAIL;
 
 	m_mapComponent[ID_STATIC].insert({ L"Com_Texture", pComponent });
+
+	// Collider
+	pComponent = m_pColliderCom = dynamic_cast<Engine::CCollider*>
+		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Collider"));
+
+	if (nullptr == pComponent)
+		return E_FAIL;
+
+	m_mapComponent[ID_STATIC].insert({ L"Com_Collider", pComponent });
 
 	return S_OK;
 }

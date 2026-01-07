@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "CPlayer.h"
 #include "CProtoMgr.h"
 #include "CManagement.h"
@@ -114,32 +114,32 @@ void CPlayer::Render_GameObject()
 {
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
 
-#pragma region ±âÁ¸ (¹ÝÀüX)
+#pragma region ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½X)
 
 	//Set_TextureSet();
 	//m_pBufferCom->Render_Buffer();
 
 #pragma endregion
 
-#pragma region ½ºÇÁ¶óÀÌÆ® ¹ÝÀü µµÀÔ - ¹öÅØ½º/ÀÎµ¦½º ¹öÆÛ ¹Ì»ç¿ë
+#pragma region ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ - ï¿½ï¿½ï¿½Ø½ï¿½/ï¿½Îµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ì»ï¿½ï¿½
 
 	Set_TextureSet();
-	// 8¹æÇâ ¸ðµÎ ½ºÇÁ¶óÀÌÆ® ÀÌ¹ÌÁö´Â ºñÈ¿À²Àû -> ÁÂ¿ì¹ÝÀüÇØ¼­ »ç¿ë
+	// 8ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½Ì¹ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¿ï¿½ï¿½ï¿½ï¿½ -> ï¿½Â¿ï¿½ï¿½ï¿½ï¿½ï¿½Ø¼ï¿½ ï¿½ï¿½ï¿½
 	bool bFlipH = (m_vDir == m_vNormDir[DIR_RU] || m_vDir == m_vNormDir[DIR_RIGHT] || m_vDir == m_vNormDir[DIR_RD]);
 	_float u1 = bFlipH ? 1.f : 0.f;
 	_float u2 = bFlipH ? 0.f : 1.f;
 	
-	// bFlipH = false (¹ÝÀüX)
+	// bFlipH = false (ï¿½ï¿½ï¿½ï¿½X)
 	//(u,v) : (0.f, 1.f)	|	(1.f, 1.f)
 	//(u,v) : (0.f, 0.f)	|	(1.f, 0.f)
 	
-	// bFlipH = true (¹ÝÀü)
+	// bFlipH = true (ï¿½ï¿½ï¿½ï¿½)
 	//(u,v) : (1.f, 1.f)	|	(0.f, 1.f)
 	//(u,v) : (1.f, 0.f)	|	(0.f, 0.f)
 	
-	// ¹®Á¦´Â ¹öÅØ½º ¹öÆÛ¸¦ µ¿ÀûÀ¸·Î ¼öÁ¤ÇÏ¸é ¿À¹öÇìµå ½ÉÇÔ
-	// - ¹öÅØ½º/ÀÎµ¦½º ¹öÆÛ¸¦ »ç¿ëÇÏÁö ¾Ê°í ±×¸®±â : DrawPrimitiveUP
-	// - ÀÎµ¦½º¹öÆÛ ¾øÀ¸¹Ç·Î D3DPT_TRIANGLELIST »ç¿ë ºÒ°¡ : D3DPT_TRIANGLESTRIPÀ¸·Î ±×¸®¸é (0-1-2), (2-1-3) À¸·Î ±×·ÁÁü
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ø½ï¿½ ï¿½ï¿½ï¿½Û¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+	// - ï¿½ï¿½ï¿½Ø½ï¿½/ï¿½Îµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Û¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê°ï¿½ ï¿½×¸ï¿½ï¿½ï¿½ : DrawPrimitiveUP
+	// - ï¿½Îµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ D3DPT_TRIANGLELIST ï¿½ï¿½ï¿½ ï¿½Ò°ï¿½ : D3DPT_TRIANGLESTRIPï¿½ï¿½ï¿½ï¿½ ï¿½×¸ï¿½ï¿½ï¿½ (0-1-2), (2-1-3) ï¿½ï¿½ï¿½ï¿½ ï¿½×·ï¿½ï¿½ï¿½
 	// 0 1 > 0 1
 	// 3 2 > 2 3
 	
@@ -165,7 +165,7 @@ void CPlayer::Render_GameObject()
 
 #pragma endregion
 
-#pragma region ½ºÇÁ¶óÀÌÆ® ½ÃÆ®
+#pragma region ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½Æ®
 
 	//m_pGraphicDev->SetTextureStageState(0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_COUNT2);
 	//Set_Texture();
@@ -340,7 +340,7 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 		m_vRollPos = m_vPos + m_vDir * 5.f;
 	}
 
-	if (GetAsyncKeyState(VK_LBUTTON) & 0x0001)	// ´­·¶À» ¶§ ÇÑ ¹ø¸¸ true
+	if (GetAsyncKeyState(VK_LBUTTON) & 0x0001)	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ true
 	{			
 		if ((m_iCombo == 3) || (m_fCharge)) return;
 
@@ -352,7 +352,7 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 		Attack_HitBox();
 	}
 
-	if (GetAsyncKeyState(VK_RBUTTON) & 0x0001)	// ´­·¶À» ¶§ ÇÑ ¹ø¸¸ true
+	if (GetAsyncKeyState(VK_RBUTTON) & 0x0001)	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ true
 	{
 		if ((m_bRoll) || (m_iCombo)) return;
 	
@@ -482,7 +482,7 @@ void CPlayer::Move_Frame(const _float& fTimeDelta)
 	{
 		m_fFrame = 0.f;
 		
-		// ±¸¸£±â ¹× °ø°ÝÀº ÇÁ·¹ÀÓÀÌ ³¡³¯ ¶§±îÁö À¯ÁöµÇ¾ú´Ù°¡ Á¾·á
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ç¾ï¿½ï¿½Ù°ï¿½ ï¿½ï¿½ï¿½ï¿½
 		if (m_eCurState == PS_ROLL)
 		{
 			m_bRoll = false;
@@ -511,8 +511,8 @@ void CPlayer::Set_Texture()
 	_uint iU = iFrame % 16;
 	_uint iV = iFrame / 16;
 
-	m_matTex._11 = 0.0625f;	// °¡·Î´Â 16Ä­ °íÁ¤
-	m_matTex._22 = 0.0625f;	// ¼¼·Î´Â 16Ä­ °íÁ¤(Player)
+	m_matTex._11 = 0.0625f;	// ï¿½ï¿½ï¿½Î´ï¿½ 16Ä­ ï¿½ï¿½ï¿½ï¿½
+	m_matTex._22 = 0.0625f;	// ï¿½ï¿½ï¿½Î´ï¿½ 16Ä­ ï¿½ï¿½ï¿½ï¿½(Player)
 
 	switch (m_eCurState)
 	{
@@ -597,7 +597,7 @@ void CPlayer::Set_TextureSet()
 
 	case PS_CHARGE:
 	{
-		// Å°ÀÎÇ² & Move_Frame¿¡¼­ °ü¸®
+		// Å°ï¿½ï¿½Ç² & Move_Frameï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	}
 	break;
 	}
@@ -647,7 +647,7 @@ void	CPlayer::OnCollision(CGameObject* pObject)
 {
 	if (pObject->Get_OBJID() == OID_MONSTER)
 	{
-		m_pTransformCom->Set_Pos(10.f, 10.f, 10.f);
+		//m_pTransformCom->Set_Pos(10.f, 10.f, 10.f);
 	}
 }
 

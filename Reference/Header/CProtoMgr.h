@@ -1,8 +1,9 @@
-#pragma once
+﻿#pragma once
 
 #include "CRcCol.h"
 #include "CRcTex.h"
 #include "CRcTexXZ.h"
+#include "CGrassBuffer.h"
 #include "CTerrainTex.h"
 #include "CCubeTex.h"
 #include "CRcColTitle.h"

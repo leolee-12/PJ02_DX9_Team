@@ -324,6 +324,9 @@
     <ClInclude Include="..\Header\CTileMgr.h">
       <Filter>10. TileMgr</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CMySkyBox.h">
+      <Filter>02. GameObject\05. SkyBox</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -463,6 +466,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CTile.cpp">
       <Filter>02. GameObject\10. Tile</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CMySkyBox.cpp">
+      <Filter>02. GameObject\05. SkyBox</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
