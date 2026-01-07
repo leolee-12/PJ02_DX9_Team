@@ -29,7 +29,7 @@ HRESULT CN3_AI::Ready_AI(const _float& fDetectRange, const _float& fInteractRang
 
 	m_fSpeed = 0.5f;
 	m_fAcmlTime = 0.f;
-	m_iRcmState = _uint(CMonsterN3::N3S_IDLE);
+	m_iRcmState = _uint(CMonsterN3::N3S_FLY);
 
 	return S_OK;
 }
@@ -38,37 +38,8 @@ void CN3_AI::Enter_State(const _uint& iState)
 {
 	switch (iState)
 	{
-	case CMonsterN3::N3S_IDLE:
-		m_fAcmlTime = 0.f;
-		break;
-	case CMonsterN3::N3S_RUN:
-	{
-		m_fAcmlTime = 0.f;
-
-		if (m_pTargetTC) m_fSpeed = 2.f;
-		else m_fSpeed = 0.5f;
-	}
-		break;
-	case CMonsterN3::N3S_ATTACK:
-	{
-		m_fSpeed = 0.f;
-		m_pOwnerTC->Get_Info(INFO_POS, &m_vLerpPos);
-		m_vLerpPos += m_vDir * 3.f;
-	}
-		break;
-	case CMonsterN3::N3S_HIT:
-	{
-		m_fSpeed = 0.1f;
-		m_pOwnerTC->Get_Info(INFO_POS, &m_vLerpPos);
-		m_vLerpPos -= m_vDir * 2.f;
-	}
-		break;
 	case CMonsterN3::N3S_SPAWN:
 		m_bActiveAI = false;
-		break;
-	case CMonsterN3::N3S_JEER:
-		break;
-	case CMonsterN3::N3S_PRAY:
 		break;
 	}
 }
@@ -77,44 +48,8 @@ void CN3_AI::Exit_State(const _uint& iState)
 {
 	switch (iState)
 	{
-	case CMonsterN3::N3S_IDLE:
-	{
-		if (!m_pTargetTC) m_bChase = false;
-
-		_vec3 vDir;
-
-		if (!m_bChase)	Randomize_Dir();
-		else			Compute_TargetDir();
-	}
-	break;
-
-	case CMonsterN3::N3S_RUN:
-	{
-		if (!m_pTargetTC) m_bChase = false;
-	}
-	break;
-
-	case CMonsterN3::N3S_ATTACK:
-	{
-		if (!m_pTargetTC) m_bChase = false;
-
-		_vec3 vDir;
-
-		Randomize_Dir();
-	}
-	break;
-
-	case CMonsterN3::N3S_HIT:
-		break;
-
 	case CMonsterN3::N3S_SPAWN:
 		m_bActiveAI = true;
-		break;
-
-	case CMonsterN3::N3S_JEER:
-		break;
-
-	case CMonsterN3::N3S_PRAY:
 		break;
 	}
 }
@@ -131,105 +66,28 @@ _int CN3_AI::Update_Component(const _float& fTimeDelta)
 
 	switch (m_iCurState)
 	{
-	case CMonsterN3::N3S_IDLE:
-		Update_Idle(fTimeDelta);
-		break;
-	case CMonsterN3::N3S_RUN:
-		Update_Run(fTimeDelta);
-		break;
-	case CMonsterN3::N3S_ATTACK:
-		Update_Attack(fTimeDelta);
-		break;
-	case CMonsterN3::N3S_HIT:
-		Update_Hit(fTimeDelta);
-		break;
 	case CMonsterN3::N3S_SPAWN:
 		Update_Spawn(fTimeDelta);
-		break;
-	case CMonsterN3::N3S_JEER:
-		Update_Jeer(fTimeDelta);
-		break;
-	case CMonsterN3::N3S_PRAY:
-		Update_Pray(fTimeDelta);
 		break;
 	}
 
 	return iExit;
 }
 
-void CN3_AI::Update_Idle(const _float& fTimeDelta)
+void CN3_AI::Update_Fly(const _float& fTimeDelta)
 {
 	if (!m_pTargetTC) return;
-
-	if (m_bChase)
-	{	// 타겟을 이미 발견했을 때
-		if (m_fDistance <= m_fInteractRange)
-		{	// 타겟이 상호작용 범위 내에 있을 시 공격 상태로 전환
-			Change_State(CMonsterN3::N3S_ATTACK);
-			return;
-		}
-		else
-		{	// 타겟이 상호작용 범위 내에 없을 시 이동 상태로 전환하여 추적
-			Change_State(CMonsterN3::N3S_RUN);
-		}
-	}
-	else
-	{	
-		if (m_fDistance <= m_fDetectRange)
-		{	// 타겟이 감지 범위 내로 진입 시 발견 후 이동 상태로 전환하여 추적
-			m_bChase = true;
-			Change_State(CMonsterN3::N3S_RUN);
-		}
-		else if (m_fAcmlTime > 3.f)
-		{	// 타겟이 감지 범위 내에 없을 때는 대기하다 이동 상태로 전환하여 순찰
-			Change_State(CMonsterN3::N3S_RUN);
-		}
-	}
-}
-
-void CN3_AI::Update_Run(const _float& fTimeDelta)
-{
-	if (!m_pTargetTC) Change_State(CMonsterN3::N3S_IDLE);
-
-	if (m_bChase)
-	{	// 타겟을 이미 발견했을 때
-		if (m_fDistance <= m_fInteractRange)
-		{	
-			if ((m_iPreState != CMonsterN3::N3S_ATTACK) || (m_iPreState == CMonsterN3::N3S_ATTACK && m_fAcmlTime >= 5.f))
-				Change_State(CMonsterN3::N3S_ATTACK);
-		}
-	}
-	else
-	{	// 타겟을 발견하지 못했을 때
-		if (m_fDistance <= m_fDetectRange)
-		{	// 타겟이 감지 범위 내로 진입 시 발견
-			m_bChase = true;
-			Compute_TargetDir();
-		}
-		else if (m_fAcmlTime > 3.f)
-		{	// 타겟이 감지 범위 내에 없을 때는 순찰하다 대기 상태로 전환
-			Change_State(CMonsterN3::N3S_IDLE);
-			return;
-		}
-	}
-	if (m_fAcmlTime > 3.f) Compute_TargetDir();
 
 	m_pOwnerTC->Move_Pos(&m_vDir, fTimeDelta, m_fSpeed);
 }
 
-void CN3_AI::Update_Attack(const _float& fTimeDelta)
+void CN3_AI::Update_Prepare(const _float& fTimeDelta)
 {
-	if (!m_pTargetTC) Change_State(CMonsterN3::N3S_IDLE);
+	if (m_fAcmlTime > 3.f) Compute_TargetDir();
 
-	_vec3 vPos;
-	m_pOwnerTC->Get_Info(INFO_POS, &vPos);
-
-	D3DXVec3Lerp(&vPos, &vPos, &m_vLerpPos, m_fSpeed);
-
-	m_pOwnerTC->Set_Pos(vPos.x, vPos.y, vPos.z);
 }
 
-void CN3_AI::Update_Hit(const _float& fTimeDelta)
+void CN3_AI::Update_Rush(const _float& fTimeDelta)
 {
 	_vec3 vPos;
 	m_pOwnerTC->Get_Info(INFO_POS, &vPos);
@@ -240,14 +98,6 @@ void CN3_AI::Update_Hit(const _float& fTimeDelta)
 }
 
 void CN3_AI::Update_Spawn(const _float& fTimeDelta)
-{
-}
-
-void CN3_AI::Update_Jeer(const _float& fTimeDelta)
-{
-}
-
-void CN3_AI::Update_Pray(const _float& fTimeDelta)
 {
 }
 
@@ -290,16 +140,8 @@ void CN3_AI::Anim_End(CMonsterN3::MONSTER_N3_STATE eState)
 {
 	switch (eState)
 	{
-	case CMonsterN3::N3S_ATTACK:
-		Change_State(CMonsterN3::N3S_RUN);
-		break;
-
-	case CMonsterN3::N3S_HIT:
-		Change_State(CMonsterN3::N3S_RUN);
-		break;
-
 	case CMonsterN3::N3S_SPAWN:
-		Change_State(CMonsterN3::N3S_IDLE);
+		Change_State(CMonsterN3::N3S_FLY);
 		break;
 	}
 }

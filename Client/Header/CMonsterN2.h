@@ -63,6 +63,7 @@ private:
 
 	// 마디 관련
 	CNode*		m_pNode[3];
+	_float		m_fGroundY;
 
 public:
 	static CMonsterN2*	Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel);

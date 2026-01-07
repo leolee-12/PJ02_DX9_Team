@@ -156,7 +156,7 @@ void CMonsterN3::Ready_Variable()
 {
 	// Transform 세팅
 	m_pTransformCom->Set_Pos(_float(rand() % 20), 1.f, _float(rand() % 20));
-	m_pTransformCom->Set_Scale(3.f, 3.f, 3.f);
+	m_pTransformCom->Set_Scale(4.f, 4.f, 4.f);
 
 	// Collider 세팅
 	m_pColliderCom->RegisterToManager(this, CL_MONSTER);
@@ -165,17 +165,6 @@ void CMonsterN3::Ready_Variable()
 	m_pAICom->Set_OwnerTransform(m_pTransformCom);
 	m_pAICom->Set_TargetTransform(CPersistentMgr::GetInstance()->Get_PlayerTransform());
 	m_pAICom->Set_State<MONSTER_N3_STATE>(N3S_SPAWN);
-
-	// 단위벡터 세팅
-	_float fAngle(0.f);
-
-	for (_uint i = 0; i < DIR_END; ++i)
-	{
-		m_vNormDir[i] = { cosf(fAngle), 0.f, -sinf(fAngle) };
-		fAngle += D3DX_PI * 0.25f;
-	}
-
-	m_vDir = m_vNormDir[DIR_LEFT];
 
 	// Anim 관련 세팅
 	m_fFrameSpeed = 24.f;
@@ -209,46 +198,27 @@ void CMonsterN3::Check_Frame()
 
 	switch (m_eCurState)
 	{
-	case N3S_IDLE:
+	case N3S_FLY:
 	{
-		m_fFrameEnd = 24.f;
+		m_fFrameEnd = 16.f;
 	}
 	break;
 
-	case N3S_RUN:
+	case N3S_PREPARE:
 	{
-		m_fFrameEnd = 14.f;
+		m_fFrameEnd = 28.f;
 	}
 	break;
 
-	case N3S_ATTACK:
+	case N3S_RUSH:
 	{
-		m_eAttackPhase = PREPARE;
-		m_fFrameEnd = 18.f;
-	}
-	break;
-
-	case N3S_HIT:
-	{
-		m_fFrameEnd = 11.f;
+		m_fFrameEnd = 16.f;
 	}
 	break;
 
 	case N3S_SPAWN:
 	{
-		m_fFrameEnd = 36.f;
-	}
-	break;
-
-	case N3S_JEER:
-	{
-		m_fFrameEnd = 48.f;
-	}
-	break;
-
-	case N3S_PRAY:
-	{
-		m_fFrameEnd = 32.f;
+		m_fFrameEnd = 16.f;
 	}
 	break;
 	}
@@ -266,33 +236,14 @@ void CMonsterN3::Move_Frame(const _float& fTimeDelta)
 
 		switch (m_eCurState)
 		{
-		case N3S_ATTACK:
-		{
-			if (m_eAttackPhase == PREPARE)
-			{
-				m_eAttackPhase = EXECUTE;
-				m_pAICom->Set_Speed(0.2f);
-				m_fFrameEnd = 27.f;
-				Attack_HitBox();
-			}
-			else if (m_eAttackPhase == EXECUTE)
-			{	// 상태 유지가 애니메이션에 종속적인 경우(Update에서 상태 전환을 하지 않음)
-				//  : 애니메이션 종료를 AI 컴포넌트에게 알리며 상태 변경
-				m_pAICom->Anim_End(m_eCurState);
-				m_eCurState = N3S_RUN;
-				m_eAttackPhase = PREPARE;
-			}
-		}
-		break;
-
-		case N3S_HIT:
-			m_pAICom->Anim_End(m_eCurState);
-			m_eCurState = N3S_RUN;
-			break;
-
 		case N3S_SPAWN:
 			m_pAICom->Anim_End(m_eCurState);
-			m_eCurState = N3S_IDLE;
+			m_eCurState = N3S_FLY;
+			break;
+
+		case N3S_PREPARE:
+			m_pAICom->Anim_End(m_eCurState);
+			m_eCurState = N3S_RUSH;
 			break;
 		}
 	}
@@ -303,61 +254,35 @@ void CMonsterN3::Set_Texture()
 	_vec3 vDir = *(m_pAICom->Get_Dir());		// AI로부터 받아온 방향
 	_bool bFilpX = vDir.x > 0.f ? true : false;	// 반전 여부
 	_uint iFrame = m_fFrame;					// 현재 프레임
+	_uint iTexIdx = _uint(m_eCurState);			// 텍스처 인덱스
 
 	D3DXMatrixIdentity(&m_matTex);
 	_uint iU = iFrame % 16;
 	_uint iV = iFrame / 16;
 
 	m_matTex._11 = 0.0625f;	// 가로는 16칸 고정
-	m_matTex._22 = 0.25f;	// 세로는 4칸 고정(MonsterN3)
+	m_matTex._22 = 0.5f;	// 세로는 2칸 고정(MonsterN3)
 
 	switch (m_eCurState)
 	{
-	case N3S_IDLE:
+	case N3S_FLY:
 	{
-		if (vDir.z > 0.f) iV += 2;
 	}
 	break;
 
-	case N3S_RUN:
+	case N3S_PREPARE:
 	{
-		if (vDir.z > 0.f) iV += 1;
 	}
 	break;
 
-	case N3S_ATTACK:
-	{
-		switch (m_eAttackPhase)
-		{
-			case EXECUTE:
-			{
-				iV += 2;
-			}	
-			break;
-
-			default:
-				break;
-		}
-	}
-	break;
-
-	case N3S_HIT:
+	case N3S_RUSH:
 	{
 	}
 	break;
 
 	case N3S_SPAWN:
 	{
-	}
-	break;
-
-	case N3S_JEER:
-	{
-	}
-	break;
-
-	case N3S_PRAY:
-	{
+		iTexIdx = 0;
 	}
 	break;
 	}
@@ -372,11 +297,11 @@ void CMonsterN3::Set_Texture()
 		m_matTex._31 = _float(iU) * 0.0625f;	// 반전 X : 왼쪽에서 오른쪽으로 읽음
 	}
 
-	m_matTex._32 = _float(iV) * 0.25f;
+	m_matTex._32 = _float(iV) * 0.5f;
 
 	m_pGraphicDev->SetTransform(D3DTS_TEXTURE0, &m_matTex);
 
-	m_pTextureCom->Set_Texture(_uint(m_eCurState));
+	m_pTextureCom->Set_Texture(iTexIdx);
 }
 
 void CMonsterN3::Attack_HitBox()
@@ -400,27 +325,11 @@ void CMonsterN3::Attack_HitBox()
 void CMonsterN3::Attacked(const _int& iAttack)
 {
 	m_iHp -= iAttack;
-
-	if (m_eAttackPhase != EXECUTE)
-	{
-		if (m_eCurState == N3S_HIT)
-		{
-			m_fFrame = 0.f;
-		}
-		else
-		{
-			m_eCurState = N3S_HIT;
-			m_pAICom->Set_State<MONSTER_N3_STATE>(N3S_HIT);
-		}
-	}
 }
 
 void CMonsterN3::Update_State()
 {
-	if (m_eCurState == N3S_SPAWN || m_eCurState == N3S_HIT)
-		return;
-
-	if (m_eCurState == N3S_ATTACK && m_eAttackPhase == EXECUTE && m_fFrame < m_fFrameEnd)
+	if (m_eCurState == N3S_SPAWN)
 		return;
 
 	m_eCurState = m_pAICom->Get_RecommendState<MONSTER_N3_STATE>();

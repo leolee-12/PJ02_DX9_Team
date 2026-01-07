@@ -95,13 +95,13 @@ void CN2_AI::Exit_State(const _uint& iState)
 
 	case CMonsterN2::N2S_JUMP:
 	{
-		m_vSpeed = { 0.f, 0.f, 0.f };
 	}
 	break;
 
 	case CMonsterN2::N2S_LAND:
 	{
 		if (!m_pTargetTC) m_bChase = false;
+		m_vSpeed = { 0.f, 0.f, 0.f };
 	}
 	break;
 
@@ -190,7 +190,14 @@ void CN2_AI::Update_Jump(const _float& fTimeDelta)
 
 void CN2_AI::Update_Land(const _float& fTimeDelta)
 {
-
+	if (m_fAcmlTime < 0.2f)  // 0.2ÃÊ µ¿¾È
+	{
+		_vec3 vPos;
+		m_pOwnerTC->Get_Info(INFO_POS, &vPos);
+		_float fDeceleration = 1.0f - (m_fAcmlTime / 0.2f);
+		vPos += m_vDir * 0.5f * fDeceleration * fTimeDelta;
+		m_pOwnerTC->Set_Pos(vPos.x, vPos.y, vPos.z);
+	}
 }
 
 void CN2_AI::Update_Spawn(const _float& fTimeDelta)

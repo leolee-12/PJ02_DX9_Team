@@ -17,6 +17,7 @@
 #include "CMonsterN1.h"
 #include "CItem.h"
 #include "CMonsterN2.h"
+#include <CMonsterN3.h>
 
 CTest::CTest(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -161,7 +162,7 @@ HRESULT CTest::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 
 	pGameObject->AddRef();
 
-	for (_uint i = 0; i < 20; ++i)
+	for (_uint i = 0; i < 3; ++i)
 	{
 		//pGameObject = CMonsterN1::Create(m_pGraphicDev, m_pMessageChannel);
 		//
@@ -180,7 +181,7 @@ HRESULT CTest::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 			return E_FAIL;
 	}
 
-	for (_uint i = 0; i < 20; ++i)
+	for (_uint i = 0; i < 1000; ++i)
 	{
 		pGameObject = CMonsterN2::Create(m_pGraphicDev, m_pMessageChannel);
 		

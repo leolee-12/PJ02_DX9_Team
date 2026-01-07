@@ -189,7 +189,7 @@ void CMonsterN2::Ready_Variable()
 	// 게임로직 변수 세팅
 	m_iAttack = 1;
 	m_iHp = 10;
-
+	m_fGroundY = 1.f;
 
 	// 마디 세팅
 	vScale *= 0.7f;
@@ -417,6 +417,7 @@ void CMonsterN2::Compute_NodePos(const _float& fTimeDelta)
 	_float fHeadSpeed = D3DXVec3Length(&vHeadVelocity) / fTimeDelta;
 	_float fBaseDist = 0.2f;
 	_float fAdaptiveDist = fBaseDist + fHeadSpeed * 0.02f;
+	_float fScaleReduction = 0.7f;
 
 	for (_uint i = 0; i < 3; ++i)
 	{
@@ -428,7 +429,8 @@ void CMonsterN2::Compute_NodePos(const _float& fTimeDelta)
 		_float fLerp = min(1.f, fDistRatio * 0.5f);
 		_vec3 vTargetPos = vPrevPos - vNewDir * fAdaptiveDist;
 
-		if (m_eCurState != N2S_JUMP && m_eCurState != N2S_LAND) vTargetPos.y = 1.f;
+		if (m_eCurState != N2S_JUMP) vTargetPos.y = m_fGroundY - (m_fGroundY * (1.f - fScaleReduction) * 0.5f);	// 줄어든 크기의 절반만 낮추는게 맞는 것 같은데...
+		fScaleReduction *= 0.7f;
 
 		vCurPos = m_pNode[i]->Get_NodePos();
 		_vec3 vNewPos;

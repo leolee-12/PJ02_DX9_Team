@@ -14,8 +14,7 @@ class CN3_AI;
 class CMonsterN3 : public CMonster 
 {
 public:
-	enum MONSTER_N3_STATE { N3S_IDLE, N3S_RUN, N3S_ATTACK, N3S_HIT, N3S_SPAWN, N3S_JEER, N3S_PRAY, N3S_END };
-	enum ATTACK_PHASE { PREPARE, EXECUTE };
+	enum MONSTER_N3_STATE { N3S_FLY, N3S_PREPARE, N3S_RUSH, N3S_SPAWN, N3S_END };
 
 private:
 	explicit	CMonsterN3(LPDIRECT3DDEVICE9 pGraphicDev);
@@ -24,9 +23,6 @@ private:
 	virtual		~CMonsterN3();
 
 public:
-	void				Set_Dir(_vec3* pDir)	{ m_vDir = *pDir; }
-	const _vec3*		Get_Dir()				{ return &m_vDir; }
-
 	virtual HRESULT		Ready_GameObject();
 	virtual _int		Update_GameObject(const _float& fTimeDelta);
 	virtual void		LateUpdate_GameObject(const _float& fTimeDelta);
@@ -54,10 +50,7 @@ private:
 	_float				m_fFrame;
 	_float				m_fFrameEnd;
 	_float				m_fFrameSpeed;
-	_vec3				m_vNormDir[DIR_END];
-	_vec3				m_vDir;
 	_matrix				m_matTex;
-	ATTACK_PHASE		m_eAttackPhase;
 
 	// 스테이터스 관련
 	_int				m_iAttack;
