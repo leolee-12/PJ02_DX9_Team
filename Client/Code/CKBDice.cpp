@@ -27,6 +27,7 @@ CKBDice::CKBDice(LPDIRECT3DDEVICE9 pGraphicDev)
 	ZeroMemory(&m_vPos, sizeof(_vec3));
 	ZeroMemory(&m_vStartPos, sizeof(_vec3));
 	ZeroMemory(&m_vTargetPos, sizeof(_vec3));
+	ZeroMemory(&m_tColor, sizeof(D3DXCOLOR));
 }
 
 CKBDice::~CKBDice()
@@ -38,7 +39,7 @@ HRESULT CKBDice::Ready_GameObject()
 	if (FAILED(Add_Component()))
 		return E_FAIL;
 
-	m_pTransformCom->Set_Scale(50.f, 50.f, 1.f);
+	m_pTransformCom->Set_Scale(52.f, 52.f, 1.f);
 	switch (m_iTurn)
 	{
 	case 0: // 플레이어
@@ -55,6 +56,7 @@ HRESULT CKBDice::Ready_GameObject()
 
 	m_pTransformCom->Set_Pos(m_vPos.x, m_vPos.y, m_vPos.z);
 
+	Set_ColorWhite();
 	Roll();
 
 	return S_OK;
@@ -92,12 +94,26 @@ void CKBDice::LateUpdate_GameObject(const _float& fTimeDelta)
 
 void CKBDice::Render_GameObject()
 {
+	m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, TRUE);
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
+
+	D3DMATERIAL9 tMtrl;
+	ZeroMemory(&tMtrl, sizeof(D3DMATERIAL9));
+
+	tMtrl.Diffuse = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
+	tMtrl.Specular = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
+	tMtrl.Ambient = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
+
+	tMtrl.Emissive = m_tColor;
+	tMtrl.Power = 0.f;
+
+	m_pGraphicDev->SetMaterial(&tMtrl);
 
 	// m_iValue is 1~6, texture index is 0~5
 	m_pTextureCom->Set_Texture(m_iValue - 1);
 
 	m_pBufferCom->Render_Buffer();
+	m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, FALSE);
 }
 
 void CKBDice::OnCollision(CGameObject* pObject)

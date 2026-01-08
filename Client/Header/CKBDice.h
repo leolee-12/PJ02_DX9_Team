@@ -37,6 +37,10 @@ public:
 	void			SetPosition(const _vec3& vPos);		// Set position immediately
 	void			SetDead() { m_bDead = true; }		// Mark for deletion
 
+	void            Set_ColorWhite() { m_tColor = D3DXCOLOR(1.f, 1.f, 1.f, 1.f); }
+	void            Set_ColorBlue() { m_tColor = D3DXCOLOR(0.7f, 0.9f, 1.f, 1.f); }
+	void            Set_ColorYellow() { m_tColor = D3DXCOLOR(1.f, 1.f, 0.7f, 1.f); }
+
 public:
 	static CKBDice* Create(LPDIRECT3DDEVICE9 pGraphicDev, _int iTurn);
 
@@ -82,5 +86,8 @@ private:
 	_float          m_fBounceSpeed;     // 튀는 속도
 	_float          m_fBounceAccel;     // 가속도
 	_float 			m_fBounceGoal;      // 도착지점
+
+	// 주사위 색 관련
+	D3DXCOLOR       m_tColor;
 };
 

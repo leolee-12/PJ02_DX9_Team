@@ -1,17 +1,17 @@
-#ifndef Engine_Enum_h__
+﻿#ifndef Engine_Enum_h__
 #define Engine_Enum_h__
 
 namespace Engine
 {
 	enum WINMODE { MODE_FULL, MODE_WIN };
 
-	// Dynamic ������Ʈ ��� �� �����Ӹ��� �����ؾ��ϴ� ������Ʈ ����
+	// Dynamic 컴포넌트 용도 및 프레임마다 갱신해야하는 컴포넌트 등록
 	enum COMPONENTID { ID_DYNAMIC, ID_STATIC, ID_END };
 
 	enum INFO {	INFO_RIGHT, INFO_UP, INFO_LOOK, INFO_POS, INFO_END };
 
 	enum ROTATION { ROT_X, ROT_Y, ROT_Z, ROT_END };
-	
+
 	enum BILBOARD { BBD_X, BBD_Y, BBD_Z, BBD_END};
 
 	enum TEXTUREID { TEX_NORMAL, TEX_CUBE, TEX_END };
@@ -53,7 +53,7 @@ namespace Engine
 		CL_15		= 1 << 14,
 		CL_16		= 1 << 15,
 
-		CL_ALL		= 0xFFFF // 1111 1111 1111 1111 16��Ʈ
+		CL_ALL		= 0xFFFF // 1111 1111 1111 1111 16비트
 	};
 	inline COLGROUP operator|(COLGROUP lhs, COLGROUP rhs) {
 		return COLGROUP((unsigned int)lhs | (unsigned int)rhs);

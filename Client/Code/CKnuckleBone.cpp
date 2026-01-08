@@ -31,6 +31,9 @@ CKnuckleBone::CKnuckleBone(LPDIRECT3DDEVICE9 pGraphicDev)
 	, m_fNPCThinkTime(0.f)
 	, m_fResultTime(0.f), m_iWinner(-1)
 	, m_fShowTime(0.f)
+	, m_iLastPlacedCol(0)
+	, m_fEnterDelay(0.f)
+	, m_bEnterDone(false)
 {
 	ZeroMemory(m_iBoard, sizeof(m_iBoard));
 	ZeroMemory(m_pBoardDice, sizeof(m_pBoardDice));
@@ -125,6 +128,7 @@ void CKnuckleBone::Render_Scene()
 		break;
 	case KB_MAIN:
 		Render_Font_Main();
+		Render_Font_Trun();
 		break;
 	case KB_END:
 		break;
@@ -451,7 +455,6 @@ void CKnuckleBone::State_machine()
 			m_strLayerTag = L"Main_Layer";
 			// 게임 시작: 주사위 굴리기
 			Ready_MainGame();
-			Start_Roll();
 			break;
 		case KB_END:
 			break;
@@ -594,8 +597,31 @@ void CKnuckleBone::Free()
 // 메인 게임 로직 업데이트 (true 반환 시 씬 전환됨, 즉시 탈출 필요)
 _bool CKnuckleBone::Update_MainGame(const _float& fTimeDelta)
 {
-	if (nullptr == m_pCurDice)
-		return false;
+	if (nullptr == m_pCurDice) {
+		if (m_fEnterDelay >= 1.f)
+		{
+			map<wstring, CLayer*>::iterator iter = m_mapLayer.find(L"Main_Layer");
+			if (iter == m_mapLayer.end()) { return false; }
+
+			CGameObject* pGameObject = nullptr;
+
+			pGameObject = m_pCurDice = CKBDice::Create(m_pGraphicDev, m_iCurTurn);
+
+			if (nullptr == pGameObject)
+				return false;
+
+			if (FAILED(iter->second->Add_GameObject(L"KBDice", pGameObject)))
+				return false;
+
+			m_bEnterDone = true;
+
+			Start_Roll();
+		}
+		else {
+			m_fEnterDelay += fTimeDelta;
+			return false;
+		}
+	}
 
 	switch (m_eMainState)
 	{
@@ -638,6 +664,10 @@ _bool CKnuckleBone::Update_MainGame(const _float& fTimeDelta)
 		// 주사위 이동 중 - 이동 완료되면 다음 턴
 		if (m_pCurDice->GetState() == DS_IDLE)
 		{
+			// 배치 완료 후 양쪽 보드의 해당 열 색상 업데이트
+			Update_ColumnDiceColors(0, m_iLastPlacedCol);	// 플레이어
+			Update_ColumnDiceColors(1, m_iLastPlacedCol);	// NPC
+
 			// 게임 종료 체크
 			if (Check_GameEnd())
 			{
@@ -720,6 +750,9 @@ void CKnuckleBone::Place_Dice(_int iOwner, _int iCol)
 	// 주사위 이동 (애니메이션)
 	_vec3 vTargetPos = Get_SlotPosition(iOwner, iCol, iRow);
 	m_pCurDice->MoveTo(vTargetPos);
+
+	// 배치 열 저장 (이동 완료 후 색상 업데이트용)
+	m_iLastPlacedCol = iCol;
 
 	m_eMainState = MS_PLACE;
 }
@@ -806,13 +839,13 @@ void CKnuckleBone::Render_Font_Main()
 	wchar_t szScore[64];
 
 	// 플레이어 총점 (화면 중앙 왼쪽)
-	swprintf_s(szScore, L"Player: %d", iPlayerScore);
-	RECT rcPlayer = { 0, (WINCY / 2) - 20, WINCX / 2 - 100, (WINCY / 2) + 100 };
+	swprintf_s(szScore, L"Player\n%d", iPlayerScore);
+	RECT rcPlayer = { 0, (WINCY / 2) - 20, (WINCX / 2) - 200, (WINCY / 2) + 100 };
 	CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans30", szScore, rcPlayer, FontColor, DT_CENTER | DT_BOTTOM);
 
 	// NPC 총점 (화면 중앙 오른쪽)
-	swprintf_s(szScore, L"NPC: %d", iNPCScore);
-	RECT rcNPC = { WINCX / 2 + 100, (WINCY / 2) - 20, WINCX, (WINCY / 2) + 100 };
+	swprintf_s(szScore, L"NPC\n%d", iNPCScore);
+	RECT rcNPC = { (WINCX / 2) + 200, (WINCY / 2) - 20, WINCX, (WINCY / 2) + 100 };
 	CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans30", szScore, rcNPC, FontColor, DT_CENTER | DT_BOTTOM);
 
 	// 열별 점수 표시 (두 보드 사이에 표시)
@@ -843,7 +876,26 @@ void CKnuckleBone::Render_Font_Main()
 	}
 }
 
-// 열 점수 계산 (같은 눈이 있으면 배가)
+void CKnuckleBone::Render_Font_Trun()
+{
+	if (m_bEnterDone)
+		return;
+
+	D3DXCOLOR FontColor = D3DXCOLOR(240.f / 256.f, 240.f / 256.f, 240.f / 256.f, 1.f);
+	RECT rc = { 0, 0, WINCX, WINCY };
+
+	switch (m_iCurTurn)
+	{
+	case 0:
+		CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans60", L"어린양이 먼저 굴립니다", rc, FontColor, DT_CENTER | DT_VCENTER);
+		break;
+	case 1:
+		CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans60", L"라타우 측이 먼저 굴립니다", rc, FontColor, DT_CENTER | DT_VCENTER);
+		break;
+	}
+}
+
+// 열 점수 계산 (같은 눈이 있으면 배)
 _int CKnuckleBone::Calc_ColumnScore(_int iOwner, _int iCol)
 {
 	// 해당 열의 주사위 눈 값들
@@ -855,7 +907,7 @@ _int CKnuckleBone::Calc_ColumnScore(_int iOwner, _int iCol)
 
 	_int iScore = 0;
 
-	// 각 주사위 눈에 대해 같은 눈 개수를 세고 배가 적용
+	// 각 주사위 눈에 대해 같은 눈 개수를 세고 배 적용
 	for (_int i = 0; i < 3; ++i)
 	{
 		if (iValues[i] == 0)
@@ -1076,18 +1128,36 @@ HRESULT CKnuckleBone::Ready_MainGame()
 	m_pKBMask->Show_Mask();
 	m_iSelectedCol = 1;
 
-	map<wstring, CLayer*>::iterator iter = m_mapLayer.find(L"Main_Layer");
-	if (iter == m_mapLayer.end()) { return E_FAIL; }
-
-	CGameObject* pGameObject = nullptr;
-
-	pGameObject = m_pCurDice = CKBDice::Create(m_pGraphicDev, m_iCurTurn);
-
-	if (nullptr == pGameObject)
-		return E_FAIL;
-
-	if (FAILED(iter->second->Add_GameObject(L"KBDice", pGameObject)))
-		return E_FAIL;
-
 	return S_OK;
+}
+
+// 열 주사위 색상 업데이트 (같은 눈 개수에 따라)
+void CKnuckleBone::Update_ColumnDiceColors(_int iOwner, _int iCol)
+{
+	// 해당 열에서 각 눈의 개수 세기
+	_int iValueCount[7] = { 0 }; // 인덱스 1~6 사용
+
+	for (_int iRow = 0; iRow < 3; ++iRow)
+	{
+		_int iValue = m_iBoard[iOwner][iCol][iRow];
+		if (iValue > 0 && iValue <= 6)
+			++iValueCount[iValue];
+	}
+
+	// 개수에 맞는 색으로 설정
+	for (_int iRow = 0; iRow < 3; ++iRow)
+	{
+		if (m_pBoardDice[iOwner][iCol][iRow] == nullptr)
+			continue;
+
+		_int iValue = m_iBoard[iOwner][iCol][iRow];
+		_int iCount = iValueCount[iValue];
+
+		if (iCount == 3)
+			m_pBoardDice[iOwner][iCol][iRow]->Set_ColorBlue();
+		else if (iCount == 2)
+			m_pBoardDice[iOwner][iCol][iRow]->Set_ColorYellow();
+		else
+			m_pBoardDice[iOwner][iCol][iRow]->Set_ColorWhite();
+	}
 }
