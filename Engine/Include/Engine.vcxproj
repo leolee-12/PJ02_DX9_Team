@@ -178,6 +178,7 @@ call Copy.bat</Command>
     <ClInclude Include="..\Header\CImGuiMgr.h" />
     <ClInclude Include="..\Header\CLayer.h" />
     <ClInclude Include="..\Header\CLight.h" />
+    <ClInclude Include="..\Header\CPointLight.h" />
     <ClInclude Include="..\Header\CLightMgr.h" />
     <ClInclude Include="..\Header\CManagement.h" />
     <ClInclude Include="..\Header\CAIController.h" />
@@ -188,6 +189,8 @@ call Copy.bat</Command>
     <ClInclude Include="..\Header\CProtoMgr.h" />
     <ClInclude Include="..\Header\CRcCol.h" />
     <ClInclude Include="..\Header\CRcTex.h" />
+    <ClInclude Include="..\Header\CRcTexXZ.h" />
+    <ClInclude Include="..\Header\CGrassBuffer.h" />
     <ClInclude Include="..\Header\CRenderer.h" />
     <ClInclude Include="..\Header\CSaveLoadMgr.h" />
     <ClInclude Include="..\Header\CScene.h" />
@@ -211,6 +214,7 @@ call Copy.bat</Command>
     <ClInclude Include="..\Header\IMessageChannel.h" />
     <ClInclude Include="..\Header\Edit_Define.h" />
     <ClInclude Include="..\Header\perlin_jitter.h" />
+    <ClInclude Include="..\Header\CMapLoader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\ImGuizmo\GraphEditor.cpp" />
@@ -241,6 +245,7 @@ call Copy.bat</Command>
     <ClCompile Include="..\Code\CImGuiMgr.cpp" />
     <ClCompile Include="..\Code\CLayer.cpp" />
     <ClCompile Include="..\Code\CLight.cpp" />
+    <ClCompile Include="..\Code\CPointLight.cpp" />
     <ClCompile Include="..\Code\CLightMgr.cpp" />
     <ClCompile Include="..\Code\CManagement.cpp" />
     <ClCompile Include="..\Code\CAIController.cpp" />
@@ -251,6 +256,8 @@ call Copy.bat</Command>
     <ClCompile Include="..\Code\CProtoMgr.cpp" />
     <ClCompile Include="..\Code\CRcCol.cpp" />
     <ClCompile Include="..\Code\CRcTex.cpp" />
+    <ClCompile Include="..\Code\CRcTexXZ.cpp" />
+    <ClCompile Include="..\Code\CGrassBuffer.cpp" />
     <ClCompile Include="..\Code\CRenderer.cpp" />
     <ClCompile Include="..\Code\CSaveLoadMgr.cpp" />
     <ClCompile Include="..\Code\CScene.cpp" />
@@ -265,6 +272,7 @@ call Copy.bat</Command>
     <ClCompile Include="..\Code\CUi.cpp" />
     <ClCompile Include="..\Code\CVIBuffer.cpp" />
     <ClCompile Include="..\Code\RandomEngine.cpp" />
+    <ClCompile Include="..\Code\CMapLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />

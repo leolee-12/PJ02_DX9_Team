@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "CBase.h"
 #include "CGameObject.h"
 #include "Engine_Define.h"
@@ -7,6 +7,7 @@ namespace Engine
 {
 	class CTransform;
 }
+
 class CPersistentMgr : public CBase
 {
 private:

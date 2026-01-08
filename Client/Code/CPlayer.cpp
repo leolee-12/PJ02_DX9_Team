@@ -649,7 +649,7 @@ void	CPlayer::OnCollision(CGameObject* pObject)
 {
 	if (pObject->Get_OBJID() == OID_MONSTER)
 	{
-		m_pTransformCom->Set_Pos(10.f, 10.f, 10.f);
+		//m_pTransformCom->Set_Pos(10.f, 10.f, 10.f);
 	}
 }
 

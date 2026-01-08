@@ -64,6 +64,57 @@ namespace Engine
 		_float hx, hy, hz;
 	}AABB;
 
+    // Map Data Structures
+    typedef struct tagTileData
+    {
+        _int x, z;
+        _int textureId;
+        _int maskFlags;
+    }TILEDATA;
+
+    typedef struct tagSpawnData
+    {
+        _int type;                      // 0=Player, 1=Monster
+        _int monsterType;
+        _float x, z;
+    }SPAWNDATA;
+
+    typedef struct tagObjectData
+    {
+        std::string category;
+        _int textureIndex;
+        _float x, y, z;
+        _float scale;
+        _int placement;         // 0=Standing(Billboard), 1=Floor
+    }OBJECTDATA;
+
+    typedef struct tagLightData
+    {
+        _float x, y, z;
+        _int intensity;     // 0=Strong, 1=Medium, 2=Weak
+    }LIGHTDATA;
+
+    typedef struct tagMapData
+    {
+        _int width, height;
+        std::vector<TILEDATA> tiles;
+        std::vector<SPAWNDATA> spawns;
+        std::vector<OBJECTDATA> objects;
+        _int skyType;
+        std::vector<LIGHTDATA> lights;
+    }MAPDATA;
+
+    // Mask Flags
+    enum EMaskFlags
+    {
+        MASK_NONE = 0,
+        MASK_DOWN = 1,
+        MASK_LEFT = 2,
+        MASK_RIGHT = 4,
+        MASK_UP = 8
+    };
+
+
 }
 
 

@@ -1,4 +1,6 @@
-#include "CTexture.h"
+﻿#include "CTexture.h"
+#include <algorithm>
+#include <string>
 
 CTexture::CTexture()
 {
@@ -66,6 +68,64 @@ HRESULT CTexture::Ready_Texture(TEXTUREID eID, const _tchar* pPath, const _uint&
 	return S_OK;
 }
 
+HRESULT CTexture::Ready_Texture_FromFolder(TEXTUREID eID, const _tchar* pFolderPath)
+{
+	// folderPath\*.png
+	std::wstring strSearchPath = pFolderPath;
+	strSearchPath += L"\\*.png";
+
+	// png
+	std::vector<std::wstring> vecFiles;
+
+	WIN32_FIND_DATA findData;
+	HANDLE hFind = FindFirstFile(strSearchPath.c_str(), &findData);
+
+	if (INVALID_HANDLE_VALUE == hFind)
+		return E_FAIL;
+
+	do
+	{
+		if (!(findData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY))
+		{
+			vecFiles.push_back(findData.cFileName);
+		}
+	} while (FindNextFile(hFind, &findData));
+
+	FindClose(hFind);
+
+	if (vecFiles.empty())
+		return E_FAIL;
+
+	// MapEditorTool
+	std::sort(vecFiles.begin(), vecFiles.end());
+
+	m_vecTexture.reserve(vecFiles.size());
+	std::wstring strFolderPath = pFolderPath;
+
+	for (size_t i = 0; i < vecFiles.size(); ++i)
+	{
+		std::wstring strFullPath = strFolderPath + L"\\" + vecFiles[i];
+		IDirect3DBaseTexture9* pTexture = nullptr;
+
+		switch (eID)
+		{
+		case TEX_NORMAL:
+			if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, strFullPath.c_str(), (LPDIRECT3DTEXTURE9*)&pTexture)))
+				return E_FAIL;
+			break;
+
+		case TEX_CUBE:
+			if (FAILED(D3DXCreateCubeTextureFromFile(m_pGraphicDev, strFullPath.c_str(), (LPDIRECT3DCUBETEXTURE9*)&pTexture)))
+				return E_FAIL;
+			break;
+		}
+
+		m_vecTexture.push_back(pTexture);
+	}
+
+	return S_OK;
+}
+
 void CTexture::Set_Texture(const _uint& iIndex)
 {
 	if (m_vecTexture.size() <= iIndex)
@@ -90,6 +150,20 @@ CTexture* CTexture::Create(LPDIRECT3DDEVICE9 pGraphicDev, TEXTUREID eID, const _
 	{
 		Safe_Release(pTexture);
 		MSG_BOX("Texture Create Failed");
+		return nullptr;
+	}
+
+	return pTexture;
+}
+
+CTexture* CTexture::CreateFromFolder(LPDIRECT3DDEVICE9 pGraphicDev, TEXTUREID eID, const _tchar* pFolderPath)
+{
+	CTexture* pTexture = new CTexture(pGraphicDev);
+
+	if (FAILED(pTexture->Ready_Texture_FromFolder(eID, pFolderPath)))
+	{
+		Safe_Release(pTexture);
+		MSG_BOX("Texture CreateFromFolder Failed");
 		return nullptr;
 	}
 
