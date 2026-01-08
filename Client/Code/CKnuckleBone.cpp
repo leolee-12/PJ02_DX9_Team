@@ -32,6 +32,8 @@ CKnuckleBone::CKnuckleBone(LPDIRECT3DDEVICE9 pGraphicDev)
 	, m_fResultTime(0.f), m_iWinner(-1)
 	, m_fShowTime(0.f)
 	, m_iLastPlacedCol(0)
+	, m_fEnterDelay(0.f)
+	, m_bEnterDone(false)
 {
 	ZeroMemory(m_iBoard, sizeof(m_iBoard));
 	ZeroMemory(m_pBoardDice, sizeof(m_pBoardDice));
@@ -126,6 +128,7 @@ void CKnuckleBone::Render_Scene()
 		break;
 	case KB_MAIN:
 		Render_Font_Main();
+		Render_Font_Trun();
 		break;
 	case KB_END:
 		break;
@@ -452,7 +455,6 @@ void CKnuckleBone::State_machine()
 			m_strLayerTag = L"Main_Layer";
 			// 게임 시작: 주사위 굴리기
 			Ready_MainGame();
-			Start_Roll();
 			break;
 		case KB_END:
 			break;
@@ -595,8 +597,31 @@ void CKnuckleBone::Free()
 // 메인 게임 로직 업데이트 (true 반환 시 씬 전환됨, 즉시 탈출 필요)
 _bool CKnuckleBone::Update_MainGame(const _float& fTimeDelta)
 {
-	if (nullptr == m_pCurDice)
-		return false;
+	if (nullptr == m_pCurDice) {
+		if (m_fEnterDelay >= 1.f)
+		{
+			map<wstring, CLayer*>::iterator iter = m_mapLayer.find(L"Main_Layer");
+			if (iter == m_mapLayer.end()) { return false; }
+
+			CGameObject* pGameObject = nullptr;
+
+			pGameObject = m_pCurDice = CKBDice::Create(m_pGraphicDev, m_iCurTurn);
+
+			if (nullptr == pGameObject)
+				return false;
+
+			if (FAILED(iter->second->Add_GameObject(L"KBDice", pGameObject)))
+				return false;
+
+			m_bEnterDone = true;
+
+			Start_Roll();
+		}
+		else {
+			m_fEnterDelay += fTimeDelta;
+			return false;
+		}
+	}
 
 	switch (m_eMainState)
 	{
@@ -815,12 +840,12 @@ void CKnuckleBone::Render_Font_Main()
 
 	// 플레이어 총점 (화면 중앙 왼쪽)
 	swprintf_s(szScore, L"Player\n%d", iPlayerScore);
-	RECT rcPlayer = { 0, (WINCY / 2) - 20, WINCX / 2, (WINCY / 2) + 100 };
+	RECT rcPlayer = { 0, (WINCY / 2) - 20, (WINCX / 2) - 200, (WINCY / 2) + 100 };
 	CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans30", szScore, rcPlayer, FontColor, DT_CENTER | DT_BOTTOM);
 
 	// NPC 총점 (화면 중앙 오른쪽)
 	swprintf_s(szScore, L"NPC\n%d", iNPCScore);
-	RECT rcNPC = { WINCX / 2, (WINCY / 2) - 20, WINCX, (WINCY / 2) + 100 };
+	RECT rcNPC = { (WINCX / 2) + 200, (WINCY / 2) - 20, WINCX, (WINCY / 2) + 100 };
 	CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans30", szScore, rcNPC, FontColor, DT_CENTER | DT_BOTTOM);
 
 	// 열별 점수 표시 (두 보드 사이에 표시)
@@ -848,6 +873,25 @@ void CKnuckleBone::Render_Font_Main()
 		swprintf_s(szScore, L"%d", iNPCColScore);
 		RECT rcNPCCol = { iColScreenX - 50, iNPCScoreY, iColScreenX + 50, iNPCScoreY + 30 };
 		CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans30", szScore, rcNPCCol, FontColor, DT_CENTER | DT_TOP);
+	}
+}
+
+void CKnuckleBone::Render_Font_Trun()
+{
+	if (m_bEnterDone)
+		return;
+
+	D3DXCOLOR FontColor = D3DXCOLOR(240.f / 256.f, 240.f / 256.f, 240.f / 256.f, 1.f);
+	RECT rc = { 0, 0, WINCX, WINCY };
+
+	switch (m_iCurTurn)
+	{
+	case 0:
+		CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans60", L"어린양이 먼저 굴립니다", rc, FontColor, DT_CENTER | DT_VCENTER);
+		break;
+	case 1:
+		CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans60", L"라타우 측이 먼저 굴립니다", rc, FontColor, DT_CENTER | DT_VCENTER);
+		break;
 	}
 }
 
@@ -1083,19 +1127,6 @@ HRESULT CKnuckleBone::Ready_MainGame()
 	m_pKBMask->Set_Index(m_iCurTurn);
 	m_pKBMask->Show_Mask();
 	m_iSelectedCol = 1;
-
-	map<wstring, CLayer*>::iterator iter = m_mapLayer.find(L"Main_Layer");
-	if (iter == m_mapLayer.end()) { return E_FAIL; }
-
-	CGameObject* pGameObject = nullptr;
-
-	pGameObject = m_pCurDice = CKBDice::Create(m_pGraphicDev, m_iCurTurn);
-
-	if (nullptr == pGameObject)
-		return E_FAIL;
-
-	if (FAILED(iter->second->Add_GameObject(L"KBDice", pGameObject)))
-		return E_FAIL;
 
 	return S_OK;
 }
