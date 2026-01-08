@@ -35,20 +35,25 @@ HRESULT CPointLight::Ready_PointLight(const LIGHTDATA& lightData, const _uint& i
 	ZeroMemory(&m_tLight, sizeof(D3DLIGHT9));
 
 	m_tLight.Type = D3DLIGHT_POINT;
-
-	// Candlelight color (warm orange)
-	m_tLight.Diffuse = D3DXCOLOR(1.0f, 0.9f, 0.7f, 1.0f);
-	m_tLight.Ambient = D3DXCOLOR(0.2f, 0.15f, 0.1f, 1.0f);
-	m_tLight.Specular = D3DXCOLOR(0.5f, 0.4f, 0.3f, 1.0f);
+	
+	// light color
+	m_tLight.Diffuse = D3DXCOLOR(0.8f, 0.3f, 0.3f, 1.0f);
+	m_tLight.Ambient = D3DXCOLOR(0.f, 0.05f, 0.05f, 1.0f);
+	//m_tLight.Specular = D3DXCOLOR(1.0f, 0.3f, 0.3f, 1.0f);
+	 
+	//m_tLight.Ambient = D3DXCOLOR(1.f, 1.f, 1.f, 1.0f);
+	m_tLight.Specular = D3DXCOLOR(1.f, 0.f, 0.f, 1.0f);
 
 	// Position
 	m_tLight.Position = D3DXVECTOR3(m_vPosition.x, m_vPosition.y, m_vPosition.z);
 
 	// Attenuation based on intensity preset
-	m_tLight.Range = PRESET_RANGE[m_iIntensity];
-	m_tLight.Attenuation0 = 0.f;
-	m_tLight.Attenuation1 = PRESET_ATTENUATION[m_iIntensity];
-	m_tLight.Attenuation2 = 0.f;
+	//m_tLight.Range = PRESET_RANGE[m_iIntensity];
+	m_tLight.Range = 80;
+	m_tLight.Attenuation0 = 1.f;
+	//m_tLight.Attenuation1 = PRESET_ATTENUATION[m_iIntensity];
+	m_tLight.Attenuation1 = 0.0f;
+	m_tLight.Attenuation2 = 0.012f;
 
 	// Set light but don't enable yet
 	m_pGraphicDev->SetLight(iIndex, &m_tLight);

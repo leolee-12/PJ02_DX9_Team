@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CTileMgr.h"
 #include "CTile.h"
 
@@ -25,7 +25,7 @@ HRESULT CTileMgr::Initialize(LPDIRECT3DDEVICE9 pGraphicDev, const Engine::MAPDAT
 	m_iMapWidth = mapData.width;
 	m_iMapHeight = mapData.height;
 
-	// 맵 데이터로부터 타일 생성
+	// Create tiles from map data
 	for (const auto& tileData : mapData.tiles)
 	{
 		CTile* pTile = CTile::Create(pGraphicDev, tileData);

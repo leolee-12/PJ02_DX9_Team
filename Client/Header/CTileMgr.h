@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "CBase.h"
 #include "Engine_Define.h"
 #include <vector>
@@ -7,7 +7,6 @@ class CTile;
 
 class CTileMgr : public CBase
 {
-	// 안녕
 	DECLARE_SINGLETON(CTileMgr)
 
 private:
@@ -30,7 +29,7 @@ private:
 	_int				m_iMapWidth;
 	_int				m_iMapHeight;
 	LPDIRECT3DDEVICE9	m_pGraphicDev;
-	_bool				m_bInitialized;	// 초기화 여부
+	_bool				m_bInitialized;
 
 private:
 	virtual void Free();

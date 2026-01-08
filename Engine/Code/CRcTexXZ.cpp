@@ -22,7 +22,7 @@ HRESULT CRcTexXZ::Ready_Buffer()
 {
 
 	// 20x20 grid for better Point Light interpolation
-	const _int GRID_SIZE = 20;
+	const _int GRID_SIZE = 100;
 	const _int VERTEX_COUNT = (GRID_SIZE + 1) * (GRID_SIZE + 1);  // 21x21 = 441
 	const _int TRI_COUNT = GRID_SIZE * GRID_SIZE * 2;  // 800
 

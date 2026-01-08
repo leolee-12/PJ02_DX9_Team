@@ -343,16 +343,14 @@ HRESULT CTest::Ready_Light()
 
 	tLightInfo.Type = D3DLIGHT_DIRECTIONAL;
 
-	// Purple dungeon atmosphere - brighter purple tint
-	tLightInfo.Diffuse = D3DXCOLOR(0.5f, 0.35f, 0.6f, 1.f);
-	tLightInfo.Specular = D3DXCOLOR(0.3f, 0.2f, 0.4f, 1.f);
-	tLightInfo.Ambient = D3DXCOLOR(0.2f, 0.1f, 0.25f, 1.f);
+	tLightInfo.Diffuse = D3DXCOLOR(0.6f, 0.3f, 0.85f, 1.f);
+	tLightInfo.Specular = D3DXCOLOR(0.4f, 0.2f, 0.6f, 1.f);
+	tLightInfo.Ambient = D3DXCOLOR(0.3f, 0.12f, 0.4f, 1.f);
 
 	tLightInfo.Direction = { 1.f, -1.f, 1.f };
 
 	if (FAILED(CLightMgr::GetInstance()->Ready_Light(m_pGraphicDev, &tLightInfo, 0)))
 		return E_FAIL;
-
 
 	return S_OK;
 }
