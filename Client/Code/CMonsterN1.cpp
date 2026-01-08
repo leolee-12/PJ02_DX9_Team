@@ -66,7 +66,7 @@ _int CMonsterN1::Update_GameObject(const _float& fTimeDelta)
 
 	m_pColliderCom->UpdateFromTransform(m_pTransformCom);
 	// 충돌체 디버그용
-	m_pColliderCom->Update_AABBforRender();
+	if (g_bDebug) m_pColliderCom->Update_AABBforRender();
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
 	if (iExit == DEAD)
@@ -371,10 +371,14 @@ void CMonsterN1::Set_Texture()
 
 void CMonsterN1::Attack_HitBox()
 {
-	AABB tAABB = { m_vPos.x, m_vPos.y, m_vPos.z,
-					2.f, 1.f, 2.f };
+	_vec3 vDir = *m_pAICom->Get_Dir();
+
+	AABB tAABB = { m_vPos.x + vDir.x, m_vPos.y + vDir.y, m_vPos.z + vDir.z,
+					0.75f, 0.75f, 0.75f };
 
 	vector<CGameObject*> tempVec = CCollisionMgr::GetInstance()->Test_AABB(tAABB, CL_PLAYER);
+
+	if (g_bDebug) CRenderer::GetInstance()->Add_TestCollider(tAABB, 60);
 
 	if (!tempVec.empty())
 	{

@@ -13,6 +13,8 @@
 #include "CTileMgr.h"
 #include "CMapLoader.h"
 
+bool g_bDebug = false;
+
 CMainApp::CMainApp() : m_pDeviceClass(nullptr), m_pGraphicDev(nullptr)
 , m_pManagementClass(CManagement::GetInstance())
 {

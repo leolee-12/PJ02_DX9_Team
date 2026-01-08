@@ -38,6 +38,7 @@
 extern HINSTANCE g_hInst;
 extern HWND g_hWnd;
 extern WNDCLASSEXW wndclass;
+extern bool g_bDebug;
 
 using namespace std;
 

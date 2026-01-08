@@ -94,7 +94,7 @@ _int CPlayer::Update_GameObject(const _float& fTimeDelta)
 	//-------------------------------------------------
 
 	// 충돌체 디버그용
-	m_pColliderCom->Update_AABBforRender();
+	if(g_bDebug) m_pColliderCom->Update_AABBforRender();
 
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 	
@@ -294,6 +294,11 @@ HRESULT CPlayer::Add_Component()
 
 void CPlayer::Key_Input(const _float& fTimeDelta)
 {
+	if (CDInputMgr::GetInstance()->Key_Down(DIK_Z))
+	{
+		g_bDebug = !g_bDebug;
+	}
+
 	if (!m_bRoll && !m_iCombo && !m_fCharge)
 	{
 		if (CDInputMgr::GetInstance()->Key_Pressing(DIK_W))
@@ -647,7 +652,7 @@ void CPlayer::Attack_HitBox()
 	AABB tAABB = { fX, m_vPos.y, m_vPos.z,
 					1.5f, 1.f, 1.5f };
 
-	CRenderer::GetInstance()->Add_TestCollider(tAABB, 60);
+	if(g_bDebug) CRenderer::GetInstance()->Add_TestCollider(tAABB, 60);
 
 	vector<CGameObject*> tempVec = CCollisionMgr::GetInstance()->Test_AABB(tAABB, CL_MONSTER);
 
