@@ -1,4 +1,5 @@
 #include "CRenderer.h"
+#include "CCollider.h"
 
 IMPLEMENT_SINGLETON(CRenderer)
 
@@ -20,12 +21,22 @@ void CRenderer::Add_RenderGroup(RENDERID eType, CGameObject* pGameObject)
 	pGameObject->AddRef();
 }
 
+void CRenderer::Add_ColliderDebugGroup(CCollider* pCollider)
+{
+	if (nullptr == pCollider)
+		return;
+	m_vecColDebugGroup.push_back(pCollider);
+	pCollider->AddRef();
+}
+
 void CRenderer::Render_GameObject(LPDIRECT3DDEVICE9& pGraphicDev)
 {
 	Render_Priority(pGraphicDev);
 	Render_NonAlpha(pGraphicDev);
 	Render_Alpha(pGraphicDev);
 	Render_UI(pGraphicDev);
+
+	Render_ColliderDebug(pGraphicDev);
 
 	Clear_RenderGroup();
 }
@@ -37,6 +48,30 @@ void CRenderer::Clear_RenderGroup()
 		for_each(m_RenderGroup[i].begin(), m_RenderGroup[i].end(), CDeleteObj());
 		m_RenderGroup[i].clear();
 	}
+
+	for (auto& pCollider : m_vecColDebugGroup)
+		Safe_Release(pCollider);
+
+	m_vecColDebugGroup.clear();
+
+	for (auto iter = m_vecTestColliders.begin();
+		iter != m_vecTestColliders.end();)
+	{
+		if (iter->iFrame == 0)
+		{
+			iter = m_vecTestColliders.erase(iter);
+		}
+		else
+		{
+			++iter;
+		}
+	}
+}
+
+void CRenderer::Add_TestCollider(const AABB& tAABB, _int iFrame)
+{
+	TESTCOL tTestCol = { tAABB, iFrame };
+	m_vecTestColliders.push_back(tTestCol);
 }
 
 void CRenderer::Render_Priority(LPDIRECT3DDEVICE9& pGraphicDev)
@@ -105,6 +140,59 @@ void CRenderer::Render_UI(LPDIRECT3DDEVICE9& pGraphicDev)
 
 	pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
 	pGraphicDev->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
+}
+
+void CRenderer::Render_ColliderDebug(LPDIRECT3DDEVICE9& pGraphicDev)
+{
+	_matrix matOldWorld, matIdentity;
+	D3DXMatrixIdentity(&matIdentity);
+	pGraphicDev->GetTransform(D3DTS_WORLD, &matOldWorld);
+	pGraphicDev->SetTransform(D3DTS_WORLD, &matIdentity);
+
+	for (auto& pCollider : m_vecColDebugGroup)
+	{
+		pCollider->Render_Collider();
+	}
+
+	for (auto& TestCol : m_vecTestColliders)
+	{
+		D3DXVECTOR3 c = { TestCol.tAABB.x, TestCol.tAABB.y, TestCol.tAABB.z };
+		D3DXVECTOR3 h = { TestCol.tAABB.hx, TestCol.tAABB.hy, TestCol.tAABB.hz };
+		// 8개 꼭짓점 계산 
+		D3DXVECTOR3 v[8] = {
+			{c.x - h.x, c.y - h.y, c.z - h.z},
+			{c.x - h.x, c.y - h.y, c.z + h.z},
+			{c.x - h.x, c.y + h.y, c.z - h.z},
+			{c.x - h.x, c.y + h.y, c.z + h.z},
+			{c.x + h.x, c.y - h.y, c.z - h.z},
+			{c.x + h.x, c.y - h.y, c.z + h.z},
+			{c.x + h.x, c.y + h.y, c.z - h.z},
+			{c.x + h.x, c.y + h.y, c.z + h.z},
+		};
+		// 12개 엣지를 연결하는 인덱스 
+		WORD indices[24] =
+		{
+			0,1, 0,2, 0,4,
+			7,6, 7,5, 7,3,
+			1,5, 1,3, 2,3,
+			2,6, 4,5, 4,6
+		};
+
+		DebugVertex verts[8];
+		for (int i = 0; i < 8; ++i)
+		{
+			verts[i].vPosition = v[i];
+			verts[i].dwColor = D3DCOLOR_ARGB(255, 0, 255, 0);
+		}
+
+		pGraphicDev->SetFVF(FVF_DEBUG);
+		pGraphicDev->DrawIndexedPrimitiveUP(D3DPT_LINELIST, 0, 8, 12, indices, D3DFMT_INDEX16, verts, sizeof(DebugVertex));
+
+		--TestCol.iFrame;
+	}
+
+
+	pGraphicDev->SetTransform(D3DTS_WORLD, &matOldWorld);
 }
 
 void CRenderer::Free()

@@ -8,12 +8,12 @@ namespace Engine
 	class CTexture;
 }
 
-class CKBTab :
+class CKBDiceBox :
 	public CUi
 {
 private:
-	explicit CKBTab(LPDIRECT3DDEVICE9 pGraphicDev);
-	virtual ~CKBTab();
+	explicit CKBDiceBox(LPDIRECT3DDEVICE9 pGraphicDev);
+	virtual ~CKBDiceBox();
 
 public:
 	virtual			HRESULT		Ready_GameObject();
@@ -22,12 +22,8 @@ public:
 	virtual			void		Render_GameObject();
 	virtual			void		OnCollision(CGameObject* pObject);
 
-	void			  Move_Down();
-	void			  Move_Up();
-	void			  Move_Title();
-
 public:
-	static CKBTab* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	static CKBDiceBox* Create(LPDIRECT3DDEVICE9 pGraphicDev, _int iOwner);
 
 private:
 	virtual			void		Free();
@@ -38,5 +34,9 @@ private:
 	CRcTex* m_pBufferCom;
 	CTransform* m_pTransformCom;
 	CTexture* m_pTextureCom;
+
+	// 0 วร, 1 NPC
+	_int   m_iOwner;
+	D3DXCOLOR m_tColor;
 };
 

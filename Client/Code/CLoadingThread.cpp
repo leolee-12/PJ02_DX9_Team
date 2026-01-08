@@ -26,12 +26,12 @@ HRESULT CLoadingThread::Ready_Loading(LOADINGID eID)
 
     int iNumber = 10;
 
-    m_hThread = (HANDLE)_beginthreadex(NULL,    // 보안속성(핸들의 상속 여부, null인 경우 상속에서 제외)
-                                        0,      // 디폴트 스택 사이즈(1 바이트)
-                                        Thread_Main,      // 쓰레드 함수
-                                        this,   // 쓰레드 함수를 이용하여 가공할 데이터 주소    
-                                        0,      // 쓰레드 생성 및 실행을 조정하기 옵션(flag)
-                                        NULL);  // 쓰레드 id
+    m_hThread = (HANDLE)_beginthreadex(NULL,    
+                                        0,      
+                                        Thread_Main,      
+                                        this,       
+                                        0,      
+                                        NULL);  
 
 
     return S_OK;
@@ -118,7 +118,7 @@ _uint CLoadingThread::Loading_ForStage()
 
     m_bFinish = true;
 
-    lstrcpy(m_szLoading, L"테스트");
+    lstrcpy(m_szLoading, L"占쌓쏙옙트");
 
     return 0;
 }
@@ -189,7 +189,20 @@ _uint CLoadingThread::Loading_ForKnuckleBone()
 
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Divider", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/TileDivider_%d.png", 2));
     
-    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_KBMask", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/Knucklebones_BW_MASK.png", 2));
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_KBMask", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/Knucklebones_BW_MASK_%d.png", 2));
+
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_KBTab", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/TabRed.png", 1));
+
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_KBSix", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/Six.png", 1));
+
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_KBDice", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/Dice_%d.png", 6));
+
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_KBBoardSlot", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/Knucklebones_WhiteSquare.png", 1));
+
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_KBDiceBox", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/DiceBox_A.png", 1));
+
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_KBBack", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/DiceTubBG.png", 1));
+
 
     m_fPercent = 100.f;
 

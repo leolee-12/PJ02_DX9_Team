@@ -1,30 +1,41 @@
 #include "pch.h"
-#include "CKBCenter.h"
+#include "CKBDiceBox.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
 
-CKBCenter::CKBCenter(LPDIRECT3DDEVICE9 pGraphicDev)
+CKBDiceBox::CKBDiceBox(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CUi(pGraphicDev), m_pBufferCom(nullptr), m_pTransformCom(nullptr)
 {
 	ZeroMemory(&m_vPos, sizeof(_vec3));
 }
 
-CKBCenter::~CKBCenter()
+CKBDiceBox::~CKBDiceBox()
 {
 }
 
-HRESULT CKBCenter::Ready_GameObject()
+HRESULT CKBDiceBox::Ready_GameObject()
 {
 	if (FAILED(Add_Component()))
 		return E_FAIL;
 
-	m_pTransformCom->Set_Scale(60.f, 60.f, 1.f);
-	m_pTransformCom->Set_Pos(0.f, 40.f, 0.f);
+	m_pTransformCom->Set_Scale(802.f * 0.3f, 546.f * 0.28f, 1.f);
+
+	switch (m_iOwner)
+	{
+	case 0: // 플레이어
+		m_pTransformCom->Set_Pos((_float(-WINCX) * 0.5f) + 220.f, _float(-WINCY / 2) + 140.f, 0.5f);
+		m_tColor = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
+		break;
+	case 1: // NPC
+		m_pTransformCom->Set_Pos((_float(WINCX) * 0.5f) - 220.f, _float(WINCY / 2) - 140.f, 0.5f);
+		m_tColor = D3DXCOLOR(0.7f, 0.9f, 1.f, 1.f);
+		break;
+	}
 
 	return S_OK;
 }
 
-_int CKBCenter::Update_GameObject(const _float& fTimeDelta)
+_int CKBDiceBox::Update_GameObject(const _float& fTimeDelta)
 {
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
@@ -33,43 +44,41 @@ _int CKBCenter::Update_GameObject(const _float& fTimeDelta)
 	return iExit;
 }
 
-void CKBCenter::LateUpdate_GameObject(const _float& fTimeDelta)
+void CKBDiceBox::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
 	m_pTransformCom->Get_Info(INFO_POS, &m_vPos);
 	Compute_ViewDepth_Ortho(&m_vPos);
 }
 
-void CKBCenter::Render_GameObject()
+void CKBDiceBox::Render_GameObject()
 {
 	m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, TRUE);
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
 
-	D3DMATERIAL9			tMtrl;
+	D3DMATERIAL9 tMtrl;
 	ZeroMemory(&tMtrl, sizeof(D3DMATERIAL9));
 
 	tMtrl.Diffuse = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
 	tMtrl.Specular = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
 	tMtrl.Ambient = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-
 	tMtrl.Emissive = m_tColor;
 	tMtrl.Power = 0.f;
 
 	m_pGraphicDev->SetMaterial(&tMtrl);
 
-	m_pTextureCom->Set_Texture();
+	m_pTextureCom->Set_Texture(0);
 
 	m_pBufferCom->Render_Buffer();
-
 	m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, FALSE);
 }
 
-void CKBCenter::OnCollision(CGameObject* pObject)
+void CKBDiceBox::OnCollision(CGameObject* pObject)
 {
 
 }
 
-HRESULT CKBCenter::Add_Component()
+HRESULT CKBDiceBox::Add_Component()
 {
 	Engine::CComponent* pComponent = nullptr;
 
@@ -92,7 +101,7 @@ HRESULT CKBCenter::Add_Component()
 	m_mapComponent[ID_DYNAMIC].insert({ L"Com_Transform", pComponent });
 
 	pComponent = m_pTextureCom = dynamic_cast<Engine::CTexture*>
-		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_KBCenter"));
+		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_KBDiceBox"));
 
 	if (nullptr == pComponent)
 		return E_FAIL;
@@ -104,22 +113,22 @@ HRESULT CKBCenter::Add_Component()
 
 
 
-CKBCenter* CKBCenter::Create(LPDIRECT3DDEVICE9 pGraphicDev, const D3DXCOLOR& Color)
+CKBDiceBox* CKBDiceBox::Create(LPDIRECT3DDEVICE9 pGraphicDev, _int iOwner)
 {
-	CKBCenter* pKBCenter = new CKBCenter(pGraphicDev);
-	pKBCenter->m_tColor = Color;
+	CKBDiceBox* pDiceBox = new CKBDiceBox(pGraphicDev);
+	pDiceBox->m_iOwner = iOwner;
 
-	if (FAILED(pKBCenter->Ready_GameObject()))
+	if (FAILED(pDiceBox->Ready_GameObject()))
 	{
-		Safe_Release(pKBCenter);
-		MSG_BOX("pKBCenter Create Failed");
+		Safe_Release(pDiceBox);
+		MSG_BOX("pDiceBox Create Failed");
 		return nullptr;
 	}
 
-	return pKBCenter;
+	return pDiceBox;
 }
 
-void CKBCenter::Free()
+void CKBDiceBox::Free()
 {
 	CUi::Free();
 }

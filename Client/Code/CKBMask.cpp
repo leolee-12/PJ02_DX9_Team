@@ -5,6 +5,7 @@
 
 CKBMask::CKBMask(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CUi(pGraphicDev), m_pBufferCom(nullptr), m_pTransformCom(nullptr)
+	, m_bRender(false) , m_iIndex(0)
 {
 	ZeroMemory(&m_vPos, sizeof(_vec3));
 }
@@ -19,7 +20,7 @@ HRESULT CKBMask::Ready_GameObject()
 		return E_FAIL;
 
 	m_pTransformCom->Set_Scale(_float(WINCX), _float(WINCY), 1.f);
-	m_pTransformCom->Set_Pos(0.f, 0.f, 0.1f);
+	m_pTransformCom->Set_Pos(0.f, 0.f, 0.3f);
 
 	return S_OK;
 }
@@ -28,7 +29,9 @@ _int CKBMask::Update_GameObject(const _float& fTimeDelta)
 {
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
-	CRenderer::GetInstance()->Add_RenderGroup(RENDER_UI, this);
+	if (m_bRender) {
+		CRenderer::GetInstance()->Add_RenderGroup(RENDER_UI, this);
+	}
 
 	return iExit;
 }
@@ -67,7 +70,7 @@ void CKBMask::Render_GameObject()
 	// 전체 알파값 지정
 	m_pGraphicDev->SetRenderState(D3DRS_TEXTUREFACTOR, D3DCOLOR_ARGB(128, 255, 255, 255));
 
-	m_pTextureCom->Set_Texture();
+	m_pTextureCom->Set_Texture(m_iIndex);
 
 	m_pBufferCom->Render_Buffer();
 
