@@ -19,6 +19,7 @@
 #include "CCollisionMgr.h"
 #include "CMonsterN2.h"
 #include <CMonsterN3.h>
+#include <CMonsterB1.h>
 
 CTest::CTest(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -183,9 +184,9 @@ HRESULT CTest::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 			return E_FAIL;
 	}
 
-	for (_uint i = 0; i < 20; ++i)
+	for (_uint i = 0; i < 1; ++i)
 	{
-		pGameObject = CMonsterN3::Create(m_pGraphicDev, m_pMessageChannel);
+		pGameObject = CMonsterB1::Create(m_pGraphicDev, m_pMessageChannel);
 		
 		if (nullptr == pGameObject)
 			return E_FAIL;

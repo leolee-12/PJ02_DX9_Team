@@ -6,6 +6,7 @@
 #include "CN1_AI.h"
 #include <CN2_AI.h>
 #include <CN3_AI.h>
+#include <CB1_AI.h>
 
 CLoadingThread::CLoadingThread(LPDIRECT3DDEVICE9 pGraphicDev)
     : m_pGraphicDev(pGraphicDev), m_bFinish(false), m_eLoading(LOADING_END), m_fPercent(0.f)
@@ -166,10 +167,16 @@ _uint CLoadingThread::Loading_ForTest()
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_N2Node2Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal2/N2Node_01.png", 1));
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_N2Node3Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal2/N2Node_02.png", 1));
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_MonsterN3Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal3/MonsterN3_%02d.png", 3));
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_MonsterB1Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Boss1/MonsterB1_%02d.png", 8));
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_B1Node1Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Boss1/B1Node_00.png", 1));
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_B1Node2Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Boss1/B1Node_01.png", 1));
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_B1Node3Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Boss1/B1Node_02.png", 1));
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_B1Node4Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Boss1/B1Node_03.png", 1));
 
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_N1_AI", CN1_AI::Create(m_pGraphicDev, 6.f, 1.f));
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_N2_AI", CN2_AI::Create(m_pGraphicDev, 6.f, 4.f));
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_N3_AI", CN3_AI::Create(m_pGraphicDev, 6.f, 3.f));
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_B1_AI", CB1_AI::Create(m_pGraphicDev, 40.f, 5.f));
 
     //Sleep(2000);
 

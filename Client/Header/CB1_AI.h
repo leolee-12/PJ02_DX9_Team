@@ -20,27 +20,25 @@ public:
 
 private:
 	_int		Update_Component(const _float& fTimeDelta)	override;
-	void		Update_Idle(const _float& fTimeDelta);
-	void		Update_Run(const _float& fTimeDelta);
-	void		Update_Attack(const _float& fTimeDelta);
-	void		Update_Hit(const _float& fTimeDelta);
+	void		Update_Crawl(const _float& fTimeDelta);
+	void		Update_Jump(const _float& fTimeDelta);
+	void		Update_Land(const _float& fTimeDelta);
 	void		Update_Spawn(const _float& fTimeDelta);
-	void		Update_Jeer(const _float& fTimeDelta);
-	void		Update_Pray(const _float& fTimeDelta);
-
-	void		Compute_Distance();
-	void		Compute_TargetDir();
-	void		Randomize_Dir();
+	void		Update_Stop(const _float& fTimeDelta);
 
 private:
 	_float		m_fSpeed;
+	_vec3		m_vSpeed;
+	_float		m_fAngle;
+	_float		m_fGravity;
+	_float		m_fGroundY;
 	_float		m_fAcmlTime;
 	_bool		m_bChase;
 	_vec3		m_vLerpPos;		// Lerp¿ë À§Ä¡
 
 public:
-	static CB1_AI*		Create(LPDIRECT3DDEVICE9 pGraphicDev, const _float& fDetectRange, const _float& fInteractRange, const _uint& iInitState = 0);
-	CComponent*			Clone()	override;
+	static CB1_AI* Create(LPDIRECT3DDEVICE9 pGraphicDev, const _float& fDetectRange, const _float& fInteractRange, const _uint& iInitState = 0);
+	CComponent* Clone()	override;
 
 protected:
 	void				Free()	override;
