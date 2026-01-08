@@ -74,6 +74,7 @@ HRESULT CKnuckleBone::Ready_Scene()
 _int CKnuckleBone::Update_Scene(const _float& fTimeDelta)
 {
 	Key_Input_KB();
+	Debug_Key_Input_KB();
 	State_machine();
 
 	// 메인 게임 로직 업데이트
@@ -569,6 +570,16 @@ void CKnuckleBone::Key_Input_KB()
 
 	default:
 		return;
+	}
+}
+
+void CKnuckleBone::Debug_Key_Input_KB()
+{
+	if (CDInputMgr::GetInstance()->Key_Down(DIK_F2))
+	{
+		m_iWinner = Get_Winner();
+		m_fResultTime = 0.f;
+		m_eMainState = MS_RESULT;
 	}
 }
 

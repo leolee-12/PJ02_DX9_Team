@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CLoadingThread.h"
 #include "CProtoMgr.h"
 #include "CPlayer.h"
@@ -26,12 +26,12 @@ HRESULT CLoadingThread::Ready_Loading(LOADINGID eID)
 
     int iNumber = 10;
 
-    m_hThread = (HANDLE)_beginthreadex(NULL,    
-                                        0,      
-                                        Thread_Main,      
-                                        this,       
-                                        0,      
-                                        NULL);  
+    m_hThread = (HANDLE)_beginthreadex(NULL,
+                                        0,
+                                        Thread_Main,
+                                        this,
+                                        0,
+                                        NULL);
 
 
     return S_OK;
@@ -156,13 +156,13 @@ _uint CLoadingThread::Loading_ForTest()
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_TerrainTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Terrain/Grass_%d.tga", 2));
 
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_TerrainWallTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Terrain/Grass_%d.tga", 2));
-    
+
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_SkyTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_CUBE, L"../Bin/Resource/Texture/SkyBox/burger%d.dds", 4));
-    
+
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_EffectTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Explosion/Explosion%d.png", 90));
-    
+
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_CubeTex", Engine::CCubeTex::Create(m_pGraphicDev));
-    
+
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_TerrainTex", Engine::CTerrainTex::Create(m_pGraphicDev, VTXCNTX, VTXCNTZ, VTXITV, L"../Bin/Resource/Texture/Terrain/Height.bmp"));
 
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_TerrainWallTex", Engine::CTerrainWallTex::Create(m_pGraphicDev, 51, 51, VTXITV));
@@ -183,11 +183,26 @@ _uint CLoadingThread::Loading_ForTest()
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_N1_AI", CN1_AI::Create(m_pGraphicDev, 6.f, 1.f));
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_N2_AI", CN2_AI::Create(m_pGraphicDev, 6.f, 4.f));
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_N3_AI", CN3_AI::Create(m_pGraphicDev, 6.f, 3.f));
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_N1_AI", CN1_AI::Create(m_pGraphicDev, 5.f, 1.f));
+
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_ItemTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Item/Item_%02d.png", 8));
+
+    //게이지 테스트
+
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_GaugeCover", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Player/PassionGauge/GaugeCover.png", 1));
+
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_GaugeStar", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Player/PassionGauge/GaugeStar.png", 1));
+
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_PassionGauge", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Player/PassionGauge/PassionGauge.png", 1));
+
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_PassionIcon", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Player/PassionGauge/PassionIcon_%d.png", 2));
+
+
 
     //Sleep(2000);
 
     m_fPercent += 50.f;
-    
+
     m_bFinish = true;
 
     return _uint();
@@ -201,7 +216,7 @@ _uint CLoadingThread::Loading_ForKnuckleBone()
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_KBCenter", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/KnucklebonesIcon.png", 1));
 
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Divider", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/TileDivider_%d.png", 2));
-    
+
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_KBMask", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/Knucklebones_BW_MASK_%d.png", 2));
 
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_KBTab", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/TabRed.png", 1));
@@ -247,7 +262,7 @@ unsigned int CLoadingThread::Thread_Main(void* pArg)
         break;
 
     case LOADING_BOSS:
-        break;        
+        break;
     }
 
     LeaveCriticalSection(pLoading->Get_Crt());

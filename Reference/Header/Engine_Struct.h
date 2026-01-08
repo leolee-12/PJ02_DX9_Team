@@ -40,7 +40,7 @@ namespace Engine
 
 	}VTXDEBUG; 
 
-	const _ulong	FVF_DEBUG = D3DFVF_XYZ | D3DFVF_DIFFUSE;
+    const _ulong	FVF_DEBUG = D3DFVF_XYZ | D3DFVF_DIFFUSE;
 
 	typedef struct tagIndex16
 	{

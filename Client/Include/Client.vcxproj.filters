@@ -118,6 +118,42 @@
     <Filter Include="02. GameObject\07. UI\02. DungeonUI\02. CDungeonLine">
       <UniqueIdentifier>{552d0d28-eb92-4a43-b910-1de82ce2300c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\04. Camera">
+      <UniqueIdentifier>{238f4029-df65-4760-af60-aac3d4766c58}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\04. Camera\01. DynamicCamera">
+      <UniqueIdentifier>{90a409f8-1b96-4329-9023-b52d183d047c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\04. Camera\00. MainCamera">
+      <UniqueIdentifier>{034c96cf-6932-41a4-9e6e-cbbb742ea410}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\09. Item">
+      <UniqueIdentifier>{5daaea79-d1ec-46ae-a481-80a46217e916}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene">
+      <UniqueIdentifier>{60ad0de0-adf1-440e-987a-796e2ff8332f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\00. Logo">
+      <UniqueIdentifier>{0d271025-e384-4299-bf6d-972bbc338575}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\01. Stage">
+      <UniqueIdentifier>{f40be6c5-f78e-4629-9f22-c05f63c86d1a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\99. Loading">
+      <UniqueIdentifier>{162da509-93eb-497c-bb4b-016c0b3d5fae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\99. Loading\LoadingThread">
+      <UniqueIdentifier>{bec13d5c-cc47-4d5b-a2eb-0fb3bafdcfdd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\03. Test">
+      <UniqueIdentifier>{7bf09d6b-5222-4361-bb6b-3e27ea739fa2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\04. EditScene">
+      <UniqueIdentifier>{ff5bb01d-db75-499d-ae0b-be1f8fb58ee7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\05. KnuckleBone">
+      <UniqueIdentifier>{fbdfd1c6-2a58-45e4-970b-5fac37bacfcb}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02. GameObject\07. UI\03. PlayerUI">
       <UniqueIdentifier>{42822674-7f0e-422b-9af0-ec007c6f798a}</UniqueIdentifier>
     </Filter>
@@ -210,6 +246,9 @@
     </Filter>
     <Filter Include="02. GameObject\11. Grass">
       <UniqueIdentifier>{20638477-cadd-4aa2-94a1-d3b5098d0639}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="10. TileMgr">
+      <UniqueIdentifier>{01b64606-77a6-499b-92aa-0bad3eff8f84}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -319,7 +358,7 @@
       <Filter>02. GameObject\07. UI\02. DungeonUI\02. CDungeonLine</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CPlayerHP.h">
-      <Filter>02. GameObject\07. UI\03. PlayerUI\00. PlayerHP</Filter>
+      <Filter>02. GameObject\07. UI\04. PlayerUI\00. PlayerHP</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CN1_AI.h">
       <Filter>02. GameObject\02. Monster\Normal1</Filter>
@@ -456,6 +495,27 @@
     <ClInclude Include="..\Header\CMySkyBox.h">
       <Filter>02. GameObject\05. SkyBox</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CGaugeCover.h">
+      <Filter>02. GameObject\07. UI\04. PlayerUI\01. Gauge\00. GaugeCover</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\PlayerUI.h">
+      <Filter>02. GameObject\07. UI\04. PlayerUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CGaugeStar.h">
+      <Filter>02. GameObject\07. UI\04. PlayerUI\01. Gauge\01. GaugeStar</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CPassionGauge.h">
+      <Filter>02. GameObject\07. UI\04. PlayerUI\01. Gauge\02. PassionGauge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CPassionIcon.h">
+      <Filter>02. GameObject\07. UI\04. PlayerUI\01. Gauge\03. PassionIcon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CGauge.h">
+      <Filter>02. GameObject\07. UI\04. PlayerUI\01. Gauge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\Gage_Enum.h">
+      <Filter>02. GameObject\07. UI\04. PlayerUI\01. Gauge</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -555,7 +615,7 @@
       <Filter>02. GameObject\07. UI\02. DungeonUI\02. CDungeonLine</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CPlayerHP.cpp">
-      <Filter>02. GameObject\07. UI\03. PlayerUI\00. PlayerHP</Filter>
+      <Filter>02. GameObject\07. UI\04. PlayerUI\00. PlayerHP</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CN1_AI.cpp">
       <Filter>02. GameObject\02. Monster\Normal1</Filter>
@@ -688,6 +748,21 @@
     </ClCompile>
     <ClCompile Include="..\Code\CMySkyBox.cpp">
       <Filter>02. GameObject\05. SkyBox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CGaugeCover.cpp">
+      <Filter>02. GameObject\07. UI\04. PlayerUI\01. Gauge\00. GaugeCover</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CGaugeStar.cpp">
+      <Filter>02. GameObject\07. UI\04. PlayerUI\01. Gauge\01. GaugeStar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CPassionGauge.cpp">
+      <Filter>02. GameObject\07. UI\04. PlayerUI\01. Gauge\02. PassionGauge</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CPassionIcon.cpp">
+      <Filter>02. GameObject\07. UI\04. PlayerUI\01. Gauge\03. PassionIcon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CGauge.cpp">
+      <Filter>02. GameObject\07. UI\04. PlayerUI\01. Gauge</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
