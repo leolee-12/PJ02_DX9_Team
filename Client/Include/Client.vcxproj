@@ -155,6 +155,9 @@
     <ClInclude Include="..\Header\CDungeonLine.h" />
     <ClInclude Include="..\Header\CDynamicCamera.h" />
     <ClInclude Include="..\Header\CEditScene.h" />
+    <ClInclude Include="..\Header\CGauge.h" />
+    <ClInclude Include="..\Header\CGaugeCover.h" />
+    <ClInclude Include="..\Header\CGaugeStar.h" />
     <ClInclude Include="..\Header\CItem.h" />
     <ClInclude Include="..\Header\CKBBack.h" />
     <ClInclude Include="..\Header\CKBBack2.h" />
@@ -184,6 +187,8 @@
     <ClInclude Include="..\Header\CMonsterN1.h" />
     <ClInclude Include="..\Header\CMySkyBox.h" />
     <ClInclude Include="..\Header\CN1_AI.h" />
+    <ClInclude Include="..\Header\CPassionGauge.h" />
+    <ClInclude Include="..\Header\CPassionIcon.h" />
     <ClInclude Include="..\Header\CPassiveItem.h" />
     <ClInclude Include="..\Header\CPersistentMgr.h" />
     <ClInclude Include="..\Header\CPlayer.h" />
@@ -200,6 +205,8 @@
     <ClInclude Include="..\Header\CTitleCenter.h" />
     <ClInclude Include="..\Header\CTitleLogo.h" />
     <ClInclude Include="..\Header\CTitleTab.h" />
+    <ClInclude Include="..\Header\Gage_Enum.h" />
+    <ClInclude Include="..\Header\PlayerUI.h" />
     <ClInclude Include="..\Header\TestCube.h" />
     <ClInclude Include="..\Header\CTile.h" />
     <ClInclude Include="..\Header\CTileMgr.h" />
@@ -221,6 +228,9 @@
     <ClCompile Include="..\Code\CDungeonLine.cpp" />
     <ClCompile Include="..\Code\CDynamicCamera.cpp" />
     <ClCompile Include="..\Code\CEditScene.cpp" />
+    <ClCompile Include="..\Code\CGauge.cpp" />
+    <ClCompile Include="..\Code\CGaugeCover.cpp" />
+    <ClCompile Include="..\Code\CGaugeStar.cpp" />
     <ClCompile Include="..\Code\CItem.cpp" />
     <ClCompile Include="..\Code\CKBBack.cpp" />
     <ClCompile Include="..\Code\CKBBack2.cpp" />
@@ -250,6 +260,8 @@
     <ClCompile Include="..\Code\CMonsterN1.cpp" />
     <ClCompile Include="..\Code\CMySkyBox.cpp" />
     <ClCompile Include="..\Code\CN1_AI.cpp" />
+    <ClCompile Include="..\Code\CPassionGauge.cpp" />
+    <ClCompile Include="..\Code\CPassionIcon.cpp" />
     <ClCompile Include="..\Code\CPassiveItem.cpp" />
     <ClCompile Include="..\Code\CPersistentMgr.cpp" />
     <ClCompile Include="..\Code\CPlayer.cpp" />

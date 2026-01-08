@@ -1,4 +1,4 @@
-#include "CRenderer.h"
+Ôªø#include "CRenderer.h"
 #include "CCollider.h"
 
 IMPLEMENT_SINGLETON(CRenderer)
@@ -144,6 +144,9 @@ void CRenderer::Render_UI(LPDIRECT3DDEVICE9& pGraphicDev)
 
 void CRenderer::Render_ColliderDebug(LPDIRECT3DDEVICE9& pGraphicDev)
 {
+	pGraphicDev->SetTexture(0, NULL);
+	pGraphicDev->SetRenderState(D3DRS_LIGHTING, FALSE); // Ï°∞Î™Ö ÎÅÑÍ∏∞
+
 	_matrix matOldWorld, matIdentity;
 	D3DXMatrixIdentity(&matIdentity);
 	pGraphicDev->GetTransform(D3DTS_WORLD, &matOldWorld);
@@ -158,7 +161,7 @@ void CRenderer::Render_ColliderDebug(LPDIRECT3DDEVICE9& pGraphicDev)
 	{
 		D3DXVECTOR3 c = { TestCol.tAABB.x, TestCol.tAABB.y, TestCol.tAABB.z };
 		D3DXVECTOR3 h = { TestCol.tAABB.hx, TestCol.tAABB.hy, TestCol.tAABB.hz };
-		// 8∞≥ ≤¿¡˛¡° ∞ËªÍ 
+		// 8Í∞ú Íº≠ÏßìÏ†ê Í≥ÑÏÇ∞ 
 		D3DXVECTOR3 v[8] = {
 			{c.x - h.x, c.y - h.y, c.z - h.z},
 			{c.x - h.x, c.y - h.y, c.z + h.z},
@@ -169,7 +172,7 @@ void CRenderer::Render_ColliderDebug(LPDIRECT3DDEVICE9& pGraphicDev)
 			{c.x + h.x, c.y + h.y, c.z - h.z},
 			{c.x + h.x, c.y + h.y, c.z + h.z},
 		};
-		// 12∞≥ øß¡ˆ∏¶ ø¨∞·«œ¥¬ ¿Œµ¶Ω∫ 
+		// 12Í∞ú Ïó£ÏßÄÎ•º Ïó∞Í≤∞ÌïòÎäî Ïù∏Îç±Ïä§ 
 		WORD indices[24] =
 		{
 			0,1, 0,2, 0,4,
