@@ -45,6 +45,7 @@ private:
 
 	void			State_machine();
 	void			Key_Input_KB();
+	void            Debug_Key_Input_KB();
 
 	// 메인 게임 로직
 	_bool			Update_MainGame(const _float& fTimeDelta);	// true 반환 시 씬 전환됨, 즉시 탈출 필요

@@ -2,9 +2,7 @@
 
 #include "CScene.h"
 
-#include "CPlayer.h"
-#include "CMonster.h"
-#include "CTerrain.h"
+class CGauge;
 
 class CTest : public CScene
 {
@@ -32,6 +30,9 @@ public:
 	static CTest* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 private:
 	virtual void Free();
+
+private:
+	CGauge* m_pTestGauge;
 
 };
 
