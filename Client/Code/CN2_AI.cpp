@@ -37,7 +37,7 @@ HRESULT CN2_AI::Ready_AI(const _float& fDetectRange, const _float& fInteractRang
 	m_fAngle = 0.f;
 	m_vSpeed = { 0.f, 0.f, 0.f};
 	m_fGravity = -9.8f;
-	m_fGroundY = 1.f;
+	m_fGroundY = 0.f;
 	m_fAcmlTime = 0.f;
 	m_iRcmState = _uint(CMonsterN2::N2S_SPAWN);
 
@@ -53,8 +53,8 @@ void CN2_AI::Enter_State(const _uint& iState)
 		m_fSpeed = 0.03f;
 		_vec3 vPrevPos, vDesiredDir;
 		
-		if		((!m_bChase) || (m_fAcmlTime < 2.f))	vDesiredDir = Randomize_Dir();
-		else if ((m_bChase) && (m_fAcmlTime >= 2.f))	vDesiredDir = Compute_TargetDir();
+		if		((!m_bChase) || (m_fAcmlTime < 1.f))	vDesiredDir = Randomize_Dir();
+		else if ((m_bChase) && (m_fAcmlTime >= 1.f))	vDesiredDir = Compute_TargetDir();
 
 		m_pOwnerTC->Get_Info(INFO_POS, &vPrevPos);
 		m_vDir = Compute_LimitedDir(60.f, m_vDir, vDesiredDir);

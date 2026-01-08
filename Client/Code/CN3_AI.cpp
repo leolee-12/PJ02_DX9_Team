@@ -40,16 +40,24 @@ void CN3_AI::Enter_State(const _uint& iState)
 	{
 	case CMonsterN3::N3S_FLY:
 	{
-		m_fSpeed = 1.f;
 		_vec3 vPrevPos, vDesiredDir;
 
-		if ((!m_bChase) || (m_fAcmlTime < 2.f))			vDesiredDir = Randomize_Dir();
-		else if ((m_bChase) && (m_fAcmlTime >= 2.f))	vDesiredDir = Compute_TargetDir();
+		if (!m_bChase)
+		{
+			m_fSpeed = 1.5f;
 
+			if (m_fAcmlTime < 2.f) vDesiredDir = Randomize_Dir();
+		}
+		else
+		{
+			m_fSpeed = 3.f;
+			if (m_fAcmlTime >= 2.f) vDesiredDir = Compute_TargetDir();
+		}
 		m_pOwnerTC->Get_Info(INFO_POS, &vPrevPos);
 		m_vDir = Compute_LimitedDir(60.f, m_vDir, vDesiredDir);
 		m_vDir.x += Get_Rand_Int(-5, 5) * 0.05f;	// -0.25f ~ 0.25f 난수
 		m_vDir.z += Get_Rand_Int(-5, 5) * 0.05f;	// -0.25f ~ 0.25f 난수
+		m_vDir.y = 0.f;
 		D3DXVec3Normalize(&m_vDir, &m_vDir);
 	}
 		break;
@@ -150,6 +158,12 @@ void CN3_AI::Update_Fly(const _float& fTimeDelta)
 	}
 
 	m_pOwnerTC->Move_Pos(&m_vDir, fTimeDelta, m_fSpeed);
+
+	if (_uint(m_fAcmlTime) % 3 == 0)
+	{	// 타겟이 감지 범위 내에 없을 때는 순찰하다 대기 상태로 전환
+		Change_State(CMonsterN3::N3S_STOP);
+		return;
+	}
 }
 
 void CN3_AI::Update_Prepare(const _float& fTimeDelta)
@@ -184,7 +198,10 @@ void CN3_AI::Update_Stop(const _float& fTimeDelta)
 		return;
 	}
 
-	Change_State(CMonsterN3::N3S_FLY);
+	if (_uint(m_fAcmlTime) % 3 != 0)
+	{	// 타겟이 감지 범위 내에 없을 때는 순찰하다 대기 상태로 전환
+		Change_State(CMonsterN3::N3S_FLY);
+	}
 }
 
 void CN3_AI::Anim_End(CMonsterN3::MONSTER_N3_STATE eState)

@@ -65,7 +65,8 @@ _int CMonsterN1::Update_GameObject(const _float& fTimeDelta)
 	Move_Frame(fTimeDelta);
 
 	m_pColliderCom->UpdateFromTransform(m_pTransformCom);
-
+	// 충돌체 디버그용
+	m_pColliderCom->Update_AABBforRender();
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
 	if (iExit == DEAD)
@@ -155,7 +156,7 @@ HRESULT CMonsterN1::Add_Component()
 void CMonsterN1::Ready_Variable()
 {
 	// Transform 세팅
-	m_pTransformCom->Set_Pos(_float(rand() % 20), 1.f, _float(rand() % 20));
+	m_pTransformCom->Set_Pos(_float(rand() % 20), 0.f, _float(rand() % 20));
 	m_pTransformCom->Set_Scale(3.f, 3.f, 3.f);
 
 	// Collider 세팅

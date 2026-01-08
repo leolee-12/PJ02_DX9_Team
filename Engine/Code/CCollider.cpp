@@ -103,9 +103,15 @@ void CCollider::Render_Collider()
 		verts[i].dwColor = D3DCOLOR_ARGB(255, 0, 255, 0); 
 	} 
 
+	DWORD dwLighting;
+	m_pGraphicDev->GetRenderState(D3DRS_LIGHTING, &dwLighting);
+	m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, FALSE);
+	m_pGraphicDev->SetTexture(0, nullptr);
+
 	m_pGraphicDev->SetFVF(FVF_DEBUG);
 	m_pGraphicDev->DrawIndexedPrimitiveUP( D3DPT_LINELIST, 0, 8, 12, indices, D3DFMT_INDEX16, verts, sizeof(DebugVertex) );
 
+	m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, dwLighting);
 }
 
 CCollider* CCollider::Create(LPDIRECT3DDEVICE9 pGraphicDev, optional<AABB> tInitAABB)

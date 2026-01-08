@@ -68,7 +68,8 @@ _int CMonsterN2::Update_GameObject(const _float& fTimeDelta)
 	Move_Frame(fTimeDelta);
 
 	m_pColliderCom->UpdateFromTransform(m_pTransformCom);
-
+	// 충돌체 디버그용
+	m_pColliderCom->Update_AABBforRender();
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
 	if (iExit == DEAD)
@@ -170,12 +171,14 @@ HRESULT CMonsterN2::Add_Component()
 void CMonsterN2::Ready_Variable()
 {
 	// Transform 세팅
-	m_pTransformCom->Set_Pos(_float(rand() % 10), 1.f, _float(rand() % 10));
+	m_pTransformCom->Set_Pos(_float(rand() % 10), 0.f, _float(rand() % 10));
 	_vec3 vScale{ 3.f, 3.f, 3.f };
 	m_pTransformCom->Set_Scale(vScale.x, vScale.y, vScale.z);
 
 	// Collider 세팅
 	m_pColliderCom->RegisterToManager(this, CL_MONSTER);
+	AABB tAABB = { m_vPos.x, m_vPos.y, m_vPos.z, 0.7f, 0.5f, 0.7f };
+	m_pColliderCom->Set_AABB(tAABB);
 
 	// AI 세팅
 	m_pAICom->Set_OwnerTransform(m_pTransformCom);
@@ -189,7 +192,7 @@ void CMonsterN2::Ready_Variable()
 	// 게임로직 변수 세팅
 	m_iAttack = 1;
 	m_iHp = 10;
-	m_fGroundY = 1.f;
+	m_fGroundY = 0.f;
 
 	// 마디 세팅
 	vScale *= 0.7f;

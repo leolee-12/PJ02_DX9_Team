@@ -15,6 +15,8 @@
 #include "CSoundMgr.h"
 #include "CMainCamera.h"
 #include "CMonsterN1.h"
+#include "CMonsterN2.h"
+#include "CMonsterN3.h"
 #include "CMapLoader.h"
 #include "CTileMgr.h"
 #include "CMapObject.h"
@@ -140,7 +142,7 @@ HRESULT CStage::Ready_Environment_Layer(const _tchar* pLayerTag)
 
 	if (FAILED(pLayer->Add_GameObject(L"MainCamera", pGameObject)))
 		return E_FAIL;
-
+		
 
 
 	m_mapLayer.insert({ pLayerTag , pLayer });
@@ -239,6 +241,23 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 		return E_FAIL;
 
 	pGameObject->AddRef();
+
+	for (_uint i = 0; i < 3; ++i)
+	{
+		pGameObject = CMonsterN2::Create(m_pGraphicDev, m_pMessageChannel);
+		
+		NULL_CHECK_RETURN(pGameObject, E_FAIL)
+		
+		if (FAILED(pLayer->Add_GameObject(L"Monster", pGameObject)))
+			return E_FAIL;
+
+		pGameObject = CMonsterN3::Create(m_pGraphicDev, m_pMessageChannel);
+
+		NULL_CHECK_RETURN(pGameObject, E_FAIL)
+
+		if (FAILED(pLayer->Add_GameObject(L"Monster", pGameObject)))
+			return E_FAIL;
+	}
 
 	m_mapLayer.insert({ pLayerTag , pLayer });
 

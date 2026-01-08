@@ -84,6 +84,14 @@ _int CPlayer::Update_GameObject(const _float& fTimeDelta)
 	Move_Frame(fTimeDelta);
 
 	m_pColliderCom->UpdateFromTransform(m_pTransformCom);
+	
+	//------스프라이트 중심 오류로 인한 임시 코드------
+	_float fX(0.f), fY(m_vPos.y - 0.2f);
+	if (m_vDir.x > 0.001f)		fX = m_vPos.x - 0.4f;
+	else						fX = m_vPos.x + 0.4f;
+	AABB tAABB = { fX, fY, m_vPos.z, 1.f, 1.f, 1.f };
+	m_pColliderCom->Set_AABB(tAABB);
+	//-------------------------------------------------
 
 	// 충돌체 디버그용
 	m_pColliderCom->Update_AABBforRender();
@@ -185,6 +193,9 @@ void CPlayer::Ready_Variable()
 	m_pTransformCom->Set_Scale(5.f, 5.f, 5.f);
 	//m_pTransformCom->Set_Scale(7.f, 7.f, 7.f);	// Tex2
 	m_fFrameSpeed = 24.f;
+
+	AABB tAABB = { m_vPos.x, m_vPos.y, m_vPos.z, 1.f, 1.f, 1.f };
+	m_pColliderCom->Set_AABB(tAABB);
 
 	_float fAngle(0.f);
 
@@ -348,7 +359,7 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 		m_bRoll = false;
 		m_fFrame = 0.f;
 		m_eCurState = PS_ATTACK;
-		m_pTransformCom->Move_Pos(&m_vDir, fTimeDelta, m_fSpeed - 5.f);
+		m_pTransformCom->Move_Pos(&m_vDir, fTimeDelta, m_fSpeed - 3.f);
 		Attack_HitBox();
 	}
 
@@ -627,8 +638,14 @@ void CPlayer::Charge(const _float& fTimeDelta)
 
 void CPlayer::Attack_HitBox()
 {
-	AABB tAABB = { m_vPos.x, m_vPos.y, m_vPos.z,
-					2.f, 1.f, 2.f };
+	_float fX(0.f);
+
+	if (m_vDir.x >= 0.f)	fX = m_vPos.x + 1.2f;
+	else					fX = m_vPos.x - 1.2f;
+
+
+	AABB tAABB = { fX, m_vPos.y, m_vPos.z,
+					1.5f, 1.f, 1.5f };
 
 	CRenderer::GetInstance()->Add_TestCollider(tAABB, 60);
 
