@@ -85,6 +85,9 @@ _int CPlayer::Update_GameObject(const _float& fTimeDelta)
 
 	m_pColliderCom->UpdateFromTransform(m_pTransformCom);
 
+	// 충돌체 디버그용
+	m_pColliderCom->Update_AABBforRender();
+
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 	
 	Set_OnTerrain();
@@ -502,7 +505,7 @@ void CPlayer::Move_Frame(const _float& fTimeDelta)
 
 void CPlayer::Set_Texture()
 {
-	_uint iFrame = m_fFrame;
+	_uint iFrame = _uint(m_fFrame);
 
 	D3DXMatrixIdentity(&m_matTex);
 	_uint iU = iFrame % 16;
@@ -627,6 +630,8 @@ void CPlayer::Attack_HitBox()
 	AABB tAABB = { m_vPos.x, m_vPos.y, m_vPos.z,
 					2.f, 1.f, 2.f };
 
+	CRenderer::GetInstance()->Add_TestCollider(tAABB, 60);
+
 	vector<CGameObject*> tempVec = CCollisionMgr::GetInstance()->Test_AABB(tAABB, CL_MONSTER);
 
 	if (!tempVec.empty())
@@ -644,7 +649,7 @@ void	CPlayer::OnCollision(CGameObject* pObject)
 {
 	if (pObject->Get_OBJID() == OID_MONSTER)
 	{
-		m_pTransformCom->Set_Pos(10.f, 10.f, 10.f);
+		//m_pTransformCom->Set_Pos(10.f, 10.f, 10.f);
 	}
 }
 

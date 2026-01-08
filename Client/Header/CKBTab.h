@@ -22,6 +22,10 @@ public:
 	virtual			void		Render_GameObject();
 	virtual			void		OnCollision(CGameObject* pObject);
 
+	void			  Move_Down();
+	void			  Move_Up();
+	void			  Move_Title();
+
 public:
 	static CKBTab* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 

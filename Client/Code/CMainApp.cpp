@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CMainApp.h"
 #include "CLogo.h"
 #include "CStage.h"
@@ -7,12 +7,11 @@
 #include "CDInputMgr.h"
 #include "CFontMgr.h"
 #include "CLightMgr.h"
-#include "CImGuiMgr.h"
 #include "CCollisionMgr.h"
 #include "CPersistentMgr.h"
 #include "CSoundMgr.h"
-
-//#define IMGUI
+#include "CTileMgr.h"
+#include "CMapLoader.h"
 
 CMainApp::CMainApp() : m_pDeviceClass(nullptr), m_pGraphicDev(nullptr)
 , m_pManagementClass(CManagement::GetInstance())
@@ -33,13 +32,7 @@ HRESULT CMainApp::Ready_MainApp()
 	if (FAILED(Ready_Scene(m_pGraphicDev)))
 		return E_FAIL;
 
-#ifdef IMGUI
-	CImGuiMgr::GetInstance()->ImGui_Setup(g_hWnd, m_pGraphicDev, wndclass);
-
-#else
 	CCollisionMgr::GetInstance()->Ready_CollisionMgr();
-
-#endif // IMGUI
 	CSoundMgr::GetInstance()->Ready_SoundMgr();
 
 	return S_OK;
@@ -48,11 +41,10 @@ HRESULT CMainApp::Ready_MainApp()
 int CMainApp::Update_MainApp(const float& fTimeDelta)
 {
 	m_pManagementClass->Update_Scene(fTimeDelta);
-
-#ifdef IMGUI
-	CImGuiMgr::GetInstance()->ImGui_Tick();
-#endif // IMGUI
 	CDInputMgr::GetInstance()->Update_InputDev();
+
+	// 타일 매니저 업데이트
+	CTileMgr::GetInstance()->Update(fTimeDelta);
 
 	// _ulong dwDst = 0;
 
@@ -67,12 +59,11 @@ int CMainApp::Update_MainApp(const float& fTimeDelta)
 void CMainApp::LateUpdate_MainApp(const float& fTimeDelta)
 {
 	m_pManagementClass->LateUpdate_Scene(fTimeDelta);
-#ifdef IMGUI
 
-#else
+	// 타일 매니저 레이트 업데이트
+	CTileMgr::GetInstance()->LateUpdate(fTimeDelta);
+
 	//CCollisionMgr::GetInstance()->Check_Collisions(fTimeDelta);
-#endif // IMGUI
-
 	CSoundMgr::GetInstance()->Update();
 }
 
@@ -82,14 +73,7 @@ void CMainApp::Render_MainApp()
 
 	m_pManagementClass->Render_Scene(m_pGraphicDev);
 
-#ifdef IMGUI
-	CImGuiMgr::GetInstance()->ImGui_Render();
-
-#else
-#endif // IMGUI
-
 	m_pDeviceClass->Render_End();
-
 }
 
 HRESULT CMainApp::Ready_DefaultSetting(LPDIRECT3DDEVICE9* ppGraphicDev)
@@ -118,32 +102,7 @@ HRESULT CMainApp::Ready_DefaultSetting(LPDIRECT3DDEVICE9* ppGraphicDev)
 	(*ppGraphicDev)->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
 	(*ppGraphicDev)->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
 
-	// ��Ʈ �߰�
-
-	if (FAILED(CFontMgr::GetInstance()->Ready_Font((*ppGraphicDev), L"Font_Default", L"Malgun Gothic", 0, 20, FW_HEAVY)))
-		return E_FAIL;
-
-	if (FAILED(CFontMgr::GetInstance()->Ready_Font((*ppGraphicDev), L"Font_Lapture20", L"LaptureDisplay", 0, 20, FW_THIN)))
-		return E_FAIL;
-
-	if (FAILED(CFontMgr::GetInstance()->Ready_Font((*ppGraphicDev), L"Font_Lapture30", L"LaptureDisplay", 0, 30, FW_THIN)))
-		return E_FAIL;
-
-	if (FAILED(CFontMgr::GetInstance()->Ready_Font((*ppGraphicDev), L"Font_Lapture40", L"LaptureDisplay", 0, 40, FW_THIN)))
-		return E_FAIL;
-
-	if (FAILED(CFontMgr::GetInstance()->Ready_Font((*ppGraphicDev), L"Font_Lapture60", L"LaptureDisplay", 0, 60, FW_THIN)))
-		return E_FAIL;
-
-
-	if (FAILED(CFontMgr::GetInstance()->Ready_Font((*ppGraphicDev), L"Font_NotoSans30", L"Noto Sans KR Regular", 0, 30, FW_REGULAR)))
-		return E_FAIL;
-
-	if (FAILED(CFontMgr::GetInstance()->Ready_Font((*ppGraphicDev), L"Font_NotoSans40", L"Noto Sans KR Regular", 0, 40, FW_REGULAR)))
-		return E_FAIL;
-
-	if (FAILED(CFontMgr::GetInstance()->Ready_Font((*ppGraphicDev), L"Font_NotoSans60", L"Noto Sans KR Regular", 0, 60, FW_REGULAR)))
-		return E_FAIL;
+	Ready_Font();
 
 
 	return S_OK;
@@ -166,14 +125,44 @@ HRESULT CMainApp::Ready_Scene(LPDIRECT3DDEVICE9 pGraphicDev)
 	return S_OK;
 }
 
+HRESULT CMainApp::Ready_Font()
+{
+	if (FAILED(CFontMgr::GetInstance()->Ready_Font(m_pGraphicDev, L"Font_Default", L"Malgun Gothic", 0, 20, FW_HEAVY)))
+		return E_FAIL;
+
+	if (FAILED(CFontMgr::GetInstance()->Ready_Font(m_pGraphicDev, L"Font_Lapture20", L"LaptureDisplay", 0, 20, FW_THIN)))
+		return E_FAIL;
+
+	if (FAILED(CFontMgr::GetInstance()->Ready_Font(m_pGraphicDev, L"Font_Lapture30", L"LaptureDisplay", 0, 30, FW_THIN)))
+		return E_FAIL;
+
+	if (FAILED(CFontMgr::GetInstance()->Ready_Font(m_pGraphicDev, L"Font_Lapture40", L"LaptureDisplay", 0, 40, FW_THIN)))
+		return E_FAIL;
+
+	if (FAILED(CFontMgr::GetInstance()->Ready_Font(m_pGraphicDev, L"Font_Lapture60", L"LaptureDisplay", 0, 60, FW_THIN)))
+		return E_FAIL;
+
+
+	if (FAILED(CFontMgr::GetInstance()->Ready_Font(m_pGraphicDev, L"Font_NotoSans30", L"Noto Sans KR Regular", 0, 30, FW_REGULAR)))
+		return E_FAIL;
+
+	if (FAILED(CFontMgr::GetInstance()->Ready_Font(m_pGraphicDev, L"Font_NotoSans40", L"Noto Sans KR Regular", 0, 40, FW_REGULAR)))
+		return E_FAIL;
+
+	if (FAILED(CFontMgr::GetInstance()->Ready_Font(m_pGraphicDev, L"Font_NotoSans60", L"Noto Sans KR Regular", 0, 60, FW_REGULAR)))
+		return E_FAIL;
+
+	if (FAILED(CFontMgr::GetInstance()->Ready_Font(m_pGraphicDev, L"Font_NotoSans80", L"Noto Sans KR Regular", 0, 80, FW_REGULAR)))
+		return E_FAIL;
+
+	if (FAILED(CFontMgr::GetInstance()->Ready_Font(m_pGraphicDev, L"Font_NotoSans100", L"Noto Sans KR Regular", 0, 100, FW_REGULAR)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
 CMainApp* CMainApp::Create()
 {
-#ifdef IMGUI
-
-#else
-
-#endif // IMGUI
-
 	CMainApp* pMainApp = new CMainApp;
 
 	if (FAILED(pMainApp->Ready_MainApp()))
@@ -190,8 +179,10 @@ CMainApp* CMainApp::Create()
 void CMainApp::Free()
 {
 	Safe_Release(m_pGraphicDev);
-	Safe_Release(m_pDeviceClass);	
+	Safe_Release(m_pDeviceClass);
 
+	CMapLoader::DestroyInstance();
+	CTileMgr::DestroyInstance();
 	CPersistentMgr::DestroyInstance();
 	CLightMgr::DestroyInstance();
 	CFontMgr::DestroyInstance();
@@ -203,9 +194,5 @@ void CMainApp::Free()
 	CManagement::DestroyInstance();
 	CCollisionMgr::DestroyInstance();
 	CSoundMgr::DestroyInstance();
-#ifdef IMGUI
-	CImGuiMgr::GetInstance()->ImGui_Shutdown();
-	CImGuiMgr::DestroyInstance();
-#endif // IMGUI
 	m_pDeviceClass->DestroyInstance();
 }

@@ -16,6 +16,7 @@
 #include "CMainCamera.h"
 #include "CMonsterN1.h"
 #include "CItem.h"
+#include "CCollisionMgr.h"
 #include "CMonsterN2.h"
 #include <CMonsterN3.h>
 
@@ -82,6 +83,7 @@ void CTest::LateUpdate_Scene(const _float& fTimeDelta)
 {
 	CCollisionMgr::GetInstance()->Check_Collisions(fTimeDelta);
 	Engine::CScene::LateUpdate_Scene(fTimeDelta);
+	CCollisionMgr::GetInstance()->Check_Collisions(fTimeDelta);
 }
 
 void CTest::Render_Scene()

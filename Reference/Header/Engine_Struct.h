@@ -33,6 +33,15 @@ namespace Engine
 
 	const _ulong	FVF_CUBE = D3DFVF_XYZ | D3DFVF_TEX1 | D3DFVF_TEXCOORDSIZE3(0); // 텍스처의 UV 좌표 값을 FLOAT형 3개로 표현하겠다는 매크로(괄호안의 숫자 0의 의미는 본래 버텍스에 텍스쳐 UV값이 여러개가 올 수 있는데 그중 0번째 값을 지정하겠다는 의미)
 
+	typedef struct DebugVertex 
+	{ 
+		D3DXVECTOR3 vPosition;
+		DWORD dwColor; 
+
+	}VTXDEBUG; 
+
+	const _ulong	FVF_DEBUG = D3DFVF_XYZ | D3DFVF_DIFFUSE;
+
 	typedef struct tagIndex16
 	{
 		_ushort  _0;
@@ -54,6 +63,57 @@ namespace Engine
 		_float x, y, z;
 		_float hx, hy, hz;
 	}AABB;
+
+    // Map Data Structures
+    typedef struct tagTileData
+    {
+        _int x, z;
+        _int textureId;
+        _int maskFlags;
+    }TILEDATA;
+
+    typedef struct tagSpawnData
+    {
+        _int type;                      // 0=Player, 1=Monster
+        _int monsterType;
+        _float x, z;
+    }SPAWNDATA;
+
+    typedef struct tagObjectData
+    {
+        std::string category;
+        _int textureIndex;
+        _float x, y, z;
+        _float scale;
+        _int placement;         // 0=Standing(Billboard), 1=Floor
+    }OBJECTDATA;
+
+    typedef struct tagLightData
+    {
+        _float x, y, z;
+        _int intensity;     // 0=Strong, 1=Medium, 2=Weak
+    }LIGHTDATA;
+
+    typedef struct tagMapData
+    {
+        _int width, height;
+        std::vector<TILEDATA> tiles;
+        std::vector<SPAWNDATA> spawns;
+        std::vector<OBJECTDATA> objects;
+        _int skyType;
+        std::vector<LIGHTDATA> lights;
+    }MAPDATA;
+
+    // Mask Flags
+    enum EMaskFlags
+    {
+        MASK_NONE = 0,
+        MASK_DOWN = 1,
+        MASK_LEFT = 2,
+        MASK_RIGHT = 4,
+        MASK_UP = 8
+    };
+
 
 }
 

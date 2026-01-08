@@ -4,10 +4,8 @@
 #include "framework.h"
 #include "Client.h"
 #include "../Client/Header/CMainApp.h"
-#include "CImGuiMgr.h"
 
 #define MAX_LOADSTRING 100
-//#define IMGUI
 
 // 전역 변수:
 HINSTANCE g_hInst;                                // 현재 인스턴스입니다.
@@ -15,10 +13,6 @@ WCHAR szTitle[MAX_LOADSTRING];                  // 제목 표시줄 텍스트입
 WCHAR szWindowClass[MAX_LOADSTRING];            // 기본 창 클래스 이름입니다.
 HWND    g_hWnd;
 WNDCLASSEXW wndclass;
-
-// ImGui
-UINT                     g_ResizeWidth = 0, g_ResizeHeight = 0;
-WNDCLASSEXW wc;
 
 // 이 코드 모듈에 포함된 함수의 선언을 전달합니다:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
@@ -162,20 +156,6 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
    AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
     
-#ifdef IMGUI
-   float main_scale = CImGuiMgr::GetInstance()->ImGui_Init();
-
-   wc = { sizeof(wc), CS_CLASSDC, WndProc, 0L, 0L, GetModuleHandle(nullptr), nullptr, nullptr, nullptr, nullptr, L"ImGui Example", nullptr };
-   ::RegisterClassExW(&wc);
-   wndclass = wc;
-
-   g_hWnd = ::CreateWindowW(wc.lpszClassName, L"Dear ImGui DirectX9 Example", WS_OVERLAPPEDWINDOW, 100, 100, (int)(1280 * main_scale), (int)(800 * main_scale), nullptr, nullptr, wc.hInstance, nullptr);
-
-   // Show the window
-   ::ShowWindow(g_hWnd, SW_SHOWDEFAULT);
-   ::UpdateWindow(g_hWnd);
-
-#else 
    HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
        CW_USEDEFAULT, 0,
        rc.right - rc.left,
@@ -190,7 +170,6 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
    ShowWindow(hWnd, nCmdShow);
    UpdateWindow(hWnd);
-#endif // IMGUI
 
    return TRUE;
 }
@@ -206,16 +185,8 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 //
 // 
 
-//extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
-
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-#ifdef IMGUI
-    CImGuiMgr::GetInstance()->WndProc(g_hWnd, message, wParam, lParam);
-
-    return ::DefWindowProcW(hWnd, message, wParam, lParam);
-
-#else 
     switch (message)
     {
     case WM_COMMAND:
@@ -261,10 +232,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     default:
         return DefWindowProc(hWnd, message, wParam, lParam);
     }
-    return 0;
-
-#endif
-
     return 0;
 }
 

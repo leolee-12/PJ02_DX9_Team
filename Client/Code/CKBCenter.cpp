@@ -52,7 +52,7 @@ void CKBCenter::Render_GameObject()
 	tMtrl.Specular = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
 	tMtrl.Ambient = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
 
-	tMtrl.Emissive = D3DXCOLOR(0.7f, 0.f, 0.f, 1.f);
+	tMtrl.Emissive = m_tColor;
 	tMtrl.Power = 0.f;
 
 	m_pGraphicDev->SetMaterial(&tMtrl);
@@ -104,9 +104,10 @@ HRESULT CKBCenter::Add_Component()
 
 
 
-CKBCenter* CKBCenter::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+CKBCenter* CKBCenter::Create(LPDIRECT3DDEVICE9 pGraphicDev, const D3DXCOLOR& Color)
 {
 	CKBCenter* pKBCenter = new CKBCenter(pGraphicDev);
+	pKBCenter->m_tColor = Color;
 
 	if (FAILED(pKBCenter->Ready_GameObject()))
 	{

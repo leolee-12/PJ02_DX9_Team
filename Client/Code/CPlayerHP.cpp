@@ -55,9 +55,9 @@ void CPlayerHP::Render_GameObject()
 {
 	//m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
 
-	_uint iUICell = m_iPlayerMaxHp / 2;
+	_int iUICell = m_iPlayerMaxHp / 2;
 
-	for (_uint i = 0; i < iUICell; ++i)
+	for (_int i = 0; i < iUICell; ++i)
 	{
 		_matrix matTmp = *(m_pTransformCom->Get_World());
 		_float fMoveX = 25.f;
