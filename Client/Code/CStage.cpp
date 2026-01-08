@@ -170,7 +170,7 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	// Map Load
 	Engine::MAPDATA mapData;
 	if (SUCCEEDED(Engine::CMapLoader::GetInstance()->LoadMapA(
-		"../../Maps/MapData/Tutorial_test.txt", mapData)))
+		"../Bin/Resource/Maps/MapData/Tutorial_test.txt", mapData)))
 	{
 		// 맵 데이터의 skyType으로 SkyBox 생성
 		pGameObject = CMySkyBox::Create(m_pGraphicDev, mapData.skyType);

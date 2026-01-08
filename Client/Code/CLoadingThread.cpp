@@ -81,11 +81,11 @@ _uint CLoadingThread::Loading_ForStage()
 
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_TileTexture",
         Engine::CTexture::CreateFromFolder(m_pGraphicDev, TEX_NORMAL,
-            L"../../Maps/Texture/Tile"));
+            L"../Bin/Resource/Maps/Texture/Tile"));
 
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_TileMaskTexture",
         Engine::CTexture::CreateFromFolder(m_pGraphicDev, TEX_NORMAL,
-            L"../../Maps/Texture/TileMasking"));
+            L"../Bin/Resource/Maps/Texture/TileMasking"));
 
     // ===== Grass 관련 =====
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_GrassBuffer",
@@ -93,7 +93,7 @@ _uint CLoadingThread::Loading_ForStage()
 
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_GrassTexture",
         Engine::CTexture::CreateFromFolder(m_pGraphicDev, TEX_NORMAL,
-            L"../../Maps/Texture/Object/Grass"));
+            L"../Bin/Resource/Maps/Texture/Object/Grass"));
 
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Collider",
         Engine::CCollider::Create(m_pGraphicDev));
@@ -101,19 +101,19 @@ _uint CLoadingThread::Loading_ForStage()
     // ===== 맵 오브젝트 텍스처 =====
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_RockTexture",
         Engine::CTexture::CreateFromFolder(m_pGraphicDev, TEX_NORMAL,
-            L"../../Maps/Texture/Object/Rock"));
+            L"../Bin/Resource/Maps/Texture/Object/Rock"));
 
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_TreeTexture",
         Engine::CTexture::CreateFromFolder(m_pGraphicDev, TEX_NORMAL,
-            L"../../Maps/Texture/Object/Tree"));
+            L"../Bin/Resource/Maps/Texture/Object/Tree"));
 
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_FireTexture",
         Engine::CTexture::CreateFromFolder(m_pGraphicDev, TEX_NORMAL,
-            L"../../Maps/Texture/Object/Fire"));
+            L"../Bin/Resource/Maps/Texture/Object/Fire"));
 
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_TentTexture",
         Engine::CTexture::CreateFromFolder(m_pGraphicDev, TEX_NORMAL,
-            L"../../Maps/Texture/Object/Tent"));
+            L"../Bin/Resource/Maps/Texture/Object/Tent"));
 
     //Sleep(2000);
 
@@ -170,11 +170,11 @@ _uint CLoadingThread::Loading_ForTest()
 
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_TileTexture",
         Engine::CTexture::CreateFromFolder(m_pGraphicDev, TEX_NORMAL,
-            L"../../Maps/Texture/Tile"));
+            L"../Bin/Resource/Maps/Texture/Tile"));
 
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_TileMaskTexture",
         Engine::CTexture::CreateFromFolder(m_pGraphicDev, TEX_NORMAL,
-            L"../../Maps/Texture/TileMasking"));
+            L"../Bin/Resource/Maps/Texture/TileMasking"));
 
     // ===== Grass 관련 =====
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_GrassBuffer",
@@ -182,7 +182,7 @@ _uint CLoadingThread::Loading_ForTest()
 
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_GrassTexture",
         Engine::CTexture::CreateFromFolder(m_pGraphicDev, TEX_NORMAL,
-            L"../../Maps/Texture/Object/Grass"));
+            L"../Bin/Resource/Maps/Texture/Object/Grass"));
 
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Collider",
         Engine::CCollider::Create(m_pGraphicDev));
@@ -190,19 +190,19 @@ _uint CLoadingThread::Loading_ForTest()
     // ===== 맵 오브젝트 텍스처 =====
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_RockTexture",
         Engine::CTexture::CreateFromFolder(m_pGraphicDev, TEX_NORMAL,
-            L"../../Maps/Texture/Object/Rock"));
+            L"../Bin/Resource/Maps/Texture/Object/Rock"));
 
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_TreeTexture",
         Engine::CTexture::CreateFromFolder(m_pGraphicDev, TEX_NORMAL,
-            L"../../Maps/Texture/Object/Tree"));
+            L"../Bin/Resource/Maps/Texture/Object/Tree"));
 
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_FireTexture",
         Engine::CTexture::CreateFromFolder(m_pGraphicDev, TEX_NORMAL,
-            L"../../Maps/Texture/Object/Fire"));
+            L"../Bin/Resource/Maps/Texture/Object/Fire"));
 
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_TentTexture",
         Engine::CTexture::CreateFromFolder(m_pGraphicDev, TEX_NORMAL,
-            L"../../Maps/Texture/Object/Tent"));
+            L"../Bin/Resource/Maps/Texture/Object/Tent"));
 
     //Sleep(2000);
 
