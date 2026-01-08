@@ -147,6 +147,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\Header\CB1_AI.h" />
+    <ClInclude Include="..\Header\CB2_AI.h" />
     <ClInclude Include="..\Header\CActiveItem.h" />
     <ClInclude Include="..\Header\CBackGround.h" />
     <ClInclude Include="..\Header\CDivider.h" />
@@ -184,11 +186,18 @@
     <ClInclude Include="..\Header\CMainApp.h" />
     <ClInclude Include="..\Header\CMainCamera.h" />
     <ClInclude Include="..\Header\CMonster.h" />
+    <ClInclude Include="..\Header\CMonsterB1.h" />
+    <ClInclude Include="..\Header\CMonsterB2.h" />
     <ClInclude Include="..\Header\CMonsterN1.h" />
     <ClInclude Include="..\Header\CMySkyBox.h" />
+    <ClInclude Include="..\Header\CMonsterN2.h" />
+    <ClInclude Include="..\Header\CMonsterN3.h" />
     <ClInclude Include="..\Header\CN1_AI.h" />
     <ClInclude Include="..\Header\CPassionGauge.h" />
     <ClInclude Include="..\Header\CPassionIcon.h" />
+    <ClInclude Include="..\Header\CN2_AI.h" />
+    <ClInclude Include="..\Header\CN3_AI.h" />
+    <ClInclude Include="..\Header\CNode.h" />
     <ClInclude Include="..\Header\CPassiveItem.h" />
     <ClInclude Include="..\Header\CPersistentMgr.h" />
     <ClInclude Include="..\Header\CPlayer.h" />
@@ -220,6 +229,8 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Code\CB1_AI.cpp" />
+    <ClCompile Include="..\Code\CB2_AI.cpp" />
     <ClCompile Include="..\Code\CActiveItem.cpp" />
     <ClCompile Include="..\Code\CBackGround.cpp" />
     <ClCompile Include="..\Code\CDivider.cpp" />
@@ -257,11 +268,18 @@
     <ClCompile Include="..\Code\CMainApp.cpp" />
     <ClCompile Include="..\Code\CMainCamera.cpp" />
     <ClCompile Include="..\Code\CMonster.cpp" />
+    <ClCompile Include="..\Code\CMonsterB1.cpp" />
+    <ClCompile Include="..\Code\CMonsterB2.cpp" />
     <ClCompile Include="..\Code\CMonsterN1.cpp" />
+    <ClCompile Include="..\Code\CMonsterN2.cpp" />
+    <ClCompile Include="..\Code\CMonsterN3.cpp" />
     <ClCompile Include="..\Code\CMySkyBox.cpp" />
     <ClCompile Include="..\Code\CN1_AI.cpp" />
     <ClCompile Include="..\Code\CPassionGauge.cpp" />
     <ClCompile Include="..\Code\CPassionIcon.cpp" />
+    <ClCompile Include="..\Code\CN2_AI.cpp" />
+    <ClCompile Include="..\Code\CN3_AI.cpp" />
+    <ClCompile Include="..\Code\CNode.cpp" />
     <ClCompile Include="..\Code\CPassiveItem.cpp" />
     <ClCompile Include="..\Code\CPersistentMgr.cpp" />
     <ClCompile Include="..\Code\CPlayer.cpp" />

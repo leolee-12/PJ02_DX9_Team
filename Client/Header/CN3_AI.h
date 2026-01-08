@@ -1,13 +1,13 @@
 #pragma once
 #include "CAIController.h"
-#include "CMonsterN1.h"
+#include "CMonsterN3.h"
 
-class CN1_AI : public CAIController
+class CN3_AI : public CAIController
 {
 protected:
-	explicit	CN1_AI(LPDIRECT3DDEVICE9 pGraphicDev);
-	explicit	CN1_AI(const CN1_AI& rhs);
-	virtual		~CN1_AI();
+	explicit	CN3_AI(LPDIRECT3DDEVICE9 pGraphicDev);
+	explicit	CN3_AI(const CN3_AI& rhs);
+	virtual		~CN3_AI();
 
 protected:
 	HRESULT		Ready_AI(const _float& fDetectRange, const _float& fInteractRange, const _uint& iInitState);
@@ -16,17 +16,15 @@ protected:
 
 public:
 	void		Set_Speed(const _float& fSpeed) { m_fSpeed = fSpeed; }
-	void		Anim_End(CMonsterN1::MONSTER_N1_STATE eState);
+	void		Anim_End(CMonsterN3::MONSTER_N3_STATE eState);
 
 private:
 	_int		Update_Component(const _float& fTimeDelta)	override;
-	void		Update_Idle(const _float& fTimeDelta);
-	void		Update_Run(const _float& fTimeDelta);
-	void		Update_Attack(const _float& fTimeDelta);
-	void		Update_Hit(const _float& fTimeDelta);
+	void		Update_Fly(const _float& fTimeDelta);
+	void		Update_Prepare(const _float& fTimeDelta);
+	void		Update_Rush(const _float& fTimeDelta);
 	void		Update_Spawn(const _float& fTimeDelta);
-	void		Update_Jeer(const _float& fTimeDelta);
-	void		Update_Pray(const _float& fTimeDelta);
+	void		Update_Stop(const _float& fTimeDelta);
 
 private:
 	_float		m_fSpeed;
@@ -35,7 +33,7 @@ private:
 	_vec3		m_vLerpPos;		// Lerp¿ë À§Ä¡
 
 public:
-	static CN1_AI*		Create(LPDIRECT3DDEVICE9 pGraphicDev, const _float& fDetectRange, const _float& fInteractRange, const _uint& iInitState = 0);
+	static CN3_AI*		Create(LPDIRECT3DDEVICE9 pGraphicDev, const _float& fDetectRange, const _float& fInteractRange, const _uint& iInitState = 0);
 	CComponent*			Clone()	override;
 
 protected:

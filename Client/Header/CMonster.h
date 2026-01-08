@@ -28,12 +28,12 @@ protected:
 	HRESULT			Add_Component();
 
 protected:
-	Engine::CRcTex* m_pBufferCom;
+	Engine::CRcTex*		m_pBufferCom;
 	Engine::CTransform* m_pTransformCom;
-	Engine::CTexture* m_pTextureCom;
-	Engine::CCollider* m_pColliderCom;
+	Engine::CTexture*	m_pTextureCom;
+	Engine::CCollider*	m_pColliderCom;
 
-	_vec3			  m_vPos;
+	_vec3				m_vPos;
 
 public:
 	static CMonster* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel);

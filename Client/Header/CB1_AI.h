@@ -1,13 +1,13 @@
 #pragma once
 #include "CAIController.h"
-#include "CMonsterN1.h"
+#include "CMonsterB1.h"
 
-class CN1_AI : public CAIController
+class CB1_AI : public CAIController
 {
 protected:
-	explicit	CN1_AI(LPDIRECT3DDEVICE9 pGraphicDev);
-	explicit	CN1_AI(const CN1_AI& rhs);
-	virtual		~CN1_AI();
+	explicit	CB1_AI(LPDIRECT3DDEVICE9 pGraphicDev);
+	explicit	CB1_AI(const CB1_AI& rhs);
+	virtual		~CB1_AI();
 
 protected:
 	HRESULT		Ready_AI(const _float& fDetectRange, const _float& fInteractRange, const _uint& iInitState);
@@ -16,7 +16,7 @@ protected:
 
 public:
 	void		Set_Speed(const _float& fSpeed) { m_fSpeed = fSpeed; }
-	void		Anim_End(CMonsterN1::MONSTER_N1_STATE eState);
+	void		Anim_End(CMonsterB1::MONSTER_B1_STATE eState);
 
 private:
 	_int		Update_Component(const _float& fTimeDelta)	override;
@@ -28,6 +28,10 @@ private:
 	void		Update_Jeer(const _float& fTimeDelta);
 	void		Update_Pray(const _float& fTimeDelta);
 
+	void		Compute_Distance();
+	void		Compute_TargetDir();
+	void		Randomize_Dir();
+
 private:
 	_float		m_fSpeed;
 	_float		m_fAcmlTime;
@@ -35,7 +39,7 @@ private:
 	_vec3		m_vLerpPos;		// Lerp¿ë À§Ä¡
 
 public:
-	static CN1_AI*		Create(LPDIRECT3DDEVICE9 pGraphicDev, const _float& fDetectRange, const _float& fInteractRange, const _uint& iInitState = 0);
+	static CB1_AI*		Create(LPDIRECT3DDEVICE9 pGraphicDev, const _float& fDetectRange, const _float& fInteractRange, const _uint& iInitState = 0);
 	CComponent*			Clone()	override;
 
 protected:
