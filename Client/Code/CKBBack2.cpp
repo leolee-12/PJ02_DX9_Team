@@ -1,30 +1,30 @@
 #include "pch.h"
-#include "CKBCenter.h"
+#include "CKBBack2.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
 
-CKBCenter::CKBCenter(LPDIRECT3DDEVICE9 pGraphicDev)
+CKBBack2::CKBBack2(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CUi(pGraphicDev), m_pBufferCom(nullptr), m_pTransformCom(nullptr)
 {
 	ZeroMemory(&m_vPos, sizeof(_vec3));
 }
 
-CKBCenter::~CKBCenter()
+CKBBack2::~CKBBack2()
 {
 }
 
-HRESULT CKBCenter::Ready_GameObject()
+HRESULT CKBBack2::Ready_GameObject()
 {
 	if (FAILED(Add_Component()))
 		return E_FAIL;
 
-	m_pTransformCom->Set_Scale(60.f, 60.f, 1.f);
-	m_pTransformCom->Set_Pos(0.f, 40.f, 0.f);
+	m_pTransformCom->Set_Scale(_float(WINCX), _float(WINCY), 1.f);
+	m_pTransformCom->Set_Pos(0.f, 0.f, 0.75f);
 
 	return S_OK;
 }
 
-_int CKBCenter::Update_GameObject(const _float& fTimeDelta)
+_int CKBBack2::Update_GameObject(const _float& fTimeDelta)
 {
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
@@ -33,14 +33,14 @@ _int CKBCenter::Update_GameObject(const _float& fTimeDelta)
 	return iExit;
 }
 
-void CKBCenter::LateUpdate_GameObject(const _float& fTimeDelta)
+void CKBBack2::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
 	m_pTransformCom->Get_Info(INFO_POS, &m_vPos);
 	Compute_ViewDepth_Ortho(&m_vPos);
 }
 
-void CKBCenter::Render_GameObject()
+void CKBBack2::Render_GameObject()
 {
 	m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, TRUE);
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
@@ -52,7 +52,7 @@ void CKBCenter::Render_GameObject()
 	tMtrl.Specular = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
 	tMtrl.Ambient = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
 
-	tMtrl.Emissive = m_tColor;
+	tMtrl.Emissive = D3DXCOLOR(0.3f, 0.3f, 0.3f, 1.f);
 	tMtrl.Power = 0.f;
 
 	m_pGraphicDev->SetMaterial(&tMtrl);
@@ -64,12 +64,12 @@ void CKBCenter::Render_GameObject()
 	m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, FALSE);
 }
 
-void CKBCenter::OnCollision(CGameObject* pObject)
+void CKBBack2::OnCollision(CGameObject* pObject)
 {
 
 }
 
-HRESULT CKBCenter::Add_Component()
+HRESULT CKBBack2::Add_Component()
 {
 	Engine::CComponent* pComponent = nullptr;
 
@@ -92,7 +92,7 @@ HRESULT CKBCenter::Add_Component()
 	m_mapComponent[ID_DYNAMIC].insert({ L"Com_Transform", pComponent });
 
 	pComponent = m_pTextureCom = dynamic_cast<Engine::CTexture*>
-		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_KBCenter"));
+		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_KBBack"));
 
 	if (nullptr == pComponent)
 		return E_FAIL;
@@ -104,10 +104,9 @@ HRESULT CKBCenter::Add_Component()
 
 
 
-CKBCenter* CKBCenter::Create(LPDIRECT3DDEVICE9 pGraphicDev, const D3DXCOLOR& Color)
+CKBBack2* CKBBack2::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 {
-	CKBCenter* pKBCenter = new CKBCenter(pGraphicDev);
-	pKBCenter->m_tColor = Color;
+	CKBBack2* pKBCenter = new CKBBack2(pGraphicDev);
 
 	if (FAILED(pKBCenter->Ready_GameObject()))
 	{
@@ -119,7 +118,7 @@ CKBCenter* CKBCenter::Create(LPDIRECT3DDEVICE9 pGraphicDev, const D3DXCOLOR& Col
 	return pKBCenter;
 }
 
-void CKBCenter::Free()
+void CKBBack2::Free()
 {
 	CUi::Free();
 }

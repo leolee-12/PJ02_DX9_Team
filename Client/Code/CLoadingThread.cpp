@@ -24,12 +24,12 @@ HRESULT CLoadingThread::Ready_Loading(LOADINGID eID)
 
     int iNumber = 10;
 
-    m_hThread = (HANDLE)_beginthreadex(NULL,    // º¸¾È¼Ó¼º(ÇÚµéÀÇ »ó¼Ó ¿©ºÎ, nullÀÎ °æ¿ì »ó¼Ó¿¡¼­ Á¦¿Ü)
-                                        0,      // µðÆúÆ® ½ºÅÃ »çÀÌÁî(1 ¹ÙÀÌÆ®)
-                                        Thread_Main,      // ¾²·¹µå ÇÔ¼ö
-                                        this,   // ¾²·¹µå ÇÔ¼ö¸¦ ÀÌ¿ëÇÏ¿© °¡°øÇÒ µ¥ÀÌÅÍ ÁÖ¼Ò    
-                                        0,      // ¾²·¹µå »ý¼º ¹× ½ÇÇàÀ» Á¶Á¤ÇÏ±â ¿É¼Ç(flag)
-                                        NULL);  // ¾²·¹µå id
+    m_hThread = (HANDLE)_beginthreadex(NULL,    
+                                        0,      
+                                        Thread_Main,      
+                                        this,       
+                                        0,      
+                                        NULL);  
 
 
     return S_OK;
@@ -39,6 +39,8 @@ _uint CLoadingThread::Loading_ForStage()
 {
     //Sleep(1000);
 
+
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_ItemTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Item/Item_%02d.png", 8))))
     if (FAILED(CPersistentMgr::GetInstance()->Ready_GlobalObjects(m_pGraphicDev)))
         return E_FAIL;
 
@@ -75,7 +77,7 @@ _uint CLoadingThread::Loading_ForStage()
 
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_N1_AI", CN1_AI::Create(m_pGraphicDev, 5.f, 1.f));
 
-    // ===== Å¸ÀÏ °ü·Ã =====
+    // ===== Å¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ =====
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_RcTexXZ",
         Engine::CRcTexXZ::Create(m_pGraphicDev));
 
@@ -87,7 +89,7 @@ _uint CLoadingThread::Loading_ForStage()
         Engine::CTexture::CreateFromFolder(m_pGraphicDev, TEX_NORMAL,
             L"../Bin/Resource/Maps/Texture/TileMasking"));
 
-    // ===== Grass °ü·Ã =====
+    // ===== Grass ï¿½ï¿½ï¿½ï¿½ =====
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_GrassBuffer",
         Engine::CGrassBuffer::Create(m_pGraphicDev));
 
@@ -98,7 +100,7 @@ _uint CLoadingThread::Loading_ForStage()
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Collider",
         Engine::CCollider::Create(m_pGraphicDev));
 
-    // ===== ¸Ê ¿ÀºêÁ§Æ® ÅØ½ºÃ³ =====
+    // ===== ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½Ø½ï¿½Ã³ =====
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_RockTexture",
         Engine::CTexture::CreateFromFolder(m_pGraphicDev, TEX_NORMAL,
             L"../Bin/Resource/Maps/Texture/Object/Rock"));
@@ -161,48 +163,10 @@ _uint CLoadingThread::Loading_ForTest()
     
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_MonsterN1Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal1/MonsterN1_%02d.png", 7));
 
-
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_N1_AI", CN1_AI::Create(m_pGraphicDev, 5.f, 1.f));
 
-    // ===== Å¸ÀÏ °ü·Ã =====
-    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_RcTexXZ",
-        Engine::CRcTexXZ::Create(m_pGraphicDev));
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_ItemTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Item/Item_%02d.png", 8));
 
-    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_TileTexture",
-        Engine::CTexture::CreateFromFolder(m_pGraphicDev, TEX_NORMAL,
-            L"../Bin/Resource/Maps/Texture/Tile"));
-
-    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_TileMaskTexture",
-        Engine::CTexture::CreateFromFolder(m_pGraphicDev, TEX_NORMAL,
-            L"../Bin/Resource/Maps/Texture/TileMasking"));
-
-    // ===== Grass °ü·Ã =====
-    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_GrassBuffer",
-        Engine::CGrassBuffer::Create(m_pGraphicDev));
-
-    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_GrassTexture",
-        Engine::CTexture::CreateFromFolder(m_pGraphicDev, TEX_NORMAL,
-            L"../Bin/Resource/Maps/Texture/Object/Grass"));
-
-    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Collider",
-        Engine::CCollider::Create(m_pGraphicDev));
-
-    // ===== ¸Ê ¿ÀºêÁ§Æ® ÅØ½ºÃ³ =====
-    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_RockTexture",
-        Engine::CTexture::CreateFromFolder(m_pGraphicDev, TEX_NORMAL,
-            L"../Bin/Resource/Maps/Texture/Object/Rock"));
-
-    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_TreeTexture",
-        Engine::CTexture::CreateFromFolder(m_pGraphicDev, TEX_NORMAL,
-            L"../Bin/Resource/Maps/Texture/Object/Tree"));
-
-    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_FireTexture",
-        Engine::CTexture::CreateFromFolder(m_pGraphicDev, TEX_NORMAL,
-            L"../Bin/Resource/Maps/Texture/Object/Fire"));
-
-    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_TentTexture",
-        Engine::CTexture::CreateFromFolder(m_pGraphicDev, TEX_NORMAL,
-            L"../Bin/Resource/Maps/Texture/Object/Tent"));
 
     //Sleep(2000);
 
@@ -222,7 +186,20 @@ _uint CLoadingThread::Loading_ForKnuckleBone()
 
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Divider", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/TileDivider_%d.png", 2));
     
-    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_KBMask", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/Knucklebones_BW_MASK.png", 2));
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_KBMask", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/Knucklebones_BW_MASK_%d.png", 2));
+
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_KBTab", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/TabRed.png", 1));
+
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_KBSix", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/Six.png", 1));
+
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_KBDice", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/Dice_%d.png", 6));
+
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_KBBoardSlot", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/Knucklebones_WhiteSquare.png", 1));
+
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_KBDiceBox", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/DiceBox_A.png", 1));
+
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_KBBack", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/DiceTubBG.png", 1));
+
 
     m_fPercent = 100.f;
 

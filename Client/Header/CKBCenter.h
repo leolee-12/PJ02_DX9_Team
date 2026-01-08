@@ -23,7 +23,7 @@ public:
 	virtual			void		OnCollision(CGameObject* pObject);
 
 public:
-	static CKBCenter* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	static CKBCenter* Create(LPDIRECT3DDEVICE9 pGraphicDev, const D3DXCOLOR& Color);
 
 private:
 	virtual			void		Free();
@@ -34,5 +34,7 @@ private:
 	CRcTex* m_pBufferCom;
 	CTransform* m_pTransformCom;
 	CTexture* m_pTextureCom;
+
+	D3DXCOLOR m_tColor;
 };
 

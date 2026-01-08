@@ -22,6 +22,9 @@ public:
 	virtual			void		Render_GameObject();
 	virtual			void		OnCollision(CGameObject* pObject);
 
+	void			Set_Index(_int iIndex) { m_iIndex = iIndex; }
+	void            Show_Mask() { m_bRender = true; }
+
 public:
 	static CKBMask* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 
@@ -34,5 +37,8 @@ private:
 	CRcTex* m_pBufferCom;
 	CTransform* m_pTransformCom;
 	CTexture* m_pTextureCom;
+
+	_int      m_iIndex;
+	_bool     m_bRender;
 };
 

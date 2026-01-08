@@ -1,10 +1,10 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "CTest.h"
 #include "CBackGround.h"
 #include "CProtoMgr.h"
+#include "CCollisionMgr.h"
 #include "CDynamicCamera.h"
-// #include "CSkyBox.h"  // CMySkyBox로 대체
-#include "CMySkyBox.h"
+#include "CSkyBox.h"
 #include "CPersistentMgr.h"
 #include "CDungeonBack.h"
 #include "CDInputMgr.h"
@@ -15,10 +15,7 @@
 #include "CSoundMgr.h"
 #include "CMainCamera.h"
 #include "CMonsterN1.h"
-#include "CMapLoader.h"
-#include "CTileMgr.h"
-#include "CMapObject.h"
-#include "CGrass.h"
+#include "CItem.h"
 #include "CCollisionMgr.h"
 
 CTest::CTest(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -45,20 +42,11 @@ HRESULT CTest::Ready_Scene()
 
 	Ready_Light();
 
-	CCollisionMgr::GetInstance()->Ready_CollisionMgr();
-
 	return S_OK;
 }
 
 _int CTest::Update_Scene(const _float& fTimeDelta)
 {
-	Engine::CTransform* pPlayerTransform = CPersistentMgr::GetInstance()->Get_PlayerTransform();
-	if (pPlayerTransform)
-	{
-		_vec3 vPlayerPos;
-		pPlayerTransform->Get_Info(INFO_POS, &vPlayerPos);
-		Engine::CLightMgr::GetInstance()->Update_PointLights(vPlayerPos);
-	}
 	if (CDInputMgr::GetInstance()->Key_Down(DIK_R))
 	{
 		IMessageChannel::EVENT event;
@@ -84,7 +72,6 @@ _int CTest::Update_Scene(const _float& fTimeDelta)
 
 		m_pMessageChannel->Publish(event);
 	}
-
 	_int iExit = Engine::CScene::Update_Scene(fTimeDelta);
 
 	return iExit;
@@ -92,8 +79,8 @@ _int CTest::Update_Scene(const _float& fTimeDelta)
 
 void CTest::LateUpdate_Scene(const _float& fTimeDelta)
 {
+	CCollisionMgr::GetInstance()->Check_Collisions(fTimeDelta);
 	Engine::CScene::LateUpdate_Scene(fTimeDelta);
-
 	CCollisionMgr::GetInstance()->Check_Collisions(fTimeDelta);
 }
 
@@ -109,8 +96,6 @@ HRESULT CTest::Ready_Environment_Layer(const _tchar* pLayerTag)
 
 	CGameObject* pGameObject = nullptr;
 
-	// SkyBox를 Ready_GameLogic_Layer에서 mapData.skyType으로 생성하도록 변경
-	/*
 	pGameObject = CSkyBox::Create(m_pGraphicDev);
 
 	if (nullptr == pGameObject)
@@ -118,7 +103,6 @@ HRESULT CTest::Ready_Environment_Layer(const _tchar* pLayerTag)
 
 	if (FAILED(pLayer->Add_GameObject(L"SkyBox", pGameObject)))
 		return E_FAIL;
-	*/
 
 	_vec3   vEye{ 0.f, 10.f, -10.f };
 	_vec3   vAt{ 0.f, 0.f, 1.f };
@@ -156,7 +140,6 @@ HRESULT CTest::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 
 	CGameObject* pGameObject = nullptr;
 
-	/*
 	// Terrain
 	pGameObject = CTerrain::Create(m_pGraphicDev);
 
@@ -165,67 +148,6 @@ HRESULT CTest::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 
 	if (FAILED(pLayer->Add_GameObject(L"Terrain", pGameObject)))
 		return E_FAIL;
-	*/
-
-	// Map Load
-	Engine::MAPDATA mapData;
-	if (SUCCEEDED(Engine::CMapLoader::GetInstance()->LoadMapA(
-		"../Bin/Resource/Maps/MapData/Tutorial_test.txt", mapData)))
-	{
-		// 맵 데이터의 skyType으로 SkyBox 생성
-		pGameObject = CMySkyBox::Create(m_pGraphicDev, mapData.skyType);
-		if (pGameObject)
-			pLayer->Add_GameObject(L"SkyBox", pGameObject);
-
-		// Tile
-		CTileMgr::GetInstance()->Initialize(m_pGraphicDev, mapData);
-
-		// Spawns (Monster)
-		for (const auto& spawn : mapData.spawns)
-		{
-			if (spawn.type == 1)
-			{
-				pGameObject = CMonsterN1::Create(m_pGraphicDev, m_pMessageChannel);
-				if (pGameObject)
-				{
-					Engine::CTransform* pTransform = dynamic_cast<Engine::CTransform*>(
-						pGameObject->Get_Component(ID_DYNAMIC, L"Com_Transform"));
-					if (pTransform)
-						pTransform->Set_Pos(spawn.x, 0.f, spawn.z);
-					pLayer->Add_GameObject(L"Monster", pGameObject);
-				}
-			}
-		}
-
-		// Objects
-		for (const auto& obj : mapData.objects)
-		{
-			if (obj.category == "Grass")
-			{
-				pGameObject = CGrass::Create(m_pGraphicDev, obj);
-				if (pGameObject)
-					pLayer->Add_GameObject(L"Grass", pGameObject);
-			}
-			else
-			{
-				pGameObject = CMapObject::Create(m_pGraphicDev, obj);
-				if (pGameObject)
-					pLayer->Add_GameObject(L"MapObject", pGameObject);
-			}
-		}
-		// Process Lights - Point Light 생성
-		for (const auto& light : mapData.lights)
-		{
-			Engine::CLightMgr::GetInstance()->Ready_PointLight(m_pGraphicDev, light);
-		}
-	}
-	else
-	{
-		// 맵 로드 실패 시 기본 SkyBox (Day) 생성
-		pGameObject = CMySkyBox::Create(m_pGraphicDev, 0);
-		if (pGameObject)
-			pLayer->Add_GameObject(L"SkyBox", pGameObject);
-	}
 
 	// Player
 	pGameObject = CPersistentMgr::GetInstance()->Get_GlobalObjects(GOBJ_PLAYER);
@@ -239,6 +161,25 @@ HRESULT CTest::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 		return E_FAIL;
 
 	pGameObject->AddRef();
+
+	for (_uint i = 0; i < 20; ++i)
+	{
+		//pGameObject = CMonsterN1::Create(m_pGraphicDev, m_pMessageChannel);
+		//
+		//if (nullptr == pGameObject)
+		//	return E_FAIL;
+		//
+		//if (FAILED(pLayer->Add_GameObject(L"Monster", pGameObject)))
+		//	return E_FAIL;
+
+		pGameObject = CItem::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ _float(rand() % 20), 1.1f, _float(rand() % 20) }, CItem::ITEMID(rand() % 6), true);
+
+		if (nullptr == pGameObject)
+			return E_FAIL;
+
+		if (FAILED(pLayer->Add_GameObject(L"Item", pGameObject)))
+			return E_FAIL;
+	}
 
 	m_mapLayer.insert({ pLayerTag , pLayer });
 
@@ -343,14 +284,15 @@ HRESULT CTest::Ready_Light()
 
 	tLightInfo.Type = D3DLIGHT_DIRECTIONAL;
 
-	tLightInfo.Diffuse = D3DXCOLOR(0.6f, 0.3f, 0.85f, 1.f);
-	tLightInfo.Specular = D3DXCOLOR(0.4f, 0.2f, 0.6f, 1.f);
-	tLightInfo.Ambient = D3DXCOLOR(0.3f, 0.12f, 0.4f, 1.f);
+	tLightInfo.Diffuse = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
+	tLightInfo.Specular = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
+	tLightInfo.Ambient = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
 
 	tLightInfo.Direction = { 1.f, -1.f, 1.f };
 
 	if (FAILED(CLightMgr::GetInstance()->Ready_Light(m_pGraphicDev, &tLightInfo, 0)))
 		return E_FAIL;
+
 
 	return S_OK;
 }
@@ -379,6 +321,4 @@ CTest* CTest::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 void CTest::Free()
 {
 	CScene::Free();
-	CCollisionMgr::GetInstance()->Reset_For_SceneChange();
-	CLightMgr::GetInstance()->DestroyInstance();
 }

@@ -102,32 +102,7 @@ HRESULT CMainApp::Ready_DefaultSetting(LPDIRECT3DDEVICE9* ppGraphicDev)
 	(*ppGraphicDev)->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
 	(*ppGraphicDev)->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
 
-	// ��Ʈ �߰�
-
-	if (FAILED(CFontMgr::GetInstance()->Ready_Font((*ppGraphicDev), L"Font_Default", L"Malgun Gothic", 0, 20, FW_HEAVY)))
-		return E_FAIL;
-
-	if (FAILED(CFontMgr::GetInstance()->Ready_Font((*ppGraphicDev), L"Font_Lapture20", L"LaptureDisplay", 0, 20, FW_THIN)))
-		return E_FAIL;
-
-	if (FAILED(CFontMgr::GetInstance()->Ready_Font((*ppGraphicDev), L"Font_Lapture30", L"LaptureDisplay", 0, 30, FW_THIN)))
-		return E_FAIL;
-
-	if (FAILED(CFontMgr::GetInstance()->Ready_Font((*ppGraphicDev), L"Font_Lapture40", L"LaptureDisplay", 0, 40, FW_THIN)))
-		return E_FAIL;
-
-	if (FAILED(CFontMgr::GetInstance()->Ready_Font((*ppGraphicDev), L"Font_Lapture60", L"LaptureDisplay", 0, 60, FW_THIN)))
-		return E_FAIL;
-
-
-	if (FAILED(CFontMgr::GetInstance()->Ready_Font((*ppGraphicDev), L"Font_NotoSans30", L"Noto Sans KR Regular", 0, 30, FW_REGULAR)))
-		return E_FAIL;
-
-	if (FAILED(CFontMgr::GetInstance()->Ready_Font((*ppGraphicDev), L"Font_NotoSans40", L"Noto Sans KR Regular", 0, 40, FW_REGULAR)))
-		return E_FAIL;
-
-	if (FAILED(CFontMgr::GetInstance()->Ready_Font((*ppGraphicDev), L"Font_NotoSans60", L"Noto Sans KR Regular", 0, 60, FW_REGULAR)))
-		return E_FAIL;
+	Ready_Font();
 
 
 	return S_OK;
@@ -146,6 +121,42 @@ HRESULT CMainApp::Ready_Scene(LPDIRECT3DDEVICE9 pGraphicDev)
 		MSG_BOX("Logo Setting Failed");
 		return E_FAIL;
 	}
+
+	return S_OK;
+}
+
+HRESULT CMainApp::Ready_Font()
+{
+	if (FAILED(CFontMgr::GetInstance()->Ready_Font(m_pGraphicDev, L"Font_Default", L"Malgun Gothic", 0, 20, FW_HEAVY)))
+		return E_FAIL;
+
+	if (FAILED(CFontMgr::GetInstance()->Ready_Font(m_pGraphicDev, L"Font_Lapture20", L"LaptureDisplay", 0, 20, FW_THIN)))
+		return E_FAIL;
+
+	if (FAILED(CFontMgr::GetInstance()->Ready_Font(m_pGraphicDev, L"Font_Lapture30", L"LaptureDisplay", 0, 30, FW_THIN)))
+		return E_FAIL;
+
+	if (FAILED(CFontMgr::GetInstance()->Ready_Font(m_pGraphicDev, L"Font_Lapture40", L"LaptureDisplay", 0, 40, FW_THIN)))
+		return E_FAIL;
+
+	if (FAILED(CFontMgr::GetInstance()->Ready_Font(m_pGraphicDev, L"Font_Lapture60", L"LaptureDisplay", 0, 60, FW_THIN)))
+		return E_FAIL;
+
+
+	if (FAILED(CFontMgr::GetInstance()->Ready_Font(m_pGraphicDev, L"Font_NotoSans30", L"Noto Sans KR Regular", 0, 30, FW_REGULAR)))
+		return E_FAIL;
+
+	if (FAILED(CFontMgr::GetInstance()->Ready_Font(m_pGraphicDev, L"Font_NotoSans40", L"Noto Sans KR Regular", 0, 40, FW_REGULAR)))
+		return E_FAIL;
+
+	if (FAILED(CFontMgr::GetInstance()->Ready_Font(m_pGraphicDev, L"Font_NotoSans60", L"Noto Sans KR Regular", 0, 60, FW_REGULAR)))
+		return E_FAIL;
+
+	if (FAILED(CFontMgr::GetInstance()->Ready_Font(m_pGraphicDev, L"Font_NotoSans80", L"Noto Sans KR Regular", 0, 80, FW_REGULAR)))
+		return E_FAIL;
+
+	if (FAILED(CFontMgr::GetInstance()->Ready_Font(m_pGraphicDev, L"Font_NotoSans100", L"Noto Sans KR Regular", 0, 100, FW_REGULAR)))
+		return E_FAIL;
 
 	return S_OK;
 }

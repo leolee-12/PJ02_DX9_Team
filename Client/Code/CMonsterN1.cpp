@@ -166,17 +166,6 @@ void CMonsterN1::Ready_Variable()
 	m_pAICom->Set_TargetTransform(CPersistentMgr::GetInstance()->Get_PlayerTransform());
 	m_pAICom->Set_State<MONSTER_N1_STATE>(N1S_SPAWN);
 
-	// 단위벡터 세팅
-	_float fAngle(0.f);
-
-	for (_uint i = 0; i < DIR_END; ++i)
-	{
-		m_vNormDir[i] = { cosf(fAngle), 0.f, -sinf(fAngle) };
-		fAngle += D3DX_PI * 0.25f;
-	}
-
-	m_vDir = m_vNormDir[DIR_LEFT];
-
 	// Anim 관련 세팅
 	m_fFrameSpeed = 24.f;
 	D3DXMatrixIdentity(&m_matTex);
@@ -302,7 +291,7 @@ void CMonsterN1::Set_Texture()
 {
 	_vec3 vDir = *(m_pAICom->Get_Dir());		// AI로부터 받아온 방향
 	_bool bFilpX = vDir.x > 0.f ? true : false;	// 반전 여부
-	_uint iFrame = m_fFrame;					// 현재 프레임
+	_uint iFrame = _uint(m_fFrame);					// 현재 프레임
 
 	D3DXMatrixIdentity(&m_matTex);
 	_uint iU = iFrame % 16;

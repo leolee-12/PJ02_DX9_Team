@@ -8,12 +8,12 @@ namespace Engine
 	class CTexture;
 }
 
-class CKBTab :
+class CKBBoardBack :
 	public CUi
 {
 private:
-	explicit CKBTab(LPDIRECT3DDEVICE9 pGraphicDev);
-	virtual ~CKBTab();
+	explicit CKBBoardBack(LPDIRECT3DDEVICE9 pGraphicDev);
+	virtual ~CKBBoardBack();
 
 public:
 	virtual			HRESULT		Ready_GameObject();
@@ -22,12 +22,15 @@ public:
 	virtual			void		Render_GameObject();
 	virtual			void		OnCollision(CGameObject* pObject);
 
-	void			  Move_Down();
-	void			  Move_Up();
-	void			  Move_Title();
+public:
+	void		Set_Select(_bool bSelect) { m_bSelect = bSelect; }
+	void		Move_Right();
+	void		Move_Left();
+	void 		Move_Center();
+
 
 public:
-	static CKBTab* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	static CKBBoardBack* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 
 private:
 	virtual			void		Free();
@@ -38,5 +41,6 @@ private:
 	CRcTex* m_pBufferCom;
 	CTransform* m_pTransformCom;
 	CTexture* m_pTextureCom;
-};
 
+	_bool	  m_bSelect;
+};

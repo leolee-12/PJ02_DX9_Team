@@ -23,7 +23,7 @@ public:
 	virtual			void		OnCollision(CGameObject* pObject);
 
 public:
-	static CDivider* Create(LPDIRECT3DDEVICE9 pGraphicDev, _uint iPage, const _vec3& vPos);
+	static CDivider* Create(LPDIRECT3DDEVICE9 pGraphicDev, _uint iPage, const _vec3& vPos, _float fScaleRate);
 
 private:
 	virtual			void		Free();
@@ -36,5 +36,6 @@ private:
 	CTexture* m_pTextureCom;
 
 	_uint m_iPage;
+	_float m_fScaleRate;
 };
 

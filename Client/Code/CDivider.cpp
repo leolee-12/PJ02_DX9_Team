@@ -4,7 +4,7 @@
 #include "CRenderer.h"
 
 CDivider::CDivider(LPDIRECT3DDEVICE9 pGraphicDev)
-	: CUi(pGraphicDev), m_pBufferCom(nullptr), m_pTransformCom(nullptr)
+	: CUi(pGraphicDev), m_pBufferCom(nullptr), m_pTransformCom(nullptr), m_fScaleRate(0.f)
 {
 	ZeroMemory(&m_vPos, sizeof(_vec3));
 }
@@ -24,7 +24,7 @@ HRESULT CDivider::Ready_GameObject()
 		return E_FAIL;
 	}
 
-	m_pTransformCom->Set_Scale(121.f * 0.7f, 55.f * 0.7f, 1.f);
+	m_pTransformCom->Set_Scale(121.f * m_fScaleRate, 55.f * m_fScaleRate, 1.f);
 	m_pTransformCom->Set_Pos(m_vPos.x, m_vPos.y, m_vPos.z);
 
 	return S_OK;
@@ -95,11 +95,12 @@ HRESULT CDivider::Add_Component()
 
 
 
-CDivider* CDivider::Create(LPDIRECT3DDEVICE9 pGraphicDev, _uint iPage, const _vec3& vPos)
+CDivider* CDivider::Create(LPDIRECT3DDEVICE9 pGraphicDev, _uint iPage, const _vec3& vPos, _float fScaleRate)
 {
 	CDivider* pDivider = new CDivider(pGraphicDev);
 	pDivider->m_iPage = iPage;
 	pDivider->m_vPos = vPos;
+	pDivider->m_fScaleRate = fScaleRate;
 
 	if (FAILED(pDivider->Ready_GameObject()))
 	{
