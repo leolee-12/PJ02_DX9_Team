@@ -14,6 +14,7 @@
 #include "CMapLoader.h"
 
 bool g_bDebug = false;
+list<wstring>		g_MapProtoname;
 
 CMainApp::CMainApp() : m_pDeviceClass(nullptr), m_pGraphicDev(nullptr)
 , m_pManagementClass(CManagement::GetInstance())
@@ -182,6 +183,8 @@ void CMainApp::Free()
 {
 	Safe_Release(m_pGraphicDev);
 	Safe_Release(m_pDeviceClass);
+
+	g_MapProtoname.clear();
 
 	CMapLoader::DestroyInstance();
 	CTileMgr::DestroyInstance();

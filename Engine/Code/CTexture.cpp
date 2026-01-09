@@ -36,7 +36,6 @@ HRESULT CTexture::Ready_Texture(TEXTUREID eID, const _tchar* pPath, const _uint&
 	m_vecTexture.reserve(iCnt);
 
 	IDirect3DBaseTexture9* pTexture = nullptr;
-
 	
 
 	for (_uint i = 0; i < iCnt; ++i)
@@ -97,7 +96,7 @@ HRESULT CTexture::Ready_Texture_FromFolder(TEXTUREID eID, const _tchar* pFolderP
 		return E_FAIL;
 
 	// MapEditorTool
-	std::sort(vecFiles.begin(), vecFiles.end());
+	// std::sort(vecFiles.begin(), vecFiles.end());
 
 	m_vecTexture.reserve(vecFiles.size());
 	std::wstring strFolderPath = pFolderPath;

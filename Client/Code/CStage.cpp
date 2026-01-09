@@ -111,29 +111,9 @@ HRESULT CStage::Ready_Environment_Layer(const _tchar* pLayerTag)
 
 	CGameObject* pGameObject = nullptr;
 
-	// SkyBox를 Ready_GameLogic_Layer에서 mapData.skyType으로 생성하도록 변경
-	/*
-	pGameObject = CSkyBox::Create(m_pGraphicDev);
-
-	if (nullptr == pGameObject)
-		return E_FAIL;
-
-	if (FAILED(pLayer->Add_GameObject(L"SkyBox", pGameObject)))
-		return E_FAIL;
-	*/
-
 	_vec3   vEye{ 0.f, 10.f, -10.f };
 	_vec3   vAt{ 0.f, 0.f, 1.f };
 	_vec3   vUp{ 0.f, 1.f, 0.f };
-
-	// DynamicCamera
-	/*pGameObject = CDynamicCamera::Create(m_pGraphicDev, &vEye, &vAt, &vUp);
-
-	if (nullptr == pGameObject)
-		return E_FAIL;
-
-	if (FAILED(pLayer->Add_GameObject(L"DynamicCamera", pGameObject)))
-		return E_FAIL;*/
 
 	pGameObject = CMainCamera::Create(m_pGraphicDev, m_pMessageChannel);
 
@@ -142,8 +122,6 @@ HRESULT CStage::Ready_Environment_Layer(const _tchar* pLayerTag)
 
 	if (FAILED(pLayer->Add_GameObject(L"MainCamera", pGameObject)))
 		return E_FAIL;
-		
-
 
 	m_mapLayer.insert({ pLayerTag , pLayer });
 
@@ -158,21 +136,10 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 
 	CGameObject* pGameObject = nullptr;
 
-	/*
-	// Terrain
-	pGameObject = CTerrain::Create(m_pGraphicDev);
-
-	if (nullptr == pGameObject)
-		return E_FAIL;
-
-	if (FAILED(pLayer->Add_GameObject(L"Terrain", pGameObject)))
-		return E_FAIL;
-	*/
-
 	// Map Load
 	Engine::MAPDATA mapData;
 	if (SUCCEEDED(Engine::CMapLoader::GetInstance()->LoadMapA(
-		"../Bin/Resource/Maps/MapData/Tutorial_test.txt", mapData)))
+		"../Bin/Resource/Maps/MapData/Tutorial.txt", mapData)))
 	{
 		// 맵 데이터의 skyType으로 SkyBox 생성
 		pGameObject = CMySkyBox::Create(m_pGraphicDev, mapData.skyType);
@@ -215,6 +182,7 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 					pLayer->Add_GameObject(L"MapObject", pGameObject);
 			}
 		}
+
 		// Process Lights - Point Light 생성
 		for (const auto& light : mapData.lights)
 		{
