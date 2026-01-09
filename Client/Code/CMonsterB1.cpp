@@ -14,8 +14,7 @@ CMonsterB1::CMonsterB1(LPDIRECT3DDEVICE9 pGraphicDev)
 	m_eCurState(B1S_SPAWN),
 	m_fFrame(0.f),
 	m_fFrameEnd(0.f),
-	m_fFrameSpeed(0.f),
-	m_iAttack(0)
+	m_fFrameSpeed(0.f)
 {
 	ZeroMemory(m_pNode, sizeof(m_pNode));
 }
@@ -26,8 +25,7 @@ CMonsterB1::CMonsterB1(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChan
 	m_eCurState(B1S_SPAWN),
 	m_fFrame(0.f),
 	m_fFrameEnd(0.f),
-	m_fFrameSpeed(0.f),
-	m_iAttack(0)
+	m_fFrameSpeed(0.f)
 {
 	ZeroMemory(m_pNode, sizeof(m_pNode));
 }
@@ -39,8 +37,7 @@ CMonsterB1::CMonsterB1(const CMonsterB1& rhs)
 	m_eCurState(B1S_SPAWN),
 	m_fFrame(0.f),
 	m_fFrameEnd(0.f),
-	m_fFrameSpeed(0.f),
-	m_iAttack(rhs.m_iAttack)
+	m_fFrameSpeed(0.f)
 {
 	memcpy(m_pNode, rhs.m_pNode, sizeof(m_pNode));
 }
@@ -57,7 +54,6 @@ HRESULT CMonsterB1::Ready_GameObject()
 		return E_FAIL;
 
 	Ready_Variable();
-
 	Ready_Event();
 
 	return S_OK;
@@ -169,10 +165,15 @@ HRESULT CMonsterB1::Add_Component()
 
 void CMonsterB1::Ready_Variable()
 {
+	// 게임로직 변수 세팅
+	m_iAttack = 1;
+	m_iHp = 10;
+	m_fScale = 5.f;
+	m_fGroundY = -2.5f + m_fScale * 0.5f;
+
 	// Transform 세팅
-	m_pTransformCom->Set_Pos(_float(rand() % 10), 1.f, _float(rand() % 10));
-	_vec3 vScale{ 5.f, 5.f, 5.f };
-	m_pTransformCom->Set_Scale(vScale.x, vScale.y, vScale.z);
+	m_pTransformCom->Set_Pos(_float(rand() % 10), m_fGroundY, _float(rand() % 10));
+	m_pTransformCom->Set_Scale(m_fScale, m_fScale, m_fScale);
 
 	// Collider 세팅
 	m_pColliderCom->RegisterToManager(this, CL_MONSTER);
@@ -186,12 +187,8 @@ void CMonsterB1::Ready_Variable()
 	m_fFrameSpeed = 24.f;
 	D3DXMatrixIdentity(&m_matTex);
 
-	// 게임로직 변수 세팅
-	m_iAttack = 1;
-	m_iHp = 10;
-	m_fGroundY = 1.f;
-
 	// 마디 세팅
+	_vec3 vScale{ m_fScale, m_fScale, m_fScale };
 	vScale *= 0.7f;
 	m_pNode[0] = CNode::Create(m_pGraphicDev, m_pMessageChannel, m_pTransformCom, L"Proto_B1Node1Texture");
 	m_pNode[0]->Set_NodeScale(vScale);

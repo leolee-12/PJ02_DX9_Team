@@ -2,9 +2,7 @@
 
 #include "CScene.h"
 
-#include "CPlayer.h"
-#include "CMonster.h"
-#include "CTerrain.h"
+class CGauge;
 
 class CTest : public CScene
 {
@@ -23,7 +21,7 @@ private:
 	HRESULT			Ready_GameLogic_Layer(const _tchar* pLayerTag);
 	HRESULT			Ready_UI_Layer(const _tchar* pLayerTag);
 
-	//HRESULT			Ready_Const_Layer();
+	//HRESULT		Ready_Const_Layer();
 	HRESULT			Ready_Const_Layer(CLayer* pConstLayer);
 
 	HRESULT			Ready_Light();
@@ -32,6 +30,9 @@ public:
 	static CTest* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 private:
 	virtual void Free();
+
+private:
+	CGauge* m_pTestGauge;
 
 };
 

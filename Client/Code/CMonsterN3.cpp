@@ -13,8 +13,7 @@ CMonsterN3::CMonsterN3(LPDIRECT3DDEVICE9 pGraphicDev)
 		m_eCurState(N3S_SPAWN),
 		m_fFrame(0.f),
 		m_fFrameEnd(0.f),
-		m_fFrameSpeed(0.f),
-		m_iAttack(0)
+		m_fFrameSpeed(0.f)
 {
 	ZeroMemory(&m_vPos, sizeof(_vec3));
 }
@@ -25,8 +24,7 @@ CMonsterN3::CMonsterN3(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChan
 		m_eCurState(N3S_SPAWN),
 		m_fFrame(0.f),
 		m_fFrameEnd(0.f),
-		m_fFrameSpeed(0.f),
-		m_iAttack(0)
+		m_fFrameSpeed(0.f)
 {
 	ZeroMemory(&m_vPos, sizeof(_vec3));
 }
@@ -38,8 +36,7 @@ CMonsterN3::CMonsterN3(const CMonsterN3& rhs)
 		m_eCurState(N3S_SPAWN),
 		m_fFrame(0.f),
 		m_fFrameEnd(0.f),
-		m_fFrameSpeed(0.f),
-		m_iAttack(rhs.m_iAttack)
+		m_fFrameSpeed(0.f)
 {
 }
 
@@ -54,7 +51,6 @@ HRESULT CMonsterN3::Ready_GameObject()
 		return E_FAIL;
 	
 	Ready_Variable();
-
 	Ready_Event();
 
 	return S_OK;
@@ -65,6 +61,8 @@ _int CMonsterN3::Update_GameObject(const _float& fTimeDelta)
 	Move_Frame(fTimeDelta);
 
 	m_pColliderCom->UpdateFromTransform(m_pTransformCom);
+	// 충돌체 디버그용
+	if (g_bDebug) m_pColliderCom->Update_AABBforRender();
 
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
@@ -154,9 +152,16 @@ HRESULT CMonsterN3::Add_Component()
 
 void CMonsterN3::Ready_Variable()
 {
+	// 게임로직 변수 세팅
+	m_iAttack = 1;
+	m_iHp = 10;
+	m_fScale = 4.f;
+	m_fGroundY = -2.5f + m_fScale * 0.5f;
+	m_fHeight = 2.f;	// 공중에 떠있는 몬스터
+
 	// Transform 세팅
-	m_pTransformCom->Set_Pos(_float(rand() % 20), 1.f, _float(rand() % 20));
-	m_pTransformCom->Set_Scale(4.f, 4.f, 4.f);
+	m_pTransformCom->Set_Pos(_float(rand() % 20), m_fGroundY + m_fHeight, _float(rand() % 20));
+	m_pTransformCom->Set_Scale(m_fScale, m_fScale, m_fScale);
 
 	// Collider 세팅
 	m_pColliderCom->RegisterToManager(this, CL_MONSTER);
@@ -165,14 +170,11 @@ void CMonsterN3::Ready_Variable()
 	m_pAICom->Set_OwnerTransform(m_pTransformCom);
 	m_pAICom->Set_TargetTransform(CPersistentMgr::GetInstance()->Get_PlayerTransform());
 	m_pAICom->Set_State<MONSTER_N3_STATE>(N3S_SPAWN);
+	m_pAICom->Set_GroundY(m_fGroundY + m_fHeight);
 
 	// Anim 관련 세팅
 	m_fFrameSpeed = 24.f;
 	D3DXMatrixIdentity(&m_matTex);
-
-	// 게임로직 변수 세팅
-	m_iAttack = 1;
-	m_iHp = 10;
 }
 
 void CMonsterN3::Ready_Event()

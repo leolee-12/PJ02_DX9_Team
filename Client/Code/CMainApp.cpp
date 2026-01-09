@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CMainApp.h"
 #include "CLogo.h"
 #include "CStage.h"
@@ -7,12 +7,13 @@
 #include "CDInputMgr.h"
 #include "CFontMgr.h"
 #include "CLightMgr.h"
-#include "CImGuiMgr.h"
 #include "CCollisionMgr.h"
 #include "CPersistentMgr.h"
 #include "CSoundMgr.h"
+#include "CTileMgr.h"
+#include "CMapLoader.h"
 
-//#define IMGUI
+bool g_bDebug = false;
 
 CMainApp::CMainApp() : m_pDeviceClass(nullptr), m_pGraphicDev(nullptr)
 , m_pManagementClass(CManagement::GetInstance())
@@ -33,13 +34,7 @@ HRESULT CMainApp::Ready_MainApp()
 	if (FAILED(Ready_Scene(m_pGraphicDev)))
 		return E_FAIL;
 
-#ifdef IMGUI
-	CImGuiMgr::GetInstance()->ImGui_Setup(g_hWnd, m_pGraphicDev, wndclass);
-
-#else
 	CCollisionMgr::GetInstance()->Ready_CollisionMgr();
-
-#endif // IMGUI
 	CSoundMgr::GetInstance()->Ready_SoundMgr();
 
 	return S_OK;
@@ -48,11 +43,10 @@ HRESULT CMainApp::Ready_MainApp()
 int CMainApp::Update_MainApp(const float& fTimeDelta)
 {
 	m_pManagementClass->Update_Scene(fTimeDelta);
-
-#ifdef IMGUI
-	CImGuiMgr::GetInstance()->ImGui_Tick();
-#endif // IMGUI
 	CDInputMgr::GetInstance()->Update_InputDev();
+
+	// 타일 매니저 업데이트
+	CTileMgr::GetInstance()->Update(fTimeDelta);
 
 	// _ulong dwDst = 0;
 
@@ -67,12 +61,11 @@ int CMainApp::Update_MainApp(const float& fTimeDelta)
 void CMainApp::LateUpdate_MainApp(const float& fTimeDelta)
 {
 	m_pManagementClass->LateUpdate_Scene(fTimeDelta);
-#ifdef IMGUI
 
-#else
+	// 타일 매니저 레이트 업데이트
+	CTileMgr::GetInstance()->LateUpdate(fTimeDelta);
+
 	//CCollisionMgr::GetInstance()->Check_Collisions(fTimeDelta);
-#endif // IMGUI
-
 	CSoundMgr::GetInstance()->Update();
 }
 
@@ -82,14 +75,7 @@ void CMainApp::Render_MainApp()
 
 	m_pManagementClass->Render_Scene(m_pGraphicDev);
 
-#ifdef IMGUI
-	CImGuiMgr::GetInstance()->ImGui_Render();
-
-#else
-#endif // IMGUI
-
 	m_pDeviceClass->Render_End();
-
 }
 
 HRESULT CMainApp::Ready_DefaultSetting(LPDIRECT3DDEVICE9* ppGraphicDev)
@@ -179,12 +165,6 @@ HRESULT CMainApp::Ready_Font()
 
 CMainApp* CMainApp::Create()
 {
-#ifdef IMGUI
-
-#else
-
-#endif // IMGUI
-
 	CMainApp* pMainApp = new CMainApp;
 
 	if (FAILED(pMainApp->Ready_MainApp()))
@@ -201,8 +181,10 @@ CMainApp* CMainApp::Create()
 void CMainApp::Free()
 {
 	Safe_Release(m_pGraphicDev);
-	Safe_Release(m_pDeviceClass);	
+	Safe_Release(m_pDeviceClass);
 
+	CMapLoader::DestroyInstance();
+	CTileMgr::DestroyInstance();
 	CPersistentMgr::DestroyInstance();
 	CLightMgr::DestroyInstance();
 	CFontMgr::DestroyInstance();
@@ -214,9 +196,5 @@ void CMainApp::Free()
 	CManagement::DestroyInstance();
 	CCollisionMgr::DestroyInstance();
 	CSoundMgr::DestroyInstance();
-#ifdef IMGUI
-	CImGuiMgr::GetInstance()->ImGui_Shutdown();
-	CImGuiMgr::DestroyInstance();
-#endif // IMGUI
 	m_pDeviceClass->DestroyInstance();
 }

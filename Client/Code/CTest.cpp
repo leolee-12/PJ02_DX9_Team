@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CTest.h"
 #include "CBackGround.h"
 #include "CProtoMgr.h"
@@ -11,14 +11,15 @@
 #include "CDungeonIcon.h"
 #include "CLightMgr.h"
 #include "CDungeonLine.h"
-#include "CPlayerHP.h"
 #include "CSoundMgr.h"
 #include "CMainCamera.h"
 #include "CMonsterN1.h"
 #include "CItem.h"
-#include "CCollisionMgr.h"
-#include "CMonsterN2.h"
-#include <CMonsterN3.h>
+#include "CMonsterN3.h"
+#include "PlayerUI.h"
+#include "CPlayer.h"
+#include "CMonster.h"
+#include "CTerrain.h"
 #include <CMonsterB1.h>
 
 CTest::CTest(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -57,7 +58,7 @@ _int CTest::Update_Scene(const _float& fTimeDelta)
 
 		m_pMessageChannel->Publish(event);
 
-		CSoundMgr::GetInstance()->Play(L"AAAK.wav", SOUND_EFFECT, 0.1f);	
+		CSoundMgr::GetInstance()->Play(L"AAAK.wav", SOUND_EFFECT, 0.1f);
 	}
 	if (CDInputMgr::GetInstance()->Key_Down(DIK_U))
 	{
@@ -75,6 +76,29 @@ _int CTest::Update_Scene(const _float& fTimeDelta)
 
 		m_pMessageChannel->Publish(event);
 	}
+
+	if (CDInputMgr::GetInstance()->Key_Down(DIK_RIGHT))
+	{
+		m_pTestGauge->Set_GaugeState(Gauge::GS_FAITH);
+		m_pTestGauge->Set_GaugeValue(0.f);
+	}
+	if (CDInputMgr::GetInstance()->Key_Down(DIK_LEFT))
+	{
+		m_pTestGauge->Set_GaugeState(Gauge::GS_PASSION);
+		m_pTestGauge->Set_GaugeValue(0.f);
+	}
+	if (CDInputMgr::GetInstance()->Key_Down(DIK_DOWN))
+	{
+		m_pTestGauge->Add_GaugeValue(-0.5f);
+	}
+	if (CDInputMgr::GetInstance()->Key_Down(DIK_UP))
+	{
+		m_pTestGauge->Add_GaugeValue(0.5f);
+	}
+
+
+
+
 	_int iExit = Engine::CScene::Update_Scene(fTimeDelta);
 
 	return iExit;
@@ -165,33 +189,14 @@ HRESULT CTest::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 
 	pGameObject->AddRef();
 
-	for (_uint i = 0; i < 3; ++i)
+	for (_uint i = 0; i < 20; ++i)
 	{
-		//pGameObject = CMonsterN1::Create(m_pGraphicDev, m_pMessageChannel);
-		//
-		//if (nullptr == pGameObject)
-		//	return E_FAIL;
-		//
-		//if (FAILED(pLayer->Add_GameObject(L"Monster", pGameObject)))
-		//	return E_FAIL;
-
 		pGameObject = CItem::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ _float(rand() % 20), 1.1f, _float(rand() % 20) }, CItem::ITEMID(rand() % 6), true);
 
 		if (nullptr == pGameObject)
 			return E_FAIL;
 
 		if (FAILED(pLayer->Add_GameObject(L"Item", pGameObject)))
-			return E_FAIL;
-	}
-
-	for (_uint i = 0; i < 1000; ++i)
-	{
-		pGameObject = CMonsterN2::Create(m_pGraphicDev, m_pMessageChannel);
-		
-		if (nullptr == pGameObject)
-			return E_FAIL;
-		
-		if (FAILED(pLayer->Add_GameObject(L"Monster", pGameObject)))
 			return E_FAIL;
 	}
 
@@ -212,7 +217,7 @@ HRESULT CTest::Ready_UI_Layer(const _tchar* pLayerTag)
 
 	if (nullptr == pGameObject)
 		return E_FAIL;
-	
+
 	if (FAILED(pLayer->Add_GameObject(L"SelectBack", pGameObject)))
 		return E_FAIL;
 
@@ -264,6 +269,15 @@ HRESULT CTest::Ready_UI_Layer(const _tchar* pLayerTag)
 	if (FAILED(pLayer->Add_GameObject(L"PlayerHP", pGameObject)))
 		return E_FAIL;
 
+	pGameObject = m_pTestGauge = CGauge::Create(m_pGraphicDev, Gauge::GS_PASSION);
+
+	if (nullptr == pGameObject)
+		return E_FAIL;
+
+	if (FAILED(pLayer->Add_GameObject(L"Gauge", pGameObject)))
+		return E_FAIL;
+
+	
 
 
 

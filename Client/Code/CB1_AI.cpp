@@ -53,7 +53,7 @@ void CB1_AI::Enter_State(const _uint& iState)
 		m_fSpeed = 0.03f;
 		_vec3 vPrevPos, vDesiredDir;
 
-		if ((!m_bChase) || (m_fAcmlTime < 2.f))	vDesiredDir = Randomize_Dir();
+		if ((!m_bChase) || (m_fAcmlTime < 2.f))			vDesiredDir = Randomize_Dir();
 		else if ((m_bChase) && (m_fAcmlTime >= 2.f))	vDesiredDir = Compute_TargetDir();
 
 		m_pOwnerTC->Get_Info(INFO_POS, &vPrevPos);
@@ -148,14 +148,13 @@ _int CB1_AI::Update_Component(const _float& fTimeDelta)
 		Update_Land(fTimeDelta);
 		break;
 	case CMonsterB1::B1S_PREPARE:
-		Update_Spawn(fTimeDelta);
+		Update_Prepare(fTimeDelta);
 		break;
 	case CMonsterB1::B1S_ATTACK:
-		Update_Stop(fTimeDelta);
+		Update_Attack(fTimeDelta);
 		break;
 	case CMonsterB1::B1S_SHOOT:
-		Update_Spawn
-		(fTimeDelta);
+		Update_Shoot(fTimeDelta);
 		break;
 	case CMonsterB1::B1S_SPAWN:
 		Update_Spawn(fTimeDelta);
@@ -222,6 +221,14 @@ void CB1_AI::Update_Land(const _float& fTimeDelta)
 	}
 }
 
+void CB1_AI::Update_Prepare(const _float& fTimeDelta)
+{
+}
+
+void CB1_AI::Update_Attack(const _float& fTimeDelta)
+{
+}
+
 void CB1_AI::Update_Shoot(const _float& fTimeDelta)
 {
 }
@@ -266,6 +273,10 @@ void CB1_AI::Anim_End(CMonsterB1::MONSTER_B1_STATE eState)
 		break;
 
 	case CMonsterB1::B1S_SPAWN:
+		Change_State(CMonsterB1::B1S_ROAR);
+		break;
+
+	case CMonsterB1::B1S_ROAR:
 		Change_State(CMonsterB1::B1S_CRAWL);
 		break;
 	}

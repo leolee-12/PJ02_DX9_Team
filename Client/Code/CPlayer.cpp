@@ -84,9 +84,17 @@ _int CPlayer::Update_GameObject(const _float& fTimeDelta)
 	Move_Frame(fTimeDelta);
 
 	m_pColliderCom->UpdateFromTransform(m_pTransformCom);
+	
+	//------스프라이트 중심 오류로 인한 임시 코드------
+	_float fX(0.f), fY(m_vPos.y - 0.2f);
+	if (m_vDir.x > 0.001f)		fX = m_vPos.x - 0.4f;
+	else						fX = m_vPos.x + 0.4f;
+	AABB tAABB = { fX, fY, m_vPos.z, 1.f, 1.f, 1.f };
+	m_pColliderCom->Set_AABB(tAABB);
+	//-------------------------------------------------
 
 	// 충돌체 디버그용
-	m_pColliderCom->Update_AABBforRender();
+	if(g_bDebug) m_pColliderCom->Update_AABBforRender();
 
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 	
@@ -186,6 +194,9 @@ void CPlayer::Ready_Variable()
 	//m_pTransformCom->Set_Scale(7.f, 7.f, 7.f);	// Tex2
 	m_fFrameSpeed = 24.f;
 
+	AABB tAABB = { m_vPos.x, m_vPos.y, m_vPos.z, 1.f, 1.f, 1.f };
+	m_pColliderCom->Set_AABB(tAABB);
+
 	_float fAngle(0.f);
 
 	for (_uint i = 0; i < DIR_END; ++i)
@@ -283,6 +294,11 @@ HRESULT CPlayer::Add_Component()
 
 void CPlayer::Key_Input(const _float& fTimeDelta)
 {
+	if (CDInputMgr::GetInstance()->Key_Down(DIK_Z))
+	{
+		g_bDebug = !g_bDebug;
+	}
+
 	if (!m_bRoll && !m_iCombo && !m_fCharge)
 	{
 		if (CDInputMgr::GetInstance()->Key_Pressing(DIK_W))
@@ -348,7 +364,7 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 		m_bRoll = false;
 		m_fFrame = 0.f;
 		m_eCurState = PS_ATTACK;
-		m_pTransformCom->Move_Pos(&m_vDir, fTimeDelta, m_fSpeed - 5.f);
+		m_pTransformCom->Move_Pos(&m_vDir, fTimeDelta, m_fSpeed - 3.f);
 		Attack_HitBox();
 	}
 
@@ -627,10 +643,16 @@ void CPlayer::Charge(const _float& fTimeDelta)
 
 void CPlayer::Attack_HitBox()
 {
-	AABB tAABB = { m_vPos.x, m_vPos.y, m_vPos.z,
-					2.f, 1.f, 2.f };
+	_float fX(0.f);
 
-	CRenderer::GetInstance()->Add_TestCollider(tAABB, 60);
+	if (m_vDir.x >= 0.f)	fX = m_vPos.x + 1.2f;
+	else					fX = m_vPos.x - 1.2f;
+
+
+	AABB tAABB = { fX, m_vPos.y, m_vPos.z,
+					1.5f, 1.f, 1.5f };
+
+	if(g_bDebug) CRenderer::GetInstance()->Add_TestCollider(tAABB, 60);
 
 	vector<CGameObject*> tempVec = CCollisionMgr::GetInstance()->Test_AABB(tAABB, CL_MONSTER);
 
@@ -649,7 +671,7 @@ void	CPlayer::OnCollision(CGameObject* pObject)
 {
 	if (pObject->Get_OBJID() == OID_MONSTER)
 	{
-		m_pTransformCom->Set_Pos(10.f, 10.f, 10.f);
+		//m_pTransformCom->Set_Pos(10.f, 10.f, 10.f);
 	}
 }
 

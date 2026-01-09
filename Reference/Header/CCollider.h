@@ -23,6 +23,8 @@ private:
 	virtual ~CCollider();
 	
 public:
+	void Set_AABB(AABB tAABB) { m_tAABB = tAABB; }
+
 	static CCollider* Create(LPDIRECT3DDEVICE9 pGraphicDev, optional<AABB> tInitAABB = nullopt);
 	CComponent* Clone() override;
 

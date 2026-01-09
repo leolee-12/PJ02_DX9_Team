@@ -18,6 +18,7 @@ public:
 	void		Set_TargetTransform(CTransform* pTransformCom)	{ m_pTargetTC = pTransformCom; }
 	void		Set_DetectRange(_float fRange)					{ m_fDetectRange = fRange; }
 	void		Set_InteractRange(_float fRange)				{ m_fInteractRange = fRange; }
+	void		Set_GroundY(_float fGroundY)					{ m_fGroundY = fGroundY; }
 
 	_float		Get_DetectRange() const { return m_fDetectRange; }
 	const _vec3*	Get_Dir() { return &m_vDir; }
@@ -55,6 +56,7 @@ protected:
 	_float			m_fInteractRange;	// 상호작용을 시도하는 거리
 	_float			m_fDistance;		// 현재 타겟과의 거리
 	_vec3			m_vDir;				// 현재 타겟으로의 방향
+	_float			m_fGroundY;
 	
 
 protected:

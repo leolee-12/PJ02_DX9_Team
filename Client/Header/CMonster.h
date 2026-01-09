@@ -35,6 +35,11 @@ protected:
 
 	_vec3				m_vPos;
 
+	// 스테이터스 관련
+	_int				m_iAttack;
+	_float				m_fScale;
+	_float				m_fGroundY;
+
 public:
 	static CMonster* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel);
 

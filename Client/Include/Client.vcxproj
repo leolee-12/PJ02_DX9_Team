@@ -157,6 +157,9 @@
     <ClInclude Include="..\Header\CDungeonLine.h" />
     <ClInclude Include="..\Header\CDynamicCamera.h" />
     <ClInclude Include="..\Header\CEditScene.h" />
+    <ClInclude Include="..\Header\CGauge.h" />
+    <ClInclude Include="..\Header\CGaugeCover.h" />
+    <ClInclude Include="..\Header\CGaugeStar.h" />
     <ClInclude Include="..\Header\CItem.h" />
     <ClInclude Include="..\Header\CKBBack.h" />
     <ClInclude Include="..\Header\CKBBack2.h" />
@@ -186,9 +189,12 @@
     <ClInclude Include="..\Header\CMonsterB1.h" />
     <ClInclude Include="..\Header\CMonsterB2.h" />
     <ClInclude Include="..\Header\CMonsterN1.h" />
+    <ClInclude Include="..\Header\CMySkyBox.h" />
     <ClInclude Include="..\Header\CMonsterN2.h" />
     <ClInclude Include="..\Header\CMonsterN3.h" />
     <ClInclude Include="..\Header\CN1_AI.h" />
+    <ClInclude Include="..\Header\CPassionGauge.h" />
+    <ClInclude Include="..\Header\CPassionIcon.h" />
     <ClInclude Include="..\Header\CN2_AI.h" />
     <ClInclude Include="..\Header\CN3_AI.h" />
     <ClInclude Include="..\Header\CNode.h" />
@@ -208,7 +214,14 @@
     <ClInclude Include="..\Header\CTitleCenter.h" />
     <ClInclude Include="..\Header\CTitleLogo.h" />
     <ClInclude Include="..\Header\CTitleTab.h" />
+    <ClInclude Include="..\Header\Gage_Enum.h" />
+    <ClInclude Include="..\Header\PlayerUI.h" />
     <ClInclude Include="..\Header\TestCube.h" />
+    <ClInclude Include="..\Header\CTile.h" />
+    <ClInclude Include="..\Header\CTileMgr.h" />
+    <ClInclude Include="..\Header\CMapObject.h" />
+    <ClInclude Include="..\Header\CGrass.h" />
+    <ClInclude Include="..\Header\SaveLoad.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="pch.h" />
@@ -226,6 +239,9 @@
     <ClCompile Include="..\Code\CDungeonLine.cpp" />
     <ClCompile Include="..\Code\CDynamicCamera.cpp" />
     <ClCompile Include="..\Code\CEditScene.cpp" />
+    <ClCompile Include="..\Code\CGauge.cpp" />
+    <ClCompile Include="..\Code\CGaugeCover.cpp" />
+    <ClCompile Include="..\Code\CGaugeStar.cpp" />
     <ClCompile Include="..\Code\CItem.cpp" />
     <ClCompile Include="..\Code\CKBBack.cpp" />
     <ClCompile Include="..\Code\CKBBack2.cpp" />
@@ -257,7 +273,10 @@
     <ClCompile Include="..\Code\CMonsterN1.cpp" />
     <ClCompile Include="..\Code\CMonsterN2.cpp" />
     <ClCompile Include="..\Code\CMonsterN3.cpp" />
+    <ClCompile Include="..\Code\CMySkyBox.cpp" />
     <ClCompile Include="..\Code\CN1_AI.cpp" />
+    <ClCompile Include="..\Code\CPassionGauge.cpp" />
+    <ClCompile Include="..\Code\CPassionIcon.cpp" />
     <ClCompile Include="..\Code\CN2_AI.cpp" />
     <ClCompile Include="..\Code\CN3_AI.cpp" />
     <ClCompile Include="..\Code\CNode.cpp" />
@@ -273,11 +292,15 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\Code\CTestEffect.cpp" />
+    <ClCompile Include="..\Code\CTile.cpp" />
     <ClCompile Include="..\Code\CTitleBack.cpp" />
     <ClCompile Include="..\Code\CTitleCenter.cpp" />
     <ClCompile Include="..\Code\CTitleLogo.cpp" />
     <ClCompile Include="..\Code\CTitleTab.cpp" />
     <ClCompile Include="..\Code\TestCube.cpp" />
+    <ClCompile Include="..\Code\CTileMgr.cpp" />
+    <ClCompile Include="..\Code\CMapObject.cpp" />
+    <ClCompile Include="..\Code\CGrass.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

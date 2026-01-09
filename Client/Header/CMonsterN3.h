@@ -53,7 +53,7 @@ private:
 	_matrix				m_matTex;
 
 	// 스테이터스 관련
-	_int				m_iAttack;
+	_float				m_fHeight;
 
 	// AI 관련
 	CN3_AI*				m_pAICom;

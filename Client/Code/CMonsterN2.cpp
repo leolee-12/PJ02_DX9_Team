@@ -14,8 +14,7 @@ CMonsterN2::CMonsterN2(LPDIRECT3DDEVICE9 pGraphicDev)
 		m_eCurState(N2S_SPAWN),
 		m_fFrame(0.f),
 		m_fFrameEnd(0.f),
-		m_fFrameSpeed(0.f),
-		m_iAttack(0)
+		m_fFrameSpeed(0.f)
 {
 	ZeroMemory(m_pNode, sizeof(m_pNode));
 }
@@ -26,8 +25,7 @@ CMonsterN2::CMonsterN2(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChan
 		m_eCurState(N2S_SPAWN),
 		m_fFrame(0.f),
 		m_fFrameEnd(0.f),
-		m_fFrameSpeed(0.f),
-		m_iAttack(0)
+		m_fFrameSpeed(0.f)
 {
 	ZeroMemory(m_pNode, sizeof(m_pNode));
 }
@@ -39,8 +37,7 @@ CMonsterN2::CMonsterN2(const CMonsterN2& rhs)
 		m_eCurState(N2S_SPAWN),
 		m_fFrame(0.f),
 		m_fFrameEnd(0.f),
-		m_fFrameSpeed(0.f),
-		m_iAttack(rhs.m_iAttack)
+		m_fFrameSpeed(0.f)
 {
 	memcpy(m_pNode, rhs.m_pNode, sizeof(m_pNode));
 }
@@ -57,7 +54,6 @@ HRESULT CMonsterN2::Ready_GameObject()
 		return E_FAIL;
 	
 	Ready_Variable();
-
 	Ready_Event();
 
 	return S_OK;
@@ -68,7 +64,8 @@ _int CMonsterN2::Update_GameObject(const _float& fTimeDelta)
 	Move_Frame(fTimeDelta);
 
 	m_pColliderCom->UpdateFromTransform(m_pTransformCom);
-
+	// 충돌체 디버그용
+	if (g_bDebug) m_pColliderCom->Update_AABBforRender();
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
 	if (iExit == DEAD)
@@ -169,29 +166,33 @@ HRESULT CMonsterN2::Add_Component()
 
 void CMonsterN2::Ready_Variable()
 {
+	// 게임로직 변수 세팅
+	m_iAttack = 1;
+	m_iHp = 10;
+	m_fScale = 3.f;
+	m_fGroundY = -2.5f + m_fScale * 0.5f;
+
 	// Transform 세팅
-	m_pTransformCom->Set_Pos(_float(rand() % 10), 1.f, _float(rand() % 10));
-	_vec3 vScale{ 3.f, 3.f, 3.f };
-	m_pTransformCom->Set_Scale(vScale.x, vScale.y, vScale.z);
+	m_pTransformCom->Set_Pos(_float(rand() % 20), m_fGroundY, _float(rand() % 20));
+	m_pTransformCom->Set_Scale(m_fScale, m_fScale, m_fScale);
 
 	// Collider 세팅
 	m_pColliderCom->RegisterToManager(this, CL_MONSTER);
+	AABB tAABB = { m_vPos.x, m_vPos.y, m_vPos.z, 0.7f, 0.5f, 0.7f };
+	m_pColliderCom->Set_AABB(tAABB);
 
 	// AI 세팅
 	m_pAICom->Set_OwnerTransform(m_pTransformCom);
 	m_pAICom->Set_TargetTransform(CPersistentMgr::GetInstance()->Get_PlayerTransform());
 	m_pAICom->Set_State<MONSTER_N2_STATE>(N2S_SPAWN);
+	m_pAICom->Set_GroundY(m_fGroundY);
 
 	// Anim 관련 세팅
 	m_fFrameSpeed = 24.f;
 	D3DXMatrixIdentity(&m_matTex);
 
-	// 게임로직 변수 세팅
-	m_iAttack = 1;
-	m_iHp = 10;
-	m_fGroundY = 1.f;
-
 	// 마디 세팅
+	_vec3 vScale{ m_fScale, m_fScale, m_fScale };
 	vScale *= 0.7f;
 	m_pNode[0] = CNode::Create(m_pGraphicDev, m_pMessageChannel, m_pTransformCom, L"Proto_N2Node1Texture");
 	m_pNode[0]->Set_NodeScale(vScale);
@@ -429,7 +430,7 @@ void CMonsterN2::Compute_NodePos(const _float& fTimeDelta)
 		_float fLerp = min(1.f, fDistRatio * 0.5f);
 		_vec3 vTargetPos = vPrevPos - vNewDir * fAdaptiveDist;
 
-		if (m_eCurState != N2S_JUMP) vTargetPos.y = m_fGroundY - (m_fGroundY * (1.f - fScaleReduction) * 0.5f);	// 줄어든 크기의 절반만 낮추는게 맞는 것 같은데...
+		if (m_eCurState != N2S_JUMP && m_eCurState != N2S_LAND) vTargetPos.y = m_fGroundY - (m_fGroundY * (1.f - fScaleReduction) * 0.5f);
 		fScaleReduction *= 0.7f;
 
 		vCurPos = m_pNode[i]->Get_NodePos();

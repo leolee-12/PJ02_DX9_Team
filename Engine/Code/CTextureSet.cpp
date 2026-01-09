@@ -12,14 +12,12 @@ CTextureSet::CTextureSet(LPDIRECT3DDEVICE9 pGraphicDev)
 CTextureSet::CTextureSet(const CTextureSet& rhs)
 	: CComponent(rhs)
 {
-	_uint iMapSize = m_mapTexture.size();
-
 	m_mapTexture = rhs.m_mapTexture;
 
 	for (auto iter = m_mapTexture.begin();
 		iter != m_mapTexture.end(); iter++)
 	{
-		_uint iSize = iter->second.size();
+		size_t iSize = iter->second.size();
 
 		for (size_t j = 0; j < iSize; ++j)
 		{

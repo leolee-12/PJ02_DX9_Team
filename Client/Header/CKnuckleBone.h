@@ -41,9 +41,11 @@ private:
 	void			Render_Font_Tutorial();
 	void			Render_Font_Title();
 	void			Render_Font_Main();
+	void			Render_Font_Trun();
 
 	void			State_machine();
 	void			Key_Input_KB();
+	void            Debug_Key_Input_KB();
 
 	// 메인 게임 로직
 	_bool			Update_MainGame(const _float& fTimeDelta);	// true 반환 시 씬 전환됨, 즉시 탈출 필요
@@ -63,6 +65,7 @@ private:
 	// 상대 주사위 제거
 	void			Remove_OpponentDice(_int iOwner, _int iCol, _int iDiceValue);	// 상대 같은 열 같은 눈 제거
 	void			Compact_Column(_int iOwner, _int iCol);							// 열 내 빈 칸 정렬
+	void			Update_ColumnDiceColors(_int iOwner, _int iCol);				// 열 주사위 색상 업데이트
 
 	// 게임 종료 판정
 	_bool			Check_GameEnd();				// 게임 종료 여부 (한 쪽 9칸 채움)
@@ -110,5 +113,12 @@ private:
 
 	// 보드선택창 ShowTime
 	_float		m_fShowTime;
+
+	// 마지막 배치 열 (색상 업데이트용)
+	_int		m_iLastPlacedCol;
+	
+	// 최초 입장 딜레이
+	_float		m_fEnterDelay;
+	_bool       m_bEnterDone;
 };
 

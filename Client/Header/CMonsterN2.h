@@ -55,9 +55,6 @@ private:
 	_float				m_fFrameSpeed;
 	_matrix				m_matTex;
 
-	// 스테이터스 관련
-	_int		m_iAttack;
-
 	// AI 관련
 	CN2_AI*		m_pAICom;
 

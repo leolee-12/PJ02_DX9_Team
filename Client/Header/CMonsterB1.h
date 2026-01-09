@@ -55,15 +55,11 @@ private:
 	_float				m_fFrameSpeed;
 	_matrix				m_matTex;
 
-	// 스테이터스 관련
-	_int	m_iAttack;
-
 	// AI 관련
 	CB1_AI* m_pAICom;
 
 	// 마디 관련
 	CNode*		m_pNode[4];
-	_float		m_fGroundY;
 
 public:
 	static CMonsterB1* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel);
