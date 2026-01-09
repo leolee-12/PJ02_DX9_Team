@@ -232,7 +232,7 @@ _uint CLoadingThread::Loading_ForDungeon()
         if (FAILED(CPersistentMgr::GetInstance()->Ready_GlobalObjects(m_pGraphicDev)))
             return E_FAIL;
 
-    m_fPercent += 50.f;
+    
 
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_DungeonLine", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Dungeon/Line%d.png", 2));
 
@@ -299,6 +299,16 @@ _uint CLoadingThread::Loading_ForDungeon()
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_PassionGauge", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Player/PassionGauge/PassionGauge.png", 1));
 
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_PassionIcon", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Player/PassionGauge/PassionIcon_%d.png", 2));
+
+    m_fPercent += 50.f;
+    //비숍 래쉬
+
+    vector<CTextureSet::TEXINFO> tempVec(2);
+    tempVec[0] = CTextureSet::TEXINFO(L"Bishop_Leshy_Idle", L"../Bin/Resource/Texture/Bishops/Leshy/Leshy-idle/Leshy_idle-%d.png", 500);
+    tempVec[1] = CTextureSet::TEXINFO(L"Bishop_Leshy_Talk", L"../Bin/Resource/Texture/Bishops/Leshy/Leshy-talk/Leshy-talk-%d.png", 167);
+
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_BishopLeshy", Engine::CTextureSet::Create(m_pGraphicDev, TEX_NORMAL, tempVec));
+
 
     // 맵 오브젝트 로딩 
     Load_Object_Texture(Tutorial_Texture);

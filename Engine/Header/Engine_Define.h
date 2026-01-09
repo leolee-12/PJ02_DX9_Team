@@ -15,6 +15,7 @@
 #include <optional>
 #include <any>
 #include <fstream>
+#include <set>
 
 #include "json/json.h"
 

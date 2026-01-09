@@ -7,6 +7,8 @@
 #include "CTerrain.h"
 #include "CTerrainWall.h"
 
+class CGauge;
+
 class CDungeon : public CScene
 {
 private:
@@ -31,5 +33,8 @@ public:
 	static CDungeon* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 private:
 	virtual void Free();
+
+private:
+	CGauge*		 m_pGauge;
 };
 

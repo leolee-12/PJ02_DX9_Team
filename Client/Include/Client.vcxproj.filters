@@ -259,6 +259,21 @@
     <Filter Include="01. Scene\01. Maps\03. Dungeon">
       <UniqueIdentifier>{9560bf2c-af50-4eb8-bef4-9c6ceb52c988}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\13. Bishops">
+      <UniqueIdentifier>{7f83aa31-fb8d-49c4-95fc-ebbf3af46beb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\13. Bishops\00. Leshy">
+      <UniqueIdentifier>{52cf13fa-731d-4b11-bba6-7779b02f29fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\13. Bishops\01. Heket">
+      <UniqueIdentifier>{06650769-1a7d-4ff5-9267-1f4043d14e47}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\13. Bishops\02. Kallamar">
+      <UniqueIdentifier>{fd8fec59-64da-4bd1-8344-7f59f16db3fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\13. Bishops\03. Shamura">
+      <UniqueIdentifier>{28a8afb7-5c8e-4ec1-bcdb-2908ee49bd64}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -531,6 +546,21 @@
     <ClInclude Include="..\Header\CDungeon.h">
       <Filter>01. Scene\01. Maps\03. Dungeon</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CBishop_Leshy.h">
+      <Filter>02. GameObject\13. Bishops\00. Leshy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CBishop_Heket.h">
+      <Filter>02. GameObject\13. Bishops\01. Heket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CBishop_Kallamar.h">
+      <Filter>02. GameObject\13. Bishops\02. Kallamar</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CBishop_Shamura.h">
+      <Filter>02. GameObject\13. Bishops\03. Shamura</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\Bishops_Enum.h">
+      <Filter>02. GameObject\13. Bishops</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -781,6 +811,18 @@
     </ClCompile>
     <ClCompile Include="..\Code\CDungeon.cpp">
       <Filter>01. Scene\01. Maps\03. Dungeon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CBishop_Leshy.cpp">
+      <Filter>02. GameObject\13. Bishops\00. Leshy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CBishop_Heket.cpp">
+      <Filter>02. GameObject\13. Bishops\01. Heket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CBishop_Kallamar.cpp">
+      <Filter>02. GameObject\13. Bishops\02. Kallamar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CBishop_Shamura.cpp">
+      <Filter>02. GameObject\13. Bishops\03. Shamura</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

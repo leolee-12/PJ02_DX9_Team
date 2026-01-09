@@ -22,6 +22,8 @@
 #include "CMapObject.h"
 #include "CGrass.h"
 #include "CCollisionMgr.h"
+#include "CGauge.h"
+#include "CBishop_Leshy.h"
 
 CDungeon::CDungeon(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -85,6 +87,25 @@ _int CDungeon::Update_Scene(const _float& fTimeDelta)
 		event.hmapData.insert({ L"Look_Stage", CDungeonLine::DL_1 });
 
 		m_pMessageChannel->Publish(event);
+	}
+
+	if (CDInputMgr::GetInstance()->Key_Down(DIK_RIGHT))
+	{
+		m_pGauge->Set_GaugeState(Gauge::GS_FAITH);
+		m_pGauge->Set_GaugeValue(0.f);
+	}
+	if (CDInputMgr::GetInstance()->Key_Down(DIK_LEFT))
+	{
+		m_pGauge->Set_GaugeState(Gauge::GS_PASSION);
+		m_pGauge->Set_GaugeValue(0.f);
+	}
+	if (CDInputMgr::GetInstance()->Key_Down(DIK_DOWN))
+	{
+		m_pGauge->Add_GaugeValue(-0.5f);
+	}
+	if (CDInputMgr::GetInstance()->Key_Down(DIK_UP))
+	{
+		m_pGauge->Add_GaugeValue(0.5f);
 	}
 
 	_int iExit = Engine::CScene::Update_Scene(fTimeDelta);
@@ -235,6 +256,13 @@ HRESULT CDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 				return E_FAIL;
 	}
 
+	pGameObject = CBishop_Leshy::Create(m_pGraphicDev);
+
+	NULL_CHECK_RETURN(pGameObject, E_FAIL)
+
+		if (FAILED(pLayer->Add_GameObject(L"Bishop_Leshy", pGameObject)))
+			return E_FAIL;
+
 	m_mapLayer.insert({ pLayerTag , pLayer });
 
 	return S_OK;
@@ -304,6 +332,13 @@ HRESULT CDungeon::Ready_UI_Layer(const _tchar* pLayerTag)
 	if (FAILED(pLayer->Add_GameObject(L"PlayerHP", pGameObject)))
 		return E_FAIL;
 
+	pGameObject = m_pGauge = CGauge::Create(m_pGraphicDev, Gauge::GS_PASSION);
+
+	if (nullptr == pGameObject)
+		return E_FAIL;
+
+	if (FAILED(pLayer->Add_GameObject(L"Gauge", pGameObject)))
+		return E_FAIL;
 
 
 
