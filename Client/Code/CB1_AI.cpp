@@ -105,7 +105,16 @@ void CB1_AI::Exit_State(const _uint& iState)
 	}
 	break;
 
+	case CMonsterB1::B1S_PREPARE:
+		break;
+
+	case CMonsterB1::B1S_ATTACK:
+		break;
+
 	case CMonsterB1::B1S_SPAWN:
+		break;
+
+	case CMonsterB1::B1S_ROAR:
 		m_bActiveAI = true;
 		break;
 
@@ -138,8 +147,21 @@ _int CB1_AI::Update_Component(const _float& fTimeDelta)
 	case CMonsterB1::B1S_LAND:
 		Update_Land(fTimeDelta);
 		break;
+	case CMonsterB1::B1S_PREPARE:
+		Update_Spawn(fTimeDelta);
+		break;
+	case CMonsterB1::B1S_ATTACK:
+		Update_Stop(fTimeDelta);
+		break;
+	case CMonsterB1::B1S_SHOOT:
+		Update_Spawn
+		(fTimeDelta);
+		break;
 	case CMonsterB1::B1S_SPAWN:
 		Update_Spawn(fTimeDelta);
+		break;
+	case CMonsterB1::B1S_ROAR:
+		Update_Roar(fTimeDelta);
 		break;
 	case CMonsterB1::B1S_STOP:
 		Update_Stop(fTimeDelta);
@@ -200,7 +222,15 @@ void CB1_AI::Update_Land(const _float& fTimeDelta)
 	}
 }
 
+void CB1_AI::Update_Shoot(const _float& fTimeDelta)
+{
+}
+
 void CB1_AI::Update_Spawn(const _float& fTimeDelta)
+{
+}
+
+void CB1_AI::Update_Roar(const _float& fTimeDelta)
 {
 }
 

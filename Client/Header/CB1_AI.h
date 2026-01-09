@@ -23,7 +23,11 @@ private:
 	void		Update_Crawl(const _float& fTimeDelta);
 	void		Update_Jump(const _float& fTimeDelta);
 	void		Update_Land(const _float& fTimeDelta);
+	void		Update_Prepare(const _float& fTimeDelta);
+	void		Update_Attack(const _float& fTimeDelta);
+	void		Update_Shoot(const _float& fTimeDelta);
 	void		Update_Spawn(const _float& fTimeDelta);
+	void		Update_Roar(const _float& fTimeDelta);
 	void		Update_Stop(const _float& fTimeDelta);
 
 private:

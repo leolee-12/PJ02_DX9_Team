@@ -184,9 +184,9 @@ HRESULT CTest::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 			return E_FAIL;
 	}
 
-	for (_uint i = 0; i < 1; ++i)
+	for (_uint i = 0; i < 1000; ++i)
 	{
-		pGameObject = CMonsterB1::Create(m_pGraphicDev, m_pMessageChannel);
+		pGameObject = CMonsterN2::Create(m_pGraphicDev, m_pMessageChannel);
 		
 		if (nullptr == pGameObject)
 			return E_FAIL;

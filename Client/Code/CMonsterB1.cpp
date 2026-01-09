@@ -233,29 +233,40 @@ void CMonsterB1::Check_Frame()
 	switch (m_eCurState)
 	{
 	case B1S_CRAWL:
-	{
 		m_fFrameEnd = 16.f;
-	}
-	break;
+		break;
 
 	case B1S_JUMP:
-	{
 		m_fFrameEnd = 16.f;
-	}
-	break;
+		break;
 
 	case B1S_LAND:
-	{
 		m_fFrameEnd = 19.f;
-	}
-	break;
+		break;
+
+	case B1S_PREPARE:
+		m_fFrameEnd = 8.f;
+		break;
+
+	case B1S_ATTACK:
+		m_fFrameEnd = 19.f;
+		break;
+
+	case B1S_SHOOT:
+		m_fFrameEnd = 36.f;
+		break;
 
 	case B1S_SPAWN:
+		m_fFrameEnd = 19.f;
+		break;
+
+	case B1S_ROAR:
+		m_fFrameEnd = 48.f;
+		break;
+
 	case B1S_STOP:
-	{
 		m_fFrameEnd = 16.f;
-	}
-	break;
+		break;
 	}
 
 	m_ePreState = m_eCurState;
@@ -287,6 +298,11 @@ void CMonsterB1::Move_Frame(const _float& fTimeDelta)
 
 		case B1S_SPAWN:
 			m_pAICom->Anim_End(m_eCurState);
+			m_eCurState = B1S_ROAR;
+			break;
+
+		case B1S_ROAR:
+			m_pAICom->Anim_End(m_eCurState);
 			m_eCurState = B1S_CRAWL;
 			break;
 		}
@@ -310,28 +326,16 @@ void CMonsterB1::Set_Texture()
 	switch (m_eCurState)
 	{
 	case B1S_CRAWL:
-	{
-		if (vDir.z > 0.f) iV += 2;
-	}
-	break;
-
 	case B1S_JUMP:
-	{
-		if (vDir.z > 0.f) iV += 2;
-	}
-	break;
-
 	case B1S_LAND:
-	{
+	case B1S_PREPARE:
+	case B1S_ATTACK:
+	case B1S_SHOOT:
 		if (vDir.z > 0.f) iV += 2;
-	}
-	break;
+		break;
 
 	case B1S_SPAWN:
-	{
-		iTexIdx = 0;
-	}
-	break;
+		break;
 
 	case B1S_STOP:
 	{
@@ -383,7 +387,7 @@ void CMonsterB1::Attacked(const _int& iAttack)
 
 void CMonsterB1::Update_State()
 {
-	if (m_eCurState == B1S_SPAWN) return;
+	if (m_eCurState == B1S_SPAWN || m_eCurState == B1S_ROAR) return;
 
 	m_eCurState = m_pAICom->Get_RecommendState<MONSTER_B1_STATE>();
 }
@@ -419,7 +423,7 @@ void CMonsterB1::Compute_NodePos(const _float& fTimeDelta)
 
 	_vec3 vHeadVelocity = vCurPos - m_vPos;
 	_float fHeadSpeed = D3DXVec3Length(&vHeadVelocity) / fTimeDelta;
-	_float fBaseDist = 0.2f;
+	_float fBaseDist = 0.3f;
 	_float fAdaptiveDist = fBaseDist + fHeadSpeed * 0.02f;
 	_float fScaleReduction = 0.7f;
 

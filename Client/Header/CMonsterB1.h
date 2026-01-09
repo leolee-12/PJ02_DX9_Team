@@ -56,7 +56,7 @@ private:
 	_matrix				m_matTex;
 
 	// 스테이터스 관련
-	_int		m_iAttack;
+	_int	m_iAttack;
 
 	// AI 관련
 	CB1_AI* m_pAICom;
