@@ -531,6 +531,9 @@
     <ClInclude Include="..\Header\Gage_Enum.h">
       <Filter>02. GameObject\07. UI\04. PlayerUI\01. Gauge</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\LoadObjectList.h">
+      <Filter>01. Scene\99. Loading\LoadingThread</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
