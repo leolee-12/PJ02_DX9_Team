@@ -20,6 +20,9 @@ public:
 	void			Set_TextureStage(const _uint& Stage, const _uint& iIndex = 0);
 	_uint			Get_TextureCount() const { return static_cast<_uint>(m_vecTexture.size()); }
 
+	bool			Get_TextureSize(_uint* pWidth, _uint* pHeight, const _uint& iIndex = 0);
+
+
 private:
 	vector<IDirect3DBaseTexture9*>		m_vecTexture;
 

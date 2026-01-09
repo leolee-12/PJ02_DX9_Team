@@ -20,7 +20,6 @@ CRcTex::~CRcTex()
 
 HRESULT CRcTex::Ready_Buffer()
 {
-	
 	m_dwVtxSize = sizeof(VTXTEX);
 	m_dwVtxCnt = 4;
 	m_dwTriCnt = 2;
@@ -72,7 +71,6 @@ HRESULT CRcTex::Ready_Buffer()
 	pIndex[1]._2 = 3;
 
 	m_pIB->Unlock();
-
 
 	return S_OK;
 }

@@ -141,6 +141,24 @@ void CTexture::Set_TextureStage(const _uint& Stage, const _uint& iIndex)
 	m_pGraphicDev->SetTexture(Stage, m_vecTexture[iIndex]);
 }
 
+bool CTexture::Get_TextureSize(_uint* pWidth, _uint* pHeight, const _uint& iIndex)
+{
+	if (iIndex >= m_vecTexture.size())
+		return false;
+
+	IDirect3DTexture9* pTex = static_cast<IDirect3DTexture9*>(m_vecTexture[iIndex]);
+	if (nullptr == pTex)
+		return false;
+
+	D3DSURFACE_DESC desc;
+	if (FAILED(pTex->GetLevelDesc(0, &desc)))
+		return false;
+
+	*pWidth = desc.Width;
+	*pHeight = desc.Height;
+	return true;
+}
+
 CTexture* CTexture::Create(LPDIRECT3DDEVICE9 pGraphicDev, TEXTUREID eID, const _tchar* pPath, const _uint& iCnt)
 {
 	CTexture* pTexture = new CTexture(pGraphicDev);

@@ -48,17 +48,84 @@ map<wstring, int> ObjectList =
 	{L"Wood", 0},
 };
 
+// Tutorial.txt
 set<wstring> Tutorial_Texture =
 {
-	L"Candle",
-	L"Gateway",
-	L"Grass",
-	L"Pillar",
-	L"Rock",
-	L"Skull",
-	L"Stairs",
-	L"Stone",
-	L"Tree",
-	L"TutorialObject"
+    L"Candle",
+    L"Gateway",
+    L"Grass",
+    L"Pillar",
+    L"Rock",
+    L"Skull",
+    L"Stairs",
+    L"Stone",
+    L"Tree",
+    L"TutorialObject"
 };
+
+// Dungeon.txt
+set<wstring> Dungeon_Texture =
+{
+    L"Alter",
+    L"Candle",
+    L"Chain",
+    L"Circle",
+    L"Dirt",
+    L"DungeonDoor",
+    L"Gateway",
+    L"Grass",
+    L"Pillar",
+    L"Rock",
+    L"Ruin",
+    L"Skull",
+    L"Stairs",
+    L"Stone",
+    L"Stump",
+    L"Tent",
+    L"Tree",
+    L"TutorialObject",
+    L"Twig"
+};
+
+// Village.txt
+set<wstring> Village_Texture =
+{
+    L"Circle",
+    L"DungeonDoor",
+    L"Gateway",
+    L"Grass",
+    L"Rock",
+    L"Rubble",
+    L"Teleport",
+    L"Tree",
+    L"VillageStructure"
+};
+
+// TheGateway.txt
+set<wstring> TheGateway_Texture =
+{
+    L"Chain",
+    L"Gateway",
+    L"Skull",
+    L"Twig"
+};
+
+// Teleport.txt
+set<wstring> Teleport_Texture =
+{
+    L"Bush",
+    L"Candle",
+    L"Circle",
+    L"DungeonDoor",
+    L"Grass",
+    L"Icon",
+    L"Mushroom",
+    L"Rock",
+    L"Teleport",
+    L"Tree",
+    L"Twig",
+    L"Web",
+    L"Weed"
+};
+
 
