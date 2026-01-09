@@ -12,6 +12,8 @@ CMapObject::CMapObject(LPDIRECT3DDEVICE9 pGraphicDev)
 	, m_iTextureIndex(0)
 	, m_fScale(1.f)
 	, m_ePlacement(PLACEMENT_STANDING)
+	, m_TextureWidth(0.f)
+	, m_TextureHeight(0.f)
 {
 }
 
@@ -24,6 +26,8 @@ CMapObject::CMapObject(const CMapObject& rhs)
 	, m_iTextureIndex(rhs.m_iTextureIndex)
 	, m_fScale(rhs.m_fScale)
 	, m_ePlacement(rhs.m_ePlacement)
+	, m_TextureWidth(rhs.m_TextureWidth)
+	, m_TextureHeight(rhs.m_TextureHeight)
 {
 }
 
@@ -84,23 +88,22 @@ void CMapObject::Set_ObjectData(const Engine::OBJECTDATA& objData)
 	m_ePlacement = static_cast<PLACEMENT_TYPE>(objData.placement);
 
 	// Set position
-	m_pTransformCom->Set_Pos(objData.x, objData.y, objData.z);
+	m_pTransformCom->Set_Pos(objData.x, objData.y - 2.4f, objData.z);
 
-	if (objData.placement == 0)
+	// Get Texture H,W
+	m_pTextureCom->Get_TextureSize(&m_TextureWidth, &m_TextureHeight, m_iTextureIndex);
+
+	float aspectRatio = static_cast<float>(m_TextureWidth) / static_cast<float>(m_TextureHeight);
+
+	if (PLACEMENT_STANDING == m_ePlacement)
 	{
-		// standing
-		m_pTransformCom->Set_Scale(m_fScale, m_fScale * 1.5, m_fScale);
+		// Standing: height = scale, width = scale * aspectRatio
+		m_pTransformCom->Set_Scale(m_fScale * aspectRatio, m_fScale * 1.5, m_fScale);
 	}
 	else
 	{
-		// laying
-		m_pTransformCom->Set_Scale(m_fScale, m_fScale, m_fScale);
-	}
-
-
-	// If floor placement, rotate to lie flat (앞면이 위를 향하도록)
-	if (PLACEMENT_FLOOR == m_ePlacement)
-	{
+		// Floor: X = scale * aspectRatio, Z = scale
+		m_pTransformCom->Set_Scale(m_fScale * aspectRatio, m_fScale, 1.f);
 		m_pTransformCom->Rotation(ROT_X, 90.f);
 	}
 }
@@ -128,7 +131,6 @@ HRESULT CMapObject::Add_Component()
 	m_mapComponent[ID_DYNAMIC].insert({ L"Com_Transform", pComponent });
 
 	// 카테고리에 따라 텍스처 로드
-	//const _tchar* szTextureProto = L"Proto_RockTexture";  // 기본값
 	wstring szTextureProto = L"Proto_RockTexture";  // 기본값
 
 	// proto Name 생성 
@@ -139,22 +141,6 @@ HRESULT CMapObject::Add_Component()
 	{
 		szTextureProto = newProtoName;
 	}
-
-	//if (m_strCategory == "Rock")
-	//	szTextureProto = L"Proto_RockTexture";
-	//else if (m_strCategory == "Tree")
-	//	szTextureProto = L"Proto_TreeTexture";
-	//else if (m_strCategory == "Fire")
-	//	szTextureProto = L"Proto_FireTexture";
-	//else if (m_strCategory == "Tent")
-	//	szTextureProto = L"Proto_TentTexture";
-	//else if (m_strCategory == "Twig")
-	//	szTextureProto = L"Proto_TreeTexture";  // Twig는 Tree 텍스처 사용
-	//else if (m_strCategory == "Stairs")
-	//	szTextureProto = L"Proto_StairsTexture";
-	//else if (m_strCategory == "Stone")
-	//	szTextureProto = L"Proto_StoneTexture";  
-
 
 	pComponent = m_pTextureCom = dynamic_cast<Engine::CTexture*>
 		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(szTextureProto.c_str()));

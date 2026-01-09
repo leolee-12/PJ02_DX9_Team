@@ -121,7 +121,7 @@ void CGrass::Set_ObjectData(const Engine::OBJECTDATA& objData)
 	m_fScale = objData.scale;
 	m_fBaseScale = objData.scale;
 
-	m_pTransformCom->Set_Pos(objData.x, objData.y, objData.z);
+	m_pTransformCom->Set_Pos(objData.x, objData.y - 1.0f, objData.z);
 	m_pTransformCom->Set_Scale(m_fScale, m_fScale, m_fScale);
 
 	// Position-based phase for individual sway timing
@@ -215,6 +215,7 @@ HRESULT CGrass::Add_Component()
 	// Collider
 	pComponent = m_pColliderCom = dynamic_cast<Engine::CCollider*>
 		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Collider"));
+	//static_cast<Engine::CCollider*>(pComponent)->Set_AABB();
 
 	if (nullptr == pComponent)
 		return E_FAIL;
