@@ -60,6 +60,8 @@ _int CGrass::Update_GameObject(const _float& fTimeDelta)
 {
 	m_pColliderCom->UpdateFromTransform(m_pTransformCom);
 
+	if (g_bDebug) { m_pColliderCom->Update_AABBforRender(); }
+
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
 	m_fAccTime += fTimeDelta;

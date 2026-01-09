@@ -25,23 +25,11 @@
     <Filter Include="01. Scene\00. Logo">
       <UniqueIdentifier>{0d271025-e384-4299-bf6d-972bbc338575}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. Scene\01. Stage">
-      <UniqueIdentifier>{f40be6c5-f78e-4629-9f22-c05f63c86d1a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01. Scene\99. Loading">
       <UniqueIdentifier>{162da509-93eb-497c-bb4b-016c0b3d5fae}</UniqueIdentifier>
     </Filter>
     <Filter Include="01. Scene\99. Loading\LoadingThread">
       <UniqueIdentifier>{bec13d5c-cc47-4d5b-a2eb-0fb3bafdcfdd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Scene\03. Test">
-      <UniqueIdentifier>{7bf09d6b-5222-4361-bb6b-3e27ea739fa2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Scene\04. EditScene">
-      <UniqueIdentifier>{ff5bb01d-db75-499d-ae0b-be1f8fb58ee7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Scene\05. KnuckleBone">
-      <UniqueIdentifier>{fbdfd1c6-2a58-45e4-970b-5fac37bacfcb}</UniqueIdentifier>
     </Filter>
     <Filter Include="10. TileMgr">
       <UniqueIdentifier>{01b64606-77a6-499b-92aa-0bad3eff8f84}</UniqueIdentifier>
@@ -265,6 +253,24 @@
     <Filter Include="02. GameObject\07. UI\04. PlayerUI\01. Gauge\03. PassionIcon">
       <UniqueIdentifier>{62a60c43-a0a5-441d-912f-2f4c64dd1ffc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Scene\01. Maps">
+      <UniqueIdentifier>{4e1e71d3-7af1-4978-b079-ff0455d22473}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\02. KnuckleBone">
+      <UniqueIdentifier>{fbdfd1c6-2a58-45e4-970b-5fac37bacfcb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\01. Maps\00. Test">
+      <UniqueIdentifier>{7bf09d6b-5222-4361-bb6b-3e27ea739fa2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\01. Maps\01. EditScene">
+      <UniqueIdentifier>{ff5bb01d-db75-499d-ae0b-be1f8fb58ee7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\01. Maps\02. Stage">
+      <UniqueIdentifier>{f40be6c5-f78e-4629-9f22-c05f63c86d1a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\01. Maps\03. Dungeon">
+      <UniqueIdentifier>{9560bf2c-af50-4eb8-bef4-9c6ceb52c988}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -298,7 +304,7 @@
       <Filter>02. GameObject\02. Monster</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CStage.h">
-      <Filter>01. Scene\01. Stage</Filter>
+      <Filter>01. Scene\01. Maps\02. Stage</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CTerrain.h">
       <Filter>02. GameObject\03. Terrain</Filter>
@@ -310,7 +316,7 @@
       <Filter>02. GameObject\05. SkyBox</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CTest.h">
-      <Filter>01. Scene\03. Test</Filter>
+      <Filter>01. Scene\01. Maps\00. Test</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CTerrainWall.h">
       <Filter>02. GameObject\06. TerrainWall</Filter>
@@ -322,7 +328,7 @@
       <Filter>02. GameObject\99. TestObject</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CEditScene.h">
-      <Filter>01. Scene\04. EditScene</Filter>
+      <Filter>01. Scene\01. Maps\01. EditScene</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CLoadingThread.h">
       <Filter>01. Scene\99. Loading\LoadingThread</Filter>
@@ -385,7 +391,7 @@
       <Filter>02. GameObject\09. Item</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CKnuckleBone.h">
-      <Filter>01. Scene\05. KnuckleBone</Filter>
+      <Filter>01. Scene\02. KnuckleBone</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CKBBack.h">
       <Filter>02. GameObject\07. UI\03. KBUI\00. TTutorial\00. KBBack</Filter>
@@ -531,6 +537,9 @@
     <ClInclude Include="..\Header\Gage_Enum.h">
       <Filter>02. GameObject\07. UI\04. PlayerUI\01. Gauge</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CDungeon.h">
+      <Filter>01. Scene\01. Maps\03. Dungeon</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -555,7 +564,7 @@
       <Filter>02. GameObject\02. Monster</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CStage.cpp">
-      <Filter>01. Scene\01. Stage</Filter>
+      <Filter>01. Scene\01. Maps\02. Stage</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CTerrain.cpp">
       <Filter>02. GameObject\03. Terrain</Filter>
@@ -567,7 +576,7 @@
       <Filter>02. GameObject\05. SkyBox</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CTest.cpp">
-      <Filter>01. Scene\03. Test</Filter>
+      <Filter>01. Scene\01. Maps\00. Test</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CTerrainWall.cpp">
       <Filter>02. GameObject\06. TerrainWall</Filter>
@@ -579,7 +588,7 @@
       <Filter>02. GameObject\99. TestObject</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CEditScene.cpp">
-      <Filter>01. Scene\04. EditScene</Filter>
+      <Filter>01. Scene\01. Maps\01. EditScene</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CLoadingThread.cpp">
       <Filter>01. Scene\99. Loading\LoadingThread</Filter>
@@ -642,7 +651,7 @@
       <Filter>02. GameObject\09. Item</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CKnuckleBone.cpp">
-      <Filter>01. Scene\05. KnuckleBone</Filter>
+      <Filter>01. Scene\02. KnuckleBone</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CKBBack.cpp">
       <Filter>02. GameObject\07. UI\03. KBUI\00. TTutorial\00. KBBack</Filter>
@@ -778,6 +787,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CGauge.cpp">
       <Filter>02. GameObject\07. UI\04. PlayerUI\01. Gauge</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CDungeon.cpp">
+      <Filter>01. Scene\01. Maps\03. Dungeon</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -21,6 +21,7 @@ public:
 	_uint		Loading_ForStage();
 	_uint		Loading_ForTest();
 	_uint		Loading_ForKnuckleBone();
+	_uint		Loading_ForDungeon();
 
 public:
 	static unsigned int CALLBACK Thread_Main(void* pArg);
