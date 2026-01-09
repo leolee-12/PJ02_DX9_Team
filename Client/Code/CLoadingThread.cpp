@@ -6,6 +6,7 @@
 #include "CN1_AI.h"
 #include <CN2_AI.h>
 #include <CN3_AI.h>
+#include "LoadObjectList.h"
 
 CLoadingThread::CLoadingThread(LPDIRECT3DDEVICE9 pGraphicDev)
     : m_pGraphicDev(pGraphicDev), m_bFinish(false), m_eLoading(LOADING_END), m_fPercent(0.f)
@@ -103,29 +104,11 @@ _uint CLoadingThread::Loading_ForStage()
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_GrassBuffer",
         Engine::CGrassBuffer::Create(m_pGraphicDev));
 
-    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_GrassTexture",
-        Engine::CTexture::CreateFromFolder(m_pGraphicDev, TEX_NORMAL,
-            L"../Bin/Resource/Maps/Texture/Object/Grass"));
-
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Collider",
         Engine::CCollider::Create(m_pGraphicDev));
 
-    // ===== �� ������Ʈ �ؽ�ó =====
-    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_RockTexture",
-        Engine::CTexture::CreateFromFolder(m_pGraphicDev, TEX_NORMAL,
-            L"../Bin/Resource/Maps/Texture/Object/Rock"));
-
-    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_TreeTexture",
-        Engine::CTexture::CreateFromFolder(m_pGraphicDev, TEX_NORMAL,
-            L"../Bin/Resource/Maps/Texture/Object/Tree"));
-
-    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_FireTexture",
-        Engine::CTexture::CreateFromFolder(m_pGraphicDev, TEX_NORMAL,
-            L"../Bin/Resource/Maps/Texture/Object/Fire"));
-
-    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_TentTexture",
-        Engine::CTexture::CreateFromFolder(m_pGraphicDev, TEX_NORMAL,
-            L"../Bin/Resource/Maps/Texture/Object/Tent"));
+    // 맵 오브젝트 로딩 
+    Load_Object_Texture(Tutorial_Texture);
 
     //Sleep(2000);
 
@@ -183,9 +166,8 @@ _uint CLoadingThread::Loading_ForTest()
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_N1_AI", CN1_AI::Create(m_pGraphicDev, 6.f, 1.f));
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_N2_AI", CN2_AI::Create(m_pGraphicDev, 6.f, 4.f));
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_N3_AI", CN3_AI::Create(m_pGraphicDev, 6.f, 3.f));
-    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_N1_AI", CN1_AI::Create(m_pGraphicDev, 5.f, 1.f));
-
-    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_ItemTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Item/Item_%02d.png", 8));
+    //CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_N1_AI", CN1_AI::Create(m_pGraphicDev, 5.f, 1.f));
+    //CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_ItemTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Item/Item_%02d.png", 8));
 
     //게이지 테스트
 
@@ -237,6 +219,25 @@ _uint CLoadingThread::Loading_ForKnuckleBone()
     m_bFinish = true;
 
     return _uint();
+}
+
+void CLoadingThread::Load_Object_Texture(const std::set<std::wstring>& textureSet)
+{
+    for (const auto& name : textureSet)
+    {
+        auto it = ObjectList.find(name);
+        if (it == ObjectList.end() || it->second <= 0)
+            continue;
+
+        std::wstring protoName = L"Proto_" + name + L"Texture";
+        g_MapProtoname.push_back(protoName);
+
+        std::wstring path = L"../Bin/Resource/Maps/Texture/Object/" + name + L"/" + name + L"%d.png";
+
+        CProtoMgr::GetInstance()->Ready_Prototype(
+            g_MapProtoname.back().c_str(),
+            Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, path.c_str(), it->second));
+    }
 }
 
 unsigned int CLoadingThread::Thread_Main(void* pArg)

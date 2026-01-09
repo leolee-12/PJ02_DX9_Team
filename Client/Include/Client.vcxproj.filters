@@ -154,12 +154,6 @@
     <Filter Include="01. Scene\05. KnuckleBone">
       <UniqueIdentifier>{fbdfd1c6-2a58-45e4-970b-5fac37bacfcb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\07. UI\03. PlayerUI">
-      <UniqueIdentifier>{42822674-7f0e-422b-9af0-ec007c6f798a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\07. UI\03. PlayerUI\00. PlayerHP">
-      <UniqueIdentifier>{0725e0bd-c9d2-46c7-8aaf-d8ffc0b97dd6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObject\07. UI\03. KBUI">
       <UniqueIdentifier>{41fa98cd-1415-4315-904c-4273008d3aab}</UniqueIdentifier>
     </Filter>
@@ -249,6 +243,27 @@
     </Filter>
     <Filter Include="10. TileMgr">
       <UniqueIdentifier>{01b64606-77a6-499b-92aa-0bad3eff8f84}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. UI\04. PlayerUI">
+      <UniqueIdentifier>{42822674-7f0e-422b-9af0-ec007c6f798a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. UI\04. PlayerUI\00. PlayerHP">
+      <UniqueIdentifier>{0725e0bd-c9d2-46c7-8aaf-d8ffc0b97dd6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. UI\04. PlayerUI\01. Gauge">
+      <UniqueIdentifier>{bada316d-27a9-450a-866e-8bc3c74f2522}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. UI\04. PlayerUI\01. Gauge\00. GaugeCover">
+      <UniqueIdentifier>{812bddef-ebb1-450e-9cde-ef4e253c6b61}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. UI\04. PlayerUI\01. Gauge\01. GaugeStar">
+      <UniqueIdentifier>{a2a264ef-377e-4861-8139-196a341538e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. UI\04. PlayerUI\01. Gauge\02. PassionGauge">
+      <UniqueIdentifier>{48ce0224-a9df-40fb-a6b5-ede6b4574d14}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. UI\04. PlayerUI\01. Gauge\03. PassionIcon">
+      <UniqueIdentifier>{62a60c43-a0a5-441d-912f-2f4c64dd1ffc}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -515,6 +530,9 @@
     </ClInclude>
     <ClInclude Include="..\Header\Gage_Enum.h">
       <Filter>02. GameObject\07. UI\04. PlayerUI\01. Gauge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\LoadObjectList.h">
+      <Filter>01. Scene\99. Loading\LoadingThread</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

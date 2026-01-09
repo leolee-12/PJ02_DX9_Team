@@ -22,6 +22,8 @@ public:
 	_uint		Loading_ForTest();
 	_uint		Loading_ForKnuckleBone();
 
+	void		Load_Object_Texture(const std::set<std::wstring>& textureSet);
+
 public:
 	static unsigned int CALLBACK Thread_Main(void* pArg);
 

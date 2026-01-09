@@ -86,8 +86,17 @@ void CMapObject::Set_ObjectData(const Engine::OBJECTDATA& objData)
 	// Set position
 	m_pTransformCom->Set_Pos(objData.x, objData.y, objData.z);
 
-	// Set scale
-	m_pTransformCom->Set_Scale(m_fScale, m_fScale, m_fScale);
+	if (objData.placement == 0)
+	{
+		// standing
+		m_pTransformCom->Set_Scale(m_fScale, m_fScale * 1.5, m_fScale);
+	}
+	else
+	{
+		// laying
+		m_pTransformCom->Set_Scale(m_fScale, m_fScale, m_fScale);
+	}
+
 
 	// If floor placement, rotate to lie flat (앞면이 위를 향하도록)
 	if (PLACEMENT_FLOOR == m_ePlacement)
@@ -119,21 +128,36 @@ HRESULT CMapObject::Add_Component()
 	m_mapComponent[ID_DYNAMIC].insert({ L"Com_Transform", pComponent });
 
 	// 카테고리에 따라 텍스처 로드
-	const _tchar* szTextureProto = L"Proto_RockTexture";  // 기본값
+	//const _tchar* szTextureProto = L"Proto_RockTexture";  // 기본값
+	wstring szTextureProto = L"Proto_RockTexture";  // 기본값
 
-	if (m_strCategory == "Rock")
-		szTextureProto = L"Proto_RockTexture";
-	else if (m_strCategory == "Tree")
-		szTextureProto = L"Proto_TreeTexture";
-	else if (m_strCategory == "Fire")
-		szTextureProto = L"Proto_FireTexture";
-	else if (m_strCategory == "Tent")
-		szTextureProto = L"Proto_TentTexture";
-	else if (m_strCategory == "Twig")
-		szTextureProto = L"Proto_TreeTexture";  // Twig는 Tree 텍스처 사용
+	// proto Name 생성 
+	std::wstring newProtoName(m_strCategory.begin(), m_strCategory.end());
+	newProtoName = L"Proto_" + newProtoName + L"Texture";
+
+	if (!newProtoName.empty())
+	{
+		szTextureProto = newProtoName;
+	}
+
+	//if (m_strCategory == "Rock")
+	//	szTextureProto = L"Proto_RockTexture";
+	//else if (m_strCategory == "Tree")
+	//	szTextureProto = L"Proto_TreeTexture";
+	//else if (m_strCategory == "Fire")
+	//	szTextureProto = L"Proto_FireTexture";
+	//else if (m_strCategory == "Tent")
+	//	szTextureProto = L"Proto_TentTexture";
+	//else if (m_strCategory == "Twig")
+	//	szTextureProto = L"Proto_TreeTexture";  // Twig는 Tree 텍스처 사용
+	//else if (m_strCategory == "Stairs")
+	//	szTextureProto = L"Proto_StairsTexture";
+	//else if (m_strCategory == "Stone")
+	//	szTextureProto = L"Proto_StoneTexture";  
+
 
 	pComponent = m_pTextureCom = dynamic_cast<Engine::CTexture*>
-		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(szTextureProto));
+		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(szTextureProto.c_str()));
 
 	if (nullptr == pComponent)
 	{
