@@ -171,7 +171,7 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 		{
 			if (obj.category == "Grass")
 			{
-				pGameObject = CGrass::Create(m_pGraphicDev, obj);
+				pGameObject = CGrass::Create(m_pGraphicDev, obj, m_pMessageChannel);
 				if (pGameObject)
 					pLayer->Add_GameObject(L"Grass", pGameObject);
 			}

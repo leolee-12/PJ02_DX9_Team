@@ -58,7 +58,7 @@ private:
 	_vec3				m_vReactDir;
 
 public:
-	static CGrass* Create(LPDIRECT3DDEVICE9 pGraphicDev, const Engine::OBJECTDATA& objData);
+	static CGrass* Create(LPDIRECT3DDEVICE9 pGraphicDev, const Engine::OBJECTDATA& objData, IMessageChannel* pMessageChannel);
 
 private:
 	virtual void Free();
