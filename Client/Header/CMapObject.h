@@ -51,6 +51,9 @@ private:
 	_float				m_fScale;
 	PLACEMENT_TYPE		m_ePlacement;
 
+	_uint				m_TextureWidth;
+	_uint				m_TextureHeight;
+
 public:
 	static CMapObject* Create(LPDIRECT3DDEVICE9 pGraphicDev, const Engine::OBJECTDATA& objData);
 

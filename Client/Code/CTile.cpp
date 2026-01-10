@@ -3,6 +3,7 @@
 #include "CProtoMgr.h"
 #include "CRenderer.h"
 #include "CMapLoader.h"
+#include <d3dx9shader.h>
 
 CTile::CTile(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev)
@@ -39,6 +40,9 @@ HRESULT CTile::Ready_GameObject()
 	if (FAILED(Add_Component()))
 		return E_FAIL;
 
+	if (FAILED(Ready_PixelShader()))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -46,7 +50,7 @@ _int CTile::Update_GameObject(const _float& fTimeDelta)
 {
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
-	CRenderer::GetInstance()->Add_RenderGroup(RENDER_PRIORITY, this);
+	CRenderer::GetInstance()->Add_RenderGroup(RENDER_TILE, this);
 
 	return iExit;
 }
@@ -108,6 +112,8 @@ void CTile::Render_Masks()
 	if (nullptr == m_pMaskTextureCom)
 		return;
 
+	DWORD oldAlphaop, oldColorop, oldAlphaTest;
+
 	// Enable alpha blending (standard settings)
 	m_pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
 	m_pGraphicDev->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
@@ -118,12 +124,21 @@ void CTile::Render_Masks()
 	m_pGraphicDev->SetRenderState(D3DRS_ALPHAREF, 0x80);
 	m_pGraphicDev->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
 
-	// Mask color = black (use texture alpha only)
+	// Mask color = black (use teture alpha only)
+	m_pGraphicDev->GetTextureStageState(0, D3DTSS_COLOROP, &oldColorop);
+	m_pGraphicDev->GetTextureStageState(0, D3DTSS_ALPHAOP, &oldAlphaop);
+
 	m_pGraphicDev->SetRenderState(D3DRS_TEXTUREFACTOR, 0xFF000000);
 	m_pGraphicDev->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
 	m_pGraphicDev->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TFACTOR);
 	m_pGraphicDev->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1);
 	m_pGraphicDev->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
+
+	/*m_pGraphicDev->GetRenderState(D3DRS_ALPHATESTENABLE, &oldAlphaTest);
+	m_pGraphicDev->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
+
+	m_pGraphicDev->SetPixelShader(m_pPixelShader);*/
+	
 
 	_matrix matWorld, matScale, matTrans;
 	_float fTileSize = Engine::CMapLoader::TILE_SIZE;
@@ -215,12 +230,16 @@ void CTile::Render_Masks()
 	}
 
 	// Restore TextureStage settings
-	m_pGraphicDev->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
+	m_pGraphicDev->SetTextureStageState(0, D3DTSS_COLOROP, oldColorop);
 	m_pGraphicDev->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
-	m_pGraphicDev->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
+	m_pGraphicDev->SetTextureStageState(0, D3DTSS_ALPHAOP, oldAlphaop);
 	m_pGraphicDev->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
 	m_pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
 	m_pGraphicDev->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
+
+	/*m_pGraphicDev->SetRenderState(D3DRS_ALPHATESTENABLE, oldAlphaTest);
+
+	m_pGraphicDev->SetPixelShader(NULL);*/
 }
 
 HRESULT CTile::Add_Component()
@@ -276,6 +295,48 @@ CTile* CTile::Create(LPDIRECT3DDEVICE9 pGraphicDev, const Engine::TILEDATA& tile
 	pTile->Set_TileData(tileData.x, tileData.z, tileData.textureId, tileData.maskFlags);
 
 	return pTile;
+}
+
+HRESULT CTile::Ready_PixelShader()
+{
+	LPD3DXBUFFER pCode = NULL;
+	LPD3DXBUFFER pError = NULL;
+
+	// HLSL 파일 컴파일 
+	HRESULT hr = D3DXCompileShaderFromFile(
+		L"../Shader/TileMask.hlsl", // 파일명 
+		NULL, // 매크로 
+		NULL, // include 
+		"PS_TileMask", // 엔트리 포인트 
+		"ps_2_0", // 셰이더 모델 
+		0, // 플래그 
+		&pCode,
+		&pError,
+		&m_pConstTable);
+
+	if (FAILED(hr))
+	{
+		if (pError)
+		{
+			MessageBoxA(NULL,
+				(char*)pError->GetBufferPointer(),
+				"Shader Error",
+				MB_OK);
+			pError->Release();
+		}
+		return E_FAIL;
+	} // 픽셀 셰이더 생성 
+
+	if (pCode) {
+		m_pGraphicDev->CreatePixelShader((DWORD*)pCode->GetBufferPointer(), &m_pPixelShader);
+		pCode->Release();
+	}
+
+	if (pError) {
+		pError->Release();
+	}
+
+	return S_OK;
 }
 
 void CTile::Free()

@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "CStage.h"
+#include "CDungeon.h"
 #include "CBackGround.h"
 #include "CProtoMgr.h"
 #include "CDynamicCamera.h"
@@ -22,18 +22,19 @@
 #include "CMapObject.h"
 #include "CGrass.h"
 #include "CCollisionMgr.h"
-#include <CMonsterB1.h>
+#include "CGauge.h"
+#include "CBishop_Leshy.h"
 
-CStage::CStage(LPDIRECT3DDEVICE9 pGraphicDev)
+CDungeon::CDungeon(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
 {
 }
 
-CStage::~CStage()
+CDungeon::~CDungeon()
 {
 }
 
-HRESULT CStage::Ready_Scene()
+HRESULT CDungeon::Ready_Scene()
 {
 	m_pMessageChannel = CStageMessage::Create();
 
@@ -53,7 +54,7 @@ HRESULT CStage::Ready_Scene()
 	return S_OK;
 }
 
-_int CStage::Update_Scene(const _float& fTimeDelta)
+_int CDungeon::Update_Scene(const _float& fTimeDelta)
 {
 	Engine::CTransform* pPlayerTransform = CPersistentMgr::GetInstance()->Get_PlayerTransform();
 	if (pPlayerTransform)
@@ -88,33 +89,48 @@ _int CStage::Update_Scene(const _float& fTimeDelta)
 		m_pMessageChannel->Publish(event);
 	}
 
+	if (CDInputMgr::GetInstance()->Key_Down(DIK_RIGHT))
+	{
+		m_pGauge->Set_GaugeState(Gauge::GS_FAITH);
+		m_pGauge->Set_GaugeValue(0.f);
+	}
+	if (CDInputMgr::GetInstance()->Key_Down(DIK_LEFT))
+	{
+		m_pGauge->Set_GaugeState(Gauge::GS_PASSION);
+		m_pGauge->Set_GaugeValue(0.f);
+	}
+	if (CDInputMgr::GetInstance()->Key_Down(DIK_DOWN))
+	{
+		m_pGauge->Add_GaugeValue(-0.5f);
+	}
+	if (CDInputMgr::GetInstance()->Key_Down(DIK_UP))
+	{
+		m_pGauge->Add_GaugeValue(0.5f);
+	}
+
 	_int iExit = Engine::CScene::Update_Scene(fTimeDelta);
 
 	return iExit;
 }
 
-void CStage::LateUpdate_Scene(const _float& fTimeDelta)
+void CDungeon::LateUpdate_Scene(const _float& fTimeDelta)
 {
 	Engine::CScene::LateUpdate_Scene(fTimeDelta);
 
 	CCollisionMgr::GetInstance()->Check_Collisions(fTimeDelta);
 }
 
-void CStage::Render_Scene()
+void CDungeon::Render_Scene()
 {
 }
 
-HRESULT CStage::Ready_Environment_Layer(const _tchar* pLayerTag)
+HRESULT CDungeon::Ready_Environment_Layer(const _tchar* pLayerTag)
 {
 	CLayer* pLayer = CLayer::Create();
 	if (nullptr == pLayer)
 		return E_FAIL;
 
 	CGameObject* pGameObject = nullptr;
-
-	_vec3   vEye{ 0.f, 10.f, -10.f };
-	_vec3   vAt{ 0.f, 0.f, 1.f };
-	_vec3   vUp{ 0.f, 1.f, 0.f };
 
 	pGameObject = CMainCamera::Create(m_pGraphicDev, m_pMessageChannel);
 
@@ -124,12 +140,14 @@ HRESULT CStage::Ready_Environment_Layer(const _tchar* pLayerTag)
 	if (FAILED(pLayer->Add_GameObject(L"MainCamera", pGameObject)))
 		return E_FAIL;
 
+
+
 	m_mapLayer.insert({ pLayerTag , pLayer });
 
 	return S_OK;
 }
 
-HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
+HRESULT CDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 {
 	CLayer* pLayer = CLayer::Create();
 	if (nullptr == pLayer)
@@ -137,10 +155,21 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 
 	CGameObject* pGameObject = nullptr;
 
+	/*
+	// Terrain
+	pGameObject = CTerrain::Create(m_pGraphicDev);
+
+	if (nullptr == pGameObject)
+		return E_FAIL;
+
+	if (FAILED(pLayer->Add_GameObject(L"Terrain", pGameObject)))
+		return E_FAIL;
+	*/
+
 	// Map Load
 	Engine::MAPDATA mapData;
 	if (SUCCEEDED(Engine::CMapLoader::GetInstance()->LoadMapA(
-		"../Bin/Resource/Maps/MapData/Tutorial.txt", mapData)))
+		"../Bin/Resource/Maps/MapData/Dungeon.txt", mapData)))
 	{
 		// 맵 데이터의 skyType으로 SkyBox 생성
 		pGameObject = CMySkyBox::Create(m_pGraphicDev, mapData.skyType);
@@ -151,21 +180,21 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 		CTileMgr::GetInstance()->Initialize(m_pGraphicDev, mapData);
 
 		// Spawns (Monster)
-		//for (const auto& spawn : mapData.spawns)
-		//{
-		//	if (spawn.type == 1)
-		//	{
-		//		pGameObject = CMonsterN1::Create(m_pGraphicDev, m_pMessageChannel);
-		//		if (pGameObject)
-		//		{
-		//			Engine::CTransform* pTransform = dynamic_cast<Engine::CTransform*>(
-		//				pGameObject->Get_Component(ID_DYNAMIC, L"Com_Transform"));
-		//			if (pTransform)
-		//				pTransform->Set_Pos(spawn.x, 0.f, spawn.z);
-		//			pLayer->Add_GameObject(L"Monster", pGameObject);
-		//		}
-		//	}
-		//}
+		for (const auto& spawn : mapData.spawns)
+		{
+			if (spawn.type == 1)
+			{
+				pGameObject = CMonsterN1::Create(m_pGraphicDev, m_pMessageChannel);
+				if (pGameObject)
+				{
+					Engine::CTransform* pTransform = dynamic_cast<Engine::CTransform*>(
+						pGameObject->Get_Component(ID_DYNAMIC, L"Com_Transform"));
+					if (pTransform)
+						pTransform->Set_Pos(spawn.x, 0.f, spawn.z);
+					pLayer->Add_GameObject(L"Monster", pGameObject);
+				}
+			}
+		}
 
 		// Objects
 		for (const auto& obj : mapData.objects)
@@ -183,7 +212,6 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 					pLayer->Add_GameObject(L"MapObject", pGameObject);
 			}
 		}
-
 		// Process Lights - Point Light 생성
 		for (const auto& light : mapData.lights)
 		{
@@ -211,15 +239,8 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 
 	pGameObject->AddRef();
 
-	for (_uint i = 0; i < 20; ++i)
+	for (_uint i = 0; i < 3; ++i)
 	{
-		pGameObject = CMonsterN1::Create(m_pGraphicDev, m_pMessageChannel);
-
-		NULL_CHECK_RETURN(pGameObject, E_FAIL)
-
-		if (FAILED(pLayer->Add_GameObject(L"Monster", pGameObject)))
-			return E_FAIL;
-
 		pGameObject = CMonsterN2::Create(m_pGraphicDev, m_pMessageChannel);
 
 		NULL_CHECK_RETURN(pGameObject, E_FAIL)
@@ -235,12 +256,19 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 				return E_FAIL;
 	}
 
+	pGameObject = CBishop_Leshy::Create(m_pGraphicDev);
+
+	NULL_CHECK_RETURN(pGameObject, E_FAIL)
+
+		if (FAILED(pLayer->Add_GameObject(L"Bishop_Leshy", pGameObject)))
+			return E_FAIL;
+
 	m_mapLayer.insert({ pLayerTag , pLayer });
 
 	return S_OK;
 }
 
-HRESULT CStage::Ready_UI_Layer(const _tchar* pLayerTag)
+HRESULT CDungeon::Ready_UI_Layer(const _tchar* pLayerTag)
 {
 	CLayer* pLayer = CLayer::Create();
 	if (nullptr == pLayer)
@@ -304,6 +332,13 @@ HRESULT CStage::Ready_UI_Layer(const _tchar* pLayerTag)
 	if (FAILED(pLayer->Add_GameObject(L"PlayerHP", pGameObject)))
 		return E_FAIL;
 
+	pGameObject = m_pGauge = CGauge::Create(m_pGraphicDev, Gauge::GS_PASSION);
+
+	if (nullptr == pGameObject)
+		return E_FAIL;
+
+	if (FAILED(pLayer->Add_GameObject(L"Gauge", pGameObject)))
+		return E_FAIL;
 
 
 
@@ -312,12 +347,12 @@ HRESULT CStage::Ready_UI_Layer(const _tchar* pLayerTag)
 	return S_OK;
 }
 
-HRESULT CStage::Ready_Const_Layer()
+HRESULT CDungeon::Ready_Const_Layer()
 {
 	return S_OK;
 }
 
-HRESULT CStage::Ready_Light()
+HRESULT CDungeon::Ready_Light()
 {
 	D3DLIGHT9	tLightInfo;
 	ZeroMemory(&tLightInfo, sizeof(D3DLIGHT9));
@@ -336,9 +371,9 @@ HRESULT CStage::Ready_Light()
 	return S_OK;
 }
 
-CStage* CStage::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+CDungeon* CDungeon::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 {
-	CStage* pTest = new CStage(pGraphicDev);
+	CDungeon* pTest = new CDungeon(pGraphicDev);
 
 	if (FAILED(pTest->Ready_Scene()))
 	{
@@ -347,17 +382,10 @@ CStage* CStage::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 		return nullptr;
 	}
 
-	/*if (FAILED(pTest->Ready_Const_Layer(pConstLayer)))
-	{
-		Safe_Release(pTest);
-		MSG_BOX("pTest Create Failed");
-		return nullptr;
-	}*/
-
 	return pTest;
 }
 
-void CStage::Free()
+void CDungeon::Free()
 {
 	CScene::Free();
 	CCollisionMgr::GetInstance()->Reset_For_SceneChange();

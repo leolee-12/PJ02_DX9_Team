@@ -12,6 +12,8 @@ CMapObject::CMapObject(LPDIRECT3DDEVICE9 pGraphicDev)
 	, m_iTextureIndex(0)
 	, m_fScale(1.f)
 	, m_ePlacement(PLACEMENT_STANDING)
+	, m_TextureWidth(0.f)
+	, m_TextureHeight(0.f)
 {
 }
 
@@ -24,6 +26,8 @@ CMapObject::CMapObject(const CMapObject& rhs)
 	, m_iTextureIndex(rhs.m_iTextureIndex)
 	, m_fScale(rhs.m_fScale)
 	, m_ePlacement(rhs.m_ePlacement)
+	, m_TextureWidth(rhs.m_TextureWidth)
+	, m_TextureHeight(rhs.m_TextureHeight)
 {
 }
 
@@ -43,7 +47,12 @@ _int CMapObject::Update_GameObject(const _float& fTimeDelta)
 {
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
-	CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHA, this);
+	if (PLACEMENT_STANDING == m_ePlacement) {
+		CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHA, this);
+	}
+	else {
+		CRenderer::GetInstance()->Add_RenderGroup(RENDER_FLOOR, this);
+	}
 
 	return iExit;
 }
@@ -68,8 +77,10 @@ void CMapObject::Render_GameObject()
 	m_pGraphicDev->SetRenderState(D3DRS_ALPHAREF, 0x10);
 	m_pGraphicDev->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
 
+
 	m_pTextureCom->Set_Texture(m_iTextureIndex);
 	m_pBufferCom->Render_Buffer();
+
 
 	// 설정 복원
 	m_pGraphicDev->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
@@ -83,15 +94,26 @@ void CMapObject::Set_ObjectData(const Engine::OBJECTDATA& objData)
 	m_fScale = objData.scale;
 	m_ePlacement = static_cast<PLACEMENT_TYPE>(objData.placement);
 
-	// Set position
-	m_pTransformCom->Set_Pos(objData.x, objData.y, objData.z);
+	// Get Texture H,W
+	m_pTextureCom->Get_TextureSize(&m_TextureWidth, &m_TextureHeight, m_iTextureIndex);
 
-	// Set scale
-	m_pTransformCom->Set_Scale(m_fScale, m_fScale, m_fScale);
+	float aspectRatio = static_cast<float>(m_TextureWidth) / static_cast<float>(m_TextureHeight);
+	float HelfWidth = m_fScale * aspectRatio * 0.5f;
+	float baseY = -2.4f;
 
-	// If floor placement, rotate to lie flat (앞면이 위를 향하도록)
-	if (PLACEMENT_FLOOR == m_ePlacement)
+	if (PLACEMENT_STANDING == m_ePlacement)
 	{
+		// Set position
+		m_pTransformCom->Set_Pos(objData.x, objData.y + baseY + (m_fScale / 2), objData.z);
+		// Standing: height = scale, width = scale * aspectRatio
+		m_pTransformCom->Set_Scale(m_fScale * aspectRatio, m_fScale, m_fScale);
+	}
+	else
+	{
+		// Set position
+		m_pTransformCom->Set_Pos(objData.x, objData.y + baseY, objData.z);
+		// Floor: X = scale * aspectRatio, Z = scale
+		m_pTransformCom->Set_Scale(m_fScale * aspectRatio, m_fScale, 1.f);
 		m_pTransformCom->Rotation(ROT_X, 90.f);
 	}
 }
@@ -119,21 +141,19 @@ HRESULT CMapObject::Add_Component()
 	m_mapComponent[ID_DYNAMIC].insert({ L"Com_Transform", pComponent });
 
 	// 카테고리에 따라 텍스처 로드
-	const _tchar* szTextureProto = L"Proto_RockTexture";  // 기본값
+	wstring szTextureProto = L"Proto_RockTexture";  // 기본값
 
-	if (m_strCategory == "Rock")
-		szTextureProto = L"Proto_RockTexture";
-	else if (m_strCategory == "Tree")
-		szTextureProto = L"Proto_TreeTexture";
-	else if (m_strCategory == "Fire")
-		szTextureProto = L"Proto_FireTexture";
-	else if (m_strCategory == "Tent")
-		szTextureProto = L"Proto_TentTexture";
-	else if (m_strCategory == "Twig")
-		szTextureProto = L"Proto_TreeTexture";  // Twig는 Tree 텍스처 사용
+	// proto Name 생성 
+	std::wstring newProtoName(m_strCategory.begin(), m_strCategory.end());
+	newProtoName = L"Proto_" + newProtoName + L"Texture";
+
+	if (!newProtoName.empty())
+	{
+		szTextureProto = newProtoName;
+	}
 
 	pComponent = m_pTextureCom = dynamic_cast<Engine::CTexture*>
-		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(szTextureProto));
+		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(szTextureProto.c_str()));
 
 	if (nullptr == pComponent)
 	{

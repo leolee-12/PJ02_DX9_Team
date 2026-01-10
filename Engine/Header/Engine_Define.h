@@ -3,6 +3,7 @@
 
 #include <d3d9.h>
 #include <d3dx9.h>
+#include <d3dx9shader.h>
 
 #include <vector>
 #include <list>
@@ -15,6 +16,7 @@
 #include <optional>
 #include <any>
 #include <fstream>
+#include <set>
 
 #include "json/json.h"
 

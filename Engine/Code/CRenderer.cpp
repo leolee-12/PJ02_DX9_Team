@@ -33,6 +33,8 @@ void CRenderer::Render_GameObject(LPDIRECT3DDEVICE9& pGraphicDev)
 {
 	Render_Priority(pGraphicDev);
 	Render_NonAlpha(pGraphicDev);
+	Render_Tile(pGraphicDev);
+	Render_Floor(pGraphicDev);
 	Render_Alpha(pGraphicDev);
 	Render_UI(pGraphicDev);
 
@@ -84,6 +86,24 @@ void CRenderer::Render_NonAlpha(LPDIRECT3DDEVICE9& pGraphicDev)
 {
 	for (auto& pObj : m_RenderGroup[RENDER_NONALPHA])
 		pObj->Render_GameObject();
+}
+
+void CRenderer::Render_Tile(LPDIRECT3DDEVICE9& pGraphicDev)
+{
+	pGraphicDev->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
+	pGraphicDev->SetRenderState(D3DRS_ALPHAREF, 0x08);
+	pGraphicDev->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
+
+
+	pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+	pGraphicDev->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+	pGraphicDev->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+
+	for (auto& pObj : m_RenderGroup[RENDER_TILE])
+		pObj->Render_GameObject();
+
+	pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
+	pGraphicDev->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
 }
 
 void CRenderer::Render_Alpha(LPDIRECT3DDEVICE9& pGraphicDev)
@@ -140,6 +160,30 @@ void CRenderer::Render_UI(LPDIRECT3DDEVICE9& pGraphicDev)
 
 	pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
 	pGraphicDev->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
+}
+
+void CRenderer::Render_Floor(LPDIRECT3DDEVICE9& pGraphicDev)
+{
+	m_RenderGroup[RENDER_FLOOR].sort([](CGameObject* pDst, CGameObject* pSrc)->bool
+		{
+			return pDst->Get_Depth() > pSrc->Get_Depth();
+		});
+
+
+	pGraphicDev->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
+	pGraphicDev->SetRenderState(D3DRS_ALPHAREF, 0x08);
+	pGraphicDev->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
+
+	pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+
+	pGraphicDev->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+	pGraphicDev->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+
+	for (auto& pObj : m_RenderGroup[RENDER_FLOOR])
+		pObj->Render_GameObject();
+
+	pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
+	pGraphicDev->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
 }
 
 void CRenderer::Render_ColliderDebug(LPDIRECT3DDEVICE9& pGraphicDev)

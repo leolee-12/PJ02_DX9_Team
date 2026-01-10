@@ -36,12 +36,11 @@ HRESULT CTexture::Ready_Texture(TEXTUREID eID, const _tchar* pPath, const _uint&
 	m_vecTexture.reserve(iCnt);
 
 	IDirect3DBaseTexture9* pTexture = nullptr;
-
 	
 
 	for (_uint i = 0; i < iCnt; ++i)
 	{
-		TCHAR szFileName[128] = L"";
+		TCHAR szFileName[256] = L"";
 		
 		wsprintf(szFileName, pPath, i);
 
@@ -97,7 +96,7 @@ HRESULT CTexture::Ready_Texture_FromFolder(TEXTUREID eID, const _tchar* pFolderP
 		return E_FAIL;
 
 	// MapEditorTool
-	std::sort(vecFiles.begin(), vecFiles.end());
+	// std::sort(vecFiles.begin(), vecFiles.end());
 
 	m_vecTexture.reserve(vecFiles.size());
 	std::wstring strFolderPath = pFolderPath;
@@ -140,6 +139,33 @@ void CTexture::Set_TextureStage(const _uint& Stage, const _uint& iIndex)
 		return;
 
 	m_pGraphicDev->SetTexture(Stage, m_vecTexture[iIndex]);
+}
+
+bool CTexture::Get_TextureSize(_uint* pWidth, _uint* pHeight, const _uint& iIndex)
+{
+	if (iIndex >= m_vecTexture.size())
+		return false;
+
+	IDirect3DTexture9* pTex = static_cast<IDirect3DTexture9*>(m_vecTexture[iIndex]);
+	if (nullptr == pTex)
+		return false;
+
+	D3DSURFACE_DESC desc;
+	if (FAILED(pTex->GetLevelDesc(0, &desc)))
+		return false;
+
+	*pWidth = desc.Width;
+	*pHeight = desc.Height;
+	return true;
+}
+
+IDirect3DBaseTexture9* CTexture::Get_TextureHandle(_int iIndex)
+{
+	IDirect3DBaseTexture9* pTexture = m_vecTexture[iIndex];
+	if (pTexture == nullptr)
+		return nullptr;
+
+	return pTexture;
 }
 
 CTexture* CTexture::Create(LPDIRECT3DDEVICE9 pGraphicDev, TEXTUREID eID, const _tchar* pPath, const _uint& iCnt)
