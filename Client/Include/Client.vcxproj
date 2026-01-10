@@ -117,7 +117,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>../Header; ../../Base; ../../Reference/Header;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../Header; ../../Base; ../../Reference/Header; ../Include;</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -147,11 +147,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\Header\Bishops_Enum.h" />
     <ClInclude Include="..\Header\CB1_AI.h" />
     <ClInclude Include="..\Header\CB2_AI.h" />
     <ClInclude Include="..\Header\CActiveItem.h" />
     <ClInclude Include="..\Header\CBackGround.h" />
+    <ClInclude Include="..\Header\CBishop_Heket.h" />
+    <ClInclude Include="..\Header\CBishop_Kallamar.h" />
+    <ClInclude Include="..\Header\CBishop_Leshy.h" />
+    <ClInclude Include="..\Header\CBishop_Shamura.h" />
     <ClInclude Include="..\Header\CDivider.h" />
+    <ClInclude Include="..\Header\CDungeon.h" />
     <ClInclude Include="..\Header\CDungeonBack.h" />
     <ClInclude Include="..\Header\CDungeonIcon.h" />
     <ClInclude Include="..\Header\CDungeonLine.h" />
@@ -234,7 +240,12 @@
     <ClCompile Include="..\Code\CB2_AI.cpp" />
     <ClCompile Include="..\Code\CActiveItem.cpp" />
     <ClCompile Include="..\Code\CBackGround.cpp" />
+    <ClCompile Include="..\Code\CBishop_Heket.cpp" />
+    <ClCompile Include="..\Code\CBishop_Kallamar.cpp" />
+    <ClCompile Include="..\Code\CBishop_Leshy.cpp" />
+    <ClCompile Include="..\Code\CBishop_Shamura.cpp" />
     <ClCompile Include="..\Code\CDivider.cpp" />
+    <ClCompile Include="..\Code\CDungeon.cpp" />
     <ClCompile Include="..\Code\CDungeonBack.cpp" />
     <ClCompile Include="..\Code\CDungeonIcon.cpp" />
     <ClCompile Include="..\Code\CDungeonLine.cpp" />

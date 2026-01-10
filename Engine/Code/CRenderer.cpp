@@ -95,9 +95,16 @@ void CRenderer::Render_Alpha(LPDIRECT3DDEVICE9& pGraphicDev)
 	pGraphicDev->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 	pGraphicDev->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 
+	Render_Floor(pGraphicDev);
+
 	m_RenderGroup[RENDER_ALPHA].sort([](CGameObject* pDst, CGameObject* pSrc)->bool
 		{
-			return pDst->Get_Depth() > pSrc->Get_Depth();
+			_bool bCheck_Zfigthing = pDst->Get_NewDepth().z == pSrc->Get_NewDepth().z;
+
+			if (bCheck_Zfigthing)
+				return pDst->Get_NewDepth().y < pSrc->Get_NewDepth().y;
+			else
+				return pDst->Get_NewDepth().z > pSrc->Get_NewDepth().z;
 		});
 
 
@@ -140,6 +147,17 @@ void CRenderer::Render_UI(LPDIRECT3DDEVICE9& pGraphicDev)
 
 	pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
 	pGraphicDev->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
+}
+
+void CRenderer::Render_Floor(LPDIRECT3DDEVICE9& pGraphicDev)
+{
+	m_RenderGroup[RENDER_FLOOR].sort([](CGameObject* pDst, CGameObject* pSrc)->bool
+		{
+			return pDst->Get_Depth() > pSrc->Get_Depth();
+		});
+
+	for (auto& pObj : m_RenderGroup[RENDER_FLOOR])
+		pObj->Render_GameObject();
 }
 
 void CRenderer::Render_ColliderDebug(LPDIRECT3DDEVICE9& pGraphicDev)

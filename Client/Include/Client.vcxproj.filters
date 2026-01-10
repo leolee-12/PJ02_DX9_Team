@@ -25,23 +25,11 @@
     <Filter Include="01. Scene\00. Logo">
       <UniqueIdentifier>{0d271025-e384-4299-bf6d-972bbc338575}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. Scene\01. Stage">
-      <UniqueIdentifier>{f40be6c5-f78e-4629-9f22-c05f63c86d1a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01. Scene\99. Loading">
       <UniqueIdentifier>{162da509-93eb-497c-bb4b-016c0b3d5fae}</UniqueIdentifier>
     </Filter>
     <Filter Include="01. Scene\99. Loading\LoadingThread">
       <UniqueIdentifier>{bec13d5c-cc47-4d5b-a2eb-0fb3bafdcfdd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Scene\03. Test">
-      <UniqueIdentifier>{7bf09d6b-5222-4361-bb6b-3e27ea739fa2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Scene\04. EditScene">
-      <UniqueIdentifier>{ff5bb01d-db75-499d-ae0b-be1f8fb58ee7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Scene\05. KnuckleBone">
-      <UniqueIdentifier>{fbdfd1c6-2a58-45e4-970b-5fac37bacfcb}</UniqueIdentifier>
     </Filter>
     <Filter Include="10. TileMgr">
       <UniqueIdentifier>{01b64606-77a6-499b-92aa-0bad3eff8f84}</UniqueIdentifier>
@@ -136,23 +124,11 @@
     <Filter Include="01. Scene\00. Logo">
       <UniqueIdentifier>{0d271025-e384-4299-bf6d-972bbc338575}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. Scene\01. Stage">
-      <UniqueIdentifier>{f40be6c5-f78e-4629-9f22-c05f63c86d1a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01. Scene\99. Loading">
       <UniqueIdentifier>{162da509-93eb-497c-bb4b-016c0b3d5fae}</UniqueIdentifier>
     </Filter>
     <Filter Include="01. Scene\99. Loading\LoadingThread">
       <UniqueIdentifier>{bec13d5c-cc47-4d5b-a2eb-0fb3bafdcfdd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Scene\03. Test">
-      <UniqueIdentifier>{7bf09d6b-5222-4361-bb6b-3e27ea739fa2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Scene\04. EditScene">
-      <UniqueIdentifier>{ff5bb01d-db75-499d-ae0b-be1f8fb58ee7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Scene\05. KnuckleBone">
-      <UniqueIdentifier>{fbdfd1c6-2a58-45e4-970b-5fac37bacfcb}</UniqueIdentifier>
     </Filter>
     <Filter Include="02. GameObject\07. UI\03. KBUI">
       <UniqueIdentifier>{41fa98cd-1415-4315-904c-4273008d3aab}</UniqueIdentifier>
@@ -265,6 +241,39 @@
     <Filter Include="02. GameObject\07. UI\04. PlayerUI\01. Gauge\03. PassionIcon">
       <UniqueIdentifier>{62a60c43-a0a5-441d-912f-2f4c64dd1ffc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Scene\01. Maps">
+      <UniqueIdentifier>{4e1e71d3-7af1-4978-b079-ff0455d22473}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\02. KnuckleBone">
+      <UniqueIdentifier>{fbdfd1c6-2a58-45e4-970b-5fac37bacfcb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\01. Maps\00. Test">
+      <UniqueIdentifier>{7bf09d6b-5222-4361-bb6b-3e27ea739fa2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\01. Maps\01. EditScene">
+      <UniqueIdentifier>{ff5bb01d-db75-499d-ae0b-be1f8fb58ee7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\01. Maps\02. Stage">
+      <UniqueIdentifier>{f40be6c5-f78e-4629-9f22-c05f63c86d1a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\01. Maps\03. Dungeon">
+      <UniqueIdentifier>{9560bf2c-af50-4eb8-bef4-9c6ceb52c988}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\13. Bishops">
+      <UniqueIdentifier>{7f83aa31-fb8d-49c4-95fc-ebbf3af46beb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\13. Bishops\00. Leshy">
+      <UniqueIdentifier>{52cf13fa-731d-4b11-bba6-7779b02f29fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\13. Bishops\01. Heket">
+      <UniqueIdentifier>{06650769-1a7d-4ff5-9267-1f4043d14e47}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\13. Bishops\02. Kallamar">
+      <UniqueIdentifier>{fd8fec59-64da-4bd1-8344-7f59f16db3fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\13. Bishops\03. Shamura">
+      <UniqueIdentifier>{28a8afb7-5c8e-4ec1-bcdb-2908ee49bd64}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -298,7 +307,7 @@
       <Filter>02. GameObject\02. Monster</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CStage.h">
-      <Filter>01. Scene\01. Stage</Filter>
+      <Filter>01. Scene\01. Maps\02. Stage</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CTerrain.h">
       <Filter>02. GameObject\03. Terrain</Filter>
@@ -310,7 +319,7 @@
       <Filter>02. GameObject\05. SkyBox</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CTest.h">
-      <Filter>01. Scene\03. Test</Filter>
+      <Filter>01. Scene\01. Maps\00. Test</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CTerrainWall.h">
       <Filter>02. GameObject\06. TerrainWall</Filter>
@@ -322,7 +331,7 @@
       <Filter>02. GameObject\99. TestObject</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CEditScene.h">
-      <Filter>01. Scene\04. EditScene</Filter>
+      <Filter>01. Scene\01. Maps\01. EditScene</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CLoadingThread.h">
       <Filter>01. Scene\99. Loading\LoadingThread</Filter>
@@ -385,7 +394,7 @@
       <Filter>02. GameObject\09. Item</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CKnuckleBone.h">
-      <Filter>01. Scene\05. KnuckleBone</Filter>
+      <Filter>01. Scene\02. KnuckleBone</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CKBBack.h">
       <Filter>02. GameObject\07. UI\03. KBUI\00. TTutorial\00. KBBack</Filter>
@@ -534,6 +543,24 @@
     <ClInclude Include="..\Header\LoadObjectList.h">
       <Filter>01. Scene\99. Loading\LoadingThread</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CDungeon.h">
+      <Filter>01. Scene\01. Maps\03. Dungeon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CBishop_Leshy.h">
+      <Filter>02. GameObject\13. Bishops\00. Leshy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CBishop_Heket.h">
+      <Filter>02. GameObject\13. Bishops\01. Heket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CBishop_Kallamar.h">
+      <Filter>02. GameObject\13. Bishops\02. Kallamar</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CBishop_Shamura.h">
+      <Filter>02. GameObject\13. Bishops\03. Shamura</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\Bishops_Enum.h">
+      <Filter>02. GameObject\13. Bishops</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -558,7 +585,7 @@
       <Filter>02. GameObject\02. Monster</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CStage.cpp">
-      <Filter>01. Scene\01. Stage</Filter>
+      <Filter>01. Scene\01. Maps\02. Stage</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CTerrain.cpp">
       <Filter>02. GameObject\03. Terrain</Filter>
@@ -570,7 +597,7 @@
       <Filter>02. GameObject\05. SkyBox</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CTest.cpp">
-      <Filter>01. Scene\03. Test</Filter>
+      <Filter>01. Scene\01. Maps\00. Test</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CTerrainWall.cpp">
       <Filter>02. GameObject\06. TerrainWall</Filter>
@@ -582,7 +609,7 @@
       <Filter>02. GameObject\99. TestObject</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CEditScene.cpp">
-      <Filter>01. Scene\04. EditScene</Filter>
+      <Filter>01. Scene\01. Maps\01. EditScene</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CLoadingThread.cpp">
       <Filter>01. Scene\99. Loading\LoadingThread</Filter>
@@ -645,7 +672,7 @@
       <Filter>02. GameObject\09. Item</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CKnuckleBone.cpp">
-      <Filter>01. Scene\05. KnuckleBone</Filter>
+      <Filter>01. Scene\02. KnuckleBone</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CKBBack.cpp">
       <Filter>02. GameObject\07. UI\03. KBUI\00. TTutorial\00. KBBack</Filter>
@@ -781,6 +808,21 @@
     </ClCompile>
     <ClCompile Include="..\Code\CGauge.cpp">
       <Filter>02. GameObject\07. UI\04. PlayerUI\01. Gauge</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CDungeon.cpp">
+      <Filter>01. Scene\01. Maps\03. Dungeon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CBishop_Leshy.cpp">
+      <Filter>02. GameObject\13. Bishops\00. Leshy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CBishop_Heket.cpp">
+      <Filter>02. GameObject\13. Bishops\01. Heket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CBishop_Kallamar.cpp">
+      <Filter>02. GameObject\13. Bishops\02. Kallamar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CBishop_Shamura.cpp">
+      <Filter>02. GameObject\13. Bishops\03. Shamura</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

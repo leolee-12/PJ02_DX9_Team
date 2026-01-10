@@ -654,7 +654,7 @@ void CPlayer::Attack_HitBox()
 
 	if(g_bDebug) CRenderer::GetInstance()->Add_TestCollider(tAABB, 60);
 
-	vector<CGameObject*> tempVec = CCollisionMgr::GetInstance()->Test_AABB(tAABB, CL_MONSTER);
+	vector<CGameObject*> tempVec = CCollisionMgr::GetInstance()->Test_AABB(tAABB, CL_MONSTER | CL_GRASS);
 
 	if (!tempVec.empty())
 	{
