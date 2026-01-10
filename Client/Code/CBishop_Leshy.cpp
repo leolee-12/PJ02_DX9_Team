@@ -21,7 +21,7 @@ HRESULT CBishop_Leshy::Ready_GameObject()
 		return E_FAIL;
 
 	m_pTransformCom->Set_Scale(332.f * 0.05f, 422.f * 0.05f, 0.f);
-	m_pTransformCom->Set_Pos(0.f, 0.f, 50.f);
+	m_pTransformCom->Set_Pos(0.f, 2.f, 50.f);
 
 	m_eCurState = Bishops::BS_IDLE;
 
@@ -35,7 +35,7 @@ HRESULT CBishop_Leshy::Ready_Material()
 
 	tMtrl.Diffuse = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
 	tMtrl.Specular = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-	tMtrl.Ambient = D3DXCOLOR(0.f, 0.f, 0.f, 1.f);
+	tMtrl.Ambient = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
 
 	tMtrl.Emissive = D3DXCOLOR(0.f, 0.f, 0.f, 1.f);
 	tMtrl.Power = 0.f;
@@ -72,8 +72,8 @@ void CBishop_Leshy::Render_GameObject()
 
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
 
-	/*if (FAILED(Ready_Material()))
-		return;*/
+	if (FAILED(Ready_Material()))
+		return;
 
 	m_pTextureCom->Set_Texture(m_strStateKey, m_iFrame);
 
