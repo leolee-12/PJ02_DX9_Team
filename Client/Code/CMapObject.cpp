@@ -47,6 +47,8 @@ _int CMapObject::Update_GameObject(const _float& fTimeDelta)
 {
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
+	//CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHA, this);
+
 	if (PLACEMENT_STANDING == m_ePlacement) {
 		CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHA, this);
 	}
@@ -92,21 +94,24 @@ void CMapObject::Set_ObjectData(const Engine::OBJECTDATA& objData)
 	m_fScale = objData.scale;
 	m_ePlacement = static_cast<PLACEMENT_TYPE>(objData.placement);
 
-	// Set position
-	m_pTransformCom->Set_Pos(objData.x, objData.y - 2.4f, objData.z);
-
 	// Get Texture H,W
 	m_pTextureCom->Get_TextureSize(&m_TextureWidth, &m_TextureHeight, m_iTextureIndex);
 
 	float aspectRatio = static_cast<float>(m_TextureWidth) / static_cast<float>(m_TextureHeight);
+	float HelfWidth = m_fScale * aspectRatio * 0.5f;
+	float baseY = -2.4f;
 
 	if (PLACEMENT_STANDING == m_ePlacement)
 	{
+		// Set position
+		m_pTransformCom->Set_Pos(objData.x, objData.y + baseY + (m_fScale/2), objData.z);
 		// Standing: height = scale, width = scale * aspectRatio
-		m_pTransformCom->Set_Scale(m_fScale * aspectRatio, m_fScale * 1.5, m_fScale);
+		m_pTransformCom->Set_Scale(m_fScale * aspectRatio, m_fScale, m_fScale);
 	}
 	else
 	{
+		// Set position
+		m_pTransformCom->Set_Pos(objData.x, objData.y + baseY, objData.z);
 		// Floor: X = scale * aspectRatio, Z = scale
 		m_pTransformCom->Set_Scale(m_fScale * aspectRatio, m_fScale, 1.f);
 		m_pTransformCom->Rotation(ROT_X, 90.f);

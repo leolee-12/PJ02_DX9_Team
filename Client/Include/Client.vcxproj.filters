@@ -274,6 +274,9 @@
     <Filter Include="02. GameObject\13. Bishops\03. Shamura">
       <UniqueIdentifier>{28a8afb7-5c8e-4ec1-bcdb-2908ee49bd64}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Scene\01. Maps\04. Village">
+      <UniqueIdentifier>{71467a02-ac11-4d7a-84a6-64382f2466ef}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">

@@ -309,11 +309,8 @@ _uint CLoadingThread::Loading_ForDungeon()
 
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_BishopLeshy", Engine::CTextureSet::Create(m_pGraphicDev, TEX_NORMAL, tempVec));
 
-    
-
-
     // 맵 오브젝트 로딩 
-    Load_Object_Texture(Tutorial_Texture);
+    Load_Object_Texture(Dungeon_Texture);
 
     m_fPercent += 50.f;
 
