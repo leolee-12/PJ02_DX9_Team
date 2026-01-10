@@ -159,6 +159,15 @@ bool CTexture::Get_TextureSize(_uint* pWidth, _uint* pHeight, const _uint& iInde
 	return true;
 }
 
+IDirect3DBaseTexture9* CTexture::Get_TextureHandle(_int iIndex)
+{
+	IDirect3DBaseTexture9* pTexture = m_vecTexture[iIndex];
+	if (pTexture == nullptr)
+		return nullptr;
+
+	return pTexture;
+}
+
 CTexture* CTexture::Create(LPDIRECT3DDEVICE9 pGraphicDev, TEXTUREID eID, const _tchar* pPath, const _uint& iCnt)
 {
 	CTexture* pTexture = new CTexture(pGraphicDev);

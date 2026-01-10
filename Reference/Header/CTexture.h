@@ -22,6 +22,8 @@ public:
 
 	bool			Get_TextureSize(_uint* pWidth, _uint* pHeight, const _uint& iIndex = 0);
 
+	IDirect3DBaseTexture9* Get_TextureHandle(_int iIndex);
+
 
 private:
 	vector<IDirect3DBaseTexture9*>		m_vecTexture;

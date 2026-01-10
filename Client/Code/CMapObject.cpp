@@ -79,8 +79,10 @@ void CMapObject::Render_GameObject()
 	m_pGraphicDev->SetRenderState(D3DRS_ALPHAREF, 0x10);
 	m_pGraphicDev->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
 
+
 	m_pTextureCom->Set_Texture(m_iTextureIndex);
 	m_pBufferCom->Render_Buffer();
+
 
 	// 설정 복원
 	m_pGraphicDev->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
