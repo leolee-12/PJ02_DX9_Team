@@ -216,6 +216,8 @@ _uint CLoadingThread::Loading_ForKnuckleBone()
     return _uint();
 }
 
+// 이 함수 무시하셔도 됩니다
+// 그냥 편리를 위해 만들어놓은 것 (로직 적용 x)
 _uint CLoadingThread::Loading_MapCommon()
 {
 
@@ -250,6 +252,12 @@ _uint CLoadingThread::Loading_ForTutorial()
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_CubeTex", Engine::CCubeTex::Create(m_pGraphicDev));
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_PlayerHP", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Player/Health_%d.png", 3));
 
+    // 맵 오브젝트 로딩 
+    Load_Object_Texture(Tutorial_Texture);
+
+    m_fPercent += 50.f;
+
+    m_bFinish = true;
 
     return _uint();
 }
@@ -375,6 +383,13 @@ _uint CLoadingThread::Loading_ForVillage()
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_CubeTex", Engine::CCubeTex::Create(m_pGraphicDev));
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_PlayerHP", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Player/Health_%d.png", 3));
 
+    // 맵 오브젝트 로딩 
+    Load_Object_Texture(Village_Texture);
+
+    m_fPercent += 50.f;
+
+    m_bFinish = true;
+
     return _uint();
 }
 
@@ -392,6 +407,13 @@ _uint CLoadingThread::Loading_ForRealDungeon()
 
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_CubeTex", Engine::CCubeTex::Create(m_pGraphicDev));
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_PlayerHP", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Player/Health_%d.png", 3));
+
+    // 맵 오브젝트 로딩 
+    //Load_Object_Texture();
+
+    m_fPercent += 50.f;
+
+    m_bFinish = true;
 
     return _uint();
 }
@@ -411,6 +433,13 @@ _uint CLoadingThread::Loading_ForAmdusiasRoom()
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_CubeTex", Engine::CCubeTex::Create(m_pGraphicDev));
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_PlayerHP", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Player/Health_%d.png", 3));
 
+    // 맵 오브젝트 로딩 
+    //Load_Object_Texture(Tutorial_Texture);
+
+    m_fPercent += 50.f;
+
+    m_bFinish = true;
+
     return _uint();
 }
 
@@ -429,6 +458,13 @@ _uint CLoadingThread::Loading_ForLeshyRoom()
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_CubeTex", Engine::CCubeTex::Create(m_pGraphicDev));
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_PlayerHP", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Player/Health_%d.png", 3));
 
+    // 맵 오브젝트 로딩 
+    //Load_Object_Texture(Tutorial_Texture);
+
+    m_fPercent += 50.f;
+
+
+    m_bFinish = true;
     return _uint();
 }
 
@@ -473,8 +509,32 @@ unsigned int CLoadingThread::Thread_Main(void* pArg)
         iFlag = pLoading->Loading_ForKnuckleBone();
         break;
 
+    case LOADING_TUTORIAL:
+        iFlag = pLoading->Loading_ForTutorial();
+        break;
+
     case LOADING_DUNGEON:
         iFlag = pLoading->Loading_ForDungeon();
+        break;
+
+    case LOADING_THEGATEWAY:
+        iFlag = pLoading->Loading_ForTheGateway();
+        break;
+
+    case LOADING_VILLAGE:
+        iFlag = pLoading->Loading_ForVillage();
+        break;
+
+    case LOADING_REALDUNGEON:
+        iFlag = pLoading->Loading_ForRealDungeon();
+        break;
+
+    case LOADING_AMDUSIASROOM:
+        iFlag = pLoading->Loading_ForAmdusiasRoom();
+        break;
+
+    case LOADING_LESHYROOM:
+        iFlag = pLoading->Loading_ForLeshyRoom();
         break;
 
     case LOADING_BOSS:
