@@ -22,9 +22,6 @@
     <Filter Include="01. Scene">
       <UniqueIdentifier>{60ad0de0-adf1-440e-987a-796e2ff8332f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. Scene\00. Logo">
-      <UniqueIdentifier>{0d271025-e384-4299-bf6d-972bbc338575}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01. Scene\99. Loading">
       <UniqueIdentifier>{162da509-93eb-497c-bb4b-016c0b3d5fae}</UniqueIdentifier>
     </Filter>
@@ -256,9 +253,6 @@
     <Filter Include="01. Scene\01. Maps\02. Stage">
       <UniqueIdentifier>{f40be6c5-f78e-4629-9f22-c05f63c86d1a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. Scene\01. Maps\03. Dungeon">
-      <UniqueIdentifier>{9560bf2c-af50-4eb8-bef4-9c6ceb52c988}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObject\13. Bishops">
       <UniqueIdentifier>{7f83aa31-fb8d-49c4-95fc-ebbf3af46beb}</UniqueIdentifier>
     </Filter>
@@ -276,6 +270,30 @@
     </Filter>
     <Filter Include="01. Scene\99. Loading\LoadingThread\New">
       <UniqueIdentifier>{4cb57919-a0a7-4051-bd12-d92354f2419c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\01. Maps\10. LeshyRoom">
+      <UniqueIdentifier>{e54dbddb-b0a1-4fba-982a-2b27c388eb32}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\01. Maps\08. RealDungeon">
+      <UniqueIdentifier>{85febe2e-07d2-42fc-850d-8663b92acb9a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\01. Maps\04. Tutorial">
+      <UniqueIdentifier>{08f675a5-4005-4bed-9f8c-e9c1ef960dbb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\01. Maps\06. Dungeon">
+      <UniqueIdentifier>{9560bf2c-af50-4eb8-bef4-9c6ceb52c988}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\01. Maps\00. Logo">
+      <UniqueIdentifier>{0d271025-e384-4299-bf6d-972bbc338575}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\01. Maps\09. AmdusiasRoom">
+      <UniqueIdentifier>{f5f4d96c-11a7-4d90-929c-1028403dcaef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\01. Maps\05. TheGateway">
+      <UniqueIdentifier>{5bf50683-65bf-40b4-9c87-9150bd6c818e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\01. Maps\07. Village">
+      <UniqueIdentifier>{71467a02-ac11-4d7a-84a6-64382f2466ef}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -298,7 +316,7 @@
       <Filter>00. MainApp</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CLogo.h">
-      <Filter>01. Scene\00. Logo</Filter>
+      <Filter>01. Scene\01. Maps\00. Logo</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CBackGround.h">
       <Filter>02. GameObject\00. BackGround</Filter>
@@ -547,7 +565,7 @@
       <Filter>01. Scene\99. Loading\LoadingThread</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CDungeon.h">
-      <Filter>01. Scene\01. Maps\03. Dungeon</Filter>
+      <Filter>01. Scene\01. Maps\06. Dungeon</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CBishop_Leshy.h">
       <Filter>02. GameObject\13. Bishops\00. Leshy</Filter>
@@ -567,6 +585,24 @@
     <ClInclude Include="..\Header\CMultiLoadingThread.h">
       <Filter>01. Scene\99. Loading\LoadingThread\New</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CVillage.h">
+      <Filter>01. Scene\01. Maps\07. Village</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CTutorial.h">
+      <Filter>01. Scene\01. Maps\04. Tutorial</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CTheGateway.h">
+      <Filter>01. Scene\01. Maps\05. TheGateway</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CRealDungeon.h">
+      <Filter>01. Scene\01. Maps\08. RealDungeon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CAmdusiasRoom.h">
+      <Filter>01. Scene\01. Maps\09. AmdusiasRoom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CLeshyRoom.h">
+      <Filter>01. Scene\01. Maps\10. LeshyRoom</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -579,7 +615,7 @@
       <Filter>00. MainApp</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CLogo.cpp">
-      <Filter>01. Scene\00. Logo</Filter>
+      <Filter>01. Scene\01. Maps\00. Logo</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CBackGround.cpp">
       <Filter>02. GameObject\00. BackGround</Filter>
@@ -816,7 +852,7 @@
       <Filter>02. GameObject\07. UI\04. PlayerUI\01. Gauge</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CDungeon.cpp">
-      <Filter>01. Scene\01. Maps\03. Dungeon</Filter>
+      <Filter>01. Scene\01. Maps\06. Dungeon</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CBishop_Leshy.cpp">
       <Filter>02. GameObject\13. Bishops\00. Leshy</Filter>
@@ -832,6 +868,24 @@
     </ClCompile>
     <ClCompile Include="..\Code\CMultiLoadingThread.cpp">
       <Filter>01. Scene\99. Loading\LoadingThread\New</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CVillage.cpp">
+      <Filter>01. Scene\01. Maps\07. Village</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CTutorial.cpp">
+      <Filter>01. Scene\01. Maps\04. Tutorial</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CTheGateway.cpp">
+      <Filter>01. Scene\01. Maps\05. TheGateway</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CRealDungeon.cpp">
+      <Filter>01. Scene\01. Maps\08. RealDungeon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CAmdusiasRoom.cpp">
+      <Filter>01. Scene\01. Maps\09. AmdusiasRoom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CLeshyRoom.cpp">
+      <Filter>01. Scene\01. Maps\10. LeshyRoom</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

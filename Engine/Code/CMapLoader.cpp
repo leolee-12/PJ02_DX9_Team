@@ -121,6 +121,7 @@ void CMapLoader::ParseSection(const std::string& section, const std::string& lin
 			// 타일 크기 10 → 8 변경에 따른 비율 조정 (0.8)
 			const float SCALE_RATIO = 0.8f;
 			obj.x *= SCALE_RATIO;
+			obj.y *= SCALE_RATIO;
 			// obj.y는 높이이므로 유지
 			obj.z *= SCALE_RATIO;
 			obj.scale *= SCALE_RATIO;
