@@ -274,6 +274,9 @@
     <Filter Include="02. GameObject\13. Bishops\03. Shamura">
       <UniqueIdentifier>{28a8afb7-5c8e-4ec1-bcdb-2908ee49bd64}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Scene\99. Loading\LoadingThread\New">
+      <UniqueIdentifier>{4cb57919-a0a7-4051-bd12-d92354f2419c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -561,6 +564,9 @@
     <ClInclude Include="..\Header\Bishops_Enum.h">
       <Filter>02. GameObject\13. Bishops</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CMultiLoadingThread.h">
+      <Filter>01. Scene\99. Loading\LoadingThread\New</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -823,6 +829,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CBishop_Shamura.cpp">
       <Filter>02. GameObject\13. Bishops\03. Shamura</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CMultiLoadingThread.cpp">
+      <Filter>01. Scene\99. Loading\LoadingThread\New</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

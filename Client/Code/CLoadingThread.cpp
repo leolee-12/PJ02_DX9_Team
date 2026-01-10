@@ -88,7 +88,7 @@ _uint CLoadingThread::Loading_ForStage()
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_N2_AI", CN2_AI::Create(m_pGraphicDev, 6.f, 4.f));
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_N3_AI", CN3_AI::Create(m_pGraphicDev, 6.f, 3.f));
 
-    // ===== Ÿ�� ���� =====
+    // ===== 타일 관련 =====
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_RcTexXZ",
         Engine::CRcTexXZ::Create(m_pGraphicDev));
 
@@ -100,7 +100,7 @@ _uint CLoadingThread::Loading_ForStage()
         Engine::CTexture::CreateFromFolder(m_pGraphicDev, TEX_NORMAL,
             L"../Bin/Resource/Maps/Texture/TileMasking"));
 
-    // ===== Grass ���� =====
+    // ===== Grass 관련 =====
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_GrassBuffer",
         Engine::CGrassBuffer::Create(m_pGraphicDev));
 
@@ -271,7 +271,7 @@ _uint CLoadingThread::Loading_ForDungeon()
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_N2_AI", CN2_AI::Create(m_pGraphicDev, 6.f, 4.f));
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_N3_AI", CN3_AI::Create(m_pGraphicDev, 6.f, 3.f));
 
-    // ===== Ÿ�� ���� =====
+    // ===== 타일 관련 =====
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_RcTexXZ",
         Engine::CRcTexXZ::Create(m_pGraphicDev));
 
@@ -283,7 +283,7 @@ _uint CLoadingThread::Loading_ForDungeon()
         Engine::CTexture::CreateFromFolder(m_pGraphicDev, TEX_NORMAL,
             L"../Bin/Resource/Maps/Texture/TileMasking"));
 
-    // ===== Grass ���� =====
+    // ===== Grass 관련 =====
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_GrassBuffer",
         Engine::CGrassBuffer::Create(m_pGraphicDev));
 
@@ -304,10 +304,10 @@ _uint CLoadingThread::Loading_ForDungeon()
     //비숍 래쉬
 
     vector<CTextureSet::TEXINFO> tempVec(2);
-    tempVec[0] = CTextureSet::TEXINFO(L"Bishop_Leshy_Idle", L"../Bin/Resource/Texture/Bishops/Leshy/Leshy-idle/Leshy_idle-%d.png", 500);
+    tempVec[0] = CTextureSet::TEXINFO(L"Bishop_Leshy_Idle", L"../Bin/Resource/Texture/Bishops/Leshy/Leshy-idle/dds/Leshy_idle-%d.dds", 500);
     tempVec[1] = CTextureSet::TEXINFO(L"Bishop_Leshy_Talk", L"../Bin/Resource/Texture/Bishops/Leshy/Leshy-talk/Leshy-talk-%d.png", 167);
 
-    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_BishopLeshy", Engine::CTextureSet::Create(m_pGraphicDev, TEX_NORMAL, tempVec));
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_BishopLeshy", Engine::CTextureSet::Create(m_pGraphicDev, TEX_NORMAL, tempVec)); // 5초 
 
     
 

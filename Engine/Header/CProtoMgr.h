@@ -27,15 +27,15 @@ private:
 	virtual ~CProtoMgr();
 
 public:
-	HRESULT			Ready_Prototype(const _tchar* pComponentTag, CComponent* pComponent);
-	CComponent* Clone_Prototype(const _tchar* pComponentTag);
+	HRESULT			Ready_Prototype(const wstring& pComponentTag, CComponent* pComponent);
+	CComponent* Clone_Prototype(const wstring& pComponentTag);
 
 
 private:
-	CComponent* Find_Prototype(const _tchar* pComponentTag);
+	CComponent* Find_Prototype(const wstring& pComponentTag);
 
 private:
-	map<const _tchar*, CComponent*>		m_mapPrototype;
+	map<wstring, CComponent*>		m_mapPrototype;
 
 private:
 	virtual void Free();

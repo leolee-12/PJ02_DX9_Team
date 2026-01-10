@@ -25,7 +25,7 @@ HRESULT CLoadingCircle::Ready_GameObject()
 		return E_FAIL;
 
 	m_pTransformCom->Set_Scale(25.f, 25.f, 1.f);
-	m_pTransformCom->Set_Pos(_float(-WINCX / 2) + 300.f, _float(-WINCY / 2) + 80.f, 0.f);
+	m_pTransformCom->Set_Pos(_float(WINCX / 2) - 80.f, _float(-WINCY / 2) + 80.f, 0.f);
 	
 
 	m_hmapSubHandles.insert({ L"Stop_Rander", m_pMessageChannel->Subscribe(L"Loading_Success", [this](const IMessageChannel::EVENT&)

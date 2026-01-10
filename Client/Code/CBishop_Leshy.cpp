@@ -23,7 +23,7 @@ HRESULT CBishop_Leshy::Ready_GameObject()
 	m_pTransformCom->Set_Scale(332.f * 0.05f, 422.f * 0.05f, 0.f);
 	m_pTransformCom->Set_Pos(0.f, 2.f, 50.f);
 
-	m_eCurState = Bishops::BS_IDLE;
+	m_eCurState = Bishops::BS_TALK;
 
 	return S_OK;
 }
