@@ -99,12 +99,7 @@ void CRenderer::Render_Alpha(LPDIRECT3DDEVICE9& pGraphicDev)
 
 	m_RenderGroup[RENDER_ALPHA].sort([](CGameObject* pDst, CGameObject* pSrc)->bool
 		{
-			_bool bCheck_Zfigthing = pDst->Get_NewDepth().z == pSrc->Get_NewDepth().z;
-
-			if (bCheck_Zfigthing)
-				return pDst->Get_NewDepth().y < pSrc->Get_NewDepth().y;
-			else
-				return pDst->Get_NewDepth().z > pSrc->Get_NewDepth().z;
+			return pDst->Get_Depth() > pSrc->Get_Depth();
 		});
 
 
