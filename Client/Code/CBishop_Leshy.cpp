@@ -21,7 +21,7 @@ HRESULT CBishop_Leshy::Ready_GameObject()
 		return E_FAIL;
 
 	m_pTransformCom->Set_Scale(332.f * 0.05f, 422.f * 0.05f, 0.f);
-	m_pTransformCom->Set_Pos(0.f, 0.f, 0.f);
+	m_pTransformCom->Set_Pos(0.f, 0.f, 50.f);
 
 	m_eCurState = Bishops::BS_IDLE;
 
@@ -59,15 +59,16 @@ _int CBishop_Leshy::Update_GameObject(const _float& fTimeDelta)
 
 void CBishop_Leshy::LateUpdate_GameObject(const _float& fTimeDelta)
 {
-	CGameObject::LateUpdate_GameObject(fTimeDelta);
 	m_pTransformCom->Compute_Bilboard(BBD_X);
 	m_pTransformCom->Get_Info(INFO_POS, &m_vPos);
 	Compute_ViewDepth(&m_vPos);
+
+	CGameObject::LateUpdate_GameObject(fTimeDelta);
 }
 
 void CBishop_Leshy::Render_GameObject()
 {
-	m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, FALSE);
+	//m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, FALSE);
 
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
 
@@ -78,7 +79,7 @@ void CBishop_Leshy::Render_GameObject()
 
 	m_pBufferCom->Render_Buffer();
 
-	//m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, FALSE);
+	//m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, TRUE);
 }
 
 void CBishop_Leshy::OnCollision(CGameObject* pObject)
