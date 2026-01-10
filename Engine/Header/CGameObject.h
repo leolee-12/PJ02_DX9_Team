@@ -26,7 +26,6 @@ public:
 	CComponent* Get_Component(COMPONENTID eID, const wstring& strComponentTag);
 	OBJID		Get_OBJID() { return m_eOBJID; }
 	_float		Get_Depth() { return m_fDepth; }
-	const _vec3&       Get_NewDepth() { return m_vNewDepth; }
 
 public:
 	virtual			HRESULT		Ready_GameObject();
@@ -42,7 +41,6 @@ protected:
 	LPDIRECT3DDEVICE9						m_pGraphicDev;
 	
 	_float									m_fDepth;
-	_vec3                                   m_vNewDepth;
 
 protected:
 	virtual		void		Free();

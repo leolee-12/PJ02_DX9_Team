@@ -76,7 +76,6 @@ void CGameObject::Compute_ViewDepth(const _vec3* pPos)
 
     _vec3      vDir = vCamPos - *pPos;
 
-	m_vNewDepth = *pPos;
 	m_fDepth = D3DXVec3Length(&vDir);
 }
 
