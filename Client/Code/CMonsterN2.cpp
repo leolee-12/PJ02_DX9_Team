@@ -167,18 +167,18 @@ HRESULT CMonsterN2::Add_Component()
 void CMonsterN2::Ready_Variable()
 {
 	// 게임로직 변수 세팅
+	_float fScale = 3.f;
+	m_fGroundY = -2.5f + fScale * 0.5f;
 	m_iAttack = 1;
 	m_iHp = 10;
-	m_fScale = 3.f;
-	m_fGroundY = -2.5f + m_fScale * 0.5f;
 
 	// Transform 세팅
 	m_pTransformCom->Set_Pos(_float(rand() % 20), m_fGroundY, _float(rand() % 20));
-	m_pTransformCom->Set_Scale(m_fScale, m_fScale, m_fScale);
+	m_pTransformCom->Set_Scale(fScale, fScale, fScale);
 
 	// Collider 세팅
 	m_pColliderCom->RegisterToManager(this, CL_MONSTER);
-	AABB tAABB = { m_vPos.x, m_vPos.y, m_vPos.z, 0.7f, 0.5f, 0.7f };
+	AABB tAABB = { m_vPos.x, m_vPos.y, m_vPos.z, 0.75f, 0.75f, 0.75f };
 	m_pColliderCom->Set_AABB(tAABB);
 
 	// AI 세팅
@@ -192,7 +192,8 @@ void CMonsterN2::Ready_Variable()
 	D3DXMatrixIdentity(&m_matTex);
 
 	// 마디 세팅
-	_vec3 vScale{ m_fScale, m_fScale, m_fScale };
+	_vec3 vScale{};
+	m_pTransformCom->Get_Scale(&vScale);
 	vScale *= 0.7f;
 	m_pNode[0] = CNode::Create(m_pGraphicDev, m_pMessageChannel, m_pTransformCom, L"Proto_N2Node1Texture");
 	m_pNode[0]->Set_NodeScale(vScale);

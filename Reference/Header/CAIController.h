@@ -20,8 +20,9 @@ public:
 	void		Set_InteractRange(_float fRange)				{ m_fInteractRange = fRange; }
 	void		Set_GroundY(_float fGroundY)					{ m_fGroundY = fGroundY; }
 
-	_float		Get_DetectRange() const { return m_fDetectRange; }
+	_float			Get_DetectRange() const { return m_fDetectRange; }
 	const _vec3*	Get_Dir() { return &m_vDir; }
+	_vec3			Get_TargetDir() { return Compute_TargetDir(); }
 	// 일단 만들어놨으나, 필요없는 Set/Get 함수는 지울 예정
 
 	template <typename T>

@@ -153,15 +153,15 @@ HRESULT CMonsterN3::Add_Component()
 void CMonsterN3::Ready_Variable()
 {
 	// 게임로직 변수 세팅
+	_float fScale = 4.f;
+	m_fGroundY = -2.5f + fScale * 0.5f;
 	m_iAttack = 1;
 	m_iHp = 10;
-	m_fScale = 4.f;
-	m_fGroundY = -2.5f + m_fScale * 0.5f;
 	m_fHeight = 2.f;	// 공중에 떠있는 몬스터
 
 	// Transform 세팅
 	m_pTransformCom->Set_Pos(_float(rand() % 20), m_fGroundY + m_fHeight, _float(rand() % 20));
-	m_pTransformCom->Set_Scale(m_fScale, m_fScale, m_fScale);
+	m_pTransformCom->Set_Scale(fScale, fScale, fScale);
 
 	// Collider 세팅
 	m_pColliderCom->RegisterToManager(this, CL_MONSTER);
@@ -268,6 +268,14 @@ void CMonsterN3::Set_Texture()
 	_bool bFilpX = vDir.x > 0.f ? true : false;	// 반전 여부
 	_uint iFrame = m_fFrame;					// 현재 프레임
 	_uint iTexIdx = _uint(m_eCurState);			// 텍스처 인덱스
+	
+	if (!m_pAICom->Is_Chasing() || m_eCurState == N3S_RUSH)
+		bFilpX = vDir.x > 0.f ? true : false;	// 반전 여부
+	else
+	{
+		_vec3 vTargetDir = m_pAICom->Get_TargetDir();
+		bFilpX = vTargetDir.x > 0.f ? true : false;	// 반전 여부
+	}
 
 	D3DXMatrixIdentity(&m_matTex);
 	_uint iU = iFrame % 16;

@@ -37,7 +37,6 @@ protected:
 
 	// 스테이터스 관련
 	_int				m_iAttack;
-	_float				m_fScale;
 	_float				m_fGroundY;
 
 public:

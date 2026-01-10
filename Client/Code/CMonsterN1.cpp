@@ -153,14 +153,14 @@ HRESULT CMonsterN1::Add_Component()
 void CMonsterN1::Ready_Variable()
 {
 	// 게임로직 변수 세팅
+	_float fScale = 3.f;
+	m_fGroundY = -2.5f + fScale * 0.5f;
 	m_iAttack = 1;
 	m_iHp = 10;
-	m_fScale = 3.f;
-	m_fGroundY = -2.5f + m_fScale * 0.5f;
 
 	// Transform 세팅
 	m_pTransformCom->Set_Pos(_float(rand() % 20), m_fGroundY, _float(rand() % 20));
-	m_pTransformCom->Set_Scale(m_fScale, m_fScale, m_fScale);
+	m_pTransformCom->Set_Scale(fScale, fScale, fScale);
 
 	// Collider 세팅
 	m_pColliderCom->RegisterToManager(this, CL_MONSTER);
