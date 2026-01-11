@@ -25,6 +25,9 @@
 #include "CGauge.h"
 #include "CBishop_Leshy.h"
 #include <CMonsterB1.h>
+#include "CBishop_Heket.h"
+#include "CBishop_Kallamar.h"
+#include "CBishop_Shamura.h"
 
 CDungeon::CDungeon(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -183,17 +186,72 @@ HRESULT CDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 		// Spawns (Monster)
 		for (const auto& spawn : mapData.spawns)
 		{
-			if (spawn.type == 1)
-			{
-				pGameObject = CMonsterN1::Create(m_pGraphicDev, m_pMessageChannel);
-				if (pGameObject)
+			if (spawn.type == 1) {
+				switch (spawn.monsterType)
 				{
-					Engine::CTransform* pTransform = dynamic_cast<Engine::CTransform*>(
-						pGameObject->Get_Component(ID_DYNAMIC, L"Com_Transform"));
-					if (pTransform)
-						pTransform->Set_Pos(spawn.x, 0.f, spawn.z);
-					pLayer->Add_GameObject(L"Monster", pGameObject);
+				case 1:
+					pGameObject = CMonsterN1::Create(m_pGraphicDev, m_pMessageChannel);
+					if (pGameObject)
+					{
+						Engine::CTransform* pTransform = dynamic_cast<Engine::CTransform*>(
+							pGameObject->Get_Component(ID_DYNAMIC, L"Com_Transform"));
+						if (pTransform)
+							pTransform->Set_Pos(spawn.x, 0.f, spawn.z);
+						pLayer->Add_GameObject(L"Monster", pGameObject);
+					}
+					break;
+				case 31:
+					pGameObject = CBishop_Leshy::Create(m_pGraphicDev, m_pMessageChannel, spawn);
+
+					NULL_CHECK_RETURN(pGameObject, E_FAIL)
+
+					if (FAILED(pLayer->Add_GameObject(L"Bishop_Leshy", pGameObject)))
+						return E_FAIL;
+
+					break;
+				case 32:
+					pGameObject = CBishop_Heket::Create(m_pGraphicDev, m_pMessageChannel, spawn);
+
+					NULL_CHECK_RETURN(pGameObject, E_FAIL)
+
+					if (FAILED(pLayer->Add_GameObject(L"Bishop_Heket", pGameObject)))
+						return E_FAIL;
+
+					break;
+
+				case 33:
+					pGameObject = CBishop_Kallamar::Create(m_pGraphicDev, m_pMessageChannel, spawn);
+
+					NULL_CHECK_RETURN(pGameObject, E_FAIL)
+
+					if (FAILED(pLayer->Add_GameObject(L"Bishop_Kallamar", pGameObject)))
+						return E_FAIL;
+
+					break;
+
+				case 34:
+					pGameObject = CBishop_Shamura::Create(m_pGraphicDev, m_pMessageChannel, spawn);
+
+					NULL_CHECK_RETURN(pGameObject, E_FAIL)
+
+					if (FAILED(pLayer->Add_GameObject(L"Bishop_Shamura", pGameObject)))
+						return E_FAIL;
+
+					break;
 				}
+
+				/*if (spawn.type == 1)
+				{
+					pGameObject = CMonsterN1::Create(m_pGraphicDev, m_pMessageChannel);
+					if (pGameObject)
+					{
+						Engine::CTransform* pTransform = dynamic_cast<Engine::CTransform*>(
+							pGameObject->Get_Component(ID_DYNAMIC, L"Com_Transform"));
+						if (pTransform)
+							pTransform->Set_Pos(spawn.x, 0.f, spawn.z);
+						pLayer->Add_GameObject(L"Monster", pGameObject);
+					}
+				}*/
 			}
 		}
 
@@ -262,13 +320,6 @@ HRESULT CDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	NULL_CHECK_RETURN(pGameObject, E_FAIL)
 
 		if (FAILED(pLayer->Add_GameObject(L"Monster", pGameObject)))
-			return E_FAIL;
-
-	pGameObject = CBishop_Leshy::Create(m_pGraphicDev);
-
-	NULL_CHECK_RETURN(pGameObject, E_FAIL)
-
-		if (FAILED(pLayer->Add_GameObject(L"Bishop_Leshy", pGameObject)))
 			return E_FAIL;
 
 	m_mapLayer.insert({ pLayerTag , pLayer });

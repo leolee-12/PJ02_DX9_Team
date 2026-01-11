@@ -24,8 +24,9 @@
 
 
 CLoading::CLoading(LPDIRECT3DDEVICE9 pGraphicDev, LOADINGID ChangeID)
-	: CScene(pGraphicDev), m_pLoading(nullptr), m_eChangeID(ChangeID)//, m_fLoadingDelay(0.f)
-	, m_iCompletedCount(0)//, m_iLoadingFrame(0)
+	: CScene(pGraphicDev), m_pLoading(nullptr), m_eChangeID(ChangeID), m_fLoadingDelay(0.f)
+	, m_iCompletedCount(0), m_pLoadingFG(nullptr)
+	, m_fLoadingPersent(0.f), m_iLoadCount(0), m_iTotalCount(0)
 {
 }
 
@@ -68,26 +69,26 @@ _int CLoading::Update_Scene(const _float& fTimeDelta)
 	_float LoadingClamp = _float(m_iLoadCount) / _float(m_iTotalCount);
 	_float ProtoClamp = _float(m_iCompletedCount) / _float(m_iTotalCount);
 
-	_float fPersent = (LoadingClamp + ProtoClamp) / 2.f;
+	m_fLoadingPersent = (LoadingClamp + ProtoClamp) / 2.f;
 
-	if (fPersent < 0)
+	if (m_fLoadingPersent < 0)
 	{
-		fPersent = 0.f;
+		m_fLoadingPersent = 0.f;
 	}
-	else if (fPersent > 1.f)
+	else if (m_fLoadingPersent > 1.f)
 	{
-		fPersent = 1.f;
+		m_fLoadingPersent = 1.f;
 	}
 
 
-	m_pLoadingFG->Update_Pos(fPersent);
+	m_pLoadingFG->Update_Pos(m_fLoadingPersent);
 
 	_int iExit = Engine::CScene::Update_Scene(fTimeDelta);
 
 	//if (true == m_pLoading->Get_Finish())
 	if (m_iTotalCount == m_iCompletedCount)
 	{
-		//if (m_fLoadingDelay >= 1.f) {
+		if (m_fLoadingDelay >= 1.f) {
 			Engine::CScene* pScene = nullptr;
 			switch (m_pLoading->Get_Loading())
 			{
@@ -128,9 +129,9 @@ _int CLoading::Update_Scene(const _float& fTimeDelta)
 				MSG_BOX("Stage Scene Failed");
 				return -1;
 			}
-		//}
-		//_float fClampedDelta = min(fTimeDelta, 0.1f);  // 최대 100ms로 제한
-		//m_fLoadingDelay += fClampedDelta;
+		}
+		_float fClampedDelta = min(fTimeDelta, 0.1f);  // 최대 100ms로 제한
+		m_fLoadingDelay += fClampedDelta;
 	}
 
 	return iExit;
@@ -152,20 +153,31 @@ void CLoading::Render_Scene()
 {
 	// debug 용
 
+	_int iRenderPersent = _int(m_fLoadingPersent * 100.f);
+
+	_tchar szPersent[64] = L"";
+
+	swprintf_s(szPersent, L"\n%d %%", iRenderPersent);
 
 	_vec2		vPos{ 150.f, WINCY - 100.f };
+	_vec2		vPos2{ 150.f + 50.f, WINCY - 100.f };
 
 	if (m_iTotalCount == m_iLoadCount) {
 		if (m_iTotalCount == m_iCompletedCount) {
 			CFontMgr::GetInstance()->Render_Font(L"Font_Lapture40", L"로딩 완료!", &vPos, D3DXCOLOR(0.75f, 0.75f, 0.75f, 1.f), DT_NOCLIP);
+			CFontMgr::GetInstance()->Render_Font(L"Font_Lapture40", szPersent, &vPos, D3DXCOLOR(0.75f, 0.75f, 0.75f, 1.f), DT_NOCLIP);
 		}
 		else {
 			CFontMgr::GetInstance()->Render_Font(L"Font_Lapture40", L"오브젝트 생성중", &vPos, D3DXCOLOR(0.75f, 0.75f, 0.75f, 1.f), DT_NOCLIP);
+			CFontMgr::GetInstance()->Render_Font(L"Font_Lapture40", szPersent, &vPos, D3DXCOLOR(0.75f, 0.75f, 0.75f, 1.f), DT_NOCLIP);
 		}
 	}
 	else {
 		CFontMgr::GetInstance()->Render_Font(L"Font_Lapture40", L"텍스쳐 생성중", &vPos, D3DXCOLOR(0.75f, 0.75f, 0.75f, 1.f), DT_NOCLIP);
+		CFontMgr::GetInstance()->Render_Font(L"Font_Lapture40", szPersent, &vPos, D3DXCOLOR(0.75f, 0.75f, 0.75f, 1.f), DT_NOCLIP);
 	}
+
+	
 }
 
 

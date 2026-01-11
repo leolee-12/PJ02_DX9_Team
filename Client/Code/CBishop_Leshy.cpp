@@ -4,11 +4,12 @@
 #include "CRenderer.h"
 
 CBishop_Leshy::CBishop_Leshy(LPDIRECT3DDEVICE9 pGraphicDev)
-	: CGameObject(pGraphicDev), m_pBufferCom(nullptr), m_pTransformCom(nullptr)
+	: CGameObject(pGraphicDev), m_pBufferCom(nullptr), m_pTransformCom(nullptr), m_pTextureCom(nullptr)
 	, m_iFrame(0), m_iFrameEnd(0)
 	, m_eCurState(Bishops::BS_END), m_ePreState(Bishops::BS_END)
 {
 	ZeroMemory(&m_vPos, sizeof(_vec3));
+	ZeroMemory(&m_tSpawndata, sizeof(Engine::SPAWNDATA));
 }
 
 CBishop_Leshy::~CBishop_Leshy()
@@ -21,9 +22,10 @@ HRESULT CBishop_Leshy::Ready_GameObject()
 		return E_FAIL;
 
 	m_pTransformCom->Set_Scale(332.f * 0.05f, 422.f * 0.05f, 0.f);
-	m_pTransformCom->Set_Pos(0.f, 2.f, 50.f);
 
-	m_eCurState = Bishops::BS_TALK;
+	m_pTransformCom->Set_Pos(m_tSpawndata.x, 2.f, m_tSpawndata.z);
+
+	m_eCurState = Bishops::BS_IDLE;
 
 	return S_OK;
 }
@@ -133,7 +135,7 @@ void		CBishop_Leshy::Update_State()
 			break;
 		case Bishops::BS_TALK:
 			m_strStateKey = L"Bishop_Leshy_Talk";
-			m_iFrame = 0.f;
+			m_iFrame = 0;
 			m_iFrameEnd = m_pTextureCom->Get_TextureEnd(m_strStateKey);
 			break;
 		}
@@ -164,9 +166,13 @@ void CBishop_Leshy::Update_Frame(const _float& fTimeDelta)
 
 
 
-CBishop_Leshy* CBishop_Leshy::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+CBishop_Leshy* CBishop_Leshy::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMessageChannel, const Engine::SPAWNDATA& tSpawndata)
 {
 	CBishop_Leshy* pBishop_Leshy = new CBishop_Leshy(pGraphicDev);
+
+	pBishop_Leshy->m_tSpawndata = tSpawndata;
+	pBishop_Leshy->m_pMessageChannel = pMessageChannel;
+	pBishop_Leshy->m_pMessageChannel->AddRef();
 
 	if (FAILED(pBishop_Leshy->Ready_GameObject()))
 	{

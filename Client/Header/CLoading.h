@@ -39,7 +39,9 @@ private:
 	_uint			m_iCompletedCount;
 	_uint			m_iTotalCount;
 
-	//_float			m_fLoadingDelay;
+	_float			m_fLoadingPersent;
+
+	_float			m_fLoadingDelay;
 
 public:
 	static CLoading* Create(LPDIRECT3DDEVICE9 pGraphicDev, LOADINGID ChangeID);
