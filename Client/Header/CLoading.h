@@ -22,12 +22,12 @@ private:
 	HRESULT			Ready_GameLogic_Layer(const _tchar* pLayerTag) { return S_OK; }
 	HRESULT			Ready_UI_Layer(const _tchar* pLayerTag);
 
-	void			Load_Object_Texture(const std::set<std::wstring>& textureSet);
+	//void			Load_Object_Texture(const std::set<std::wstring>& textureSet);
 
 private:
 	HRESULT			Ready_Prototype();
 
-	HRESULT			Excute_Ready_Texture();
+	void			Update_Count();
 
 private:
 	//CLoadingThread* m_pLoading;
@@ -35,11 +35,11 @@ private:
 	LOADINGID		m_eChangeID;
 	CLoadingFG*		m_pLoadingFG;
 
+	_uint			m_iLoadCount;
 	_uint			m_iCompletedCount;
 	_uint			m_iTotalCount;
 
-	_uint           m_iLoadingFrame;
-	_float			m_fLoadingDelay;
+	//_float			m_fLoadingDelay;
 
 public:
 	static CLoading* Create(LPDIRECT3DDEVICE9 pGraphicDev, LOADINGID ChangeID);

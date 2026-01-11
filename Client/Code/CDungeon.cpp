@@ -378,7 +378,7 @@ CDungeon* CDungeon::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 	if (FAILED(pTest->Ready_Scene()))
 	{
 		Safe_Release(pTest);
-		MSG_BOX("pTest Create Failed");
+		MSG_BOX("pDungeon Create Failed");
 		return nullptr;
 	}
 
