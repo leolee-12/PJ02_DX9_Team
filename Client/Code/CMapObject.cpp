@@ -47,6 +47,8 @@ _int CMapObject::Update_GameObject(const _float& fTimeDelta)
 {
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
+	//CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHA, this);
+
 	if (PLACEMENT_STANDING == m_ePlacement) {
 		CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHA, this);
 	}
@@ -104,7 +106,7 @@ void CMapObject::Set_ObjectData(const Engine::OBJECTDATA& objData)
 	if (PLACEMENT_STANDING == m_ePlacement)
 	{
 		// Set position
-		m_pTransformCom->Set_Pos(objData.x, objData.y + baseY + (m_fScale / 2), objData.z);
+		m_pTransformCom->Set_Pos(objData.x, objData.y + baseY + (m_fScale/2), objData.z);
 		// Standing: height = scale, width = scale * aspectRatio
 		m_pTransformCom->Set_Scale(m_fScale * aspectRatio, m_fScale, m_fScale);
 	}

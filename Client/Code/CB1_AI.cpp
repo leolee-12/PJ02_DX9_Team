@@ -11,6 +11,7 @@ CB1_AI::CB1_AI(LPDIRECT3DDEVICE9 pGraphicDev)
 	m_fGravity(0.f),
 	m_fGroundY(0.f)
 {
+	ZeroMemory(m_pAttackPattern, sizeof(m_pAttackPattern));
 }
 
 CB1_AI::CB1_AI(const CB1_AI& rhs)
@@ -22,6 +23,7 @@ CB1_AI::CB1_AI(const CB1_AI& rhs)
 	m_fGravity(rhs.m_fGravity),
 	m_fGroundY(rhs.m_fGroundY)
 {
+	memcpy(m_pAttackPattern, rhs.m_pAttackPattern, sizeof(m_pAttackPattern));
 }
 
 CB1_AI::~CB1_AI()
@@ -40,6 +42,12 @@ HRESULT CB1_AI::Ready_AI(const _float& fDetectRange, const _float& fInteractRang
 	m_fGroundY = 1.f;
 	m_fAcmlTime = 0.f;
 	m_iRcmState = _uint(CMonsterB1::B1S_SPAWN);
+
+	// 초기 공격 패턴 설정
+	m_patternQueue.push(CMonsterB1::B1S_JUMP);
+	m_patternQueue.push(CMonsterB1::B1S_PREPARE);
+	m_patternQueue.push(CMonsterB1::B1S_SHOOT);
+	m_patternQueue.push(CMonsterB1::B1S_SUMMON);
 
 	return S_OK;
 }
@@ -66,7 +74,7 @@ void CB1_AI::Enter_State(const _uint& iState)
 	case CMonsterB1::B1S_JUMP:
 	{
 		m_vDir = Compute_TargetDir();
-		m_vSpeed = { m_vDir.x * 3.f, 5.f, m_vDir.z * 3.f };
+		m_vSpeed = { m_vDir.x * 3.f, 10.f, m_vDir.z * 3.f };
 	}
 	break;
 	case CMonsterB1::B1S_LAND:
@@ -126,6 +134,47 @@ void CB1_AI::Exit_State(const _uint& iState)
 	}
 }
 
+void CB1_AI::Generate_Pattern(CMonsterB1::MONSTER_B1_STATE ePrevPattern)
+{
+	// 이전 패턴(or 다른 변수여도 됨)에 따라 다음 패턴의 확률을 결정
+	_uint iRate_JUMP(0);
+	_uint iRate_PREPARE(0);
+	_uint iRate_SHOOT(0);
+	_uint iRate_SUMMON(0);
+
+	switch (ePrevPattern)
+	{
+	case CMonsterB1::B1S_JUMP:
+		iRate_PREPARE = 40;
+		iRate_SHOOT = 40;
+		iRate_SUMMON = 20;
+		break;
+
+	case CMonsterB1::B1S_PREPARE:
+		iRate_JUMP = 40;
+		iRate_SHOOT = 40;
+		iRate_SUMMON = 20;
+		break;
+
+	case CMonsterB1::B1S_SHOOT:
+		iRate_JUMP = 40;
+		iRate_PREPARE = 40;
+		iRate_SUMMON = 20;
+		break;
+
+	case CMonsterB1::B1S_SUMMON:
+		iRate_JUMP = 33;
+		iRate_PREPARE = 33;
+		iRate_SHOOT = 34;
+		break;
+	}
+
+	_uint iRandom = Get_Rand_Int(1, 100);
+
+	if(iRandom <= iRate_JUMP) m_patternQueue
+
+}
+
 _int CB1_AI::Update_Component(const _float& fTimeDelta)
 {
 	_int iExit(0);
@@ -156,6 +205,9 @@ _int CB1_AI::Update_Component(const _float& fTimeDelta)
 	case CMonsterB1::B1S_SHOOT:
 		Update_Shoot(fTimeDelta);
 		break;
+	case CMonsterB1::B1S_SUMMON:
+		Update_Summon(fTimeDelta);
+		break;
 	case CMonsterB1::B1S_SPAWN:
 		Update_Spawn(fTimeDelta);
 		break;
@@ -177,7 +229,10 @@ void CB1_AI::Update_Crawl(const _float& fTimeDelta)
 		if (m_fDistance <= m_fInteractRange)
 		{
 			if (m_fAcmlTime >= 5.f)
-				Change_State(CMonsterB1::B1S_JUMP);
+			{
+				if(!m_patternQueue.empty())
+					Change_State(m_patternQueue.front());
+			}
 		}
 	}
 	else
