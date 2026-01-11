@@ -14,6 +14,7 @@
 #include <d3dx9.h>
 
 #include <vector>
+#include <deque>
 #include <list>
 #include <map>
 #include <algorithm>

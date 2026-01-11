@@ -30,6 +30,23 @@ public:
 		m_vScale = { _fX, _fY, _fZ };
 	}
 
+	_vec3* Get_Scale(_vec3* pOut)
+	{
+		*pOut = m_vScale;
+		return pOut;
+	}
+
+	float		Get_Scale(ROTATION Axis)
+	{
+		switch (Axis)
+		{
+		case ROT_X: return m_vScale.x;
+		case ROT_Y: return m_vScale.y;
+		case ROT_Z: return m_vScale.z;
+		default:	return 0.f;
+		}
+	}
+
 	void		Move_Pos(const _vec3* pDir, const _float& fTimeDelta, const _float& fSpeed)
 	{
 		m_vInfo[INFO_POS] += *pDir * fTimeDelta * fSpeed;

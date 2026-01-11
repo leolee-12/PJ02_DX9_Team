@@ -148,6 +148,18 @@
     <Filter Include="02. GameObject\07. UI\03. KBUI\00. TTutorial\00. KBBack">
       <UniqueIdentifier>{361ac797-f26e-4d74-843b-11dc7fd5c6c5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\02. Monster\Normal2">
+      <UniqueIdentifier>{7afa2db1-0b9b-45dd-add7-b4436ab26da5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\02. Monster\Normal3">
+      <UniqueIdentifier>{c750db87-30b0-461e-be3c-7188c009816e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\02. Monster\Boss1">
+      <UniqueIdentifier>{4835642c-34bd-4f07-9943-87d66889933e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\02. Monster\Boss2">
+      <UniqueIdentifier>{a2bf76f1-004d-4e27-ad5f-a12e80a7f38a}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02. GameObject\07. UI\03. KBUI\99. Test">
       <UniqueIdentifier>{c05846a8-0aa5-450d-bd73-73898a6a4ab8}</UniqueIdentifier>
     </Filter>
