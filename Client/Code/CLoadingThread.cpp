@@ -96,7 +96,7 @@ _uint CLoadingThread::Loading_ForStage()
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_B1_AI", CB1_AI::Create(m_pGraphicDev, 40.f, 5.f));
 
 
-    // ===== Ÿ�� ���� =====
+    // Tile
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_RcTexXZ",
         Engine::CRcTexXZ::Create(m_pGraphicDev));
 
@@ -108,7 +108,7 @@ _uint CLoadingThread::Loading_ForStage()
         Engine::CTexture::CreateFromFolder(m_pGraphicDev, TEX_NORMAL,
             L"../Bin/Resource/Maps/Texture/TileMasking"));
 
-    // ===== Grass ���� =====
+    // Grass
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_GrassBuffer",
         Engine::CGrassBuffer::Create(m_pGraphicDev));
 
@@ -117,8 +117,6 @@ _uint CLoadingThread::Loading_ForStage()
 
     // 맵 오브젝트 로딩 
     Load_Object_Texture(Tutorial_Texture);
-
-    //Sleep(2000);
 
     m_fPercent += 50.f;
 
@@ -192,9 +190,6 @@ _uint CLoadingThread::Loading_ForTest()
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_PassionIcon", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Player/PassionGauge/PassionIcon_%d.png", 2));
 
 
-
-    //Sleep(2000);
-
     m_fPercent += 50.f;
 
     m_bFinish = true;
@@ -229,6 +224,71 @@ _uint CLoadingThread::Loading_ForKnuckleBone()
     m_fPercent = 100.f;
 
     m_bFinish = true;
+
+    return _uint();
+}
+
+// 이 함수 무시하셔도 됩니다
+// 그냥 편리를 위해 만들어놓은 것 (로직 적용 x)
+_uint CLoadingThread::Loading_MapCommon()
+{
+
+    if (FAILED(CPersistentMgr::GetInstance()->Ready_GlobalObjects(m_pGraphicDev)))
+        return E_FAIL;
+
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_ItemTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Item/Item_%02d.png", 8))))
+        if (FAILED(CPersistentMgr::GetInstance()->Ready_GlobalObjects(m_pGraphicDev)))
+            return E_FAIL;
+
+    m_fPercent += 50.f;
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_EffectTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Explosion/Explosion%d.png", 90));
+
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_CubeTex", Engine::CCubeTex::Create(m_pGraphicDev));
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_PlayerHP", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Player/Health_%d.png", 3));
+
+}
+
+_uint CLoadingThread::Loading_ForTutorial()
+{
+
+    if (FAILED(CPersistentMgr::GetInstance()->Ready_GlobalObjects(m_pGraphicDev)))
+        return E_FAIL;
+
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_ItemTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Item/Item_%02d.png", 8))))
+        if (FAILED(CPersistentMgr::GetInstance()->Ready_GlobalObjects(m_pGraphicDev)))
+            return E_FAIL;
+
+    m_fPercent += 50.f;
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_EffectTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Explosion/Explosion%d.png", 90));
+
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_CubeTex", Engine::CCubeTex::Create(m_pGraphicDev));
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_PlayerHP", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Player/Health_%d.png", 3));
+
+    // 맵 오브젝트 로딩 
+    Load_Object_Texture(Tutorial_Texture);
+
+    m_fPercent += 50.f;
+
+    m_bFinish = true;
+
+    return _uint();
+}
+
+_uint CLoadingThread::Loading_ForTheGateway()
+{
+
+    if (FAILED(CPersistentMgr::GetInstance()->Ready_GlobalObjects(m_pGraphicDev)))
+        return E_FAIL;
+
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_ItemTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Item/Item_%02d.png", 8))))
+        if (FAILED(CPersistentMgr::GetInstance()->Ready_GlobalObjects(m_pGraphicDev)))
+            return E_FAIL;
+
+    m_fPercent += 50.f;
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_EffectTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Explosion/Explosion%d.png", 90));
+
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_CubeTex", Engine::CCubeTex::Create(m_pGraphicDev));
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_PlayerHP", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Player/Health_%d.png", 3));
 
     return _uint();
 }
@@ -283,25 +343,14 @@ _uint CLoadingThread::Loading_ForDungeon()
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_N2_AI", CN2_AI::Create(m_pGraphicDev, 6.f, 4.f));
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_N3_AI", CN3_AI::Create(m_pGraphicDev, 6.f, 3.f));
 
-    // ===== Ÿ�� ���� =====
-    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_RcTexXZ",
-        Engine::CRcTexXZ::Create(m_pGraphicDev));
+    // Tile
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_RcTexXZ", Engine::CRcTexXZ::Create(m_pGraphicDev));
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_TileTexture", Engine::CTexture::CreateFromFolder(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Maps/Texture/Tile"));
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_TileMaskTexture", Engine::CTexture::CreateFromFolder(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Maps/Texture/TileMasking"));
 
-    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_TileTexture",
-        Engine::CTexture::CreateFromFolder(m_pGraphicDev, TEX_NORMAL,
-            L"../Bin/Resource/Maps/Texture/Tile"));
-
-    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_TileMaskTexture",
-        Engine::CTexture::CreateFromFolder(m_pGraphicDev, TEX_NORMAL,
-            L"../Bin/Resource/Maps/Texture/TileMasking"));
-
-    // ===== Grass ���� =====
-    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_GrassBuffer",
-        Engine::CGrassBuffer::Create(m_pGraphicDev));
-
-    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Collider",
-        Engine::CCollider::Create(m_pGraphicDev));
-
+    // Grass 
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_GrassBuffer", Engine::CGrassBuffer::Create(m_pGraphicDev));
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Collider", Engine::CCollider::Create(m_pGraphicDev));
 
     // 게이지
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_GaugeCover", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Player/PassionGauge/GaugeCover.png", 1));
@@ -321,16 +370,113 @@ _uint CLoadingThread::Loading_ForDungeon()
 
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_BishopLeshy", Engine::CTextureSet::Create(m_pGraphicDev, TEX_NORMAL, tempVec));
 
-    
-
-
     // 맵 오브젝트 로딩 
-    Load_Object_Texture(Tutorial_Texture);
+    Load_Object_Texture(Dungeon_Texture);
 
     m_fPercent += 50.f;
 
     m_bFinish = true;
 
+    return _uint();
+}
+
+_uint CLoadingThread::Loading_ForVillage()
+{
+    if (FAILED(CPersistentMgr::GetInstance()->Ready_GlobalObjects(m_pGraphicDev)))
+        return E_FAIL;
+
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_ItemTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Item/Item_%02d.png", 8))))
+        if (FAILED(CPersistentMgr::GetInstance()->Ready_GlobalObjects(m_pGraphicDev)))
+            return E_FAIL;
+
+    m_fPercent += 50.f;
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_EffectTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Explosion/Explosion%d.png", 90));
+
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_CubeTex", Engine::CCubeTex::Create(m_pGraphicDev));
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_PlayerHP", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Player/Health_%d.png", 3));
+
+    // 맵 오브젝트 로딩 
+    Load_Object_Texture(Village_Texture);
+
+    m_fPercent += 50.f;
+
+    m_bFinish = true;
+
+    return _uint();
+}
+
+_uint CLoadingThread::Loading_ForRealDungeon()
+{
+    if (FAILED(CPersistentMgr::GetInstance()->Ready_GlobalObjects(m_pGraphicDev)))
+        return E_FAIL;
+
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_ItemTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Item/Item_%02d.png", 8))))
+        if (FAILED(CPersistentMgr::GetInstance()->Ready_GlobalObjects(m_pGraphicDev)))
+            return E_FAIL;
+
+    m_fPercent += 50.f;
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_EffectTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Explosion/Explosion%d.png", 90));
+
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_CubeTex", Engine::CCubeTex::Create(m_pGraphicDev));
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_PlayerHP", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Player/Health_%d.png", 3));
+
+    // 맵 오브젝트 로딩 
+    //Load_Object_Texture();
+
+    m_fPercent += 50.f;
+
+    m_bFinish = true;
+
+    return _uint();
+}
+
+_uint CLoadingThread::Loading_ForAmdusiasRoom()
+{
+    if (FAILED(CPersistentMgr::GetInstance()->Ready_GlobalObjects(m_pGraphicDev)))
+        return E_FAIL;
+
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_ItemTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Item/Item_%02d.png", 8))))
+        if (FAILED(CPersistentMgr::GetInstance()->Ready_GlobalObjects(m_pGraphicDev)))
+            return E_FAIL;
+
+    m_fPercent += 50.f;
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_EffectTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Explosion/Explosion%d.png", 90));
+
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_CubeTex", Engine::CCubeTex::Create(m_pGraphicDev));
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_PlayerHP", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Player/Health_%d.png", 3));
+
+    // 맵 오브젝트 로딩 
+    //Load_Object_Texture(Tutorial_Texture);
+
+    m_fPercent += 50.f;
+
+    m_bFinish = true;
+
+    return _uint();
+}
+
+_uint CLoadingThread::Loading_ForLeshyRoom()
+{
+    if (FAILED(CPersistentMgr::GetInstance()->Ready_GlobalObjects(m_pGraphicDev)))
+        return E_FAIL;
+
+    if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_ItemTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Item/Item_%02d.png", 8))))
+        if (FAILED(CPersistentMgr::GetInstance()->Ready_GlobalObjects(m_pGraphicDev)))
+            return E_FAIL;
+
+    m_fPercent += 50.f;
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_EffectTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Explosion/Explosion%d.png", 90));
+
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_CubeTex", Engine::CCubeTex::Create(m_pGraphicDev));
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_PlayerHP", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Player/Health_%d.png", 3));
+
+    // 맵 오브젝트 로딩 
+    //Load_Object_Texture(Tutorial_Texture);
+
+    m_fPercent += 50.f;
+
+
+    m_bFinish = true;
     return _uint();
 }
 
@@ -375,8 +521,32 @@ unsigned int CLoadingThread::Thread_Main(void* pArg)
         iFlag = pLoading->Loading_ForKnuckleBone();
         break;
 
+    case LOADING_TUTORIAL:
+        iFlag = pLoading->Loading_ForTutorial();
+        break;
+
     case LOADING_DUNGEON:
         iFlag = pLoading->Loading_ForDungeon();
+        break;
+
+    case LOADING_THEGATEWAY:
+        iFlag = pLoading->Loading_ForTheGateway();
+        break;
+
+    case LOADING_VILLAGE:
+        iFlag = pLoading->Loading_ForVillage();
+        break;
+
+    case LOADING_REALDUNGEON:
+        iFlag = pLoading->Loading_ForRealDungeon();
+        break;
+
+    case LOADING_AMDUSIASROOM:
+        iFlag = pLoading->Loading_ForAmdusiasRoom();
+        break;
+
+    case LOADING_LESHYROOM:
+        iFlag = pLoading->Loading_ForLeshyRoom();
         break;
 
     case LOADING_BOSS:
