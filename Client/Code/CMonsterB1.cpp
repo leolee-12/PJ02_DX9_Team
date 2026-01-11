@@ -14,7 +14,9 @@ CMonsterB1::CMonsterB1(LPDIRECT3DDEVICE9 pGraphicDev)
 	m_eCurState(B1S_SPAWN),
 	m_fFrame(0.f),
 	m_fFrameEnd(0.f),
-	m_fFrameSpeed(0.f)
+	m_fFrameSpeed(0.f),
+	m_iPhase(0),
+	m_iMaxHp(0)
 {
 	ZeroMemory(m_pNode, sizeof(m_pNode));
 }
@@ -25,7 +27,9 @@ CMonsterB1::CMonsterB1(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChan
 	m_eCurState(B1S_SPAWN),
 	m_fFrame(0.f),
 	m_fFrameEnd(0.f),
-	m_fFrameSpeed(0.f)
+	m_fFrameSpeed(0.f),
+	m_iPhase(0),
+	m_iMaxHp(0)
 {
 	ZeroMemory(m_pNode, sizeof(m_pNode));
 }
@@ -37,7 +41,9 @@ CMonsterB1::CMonsterB1(const CMonsterB1& rhs)
 	m_eCurState(B1S_SPAWN),
 	m_fFrame(0.f),
 	m_fFrameEnd(0.f),
-	m_fFrameSpeed(0.f)
+	m_fFrameSpeed(0.f),
+	m_iPhase(rhs.m_iPhase),
+	m_iMaxHp(rhs.m_iPhase)
 {
 	memcpy(m_pNode, rhs.m_pNode, sizeof(m_pNode));
 }
@@ -61,6 +67,8 @@ HRESULT CMonsterB1::Ready_GameObject()
 
 _int CMonsterB1::Update_GameObject(const _float& fTimeDelta)
 {
+	Check_Phase();
+
 	Move_Frame(fTimeDelta);
 
 	m_pColliderCom->UpdateFromTransform(m_pTransformCom);
@@ -98,8 +106,14 @@ void CMonsterB1::LateUpdate_GameObject(const _float& fTimeDelta)
 	{
 		m_pNode[i]->LateUpdate_GameObject(fTimeDelta);
 
-		if (vDir.z > 0.f)	m_pNode[i]->Set_Depth(m_fDepth - (i + 1) * 0.001f);
-		else				m_pNode[i]->Set_Depth(m_fDepth + (i + 1) * 0.001f);
+		if ((vDir.z > 0.f) && (	(m_eCurState != B1S_SHOOT)	&&
+								(m_eCurState != B1S_SUMMON)	&&
+								(m_eCurState != B1S_SPAWN)	&&
+								(m_eCurState != B1S_ROAR)	))
+			m_pNode[i]->Set_Depth(m_fDepth - (i + 1) * 0.001f);
+		
+		else
+			m_pNode[i]->Set_Depth(m_fDepth + (i + 1) * 0.001f);
 	}
 }
 
@@ -166,12 +180,11 @@ HRESULT CMonsterB1::Add_Component()
 void CMonsterB1::Ready_Variable()
 {
 	// 게임로직 변수 세팅
-	_float fScale = 5.f;
+	_float fScale = 10.f;
 	m_fGroundY = -2.5f + fScale * 0.5f;
 	m_iAttack = 1;
-	m_iHp = 10;
-	m_fScale = 5.f;
-	m_fGroundY = -2.5f + m_fScale * 0.5f;
+	m_iMaxHp = m_iHp = 10;
+	m_iPhase = 1;
 
 	// Transform 세팅
 	m_pTransformCom->Set_Pos(_float(rand() % 10), m_fGroundY, _float(rand() % 10));
@@ -179,11 +192,14 @@ void CMonsterB1::Ready_Variable()
 
 	// Collider 세팅
 	m_pColliderCom->RegisterToManager(this, CL_MONSTER);
+	AABB tAABB = { m_vPos.x, m_vPos.y, m_vPos.z, 2.5f, 2.5f, 2.5f };
+	m_pColliderCom->Set_AABB(tAABB);
 
 	// AI 세팅
 	m_pAICom->Set_OwnerTransform(m_pTransformCom);
 	m_pAICom->Set_TargetTransform(CPersistentMgr::GetInstance()->Get_PlayerTransform());
 	m_pAICom->Set_State<MONSTER_B1_STATE>(B1S_SPAWN);
+	m_pAICom->Set_GroundY(m_fGroundY);
 
 	// Anim 관련 세팅
 	m_fFrameSpeed = 24.f;
@@ -191,20 +207,21 @@ void CMonsterB1::Ready_Variable()
 
 	// 마디 세팅
 	_vec3 vScale{};
+	_float fScaleReduction(0.8f);
 	m_pTransformCom->Get_Scale(&vScale);
-	vScale *= 0.7f;
+	vScale *= fScaleReduction;
 	m_pNode[0] = CNode::Create(m_pGraphicDev, m_pMessageChannel, m_pTransformCom, L"Proto_B1Node1Texture");
 	m_pNode[0]->Set_NodeScale(vScale);
 
-	vScale *= 0.7f;
+	vScale *= fScaleReduction;
 	m_pNode[1] = CNode::Create(m_pGraphicDev, m_pMessageChannel, m_pTransformCom, L"Proto_B1Node2Texture");
 	m_pNode[1]->Set_NodeScale(vScale);
 
-	vScale *= 0.7f;
+	vScale *= fScaleReduction;
 	m_pNode[2] = CNode::Create(m_pGraphicDev, m_pMessageChannel, m_pTransformCom, L"Proto_B1Node3Texture");
 	m_pNode[2]->Set_NodeScale(vScale);
 
-	vScale *= 0.7f;
+	vScale *= fScaleReduction;
 	m_pNode[3] = CNode::Create(m_pGraphicDev, m_pMessageChannel, m_pTransformCom, L"Proto_B1Node4Texture");
 	m_pNode[3]->Set_NodeScale(vScale);
 }
@@ -256,12 +273,16 @@ void CMonsterB1::Check_Frame()
 		m_fFrameEnd = 36.f;
 		break;
 
-	case B1S_SPAWN:
+	case B1S_SUMMON:
 		m_fFrameEnd = 19.f;
 		break;
 
 	case B1S_ROAR:
 		m_fFrameEnd = 48.f;
+		break;
+
+	case B1S_SPAWN:
+		m_fFrameEnd = 19.f;
 		break;
 
 	case B1S_STOP:
@@ -296,6 +317,26 @@ void CMonsterB1::Move_Frame(const _float& fTimeDelta)
 			m_eCurState = B1S_CRAWL;
 			break;
 
+		case B1S_PREPARE:
+			m_pAICom->Anim_End(m_eCurState);
+			m_eCurState = B1S_ATTACK;
+			break;
+
+		case B1S_ATTACK:
+			m_pAICom->Anim_End(m_eCurState);
+			m_eCurState = B1S_CRAWL;
+			break;
+
+		case B1S_SHOOT:
+			m_pAICom->Anim_End(m_eCurState);
+			m_eCurState = B1S_CRAWL;
+			break;
+
+		case B1S_SUMMON:
+			m_pAICom->Anim_End(m_eCurState);
+			m_eCurState = B1S_CRAWL;
+			break;
+
 		case B1S_SPAWN:
 			m_pAICom->Anim_End(m_eCurState);
 			m_eCurState = B1S_ROAR;
@@ -312,7 +353,7 @@ void CMonsterB1::Move_Frame(const _float& fTimeDelta)
 void CMonsterB1::Set_Texture()
 {
 	_vec3 vDir = *(m_pAICom->Get_Dir());		// AI로부터 받아온 방향
-	_bool bFilpX = vDir.x > 0.f ? true : false;	// 반전 여부
+	_bool bFlipX = vDir.x > 0.f ? true : false;	// 반전 여부
 	_uint iFrame = m_fFrame;					// 현재 프레임
 	_uint iTexIdx = _uint(m_eCurState);			// 텍스처 인덱스
 
@@ -330,11 +371,12 @@ void CMonsterB1::Set_Texture()
 	case B1S_LAND:
 	case B1S_PREPARE:
 	case B1S_ATTACK:
-	case B1S_SHOOT:
 		if (vDir.z > 0.f) iV += 2;
 		break;
 
+	case B1S_SHOOT:
 	case B1S_SUMMON:
+	case B1S_ROAR:
 		break;
 
 	case B1S_SPAWN:
@@ -349,7 +391,7 @@ void CMonsterB1::Set_Texture()
 	break;
 	}
 
-	if (bFilpX)
+	if (bFlipX)
 	{
 		m_matTex._11 *= -1.f;
 		m_matTex._31 = _float(iU + 1) * 0.0625f;	// 반전 O : 오른쪽에서 왼쪽으로 읽음
@@ -427,11 +469,11 @@ void CMonsterB1::Compute_NodePos(const _float& fTimeDelta)
 
 	_vec3 vHeadVelocity = vCurPos - m_vPos;
 	_float fHeadSpeed = D3DXVec3Length(&vHeadVelocity) / fTimeDelta;
-	_float fBaseDist = 0.3f;
+	_float fBaseDist = 0.5f;
 	_float fAdaptiveDist = fBaseDist + fHeadSpeed * 0.02f;
-	_float fScaleReduction = 0.7f;
+	_float fScaleReduction = 0.8f;
 
-	for (_uint i = 0; i < 3; ++i)
+	for (_uint i = 0; i < 4; ++i)
 	{
 		_vec3 vDesiredDir = vPrevPos - m_pNode[i]->Get_NodePos();
 		_vec3 vNewDir = Compute_LimitedDir(180.f * fTimeDelta, m_pNode[i]->Get_NodeDir(), vDesiredDir);
@@ -441,8 +483,8 @@ void CMonsterB1::Compute_NodePos(const _float& fTimeDelta)
 		_float fLerp = min(1.f, fDistRatio * 0.5f);
 		_vec3 vTargetPos = vPrevPos - vNewDir * fAdaptiveDist;
 
-		if (m_eCurState != B1S_JUMP) vTargetPos.y = m_fGroundY - (m_fGroundY * (1.f - fScaleReduction) * 0.5f);	// 줄어든 크기의 절반만 낮추는게 맞는 것 같은데...
-		fScaleReduction *= 0.7f;
+		if (m_eCurState != B1S_JUMP && m_eCurState != B1S_LAND) vTargetPos.y = m_fGroundY * fScaleReduction;
+		fScaleReduction *= fScaleReduction;
 
 		vCurPos = m_pNode[i]->Get_NodePos();
 		_vec3 vNewPos;
@@ -453,6 +495,21 @@ void CMonsterB1::Compute_NodePos(const _float& fTimeDelta)
 		m_pNode[i]->Update_GameObject(fTimeDelta);
 
 		vPrevPos = vNewPos;
+	}
+}
+
+void CMonsterB1::Check_Phase()
+{
+	_float fRatio = _float(m_iHp) / m_iMaxHp;
+
+	switch (m_iPhase)
+	{
+	case 1:
+		if (fRatio <= 0.5f) m_iPhase = 2;
+		return;
+
+	case 2:
+		return;
 	}
 }
 

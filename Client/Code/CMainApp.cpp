@@ -184,7 +184,6 @@ void CMainApp::Free()
 	Safe_Release(m_pGraphicDev);
 	Safe_Release(m_pDeviceClass);
 
-
 	CMapLoader::DestroyInstance();
 	CTileMgr::DestroyInstance();
 	CPersistentMgr::DestroyInstance();

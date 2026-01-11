@@ -193,16 +193,17 @@ void CMonsterN2::Ready_Variable()
 
 	// 마디 세팅
 	_vec3 vScale{};
+	_float fScaleReduction(0.8f);
 	m_pTransformCom->Get_Scale(&vScale);
-	vScale *= 0.7f;
+	vScale *= fScaleReduction;
 	m_pNode[0] = CNode::Create(m_pGraphicDev, m_pMessageChannel, m_pTransformCom, L"Proto_N2Node1Texture");
 	m_pNode[0]->Set_NodeScale(vScale);
 
-	vScale *= 0.7f;
+	vScale *= fScaleReduction;
 	m_pNode[1] = CNode::Create(m_pGraphicDev, m_pMessageChannel, m_pTransformCom, L"Proto_N2Node2Texture");
 	m_pNode[1]->Set_NodeScale(vScale);
 
-	vScale *= 0.7f;
+	vScale *= fScaleReduction;
 	m_pNode[2] = CNode::Create(m_pGraphicDev, m_pMessageChannel, m_pTransformCom, L"Proto_N2Node3Texture");
 	m_pNode[2]->Set_NodeScale(vScale);
 }
@@ -417,9 +418,9 @@ void CMonsterN2::Compute_NodePos(const _float& fTimeDelta)
 
 	_vec3 vHeadVelocity = vCurPos - m_vPos;
 	_float fHeadSpeed = D3DXVec3Length(&vHeadVelocity) / fTimeDelta;
-	_float fBaseDist = 0.2f;
+	_float fBaseDist = 0.25f;
 	_float fAdaptiveDist = fBaseDist + fHeadSpeed * 0.02f;
-	_float fScaleReduction = 0.7f;
+	_float fScaleReduction = 0.8f;
 
 	for (_uint i = 0; i < 3; ++i)
 	{
@@ -431,8 +432,9 @@ void CMonsterN2::Compute_NodePos(const _float& fTimeDelta)
 		_float fLerp = min(1.f, fDistRatio * 0.5f);
 		_vec3 vTargetPos = vPrevPos - vNewDir * fAdaptiveDist;
 
-		if (m_eCurState != N2S_JUMP && m_eCurState != N2S_LAND) vTargetPos.y = m_fGroundY - (m_fGroundY * (1.f - fScaleReduction) * 0.5f);
-		fScaleReduction *= 0.7f;
+		if (m_eCurState != N2S_JUMP && m_eCurState == N2S_LAND)	vTargetPos.y = m_fGroundY * fScaleReduction;
+		
+		fScaleReduction *= fScaleReduction;
 
 		vCurPos = m_pNode[i]->Get_NodePos();
 		_vec3 vNewPos;

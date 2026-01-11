@@ -9,9 +9,10 @@ CB1_AI::CB1_AI(LPDIRECT3DDEVICE9 pGraphicDev)
 	m_bChase(false),
 	m_fAngle(0.f),
 	m_fGravity(0.f),
-	m_fGroundY(0.f)
+	m_fGroundY(0.f),
+	m_iDequeMinSize(3)
 {
-	ZeroMemory(m_pAttackPattern, sizeof(m_pAttackPattern));
+	m_vecAtkPatterns.reserve(4);
 }
 
 CB1_AI::CB1_AI(const CB1_AI& rhs)
@@ -21,9 +22,10 @@ CB1_AI::CB1_AI(const CB1_AI& rhs)
 	m_bChase(false),
 	m_fAngle(rhs.m_fAngle),
 	m_fGravity(rhs.m_fGravity),
-	m_fGroundY(rhs.m_fGroundY)
+	m_fGroundY(rhs.m_fGroundY),
+	m_iDequeMinSize(rhs.m_iDequeMinSize)
 {
-	memcpy(m_pAttackPattern, rhs.m_pAttackPattern, sizeof(m_pAttackPattern));
+	m_vecAtkPatterns = rhs.m_vecAtkPatterns;
 }
 
 CB1_AI::~CB1_AI()
@@ -43,11 +45,21 @@ HRESULT CB1_AI::Ready_AI(const _float& fDetectRange, const _float& fInteractRang
 	m_fAcmlTime = 0.f;
 	m_iRcmState = _uint(CMonsterB1::B1S_SPAWN);
 
-	// 초기 공격 패턴 설정
-	m_patternQueue.push(CMonsterB1::B1S_JUMP);
-	m_patternQueue.push(CMonsterB1::B1S_PREPARE);
-	m_patternQueue.push(CMonsterB1::B1S_SHOOT);
-	m_patternQueue.push(CMonsterB1::B1S_SUMMON);
+	// 공격 패턴 설정
+	m_iDequeMinSize = 3;
+	m_vecAtkPatterns.push_back({ CMonsterB1::B1S_JUMP, 40, true });
+	m_vecAtkPatterns.push_back({ CMonsterB1::B1S_PREPARE, 40, true });
+	m_vecAtkPatterns.push_back({ CMonsterB1::B1S_SHOOT, 40, true });
+	m_vecAtkPatterns.push_back({ CMonsterB1::B1S_SUMMON, 20, false });
+
+	// 시연용 : 모든 패턴이 순차적으로 실행
+	m_patternDeque.push_back(CMonsterB1::B1S_JUMP);
+	m_patternDeque.push_back(CMonsterB1::B1S_PREPARE);
+	m_patternDeque.push_back(CMonsterB1::B1S_SHOOT);
+	m_patternDeque.push_back(CMonsterB1::B1S_SUMMON);
+
+	// 게임용 : 가중치와 난수를 통해 패턴을 채워줌
+	Refill_Pattern();
 
 	return S_OK;
 }
@@ -83,9 +95,29 @@ void CB1_AI::Enter_State(const _uint& iState)
 		m_fSpeed = 1.f;
 	}
 	break;
+
+	case CMonsterB1::B1S_PREPARE:
+		break;
+
+	case CMonsterB1::B1S_ATTACK:
+		m_fAcmlTime = 0.f;
+		break;
+
+	case CMonsterB1::B1S_SHOOT:
+		m_fAcmlTime = 0.f;
+		break;
+
+	case CMonsterB1::B1S_SUMMON:
+		m_fAcmlTime = 0.f;
+		break;
+
+	case CMonsterB1::B1S_ROAR:
+		break;
+
 	case CMonsterB1::B1S_SPAWN:
 		m_bActiveAI = false;
 		break;
+
 	case CMonsterB1::B1S_STOP:
 		break;
 	}
@@ -119,11 +151,14 @@ void CB1_AI::Exit_State(const _uint& iState)
 	case CMonsterB1::B1S_ATTACK:
 		break;
 
-	case CMonsterB1::B1S_SPAWN:
+	case CMonsterB1::B1S_SUMMON:
 		break;
 
 	case CMonsterB1::B1S_ROAR:
 		m_bActiveAI = true;
+		break;
+
+	case CMonsterB1::B1S_SPAWN:
 		break;
 
 	case CMonsterB1::B1S_STOP:
@@ -134,45 +169,47 @@ void CB1_AI::Exit_State(const _uint& iState)
 	}
 }
 
-void CB1_AI::Generate_Pattern(CMonsterB1::MONSTER_B1_STATE ePrevPattern)
+void CB1_AI::Generate_Pattern(CMonsterB1::MONSTER_B1_STATE eLastPattern)
 {
-	// 이전 패턴(or 다른 변수여도 됨)에 따라 다음 패턴의 확률을 결정
-	_uint iRate_JUMP(0);
-	_uint iRate_PREPARE(0);
-	_uint iRate_SHOOT(0);
-	_uint iRate_SUMMON(0);
+	_uint iTotalWeight(0);
 
-	switch (ePrevPattern)
+	for (auto& pattern : m_vecAtkPatterns)
 	{
-	case CMonsterB1::B1S_JUMP:
-		iRate_PREPARE = 40;
-		iRate_SHOOT = 40;
-		iRate_SUMMON = 20;
-		break;
-
-	case CMonsterB1::B1S_PREPARE:
-		iRate_JUMP = 40;
-		iRate_SHOOT = 40;
-		iRate_SUMMON = 20;
-		break;
-
-	case CMonsterB1::B1S_SHOOT:
-		iRate_JUMP = 40;
-		iRate_PREPARE = 40;
-		iRate_SUMMON = 20;
-		break;
-
-	case CMonsterB1::B1S_SUMMON:
-		iRate_JUMP = 33;
-		iRate_PREPARE = 33;
-		iRate_SHOOT = 34;
-		break;
+		if (pattern.bIsActive && (pattern.eType != eLastPattern))
+		{
+			iTotalWeight += pattern.iWeight;
+		}
 	}
 
-	_uint iRandom = Get_Rand_Int(1, 100);
+	_uint iRandom = Get_Rand_Int(1, iTotalWeight);
+	_uint iAccumulated(0);
 
-	if(iRandom <= iRate_JUMP) m_patternQueue
+	for (auto& pattern : m_vecAtkPatterns)
+	{
+		if (!pattern.bIsActive || (pattern.eType == eLastPattern))
+			continue;
 
+		iAccumulated += pattern.iWeight;
+
+		if (iRandom <= iAccumulated)
+		{
+			m_patternDeque.push_back(pattern.eType);
+			break;
+		}
+	}
+}
+
+void CB1_AI::Refill_Pattern()
+{
+	while (m_patternDeque.size() < m_iDequeMinSize)
+	{
+		CMonsterB1::MONSTER_B1_STATE eLastState;
+		
+		if (m_patternDeque.empty()) eLastState = CMonsterB1::B1S_SUMMON;
+		else						eLastState = m_patternDeque.back();
+
+		Generate_Pattern(eLastState);
+	}
 }
 
 _int CB1_AI::Update_Component(const _float& fTimeDelta)
@@ -208,16 +245,18 @@ _int CB1_AI::Update_Component(const _float& fTimeDelta)
 	case CMonsterB1::B1S_SUMMON:
 		Update_Summon(fTimeDelta);
 		break;
-	case CMonsterB1::B1S_SPAWN:
-		Update_Spawn(fTimeDelta);
-		break;
 	case CMonsterB1::B1S_ROAR:
 		Update_Roar(fTimeDelta);
+		break;
+	case CMonsterB1::B1S_SPAWN:
+		Update_Spawn(fTimeDelta);
 		break;
 	case CMonsterB1::B1S_STOP:
 		Update_Stop(fTimeDelta);
 		break;
 	}
+
+	Refill_Pattern();
 
 	return iExit;
 }
@@ -230,8 +269,11 @@ void CB1_AI::Update_Crawl(const _float& fTimeDelta)
 		{
 			if (m_fAcmlTime >= 5.f)
 			{
-				if(!m_patternQueue.empty())
-					Change_State(m_patternQueue.front());
+				if (!m_patternDeque.empty())
+				{
+					Change_State(m_patternDeque.front());
+					m_patternDeque.pop_front();
+				}
 			}
 		}
 	}
@@ -288,11 +330,15 @@ void CB1_AI::Update_Shoot(const _float& fTimeDelta)
 {
 }
 
-void CB1_AI::Update_Spawn(const _float& fTimeDelta)
+void CB1_AI::Update_Summon(const _float& fTimeDelta)
 {
 }
 
 void CB1_AI::Update_Roar(const _float& fTimeDelta)
+{
+}
+
+void CB1_AI::Update_Spawn(const _float& fTimeDelta)
 {
 }
 
@@ -319,20 +365,32 @@ void CB1_AI::Anim_End(CMonsterB1::MONSTER_B1_STATE eState)
 		Change_State(CMonsterB1::B1S_STOP);
 		break;
 
-	case CMonsterB1::B1S_JUMP:
-		Change_State(CMonsterB1::B1S_LAND);
+	case CMonsterB1::B1S_LAND:
+		Change_State(CMonsterB1::B1S_CRAWL);
 		break;
 
-	case CMonsterB1::B1S_LAND:
+	case CMonsterB1::B1S_PREPARE:
+		Change_State(CMonsterB1::B1S_ATTACK);
+		break;
+
+	case CMonsterB1::B1S_ATTACK:
+		Change_State(CMonsterB1::B1S_CRAWL);
+		break;
+
+	case CMonsterB1::B1S_SHOOT:
+		Change_State(CMonsterB1::B1S_CRAWL);
+		break;
+
+	case CMonsterB1::B1S_SUMMON:
+		Change_State(CMonsterB1::B1S_CRAWL);
+		break;
+
+	case CMonsterB1::B1S_ROAR:
 		Change_State(CMonsterB1::B1S_CRAWL);
 		break;
 
 	case CMonsterB1::B1S_SPAWN:
 		Change_State(CMonsterB1::B1S_ROAR);
-		break;
-
-	case CMonsterB1::B1S_ROAR:
-		Change_State(CMonsterB1::B1S_CRAWL);
 		break;
 	}
 }

@@ -240,7 +240,7 @@ HRESULT CDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 
 	pGameObject->AddRef();
 
-	for (_uint i = 0; i < 1; ++i)
+	for (_uint i = 0; i < 5; ++i)
 	{
 		//pGameObject = CMonsterN2::Create(m_pGraphicDev, m_pMessageChannel);
 		//
@@ -249,13 +249,20 @@ HRESULT CDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 		//	if (FAILED(pLayer->Add_GameObject(L"Monster", pGameObject)))
 		//		return E_FAIL;
 
-		pGameObject = CMonsterB1::Create(m_pGraphicDev, m_pMessageChannel);
+		pGameObject = CMonsterN2::Create(m_pGraphicDev, m_pMessageChannel);
 
 		NULL_CHECK_RETURN(pGameObject, E_FAIL)
 
 			if (FAILED(pLayer->Add_GameObject(L"Monster", pGameObject)))
 				return E_FAIL;
 	}
+
+	pGameObject = CMonsterB1::Create(m_pGraphicDev, m_pMessageChannel);
+
+	NULL_CHECK_RETURN(pGameObject, E_FAIL)
+
+		if (FAILED(pLayer->Add_GameObject(L"Monster", pGameObject)))
+			return E_FAIL;
 
 	pGameObject = CBishop_Leshy::Create(m_pGraphicDev);
 
