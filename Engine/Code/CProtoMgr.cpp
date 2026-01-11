@@ -11,7 +11,7 @@ CProtoMgr::~CProtoMgr()
     Free();
 }
 
-HRESULT CProtoMgr::Ready_Prototype(const _tchar* pComponentTag, CComponent* pComponent)
+HRESULT CProtoMgr::Ready_Prototype(const wstring& pComponentTag, CComponent* pComponent)
 {
     CComponent* pInstance = Find_Prototype(pComponentTag);
 
@@ -25,7 +25,7 @@ HRESULT CProtoMgr::Ready_Prototype(const _tchar* pComponentTag, CComponent* pCom
     return S_OK;
 }
 
-CComponent* CProtoMgr::Clone_Prototype(const _tchar* pComponentTag)
+CComponent* CProtoMgr::Clone_Prototype(const wstring& pComponentTag)
 {
     CComponent* pComponent = Find_Prototype(pComponentTag);
 
@@ -35,9 +35,9 @@ CComponent* CProtoMgr::Clone_Prototype(const _tchar* pComponentTag)
     return pComponent->Clone();
 }
 
-CComponent* CProtoMgr::Find_Prototype(const _tchar* pComponentTag)
+CComponent* CProtoMgr::Find_Prototype(const wstring& pComponentTag)
 {
-    auto iter = find_if(m_mapPrototype.begin(), m_mapPrototype.end(), CTag_Finder(pComponentTag));
+    auto iter = m_mapPrototype.find(pComponentTag);
 
     if (iter == m_mapPrototype.end())
         return nullptr;

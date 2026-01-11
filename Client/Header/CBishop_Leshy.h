@@ -24,7 +24,7 @@ public:
 	virtual			void		OnCollision(CGameObject* pObject);
 
 public:
-	static CBishop_Leshy* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	static CBishop_Leshy* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMessageChannel, const Engine::SPAWNDATA& tSpawndata);
 
 	void		Update_State();
 	void        Update_Frame(const _float& fTimeDelta);
@@ -49,5 +49,7 @@ private:
 
 	Bishops::BISHOPSSTATE  m_eCurState;
 	Bishops::BISHOPSSTATE  m_ePreState;
+
+	Engine::SPAWNDATA      m_tSpawndata;
 };
 

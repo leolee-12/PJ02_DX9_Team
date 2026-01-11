@@ -2,6 +2,7 @@
 #define Engine_Struct_h__
 
 #include "Engine_Typedef.h"
+#include "Engine_Enum.h"
 
 namespace Engine
 {
@@ -113,6 +114,57 @@ namespace Engine
         MASK_RIGHT = 4,
         MASK_UP = 8
     };
+
+	typedef struct tagProtoLoadRequest
+	{
+		std::wstring strProtoName;
+		std::wstring strFilepath;
+		_int iTexIndex;
+
+		TEXTUREID eTexType;
+
+		std::vector<std::vector<BYTE>> vecTexBuffer;
+
+		tagProtoLoadRequest() {}
+		tagProtoLoadRequest(const std::wstring& _strProtoName, const TEXTUREID _eTexType, const std::wstring& _strFilepath, const _int _iTexIndex)
+		{
+			strProtoName = _strProtoName;
+			strFilepath = _strFilepath;
+			iTexIndex = _iTexIndex;
+			eTexType = _eTexType;
+		}
+	}TEXLR;
+
+	typedef struct tagProtoLoadRequestTexSet
+	{
+		std::wstring strStateName;
+		std::wstring strFilepath;
+		_int	iTexIndex;
+
+		std::vector<std::vector<BYTE>> vecTexBuffer;
+
+		tagProtoLoadRequestTexSet() {}
+		tagProtoLoadRequestTexSet(const std::wstring& _strStateName, const std::wstring& _strFilepath, const _int _iTexIndex)
+		{
+			strStateName = _strStateName;
+			strFilepath = _strFilepath;
+			iTexIndex = _iTexIndex;
+		}
+	}TEXSETLR;
+
+	typedef struct tagTexSetLoadInfo
+	{
+		std::wstring strProtoName;
+
+		TEXTUREID eTexType;
+
+		tagTexSetLoadInfo() {}
+		tagTexSetLoadInfo(const std::wstring& _strProtoName, const TEXTUREID _eTexType)
+		{
+			strProtoName = _strProtoName;
+			eTexType = _eTexType;
+		}
+	}TEXSETINFO;
 
 
 }

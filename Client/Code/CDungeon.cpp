@@ -25,6 +25,9 @@
 #include "CGauge.h"
 #include "CBishop_Leshy.h"
 #include <CMonsterB1.h>
+#include "CBishop_Heket.h"
+#include "CBishop_Kallamar.h"
+#include "CBishop_Shamura.h"
 
 CDungeon::CDungeon(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -156,16 +159,19 @@ HRESULT CDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 
 	CGameObject* pGameObject = nullptr;
 
-	/*
-	// Terrain
-	pGameObject = CTerrain::Create(m_pGraphicDev);
+	// 플레이어를 최상단에
+	pGameObject = CPersistentMgr::GetInstance()->Get_GlobalObjects(GOBJ_PLAYER);
 
 	if (nullptr == pGameObject)
 		return E_FAIL;
 
-	if (FAILED(pLayer->Add_GameObject(L"Terrain", pGameObject)))
+	pGameObject->Set_MessageChannel(m_pMessageChannel);
+
+	if (FAILED(pLayer->Add_GameObject(L"Player", pGameObject)))
 		return E_FAIL;
-	*/
+
+	pGameObject->AddRef();
+
 
 	// Map Load
 	Engine::MAPDATA mapData;
@@ -183,17 +189,84 @@ HRESULT CDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 		// Spawns (Monster)
 		for (const auto& spawn : mapData.spawns)
 		{
-			if (spawn.type == 1)
+			switch (spawn.type)
 			{
-				pGameObject = CMonsterN1::Create(m_pGraphicDev, m_pMessageChannel);
-				if (pGameObject)
+			case 0:
+				//플레이어 스폰위치, 워프위치 적용
+				break;
+			case 1:
+				switch (spawn.monsterType)
 				{
-					Engine::CTransform* pTransform = dynamic_cast<Engine::CTransform*>(
-						pGameObject->Get_Component(ID_DYNAMIC, L"Com_Transform"));
-					if (pTransform)
-						pTransform->Set_Pos(spawn.x, 0.f, spawn.z);
-					pLayer->Add_GameObject(L"Monster", pGameObject);
+				case 0:
+					// Bat | 일반몬스터 |
+					break;
+				case 1:
+					// Worm | 일반몬스터 |
+					pGameObject = CMonsterN1::Create(m_pGraphicDev, m_pMessageChannel);
+					if (pGameObject)
+					{
+						Engine::CTransform* pTransform = dynamic_cast<Engine::CTransform*>(
+							pGameObject->Get_Component(ID_DYNAMIC, L"Com_Transform"));
+						if (pTransform)
+							pTransform->Set_Pos(spawn.x, 0.f, spawn.z);
+						pLayer->Add_GameObject(L"Monster", pGameObject);
+					}
+					break;
+				case 2:
+					// Humanoid | 일반몬스터 |
+					break;
+				case 10:
+					// Amdusias | 중간보스 |
+					break;
+				case 20:
+					// Rash | 최종보스 |
+					break;
+				case 30:
+					// WaitingOne | 연출용 |
+					break;
+				case 31:
+					pGameObject = CBishop_Leshy::Create(m_pGraphicDev, m_pMessageChannel, spawn);
+
+					NULL_CHECK_RETURN(pGameObject, E_FAIL)
+
+						if (FAILED(pLayer->Add_GameObject(L"Bishop_Leshy", pGameObject)))
+							return E_FAIL;
+
+					break;
+				case 32:
+					pGameObject = CBishop_Heket::Create(m_pGraphicDev, m_pMessageChannel, spawn);
+
+					NULL_CHECK_RETURN(pGameObject, E_FAIL)
+
+						if (FAILED(pLayer->Add_GameObject(L"Bishop_Heket", pGameObject)))
+							return E_FAIL;
+
+					break;
+
+				case 33:
+					pGameObject = CBishop_Kallamar::Create(m_pGraphicDev, m_pMessageChannel, spawn);
+
+					NULL_CHECK_RETURN(pGameObject, E_FAIL)
+
+						if (FAILED(pLayer->Add_GameObject(L"Bishop_Kallamar", pGameObject)))
+							return E_FAIL;
+
+					break;
+
+				case 34:
+					pGameObject = CBishop_Shamura::Create(m_pGraphicDev, m_pMessageChannel, spawn);
+
+					NULL_CHECK_RETURN(pGameObject, E_FAIL)
+
+						if (FAILED(pLayer->Add_GameObject(L"Bishop_Shamura", pGameObject)))
+							return E_FAIL;
+
+					break;
 				}
+				break;
+			default:
+				MSG_BOX("스폰섹션 타입오류");
+				return E_FAIL;
 			}
 		}
 
@@ -227,18 +300,7 @@ HRESULT CDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 			pLayer->Add_GameObject(L"SkyBox", pGameObject);
 	}
 
-	// Player
-	pGameObject = CPersistentMgr::GetInstance()->Get_GlobalObjects(GOBJ_PLAYER);
-
-	if (nullptr == pGameObject)
-		return E_FAIL;
-
-	pGameObject->Set_MessageChannel(m_pMessageChannel);
-
-	if (FAILED(pLayer->Add_GameObject(L"Player", pGameObject)))
-		return E_FAIL;
-
-	pGameObject->AddRef();
+	// 디버그용
 
 	for (_uint i = 0; i < 5; ++i)
 	{
@@ -262,13 +324,6 @@ HRESULT CDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	NULL_CHECK_RETURN(pGameObject, E_FAIL)
 
 		if (FAILED(pLayer->Add_GameObject(L"Monster", pGameObject)))
-			return E_FAIL;
-
-	pGameObject = CBishop_Leshy::Create(m_pGraphicDev);
-
-	NULL_CHECK_RETURN(pGameObject, E_FAIL)
-
-		if (FAILED(pLayer->Add_GameObject(L"Bishop_Leshy", pGameObject)))
 			return E_FAIL;
 
 	m_mapLayer.insert({ pLayerTag , pLayer });
@@ -386,7 +441,7 @@ CDungeon* CDungeon::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 	if (FAILED(pTest->Ready_Scene()))
 	{
 		Safe_Release(pTest);
-		MSG_BOX("pTest Create Failed");
+		MSG_BOX("pDungeon Create Failed");
 		return nullptr;
 	}
 

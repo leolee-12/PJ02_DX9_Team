@@ -43,6 +43,19 @@ HRESULT CTextureSet::Ready_Texture(TEXTUREID eID, const vector<TEXINFO>& vecTexI
 	return S_OK;
 }
 
+HRESULT CTextureSet::Ready_Texture_FromMemory(TEXTUREID eID, const vector<TEXSETLR>& vecTexSetLR)
+{
+	_uint iTexNum = _uint(vecTexSetLR.size());
+
+	for (_uint i = 0; i < iTexNum; ++i)
+	{
+		if (FAILED(Add_Texture_FromMemory(eID, vecTexSetLR[i])))
+			return E_FAIL;
+	}
+
+	return S_OK;
+}
+
 HRESULT CTextureSet::Add_Texture(TEXTUREID eID, const TEXINFO& tTexInfo)
 {
 	auto iter = m_mapTexture.find(tTexInfo.strState);
@@ -67,6 +80,7 @@ HRESULT CTextureSet::Add_Texture(TEXTUREID eID, const TEXINFO& tTexInfo)
 		{
 		case TEX_NORMAL:
 
+			// 디코딩 + 등록
 			if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFileName, (LPDIRECT3DTEXTURE9*)&pTexture)))
 				return E_FAIL;
 
@@ -75,6 +89,47 @@ HRESULT CTextureSet::Add_Texture(TEXTUREID eID, const TEXINFO& tTexInfo)
 		case TEX_CUBE:
 
 			if (FAILED(D3DXCreateCubeTextureFromFile(m_pGraphicDev, szFileName, (LPDIRECT3DCUBETEXTURE9*)&pTexture)))
+				return E_FAIL;
+
+			break;
+		}
+
+		iter->second.push_back(pTexture);
+	}
+
+	return S_OK;
+}
+
+HRESULT CTextureSet::Add_Texture_FromMemory(TEXTUREID eID, const TEXSETLR& TexSetLR)
+{
+	auto iter = m_mapTexture.find(TexSetLR.strStateName);
+
+	if (iter != m_mapTexture.end())
+		return E_FAIL;
+
+	// 맵 범위 밖을 접근하면 런타임 에러, 먼저 요소 추가해준 뒤 접근
+	iter = m_mapTexture.emplace(TexSetLR.strStateName, vector<IDirect3DBaseTexture9*>()).first;
+
+	iter->second.reserve(TexSetLR.iTexIndex);
+
+	IDirect3DBaseTexture9* pTexture = nullptr;
+
+	for (_uint i = 0; i < TexSetLR.iTexIndex; ++i)
+	{
+
+		switch (eID)
+		{
+		case TEX_NORMAL:
+
+			// 디코딩 + 등록
+			if (FAILED(D3DXCreateTextureFromFileInMemory(m_pGraphicDev, TexSetLR.vecTexBuffer[i].data(), TexSetLR.vecTexBuffer[i].size(), (LPDIRECT3DTEXTURE9*) & pTexture)))
+				return E_FAIL;
+
+			break;
+
+		case TEX_CUBE:
+
+			if (FAILED(D3DXCreateCubeTextureFromFileInMemory(m_pGraphicDev, TexSetLR.vecTexBuffer[i].data(), TexSetLR.vecTexBuffer[i].size(), (LPDIRECT3DCUBETEXTURE9*)&pTexture)))
 				return E_FAIL;
 
 			break;
@@ -114,6 +169,20 @@ CTextureSet* CTextureSet::Create(LPDIRECT3DDEVICE9 pGraphicDev, TEXTUREID eID, v
 	CTextureSet* pTexture = new CTextureSet(pGraphicDev);
 
 	if (FAILED(pTexture->Ready_Texture(eID, vecTexInfo)))
+	{
+		Safe_Release(pTexture);
+		MSG_BOX("Texture Create Failed");
+		return nullptr;
+	}
+
+	return pTexture;
+}
+
+CTextureSet* CTextureSet::CreateFromMemory(LPDIRECT3DDEVICE9 pGraphicDev, TEXTUREID eID, const vector<TEXSETLR>& vecTexSetLR)
+{
+	CTextureSet* pTexture = new CTextureSet(pGraphicDev);
+
+	if (FAILED(pTexture->Ready_Texture_FromMemory(eID, vecTexSetLR)))
 	{
 		Safe_Release(pTexture);
 		MSG_BOX("Texture Create Failed");
