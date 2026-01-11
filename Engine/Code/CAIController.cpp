@@ -11,7 +11,8 @@ CAIController::CAIController(LPDIRECT3DDEVICE9 pGraphicDev)
 		m_pTargetTC(nullptr),
 		m_fDetectRange(0.f),
 		m_fInteractRange(0.f),
-		m_fDistance(0.f)
+		m_fDistance(0.f),
+		m_fGroundY(0.f)
 {
 }
 
@@ -26,7 +27,8 @@ CAIController::CAIController(const CAIController& rhs)
 		m_fDetectRange(rhs.m_fDetectRange),
 		m_fInteractRange(rhs.m_fInteractRange),
 		m_fDistance(rhs.m_fDistance),
-		m_vDir(rhs.m_vDir)
+		m_vDir(rhs.m_vDir),
+		m_fGroundY(rhs.m_fGroundY)
 {
 }
 
@@ -39,7 +41,7 @@ HRESULT		CAIController::Ready_AI(const _float& fDetectRange, const _float& fInte
 	m_fDetectRange = fDetectRange;
 	m_fInteractRange = fInteractRange;
 	m_iCurState = iInitState;
-	m_vDir = {0.f, 0.f, 0.f};
+	m_vDir = {0.f, 0.f, -1.f};
 
 	return S_OK;
 }
@@ -68,7 +70,9 @@ void CAIController::Compute_Distance()
 
 	_vec3 vOwnerPos, vTargetPos, vDir;
 	m_pOwnerTC->Get_Info(INFO_POS, &vOwnerPos);
+	vOwnerPos.y = 0.f;
 	m_pTargetTC->Get_Info(INFO_POS, &vTargetPos);
+	vTargetPos.y = 0.f;
 	vDir = vTargetPos - vOwnerPos;
 
 	m_fDistance = D3DXVec3Length(&vDir);
@@ -80,7 +84,9 @@ _vec3 CAIController::Compute_TargetDir()
 
 	_vec3 vDir, vOwnerPos, vTargetPos;
 	m_pOwnerTC->Get_Info(INFO_POS, &vOwnerPos);
+	vOwnerPos.y = 0.f;
 	m_pTargetTC->Get_Info(INFO_POS, &vTargetPos);
+	vTargetPos.y = 0.f;
 	vDir = vTargetPos - vOwnerPos;
 	D3DXVec3Normalize(&vDir, &vDir);
 

@@ -5,42 +5,47 @@
 #include "CRenderer.h"
 #include "CPersistentMgr.h"
 #include "CCollisionMgr.h"
+#include "CNode.h"
 #include "CB1_AI.h"
 
 CMonsterB1::CMonsterB1(LPDIRECT3DDEVICE9 pGraphicDev)
-	:	CMonster(pGraphicDev),
-		m_ePreState(B1S_END),
-		m_eCurState(B1S_SPAWN),
-		m_fFrame(0.f),
-		m_fFrameEnd(0.f),
-		m_fFrameSpeed(0.f),
-		m_iAttack(0)
+	: CMonster(pGraphicDev),
+	m_ePreState(B1S_END),
+	m_eCurState(B1S_SPAWN),
+	m_fFrame(0.f),
+	m_fFrameEnd(0.f),
+	m_fFrameSpeed(0.f),
+	m_iPhase(0),
+	m_iMaxHp(0)
 {
-	ZeroMemory(&m_vPos, sizeof(_vec3));
+	ZeroMemory(m_pNode, sizeof(m_pNode));
 }
 
 CMonsterB1::CMonsterB1(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel)
-	:	CMonster(pGraphicDev, StageChannel),
-		m_ePreState(B1S_END),
-		m_eCurState(B1S_SPAWN),
-		m_fFrame(0.f),
-		m_fFrameEnd(0.f),
-		m_fFrameSpeed(0.f),
-		m_iAttack(0)
+	: CMonster(pGraphicDev, StageChannel),
+	m_ePreState(B1S_END),
+	m_eCurState(B1S_SPAWN),
+	m_fFrame(0.f),
+	m_fFrameEnd(0.f),
+	m_fFrameSpeed(0.f),
+	m_iPhase(0),
+	m_iMaxHp(0)
 {
-	ZeroMemory(&m_vPos, sizeof(_vec3));
+	ZeroMemory(m_pNode, sizeof(m_pNode));
 }
 
 
 CMonsterB1::CMonsterB1(const CMonsterB1& rhs)
-	:	CMonster(rhs),
-		m_ePreState(B1S_END),
-		m_eCurState(B1S_SPAWN),
-		m_fFrame(0.f),
-		m_fFrameEnd(0.f),
-		m_fFrameSpeed(0.f),
-		m_iAttack(rhs.m_iAttack)
+	: CMonster(rhs),
+	m_ePreState(B1S_END),
+	m_eCurState(B1S_SPAWN),
+	m_fFrame(0.f),
+	m_fFrameEnd(0.f),
+	m_fFrameSpeed(0.f),
+	m_iPhase(rhs.m_iPhase),
+	m_iMaxHp(rhs.m_iPhase)
 {
+	memcpy(m_pNode, rhs.m_pNode, sizeof(m_pNode));
 }
 
 CMonsterB1::~CMonsterB1()
@@ -50,11 +55,11 @@ CMonsterB1::~CMonsterB1()
 HRESULT CMonsterB1::Ready_GameObject()
 {
 	m_eOBJID = OID_MONSTER;
+
 	if (FAILED(Add_Component()))
 		return E_FAIL;
-	
-	Ready_Variable();
 
+	Ready_Variable();
 	Ready_Event();
 
 	return S_OK;
@@ -62,6 +67,8 @@ HRESULT CMonsterB1::Ready_GameObject()
 
 _int CMonsterB1::Update_GameObject(const _float& fTimeDelta)
 {
+	Check_Phase();
+
 	Move_Frame(fTimeDelta);
 
 	m_pColliderCom->UpdateFromTransform(m_pTransformCom);
@@ -75,6 +82,8 @@ _int CMonsterB1::Update_GameObject(const _float& fTimeDelta)
 	}
 
 	CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHA, this);
+
+	Compute_NodePos(fTimeDelta);
 
 	return iExit;
 }
@@ -90,12 +99,28 @@ void CMonsterB1::LateUpdate_GameObject(const _float& fTimeDelta)
 	Compute_ViewDepth(&m_vPos);
 
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
+
+	_vec3 vDir = *m_pAICom->Get_Dir();
+
+	for (_uint i = 0; i < 4; ++i)
+	{
+		m_pNode[i]->LateUpdate_GameObject(fTimeDelta);
+
+		if ((vDir.z > 0.f) && (	(m_eCurState != B1S_SHOOT)	&&
+								(m_eCurState != B1S_SUMMON)	&&
+								(m_eCurState != B1S_SPAWN)	&&
+								(m_eCurState != B1S_ROAR)	))
+			m_pNode[i]->Set_Depth(m_fDepth - (i + 1) * 0.001f);
+		
+		else
+			m_pNode[i]->Set_Depth(m_fDepth + (i + 1) * 0.001f);
+	}
 }
 
 void CMonsterB1::Render_GameObject()
 {
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
-	
+
 	Set_Texture();
 
 	m_pGraphicDev->SetTextureStageState(0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_COUNT2);
@@ -115,7 +140,7 @@ HRESULT CMonsterB1::Add_Component()
 
 	NULL_CHECK_RETURN(pComponent, E_FAIL)
 
-	m_mapComponent[ID_STATIC].insert({ L"Com_Buffer", pComponent });
+		m_mapComponent[ID_STATIC].insert({ L"Com_Buffer", pComponent });
 
 	// Transform
 	pComponent = m_pTransformCom = dynamic_cast<Engine::CTransform*>
@@ -123,7 +148,7 @@ HRESULT CMonsterB1::Add_Component()
 
 	NULL_CHECK_RETURN(pComponent, E_FAIL)
 
-	m_mapComponent[ID_DYNAMIC].insert({ L"Com_Transform", pComponent });
+		m_mapComponent[ID_DYNAMIC].insert({ L"Com_Transform", pComponent });
 
 	// Texture
 	pComponent = m_pTextureCom = dynamic_cast<Engine::CTexture*>
@@ -131,7 +156,7 @@ HRESULT CMonsterB1::Add_Component()
 
 	NULL_CHECK_RETURN(pComponent, E_FAIL)
 
-	m_mapComponent[ID_STATIC].insert({ L"Com_Texture", pComponent });
+		m_mapComponent[ID_STATIC].insert({ L"Com_Texture", pComponent });
 
 	// Collider
 	pComponent = m_pColliderCom = dynamic_cast<Engine::CCollider*>
@@ -139,7 +164,7 @@ HRESULT CMonsterB1::Add_Component()
 
 	NULL_CHECK_RETURN(pComponent, E_FAIL)
 
-	m_mapComponent[ID_STATIC].insert({ L"Com_Collider", pComponent });
+		m_mapComponent[ID_STATIC].insert({ L"Com_Collider", pComponent });
 
 	// AI
 	pComponent = m_pAICom = dynamic_cast<CB1_AI*>
@@ -147,43 +172,58 @@ HRESULT CMonsterB1::Add_Component()
 
 	NULL_CHECK_RETURN(pComponent, E_FAIL)
 
-	m_mapComponent[ID_DYNAMIC].insert({ L"Com_AI", pComponent });
+		m_mapComponent[ID_DYNAMIC].insert({ L"Com_AI", pComponent });
 
 	return S_OK;
 }
 
 void CMonsterB1::Ready_Variable()
 {
+	// 게임로직 변수 세팅
+	_float fScale = 10.f;
+	m_fGroundY = -2.5f + fScale * 0.5f;
+	m_iAttack = 1;
+	m_iMaxHp = m_iHp = 10;
+	m_iPhase = 1;
+
 	// Transform 세팅
-	m_pTransformCom->Set_Pos(_float(rand() % 20), 1.f, _float(rand() % 20));
-	m_pTransformCom->Set_Scale(3.f, 3.f, 3.f);
+	m_pTransformCom->Set_Pos(_float(rand() % 10), m_fGroundY, _float(rand() % 10));
+	m_pTransformCom->Set_Scale(fScale, fScale, fScale);
 
 	// Collider 세팅
 	m_pColliderCom->RegisterToManager(this, CL_MONSTER);
+	AABB tAABB = { m_vPos.x, m_vPos.y, m_vPos.z, 2.5f, 2.5f, 2.5f };
+	m_pColliderCom->Set_AABB(tAABB);
 
 	// AI 세팅
 	m_pAICom->Set_OwnerTransform(m_pTransformCom);
 	m_pAICom->Set_TargetTransform(CPersistentMgr::GetInstance()->Get_PlayerTransform());
 	m_pAICom->Set_State<MONSTER_B1_STATE>(B1S_SPAWN);
-
-	// 단위벡터 세팅
-	_float fAngle(0.f);
-
-	for (_uint i = 0; i < DIR_END; ++i)
-	{
-		m_vNormDir[i] = { cosf(fAngle), 0.f, -sinf(fAngle) };
-		fAngle += D3DX_PI * 0.25f;
-	}
-
-	m_vDir = m_vNormDir[DIR_LEFT];
+	m_pAICom->Set_GroundY(m_fGroundY);
 
 	// Anim 관련 세팅
 	m_fFrameSpeed = 24.f;
 	D3DXMatrixIdentity(&m_matTex);
 
-	// 게임로직 변수 세팅
-	m_iAttack = 1;
-	m_iHp = 10;
+	// 마디 세팅
+	_vec3 vScale{};
+	_float fScaleReduction(0.8f);
+	m_pTransformCom->Get_Scale(&vScale);
+	vScale *= fScaleReduction;
+	m_pNode[0] = CNode::Create(m_pGraphicDev, m_pMessageChannel, m_pTransformCom, L"Proto_B1Node1Texture");
+	m_pNode[0]->Set_NodeScale(vScale);
+
+	vScale *= fScaleReduction;
+	m_pNode[1] = CNode::Create(m_pGraphicDev, m_pMessageChannel, m_pTransformCom, L"Proto_B1Node2Texture");
+	m_pNode[1]->Set_NodeScale(vScale);
+
+	vScale *= fScaleReduction;
+	m_pNode[2] = CNode::Create(m_pGraphicDev, m_pMessageChannel, m_pTransformCom, L"Proto_B1Node3Texture");
+	m_pNode[2]->Set_NodeScale(vScale);
+
+	vScale *= fScaleReduction;
+	m_pNode[3] = CNode::Create(m_pGraphicDev, m_pMessageChannel, m_pTransformCom, L"Proto_B1Node4Texture");
+	m_pNode[3]->Set_NodeScale(vScale);
 }
 
 void CMonsterB1::Ready_Event()
@@ -209,48 +249,45 @@ void CMonsterB1::Check_Frame()
 
 	switch (m_eCurState)
 	{
-	case B1S_IDLE:
-	{
-		m_fFrameEnd = 24.f;
-	}
-	break;
+	case B1S_CRAWL:
+		m_fFrameEnd = 16.f;
+		break;
 
-	case B1S_RUN:
-	{
-		m_fFrameEnd = 14.f;
-	}
-	break;
+	case B1S_JUMP:
+		m_fFrameEnd = 16.f;
+		break;
+
+	case B1S_LAND:
+		m_fFrameEnd = 19.f;
+		break;
+
+	case B1S_PREPARE:
+		m_fFrameEnd = 8.f;
+		break;
 
 	case B1S_ATTACK:
-	{
-		m_eAttackPhase = PREPARE;
-		m_fFrameEnd = 18.f;
-	}
-	break;
+		m_fFrameEnd = 19.f;
+		break;
 
-	case B1S_HIT:
-	{
-		m_fFrameEnd = 11.f;
-	}
-	break;
+	case B1S_SHOOT:
+		m_fFrameEnd = 36.f;
+		break;
+
+	case B1S_SUMMON:
+		m_fFrameEnd = 19.f;
+		break;
+
+	case B1S_ROAR:
+		m_fFrameEnd = 48.f;
+		break;
 
 	case B1S_SPAWN:
-	{
-		m_fFrameEnd = 36.f;
-	}
-	break;
+		m_fFrameEnd = 19.f;
+		break;
 
-	case B1S_JEER:
-	{
-		m_fFrameEnd = 48.f;
-	}
-	break;
-
-	case B1S_PRAY:
-	{
-		m_fFrameEnd = 32.f;
-	}
-	break;
+	case B1S_STOP:
+		m_fFrameEnd = 16.f;
+		break;
 	}
 
 	m_ePreState = m_eCurState;
@@ -266,33 +303,48 @@ void CMonsterB1::Move_Frame(const _float& fTimeDelta)
 
 		switch (m_eCurState)
 		{
-		case B1S_ATTACK:
-		{
-			if (m_eAttackPhase == PREPARE)
-			{
-				m_eAttackPhase = EXECUTE;
-				m_pAICom->Set_Speed(0.2f);
-				m_fFrameEnd = 27.f;
-				Attack_HitBox();
-			}
-			else if (m_eAttackPhase == EXECUTE)
-			{	// 상태 유지가 애니메이션에 종속적인 경우(Update에서 상태 전환을 하지 않음)
-				//  : 애니메이션 종료를 AI 컴포넌트에게 알리며 상태 변경
-				m_pAICom->Anim_End(m_eCurState);
-				m_eCurState = B1S_RUN;
-				m_eAttackPhase = PREPARE;
-			}
-		}
-		break;
-
-		case B1S_HIT:
+		case B1S_CRAWL:
 			m_pAICom->Anim_End(m_eCurState);
-			m_eCurState = B1S_RUN;
+			m_eCurState = B1S_STOP;
+			break;
+
+		case B1S_JUMP:
+			m_fFrame = m_fFrameEnd - 0.001f;
+			break;
+
+		case B1S_LAND:
+			m_pAICom->Anim_End(m_eCurState);
+			m_eCurState = B1S_CRAWL;
+			break;
+
+		case B1S_PREPARE:
+			m_pAICom->Anim_End(m_eCurState);
+			m_eCurState = B1S_ATTACK;
+			break;
+
+		case B1S_ATTACK:
+			m_pAICom->Anim_End(m_eCurState);
+			m_eCurState = B1S_CRAWL;
+			break;
+
+		case B1S_SHOOT:
+			m_pAICom->Anim_End(m_eCurState);
+			m_eCurState = B1S_CRAWL;
+			break;
+
+		case B1S_SUMMON:
+			m_pAICom->Anim_End(m_eCurState);
+			m_eCurState = B1S_CRAWL;
 			break;
 
 		case B1S_SPAWN:
 			m_pAICom->Anim_End(m_eCurState);
-			m_eCurState = B1S_IDLE;
+			m_eCurState = B1S_ROAR;
+			break;
+
+		case B1S_ROAR:
+			m_pAICom->Anim_End(m_eCurState);
+			m_eCurState = B1S_CRAWL;
 			break;
 		}
 	}
@@ -301,8 +353,9 @@ void CMonsterB1::Move_Frame(const _float& fTimeDelta)
 void CMonsterB1::Set_Texture()
 {
 	_vec3 vDir = *(m_pAICom->Get_Dir());		// AI로부터 받아온 방향
-	_bool bFilpX = vDir.x > 0.f ? true : false;	// 반전 여부
+	_bool bFlipX = vDir.x > 0.f ? true : false;	// 반전 여부
 	_uint iFrame = m_fFrame;					// 현재 프레임
+	_uint iTexIdx = _uint(m_eCurState);			// 텍스처 인덱스
 
 	D3DXMatrixIdentity(&m_matTex);
 	_uint iU = iFrame % 16;
@@ -313,56 +366,32 @@ void CMonsterB1::Set_Texture()
 
 	switch (m_eCurState)
 	{
-	case B1S_IDLE:
+	case B1S_CRAWL:
+	case B1S_JUMP:
+	case B1S_LAND:
+	case B1S_PREPARE:
+	case B1S_ATTACK:
+		if (vDir.z > 0.f) iV += 2;
+		break;
+
+	case B1S_SHOOT:
+	case B1S_SUMMON:
+	case B1S_ROAR:
+		break;
+
+	case B1S_SPAWN:
+		iTexIdx = 6;
+		break;
+
+	case B1S_STOP:
 	{
+		iTexIdx = 0;
 		if (vDir.z > 0.f) iV += 2;
 	}
 	break;
-
-	case B1S_RUN:
-	{
-		if (vDir.z > 0.f) iV += 1;
-	}
-	break;
-
-	case B1S_ATTACK:
-	{
-		switch (m_eAttackPhase)
-		{
-			case EXECUTE:
-			{
-				iV += 2;
-			}	
-			break;
-
-			default:
-				break;
-		}
-	}
-	break;
-
-	case B1S_HIT:
-	{
-	}
-	break;
-
-	case B1S_SPAWN:
-	{
-	}
-	break;
-
-	case B1S_JEER:
-	{
-	}
-	break;
-
-	case B1S_PRAY:
-	{
-	}
-	break;
 	}
 
-	if (bFilpX)
+	if (bFlipX)
 	{
 		m_matTex._11 *= -1.f;
 		m_matTex._31 = _float(iU + 1) * 0.0625f;	// 반전 O : 오른쪽에서 왼쪽으로 읽음
@@ -376,7 +405,7 @@ void CMonsterB1::Set_Texture()
 
 	m_pGraphicDev->SetTransform(D3DTS_TEXTURE0, &m_matTex);
 
-	m_pTextureCom->Set_Texture(_uint(m_eCurState));
+	m_pTextureCom->Set_Texture(iTexIdx);
 }
 
 void CMonsterB1::Attack_HitBox()
@@ -400,30 +429,88 @@ void CMonsterB1::Attack_HitBox()
 void CMonsterB1::Attacked(const _int& iAttack)
 {
 	m_iHp -= iAttack;
-
-	if (m_eAttackPhase != EXECUTE)
-	{
-		if (m_eCurState == B1S_HIT)
-		{
-			m_fFrame = 0.f;
-		}
-		else
-		{
-			m_eCurState = B1S_HIT;
-			m_pAICom->Set_State<MONSTER_B1_STATE>(B1S_HIT);
-		}
-	}
 }
 
 void CMonsterB1::Update_State()
 {
-	if (m_eCurState == B1S_SPAWN || m_eCurState == B1S_HIT)
-		return;
-
-	if (m_eCurState == B1S_ATTACK && m_eAttackPhase == EXECUTE && m_fFrame < m_fFrameEnd)
-		return;
+	if (m_eCurState == B1S_SPAWN || m_eCurState == B1S_ROAR) return;
 
 	m_eCurState = m_pAICom->Get_RecommendState<MONSTER_B1_STATE>();
+}
+
+_vec3 CMonsterB1::Compute_LimitedDir(const _float& fMaxAngle, const _vec3& vCurDir, const _vec3& vDesiredDir)
+{
+	_vec3 v1, v2;
+	D3DXVec3Normalize(&v1, &vCurDir);
+	D3DXVec3Normalize(&v2, &vDesiredDir);
+
+	_float fDot = max(-1.f, min(1.f, D3DXVec3Dot(&v1, &v2)));
+	_float fRad = acosf(fDot);
+	_float fMaxRad = D3DXToRadian(fMaxAngle);
+
+	if (fRad <= fMaxRad)
+		return v2;	// 최대 회전 각도보다 작으면 그대로 사용
+
+	// 최대 회전 각도보다 크면 최대 회전 각도로 보정
+	fRad = fMaxRad / fRad;
+
+	_vec3 vResult;
+	D3DXVec3Lerp(&vResult, &v1, &v2, fRad);
+	D3DXVec3Normalize(&vResult, &vResult);
+	return vResult;
+}
+
+void CMonsterB1::Compute_NodePos(const _float& fTimeDelta)
+{	// Update에서 호출할 Node 위치 계산 함수
+	_vec3 vCurPos;
+	_vec3 vPrevPos = m_vPos;						// LateUpdate에서 갱신되지 않았으므로 이전 위치
+	m_pTransformCom->Get_Info(INFO_POS, &vCurPos);	// AICom의 Update_Component에서 갱신된 현재 위치
+	_vec3 vDir = *m_pAICom->Get_Dir();
+
+	_vec3 vHeadVelocity = vCurPos - m_vPos;
+	_float fHeadSpeed = D3DXVec3Length(&vHeadVelocity) / fTimeDelta;
+	_float fBaseDist = 0.5f;
+	_float fAdaptiveDist = fBaseDist + fHeadSpeed * 0.02f;
+	_float fScaleReduction = 0.8f;
+
+	for (_uint i = 0; i < 4; ++i)
+	{
+		_vec3 vDesiredDir = vPrevPos - m_pNode[i]->Get_NodePos();
+		_vec3 vNewDir = Compute_LimitedDir(180.f * fTimeDelta, m_pNode[i]->Get_NodeDir(), vDesiredDir);
+
+		_float fCurDist = D3DXVec3Length(&vDesiredDir);
+		_float fDistRatio = fCurDist / fAdaptiveDist;
+		_float fLerp = min(1.f, fDistRatio * 0.5f);
+		_vec3 vTargetPos = vPrevPos - vNewDir * fAdaptiveDist;
+
+		if (m_eCurState != B1S_JUMP && m_eCurState != B1S_LAND) vTargetPos.y = m_fGroundY * fScaleReduction;
+		fScaleReduction *= fScaleReduction;
+
+		vCurPos = m_pNode[i]->Get_NodePos();
+		_vec3 vNewPos;
+		D3DXVec3Lerp(&vNewPos, &vCurPos, &vTargetPos, fLerp);
+
+		m_pNode[i]->Set_NodePos(vNewPos);
+		m_pNode[i]->Set_NodeDir(vNewDir);
+		m_pNode[i]->Update_GameObject(fTimeDelta);
+
+		vPrevPos = vNewPos;
+	}
+}
+
+void CMonsterB1::Check_Phase()
+{
+	_float fRatio = _float(m_iHp) / m_iMaxHp;
+
+	switch (m_iPhase)
+	{
+	case 1:
+		if (fRatio <= 0.5f) m_iPhase = 2;
+		return;
+
+	case 2:
+		return;
+	}
 }
 
 CMonsterB1* CMonsterB1::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel)
@@ -442,5 +529,10 @@ CMonsterB1* CMonsterB1::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* S
 
 void CMonsterB1::Free()
 {
+	for (_uint i = 0; i < 4; ++i)
+	{
+		Safe_Release(m_pNode[i]);
+	}
+
 	CGameObject::Free();
 }

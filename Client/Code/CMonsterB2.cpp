@@ -13,8 +13,7 @@ CMonsterB2::CMonsterB2(LPDIRECT3DDEVICE9 pGraphicDev)
 		m_eCurState(B2S_SPAWN),
 		m_fFrame(0.f),
 		m_fFrameEnd(0.f),
-		m_fFrameSpeed(0.f),
-		m_iAttack(0)
+		m_fFrameSpeed(0.f)
 {
 	ZeroMemory(&m_vPos, sizeof(_vec3));
 }
@@ -25,8 +24,7 @@ CMonsterB2::CMonsterB2(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChan
 		m_eCurState(B2S_SPAWN),
 		m_fFrame(0.f),
 		m_fFrameEnd(0.f),
-		m_fFrameSpeed(0.f),
-		m_iAttack(0)
+		m_fFrameSpeed(0.f)
 {
 	ZeroMemory(&m_vPos, sizeof(_vec3));
 }
@@ -38,8 +36,7 @@ CMonsterB2::CMonsterB2(const CMonsterB2& rhs)
 		m_eCurState(B2S_SPAWN),
 		m_fFrame(0.f),
 		m_fFrameEnd(0.f),
-		m_fFrameSpeed(0.f),
-		m_iAttack(rhs.m_iAttack)
+		m_fFrameSpeed(0.f)
 {
 }
 
@@ -169,14 +166,6 @@ void CMonsterB2::Ready_Variable()
 	// 단위벡터 세팅
 	_float fAngle(0.f);
 
-	for (_uint i = 0; i < DIR_END; ++i)
-	{
-		m_vNormDir[i] = { cosf(fAngle), 0.f, -sinf(fAngle) };
-		fAngle += D3DX_PI * 0.25f;
-	}
-
-	m_vDir = m_vNormDir[DIR_LEFT];
-
 	// Anim 관련 세팅
 	m_fFrameSpeed = 24.f;
 	D3DXMatrixIdentity(&m_matTex);
@@ -223,7 +212,6 @@ void CMonsterB2::Check_Frame()
 
 	case B2S_ATTACK:
 	{
-		m_eAttackPhase = PREPARE;
 		m_fFrameEnd = 18.f;
 	}
 	break;
@@ -268,20 +256,6 @@ void CMonsterB2::Move_Frame(const _float& fTimeDelta)
 		{
 		case B2S_ATTACK:
 		{
-			if (m_eAttackPhase == PREPARE)
-			{
-				m_eAttackPhase = EXECUTE;
-				m_pAICom->Set_Speed(0.2f);
-				m_fFrameEnd = 27.f;
-				Attack_HitBox();
-			}
-			else if (m_eAttackPhase == EXECUTE)
-			{	// 상태 유지가 애니메이션에 종속적인 경우(Update에서 상태 전환을 하지 않음)
-				//  : 애니메이션 종료를 AI 컴포넌트에게 알리며 상태 변경
-				m_pAICom->Anim_End(m_eCurState);
-				m_eCurState = B2S_RUN;
-				m_eAttackPhase = PREPARE;
-			}
 		}
 		break;
 
@@ -327,17 +301,6 @@ void CMonsterB2::Set_Texture()
 
 	case B2S_ATTACK:
 	{
-		switch (m_eAttackPhase)
-		{
-			case EXECUTE:
-			{
-				iV += 2;
-			}	
-			break;
-
-			default:
-				break;
-		}
 	}
 	break;
 
@@ -400,27 +363,11 @@ void CMonsterB2::Attack_HitBox()
 void CMonsterB2::Attacked(const _int& iAttack)
 {
 	m_iHp -= iAttack;
-
-	if (m_eAttackPhase != EXECUTE)
-	{
-		if (m_eCurState == B2S_HIT)
-		{
-			m_fFrame = 0.f;
-		}
-		else
-		{
-			m_eCurState = B2S_HIT;
-			m_pAICom->Set_State<MONSTER_B2_STATE>(B2S_HIT);
-		}
-	}
 }
 
 void CMonsterB2::Update_State()
 {
 	if (m_eCurState == B2S_SPAWN || m_eCurState == B2S_HIT)
-		return;
-
-	if (m_eCurState == B2S_ATTACK && m_eAttackPhase == EXECUTE && m_fFrame < m_fFrameEnd)
 		return;
 
 	m_eCurState = m_pAICom->Get_RecommendState<MONSTER_B2_STATE>();

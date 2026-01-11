@@ -14,8 +14,7 @@ CMonsterN2::CMonsterN2(LPDIRECT3DDEVICE9 pGraphicDev)
 		m_eCurState(N2S_SPAWN),
 		m_fFrame(0.f),
 		m_fFrameEnd(0.f),
-		m_fFrameSpeed(0.f),
-		m_iAttack(0)
+		m_fFrameSpeed(0.f)
 {
 	ZeroMemory(m_pNode, sizeof(m_pNode));
 }
@@ -26,8 +25,7 @@ CMonsterN2::CMonsterN2(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChan
 		m_eCurState(N2S_SPAWN),
 		m_fFrame(0.f),
 		m_fFrameEnd(0.f),
-		m_fFrameSpeed(0.f),
-		m_iAttack(0)
+		m_fFrameSpeed(0.f)
 {
 	ZeroMemory(m_pNode, sizeof(m_pNode));
 }
@@ -39,8 +37,7 @@ CMonsterN2::CMonsterN2(const CMonsterN2& rhs)
 		m_eCurState(N2S_SPAWN),
 		m_fFrame(0.f),
 		m_fFrameEnd(0.f),
-		m_fFrameSpeed(0.f),
-		m_iAttack(rhs.m_iAttack)
+		m_fFrameSpeed(0.f)
 {
 	memcpy(m_pNode, rhs.m_pNode, sizeof(m_pNode));
 }
@@ -57,7 +54,6 @@ HRESULT CMonsterN2::Ready_GameObject()
 		return E_FAIL;
 	
 	Ready_Variable();
-
 	Ready_Event();
 
 	return S_OK;
@@ -170,40 +166,44 @@ HRESULT CMonsterN2::Add_Component()
 
 void CMonsterN2::Ready_Variable()
 {
+	// 게임로직 변수 세팅
+	_float fScale = 3.f;
+	m_fGroundY = -2.5f + fScale * 0.5f;
+	m_iAttack = 1;
+	m_iHp = 10;
+
 	// Transform 세팅
-	m_pTransformCom->Set_Pos(_float(rand() % 10), 0.f, _float(rand() % 10));
-	_vec3 vScale{ 3.f, 3.f, 3.f };
-	m_pTransformCom->Set_Scale(vScale.x, vScale.y, vScale.z);
+	m_pTransformCom->Set_Pos(_float(rand() % 20), m_fGroundY, _float(rand() % 20));
+	m_pTransformCom->Set_Scale(fScale, fScale, fScale);
 
 	// Collider 세팅
 	m_pColliderCom->RegisterToManager(this, CL_MONSTER);
-	AABB tAABB = { m_vPos.x, m_vPos.y, m_vPos.z, 0.7f, 0.5f, 0.7f };
+	AABB tAABB = { m_vPos.x, m_vPos.y, m_vPos.z, 0.75f, 0.75f, 0.75f };
 	m_pColliderCom->Set_AABB(tAABB);
 
 	// AI 세팅
 	m_pAICom->Set_OwnerTransform(m_pTransformCom);
 	m_pAICom->Set_TargetTransform(CPersistentMgr::GetInstance()->Get_PlayerTransform());
 	m_pAICom->Set_State<MONSTER_N2_STATE>(N2S_SPAWN);
+	m_pAICom->Set_GroundY(m_fGroundY);
 
 	// Anim 관련 세팅
 	m_fFrameSpeed = 24.f;
 	D3DXMatrixIdentity(&m_matTex);
 
-	// 게임로직 변수 세팅
-	m_iAttack = 1;
-	m_iHp = 10;
-	m_fGroundY = 0.f;
-
 	// 마디 세팅
-	vScale *= 0.7f;
+	_vec3 vScale{};
+	_float fScaleReduction(0.8f);
+	m_pTransformCom->Get_Scale(&vScale);
+	vScale *= fScaleReduction;
 	m_pNode[0] = CNode::Create(m_pGraphicDev, m_pMessageChannel, m_pTransformCom, L"Proto_N2Node1Texture");
 	m_pNode[0]->Set_NodeScale(vScale);
 
-	vScale *= 0.7f;
+	vScale *= fScaleReduction;
 	m_pNode[1] = CNode::Create(m_pGraphicDev, m_pMessageChannel, m_pTransformCom, L"Proto_N2Node2Texture");
 	m_pNode[1]->Set_NodeScale(vScale);
 
-	vScale *= 0.7f;
+	vScale *= fScaleReduction;
 	m_pNode[2] = CNode::Create(m_pGraphicDev, m_pMessageChannel, m_pTransformCom, L"Proto_N2Node3Texture");
 	m_pNode[2]->Set_NodeScale(vScale);
 }
@@ -418,9 +418,9 @@ void CMonsterN2::Compute_NodePos(const _float& fTimeDelta)
 
 	_vec3 vHeadVelocity = vCurPos - m_vPos;
 	_float fHeadSpeed = D3DXVec3Length(&vHeadVelocity) / fTimeDelta;
-	_float fBaseDist = 0.2f;
+	_float fBaseDist = 0.25f;
 	_float fAdaptiveDist = fBaseDist + fHeadSpeed * 0.02f;
-	_float fScaleReduction = 0.7f;
+	_float fScaleReduction = 0.8f;
 
 	for (_uint i = 0; i < 3; ++i)
 	{
@@ -432,8 +432,9 @@ void CMonsterN2::Compute_NodePos(const _float& fTimeDelta)
 		_float fLerp = min(1.f, fDistRatio * 0.5f);
 		_vec3 vTargetPos = vPrevPos - vNewDir * fAdaptiveDist;
 
-		if (m_eCurState != N2S_JUMP) vTargetPos.y = m_fGroundY - (m_fGroundY * (1.f - fScaleReduction) * 0.5f);	// 줄어든 크기의 절반만 낮추는게 맞는 것 같은데...
-		fScaleReduction *= 0.7f;
+		if (m_eCurState != N2S_JUMP && m_eCurState == N2S_LAND)	vTargetPos.y = m_fGroundY * fScaleReduction;
+		
+		fScaleReduction *= fScaleReduction;
 
 		vCurPos = m_pNode[i]->Get_NodePos();
 		_vec3 vNewPos;

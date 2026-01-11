@@ -13,8 +13,7 @@ CMonsterN1::CMonsterN1(LPDIRECT3DDEVICE9 pGraphicDev)
 		m_eCurState(N1S_SPAWN),
 		m_fFrame(0.f),
 		m_fFrameEnd(0.f),
-		m_fFrameSpeed(0.f),
-		m_iAttack(0)
+		m_fFrameSpeed(0.f)
 {
 	ZeroMemory(&m_vPos, sizeof(_vec3));
 }
@@ -25,8 +24,7 @@ CMonsterN1::CMonsterN1(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChan
 		m_eCurState(N1S_SPAWN),
 		m_fFrame(0.f),
 		m_fFrameEnd(0.f),
-		m_fFrameSpeed(0.f),
-		m_iAttack(0)
+		m_fFrameSpeed(0.f)
 {
 	ZeroMemory(&m_vPos, sizeof(_vec3));
 }
@@ -38,8 +36,7 @@ CMonsterN1::CMonsterN1(const CMonsterN1& rhs)
 		m_eCurState(N1S_SPAWN),
 		m_fFrame(0.f),
 		m_fFrameEnd(0.f),
-		m_fFrameSpeed(0.f),
-		m_iAttack(rhs.m_iAttack)
+		m_fFrameSpeed(0.f)
 {
 }
 
@@ -50,11 +47,11 @@ CMonsterN1::~CMonsterN1()
 HRESULT CMonsterN1::Ready_GameObject()
 {
 	m_eOBJID = OID_MONSTER;
+	
 	if (FAILED(Add_Component()))
 		return E_FAIL;
 	
 	Ready_Variable();
-
 	Ready_Event();
 
 	return S_OK;
@@ -155,9 +152,15 @@ HRESULT CMonsterN1::Add_Component()
 
 void CMonsterN1::Ready_Variable()
 {
+	// 게임로직 변수 세팅
+	_float fScale = 3.f;
+	m_fGroundY = -2.5f + fScale * 0.5f;
+	m_iAttack = 1;
+	m_iHp = 10;
+
 	// Transform 세팅
-	m_pTransformCom->Set_Pos(_float(rand() % 20), 0.f, _float(rand() % 20));
-	m_pTransformCom->Set_Scale(3.f, 3.f, 3.f);
+	m_pTransformCom->Set_Pos(_float(rand() % 20), m_fGroundY, _float(rand() % 20));
+	m_pTransformCom->Set_Scale(fScale, fScale, fScale);
 
 	// Collider 세팅
 	m_pColliderCom->RegisterToManager(this, CL_MONSTER);
@@ -166,14 +169,11 @@ void CMonsterN1::Ready_Variable()
 	m_pAICom->Set_OwnerTransform(m_pTransformCom);
 	m_pAICom->Set_TargetTransform(CPersistentMgr::GetInstance()->Get_PlayerTransform());
 	m_pAICom->Set_State<MONSTER_N1_STATE>(N1S_SPAWN);
+	m_pAICom->Set_GroundY(m_fGroundY);
 
 	// Anim 관련 세팅
 	m_fFrameSpeed = 24.f;
 	D3DXMatrixIdentity(&m_matTex);
-
-	// 게임로직 변수 세팅
-	m_iAttack = 1;
-	m_iHp = 10;
 }
 
 void CMonsterN1::Ready_Event()

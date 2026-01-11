@@ -17,6 +17,7 @@ protected:
 public:
 	void		Set_Speed(const _float& fSpeed) { m_fSpeed = fSpeed; }
 	void		Anim_End(CMonsterN3::MONSTER_N3_STATE eState);
+	_bool		Is_Chasing() { return m_bChase; }
 
 private:
 	_int		Update_Component(const _float& fTimeDelta)	override;

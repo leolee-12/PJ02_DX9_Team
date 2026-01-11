@@ -6,6 +6,7 @@
 #include "CN1_AI.h"
 #include <CN2_AI.h>
 #include <CN3_AI.h>
+#include <CB1_AI.h>
 #include "LoadObjectList.h"
 
 CLoadingThread::CLoadingThread(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -46,8 +47,6 @@ _uint CLoadingThread::Loading_ForStage()
         return E_FAIL;
 
     if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_ItemTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Item/Item_%02d.png", 8))))
-    if (FAILED(CPersistentMgr::GetInstance()->Ready_GlobalObjects(m_pGraphicDev)))
-        return E_FAIL;
 
     m_fPercent += 50.f;
 
@@ -79,14 +78,21 @@ _uint CLoadingThread::Loading_ForStage()
 
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_MonsterN1Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal1/MonsterN1_%02d.png", 7));
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_MonsterN2Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal2/MonsterN2_%02d.png", 3));
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_MonsterN3Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal3/MonsterN3_%02d.png", 3));
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_MonsterB1Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Boss1/MonsterB1_%02d.png", 8));
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_N2Node1Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal2/N2Node_00.png", 1));
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_N2Node2Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal2/N2Node_01.png", 1));
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_N2Node3Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal2/N2Node_02.png", 1));
-    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_MonsterN3Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal3/MonsterN3_%02d.png", 3));
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_B1Node1Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Boss1/B1Node_00.png", 1));
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_B1Node2Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Boss1/B1Node_01.png", 1));
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_B1Node3Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Boss1/B1Node_02.png", 1));
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_B1Node4Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Boss1/B1Node_03.png", 1));
 
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_N1_AI", CN1_AI::Create(m_pGraphicDev, 6.f, 1.f));
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_N2_AI", CN2_AI::Create(m_pGraphicDev, 6.f, 4.f));
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_N3_AI", CN3_AI::Create(m_pGraphicDev, 6.f, 3.f));
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_B1_AI", CB1_AI::Create(m_pGraphicDev, 40.f, 10.f));
+
 
     // ===== 타일 관련 =====
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_RcTexXZ",
@@ -156,16 +162,20 @@ _uint CLoadingThread::Loading_ForTest()
 
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_MonsterN1Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal1/MonsterN1_%02d.png", 7));
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_MonsterN2Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal2/MonsterN2_%02d.png", 3));
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_MonsterN3Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal3/MonsterN3_%02d.png", 3));
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_MonsterB1Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Boss1/MonsterB1_%02d.png", 8));
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_N2Node1Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal2/N2Node_00.png", 1));
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_N2Node2Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal2/N2Node_01.png", 1));
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_N2Node3Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal2/N2Node_02.png", 1));
-    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_MonsterN3Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal3/MonsterN3_%02d.png", 3));
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_B1Node1Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Boss1/B1Node_00.png", 1));
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_B1Node2Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Boss1/B1Node_01.png", 1));
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_B1Node3Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Boss1/B1Node_02.png", 1));
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_B1Node4Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Boss1/B1Node_03.png", 1));
 
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_N1_AI", CN1_AI::Create(m_pGraphicDev, 6.f, 1.f));
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_N2_AI", CN2_AI::Create(m_pGraphicDev, 6.f, 4.f));
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_N3_AI", CN3_AI::Create(m_pGraphicDev, 6.f, 3.f));
-    //CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_N1_AI", CN1_AI::Create(m_pGraphicDev, 5.f, 1.f));
-    //CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_ItemTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Item/Item_%02d.png", 8));
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_B1_AI", CB1_AI::Create(m_pGraphicDev, 40.f, 5.f));
 
     //게이지 테스트
 
@@ -322,14 +332,20 @@ _uint CLoadingThread::Loading_ForDungeon()
 
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_MonsterN1Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal1/MonsterN1_%02d.png", 7));
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_MonsterN2Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal2/MonsterN2_%02d.png", 3));
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_MonsterN3Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal3/MonsterN3_%02d.png", 3));
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_MonsterB1Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Boss1/MonsterB1_%02d.png", 8));
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_N2Node1Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal2/N2Node_00.png", 1));
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_N2Node2Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal2/N2Node_01.png", 1));
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_N2Node3Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal2/N2Node_02.png", 1));
-    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_MonsterN3Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal3/MonsterN3_%02d.png", 3));
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_B1Node1Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Boss1/B1Node_00.png", 1));
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_B1Node2Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Boss1/B1Node_01.png", 1));
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_B1Node3Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Boss1/B1Node_02.png", 1));
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_B1Node4Texture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Boss1/B1Node_03.png", 1));
 
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_N1_AI", CN1_AI::Create(m_pGraphicDev, 6.f, 1.f));
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_N2_AI", CN2_AI::Create(m_pGraphicDev, 6.f, 4.f));
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_N3_AI", CN3_AI::Create(m_pGraphicDev, 6.f, 3.f));
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_B1_AI", CB1_AI::Create(m_pGraphicDev, 40.f, 5.f));
 
     // Tile
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_RcTexXZ", Engine::CRcTexXZ::Create(m_pGraphicDev));

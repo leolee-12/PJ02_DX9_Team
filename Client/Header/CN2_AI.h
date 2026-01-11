@@ -31,7 +31,6 @@ private:
 	_vec3		m_vSpeed;
 	_float		m_fAngle;
 	_float		m_fGravity;
-	_float		m_fGroundY;
 	_float		m_fAcmlTime;
 	_bool		m_bChase;
 	_vec3		m_vLerpPos;		// Lerp¿ë À§Ä¡

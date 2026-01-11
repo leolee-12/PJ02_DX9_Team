@@ -24,6 +24,7 @@
 #include "CCollisionMgr.h"
 #include "CGauge.h"
 #include "CBishop_Leshy.h"
+#include <CMonsterB1.h>
 
 CDungeon::CDungeon(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -239,22 +240,29 @@ HRESULT CDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 
 	pGameObject->AddRef();
 
-	for (_uint i = 0; i < 3; ++i)
+	for (_uint i = 0; i < 5; ++i)
 	{
+		//pGameObject = CMonsterN2::Create(m_pGraphicDev, m_pMessageChannel);
+		//
+		//NULL_CHECK_RETURN(pGameObject, E_FAIL)
+		//
+		//	if (FAILED(pLayer->Add_GameObject(L"Monster", pGameObject)))
+		//		return E_FAIL;
+
 		pGameObject = CMonsterN2::Create(m_pGraphicDev, m_pMessageChannel);
 
 		NULL_CHECK_RETURN(pGameObject, E_FAIL)
 
 			if (FAILED(pLayer->Add_GameObject(L"Monster", pGameObject)))
 				return E_FAIL;
-
-		pGameObject = CMonsterN3::Create(m_pGraphicDev, m_pMessageChannel);
-
-		NULL_CHECK_RETURN(pGameObject, E_FAIL)
-
-			if (FAILED(pLayer->Add_GameObject(L"Monster", pGameObject)))
-				return E_FAIL;
 	}
+
+	pGameObject = CMonsterB1::Create(m_pGraphicDev, m_pMessageChannel);
+
+	NULL_CHECK_RETURN(pGameObject, E_FAIL)
+
+		if (FAILED(pLayer->Add_GameObject(L"Monster", pGameObject)))
+			return E_FAIL;
 
 	pGameObject = CBishop_Leshy::Create(m_pGraphicDev);
 

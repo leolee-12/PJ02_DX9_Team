@@ -32,8 +32,8 @@ public:
 	void				Set_NodePos(const _vec3& vPos);
 	void				Set_NodeDir(const _vec3& vDir) { D3DXVec3Normalize(&m_vDir, &vDir); }
 	void				Set_Depth(const _float& fDepth) { m_fDepth = fDepth; }
-	_vec3& const		Get_NodePos() { return m_vPos; }
-	_vec3& const		Get_NodeDir() { return m_vDir; }
+	const _vec3&		Get_NodePos() { return m_vPos; }
+	const _vec3&		Get_NodeDir() { return m_vDir; }
 
 private:
 	HRESULT				Add_Component();
