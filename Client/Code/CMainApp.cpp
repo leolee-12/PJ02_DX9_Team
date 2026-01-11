@@ -184,7 +184,6 @@ void CMainApp::Free()
 	Safe_Release(m_pGraphicDev);
 	Safe_Release(m_pDeviceClass);
 
-	g_MapProtoname.clear();
 
 	CMapLoader::DestroyInstance();
 	CTileMgr::DestroyInstance();
@@ -200,4 +199,5 @@ void CMainApp::Free()
 	CCollisionMgr::DestroyInstance();
 	CSoundMgr::DestroyInstance();
 	m_pDeviceClass->DestroyInstance();
+	g_MapProtoname.clear();
 }

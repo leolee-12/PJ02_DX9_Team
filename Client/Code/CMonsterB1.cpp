@@ -168,7 +168,7 @@ void CMonsterB1::Ready_Variable()
 	// 게임로직 변수 세팅
 	m_iAttack = 1;
 	m_iHp = 10;
-	m_fScale = 5.f;
+	m_fScale = 10.f;
 	m_fGroundY = -2.5f + m_fScale * 0.5f;
 
 	// Transform 세팅
@@ -331,7 +331,11 @@ void CMonsterB1::Set_Texture()
 		if (vDir.z > 0.f) iV += 2;
 		break;
 
+	case B1S_SUMMON:
+		break;
+
 	case B1S_SPAWN:
+		iTexIdx = 6;
 		break;
 
 	case B1S_STOP:
