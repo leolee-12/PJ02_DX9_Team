@@ -41,10 +41,10 @@ private:
 
 public:
 	virtual HRESULT Ready_Texture(TEXTUREID eID, const vector<TEXINFO>& vecTexInfo);
-	HRESULT         Ready_Texture_FromMemory(TEXTUREID eID, const vector<TEXSETLR>& vecTexSetLR);
+	HRESULT         Ready_Texture_FromThread(TEXTUREID eID, const vector<TEXSETLR>& vecTexSetLR);
 
 	HRESULT			Add_Texture(TEXTUREID eID, const TEXINFO& tTexInfo);
-	HRESULT			Add_Texture_FromMemory(TEXTUREID eID, const TEXSETLR& TexSetLR);
+	HRESULT			Add_Texture_FromThread(TEXTUREID eID, const TEXSETLR& TexSetLR);
 	void			Set_Texture(wstring strState, const _uint& iIndex = 0);
 
 	_float			Get_TextureEnd(wstring strState);
@@ -55,6 +55,7 @@ private:
 public:
 	static CTextureSet* Create(LPDIRECT3DDEVICE9 pGraphicDev, TEXTUREID eID, vector<TEXINFO>& vecTexInfo);
 	static CTextureSet* CreateFromMemory(LPDIRECT3DDEVICE9 pGraphicDev, TEXTUREID eID, const vector<TEXSETLR>& vecTexSetLR);
+	static CTextureSet* CreateFromThered(LPDIRECT3DDEVICE9 pGraphicDev, TEXTUREID eID, const vector<TEXSETLR>& vecTexSetLR);
 	virtual CComponent* Clone();
 
 private:

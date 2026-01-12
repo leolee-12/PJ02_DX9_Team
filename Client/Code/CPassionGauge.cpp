@@ -27,8 +27,8 @@ HRESULT CPassionGauge::Ready_GameObject()
 
 	Ready_PixelShader();
 
-	m_pTransformCom->Set_Scale(30.f * 2.f, 30.f * 2.f, 0.f);
-	m_pTransformCom->Set_Pos(-345.f - 240.f, 245.f + 60.f, 0.12f);
+	m_pTransformCom->Set_Scale((30.f * 2.f)*1.15f, (30.f * 2.f)*1.15f, 0.f);
+	m_pTransformCom->Set_Pos(-325.f - 240.f, 225.f + 60.f, 0.12f);
 
 	
 

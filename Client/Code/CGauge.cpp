@@ -103,10 +103,8 @@ void CGauge::Render_GameObject()
 
 	_int iGaugeValue = _int(floor(m_fGaugeValue));
 
-	_vec2 vFontPos = { 40.f, 40.f };
-
 	swprintf_s(szGauge, L"%d", iGaugeValue);
-	RECT rcPlayer = { 0, 0, 54, 69 };
+	RECT rcPlayer = { 0, 0, 74, 89 };
 	CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans30", szGauge, rcPlayer, FontColor, DT_RIGHT | DT_BOTTOM);
 }
 

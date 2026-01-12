@@ -47,13 +47,13 @@ void CPassionIcon::Update_State()
 		{
 		case Gauge::GS_PASSION:
 			m_iIndex = 0;
-			m_pTransformCom->Set_Scale(33.f * 0.5f, 42.f * 0.5f, 0.f);
-			m_pTransformCom->Set_Pos(-330.f - 245.f, 243.f + 60.f, 0.1f);
+			m_pTransformCom->Set_Scale((33.f * 0.5f)*1.15f, (42.f * 0.5f)*1.15f, 0.f);
+			m_pTransformCom->Set_Pos(-310.f - 245.f, 223.f + 60.f, 0.1f);
 			break;
 		case Gauge::GS_FAITH:
 			m_iIndex = 1;
-			m_pTransformCom->Set_Scale(103.f * 0.25f, 87.f * 0.25f, 0.f);
-			m_pTransformCom->Set_Pos(-345.f - 240.f, 240.f + 60.f, 0.1f);
+			m_pTransformCom->Set_Scale((103.f * 0.25f)*1.15f, (87.f * 0.25f)*1.15f, 0.f);
+			m_pTransformCom->Set_Pos(-325.f - 240.f, 220.f + 60.f, 0.1f);
 			break;
 		default:
 			break;
