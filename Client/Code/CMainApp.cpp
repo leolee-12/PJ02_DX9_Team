@@ -187,15 +187,15 @@ void CMainApp::Free()
 
 	CMapLoader::DestroyInstance();
 	CTileMgr::DestroyInstance();
-	CPersistentMgr::DestroyInstance();
 	CLightMgr::DestroyInstance();
 	CFontMgr::DestroyInstance();
 	CDInputMgr::DestroyInstance();
 	CRenderer::DestroyInstance();
-	CProtoMgr::DestroyInstance();
 	CFrameMgr::DestroyInstance();
 	CTimerMgr::DestroyInstance();
 	CManagement::DestroyInstance();
+	CPersistentMgr::DestroyInstance();
+	CProtoMgr::DestroyInstance();
 	CCollisionMgr::DestroyInstance();
 	CSoundMgr::DestroyInstance();
 	m_pDeviceClass->DestroyInstance();

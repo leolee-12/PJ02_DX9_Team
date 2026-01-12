@@ -3,7 +3,12 @@
 #include "Engine_Define.h"
 #include <concurrent_queue.h>
 
-const _uint WORKER_COUNT = 14;
+const _uint WORKER_COUNT = []() {
+	unsigned int cores = std::thread::hardware_concurrency();
+	return (cores > 1) ? cores - 1 : 1;
+	}();
+
+
 
 class CMultiLoadingThread : public CBase
 {
@@ -58,11 +63,13 @@ private:
 	atomic<_uint> m_iCompletedCount;
 	_uint m_iTotalProtoCount;
 
-	HANDLE				m_hThread[WORKER_COUNT];
+	vector<HANDLE>		m_vecThread;
 	LOADINGID			m_eLoading;
 
 
 	LPDIRECT3DDEVICE9					m_pGraphicDev;
+
+
 
 
 };

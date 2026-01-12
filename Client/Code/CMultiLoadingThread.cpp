@@ -11,11 +11,13 @@
 CMultiLoadingThread::CMultiLoadingThread(LPDIRECT3DDEVICE9 pGraphicDev)
     : m_eLoading(LOADING_END)
     , m_pGraphicDev(pGraphicDev)
+    , m_iTotalProtoCount(0)
 {
     m_pGraphicDev->AddRef();
-    for (_int i = 0; i < WORKER_COUNT; ++i)
+    m_vecThread.resize(WORKER_COUNT);
+    for (_uint i = 0; i < WORKER_COUNT; ++i)
     {
-        m_hThread[i] = nullptr;
+        m_vecThread[i] = nullptr;
     }
 }
 
@@ -31,15 +33,15 @@ HRESULT		CMultiLoadingThread::Ready_Loading(LOADINGID eID)
 
     Ready_Loadingqueue();
 
-    for (_int i = 0; i < WORKER_COUNT; ++i)
+    for (_uint i = 0; i < WORKER_COUNT; ++i)
     {
-        m_hThread[i] = (HANDLE)_beginthreadex(NULL,
+        m_vecThread[i] = (HANDLE)_beginthreadex(NULL,
             0,
             Thread_Main,
             this,
             0,
             NULL);
-        if (m_hThread[i] == 0)
+        if (m_vecThread[i] == 0)
         {
             MSG_BOX("멀티 스레드 생성 실패");
             return E_FAIL;
@@ -230,38 +232,55 @@ void CMultiLoadingThread::Loading_for_Dungeon()
 
     m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingBarkCover", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingMiniGame/CookingBar_Border.png", 1));
     m_iTotalProtoCount++;
+
     m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingBarRed", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingMiniGame/CookingBar_Red.png", 1));
     m_iTotalProtoCount++;
+
     m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingBarGreen", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingMiniGame/CookingBar_Green.png", 1));
     m_iTotalProtoCount++;
+
     m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingMarker", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingMiniGame/Cooking_Marker.png", 1));
     m_iTotalProtoCount++;
+
     m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingButton", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingMiniGame/CookingButton.png", 1));
     m_iTotalProtoCount++;
+
     m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingTarget", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingMiniGame/FoodTexture_%d.png", 1));
     m_iTotalProtoCount++;
+
     m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingTargetBack", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingMiniGame/CookingTargetBack.png", 1));
     m_iTotalProtoCount++;
+
     m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingSelectBack", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/CookingSelectBack.png", 1));
     m_iTotalProtoCount++;
+
     m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingSelectSlot", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/SelectSlot.png", 1));
     m_iTotalProtoCount++;
+
     m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingSelectStartBtn", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/SelectFoodTexture.png", 1));
     m_iTotalProtoCount++;
+
     m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingCardInfoStarFilled", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/StarFilled.png", 1));
     m_iTotalProtoCount++;
+
     m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingCardInfoStar", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/Star.png", 1));
     m_iTotalProtoCount++;
+
     m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingCardInfoRecipe", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/Star.png", 1));
     m_iTotalProtoCount++;
+
     m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingCardInfoFaithArrow_Down", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/FaithArrow_Down.png", 1));
     m_iTotalProtoCount++;
+
     m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingCardInfoFaithArrow_Up", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/FaithArrow_Up.png", 1));
     m_iTotalProtoCount++;
+
     m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingCardInfoFaithTexture", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/FaithTexture.png", 1));
     m_iTotalProtoCount++;
+
     m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingCardInfoRightPattern", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/Rightpattern.png", 1));
     m_iTotalProtoCount++;
+
     m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingCardInfoLeftPattern", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/Leftpattern.png", 1));
     m_iTotalProtoCount++;
 
@@ -393,38 +412,53 @@ unsigned int CMultiLoadingThread::Thread_Main(void* pArg)
 {
     CMultiLoadingThread* pOwner = reinterpret_cast<CMultiLoadingThread*>(pArg);
 
-    while (!pOwner->m_NonTexReadyQueue.empty()) {
-        TaskFunc Func = nullptr;
-        if (!pOwner->m_NonTexReadyQueue.try_pop(Func))
-            continue;
+    if (!pOwner || !pOwner->m_pGraphicDev) { return 0; }
 
-        (pOwner->*Func)();
-    }
+    while (!g_bDistroyWindowFlag) {
+        _bool bDidWork = false;
 
-    while (!pOwner->m_TexturLoadingqueue.empty()) {
-        TEXLR request;
-        if (!pOwner->m_TexturLoadingqueue.try_pop(request))
-            continue;
+       
+		TaskFunc Func = nullptr;
+        if (pOwner->m_NonTexReadyQueue.try_pop(Func))
+        {
+            if (g_bDistroyWindowFlag) break; 
+            if (!pOwner->m_pGraphicDev) break;
+            (pOwner->*Func)();
+            bDidWork = true;
+        }
 
-        CProtoMgr::GetInstance()->Ready_Prototype(request.strProtoName,
-            CTexture::CreateFromThread(pOwner->m_pGraphicDev, request.eTexType, request.strFilepath, request.iTexIndex));
+		TEXLR Texrequest;
+        if (pOwner->m_TexturLoadingqueue.try_pop(Texrequest)) {
 
-        pOwner->m_iCompletedCount++;
+            if (g_bDistroyWindowFlag) break;
+            if (!pOwner->m_pGraphicDev) break;
 
-    }
+            CProtoMgr::GetInstance()->Ready_Prototype(Texrequest.strProtoName,
+                CTexture::CreateFromThread(pOwner->m_pGraphicDev, Texrequest.eTexType, Texrequest.strFilepath, Texrequest.iTexIndex));
 
-    while (!pOwner->m_TexSetLoadingqueue.empty()) {
-        pair<TEXSETINFO, vector<TEXSETLR>> request;
-        if (!pOwner->m_TexSetLoadingqueue.try_pop(request))
-            continue;
+            pOwner->m_iCompletedCount++;
+            bDidWork = true;
+        }
 
-        TEXSETINFO texsetinfo = request.first;
-        vector<TEXSETLR> vecTexsetLR = std::move(request.second);
+		pair<TEXSETINFO, vector<TEXSETLR>> Pairrequest;
+        if (pOwner->m_TexSetLoadingqueue.try_pop(Pairrequest)) {
 
-        CProtoMgr::GetInstance()->Ready_Prototype(texsetinfo.strProtoName,
-            CTextureSet::CreateFromThered(pOwner->m_pGraphicDev, texsetinfo.eTexType, vecTexsetLR));
+            if (g_bDistroyWindowFlag) break;
+            if (!pOwner->m_pGraphicDev) break;
 
-        pOwner->m_iCompletedCount++;
+            TEXSETINFO texsetinfo = std::move(Pairrequest.first);
+            vector<TEXSETLR> vecTexsetLR = std::move(Pairrequest.second);
+
+            CProtoMgr::GetInstance()->Ready_Prototype(texsetinfo.strProtoName,
+                CTextureSet::CreateFromThered(pOwner->m_pGraphicDev, texsetinfo.eTexType, vecTexsetLR));
+
+            pOwner->m_iCompletedCount++;
+            bDidWork = true;
+        }
+
+        if (!bDidWork && pOwner->m_NonTexReadyQueue.empty() && pOwner->m_TexturLoadingqueue.empty() && pOwner->m_TexSetLoadingqueue.empty()) {
+            break;
+        }
     }
 
     
@@ -450,11 +484,18 @@ CMultiLoadingThread* CMultiLoadingThread::Create(LPDIRECT3DDEVICE9 pGraphicDev, 
 
 void CMultiLoadingThread::Free()
 {
-    WaitForMultipleObjects(WORKER_COUNT, m_hThread, TRUE, INFINITE);
+    // 안전장치 해당플래그는 윈도우 메세지루프에서 WM_DESTROY 메세지 처리 분기에 해당 플래그 켜줌
+    g_bDistroyWindowFlag = true;
+
+    if (!m_vecThread.empty()) {
+        WaitForMultipleObjects(WORKER_COUNT, m_vecThread.data(), TRUE, INFINITE);
+
+        for (HANDLE& hThread : m_vecThread) {
+            if (hThread) CloseHandle(hThread);
+        }
+        m_vecThread.clear();
+    }
 
     Safe_Release(m_pGraphicDev);
-
-    for (_uint i = 0; i < WORKER_COUNT; ++i) {
-        CloseHandle(m_hThread[i]);
-    }
 }
+
