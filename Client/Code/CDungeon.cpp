@@ -24,7 +24,7 @@
 #include "CCollisionMgr.h"
 #include "CGauge.h"
 #include "CBishop_Leshy.h"
-#include <CMonsterB1.h>
+#include "CMonsterB1.h"
 #include "CBishop_Heket.h"
 #include "CBishop_Kallamar.h"
 #include "CBishop_Shamura.h"
@@ -52,8 +52,6 @@ HRESULT CDungeon::Ready_Scene()
 		return E_FAIL;
 
 	Ready_Light();
-
-	CCollisionMgr::GetInstance()->Ready_CollisionMgr();
 
 	return S_OK;
 }
@@ -120,8 +118,6 @@ _int CDungeon::Update_Scene(const _float& fTimeDelta)
 void CDungeon::LateUpdate_Scene(const _float& fTimeDelta)
 {
 	Engine::CScene::LateUpdate_Scene(fTimeDelta);
-
-	CCollisionMgr::GetInstance()->Check_Collisions(fTimeDelta);
 }
 
 void CDungeon::Render_Scene()

@@ -66,7 +66,7 @@ void CMainApp::LateUpdate_MainApp(const float& fTimeDelta)
 	// 타일 매니저 레이트 업데이트
 	CTileMgr::GetInstance()->LateUpdate(fTimeDelta);
 
-	//CCollisionMgr::GetInstance()->Check_Collisions(fTimeDelta);
+	CCollisionMgr::GetInstance()->Check_Collisions(fTimeDelta);
 	CSoundMgr::GetInstance()->Update();
 }
 

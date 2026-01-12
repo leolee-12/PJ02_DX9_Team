@@ -26,10 +26,12 @@ public:
 	HRESULT		Ready_Loading(LOADINGID eID);
 	HRESULT		Ready_Loadingqueue();
 	
+	void        Loading_for_Tutorial();
 	void		Loading_for_Dungeon();
 	void        Loading_for_KnuckleBone();
 
 	void		NonTex_for_Dungeon();
+	void		NonTex_for_Tutorial();
 
 
 	void		Load_Object_Texture(const std::set<std::wstring>& textureSet);

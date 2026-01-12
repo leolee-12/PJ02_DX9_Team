@@ -19,6 +19,7 @@
 #include "CN1_AI.h"
 #include "CN2_AI.h"
 #include "CN3_AI.h"
+#include "CTutorial.h"
 //#include "LoadObjectList.h"
 
 
@@ -92,6 +93,13 @@ _int CLoading::Update_Scene(const _float& fTimeDelta)
 			Engine::CScene* pScene = nullptr;
 			switch (m_pLoading->Get_Loading())
 			{
+			case LOADING_TUTORIAL:
+				pScene = CTutorial::Create(m_pGraphicDev);
+
+				if (nullptr == pScene)
+					return -1;
+				break;
+
 			case LOADING_STAGE:
 				pScene = CStage::Create(m_pGraphicDev);
 
