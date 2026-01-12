@@ -569,7 +569,7 @@ void CMonsterB1::Check_Phase()
 		if (fRatio <= 0.5f)
 		{
 			m_iPhase = 2;
-			m_pAICom->Push_Front_Pattern(B1S_SPAWN);
+			m_pAICom->Push_Front_Pattern(B1S_SUMMON);
 			m_pAICom->Set_Weight(B1S_PREPARE, 10);
 		}
 		return;

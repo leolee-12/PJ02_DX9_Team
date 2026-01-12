@@ -20,6 +20,7 @@ HRESULT CCollisionMgr::Ready_CollisionMgr()
 	m_vecCollisionPool.push_back({ CL_PLAYER, CL_MONSTER });
 	m_vecCollisionPool.push_back({ CL_PLAYER, CL_ITEM });
 	m_vecCollisionPool.push_back({ CL_PLAYER, CL_GRASS });
+	m_vecCollisionPool.push_back({ CL_PLAYER, CL_WARP });
 	m_vecCollisionPool.push_back({ CL_PLAYER, CL_MBULLET });
 	m_vecCollisionPool.push_back({ CL_MONSTER, CL_GRASS });
 	m_vecCollisionPool.push_back({ CL_MONSTER, CL_PBULLET });
@@ -64,6 +65,9 @@ void CCollisionMgr::RegisterCollider(CGameObject* pOwner, const AABB& aabb, COLG
 			colliderinfo.tAABB.x = aabb.x;			// AABB 중심값 갱신
 			colliderinfo.tAABB.y = aabb.y;
 			colliderinfo.tAABB.z = aabb.z;
+			colliderinfo.tAABB.hx = aabb.hx; 
+			colliderinfo.tAABB.hy = aabb.hy; 
+			colliderinfo.tAABB.hz = aabb.hz; 
 			return;
 		}
 	}

@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "CTheGateway.h"
+#include "CCollisionMgr.h"
 
 CTheGateway::CTheGateway(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -12,7 +13,22 @@ CTheGateway::~CTheGateway()
 
 HRESULT CTheGateway::Ready_Scene()
 {
-	return E_NOTIMPL;
+	m_pMessageChannel = CStageMessage::Create();
+
+	if (FAILED(Ready_Environment_Layer(L"Environment_Layer")))
+		return E_FAIL;
+
+	if (FAILED(Ready_GameLogic_Layer(L"GameLogic_Layer")))
+		return E_FAIL;
+
+	if (FAILED(Ready_UI_Layer(L"UI_Layer")))
+		return E_FAIL;
+
+	Ready_Light();
+
+	CCollisionMgr::GetInstance()->Ready_CollisionMgr();
+
+	return S_OK;
 }
 
 _int CTheGateway::Update_Scene(const _float& fTimeDelta)
