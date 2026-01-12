@@ -28,6 +28,8 @@ protected:
 	map<wstring, CLayer*>				m_mapLayer;
 	LPDIRECT3DDEVICE9					m_pGraphicDev;
 
+	bool					bFirstLoad = true;
+
 protected:
 	virtual void			Free();
 

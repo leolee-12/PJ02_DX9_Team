@@ -367,6 +367,9 @@
     <Filter Include="02. GameObject\07. UI\05.CookingUI\01.CookingSelect\04.CookingInfoCard\03.CookingInfoCardRightParrtern">
       <UniqueIdentifier>{5c0001aa-5425-458c-8a62-547a50b57e53}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\14. Warp">
+      <UniqueIdentifier>{afb959a5-02a0-4191-9f75-2c789c60d030}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -725,6 +728,14 @@
     </ClInclude>
     <ClInclude Include="..\Header\CCookingTarget.h">
       <Filter>02. GameObject\07. UI\05.CookingUI\00.CookingMiniGame\04.CookingTarget</Filter>
+    <ClInclude Include="..\Header\CSceneWarp.h">
+      <Filter>02. GameObject\14. Warp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CMapWarp.h">
+      <Filter>02. GameObject\14. Warp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CWarp.h">
+      <Filter>02. GameObject\14. Warp</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1060,6 +1071,14 @@
     </ClCompile>
     <ClCompile Include="..\Code\CCookingInfoCardRIghtPattern.cpp">
       <Filter>02. GameObject\07. UI\05.CookingUI\01.CookingSelect\04.CookingInfoCard\03.CookingInfoCardRightParrtern</Filter>
+    <ClCompile Include="..\Code\CSceneWarp.cpp">
+      <Filter>02. GameObject\14. Warp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CMapWarp.cpp">
+      <Filter>02. GameObject\14. Warp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CWarp.cpp">
+      <Filter>02. GameObject\14. Warp</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

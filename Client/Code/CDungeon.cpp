@@ -3,7 +3,7 @@
 #include "CBackGround.h"
 #include "CProtoMgr.h"
 #include "CDynamicCamera.h"
-// #include "CSkyBox.h"  // CMySkyBox·Î ´ëÃ¼
+// #include "CSkyBox.h"  // CMySkyBoxï¿½ï¿½ ï¿½ï¿½Ã¼
 #include "CMySkyBox.h"
 #include "CPersistentMgr.h"
 #include "CDungeonBack.h"
@@ -29,6 +29,8 @@
 #include "CBishop_Kallamar.h"
 #include "CBishop_Shamura.h"
 #include "CCookingMiniGameUI.h"
+#include "CMapWarp.h"
+#include "CWarp.h"
 
 CDungeon::CDungeon(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -59,6 +61,7 @@ HRESULT CDungeon::Ready_Scene()
 
 _int CDungeon::Update_Scene(const _float& fTimeDelta)
 {
+	
 	Engine::CTransform* pPlayerTransform = CPersistentMgr::GetInstance()->Get_PlayerTransform();
 	if (pPlayerTransform)
 	{
@@ -164,7 +167,7 @@ HRESULT CDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 
 	CGameObject* pGameObject = nullptr;
 
-	// ÇÃ·¹ÀÌ¾î¸¦ ÃÖ»ó´Ü¿¡
+	// ï¿½Ã·ï¿½ï¿½Ì¾î¸¦ ï¿½Ö»ï¿½Ü¿ï¿½
 	pGameObject = CPersistentMgr::GetInstance()->Get_GlobalObjects(GOBJ_PLAYER);
 
 	if (nullptr == pGameObject)
@@ -178,12 +181,20 @@ HRESULT CDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	pGameObject->AddRef();
 
 
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½Û¾ï¿½ï¿½ï¿½
+	pGameObject = CMapWarp::Create(m_pGraphicDev, m_pMessageChannel, { 50,0,0 }, WARP_RIGHT, {-100, 0, 0}, WARP_LEFT);
+	
+	NULL_CHECK_RETURN(pGameObject, E_FAIL)
+
+	if (FAILED(pLayer->Add_GameObject(L"MapWarp", pGameObject)))
+		return E_FAIL;
+
 	// Map Load
 	Engine::MAPDATA mapData;
 	if (SUCCEEDED(Engine::CMapLoader::GetInstance()->LoadMapA(
 		"../Bin/Resource/Maps/MapData/Dungeon.txt", mapData)))
 	{
-		// ¸Ê µ¥ÀÌÅÍÀÇ skyTypeÀ¸·Î SkyBox »ý¼º
+		// ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ skyTypeï¿½ï¿½ï¿½ï¿½ SkyBox ï¿½ï¿½ï¿½ï¿½
 		pGameObject = CMySkyBox::Create(m_pGraphicDev, mapData.skyType);
 		if (pGameObject)
 			pLayer->Add_GameObject(L"SkyBox", pGameObject);
@@ -197,16 +208,16 @@ HRESULT CDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 			switch (spawn.type)
 			{
 			case 0:
-				//ÇÃ·¹ÀÌ¾î ½ºÆùÀ§Ä¡, ¿öÇÁÀ§Ä¡ Àû¿ë
+				//ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¡, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½ï¿½
 				break;
 			case 1:
 				switch (spawn.monsterType)
 				{
 				case 0:
-					// Bat | ÀÏ¹Ý¸ó½ºÅÍ |
+					// Bat | ï¿½Ï¹Ý¸ï¿½ï¿½ï¿½ |
 					break;
 				case 1:
-					// Worm | ÀÏ¹Ý¸ó½ºÅÍ |
+					// Worm | ï¿½Ï¹Ý¸ï¿½ï¿½ï¿½ |
 					pGameObject = CMonsterN1::Create(m_pGraphicDev, m_pMessageChannel);
 					if (pGameObject)
 					{
@@ -218,16 +229,16 @@ HRESULT CDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 					}
 					break;
 				case 2:
-					// Humanoid | ÀÏ¹Ý¸ó½ºÅÍ |
+					// Humanoid | ï¿½Ï¹Ý¸ï¿½ï¿½ï¿½ |
 					break;
 				case 10:
-					// Amdusias | Áß°£º¸½º |
+					// Amdusias | ï¿½ß°ï¿½ï¿½ï¿½ï¿½ï¿½ |
 					break;
 				case 20:
-					// Rash | ÃÖÁ¾º¸½º |
+					// Rash | ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ |
 					break;
 				case 30:
-					// WaitingOne | ¿¬Ãâ¿ë |
+					// WaitingOne | ï¿½ï¿½ï¿½ï¿½ï¿½ |
 					break;
 				case 31:
 					pGameObject = CBishop_Leshy::Create(m_pGraphicDev, m_pMessageChannel, spawn);
@@ -270,7 +281,7 @@ HRESULT CDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 				}
 				break;
 			default:
-				MSG_BOX("½ºÆù¼½¼Ç Å¸ÀÔ¿À·ù");
+				MSG_BOX("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Å¸ï¿½Ô¿ï¿½ï¿½ï¿½");
 				return E_FAIL;
 			}
 		}
@@ -291,7 +302,7 @@ HRESULT CDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 					pLayer->Add_GameObject(L"MapObject", pGameObject);
 			}
 		}
-		// Process Lights - Point Light »ý¼º
+		// Process Lights - Point Light ï¿½ï¿½ï¿½ï¿½
 		for (const auto& light : mapData.lights)
 		{
 			Engine::CLightMgr::GetInstance()->Ready_PointLight(m_pGraphicDev, light);
@@ -299,13 +310,13 @@ HRESULT CDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	}
 	else
 	{
-		// ¸Ê ·Îµå ½ÇÆÐ ½Ã ±âº» SkyBox (Day) »ý¼º
+		// ï¿½ï¿½ ï¿½Îµï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½âº» SkyBox (Day) ï¿½ï¿½ï¿½ï¿½
 		pGameObject = CMySkyBox::Create(m_pGraphicDev, 0);
 		if (pGameObject)
 			pLayer->Add_GameObject(L"SkyBox", pGameObject);
 	}
 
-	// µð¹ö±×¿ë
+	// ï¿½ï¿½ï¿½ï¿½×¿ï¿½
 
 	for (_uint i = 0; i < 5; ++i)
 	{
