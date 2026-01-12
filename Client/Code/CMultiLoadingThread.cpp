@@ -87,105 +87,102 @@ void CMultiLoadingThread::Loading_for_Dungeon()
     m_iTotalProtoCount = 0;
 
     // ===== 텍스처 큐 등록 (멀티스레드 로딩) =====
-    m_TexturLoadingqueue.push(TEXLR(L"Proto_ItemTexture", TEX_NORMAL, L"../Bin/Resource/Texture/Item/Item_%02d.png", 8));
+    m_TexturLoadingqueue.push(TEXLR(L"Proto_ItemTexture", TEX_NORMAL, L"../Bin/Resource/Texture/Item/dds/Item_%02d.dds", 8));
     m_iTotalProtoCount++;
 
-    m_TexturLoadingqueue.push(TEXLR(L"Proto_DungeonLine", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Dungeon/Line%d.png", 2));
+    m_TexturLoadingqueue.push(TEXLR(L"Proto_DungeonLine", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Dungeon/dds/Line%d.dds", 2));
     m_iTotalProtoCount++;
 
-    m_TexturLoadingqueue.push(TEXLR(L"Proto_DungeonIcon", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Dungeon/Icon.png", 1));
+    m_TexturLoadingqueue.push(TEXLR(L"Proto_DungeonIcon", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Dungeon/dds/Icon.dds", 1));
     m_iTotalProtoCount++;
 
-    m_TexturLoadingqueue.push(TEXLR(L"Proto_DungeonBG", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Dungeon/BG.png", 1));
+    m_TexturLoadingqueue.push(TEXLR(L"Proto_DungeonBG", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Dungeon/dds/BG.dds", 1));
     m_iTotalProtoCount++;
 
-    m_TexturLoadingqueue.push(TEXLR(L"Proto_DungeonMG", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Dungeon/MG2.png", 1));
+    m_TexturLoadingqueue.push(TEXLR(L"Proto_DungeonMG", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Dungeon/dds/MG2.dds", 1));
     m_iTotalProtoCount++;
 
-    m_TexturLoadingqueue.push(TEXLR(L"Proto_TerrainTexture", TEX_NORMAL, L"../Bin/Resource/Texture/Terrain/Grass_%d.tga", 2));
+    /*m_TexturLoadingqueue.push(TEXLR(L"Proto_TerrainTexture", TEX_NORMAL, L"../Bin/Resource/Texture/Terrain/Grass_%d.tga", 2));
     m_iTotalProtoCount++;
 
     m_TexturLoadingqueue.push(TEXLR(L"Proto_TerrainWallTexture", TEX_NORMAL, L"../Bin/Resource/Texture/Terrain/Grass_%d.tga", 2));
-    m_iTotalProtoCount++;
+    m_iTotalProtoCount++;*/
 
     m_TexturLoadingqueue.push(TEXLR(L"Proto_SkyTexture", TEX_CUBE, L"../Bin/Resource/Texture/SkyBox/burger%d.dds", 4));
     m_iTotalProtoCount++;
 
-    m_TexturLoadingqueue.push(TEXLR(L"Proto_EffectTexture", TEX_NORMAL, L"../Bin/Resource/Texture/Explosion/Explosion%d.png", 90));
+    m_TexturLoadingqueue.push(TEXLR(L"Proto_PlayerHP", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Player/dds/Health_%d.dds", 3));
     m_iTotalProtoCount++;
 
-    m_TexturLoadingqueue.push(TEXLR(L"Proto_PlayerHP", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Player/Health_%d.png", 3));
+    m_TexturLoadingqueue.push(TEXLR(L"Proto_MonsterN1Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal1/dds/MonsterN1_%02d.dds", 7));
     m_iTotalProtoCount++;
 
-    m_TexturLoadingqueue.push(TEXLR(L"Proto_MonsterN1Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal1/MonsterN1_%02d.png", 7));
+    m_TexturLoadingqueue.push(TEXLR(L"Proto_MonsterN2Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal2/dds/MonsterN2_%02d.dds", 3));
     m_iTotalProtoCount++;
 
-    m_TexturLoadingqueue.push(TEXLR(L"Proto_MonsterN2Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal2/MonsterN2_%02d.png", 3));
+    m_TexturLoadingqueue.push(TEXLR(L"Proto_MonsterN3Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal3/dds/MonsterN3_%02d.dds", 3));
     m_iTotalProtoCount++;
 
-    m_TexturLoadingqueue.push(TEXLR(L"Proto_MonsterN3Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal3/MonsterN3_%02d.png", 3));
+    m_TexturLoadingqueue.push(TEXLR(L"Proto_MonsterB1Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Boss1/dds/MonsterB1_%02d.dds", 8));
     m_iTotalProtoCount++;
 
-    m_TexturLoadingqueue.push(TEXLR(L"Proto_MonsterB1Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Boss1/MonsterB1_%02d.png", 8));
+    m_TexturLoadingqueue.push(TEXLR(L"Proto_N2Node1Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal2/dds/N2Node_00.dds", 1));
     m_iTotalProtoCount++;
 
-    m_TexturLoadingqueue.push(TEXLR(L"Proto_N2Node1Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal2/N2Node_00.png", 1));
+    m_TexturLoadingqueue.push(TEXLR(L"Proto_N2Node2Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal2/dds/N2Node_01.dds", 1));
     m_iTotalProtoCount++;
 
-    m_TexturLoadingqueue.push(TEXLR(L"Proto_N2Node2Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal2/N2Node_01.png", 1));
+    m_TexturLoadingqueue.push(TEXLR(L"Proto_N2Node3Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal2/dds/N2Node_02.dds", 1));
     m_iTotalProtoCount++;
 
-    m_TexturLoadingqueue.push(TEXLR(L"Proto_N2Node3Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal2/N2Node_02.png", 1));
+    m_TexturLoadingqueue.push(TEXLR(L"Proto_B1Node1Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Boss1/dds/B1Node_00.dds", 1));
     m_iTotalProtoCount++;
 
-    m_TexturLoadingqueue.push(TEXLR(L"Proto_B1Node1Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Boss1/B1Node_00.png", 1));
+    m_TexturLoadingqueue.push(TEXLR(L"Proto_B1Node2Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Boss1/dds/B1Node_01.dds", 1));
     m_iTotalProtoCount++;
 
-    m_TexturLoadingqueue.push(TEXLR(L"Proto_B1Node2Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Boss1/B1Node_01.png", 1));
+    m_TexturLoadingqueue.push(TEXLR(L"Proto_B1Node3Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Boss1/dds/B1Node_02.dds", 1));
     m_iTotalProtoCount++;
 
-    m_TexturLoadingqueue.push(TEXLR(L"Proto_B1Node3Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Boss1/B1Node_02.png", 1));
-    m_iTotalProtoCount++;
-
-    m_TexturLoadingqueue.push(TEXLR(L"Proto_B1Node4Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Boss1/B1Node_03.png", 1));
+    m_TexturLoadingqueue.push(TEXLR(L"Proto_B1Node4Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Boss1/dds/B1Node_03.dds", 1));
     m_iTotalProtoCount++;
 
 
 
-    m_TexturLoadingqueue.push(TEXLR(L"Proto_GaugeCover", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Player/PassionGauge/GaugeCover.png", 1));
+    m_TexturLoadingqueue.push(TEXLR(L"Proto_GaugeCover", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Player/PassionGauge/dds/GaugeCover.dds", 1));
     m_iTotalProtoCount++;
 
-    m_TexturLoadingqueue.push(TEXLR(L"Proto_GaugeStar", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Player/PassionGauge/GaugeStar.png", 1));
+    m_TexturLoadingqueue.push(TEXLR(L"Proto_GaugeStar", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Player/PassionGauge/dds/GaugeStar.dds", 1));
     m_iTotalProtoCount++;
 
-    m_TexturLoadingqueue.push(TEXLR(L"Proto_PassionGauge", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Player/PassionGauge/PassionGauge.png", 1));
+    m_TexturLoadingqueue.push(TEXLR(L"Proto_PassionGauge", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Player/PassionGauge/dds/PassionGauge.dds", 1));
     m_iTotalProtoCount++;
 
-    m_TexturLoadingqueue.push(TEXLR(L"Proto_PassionIcon", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Player/PassionGauge/PassionIcon_%d.png", 2));
+    m_TexturLoadingqueue.push(TEXLR(L"Proto_PassionIcon", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Player/PassionGauge/dds/PassionIcon_%d.dds", 2));
     m_iTotalProtoCount++;
 
     // ===== TextureSet 큐 등록 (멀티스레드 로딩) =====
     vector<TEXSETLR> vecBishopLeshy;
-    vecBishopLeshy.push_back(TEXSETLR(L"Bishop_Leshy_Idle", L"../Bin/Resource/Texture/Bishops/Leshy/Leshy-idle/Leshy_idle-%d.png", 500));
-    vecBishopLeshy.push_back(TEXSETLR(L"Bishop_Leshy_Talk", L"../Bin/Resource/Texture/Bishops/Leshy/Leshy-talk/Leshy-talk-%d.png", 167));
+    vecBishopLeshy.push_back(TEXSETLR(L"Bishop_Leshy_Idle", L"../Bin/Resource/Texture/Bishops/Leshy/Leshy-idle/dds/Leshy_idle-%d.dds", 500));
+    vecBishopLeshy.push_back(TEXSETLR(L"Bishop_Leshy_Talk", L"../Bin/Resource/Texture/Bishops/Leshy/Leshy-talk/dds/Leshy-talk-%d.dds", 167));
     m_TexSetLoadingqueue.push(make_pair(TEXSETINFO(L"Proto_BishopLeshy", TEX_NORMAL), vecBishopLeshy));
     m_iTotalProtoCount++;
 
     vector<TEXSETLR> vecBishopHeket;
-    vecBishopHeket.push_back(TEXSETLR(L"Bishop_Heket_Idle", L"../Bin/Resource/Texture/Bishops/Heket/Heket-idle/Heket-idle-%d.png", 267));
-    vecBishopHeket.push_back(TEXSETLR(L"Bishop_Heket_Talk", L"../Bin/Resource/Texture/Bishops/Heket/Heket-talk/Heket-talk-%d.png", 267));
+    vecBishopHeket.push_back(TEXSETLR(L"Bishop_Heket_Idle", L"../Bin/Resource/Texture/Bishops/Heket/Heket-idle/dds/Heket-idle-%d.dds", 267));
+    vecBishopHeket.push_back(TEXSETLR(L"Bishop_Heket_Talk", L"../Bin/Resource/Texture/Bishops/Heket/Heket-talk/dds/Heket-talk-%d.dds", 267));
     m_TexSetLoadingqueue.push(make_pair(TEXSETINFO(L"Proto_BishopHeket", TEX_NORMAL), vecBishopHeket));
     m_iTotalProtoCount++;
 
     vector<TEXSETLR> vecBishopKallamar;
-    vecBishopKallamar.push_back(TEXSETLR(L"Bishop_Kallamar_Idle", L"../Bin/Resource/Texture/Bishops/Kallamar/Kallamar-idle/Kallamar-idle-%d.png", 134));
-    vecBishopKallamar.push_back(TEXSETLR(L"Bishop_Kallamar_Talk", L"../Bin/Resource/Texture/Bishops/Kallamar/Kallamar-talk/Kallamar-talk-%d.png", 267));
+    vecBishopKallamar.push_back(TEXSETLR(L"Bishop_Kallamar_Idle", L"../Bin/Resource/Texture/Bishops/Kallamar/Kallamar-idle/dds/Kallamar-idle-%d.dds", 134));
+    vecBishopKallamar.push_back(TEXSETLR(L"Bishop_Kallamar_Talk", L"../Bin/Resource/Texture/Bishops/Kallamar/Kallamar-talk/dds/Kallamar-talk-%d.dds", 267));
     m_TexSetLoadingqueue.push(make_pair(TEXSETINFO(L"Proto_BishopKallamar", TEX_NORMAL), vecBishopKallamar));
     m_iTotalProtoCount++;
 
     vector<TEXSETLR> vecBishopShamura;
-    vecBishopShamura.push_back(TEXSETLR(L"Bishop_Shamura_Idle", L"../Bin/Resource/Texture/Bishops/Shamura/Shamura-idle/Shamura-idle-%d.png", 134));
-    vecBishopShamura.push_back(TEXSETLR(L"Bishop_Shamura_Talk", L"../Bin/Resource/Texture/Bishops/Shamura/Shamura-talk/Shamura-talk-%d.png", 267));
+    vecBishopShamura.push_back(TEXSETLR(L"Bishop_Shamura_Idle", L"../Bin/Resource/Texture/Bishops/Shamura/Shamura-idle/dds/Shamura-idle-%d.dds", 134));
+    vecBishopShamura.push_back(TEXSETLR(L"Bishop_Shamura_Talk", L"../Bin/Resource/Texture/Bishops/Shamura/Shamura-talk/dds/Shamura-talk-%d.dds", 267));
     m_TexSetLoadingqueue.push(make_pair(TEXSETINFO(L"Proto_BishopShamura", TEX_NORMAL), vecBishopShamura));
     m_iTotalProtoCount++;
 
@@ -284,33 +281,13 @@ unsigned int CMultiLoadingThread::Thread_Main(void* pArg)
         if (!pOwner->m_TexSetLoadingqueue.try_pop(request))
             continue;
 
-        for (TEXSETLR& TexSetRequest : request.second)
-        {
-            for (int i = 0; i < TexSetRequest.iTexIndex; ++i) {
-                wchar_t szPath[256];
-                wsprintf(szPath, TexSetRequest.strFilepath.c_str(), i);
+        TEXSETINFO texsetinfo = request.first;
+        vector<TEXSETLR> vecTexsetLR = std::move(request.second);
 
-                FILE* fp;
-                errno_t err = _wfopen_s(&fp, szPath, L"rb");
-                if (err != 0 || !fp)
-                {
-                    return 1;
-                }
-                fseek(fp, 0, SEEK_END);
-                size_t size = ftell(fp);
-                fseek(fp, 0, SEEK_SET);
+        CProtoMgr::GetInstance()->Ready_Prototype(texsetinfo.strProtoName,
+            CTextureSet::CreateFromThered(pOwner->m_pGraphicDev, texsetinfo.eTexType, vecTexsetLR));
 
-                vector<BYTE> buffer(size);
-                fread(buffer.data(), 1, size, fp);
-                fclose(fp);
-
-                TexSetRequest.vecTexBuffer.push_back(std::move(buffer));
-            }
-        }
-
-        pOwner->m_iLoadCount++;
-
-        pOwner->m_TexSetReadyqueue.push(std::move(request));
+        pOwner->m_iCompletedCount++;
     }
 
     while (!pOwner->m_TexturLoadingqueue.empty()) {
@@ -318,57 +295,11 @@ unsigned int CMultiLoadingThread::Thread_Main(void* pArg)
         if (!pOwner->m_TexturLoadingqueue.try_pop(request))
             continue;
 
-        for (int i = 0; i < request.iTexIndex; ++i) {
-            wchar_t szPath[256];
-            wsprintf(szPath, request.strFilepath.c_str(), i);
-
-            FILE* fp;
-            errno_t err = _wfopen_s(&fp, szPath, L"rb");
-            if (err != 0 || !fp)
-            {
-                return 1;
-            }
-            fseek(fp, 0, SEEK_END);
-            size_t size = ftell(fp);
-            fseek(fp, 0, SEEK_SET);
-
-            vector<BYTE> buffer(size);
-            fread(buffer.data(), 1, size, fp);
-            fclose(fp);
-
-            request.vecTexBuffer.push_back(std::move(buffer));
-        }
-
-        pOwner->m_iLoadCount++;
-
-        pOwner->m_TextureReadyqueue.push(std::move(request));
-        
-    }
-
-    while (!pOwner->m_TexSetReadyqueue.empty()) {
-        pair<Engine::TEXSETINFO, vector<Engine::TEXSETLR>> TexSetReq;
-        if (!pOwner->m_TexSetReadyqueue.try_pop(TexSetReq))
-            continue;
-
-        Engine::TEXSETINFO TexSetinfo = std::move(TexSetReq.first);
-
-		vector<Engine::TEXSETLR> vecTexSetLR = std::move(TexSetReq.second);
-
-        CTextureSet* Test = CTextureSet::CreateFromMemory(pOwner->m_pGraphicDev, TexSetinfo.eTexType, vecTexSetLR);
-
-		CProtoMgr::GetInstance()->Ready_Prototype(TexSetinfo.strProtoName.c_str(), Test);
-
-		pOwner->m_iCompletedCount++;
-    }
-
-    while (!pOwner->m_TextureReadyqueue.empty()) {
-        Engine::TEXLR req;
-        if (!pOwner->m_TextureReadyqueue.try_pop(req))
-            continue;
-
-        CProtoMgr::GetInstance()->Ready_Prototype(req.strProtoName.c_str(), CTexture::CreateFromMemory(pOwner->m_pGraphicDev, req.eTexType, req.vecTexBuffer, req.iTexIndex));
+        CProtoMgr::GetInstance()->Ready_Prototype(request.strProtoName,
+            CTexture::CreateFromThread(pOwner->m_pGraphicDev, request.eTexType, request.strFilepath, request.iTexIndex));
 
         pOwner->m_iCompletedCount++;
+
     }
 
     //pOwner->m_bFinish = true;
