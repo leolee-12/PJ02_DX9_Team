@@ -8,8 +8,7 @@ CN2_AI::CN2_AI(LPDIRECT3DDEVICE9 pGraphicDev)
 		m_fAcmlTime(0.f),
 		m_bChase(false),
 		m_fAngle(0.f),
-		m_fGravity(0.f),
-		m_fGroundY(0.f)
+		m_fGravity(0.f)
 {
 }
 
@@ -19,8 +18,7 @@ CN2_AI::CN2_AI(const CN2_AI& rhs)
 		m_fAcmlTime(rhs.m_fAcmlTime),
 		m_bChase(false),
 		m_fAngle(rhs.m_fAngle),
-		m_fGravity(rhs.m_fGravity),
-		m_fGroundY(rhs.m_fGroundY)
+		m_fGravity(rhs.m_fGravity)
 {
 }
 
@@ -37,7 +35,6 @@ HRESULT CN2_AI::Ready_AI(const _float& fDetectRange, const _float& fInteractRang
 	m_fAngle = 0.f;
 	m_vSpeed = { 0.f, 0.f, 0.f};
 	m_fGravity = -9.8f;
-	m_fGroundY = 0.f;
 	m_fAcmlTime = 0.f;
 	m_iRcmState = _uint(CMonsterN2::N2S_SPAWN);
 

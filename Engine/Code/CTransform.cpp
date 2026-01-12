@@ -92,10 +92,16 @@ void CTransform::LateUpdate_Component()
 
 void CTransform::Compute_Bilboard(BILBOARD Axis)
 {
-    _matrix	matView, matBill;
+    _matrix    matView, matBill;
     m_pGraphicDev->GetTransform(D3DTS_VIEW, &matView);
     D3DXMatrixIdentity(&matBill);
 
+    // 크기
+    _vec3 vScale = m_vScale;
+    _matrix matScale;
+    D3DXMatrixScaling(&matScale, vScale.x, vScale.y, vScale.z);
+
+    // 회전 빌보드 적용
     switch (Axis) {
     case BBD_X:
         matBill._22 = matView._22;
@@ -119,7 +125,14 @@ void CTransform::Compute_Bilboard(BILBOARD Axis)
 
     D3DXMatrixInverse(&matBill, 0, &matBill);
 
-    m_matWorld = matBill * m_matWorld;
+    // 위치 추출
+    _vec3 vPos = _vec3(m_matWorld._41, m_matWorld._42, m_matWorld._43);
+
+    // 월드 = 크기 * 회전 * 이동
+    m_matWorld = matScale * matBill;
+    m_matWorld._41 = vPos.x;
+    m_matWorld._42 = vPos.y;
+    m_matWorld._43 = vPos.z;
 }
 
 void CTransform::Chase_Target(const _vec3* pTargetPos, const _float& fTimeDelta, const _float& fSpeed)

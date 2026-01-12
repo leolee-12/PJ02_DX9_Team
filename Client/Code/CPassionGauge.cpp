@@ -4,7 +4,7 @@
 #include "CRenderer.h"
 
 CPassionGauge::CPassionGauge(LPDIRECT3DDEVICE9 pGraphicDev)
-	: CUi(pGraphicDev), m_pBufferCom(nullptr), m_pTransformCom(nullptr)
+	: CUi(pGraphicDev), m_pBufferCom(nullptr), m_pTransformCom(nullptr), m_pTextureCom(nullptr)
 	, m_eCurState(Gauge::GS_END)
 	, m_ePreState(Gauge::GS_END)
 	, m_fGaugeValue(0)

@@ -53,12 +53,24 @@ HRESULT CGrass::Ready_GameObject()
 
 	m_pColliderCom->RegisterToManager(this, CL_GRASS);
 
+	m_hmapSubHandles.insert({ L"Monster_Damaged", m_pMessageChannel->Subscribe(L"Monster.Attacked", [this](const IMessageChannel::EVENT& Event) {
+		for (auto& Target : any_cast<vector<CGameObject*>>(Event.hmapData.find(L"Target")->second))
+		{
+			if (Target == this)
+			{
+				this->m_iHp = 0;
+			}
+		}
+	}) });
+
 	return S_OK;
 }
 
 _int CGrass::Update_GameObject(const _float& fTimeDelta)
 {
 	m_pColliderCom->UpdateFromTransform(m_pTransformCom);
+
+	if (g_bDebug) { m_pColliderCom->Update_AABBforRender(); }
 
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
@@ -109,7 +121,7 @@ void CGrass::Set_ObjectData(const Engine::OBJECTDATA& objData)
 	m_fScale = objData.scale;
 	m_fBaseScale = objData.scale;
 
-	m_pTransformCom->Set_Pos(objData.x, objData.y, objData.z);
+	m_pTransformCom->Set_Pos(objData.x, objData.y - 1.0f, objData.z);
 	m_pTransformCom->Set_Scale(m_fScale, m_fScale, m_fScale);
 
 	// Position-based phase for individual sway timing
@@ -203,6 +215,7 @@ HRESULT CGrass::Add_Component()
 	// Collider
 	pComponent = m_pColliderCom = dynamic_cast<Engine::CCollider*>
 		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Collider"));
+	//static_cast<Engine::CCollider*>(pComponent)->Set_AABB();
 
 	if (nullptr == pComponent)
 		return E_FAIL;
@@ -212,9 +225,12 @@ HRESULT CGrass::Add_Component()
 	return S_OK;
 }
 
-CGrass* CGrass::Create(LPDIRECT3DDEVICE9 pGraphicDev, const Engine::OBJECTDATA& objData)
+CGrass* CGrass::Create(LPDIRECT3DDEVICE9 pGraphicDev, const Engine::OBJECTDATA& objData, IMessageChannel* pMessageChannel)
 {
 	CGrass* pGrass = new CGrass(pGraphicDev);
+
+	pGrass->m_pMessageChannel = pMessageChannel;
+	pGrass->m_pMessageChannel->AddRef();
 
 	if (FAILED(pGrass->Ready_GameObject()))
 	{

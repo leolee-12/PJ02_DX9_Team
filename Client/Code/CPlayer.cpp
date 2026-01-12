@@ -85,11 +85,9 @@ _int CPlayer::Update_GameObject(const _float& fTimeDelta)
 
 	m_pColliderCom->UpdateFromTransform(m_pTransformCom);
 	
-	//------스프라이트 중심 오류로 인한 임시 코드------
-	_float fX(0.f), fY(m_vPos.y - 0.2f);
-	if (m_vDir.x > 0.001f)		fX = m_vPos.x - 0.4f;
-	else						fX = m_vPos.x + 0.4f;
-	AABB tAABB = { fX, fY, m_vPos.z, 1.f, 1.f, 1.f };
+	//------스프라이트 높이와 충돌체 위치 맞춤---------
+	_float fY(m_vPos.y - m_pTransformCom->Get_Scale(ROT_Y) * 0.125f);
+	AABB tAABB = { m_vPos.x, fY, m_vPos.z, 1.f, 1.f, 1.f };
 	m_pColliderCom->Set_AABB(tAABB);
 	//-------------------------------------------------
 
@@ -97,7 +95,7 @@ _int CPlayer::Update_GameObject(const _float& fTimeDelta)
 	if(g_bDebug) m_pColliderCom->Update_AABBforRender();
 
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
-	
+
 	Set_OnTerrain();
 
 	CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHA, this);
@@ -111,6 +109,7 @@ void CPlayer::LateUpdate_GameObject(const _float& fTimeDelta)
 	Move_Roll(fTimeDelta);
 	Charge(fTimeDelta);
 	Check_Frame();
+
 	m_pTransformCom->Compute_Bilboard(BBD_X);
 	m_pTransformCom->Get_Info(INFO_POS, &m_vPos);
 	Compute_ViewDepth(&m_vPos);
@@ -122,78 +121,30 @@ void CPlayer::Render_GameObject()
 {
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
 
-#pragma region 기존 (반전X)
-
-	//Set_TextureSet();
-	//m_pBufferCom->Render_Buffer();
-
-#pragma endregion
-
-#pragma region 스프라이트 반전 도입 - 버텍스/인덱스 버퍼 미사용
-
 	Set_TextureSet();
-	// 8방향 모두 스프라이트 이미지는 비효율적 -> 좌우반전해서 사용
-	bool bFlipH = (m_vDir == m_vNormDir[DIR_RU] || m_vDir == m_vNormDir[DIR_RIGHT] || m_vDir == m_vNormDir[DIR_RD]);
-	_float u1 = bFlipH ? 1.f : 0.f;
-	_float u2 = bFlipH ? 0.f : 1.f;
-	
-	// bFlipH = false (반전X)
-	//(u,v) : (0.f, 1.f)	|	(1.f, 1.f)
-	//(u,v) : (0.f, 0.f)	|	(1.f, 0.f)
-	
-	// bFlipH = true (반전)
-	//(u,v) : (1.f, 1.f)	|	(0.f, 1.f)
-	//(u,v) : (1.f, 0.f)	|	(0.f, 0.f)
-	
-	// 문제는 버텍스 버퍼를 동적으로 수정하면 오버헤드 심함
-	// - 버텍스/인덱스 버퍼를 사용하지 않고 그리기 : DrawPrimitiveUP
-	// - 인덱스버퍼 없으므로 D3DPT_TRIANGLELIST 사용 불가 : D3DPT_TRIANGLESTRIP으로 그리면 (0-1-2), (2-1-3) 으로 그려짐
-	// 0 1 > 0 1
-	// 3 2 > 2 3
-	
-	VTXTEX pVertex[4];
-	
-	pVertex[0].vPosition = { -1.f, 1.f, 0.f };
-	pVertex[0].vTexUV = { u1, 0.f };
-	
-	pVertex[1].vPosition = { 1.f, 1.f, 0.f };
-	pVertex[1].vTexUV = { u2, 0.f };
-	
-	pVertex[3].vPosition = { 1.f, -1.f, 0.f };
-	pVertex[3].vTexUV = { u2, 1.f };
-	
-	pVertex[2].vPosition = { -1.f, -1.f, 0.f };
-	pVertex[2].vTexUV = { u1, 1.f };
-	
-	m_pGraphicDev->SetFVF(Engine::FVF_TEX);
-	
-	m_pGraphicDev->DrawPrimitiveUP(D3DPT_TRIANGLESTRIP, 2, pVertex, sizeof(VTXTEX));
-	
-	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 
-#pragma endregion
+	m_pGraphicDev->SetTextureStageState(0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_COUNT2);
 
-#pragma region 스프라이트 시트
+	m_pBufferCom->Render_Buffer();
 
-	//m_pGraphicDev->SetTextureStageState(0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_COUNT2);
-	//Set_Texture();
-	//m_pBufferCom->Render_Buffer();
-	//m_pGraphicDev->SetTextureStageState(0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE);
-
-#pragma endregion
+	m_pGraphicDev->SetTextureStageState(0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE);
 }
 
 void CPlayer::Ready_Variable()
 {
-	m_pColliderCom->RegisterToManager(this, CL_PLAYER);
+	m_fSpeed = 10.f;
+	m_iAttack = 1;
+	m_iHp = 10;
 
 	m_eOBJID = OID_PLAYER;
-
+	_float fScale = 10.f;
+	//m_pTransformCom->Set_Scale(5.f, 5.f, 5.f);			// Player 폴더
+	//m_pTransformCom->Set_Scale(7.f, 7.f, 7.f);			// Tex2
+	m_pTransformCom->Set_Scale(fScale, fScale, fScale);		// Player(3) 폴더
 	m_pTransformCom->Set_Pos(10.f, 0.f, 10.f);
-	m_pTransformCom->Set_Scale(5.f, 5.f, 5.f);
-	//m_pTransformCom->Set_Scale(7.f, 7.f, 7.f);	// Tex2
 	m_fFrameSpeed = 24.f;
 
+	m_pColliderCom->RegisterToManager(this, CL_PLAYER);
 	AABB tAABB = { m_vPos.x, m_vPos.y, m_vPos.z, 1.f, 1.f, 1.f };
 	m_pColliderCom->Set_AABB(tAABB);
 
@@ -206,9 +157,6 @@ void CPlayer::Ready_Variable()
 	}
 
 	m_vDir = m_vNormDir[DIR_LEFT];
-	m_fSpeed = 10.f;
-	m_iAttack = 1;
-	m_iHp = 10;
 }
 
 void CPlayer::Ready_Event()
@@ -619,8 +567,19 @@ void CPlayer::Set_TextureSet()
 	}
 
 	if (m_strFrameKey != strPreKey) m_fFrame = 0.f;
-
+	
 	m_fFrameEnd = m_pTextureCom->Get_TextureEnd(m_strFrameKey); 
+
+	_bool bFilpX = m_vDir.x > 0.f ? true : false;	// 반전 여부
+	D3DXMatrixIdentity(&m_matTex);
+
+	if (bFilpX)
+	{
+		m_matTex._11 *= -1.f;
+		m_matTex._31 = 1.f;	// 반전 O : 오른쪽에서 왼쪽으로 읽음
+	}
+
+	m_pGraphicDev->SetTransform(D3DTS_TEXTURE0, &m_matTex);
 
 	m_pTextureCom->Set_Texture(m_strFrameKey, _uint(m_fFrame));
 }
@@ -654,7 +613,7 @@ void CPlayer::Attack_HitBox()
 
 	if(g_bDebug) CRenderer::GetInstance()->Add_TestCollider(tAABB, 60);
 
-	vector<CGameObject*> tempVec = CCollisionMgr::GetInstance()->Test_AABB(tAABB, CL_MONSTER);
+	vector<CGameObject*> tempVec = CCollisionMgr::GetInstance()->Test_AABB(tAABB, CL_MONSTER | CL_GRASS);
 
 	if (!tempVec.empty())
 	{

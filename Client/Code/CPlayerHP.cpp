@@ -55,7 +55,7 @@ void CPlayerHP::Render_GameObject()
 {
 	//m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
 
-	m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, FALSE);
+	//m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, FALSE);
 
 	_int iUICell = m_iPlayerMaxHp / 2;
 

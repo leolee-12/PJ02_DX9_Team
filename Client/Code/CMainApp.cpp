@@ -14,6 +14,7 @@
 #include "CMapLoader.h"
 
 bool g_bDebug = false;
+list<wstring>		g_MapProtoname;
 
 CMainApp::CMainApp() : m_pDeviceClass(nullptr), m_pGraphicDev(nullptr)
 , m_pManagementClass(CManagement::GetInstance())
@@ -65,7 +66,7 @@ void CMainApp::LateUpdate_MainApp(const float& fTimeDelta)
 	// 타일 매니저 레이트 업데이트
 	CTileMgr::GetInstance()->LateUpdate(fTimeDelta);
 
-	//CCollisionMgr::GetInstance()->Check_Collisions(fTimeDelta);
+	CCollisionMgr::GetInstance()->Check_Collisions(fTimeDelta);
 	CSoundMgr::GetInstance()->Update();
 }
 
@@ -197,4 +198,5 @@ void CMainApp::Free()
 	CCollisionMgr::DestroyInstance();
 	CSoundMgr::DestroyInstance();
 	m_pDeviceClass->DestroyInstance();
+	g_MapProtoname.clear();
 }

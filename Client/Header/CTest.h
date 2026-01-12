@@ -34,7 +34,6 @@ private:
 
 private:
 	CGauge* m_pTestGauge;
-	CCookingMiniGameUI* m_pCookingMiniGameUI;
 
 };
 

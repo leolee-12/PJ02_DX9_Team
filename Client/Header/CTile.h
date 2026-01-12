@@ -22,6 +22,8 @@ public:
 	virtual void		LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual void		Render_GameObject();
 
+	HRESULT				Ready_PixelShader();
+
 public:
 	void	Set_TileData(_int iGridX, _int iGridZ, _int iTextureId, _int iMaskFlags);
 
@@ -42,6 +44,8 @@ private:
 	_int	m_iTextureId;
 	_int	m_iMaskFlags;
 
+	LPDIRECT3DPIXELSHADER9 m_pPixelShader;
+	LPD3DXCONSTANTTABLE m_pConstTable;
 public:
 	static CTile* Create(LPDIRECT3DDEVICE9 pGraphicDev, const Engine::TILEDATA& tileData);
 

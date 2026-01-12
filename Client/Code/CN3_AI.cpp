@@ -95,6 +95,7 @@ void CN3_AI::Exit_State(const _uint& iState)
 		break;
 	case CMonsterN3::N3S_RUSH:
 		if (!m_pTargetTC) m_bChase = false;
+		m_fAcmlTime = 0.f;
 		break;
 	case CMonsterN3::N3S_SPAWN:
 		m_bActiveAI = true;
@@ -168,6 +169,9 @@ void CN3_AI::Update_Fly(const _float& fTimeDelta)
 
 void CN3_AI::Update_Prepare(const _float& fTimeDelta)
 {
+	_vec3 vDesiredDir = Compute_TargetDir();
+	m_vDir = Compute_LimitedDir(60.f * fTimeDelta, m_vDir, vDesiredDir);
+
 	_vec3 vPos;
 	m_pOwnerTC->Get_Info(INFO_POS, &vPos);
 	D3DXVec3Lerp(&vPos, &vPos, &m_vLerpPos, m_fSpeed);

@@ -1,4 +1,4 @@
-#include "CRcTex.h"
+癤�#include "CRcTex.h"
 
 CRcTex::CRcTex()
 {
@@ -18,12 +18,11 @@ CRcTex::~CRcTex()
 {
 }
 
-HRESULT CRcTex::Ready_Buffer()
+HRESULT CRcTex::Ready_Buffer(DWORD dwGridSize)
 {
-	
 	m_dwVtxSize = sizeof(VTXTEX);
-	m_dwVtxCnt = 4;
-	m_dwTriCnt = 2;
+	m_dwVtxCnt = dwGridSize * dwGridSize;
+	m_dwTriCnt = (dwGridSize - 1) * (dwGridSize - 1) * 2;
 	m_dwFVF = FVF_TEX;
 
 	m_dwIdxSize = sizeof(INDEX32);
@@ -34,26 +33,24 @@ HRESULT CRcTex::Ready_Buffer()
 
 	VTXTEX* pVertex = NULL;
 
-	// &pVertex : 버텍스 버퍼에 저장된 정점 중 첫 번째 주소를 얻어 옴.
-
 	m_pVB->Lock(0, 0, (void**)&pVertex, 0);
 
-	// 오른쪽 위
-	pVertex[0].vPosition = { -0.5f, 0.5f, 0.f };
-	pVertex[0].vTexUV = { 0.f, 0.f };
-	pVertex[0].vNormal = { 0.f, 0.f, -1.f };
+	const float fStep = 1.f / (dwGridSize - 1);
 
-	pVertex[1].vPosition = { 0.5f, 0.5f, 0.f };
-	pVertex[1].vTexUV = { 1.f, 0.f };
-	pVertex[1].vNormal = { 0.f, 0.f, -1.f };
+	for (DWORD row = 0; row < dwGridSize; ++row)
+	{
+		for (DWORD col = 0; col < dwGridSize; ++col)
+		{
+			DWORD idx = row * dwGridSize + col;
 
-	pVertex[2].vPosition = { 0.5f, -0.5f, 0.f };
-	pVertex[2].vTexUV = { 1.f, 1.f };
-	pVertex[2].vNormal = { 0.f, 0.f, -1.f };
+			float fX = -0.5f + col * fStep;
+			float fY = 0.5f - row * fStep;
 
-	pVertex[3].vPosition = { -0.5f, -0.5f, 0.f };
-	pVertex[3].vTexUV = { 0.f, 1.f };
-	pVertex[3].vNormal = { 0.f, 0.f, -1.f };
+			pVertex[idx].vPosition = { fX, fY, 0.f };
+			pVertex[idx].vTexUV = { col * fStep, row * fStep };
+			pVertex[idx].vNormal = { 0.f, 0.f, -1.f };
+		}
+	}
 
 	m_pVB->Unlock();
 
@@ -61,18 +58,29 @@ HRESULT CRcTex::Ready_Buffer()
 
 	m_pIB->Lock(0, 0, (void**)&pIndex, 0);
 
-	// 오른쪽 위
-	pIndex[0]._0 = 0;
-	pIndex[0]._1 = 1;
-	pIndex[0]._2 = 2;
+	DWORD triIdx = 0;
+	for (DWORD row = 0; row < dwGridSize - 1; ++row)
+	{
+		for (DWORD col = 0; col < dwGridSize - 1; ++col)
+		{
+			DWORD topLeft = row * dwGridSize + col;
+			DWORD topRight = topLeft + 1;
+			DWORD bottomLeft = topLeft + dwGridSize;
+			DWORD bottomRight = bottomLeft + 1;
 
-	// 왼쪽 아래
-	pIndex[1]._0 = 0;
-	pIndex[1]._1 = 2;
-	pIndex[1]._2 = 3;
+			pIndex[triIdx]._0 = topLeft;
+			pIndex[triIdx]._1 = topRight;
+			pIndex[triIdx]._2 = bottomRight;
+			++triIdx;
+
+			pIndex[triIdx]._0 = topLeft;
+			pIndex[triIdx]._1 = bottomRight;
+			pIndex[triIdx]._2 = bottomLeft;
+			++triIdx;
+		}
+	}
 
 	m_pIB->Unlock();
-
 
 	return S_OK;
 }
@@ -82,11 +90,11 @@ void CRcTex::Render_Buffer()
 	CVIBuffer::Render_Buffer();
 }
 
-CRcTex* CRcTex::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+CRcTex* CRcTex::Create(LPDIRECT3DDEVICE9 pGraphicDev, DWORD dwGridSize)
 {
 	CRcTex* pRcTex = new CRcTex(pGraphicDev);
 
-	if (FAILED(pRcTex->Ready_Buffer()))
+	if (FAILED(pRcTex->Ready_Buffer(dwGridSize)))
 	{
 		Safe_Release(pRcTex);
 		MSG_BOX("pRcTex Create Failed");

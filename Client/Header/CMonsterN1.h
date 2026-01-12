@@ -54,9 +54,6 @@ private:
 	_matrix				m_matTex;
 	ATTACK_PHASE		m_eAttackPhase;	// SubState
 
-	// 게임로직 관련
-	_int				m_iAttack;
-
 	// AI 관련
 	CN1_AI*				m_pAICom;
 

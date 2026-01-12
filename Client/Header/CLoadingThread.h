@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "CBase.h"
 #include "Engine_Define.h"
 
@@ -18,9 +18,24 @@ public:
 
 public:
 	HRESULT		Ready_Loading(LOADINGID eID);
-	_uint		Loading_ForStage();
 	_uint		Loading_ForTest();
+	_uint		Loading_ForStage();
+
+	/* Loading For Map */
+	_uint		Loading_MapCommon();
+
+	_uint		Loading_ForTutorial();
+	_uint		Loading_ForTheGateway();
+	_uint		Loading_ForDungeon();
+	_uint		Loading_ForVillage();
+	_uint		Loading_ForRealDungeon();
+	_uint		Loading_ForAmdusiasRoom();
+	_uint		Loading_ForLeshyRoom();
+
+	/* Loading for minigame */
 	_uint		Loading_ForKnuckleBone();
+
+	void		Load_Object_Texture(const std::set<std::wstring>& textureSet);
 
 public:
 	static unsigned int CALLBACK Thread_Main(void* pArg);

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CVIBuffer.h"
 
@@ -13,12 +13,12 @@ protected:
 	virtual ~CRcTex();
 
 public:
-	virtual		HRESULT		Ready_Buffer();
+	HRESULT		Ready_Buffer(DWORD dwGridSize);
 	virtual		void		Render_Buffer();
 
 
 public:
-	static CRcTex* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	static CRcTex* Create(LPDIRECT3DDEVICE9 pGraphicDev, DWORD dwGridSize = 2);
 	virtual CComponent* Clone();
 private:
 	virtual		void	Free();

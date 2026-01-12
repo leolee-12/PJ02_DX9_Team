@@ -22,6 +22,9 @@
 #include "CMapObject.h"
 #include "CGrass.h"
 #include "CCollisionMgr.h"
+#include <CMonsterB1.h>
+
+
 
 CStage::CStage(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -111,29 +114,9 @@ HRESULT CStage::Ready_Environment_Layer(const _tchar* pLayerTag)
 
 	CGameObject* pGameObject = nullptr;
 
-	// SkyBox를 Ready_GameLogic_Layer에서 mapData.skyType으로 생성하도록 변경
-	/*
-	pGameObject = CSkyBox::Create(m_pGraphicDev);
-
-	if (nullptr == pGameObject)
-		return E_FAIL;
-
-	if (FAILED(pLayer->Add_GameObject(L"SkyBox", pGameObject)))
-		return E_FAIL;
-	*/
-
 	_vec3   vEye{ 0.f, 10.f, -10.f };
 	_vec3   vAt{ 0.f, 0.f, 1.f };
 	_vec3   vUp{ 0.f, 1.f, 0.f };
-
-	// DynamicCamera
-	/*pGameObject = CDynamicCamera::Create(m_pGraphicDev, &vEye, &vAt, &vUp);
-
-	if (nullptr == pGameObject)
-		return E_FAIL;
-
-	if (FAILED(pLayer->Add_GameObject(L"DynamicCamera", pGameObject)))
-		return E_FAIL;*/
 
 	pGameObject = CMainCamera::Create(m_pGraphicDev, m_pMessageChannel);
 
@@ -142,8 +125,6 @@ HRESULT CStage::Ready_Environment_Layer(const _tchar* pLayerTag)
 
 	if (FAILED(pLayer->Add_GameObject(L"MainCamera", pGameObject)))
 		return E_FAIL;
-		
-
 
 	m_mapLayer.insert({ pLayerTag , pLayer });
 
@@ -158,21 +139,10 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 
 	CGameObject* pGameObject = nullptr;
 
-	/*
-	// Terrain
-	pGameObject = CTerrain::Create(m_pGraphicDev);
-
-	if (nullptr == pGameObject)
-		return E_FAIL;
-
-	if (FAILED(pLayer->Add_GameObject(L"Terrain", pGameObject)))
-		return E_FAIL;
-	*/
-
 	// Map Load
 	Engine::MAPDATA mapData;
 	if (SUCCEEDED(Engine::CMapLoader::GetInstance()->LoadMapA(
-		"../Bin/Resource/Maps/MapData/Tutorial_test.txt", mapData)))
+		"../Bin/Resource/Maps/MapData/Tutorial.txt", mapData)))
 	{
 		// 맵 데이터의 skyType으로 SkyBox 생성
 		pGameObject = CMySkyBox::Create(m_pGraphicDev, mapData.skyType);
@@ -183,28 +153,28 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 		CTileMgr::GetInstance()->Initialize(m_pGraphicDev, mapData);
 
 		// Spawns (Monster)
-		for (const auto& spawn : mapData.spawns)
-		{
-			if (spawn.type == 1)
-			{
-				pGameObject = CMonsterN1::Create(m_pGraphicDev, m_pMessageChannel);
-				if (pGameObject)
-				{
-					Engine::CTransform* pTransform = dynamic_cast<Engine::CTransform*>(
-						pGameObject->Get_Component(ID_DYNAMIC, L"Com_Transform"));
-					if (pTransform)
-						pTransform->Set_Pos(spawn.x, 0.f, spawn.z);
-					pLayer->Add_GameObject(L"Monster", pGameObject);
-				}
-			}
-		}
+		//for (const auto& spawn : mapData.spawns)
+		//{
+		//	if (spawn.type == 1)
+		//	{
+		//		pGameObject = CMonsterN1::Create(m_pGraphicDev, m_pMessageChannel);
+		//		if (pGameObject)
+		//		{
+		//			Engine::CTransform* pTransform = dynamic_cast<Engine::CTransform*>(
+		//				pGameObject->Get_Component(ID_DYNAMIC, L"Com_Transform"));
+		//			if (pTransform)
+		//				pTransform->Set_Pos(spawn.x, 0.f, spawn.z);
+		//			pLayer->Add_GameObject(L"Monster", pGameObject);
+		//		}
+		//	}
+		//}
 
 		// Objects
 		for (const auto& obj : mapData.objects)
 		{
 			if (obj.category == "Grass")
 			{
-				pGameObject = CGrass::Create(m_pGraphicDev, obj);
+				pGameObject = CGrass::Create(m_pGraphicDev, obj, m_pMessageChannel);
 				if (pGameObject)
 					pLayer->Add_GameObject(L"Grass", pGameObject);
 			}
@@ -215,6 +185,7 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 					pLayer->Add_GameObject(L"MapObject", pGameObject);
 			}
 		}
+
 		// Process Lights - Point Light 생성
 		for (const auto& light : mapData.lights)
 		{
@@ -242,21 +213,28 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 
 	pGameObject->AddRef();
 
-	for (_uint i = 0; i < 3; ++i)
+	for (_uint i = 0; i < 1; ++i)
 	{
-		pGameObject = CMonsterN2::Create(m_pGraphicDev, m_pMessageChannel);
-		
+		//pGameObject = CMonsterN1::Create(m_pGraphicDev, m_pMessageChannel);
+		//
+		//NULL_CHECK_RETURN(pGameObject, E_FAIL)
+		//
+		//if (FAILED(pLayer->Add_GameObject(L"Monster", pGameObject)))
+		//	return E_FAIL;
+		//
+		//pGameObject = CMonsterN2::Create(m_pGraphicDev, m_pMessageChannel);
+		//
+		//NULL_CHECK_RETURN(pGameObject, E_FAIL)
+		//
+		//	if (FAILED(pLayer->Add_GameObject(L"Monster", pGameObject)))
+		//		return E_FAIL;
+
+		pGameObject = CMonsterB1::Create(m_pGraphicDev, m_pMessageChannel);
+
 		NULL_CHECK_RETURN(pGameObject, E_FAIL)
-		
-		if (FAILED(pLayer->Add_GameObject(L"Monster", pGameObject)))
-			return E_FAIL;
 
-		pGameObject = CMonsterN3::Create(m_pGraphicDev, m_pMessageChannel);
-
-		NULL_CHECK_RETURN(pGameObject, E_FAIL)
-
-		if (FAILED(pLayer->Add_GameObject(L"Monster", pGameObject)))
-			return E_FAIL;
+			if (FAILED(pLayer->Add_GameObject(L"Monster", pGameObject)))
+				return E_FAIL;
 	}
 
 	m_mapLayer.insert({ pLayerTag , pLayer });

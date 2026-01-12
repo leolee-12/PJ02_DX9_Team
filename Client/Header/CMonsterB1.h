@@ -9,13 +9,13 @@ namespace Engine
 	class CCollider;
 }
 
+class CNode;
 class CB1_AI;
 
-class CMonsterB1 : public CMonster 
+class CMonsterB1 : public CMonster
 {
 public:
-	enum MONSTER_B1_STATE { B1S_IDLE, B1S_RUN, B1S_ATTACK, B1S_HIT, B1S_SPAWN, B1S_JEER, B1S_PRAY, B1S_END };
-	enum ATTACK_PHASE { PREPARE, EXECUTE };
+	enum MONSTER_B1_STATE { B1S_CRAWL, B1S_JUMP, B1S_LAND, B1S_PREPARE, B1S_ATTACK, B1S_SHOOT, B1S_SUMMON, B1S_ROAR, B1S_SPAWN, B1S_STOP, B1S_END };
 
 private:
 	explicit	CMonsterB1(LPDIRECT3DDEVICE9 pGraphicDev);
@@ -24,9 +24,6 @@ private:
 	virtual		~CMonsterB1();
 
 public:
-	void				Set_Dir(_vec3* pDir)	{ m_vDir = *pDir; }
-	const _vec3*		Get_Dir()				{ return &m_vDir; }
-
 	virtual HRESULT		Ready_GameObject();
 	virtual _int		Update_GameObject(const _float& fTimeDelta);
 	virtual void		LateUpdate_GameObject(const _float& fTimeDelta);
@@ -46,6 +43,9 @@ private:
 	void				Attack_HitBox();
 	void				Attacked(const _int& iAttack);
 	void				Update_State();
+	_vec3				Compute_LimitedDir(const _float& fAngle, const _vec3& vCurDir, const _vec3& vDesiredDir);
+	void				Compute_NodePos(const _float& fTimeDelta);
+	void				Check_Phase();
 
 private:
 	// 스프라이트 관련
@@ -54,19 +54,20 @@ private:
 	_float				m_fFrame;
 	_float				m_fFrameEnd;
 	_float				m_fFrameSpeed;
-	_vec3				m_vNormDir[DIR_END];
-	_vec3				m_vDir;
 	_matrix				m_matTex;
-	ATTACK_PHASE		m_eAttackPhase;
-
-	// 스테이터스 관련
-	_int				m_iAttack;
 
 	// AI 관련
-	CB1_AI*				m_pAICom;
+	CB1_AI*		m_pAICom;
+
+	// 마디 관련
+	CNode*		m_pNode[4];
+
+	// 패턴 관련
+	_uint		m_iPhase;
+	_uint		m_iMaxHp;
 
 public:
-	static CMonsterB1*	Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel);
+	static CMonsterB1* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel);
 
 private:
 	virtual void		Free();
