@@ -15,6 +15,9 @@
 
 class CNode : public CGameObject
 {
+public:
+	enum USERID { MONSTER_N2, MONSTER_B1, USERID_END };
+
 private:
 	explicit	CNode(LPDIRECT3DDEVICE9 pGraphicDev);
 	explicit	CNode(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel);
@@ -34,6 +37,12 @@ public:
 	void				Set_Depth(const _float& fDepth) { m_fDepth = fDepth; }
 	const _vec3&		Get_NodePos() { return m_vPos; }
 	const _vec3&		Get_NodeDir() { return m_vDir; }
+
+	void				Set_UserID(USERID eID) { m_eUserID = eID; }
+	void				Set_AcmlTime(const _float& fTime) { m_fAcmlTime = fTime; }
+	void				Set_Material();
+	void				Reset_Material();
+	void				Switch_UseMaterial() { m_bUseMtrl = !m_bUseMtrl; }
 
 private:
 	HRESULT				Add_Component();
@@ -57,6 +66,12 @@ private:
 	_matrix				m_matTex;
 	CTransform*			m_pOwnerTC;
 	const _tchar*		m_pProtoTexKey;
+
+	// 패턴 관련
+	USERID			m_eUserID;
+	_float			m_fAcmlTime;
+	_bool			m_bMtrl = false;
+	_bool			m_bUseMtrl = false;
 
 public:
 	static CNode* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, CTransform* pOwnerTC, const _tchar* pProtoTexKey);

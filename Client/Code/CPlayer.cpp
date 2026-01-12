@@ -608,8 +608,8 @@ void CPlayer::Attack_HitBox()
 	else					fX = m_vPos.x - 1.2f;
 
 
-	AABB tAABB = { fX, m_vPos.y, m_vPos.z,
-					1.5f, 1.f, 1.5f };
+	AABB tAABB = { fX, m_vPos.y, m_vPos.z - 1.f,
+					2.f, 1.f, 2.f };
 
 	if(g_bDebug) CRenderer::GetInstance()->Add_TestCollider(tAABB, 60);
 
@@ -628,10 +628,6 @@ void CPlayer::Attack_HitBox()
 
 void	CPlayer::OnCollision(CGameObject* pObject)
 {
-	if (pObject->Get_OBJID() == OID_MONSTER)
-	{
-		//m_pTransformCom->Set_Pos(10.f, 10.f, 10.f);
-	}
 }
 
 CPlayer* CPlayer::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel)

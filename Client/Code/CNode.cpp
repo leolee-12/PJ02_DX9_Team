@@ -11,7 +11,8 @@ CNode::CNode(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev),
 	m_fFrame(0.f),
 	m_fFrameEnd(0.f),
-	m_fFrameSpeed(0.f)
+	m_fFrameSpeed(0.f),
+	m_eUserID(USERID_END)
 {
 }
 
@@ -19,7 +20,8 @@ CNode::CNode(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel)
 	: CGameObject(pGraphicDev, StageChannel),
 	m_fFrame(0.f),
 	m_fFrameEnd(0.f),
-	m_fFrameSpeed(0.f)
+	m_fFrameSpeed(0.f),
+	m_eUserID(USERID_END)
 {
 }
 
@@ -28,7 +30,8 @@ CNode::CNode(const CNode& rhs)
 	: CGameObject(rhs),
 	m_fFrame(0.f),
 	m_fFrameEnd(0.f),
-	m_fFrameSpeed(0.f)
+	m_fFrameSpeed(0.f),
+	m_eUserID(rhs.m_eUserID)
 {
 }
 
@@ -81,9 +84,13 @@ void CNode::Render_GameObject()
 
 	Set_Texture();
 
+	Set_Material();
+
 	m_pBufferCom->Render_Buffer();
 
 	m_pGraphicDev->SetTextureStageState(0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE);
+
+	Reset_Material();
 }
 
 void CNode::Set_NodeScale(const _vec3& vScale)
@@ -94,6 +101,55 @@ void CNode::Set_NodeScale(const _vec3& vScale)
 void CNode::Set_NodePos(const _vec3& vPos)
 {
 	m_pTransformCom->Set_Pos(vPos.x, vPos.y, vPos.z);
+}
+
+void CNode::Set_Material()
+{
+	if (!m_bUseMtrl) return;
+
+	switch (m_eUserID)
+	{
+	case MONSTER_B1:
+	{
+		_float fMax = 1.f;
+		_float fRatio = min(m_fAcmlTime / 2.f, 1.f);
+
+		// 텍스처 색상 혼합
+		m_pGraphicDev->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_ADD);
+		m_pGraphicDev->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
+		m_pGraphicDev->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_TFACTOR);
+
+		DWORD dwCol = DWORD(255 * fRatio * fMax);
+		m_pGraphicDev->SetRenderState(D3DRS_TEXTUREFACTOR, D3DCOLOR_ARGB(255, dwCol, DWORD(dwCol * 0.1f), DWORD(dwCol * 0.1f)));
+	}
+	break;
+
+	default:
+		break;
+	}
+	
+	m_bMtrl = true;
+}
+
+void CNode::Reset_Material()
+{
+	if (!m_bMtrl) return;
+
+	switch (m_eUserID)
+	{
+	case MONSTER_B1:
+	{
+		m_pGraphicDev->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
+		m_pGraphicDev->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_DIFFUSE);
+		m_pGraphicDev->SetRenderState(D3DRS_TEXTUREFACTOR, D3DCOLOR_ARGB(255, 255, 255, 255));
+	}
+	break;
+
+	default:
+		break;
+	}
+
+	m_bMtrl = false;
 }
 
 HRESULT CNode::Add_Component()
@@ -142,6 +198,7 @@ void CNode::Ready_Variable()
 void CNode::Move_Frame(const _float& fTimeDelta)
 {
 	m_fFrame += m_fFrameSpeed * fTimeDelta;
+	m_fAcmlTime += fTimeDelta;
 
 	if (m_fFrame >= m_fFrameEnd)
 	{

@@ -17,6 +17,8 @@
 #include "CMonsterN1.h"
 #include "CMonsterN2.h"
 #include "CMonsterN3.h"
+#include "CMonsterB1.h"
+#include "CMonsterB2.h"
 #include "CMapLoader.h"
 #include "CTileMgr.h"
 #include "CMapObject.h"
@@ -24,7 +26,6 @@
 #include "CCollisionMgr.h"
 #include "CGauge.h"
 #include "CBishop_Leshy.h"
-#include "CMonsterB1.h"
 #include "CBishop_Heket.h"
 #include "CBishop_Kallamar.h"
 #include "CBishop_Shamura.h"
@@ -214,15 +215,15 @@ HRESULT CDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 					break;
 				case 1:
 					// Worm | 일반몬스터 |
-					pGameObject = CMonsterN1::Create(m_pGraphicDev, m_pMessageChannel);
-					if (pGameObject)
-					{
-						Engine::CTransform* pTransform = dynamic_cast<Engine::CTransform*>(
-							pGameObject->Get_Component(ID_DYNAMIC, L"Com_Transform"));
-						if (pTransform)
-							pTransform->Set_Pos(spawn.x, 0.f, spawn.z);
-						pLayer->Add_GameObject(L"Monster", pGameObject);
-					}
+					//pGameObject = CMonsterN1::Create(m_pGraphicDev, m_pMessageChannel);
+					//if (pGameObject)
+					//{
+					//	Engine::CTransform* pTransform = dynamic_cast<Engine::CTransform*>(
+					//		pGameObject->Get_Component(ID_DYNAMIC, L"Com_Transform"));
+					//	if (pTransform)
+					//		pTransform->Set_Pos(spawn.x, 0.f, spawn.z);
+					//	pLayer->Add_GameObject(L"Monster", pGameObject);
+					//}
 					break;
 				case 2:
 					// Humanoid | 일반몬스터 |
@@ -328,7 +329,7 @@ HRESULT CDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 
 	NULL_CHECK_RETURN(pGameObject, E_FAIL)
 
-		if (FAILED(pLayer->Add_GameObject(L"Monster", pGameObject)))
+		if (FAILED(pLayer->Add_GameObject(L"Boss", pGameObject)))
 			return E_FAIL;
 
 	m_mapLayer.insert({ pLayerTag , pLayer });

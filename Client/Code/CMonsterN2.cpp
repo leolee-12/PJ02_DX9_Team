@@ -462,6 +462,23 @@ CMonsterN2* CMonsterN2::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* S
 	return pMonster;
 }
 
+CMonsterN2* CMonsterN2::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, _vec3 vPos)
+{
+	CMonsterN2* pMonster = new CMonsterN2(pGraphicDev, StageChannel);
+
+	if (FAILED(pMonster->Ready_GameObject()))
+	{
+		Safe_Release(pMonster);
+		MSG_BOX("pMonster Create Failed");
+		return nullptr;
+	}
+
+	pMonster->m_pTransformCom->Set_Pos(vPos.x, vPos.y, vPos.z);
+	pMonster->m_pTransformCom->Update_Component(0.f);
+
+	return pMonster;
+}
+
 void CMonsterN2::Free()
 {
 	for (_uint i = 0; i < 3; ++i)

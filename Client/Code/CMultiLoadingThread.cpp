@@ -2,11 +2,12 @@
 #include "CMultiLoadingThread.h"
 #include "CProtoMgr.h"
 #include "CPersistentMgr.h"
+#include "LoadObjectList.h"
 #include "CN1_AI.h"
 #include "CN2_AI.h"
 #include "CN3_AI.h"
 #include "CB1_AI.h"
-#include "LoadObjectList.h"
+#include "CB2_AI.h"
 
 CMultiLoadingThread::CMultiLoadingThread(LPDIRECT3DDEVICE9 pGraphicDev)
     : m_eLoading(LOADING_END)
@@ -347,7 +348,8 @@ void CMultiLoadingThread::NonTex_for_Dungeon()
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_N1_AI", CN1_AI::Create(m_pGraphicDev, 6.f, 1.f));
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_N2_AI", CN2_AI::Create(m_pGraphicDev, 6.f, 4.f));
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_N3_AI", CN3_AI::Create(m_pGraphicDev, 6.f, 3.f));
-    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_B1_AI", CB1_AI::Create(m_pGraphicDev, 40.f, 5.f));
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_B1_AI", CB1_AI::Create(m_pGraphicDev, 40.f, 10.f));
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_B2_AI", CB2_AI::Create(m_pGraphicDev, 40.f, 20.f));
 
     Load_Object_Texture(Tutorial_Texture);
 }

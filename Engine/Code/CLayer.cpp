@@ -43,14 +43,11 @@ _int CLayer::Update_Layer(const _float& fTimeDelta)
 			return iResult;
 	}*/
 
-	for (auto iter = m_mapObject.begin();
-		iter != m_mapObject.end();
-		++iter)
+	for (auto iter = m_mapObject.begin(); iter != m_mapObject.end(); ++iter)
 	{
 		auto& vecOrigin = iter->second;
 
-		for (auto veciter = vecOrigin.begin();
-			veciter != vecOrigin.end();)
+		for (auto veciter = vecOrigin.begin(); veciter != vecOrigin.end();)
 		{
 			iResult = (*veciter)->Update_GameObject(fTimeDelta);
 			if (iResult == DEAD) {

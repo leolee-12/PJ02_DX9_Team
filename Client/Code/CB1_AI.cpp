@@ -49,20 +49,16 @@ HRESULT CB1_AI::Ready_AI(const _float& fDetectRange, const _float& fInteractRang
 
 	// 공격 패턴 설정
 	m_iDequeMinSize = 3;
-	//m_vecAtkPatterns.push_back({ CMonsterB1::B1S_JUMP, 40, true });
+	m_vecAtkPatterns.push_back({ CMonsterB1::B1S_JUMP, 40, true });
 	m_vecAtkPatterns.push_back({ CMonsterB1::B1S_PREPARE, 40, true });
 	m_vecAtkPatterns.push_back({ CMonsterB1::B1S_SHOOT, 40, true });
-	//m_vecAtkPatterns.push_back({ CMonsterB1::B1S_SUMMON, 20, false });
+	m_vecAtkPatterns.push_back({ CMonsterB1::B1S_SUMMON, 20, true });
 
 	// 시연용 : 모든 패턴이 순차적으로 실행
 	m_patternDeque.push_back(CMonsterB1::B1S_JUMP);
-	//m_patternDeque.push_back(CMonsterB1::B1S_PREPARE);
+	m_patternDeque.push_back(CMonsterB1::B1S_PREPARE);
 	m_patternDeque.push_back(CMonsterB1::B1S_SHOOT);
-	//m_patternDeque.push_back(CMonsterB1::B1S_SUMMON);
-
-	m_patternDeque.push_back(CMonsterB1::B1S_SHOOT);
-	m_patternDeque.push_back(CMonsterB1::B1S_SHOOT);
-	m_patternDeque.push_back(CMonsterB1::B1S_SHOOT);
+	m_patternDeque.push_back(CMonsterB1::B1S_SUMMON);
 
 	// 게임용 : 가중치와 난수를 통해 패턴을 채워줌
 	Refill_Pattern();
@@ -76,14 +72,14 @@ void CB1_AI::Enter_State(const _uint& iState)
 	{
 	case CMonsterB1::B1S_CRAWL:
 	{
-		m_fSpeed = 0.03f;
+		m_fSpeed = 0.05f;
 		_vec3 vPrevPos, vDesiredDir;
 
 		if ((!m_bChase) || (m_fAcmlTime < 2.f))			vDesiredDir = Randomize_Dir();
 		else if ((m_bChase) && (m_fAcmlTime >= 2.f))	vDesiredDir = Compute_TargetDir();
 
 		m_pOwnerTC->Get_Info(INFO_POS, &vPrevPos);
-		m_vDir = Compute_LimitedDir(60.f, m_vDir, vDesiredDir);
+		m_vDir = Compute_LimitedDir(120.f, m_vDir, vDesiredDir);
 		m_vLerpPos = vPrevPos + m_vDir * 3.f;
 		m_vLerpPos.x += Get_Rand_Int(-5, 5) * 0.3f;	// -1.5f ~ 1.5f 난수
 		m_vLerpPos.z += Get_Rand_Int(-5, 5) * 0.3f;	// -1.5f ~ 1.5f 난수
@@ -103,11 +99,22 @@ void CB1_AI::Enter_State(const _uint& iState)
 	break;
 
 	case CMonsterB1::B1S_PREPARE:
-		break;
+	{
+		m_fAcmlTime = 0.f;
+		m_fSpeed = 0.3f;
+		m_pOwnerTC->Get_Info(INFO_POS, &m_vLerpPos);
+		m_vLerpPos -= m_vDir * 1.f;
+	}
+	break;
 
 	case CMonsterB1::B1S_ATTACK:
+	{
 		m_fAcmlTime = 0.f;
-		break;
+		m_fSpeed = 0.1f;
+		m_pOwnerTC->Get_Info(INFO_POS, &m_vLerpPos);
+		m_vLerpPos += m_vDir * 15.f;
+	}
+	break;
 
 	case CMonsterB1::B1S_SHOOT:
 		m_fAcmlTime = 0.f;
@@ -116,6 +123,7 @@ void CB1_AI::Enter_State(const _uint& iState)
 
 	case CMonsterB1::B1S_SUMMON:
 		m_fAcmlTime = 0.f;
+		m_bOnce = true;
 		break;
 
 	case CMonsterB1::B1S_ROAR:
@@ -327,10 +335,23 @@ void CB1_AI::Update_Land(const _float& fTimeDelta)
 
 void CB1_AI::Update_Prepare(const _float& fTimeDelta)
 {
+	_vec3 vDesiredDir = Compute_TargetDir();
+	m_vDir = Compute_LimitedDir(60.f * fTimeDelta, m_vDir, vDesiredDir);
+
+	_vec3 vPos;
+	m_pOwnerTC->Get_Info(INFO_POS, &vPos);
+	D3DXVec3Lerp(&vPos, &vPos, &m_vLerpPos, m_fSpeed);
+	m_pOwnerTC->Set_Pos(vPos.x, vPos.y, vPos.z);
+
+	if (m_fAcmlTime >= 2.f) Change_State(CMonsterB1::B1S_ATTACK);
 }
 
 void CB1_AI::Update_Attack(const _float& fTimeDelta)
 {
+	_vec3 vPos;
+	m_pOwnerTC->Get_Info(INFO_POS, &vPos);
+	D3DXVec3Lerp(&vPos, &vPos, &m_vLerpPos, m_fSpeed);
+	m_pOwnerTC->Set_Pos(vPos.x, vPos.y, vPos.z);
 }
 
 void CB1_AI::Update_Shoot(const _float& fTimeDelta)
@@ -338,7 +359,7 @@ void CB1_AI::Update_Shoot(const _float& fTimeDelta)
 	if (m_bOnce)
 	{
 		if(m_pOwner)
-			m_pOwner->Launch_Projectile(10);
+			m_pOwner->Launch_Projectile(20);
 
 		m_bOnce = false;
 	}
@@ -346,6 +367,13 @@ void CB1_AI::Update_Shoot(const _float& fTimeDelta)
 
 void CB1_AI::Update_Summon(const _float& fTimeDelta)
 {
+	if (m_bOnce)
+	{
+		if (m_pOwner)
+			m_pOwner->Summon_Minion(7);
+
+		m_bOnce = false;
+	}
 }
 
 void CB1_AI::Update_Roar(const _float& fTimeDelta)
@@ -410,6 +438,38 @@ void CB1_AI::Anim_End(CMonsterB1::MONSTER_B1_STATE eState)
 	case CMonsterB1::B1S_SPAWN:
 		Change_State(CMonsterB1::B1S_ROAR);
 		break;
+	}
+}
+
+void CB1_AI::Push_Front_Pattern(CMonsterB1::MONSTER_B1_STATE eState)
+{
+	size_t iSize = m_vecAtkPatterns.size();
+
+	for (size_t i = 0; i < iSize; ++i)
+	{
+		if (m_vecAtkPatterns[i].eType == eState)
+		{
+			m_patternDeque.push_front(eState);
+			return;
+		}
+	}
+}
+
+void CB1_AI::Set_Weight(CMonsterB1::MONSTER_B1_STATE eState, _uint iNewWeight)
+{
+	size_t iSize = m_vecAtkPatterns.size();
+
+	for (size_t i = 0; i < iSize; ++i)
+	{
+		if (m_vecAtkPatterns[i].eType == eState)
+		{
+			m_vecAtkPatterns[i].iWeight = iNewWeight;
+
+			if (iNewWeight == 0)	m_vecAtkPatterns[i].bIsActive = false;
+			else					m_vecAtkPatterns[i].bIsActive = true;
+
+			return;
+		}
 	}
 }
 

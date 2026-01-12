@@ -32,6 +32,7 @@ public:
 	virtual void		OnCollision(CGameObject* pObject) {};
 
 	void				Launch_Projectile(const _uint& iCount);
+	void				Summon_Minion(const _uint& iCount);
 
 private:
 	HRESULT				Add_Component();
@@ -42,6 +43,8 @@ private:
 	void				Check_Frame();
 	void				Move_Frame(const _float& fTimeDelta);
 	void				Set_Texture();
+	void				Set_Material();
+	void				Reset_Material();
 
 	void				Attack_HitBox();
 	void				Attacked(const _int& iAttack);
@@ -66,8 +69,10 @@ private:
 	CNode*		m_pNode[4];
 
 	// 패턴 관련
-	_uint		m_iPhase;
-	_uint		m_iMaxHp;
+	_uint			m_iPhase;
+	_uint			m_iMaxHp;
+	_bool			m_bMtrl = false;
+	_float			m_fAcmlTime;
 
 public:
 	static CMonsterB1* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel);
