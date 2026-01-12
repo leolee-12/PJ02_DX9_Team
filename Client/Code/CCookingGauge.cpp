@@ -1,30 +1,32 @@
 #include "pch.h"
-#include "CGaugeCover.h"
+#include "CCookingGauge.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
 
-CGaugeCover::CGaugeCover(LPDIRECT3DDEVICE9 pGraphicDev)
+
+CCookingGauge::CCookingGauge(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CUi(pGraphicDev), m_pBufferCom(nullptr), m_pTransformCom(nullptr)
 {
 	ZeroMemory(&m_vPos, sizeof(_vec3));
 }
 
-CGaugeCover::~CGaugeCover()
+CCookingGauge::~CCookingGauge()
 {
 }
 
-HRESULT CGaugeCover::Ready_GameObject()
+HRESULT CCookingGauge::Ready_GameObject()
 {
 	if (FAILED(Add_Component()))
 		return E_FAIL;
 
-	m_pTransformCom->Set_Scale( (50.f * 2.f)*1.15f, (50.f * 2.f)*1.15f, 0.f );
-	m_pTransformCom->Set_Pos( -330.f - 240.f, 230.f + 60.f, 0.1f );
+	m_pTransformCom->Set_Scale(598 * 0.4* 0.3f, 76 * 0.4, 0.f);
+	m_pTransformCom->Set_Pos(0, WINCY / 5, 0.2f);
 
+	fxRange = 50.0f;
 	return S_OK;
 }
 
-HRESULT CGaugeCover::Ready_Material()
+HRESULT CCookingGauge::Ready_Material()
 {
 	D3DMATERIAL9			tMtrl;
 	ZeroMemory(&tMtrl, sizeof(D3DMATERIAL9));
@@ -41,7 +43,7 @@ HRESULT CGaugeCover::Ready_Material()
 	return S_OK;
 }
 
-_int CGaugeCover::Update_GameObject(const _float& fTimeDelta)
+_int CCookingGauge::Update_GameObject(const _float& fTimeDelta)
 {
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
@@ -50,14 +52,14 @@ _int CGaugeCover::Update_GameObject(const _float& fTimeDelta)
 	return iExit;
 }
 
-void CGaugeCover::LateUpdate_GameObject(const _float& fTimeDelta)
+void CCookingGauge::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
 	m_pTransformCom->Get_Info(INFO_POS, &m_vPos);
 	Compute_ViewDepth_Ortho(&m_vPos);
 }
 
-void CGaugeCover::Render_GameObject()
+void CCookingGauge::Render_GameObject()
 {
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
 
@@ -68,12 +70,12 @@ void CGaugeCover::Render_GameObject()
 	m_pBufferCom->Render_Buffer();
 }
 
-void CGaugeCover::OnCollision(CGameObject* pObject)
+void CCookingGauge::OnCollision(CGameObject* pObject)
 {
 
 }
 
-HRESULT CGaugeCover::Add_Component()
+HRESULT CCookingGauge::Add_Component()
 {
 	Engine::CComponent* pComponent = nullptr;
 
@@ -96,7 +98,7 @@ HRESULT CGaugeCover::Add_Component()
 	m_mapComponent[ID_DYNAMIC].insert({ L"Com_Transform", pComponent });
 
 	pComponent = m_pTextureCom = dynamic_cast<Engine::CTexture*>
-		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_GaugeCover"));
+		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_CookingBarGreen"));
 
 	if (nullptr == pComponent)
 		return E_FAIL;
@@ -106,23 +108,44 @@ HRESULT CGaugeCover::Add_Component()
 	return S_OK;
 }
 
-
-
-CGaugeCover* CGaugeCover::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+void CCookingGauge::Set_RandomPosX()
 {
-	CGaugeCover* pGaugeCover = new CGaugeCover(pGraphicDev);
+
+	float fRandomX = Engine::Get_Rand_Float(-fxRange, fxRange);
+
+	m_pTransformCom->Set_Pos(fRandomX, WINCY / 5, 0.2f);
+}
+
+void CCookingGauge::Get_GaugeRange(float& fLeft, float& fRight)
+{
+	_vec3 vPos;
+	m_pTransformCom->Get_Info(INFO_POS, &vPos);
+
+
+	// 0.3f임시 값 상수로 넣어둔거 나중에 수정해야함
+	float  xHarlf = (598.f * 0.4f *0.3f * 0.5f) * 0.5f;
+
+	fLeft  = vPos.x - xHarlf;
+	fRight = vPos.x + xHarlf;
+}
+
+
+
+CCookingGauge* CCookingGauge::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+{
+	CCookingGauge* pGaugeCover = new CCookingGauge(pGraphicDev);
 
 	if (FAILED(pGaugeCover->Ready_GameObject()))
 	{
 		Safe_Release(pGaugeCover);
-		MSG_BOX("pGaugeCover Create Failed");
+		MSG_BOX("pCookingGauge Create Failed");
 		return nullptr;
 	}
 
 	return pGaugeCover;
 }
 
-void CGaugeCover::Free()
+void CCookingGauge::Free()
 {
 	CUi::Free();
 }

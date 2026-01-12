@@ -73,7 +73,7 @@ _int CLogo::Update_Scene(const _float& fTimeDelta)
 			case LS_EDIT:
 				// 임시입니다.
 				LSTmp = LOADING_DUNGEON;
-				break;
+				break;	
 			case LS_EXIT:
 				DestroyWindow(g_hWnd);
 				return EXIT;

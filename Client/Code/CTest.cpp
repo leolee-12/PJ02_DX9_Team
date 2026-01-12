@@ -98,7 +98,6 @@ _int CTest::Update_Scene(const _float& fTimeDelta)
 
 
 
-
 	_int iExit = Engine::CScene::Update_Scene(fTimeDelta);
 
 	return iExit;
@@ -277,7 +276,6 @@ HRESULT CTest::Ready_UI_Layer(const _tchar* pLayerTag)
 	if (FAILED(pLayer->Add_GameObject(L"Gauge", pGameObject)))
 		return E_FAIL;
 
-	
 
 
 
