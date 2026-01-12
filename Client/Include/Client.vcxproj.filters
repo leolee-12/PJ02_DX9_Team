@@ -118,9 +118,6 @@
     <Filter Include="01. Scene">
       <UniqueIdentifier>{60ad0de0-adf1-440e-987a-796e2ff8332f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. Scene\00. Logo">
-      <UniqueIdentifier>{0d271025-e384-4299-bf6d-972bbc338575}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01. Scene\99. Loading">
       <UniqueIdentifier>{162da509-93eb-497c-bb4b-016c0b3d5fae}</UniqueIdentifier>
     </Filter>

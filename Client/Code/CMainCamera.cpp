@@ -59,7 +59,7 @@ HRESULT CMainCamera::Ready_GameObject(
 
 	m_vAt = vTargetPos;
 	vTargetPos.z -= 15.f;
-	vTargetPos.y += 15.f;
+	vTargetPos.y += 10.f;
 	m_vEye = vTargetPos;
 	m_vUp = { 0.f, 1.f, 0.f };
 
@@ -76,7 +76,7 @@ HRESULT CMainCamera::Ready_GameObject(
 	D3DXVec3Cross(&m_vDirUp, &m_vLook, &m_vRight);
 	D3DXVec3Normalize(&m_vDirUp, &m_vDirUp);
 
-	m_fZoom = 15.f;
+	m_fZoom = 18.f;
 
 
 	return S_OK;
@@ -106,7 +106,7 @@ void CMainCamera::Default_CameraSetting(const _float& fTimeDelta)
 	m_pTargetTransformCom->Get_Info(INFO_POS, &vTargetPos);
 	D3DXVec3Lerp(&m_vAt, &m_vAt, &vTargetPos, fTimeDelta * m_fLerpSpeed);
 	vTargetPos.z -= m_fZoom;
-	vTargetPos.y += m_fZoom;
+	vTargetPos.y += (m_fZoom * 13.f) / 15.f;
 	D3DXVec3Lerp(&m_vEye, &m_vEye, &vTargetPos, fTimeDelta * m_fLerpSpeed);
 }
 
@@ -164,7 +164,7 @@ void CMainCamera::Set_Zoom(_float fZoom)
 
 void CMainCamera::Reset_Zoom()
 {
-	m_fZoom = 15.f;
+	m_fZoom = 30.f;
 }
 
 
