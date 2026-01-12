@@ -19,8 +19,8 @@ HRESULT CGaugeStar::Ready_GameObject()
 	if (FAILED(Add_Component()))
 		return E_FAIL;
 
-	m_pTransformCom->Set_Scale(30.f * 2.f, 28.f * 2.f, 0.f);
-	m_pTransformCom->Set_Pos(-345.f - 240.f, 243.f + 60.f, 0.11f);
+	m_pTransformCom->Set_Scale((30.f * 2.f)*1.15f, (28.f * 2.f)*1.15f, 0.f);
+	m_pTransformCom->Set_Pos(-325.f - 240.f, 223.f + 60.f, 0.11f);
 
 	return S_OK;
 }

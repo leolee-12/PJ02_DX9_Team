@@ -123,7 +123,7 @@ void CRenderer::Render_UI(LPDIRECT3DDEVICE9& pGraphicDev)
 	_matrix matView, matProj;
 	D3DXMatrixIdentity(&matView);
 	D3DXMatrixOrthoLH(&matProj, (_float)WINCX, (_float)WINCY, 0.f, 1.f);
-
+		
 	pGraphicDev->SetTransform(D3DTS_VIEW, &matView);
 	pGraphicDev->SetTransform(D3DTS_PROJECTION, &matProj);
 

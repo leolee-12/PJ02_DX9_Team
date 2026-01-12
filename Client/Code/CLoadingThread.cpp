@@ -197,6 +197,28 @@ _uint CLoadingThread::Loading_ForTest()
 
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_PassionIcon", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Player/PassionGauge/PassionIcon_%d.png", 2));
 
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_CookingBarkCover", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingMiniGame/CookingBar_Border.png", 1));
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_CookingBarRed", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingMiniGame/CookingBar_Red.png", 1));
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_CookingBarGreen", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingMiniGame/CookingBar_Green.png", 1));
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_CookingMarker", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingMiniGame/Cooking_Marker.png", 1));
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_CookingButton", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingMiniGame/CookingButton.png", 1));
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_CookingTarget", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingMiniGame/FoodTexture_%d.png", 1));
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_CookingTargetBack", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingMiniGame/CookingTargetBack.png", 1));
+
+
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_CookingSelectBack", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/CookingSelectBack.png", 1));
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_CookingSelectSlot", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/SelectSlot.png", 1));
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_CookingSelectStartBtn", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/SelectFoodTexture.png", 1));
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_CookingCardInfoCardBack", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/InfoCardBackground.png", 1));
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_CookingCardInfoStarFilled", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/StarFilled.png", 1));
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_CookingCardInfoStar", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/Star.png", 1));
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_CookingCardInfoRecipe", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/Recipe.png", 1));
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_CookingCardInfoFaithArrow_Down", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/FaithArrow_Down.png", 1));
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_CookingCardInfoFaithArrow_Up", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/FaithArrow_Up.png", 1));
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_CookingCardInfoFaithTexture", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/FaithTexture.png", 1));
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_CookingCardInfoRightPattern", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/Rightpattern.png", 1));
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_CookingCardInfoLeftPattern", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/Leftpattern.png", 1));
+
 
 
     //Sleep(2000);

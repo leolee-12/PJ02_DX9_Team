@@ -21,6 +21,8 @@
 #include "CPlayer.h"
 #include "CMonster.h"
 #include "CTerrain.h"
+#include "CCookingMiniGameUI.h"
+#include "CCookingSelectUI.h"
 
 CTest::CTest(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -96,6 +98,10 @@ _int CTest::Update_Scene(const _float& fTimeDelta)
 		m_pTestGauge->Add_GaugeValue(0.5f);
 	}
 
+	if (CDInputMgr::GetInstance()->Key_Down(DIK_SPACE))
+	{
+		m_pCookingMiniGameUI->CookingInput();
+	}
 
 
 
@@ -289,7 +295,23 @@ HRESULT CTest::Ready_UI_Layer(const _tchar* pLayerTag)
 	if (FAILED(pLayer->Add_GameObject(L"Gauge", pGameObject)))
 		return E_FAIL;
 
-	
+	pGameObject = m_pCookingMiniGameUI= CCookingMiniGameUI::Create(m_pGraphicDev);
+
+	if (nullptr == pGameObject)
+		return E_FAIL;
+
+	if (FAILED(pLayer->Add_GameObject(L"CookingMiniGame", pGameObject)))
+		return E_FAIL;
+
+	pGameObject = CCookingSelectUI::Create(m_pGraphicDev);
+
+	if (nullptr == pGameObject)
+		return E_FAIL;
+
+	if (FAILED(pLayer->Add_GameObject(L"CookingSelectUI", pGameObject)))
+		return E_FAIL;
+
+
 
 
 

@@ -1,30 +1,30 @@
 #include "pch.h"
-#include "CGaugeCover.h"
+#include "CCookingInfoCardRightPattern.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
 
-CGaugeCover::CGaugeCover(LPDIRECT3DDEVICE9 pGraphicDev)
+CCookingInfoCardRightPattern::CCookingInfoCardRightPattern(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CUi(pGraphicDev), m_pBufferCom(nullptr), m_pTransformCom(nullptr)
 {
 	ZeroMemory(&m_vPos, sizeof(_vec3));
 }
 
-CGaugeCover::~CGaugeCover()
+CCookingInfoCardRightPattern::~CCookingInfoCardRightPattern()
 {
 }
 
-HRESULT CGaugeCover::Ready_GameObject()
+HRESULT CCookingInfoCardRightPattern::Ready_GameObject()
 {
 	if (FAILED(Add_Component()))
 		return E_FAIL;
 
-	m_pTransformCom->Set_Scale( (50.f * 2.f)*1.15f, (50.f * 2.f)*1.15f, 0.f );
-	m_pTransformCom->Set_Pos( -330.f - 240.f, 230.f + 60.f, 0.1f );
+	m_pTransformCom->Set_Scale(256 * 1.5f, 256 * 2.0f, 0.f);
+	m_pTransformCom->Set_Pos(WINCX / 4, 0, 0.1f);
 
 	return S_OK;
 }
 
-HRESULT CGaugeCover::Ready_Material()
+HRESULT CCookingInfoCardRightPattern::Ready_Material()
 {
 	D3DMATERIAL9			tMtrl;
 	ZeroMemory(&tMtrl, sizeof(D3DMATERIAL9));
@@ -41,7 +41,7 @@ HRESULT CGaugeCover::Ready_Material()
 	return S_OK;
 }
 
-_int CGaugeCover::Update_GameObject(const _float& fTimeDelta)
+_int CCookingInfoCardRightPattern::Update_GameObject(const _float& fTimeDelta)
 {
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
@@ -50,30 +50,28 @@ _int CGaugeCover::Update_GameObject(const _float& fTimeDelta)
 	return iExit;
 }
 
-void CGaugeCover::LateUpdate_GameObject(const _float& fTimeDelta)
+void CCookingInfoCardRightPattern::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
 	m_pTransformCom->Get_Info(INFO_POS, &m_vPos);
 	Compute_ViewDepth_Ortho(&m_vPos);
 }
 
-void CGaugeCover::Render_GameObject()
+void CCookingInfoCardRightPattern::Render_GameObject()
 {
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
 
-
 	m_pTextureCom->Set_Texture();
-
 
 	m_pBufferCom->Render_Buffer();
 }
 
-void CGaugeCover::OnCollision(CGameObject* pObject)
+void CCookingInfoCardRightPattern::OnCollision(CGameObject* pObject)
 {
 
 }
 
-HRESULT CGaugeCover::Add_Component()
+HRESULT CCookingInfoCardRightPattern::Add_Component()
 {
 	Engine::CComponent* pComponent = nullptr;
 
@@ -96,7 +94,7 @@ HRESULT CGaugeCover::Add_Component()
 	m_mapComponent[ID_DYNAMIC].insert({ L"Com_Transform", pComponent });
 
 	pComponent = m_pTextureCom = dynamic_cast<Engine::CTexture*>
-		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_GaugeCover"));
+		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_CookingCardInfoRightPattern"));
 
 	if (nullptr == pComponent)
 		return E_FAIL;
@@ -108,21 +106,21 @@ HRESULT CGaugeCover::Add_Component()
 
 
 
-CGaugeCover* CGaugeCover::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+CCookingInfoCardRightPattern* CCookingInfoCardRightPattern::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 {
-	CGaugeCover* pGaugeCover = new CGaugeCover(pGraphicDev);
+	CCookingInfoCardRightPattern* pCookingInfoCardRightPattern = new CCookingInfoCardRightPattern(pGraphicDev);
 
-	if (FAILED(pGaugeCover->Ready_GameObject()))
+	if (FAILED(pCookingInfoCardRightPattern->Ready_GameObject()))
 	{
-		Safe_Release(pGaugeCover);
-		MSG_BOX("pGaugeCover Create Failed");
+		Safe_Release(pCookingInfoCardRightPattern);
+		MSG_BOX("pCCookingInfoCardRightPattern Create Failed");
 		return nullptr;
 	}
 
-	return pGaugeCover;
+	return pCookingInfoCardRightPattern;
 }
 
-void CGaugeCover::Free()
+void CCookingInfoCardRightPattern::Free()
 {
 	CUi::Free();
 }
