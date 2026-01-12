@@ -7,6 +7,7 @@
 #include "CCollisionMgr.h"
 #include "CNode.h"
 #include "CB1_AI.h"
+#include "CProjectile.h"
 
 CMonsterB1::CMonsterB1(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CMonster(pGraphicDev),
@@ -196,6 +197,7 @@ void CMonsterB1::Ready_Variable()
 	m_pColliderCom->Set_AABB(tAABB);
 
 	// AI 세팅
+	m_pAICom->Set_Owner(this);
 	m_pAICom->Set_OwnerTransform(m_pTransformCom);
 	m_pAICom->Set_TargetTransform(CPersistentMgr::GetInstance()->Get_PlayerTransform());
 	m_pAICom->Set_State<MONSTER_B1_STATE>(B1S_SPAWN);
@@ -354,7 +356,7 @@ void CMonsterB1::Set_Texture()
 {
 	_vec3 vDir = *(m_pAICom->Get_Dir());		// AI로부터 받아온 방향
 	_bool bFlipX = vDir.x > 0.f ? true : false;	// 반전 여부
-	_uint iFrame = m_fFrame;					// 현재 프레임
+	_uint iFrame = _uint(m_fFrame);				// 현재 프레임
 	_uint iTexIdx = _uint(m_eCurState);			// 텍스처 인덱스
 
 	D3DXMatrixIdentity(&m_matTex);
@@ -512,6 +514,40 @@ void CMonsterB1::Check_Phase()
 		return;
 	}
 }
+
+void CMonsterB1::Launch_Projectile(const _uint& iCount)
+{
+	if (iCount > 1000) return;
+
+	_float fRadian = 0.f;
+	_float fGap = 2.f * D3DX_PI / iCount;
+	_float fProjectileSpeed = 5.f;
+	_vec3 vPos{ m_vPos.x, m_vPos.y - m_fGroundY, m_vPos.z };
+
+
+	for (_uint i = 0; i < iCount; ++i)
+	{
+		_vec3 vSpeed{ cosf(fRadian) * fProjectileSpeed, 0.f, sinf(fRadian) * fProjectileSpeed };
+
+		CGameObject* pProjectile = CProjectile::Create(m_pGraphicDev, vPos, vSpeed, false);
+
+		if (pProjectile)
+		{
+			IMessageChannel::EVENT EProjectile;
+			EProjectile.strType = L"Obj.Add";
+			EProjectile.eOBJID = Engine::OID_PROJECTILE;
+			EProjectile.hmapData.emplace(L"Obj", pProjectile);
+			EProjectile.hmapData.emplace(L"LayerTag", L"GameLogic_Layer");
+			EProjectile.hmapData.emplace(L"ObjTag", L"Projectile");
+			m_pMessageChannel->Publish(EProjectile);
+		}
+
+		fRadian += fGap;
+	}
+
+	// TODO: 여기에 return 문을 삽입합니다.
+}
+
 
 CMonsterB1* CMonsterB1::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel)
 {

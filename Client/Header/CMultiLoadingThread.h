@@ -3,7 +3,7 @@
 #include "Engine_Define.h"
 #include <concurrent_queue.h>
 
-const _uint WORKER_COUNT = 4;
+const _uint WORKER_COUNT = 7;
 
 class CMultiLoadingThread : public CBase
 {

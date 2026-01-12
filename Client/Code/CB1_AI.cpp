@@ -9,8 +9,9 @@ CB1_AI::CB1_AI(LPDIRECT3DDEVICE9 pGraphicDev)
 	m_bChase(false),
 	m_fAngle(0.f),
 	m_fGravity(0.f),
-	m_fGroundY(0.f),
-	m_iDequeMinSize(3)
+	m_iDequeMinSize(3),
+	m_pOwner(nullptr),
+	m_bOnce(false)
 {
 	m_vecAtkPatterns.reserve(4);
 }
@@ -22,10 +23,12 @@ CB1_AI::CB1_AI(const CB1_AI& rhs)
 	m_bChase(false),
 	m_fAngle(rhs.m_fAngle),
 	m_fGravity(rhs.m_fGravity),
-	m_fGroundY(rhs.m_fGroundY),
-	m_iDequeMinSize(rhs.m_iDequeMinSize)
+	m_iDequeMinSize(rhs.m_iDequeMinSize),
+	m_pOwner(nullptr),
+	m_bOnce(false)
 {
 	m_vecAtkPatterns = rhs.m_vecAtkPatterns;
+	m_patternDeque = rhs.m_patternDeque;
 }
 
 CB1_AI::~CB1_AI()
@@ -41,22 +44,25 @@ HRESULT CB1_AI::Ready_AI(const _float& fDetectRange, const _float& fInteractRang
 	m_fAngle = 0.f;
 	m_vSpeed = { 0.f, 0.f, 0.f };
 	m_fGravity = -9.8f;
-	m_fGroundY = 1.f;
 	m_fAcmlTime = 0.f;
 	m_iRcmState = _uint(CMonsterB1::B1S_SPAWN);
 
 	// 공격 패턴 설정
 	m_iDequeMinSize = 3;
-	m_vecAtkPatterns.push_back({ CMonsterB1::B1S_JUMP, 40, true });
+	//m_vecAtkPatterns.push_back({ CMonsterB1::B1S_JUMP, 40, true });
 	m_vecAtkPatterns.push_back({ CMonsterB1::B1S_PREPARE, 40, true });
 	m_vecAtkPatterns.push_back({ CMonsterB1::B1S_SHOOT, 40, true });
-	m_vecAtkPatterns.push_back({ CMonsterB1::B1S_SUMMON, 20, false });
+	//m_vecAtkPatterns.push_back({ CMonsterB1::B1S_SUMMON, 20, false });
 
 	// 시연용 : 모든 패턴이 순차적으로 실행
 	m_patternDeque.push_back(CMonsterB1::B1S_JUMP);
-	m_patternDeque.push_back(CMonsterB1::B1S_PREPARE);
+	//m_patternDeque.push_back(CMonsterB1::B1S_PREPARE);
 	m_patternDeque.push_back(CMonsterB1::B1S_SHOOT);
-	m_patternDeque.push_back(CMonsterB1::B1S_SUMMON);
+	//m_patternDeque.push_back(CMonsterB1::B1S_SUMMON);
+
+	m_patternDeque.push_back(CMonsterB1::B1S_SHOOT);
+	m_patternDeque.push_back(CMonsterB1::B1S_SHOOT);
+	m_patternDeque.push_back(CMonsterB1::B1S_SHOOT);
 
 	// 게임용 : 가중치와 난수를 통해 패턴을 채워줌
 	Refill_Pattern();
@@ -105,6 +111,7 @@ void CB1_AI::Enter_State(const _uint& iState)
 
 	case CMonsterB1::B1S_SHOOT:
 		m_fAcmlTime = 0.f;
+		m_bOnce = true;
 		break;
 
 	case CMonsterB1::B1S_SUMMON:
@@ -301,7 +308,7 @@ void CB1_AI::Update_Jump(const _float& fTimeDelta)
 	m_pOwnerTC->Get_Info(INFO_POS, &vPos);
 	if (vPos.y < m_fGroundY)
 	{
-		m_pOwnerTC->Set_Pos(vPos.x, m_fGroundY, vPos.z);
+ 		m_pOwnerTC->Set_Pos(vPos.x, m_fGroundY, vPos.z);
 		Change_State(CMonsterB1::B1S_LAND);
 	}
 }
@@ -328,6 +335,13 @@ void CB1_AI::Update_Attack(const _float& fTimeDelta)
 
 void CB1_AI::Update_Shoot(const _float& fTimeDelta)
 {
+	if (m_bOnce)
+	{
+		if(m_pOwner)
+			m_pOwner->Launch_Projectile(10);
+
+		m_bOnce = false;
+	}
 }
 
 void CB1_AI::Update_Summon(const _float& fTimeDelta)
@@ -350,8 +364,12 @@ void CB1_AI::Update_Stop(const _float& fTimeDelta)
 	}
 	else if ((m_bChase) && (m_fDistance <= m_fInteractRange) && (m_fAcmlTime >= 5.f))
 	{
-		Change_State(CMonsterB1::B1S_JUMP);
-		return;
+		if (!m_patternDeque.empty())
+		{
+			Change_State(m_patternDeque.front());
+			m_patternDeque.pop_front();
+			return;
+		}
 	}
 
 	Change_State(CMonsterB1::B1S_CRAWL);

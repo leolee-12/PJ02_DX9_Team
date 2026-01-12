@@ -11,6 +11,7 @@ namespace Engine
 
 class CNode;
 class CB1_AI;
+class CProjectile;
 
 class CMonsterB1 : public CMonster
 {
@@ -29,6 +30,8 @@ public:
 	virtual void		LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual void		Render_GameObject();
 	virtual void		OnCollision(CGameObject* pObject) {};
+
+	void				Launch_Projectile(const _uint& iCount);
 
 private:
 	HRESULT				Add_Component();

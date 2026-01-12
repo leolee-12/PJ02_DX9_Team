@@ -114,7 +114,7 @@ HRESULT CTextureSet::Add_Texture_FromMemory(TEXTUREID eID, const TEXSETLR& TexSe
 
 	IDirect3DBaseTexture9* pTexture = nullptr;
 
-	for (_uint i = 0; i < TexSetLR.iTexIndex; ++i)
+	for (_int i = 0; i < TexSetLR.iTexIndex; ++i)
 	{
 
 		switch (eID)
@@ -122,14 +122,14 @@ HRESULT CTextureSet::Add_Texture_FromMemory(TEXTUREID eID, const TEXSETLR& TexSe
 		case TEX_NORMAL:
 
 			// 디코딩 + 등록
-			if (FAILED(D3DXCreateTextureFromFileInMemory(m_pGraphicDev, TexSetLR.vecTexBuffer[i].data(), TexSetLR.vecTexBuffer[i].size(), (LPDIRECT3DTEXTURE9*) & pTexture)))
+			if (FAILED(D3DXCreateTextureFromFileInMemory(m_pGraphicDev, TexSetLR.vecTexBuffer[i].data(), _uint(TexSetLR.vecTexBuffer[i].size()), (LPDIRECT3DTEXTURE9*) & pTexture)))
 				return E_FAIL;
 
 			break;
 
 		case TEX_CUBE:
 
-			if (FAILED(D3DXCreateCubeTextureFromFileInMemory(m_pGraphicDev, TexSetLR.vecTexBuffer[i].data(), TexSetLR.vecTexBuffer[i].size(), (LPDIRECT3DCUBETEXTURE9*)&pTexture)))
+			if (FAILED(D3DXCreateCubeTextureFromFileInMemory(m_pGraphicDev, TexSetLR.vecTexBuffer[i].data(), _uint(TexSetLR.vecTexBuffer[i].size()), (LPDIRECT3DCUBETEXTURE9*)&pTexture)))
 				return E_FAIL;
 
 			break;

@@ -25,6 +25,7 @@ protected:
 	void		Refill_Pattern();
 
 public:
+	void		Set_Owner(CMonsterB1* pOwner) { m_pOwner = pOwner; }
 	void		Set_Speed(const _float& fSpeed) { m_fSpeed = fSpeed; }
 	void		Anim_End(CMonsterB1::MONSTER_B1_STATE eState);
 
@@ -42,11 +43,11 @@ private:
 	void		Update_Stop(const _float& fTimeDelta);
 
 private:
+
 	_float		m_fSpeed;
 	_vec3		m_vSpeed;
 	_float		m_fAngle;
 	_float		m_fGravity;
-	_float		m_fGroundY;
 	_float		m_fAcmlTime;
 	_bool		m_bChase;
 	_vec3		m_vLerpPos;		// Lerp용 위치
@@ -55,7 +56,9 @@ private:
 	deque<CMonsterB1::MONSTER_B1_STATE> m_patternDeque;		// 공격 패턴을 담을 덱
 	vector<B1_ATKPATTERN>				m_vecAtkPatterns;	// 공격 패턴들의 정보(상태, 빈도, 활성화 여부)
 	_uint								m_iDequeMinSize;	// 덱에 담을 패턴의 최소 개수
-	
+	CMonsterB1*							m_pOwner;			// 메시지 발행은 Owner만 가능(컴포넌트는 메시지채널이 없어 불가)
+	_bool								m_bOnce;			// 패턴 관련 로직이 딱 한 번만 실행되도록
+
 	//-------------------------<패턴덱 사용 법>--------------------------
 	// - front()로 다음 패턴 가져온 뒤 pop_front()
 	// - back()으로 마지막 패턴 확인하여 중복아닌 다음 패턴을 push_back()

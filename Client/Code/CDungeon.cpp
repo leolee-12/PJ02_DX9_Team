@@ -24,10 +24,11 @@
 #include "CCollisionMgr.h"
 #include "CGauge.h"
 #include "CBishop_Leshy.h"
-#include <CMonsterB1.h>
+#include "CMonsterB1.h"
 #include "CBishop_Heket.h"
 #include "CBishop_Kallamar.h"
 #include "CBishop_Shamura.h"
+#include "CProjectile.h"
 
 CDungeon::CDungeon(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -54,6 +55,8 @@ HRESULT CDungeon::Ready_Scene()
 	Ready_Light();
 
 	CCollisionMgr::GetInstance()->Ready_CollisionMgr();
+
+	Ready_Event();
 
 	return S_OK;
 }
@@ -302,7 +305,7 @@ HRESULT CDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 
 	// 디버그용
 
-	for (_uint i = 0; i < 5; ++i)
+	for (_uint i = 0; i < 20; ++i)
 	{
 		//pGameObject = CMonsterN2::Create(m_pGraphicDev, m_pMessageChannel);
 		//
@@ -310,13 +313,6 @@ HRESULT CDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 		//
 		//	if (FAILED(pLayer->Add_GameObject(L"Monster", pGameObject)))
 		//		return E_FAIL;
-
-		pGameObject = CMonsterN2::Create(m_pGraphicDev, m_pMessageChannel);
-
-		NULL_CHECK_RETURN(pGameObject, E_FAIL)
-
-			if (FAILED(pLayer->Add_GameObject(L"Monster", pGameObject)))
-				return E_FAIL;
 	}
 
 	pGameObject = CMonsterB1::Create(m_pGraphicDev, m_pMessageChannel);
@@ -432,6 +428,25 @@ HRESULT CDungeon::Ready_Light()
 		return E_FAIL;
 
 	return S_OK;
+}
+
+void CDungeon::Ready_Event()
+{
+	m_hmapSubHandles.insert({ L"Obj_Add", m_pMessageChannel->Subscribe(L"Obj.Add", [this](const IMessageChannel::EVENT& Event) {
+	{
+		CGameObject* pGObj = any_cast<CGameObject*>(Event.hmapData.find(L"Obj")->second);
+
+		if (pGObj != nullptr)
+		{
+			wstring strLayerTag = any_cast<const _tchar*>(Event.hmapData.find(L"LayerTag")->second);
+			wstring strObjTag = any_cast<const _tchar*>(Event.hmapData.find(L"ObjTag")->second);
+			auto iter = m_mapLayer.find(strLayerTag);
+
+			if(iter != m_mapLayer.end())
+				iter->second->Add_GameObject(strObjTag, pGObj);
+		}
+	}
+	}) });
 }
 
 CDungeon* CDungeon::Create(LPDIRECT3DDEVICE9 pGraphicDev)

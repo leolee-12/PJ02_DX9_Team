@@ -150,7 +150,8 @@ void CMultiLoadingThread::Loading_for_Dungeon()
     m_TexturLoadingqueue.push(TEXLR(L"Proto_B1Node4Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Boss1/B1Node_03.png", 1));
     m_iTotalProtoCount++;
 
-
+    m_TexturLoadingqueue.push(TEXLR(L"Proto_ProjectileTexture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Projectile.png", 1));
+    m_iTotalProtoCount++;
 
     m_TexturLoadingqueue.push(TEXLR(L"Proto_GaugeCover", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Player/PassionGauge/GaugeCover.png", 1));
     m_iTotalProtoCount++;

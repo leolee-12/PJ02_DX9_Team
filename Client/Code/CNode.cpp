@@ -151,7 +151,7 @@ void CNode::Move_Frame(const _float& fTimeDelta)
 
 void CNode::Set_Texture()
 {
-	_uint iFrame = m_fFrame;					// 현재 프레임
+	_uint iFrame = _uint(m_fFrame);					// 현재 프레임
 
 	D3DXMatrixIdentity(&m_matTex);
 	_uint iU = iFrame % 16;

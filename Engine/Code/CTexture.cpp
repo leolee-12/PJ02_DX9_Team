@@ -73,21 +73,20 @@ HRESULT CTexture::Ready_Texture_FromMemory(TEXTUREID eID, const vector<vector<BY
 
 	IDirect3DBaseTexture9* pTexture = nullptr;
 
-
 	for (_uint i = 0; i < iCnt; ++i)
 	{
 		switch (eID)
 		{
 		case TEX_NORMAL:
 
-			if (FAILED(D3DXCreateTextureFromFileInMemory(m_pGraphicDev, vecTexData[i].data(), vecTexData[i].size(), (LPDIRECT3DTEXTURE9*)&pTexture)))
+			if (FAILED(D3DXCreateTextureFromFileInMemory(m_pGraphicDev, vecTexData[i].data(), _uint(vecTexData[i].size()), (LPDIRECT3DTEXTURE9*)&pTexture)))
 				return E_FAIL;
 
 			break;
 
 		case TEX_CUBE:
 
-			if (FAILED(D3DXCreateCubeTextureFromFileInMemory(m_pGraphicDev, vecTexData[i].data(), vecTexData[i].size(), (LPDIRECT3DCUBETEXTURE9*)&pTexture)))
+			if (FAILED(D3DXCreateCubeTextureFromFileInMemory(m_pGraphicDev, vecTexData[i].data(), _uint(vecTexData[i].size()), (LPDIRECT3DCUBETEXTURE9*)&pTexture)))
 				return E_FAIL;
 
 			break;
