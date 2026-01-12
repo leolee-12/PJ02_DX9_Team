@@ -8,6 +8,8 @@
 #include "CTerrainWall.h"
 
 class CGauge;
+class CCookingMiniGameUI;
+
 
 class CDungeon : public CScene
 {
@@ -37,5 +39,6 @@ private:
 
 private:
 	CGauge*		 m_pGauge;
+	CCookingMiniGameUI* m_pCookingMiniGameUi;
 };
 

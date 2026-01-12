@@ -19,6 +19,7 @@
 #include "CN1_AI.h"
 #include "CN2_AI.h"
 #include "CN3_AI.h"
+#include "CTutorial.h"
 //#include "LoadObjectList.h"
 
 
@@ -66,10 +67,10 @@ _int CLoading::Update_Scene(const _float& fTimeDelta)
 
 	//텍스쳐 로딩이끝나면 -> 게이지 50퍼보이게 프로토로딩이끝나면 -> 게이지 100퍼 
 
-	_float LoadingClamp = _float(m_iLoadCount) / _float(m_iTotalCount);
+	//_float LoadingClamp = _float(m_iLoadCount) / _float(m_iTotalCount);
 	_float ProtoClamp = _float(m_iCompletedCount) / _float(m_iTotalCount);
 
-	m_fLoadingPersent = (LoadingClamp + ProtoClamp) / 2.f;
+	m_fLoadingPersent = ProtoClamp;
 
 	if (m_fLoadingPersent < 0)
 	{
@@ -92,6 +93,13 @@ _int CLoading::Update_Scene(const _float& fTimeDelta)
 			Engine::CScene* pScene = nullptr;
 			switch (m_pLoading->Get_Loading())
 			{
+			case LOADING_TUTORIAL:
+				pScene = CTutorial::Create(m_pGraphicDev);
+
+				if (nullptr == pScene)
+					return -1;
+				break;
+
 			case LOADING_STAGE:
 				pScene = CStage::Create(m_pGraphicDev);
 
@@ -162,7 +170,7 @@ void CLoading::Render_Scene()
 	_vec2		vPos{ 150.f, WINCY - 100.f };
 	_vec2		vPos2{ 150.f + 50.f, WINCY - 100.f };
 
-	if (m_iTotalCount == m_iLoadCount) {
+	if (m_iTotalCount / 2 < m_iCompletedCount) {
 		if (m_iTotalCount == m_iCompletedCount) {
 			CFontMgr::GetInstance()->Render_Font(L"Font_Lapture40", L"로딩 완료!", &vPos, D3DXCOLOR(0.75f, 0.75f, 0.75f, 1.f), DT_NOCLIP);
 			CFontMgr::GetInstance()->Render_Font(L"Font_Lapture40", szPersent, &vPos, D3DXCOLOR(0.75f, 0.75f, 0.75f, 1.f), DT_NOCLIP);
@@ -248,7 +256,7 @@ HRESULT CLoading::Ready_UI_Layer(const _tchar* pLayerTag)
 
 void CLoading::Update_Count()
 {
-	m_iLoadCount = m_pLoading->Get_LoadCount();
+	//m_iLoadCount = m_pLoading->Get_LoadCount();
 	m_iCompletedCount = m_pLoading->Get_CompletedCount();
 }
 

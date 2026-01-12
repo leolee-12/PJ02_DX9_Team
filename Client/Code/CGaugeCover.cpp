@@ -18,8 +18,8 @@ HRESULT CGaugeCover::Ready_GameObject()
 	if (FAILED(Add_Component()))
 		return E_FAIL;
 
-	m_pTransformCom->Set_Scale( 50.f * 2.f, 50.f * 2.f, 0.f );
-	m_pTransformCom->Set_Pos( -350.f - 240.f, 250.f + 60.f, 0.1f );
+	m_pTransformCom->Set_Scale( (50.f * 2.f)*1.15f, (50.f * 2.f)*1.15f, 0.f );
+	m_pTransformCom->Set_Pos( -330.f - 240.f, 230.f + 60.f, 0.1f );
 
 	return S_OK;
 }

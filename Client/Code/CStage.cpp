@@ -24,6 +24,8 @@
 #include "CCollisionMgr.h"
 #include <CMonsterB1.h>
 
+
+
 CStage::CStage(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
 {

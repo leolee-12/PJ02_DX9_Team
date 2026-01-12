@@ -28,6 +28,7 @@
 #include "CBishop_Heket.h"
 #include "CBishop_Kallamar.h"
 #include "CBishop_Shamura.h"
+#include "CCookingMiniGameUI.h"
 #include "CProjectile.h"
 
 CDungeon::CDungeon(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -113,6 +114,14 @@ _int CDungeon::Update_Scene(const _float& fTimeDelta)
 	if (CDInputMgr::GetInstance()->Key_Down(DIK_UP))
 	{
 		m_pGauge->Add_GaugeValue(0.5f);
+	}
+	if (CDInputMgr::GetInstance()->Key_Down(DIK_H))
+	{
+		m_pCookingMiniGameUi->SetRenderChange();
+	}
+	if (CDInputMgr::GetInstance()->Key_Down(DIK_J))
+	{
+		m_pCookingMiniGameUi->CookingInput();
 	}
 
 	_int iExit = Engine::CScene::Update_Scene(fTimeDelta);
@@ -397,6 +406,14 @@ HRESULT CDungeon::Ready_UI_Layer(const _tchar* pLayerTag)
 		return E_FAIL;
 
 	if (FAILED(pLayer->Add_GameObject(L"Gauge", pGameObject)))
+		return E_FAIL;
+
+	pGameObject = m_pCookingMiniGameUi = CCookingMiniGameUI::Create(m_pGraphicDev);
+
+	if (nullptr == pGameObject)
+		return E_FAIL;
+
+	if (FAILED(pLayer->Add_GameObject(L"CookingMiniGameUI", pGameObject)))
 		return E_FAIL;
 
 

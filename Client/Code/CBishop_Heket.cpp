@@ -21,9 +21,9 @@ HRESULT CBishop_Heket::Ready_GameObject()
 	if (FAILED(Add_Component()))
 		return E_FAIL;
 
-	m_pTransformCom->Set_Scale(269.f * 0.05f, 451.f * 0.05f, 0.f);
+	m_pTransformCom->Set_Scale(269.f * 0.025f, 451.f * 0.025f, 0.f);
 
-	m_pTransformCom->Set_Pos(m_tSpawndata.x, 2.f, m_tSpawndata.z);
+	m_pTransformCom->Set_Pos(m_tSpawndata.x * 0.8f, 2.f, m_tSpawndata.z * 0.8f);
 
 	m_eCurState = Bishops::BS_IDLE;
 

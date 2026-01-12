@@ -3,6 +3,7 @@
 #include "CScene.h"
 
 class CGauge;
+class CCookingMiniGameUI;
 
 class CTest : public CScene
 {

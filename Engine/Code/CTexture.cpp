@@ -67,7 +67,7 @@ HRESULT CTexture::Ready_Texture(TEXTUREID eID, const _tchar* pPath, const _uint&
 	return S_OK;
 }
 
-HRESULT CTexture::Ready_Texture_FromMemory(TEXTUREID eID, const vector<vector<BYTE>>& vecTexData, const _uint& iCnt)
+HRESULT CTexture::Ready_Texture_FromThread(TEXTUREID eID, const wstring& strFilepath, const _uint& iCnt)
 {
 	m_vecTexture.reserve(iCnt);
 
@@ -75,18 +75,22 @@ HRESULT CTexture::Ready_Texture_FromMemory(TEXTUREID eID, const vector<vector<BY
 
 	for (_uint i = 0; i < iCnt; ++i)
 	{
+		TCHAR szFileName[256] = L"";
+
+		wsprintf(szFileName, strFilepath.c_str(), i);
+
 		switch (eID)
 		{
 		case TEX_NORMAL:
 
-			if (FAILED(D3DXCreateTextureFromFileInMemory(m_pGraphicDev, vecTexData[i].data(), _uint(vecTexData[i].size()), (LPDIRECT3DTEXTURE9*)&pTexture)))
+			if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFileName, (LPDIRECT3DTEXTURE9*)&pTexture)))
 				return E_FAIL;
 
 			break;
 
 		case TEX_CUBE:
 
-			if (FAILED(D3DXCreateCubeTextureFromFileInMemory(m_pGraphicDev, vecTexData[i].data(), _uint(vecTexData[i].size()), (LPDIRECT3DCUBETEXTURE9*)&pTexture)))
+			if (FAILED(D3DXCreateCubeTextureFromFile(m_pGraphicDev, szFileName, (LPDIRECT3DCUBETEXTURE9*)&pTexture)))
 				return E_FAIL;
 
 			break;
@@ -213,11 +217,11 @@ CTexture* CTexture::Create(LPDIRECT3DDEVICE9 pGraphicDev, TEXTUREID eID, const _
 	return pTexture;
 }
 
-CTexture* CTexture::CreateFromMemory(LPDIRECT3DDEVICE9 pGraphicDev, TEXTUREID eID, const vector<vector<BYTE>>& vecTexData, const _uint& iCnt)
+CTexture* CTexture::CreateFromThread(LPDIRECT3DDEVICE9 pGraphicDev, TEXTUREID eID, const wstring& strFilepath, const _uint& iCnt)
 {
 	CTexture* pTexture = new CTexture(pGraphicDev);
 
-	if (FAILED(pTexture->Ready_Texture_FromMemory(eID, vecTexData, iCnt)))
+	if (FAILED(pTexture->Ready_Texture_FromThread(eID, strFilepath, iCnt)))
 	{
 		Safe_Release(pTexture);
 		MSG_BOX("Texture Create Failed");
