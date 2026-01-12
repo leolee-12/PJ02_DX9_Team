@@ -16,12 +16,6 @@ enum PLACEMENT_TYPE
 	PLACEMENT_FLOOR = 1		// �ٴڿ� ���� ��ü
 };
 
-/* ===================================================
-	CMapObject
-
-	�������� �ϴ� �� ������Ʈ
- =====================================================*/
-
 class CMapObject : public CGameObject
 {
 private:

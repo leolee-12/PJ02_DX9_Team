@@ -42,7 +42,7 @@ namespace Engine
 		CL_MONSTER	= 1 << 1,
 		CL_ITEM		= 1 << 2,
 		CL_GRASS	= 1 << 3,
-		CL_5		= 1 << 4,
+		CL_WARP		= 1 << 4,
 		CL_6		= 1 << 5,
 		CL_7		= 1 << 6,
 		CL_8		= 1 << 7,

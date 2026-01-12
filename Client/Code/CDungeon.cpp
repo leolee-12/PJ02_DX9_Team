@@ -28,6 +28,8 @@
 #include "CBishop_Heket.h"
 #include "CBishop_Kallamar.h"
 #include "CBishop_Shamura.h"
+#include "CMapWarp.h"
+#include "CWarp.h"
 
 CDungeon::CDungeon(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -60,6 +62,7 @@ HRESULT CDungeon::Ready_Scene()
 
 _int CDungeon::Update_Scene(const _float& fTimeDelta)
 {
+	
 	Engine::CTransform* pPlayerTransform = CPersistentMgr::GetInstance()->Get_PlayerTransform();
 	if (pPlayerTransform)
 	{
@@ -172,6 +175,14 @@ HRESULT CDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 
 	pGameObject->AddRef();
 
+
+	// Æ÷ÅÐ ÀÛ¾÷¿ë
+	pGameObject = CMapWarp::Create(m_pGraphicDev, m_pMessageChannel, { 50,0,0 }, WARP_RIGHT, {-100, 0, 0}, WARP_LEFT);
+	
+	NULL_CHECK_RETURN(pGameObject, E_FAIL)
+
+	if (FAILED(pLayer->Add_GameObject(L"MapWarp", pGameObject)))
+		return E_FAIL;
 
 	// Map Load
 	Engine::MAPDATA mapData;

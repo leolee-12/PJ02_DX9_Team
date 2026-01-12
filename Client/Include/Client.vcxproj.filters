@@ -307,6 +307,9 @@
     <Filter Include="01. Scene\01. Maps\07. Village">
       <UniqueIdentifier>{71467a02-ac11-4d7a-84a6-64382f2466ef}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\14. Warp">
+      <UniqueIdentifier>{afb959a5-02a0-4191-9f75-2c789c60d030}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -615,6 +618,15 @@
     <ClInclude Include="..\Header\CLeshyRoom.h">
       <Filter>01. Scene\01. Maps\10. LeshyRoom</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CSceneWarp.h">
+      <Filter>02. GameObject\14. Warp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CMapWarp.h">
+      <Filter>02. GameObject\14. Warp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CWarp.h">
+      <Filter>02. GameObject\14. Warp</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -898,6 +910,15 @@
     </ClCompile>
     <ClCompile Include="..\Code\CLeshyRoom.cpp">
       <Filter>01. Scene\01. Maps\10. LeshyRoom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CSceneWarp.cpp">
+      <Filter>02. GameObject\14. Warp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CMapWarp.cpp">
+      <Filter>02. GameObject\14. Warp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CWarp.cpp">
+      <Filter>02. GameObject\14. Warp</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

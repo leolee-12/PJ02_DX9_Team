@@ -35,6 +35,7 @@ HRESULT CMainApp::Ready_MainApp()
 	if (FAILED(Ready_Scene(m_pGraphicDev)))
 		return E_FAIL;
 
+
 	CCollisionMgr::GetInstance()->Ready_CollisionMgr();
 	CSoundMgr::GetInstance()->Ready_SoundMgr();
 

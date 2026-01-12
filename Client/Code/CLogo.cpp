@@ -103,13 +103,11 @@ void CLogo::LateUpdate_Scene(const _float& fTimeDelta)
 void CLogo::Render_Scene()
 {
 	// debug 용
-
 	_vec2		vPlay{ _float(WINCX / 2) - 200.f, 320.f };
 	_vec2		vEdit{ _float(WINCX / 2) - 200.f, 420.f };
 	_vec2		vExit{ _float(WINCX / 2) - 200.f, 520.f };
 
 	//D3DXCOLOR 
-
 	switch (m_eLogoState) {
 	case LS_START:
 		CFontMgr::GetInstance()->Render_Font(L"Font_Lapture40", L"플레이", &vPlay, D3DXCOLOR(1.f, 1.f, 1.f, 1.f), DT_CENTER | DT_NOCLIP);

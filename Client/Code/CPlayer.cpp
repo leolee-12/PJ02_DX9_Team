@@ -5,6 +5,8 @@
 #include "CRenderer.h"
 #include "CDInputMgr.h"
 #include "CCollisionMgr.h"
+#include "CWarp.h"
+#include "CSceneWarp.h"
 
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev),
@@ -180,6 +182,30 @@ void CPlayer::Ready_Event()
 
 	}
 	}) });
+
+	m_hmapSubHandles.insert({ L"Player_MapWarp", m_pMessageChannel->Subscribe(L"Player.MapWarp", [this](const IMessageChannel::EVENT& Event)
+		{
+			CWarp* Warp = any_cast<CWarp*>(Event.hmapData.find(L"WarpPtr")->second);
+
+			if (Warp != nullptr)
+			{
+				_vec3 pos = Warp->Get_OtherWarp()->Get_WarpPos();
+				m_pTransformCom->Set_Pos(pos.x, 0, pos.z);
+			}
+		}
+	) });
+
+//	m_hmapSubHandles.insert({ L"Player_SceneWarp", m_pMessageChannel->Subscribe(L"Player.SceneWarp", [this](const IMessageChannel::EVENT& Event)
+//	{
+//		CSceneWarp* Warp = any_cast<CSceneWarp*>(Event.hmapData.find(L"Warp")->second);
+//
+//		if (Warp != nullptr)
+//		{/*
+//			_vec3 pos = Warp->Get_Pos();
+//			m_pTransformCom->Set_Pos(pos.x, pos.y, pos.z);*/
+//		}
+//	}
+//) });
 
 	m_bMsgRegistered = true;
 }

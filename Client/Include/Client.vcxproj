@@ -195,6 +195,7 @@
     <ClInclude Include="..\Header\CLogo.h" />
     <ClInclude Include="..\Header\CMainApp.h" />
     <ClInclude Include="..\Header\CMainCamera.h" />
+    <ClInclude Include="..\Header\CMapWarp.h" />
     <ClInclude Include="..\Header\CMonster.h" />
     <ClInclude Include="..\Header\CMonsterB1.h" />
     <ClInclude Include="..\Header\CMonsterB2.h" />
@@ -214,6 +215,7 @@
     <ClInclude Include="..\Header\CPlayer.h" />
     <ClInclude Include="..\Header\CPlayerHP.h" />
     <ClInclude Include="..\Header\CRealDungeon.h" />
+    <ClInclude Include="..\Header\CSceneWarp.h" />
     <ClInclude Include="..\Header\CSkyBox.h" />
     <ClInclude Include="..\Header\CStage.h" />
     <ClInclude Include="..\Header\CTerrain.h" />
@@ -229,6 +231,7 @@
     <ClInclude Include="..\Header\CTitleTab.h" />
     <ClInclude Include="..\Header\CTutorial.h" />
     <ClInclude Include="..\Header\CVillage.h" />
+    <ClInclude Include="..\Header\CWarp.h" />
     <ClInclude Include="..\Header\Gage_Enum.h" />
     <ClInclude Include="..\Header\LoadObjectList.h" />
     <ClInclude Include="..\Header\PlayerUI.h" />
@@ -292,6 +295,7 @@
     <ClCompile Include="..\Code\CLogo.cpp" />
     <ClCompile Include="..\Code\CMainApp.cpp" />
     <ClCompile Include="..\Code\CMainCamera.cpp" />
+    <ClCompile Include="..\Code\CMapWarp.cpp" />
     <ClCompile Include="..\Code\CMonster.cpp" />
     <ClCompile Include="..\Code\CMonsterB1.cpp" />
     <ClCompile Include="..\Code\CMonsterB2.cpp" />
@@ -311,6 +315,7 @@
     <ClCompile Include="..\Code\CPlayer.cpp" />
     <ClCompile Include="..\Code\CPlayerHP.cpp" />
     <ClCompile Include="..\Code\CRealDungeon.cpp" />
+    <ClCompile Include="..\Code\CSceneWarp.cpp" />
     <ClCompile Include="..\Code\CSkyBox.cpp" />
     <ClCompile Include="..\Code\CStage.cpp" />
     <ClCompile Include="..\Code\CTerrain.cpp" />
@@ -327,6 +332,7 @@
     <ClCompile Include="..\Code\CTitleTab.cpp" />
     <ClCompile Include="..\Code\CTutorial.cpp" />
     <ClCompile Include="..\Code\CVillage.cpp" />
+    <ClCompile Include="..\Code\CWarp.cpp" />
     <ClCompile Include="..\Code\TestCube.cpp" />
     <ClCompile Include="..\Code\CTileMgr.cpp" />
     <ClCompile Include="..\Code\CMapObject.cpp" />
