@@ -147,7 +147,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\Code\CCookingTarget.h" />
     <ClInclude Include="..\Header\Bishops_Enum.h" />
     <ClInclude Include="..\Header\CAmdusiasRoom.h" />
     <ClInclude Include="..\Header\CB1_AI.h" />
@@ -166,6 +165,7 @@
     <ClInclude Include="..\Header\CCookingInfoCardBack.h" />
     <ClInclude Include="..\Header\CCookingSelectUI.h" />
     <ClInclude Include="..\Header\CCookingSelectSlot.h" />
+    <ClInclude Include="..\Header\CCookingTarget.h" />
     <ClInclude Include="..\Header\CCookingTargetBack.h" />
     <ClInclude Include="..\Header\CCookingTargetFood.h" />
     <ClInclude Include="..\Header\CBishop_Heket.h" />

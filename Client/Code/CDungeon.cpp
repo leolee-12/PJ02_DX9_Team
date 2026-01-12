@@ -110,6 +110,14 @@ _int CDungeon::Update_Scene(const _float& fTimeDelta)
 	{
 		m_pGauge->Add_GaugeValue(0.5f);
 	}
+	if (CDInputMgr::GetInstance()->Key_Down(DIK_H))
+	{
+		m_pCookingMiniGameUi->SetRenderChange();
+	}
+	if (CDInputMgr::GetInstance()->Key_Down(DIK_J))
+	{
+		m_pCookingMiniGameUi->CookingInput();
+	}
 
 	_int iExit = Engine::CScene::Update_Scene(fTimeDelta);
 

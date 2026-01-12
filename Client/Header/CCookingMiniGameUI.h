@@ -32,6 +32,8 @@ public:
 	_bool Check_CookingResult();
 	_bool CookingInput();
 
+	// 테스트용 임시용 나중에 선택창이랑 연결되면 변경될듯
+	void SetRenderChange();
 private:
 	virtual			void		Free();
 

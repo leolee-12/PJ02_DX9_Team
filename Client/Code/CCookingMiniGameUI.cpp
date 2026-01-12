@@ -88,7 +88,7 @@ HRESULT CCookingMiniGameUI::Ready_GameObject()
 	m_vecCookingUI.push_back(pGameObject);
 
 
-	m_bRender = true;
+	m_bRender = false;
 	m_iCurCookingCount = 0;
 	m_iCookingCount = 0;
 	return S_OK;
@@ -175,6 +175,18 @@ CCookingMiniGameUI* CCookingMiniGameUI::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 	}
 
 	return pCookingMiniGame;
+}
+
+void CCookingMiniGameUI::SetRenderChange()
+{
+	if (m_bRender == false)
+	{
+		m_bRender = true;
+	}
+	else
+	{
+		m_bRender = false;
+	}
 }
 
 void CCookingMiniGameUI::Free()
