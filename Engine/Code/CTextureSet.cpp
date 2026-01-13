@@ -202,7 +202,7 @@ CTextureSet* CTextureSet::CreateFromThered(LPDIRECT3DDEVICE9 pGraphicDev, TEXTUR
 	if (FAILED(pTexture->Ready_Texture_FromThread(eID, vecTexSetLR)))
 	{
 		Safe_Release(pTexture);
-		MSG_BOX("Texture Create Failed");
+		MSG_BOX("Texture CreateFromThread Failed");
 		return nullptr;
 	}
 

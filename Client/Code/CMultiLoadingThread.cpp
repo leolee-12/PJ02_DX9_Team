@@ -55,15 +55,20 @@ HRESULT CMultiLoadingThread::Ready_Loadingqueue()
 {
     switch (m_eLoading)
     {
-    case LOADING_TUTORIAL:
-        Loading_for_Tutorial();
+    case LOADING_LOGO:
+        Loading_for_Logo();
         break;
-    case LOADING_STAGE:
 
+    case LOADING_STAGE:
+        Loading_for_Stage();
+        break;
+
+    case LOADING_BOSS:
+        Loading_for_Boss();
         break;
 
     case LOADING_TEST:
-
+        Loading_for_Test();
         break;
 
     case LOADING_KNUCKLEBONE:
@@ -74,7 +79,28 @@ HRESULT CMultiLoadingThread::Ready_Loadingqueue()
         Loading_for_Dungeon();
         break;
 
-    case LOADING_BOSS:
+    case LOADING_TUTORIAL:
+        Loading_for_Tutorial();
+        break;
+
+    case LOADING_THEGATEWAY:
+        Loading_for_TheGateway();
+        break;
+
+    case LOADING_VILLAGE:
+        Loading_for_Village();
+        break;
+
+    case LOADING_REALDUNGEON:
+        Loading_for_RealDungeon();
+        break;
+
+    case LOADING_AMDUSIASROOM:
+        Loading_for_AmdusiasRoom();
+        break;
+
+    case LOADING_LESHYROOM:
+        Loading_for_LeshyRoom();
         break;
 
     default:
@@ -85,11 +111,95 @@ HRESULT CMultiLoadingThread::Ready_Loadingqueue()
     return S_OK;
 }
 
+void CMultiLoadingThread::Loading_for_Logo()
+{
+    m_iTotalProtoCount = 0;
+
+    m_NonTexReadyQueue.push(&CMultiLoadingThread::NonTex_for_Logo);
+    m_iTotalProtoCount++;
+
+    m_TexturLoadingqueue.push(TEXLR(L"Proto_MainMenuTex", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Mainmenu(2)/animation_%04d.png", 48));
+    m_iTotalProtoCount++;
+
+    m_TexturLoadingqueue.push(TEXLR(L"Proto_MainLogoTex", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Mainmenu/Logo.png", 1));
+    m_iTotalProtoCount++;
+
+    m_TexturLoadingqueue.push(TEXLR(L"Proto_MainTabTex", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Mainmenu/Tab.png", 1));
+    m_iTotalProtoCount++;
+}
+
+void CMultiLoadingThread::Loading_for_Stage()
+{
+    m_iTotalProtoCount = 0;
+
+    m_NonTexReadyQueue.push(&CMultiLoadingThread::NonTex_for_Stage);
+    m_iTotalProtoCount++;
+}
+
+void CMultiLoadingThread::Loading_for_Boss()
+{
+    m_iTotalProtoCount = 0;
+
+    m_NonTexReadyQueue.push(&CMultiLoadingThread::NonTex_for_Boss);
+    m_iTotalProtoCount++;
+}
+
+void CMultiLoadingThread::Loading_for_Test()
+{
+    m_iTotalProtoCount = 0;
+
+    m_NonTexReadyQueue.push(&CMultiLoadingThread::NonTex_for_Test);
+    m_iTotalProtoCount++;
+}
+
+void CMultiLoadingThread::Loading_for_KnuckleBone()
+{
+    m_iTotalProtoCount = 0;
+
+    m_NonTexReadyQueue.push(&CMultiLoadingThread::NonTex_for_Tutorial);
+    m_iTotalProtoCount++;
+
+
+    m_TexturLoadingqueue.push(TEXLR(L"Proto_TTutorial", TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/TTutorial_%d.png", 2));
+    m_iTotalProtoCount++;
+
+    m_TexturLoadingqueue.push(TEXLR(L"Proto_KBCenter", TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/KnucklebonesIcon.png", 1));
+    m_iTotalProtoCount++;
+
+    m_TexturLoadingqueue.push(TEXLR(L"Proto_Divider", TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/TileDivider_%d.png", 2));
+    m_iTotalProtoCount++;
+
+    m_TexturLoadingqueue.push(TEXLR(L"Proto_KBMask", TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/Knucklebones_BW_MASK_%d.png", 2));
+    m_iTotalProtoCount++;
+
+    m_TexturLoadingqueue.push(TEXLR(L"Proto_KBTab", TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/TabRed.png", 1));
+    m_iTotalProtoCount++;
+
+    m_TexturLoadingqueue.push(TEXLR(L"Proto_KBSix", TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/Six.png", 1));
+    m_iTotalProtoCount++;
+
+    m_TexturLoadingqueue.push(TEXLR(L"Proto_KBDice", TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/Dice_%d.png", 6));
+    m_iTotalProtoCount++;
+
+    m_TexturLoadingqueue.push(TEXLR(L"Proto_KBBoardSlot", TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/Knucklebones_WhiteSquare.png", 1));
+    m_iTotalProtoCount++;
+
+    m_TexturLoadingqueue.push(TEXLR(L"Proto_KBDiceBox", TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/DiceBox_A.png", 1));
+    m_iTotalProtoCount++;
+
+    m_TexturLoadingqueue.push(TEXLR(L"Proto_KBBack", TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/DiceTubBG.png", 1));
+    m_iTotalProtoCount++;
+
+    //m_iTotalProtoCount = m_TexturLoadingqueue.unsafe_size();
+}
+
 void CMultiLoadingThread::Loading_for_Tutorial()
 {
-    m_NonTexReadyQueue.push(&CMultiLoadingThread::NonTex_for_Tutorial);
-
     m_iTotalProtoCount = 0;
+
+    m_NonTexReadyQueue.push(&CMultiLoadingThread::NonTex_for_Tutorial);
+    m_iTotalProtoCount++;
+
 
     // ===== 텍스처 큐 등록 (멀티스레드 로딩) =====
 
@@ -157,9 +267,11 @@ void CMultiLoadingThread::Loading_for_Tutorial()
 
 void CMultiLoadingThread::Loading_for_Dungeon()
 {
-    m_NonTexReadyQueue.push(&CMultiLoadingThread::NonTex_for_Dungeon);
-
     m_iTotalProtoCount = 0;
+
+    m_NonTexReadyQueue.push(&CMultiLoadingThread::NonTex_for_Dungeon);
+    m_iTotalProtoCount++;
+
 
     // ===== 텍스처 큐 등록 (멀티스레드 로딩) =====
     m_TexturLoadingqueue.push(TEXLR(L"Proto_ItemTexture", TEX_NORMAL, L"../Bin/Resource/Texture/Item/dds/Item_%02d.dds", 8));
@@ -283,72 +395,70 @@ void CMultiLoadingThread::Loading_for_Dungeon()
 
     m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingCardInfoLeftPattern", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/Leftpattern.png", 1));
     m_iTotalProtoCount++;
-
-    // ===== TextureSet 큐 등록 (멀티스레드 로딩) =====
-    vector<TEXSETLR> vecBishopLeshy;
-    vecBishopLeshy.push_back(TEXSETLR(L"Bishop_Leshy_Idle", L"../Bin/Resource/Texture/Bishops/Leshy/Leshy-idle/dds/Leshy_idle-%d.dds", 500));
-    vecBishopLeshy.push_back(TEXSETLR(L"Bishop_Leshy_Talk", L"../Bin/Resource/Texture/Bishops/Leshy/Leshy-talk/dds/Leshy-talk-%d.dds", 167));
-    m_TexSetLoadingqueue.push(make_pair(TEXSETINFO(L"Proto_BishopLeshy", TEX_NORMAL), vecBishopLeshy));
-    m_iTotalProtoCount++;
-
-    vector<TEXSETLR> vecBishopHeket;
-    vecBishopHeket.push_back(TEXSETLR(L"Bishop_Heket_Idle", L"../Bin/Resource/Texture/Bishops/Heket/Heket-idle/dds/Heket-idle-%d.dds", 267));
-    vecBishopHeket.push_back(TEXSETLR(L"Bishop_Heket_Talk", L"../Bin/Resource/Texture/Bishops/Heket/Heket-talk/dds/Heket-talk-%d.dds", 267));
-    m_TexSetLoadingqueue.push(make_pair(TEXSETINFO(L"Proto_BishopHeket", TEX_NORMAL), vecBishopHeket));
-    m_iTotalProtoCount++;
-
-    vector<TEXSETLR> vecBishopKallamar;
-    vecBishopKallamar.push_back(TEXSETLR(L"Bishop_Kallamar_Idle", L"../Bin/Resource/Texture/Bishops/Kallamar/Kallamar-idle/dds/Kallamar-idle-%d.dds", 134));
-    vecBishopKallamar.push_back(TEXSETLR(L"Bishop_Kallamar_Talk", L"../Bin/Resource/Texture/Bishops/Kallamar/Kallamar-talk/dds/Kallamar-talk-%d.dds", 267));
-    m_TexSetLoadingqueue.push(make_pair(TEXSETINFO(L"Proto_BishopKallamar", TEX_NORMAL), vecBishopKallamar));
-    m_iTotalProtoCount++;
-
-    vector<TEXSETLR> vecBishopShamura;
-    vecBishopShamura.push_back(TEXSETLR(L"Bishop_Shamura_Idle", L"../Bin/Resource/Texture/Bishops/Shamura/Shamura-idle/dds/Shamura-idle-%d.dds", 134));
-    vecBishopShamura.push_back(TEXSETLR(L"Bishop_Shamura_Talk", L"../Bin/Resource/Texture/Bishops/Shamura/Shamura-talk/dds/Shamura-talk-%d.dds", 267));
-    m_TexSetLoadingqueue.push(make_pair(TEXSETINFO(L"Proto_BishopShamura", TEX_NORMAL), vecBishopShamura));
-    m_iTotalProtoCount++;
-
-
-
-    //m_iTotalProtoCount = m_TexturLoadingqueue.unsafe_size();
 }
 
-void CMultiLoadingThread::Loading_for_KnuckleBone()
+void CMultiLoadingThread::Loading_for_TheGateway()
 {
     m_iTotalProtoCount = 0;
 
-    m_TexturLoadingqueue.push(TEXLR(L"Proto_TTutorial", TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/TTutorial_%d.png", 2));
+    m_NonTexReadyQueue.push(&CMultiLoadingThread::NonTex_for_Dungeon);
     m_iTotalProtoCount++;
+}
 
-    m_TexturLoadingqueue.push(TEXLR(L"Proto_KBCenter", TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/KnucklebonesIcon.png", 1));
+void CMultiLoadingThread::Loading_for_Village()
+{
+    m_iTotalProtoCount = 0;
+
+    m_NonTexReadyQueue.push(&CMultiLoadingThread::NonTex_for_Village);
     m_iTotalProtoCount++;
+}
 
-    m_TexturLoadingqueue.push(TEXLR(L"Proto_Divider", TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/TileDivider_%d.png", 2));
+void CMultiLoadingThread::Loading_for_RealDungeon()
+{
+    m_iTotalProtoCount = 0;
+
+    m_NonTexReadyQueue.push(&CMultiLoadingThread::NonTex_for_RealDungeon);
     m_iTotalProtoCount++;
+    
+}
 
-    m_TexturLoadingqueue.push(TEXLR(L"Proto_KBMask", TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/Knucklebones_BW_MASK_%d.png", 2));
+void CMultiLoadingThread::Loading_for_AmdusiasRoom()
+{
+    m_iTotalProtoCount = 0;
+
+    m_NonTexReadyQueue.push(&CMultiLoadingThread::NonTex_for_AmdusiasRoom);
     m_iTotalProtoCount++;
+    
+}
 
-    m_TexturLoadingqueue.push(TEXLR(L"Proto_KBTab", TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/TabRed.png", 1));
+void CMultiLoadingThread::Loading_for_LeshyRoom()
+{
+    m_iTotalProtoCount = 0;
+
+    m_NonTexReadyQueue.push(&CMultiLoadingThread::NonTex_for_LeshyRoom);
     m_iTotalProtoCount++;
+    
+}
 
-    m_TexturLoadingqueue.push(TEXLR(L"Proto_KBSix", TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/Six.png", 1));
-    m_iTotalProtoCount++;
+void CMultiLoadingThread::NonTex_for_Logo()
+{
+    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_RcColTitle", Engine::CRcColTitle::Create(m_pGraphicDev));
+}
 
-    m_TexturLoadingqueue.push(TEXLR(L"Proto_KBDice", TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/Dice_%d.png", 6));
-    m_iTotalProtoCount++;
+void CMultiLoadingThread::NonTex_for_Stage()
+{
+}
 
-    m_TexturLoadingqueue.push(TEXLR(L"Proto_KBBoardSlot", TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/Knucklebones_WhiteSquare.png", 1));
-    m_iTotalProtoCount++;
+void CMultiLoadingThread::NonTex_for_Boss()
+{
+}
 
-    m_TexturLoadingqueue.push(TEXLR(L"Proto_KBDiceBox", TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/DiceBox_A.png", 1));
-    m_iTotalProtoCount++;
+void CMultiLoadingThread::NonTex_for_Test()
+{
+}
 
-    m_TexturLoadingqueue.push(TEXLR(L"Proto_KBBack", TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/DiceTubBG.png", 1));
-    m_iTotalProtoCount++;
-
-    //m_iTotalProtoCount = m_TexturLoadingqueue.unsafe_size();
+void CMultiLoadingThread::NonTex_for_KnuckleBone()
+{
 }
 
 void CMultiLoadingThread::NonTex_for_Dungeon()
@@ -367,7 +477,33 @@ void CMultiLoadingThread::NonTex_for_Dungeon()
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_N3_AI", CN3_AI::Create(m_pGraphicDev, 6.f, 3.f));
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_B1_AI", CB1_AI::Create(m_pGraphicDev, 40.f, 5.f));
 
-    Load_Object_Texture(Tutorial_Texture);
+    Load_Object_Texture(Dungeon_Texture);
+}
+
+void CMultiLoadingThread::NonTex_for_TheGateway()
+{
+    CPersistentMgr::GetInstance()->Ready_GlobalObjects(m_pGraphicDev);
+    Load_Object_Texture(TheGateway_Texture);
+}
+
+void CMultiLoadingThread::NonTex_for_Village()
+{
+    Load_Object_Texture(Village_Texture);
+}
+
+void CMultiLoadingThread::NonTex_for_RealDungeon()
+{
+    //Load_Object_Texture(RealDungeon_Texture);
+}
+
+void CMultiLoadingThread::NonTex_for_AmdusiasRoom()
+{
+    //Load_Object_Texture(AmdusiasRoom_Texture);
+}
+
+void CMultiLoadingThread::NonTex_for_LeshyRoom()
+{
+    //Load_Object_Texture(LeshyRoom_Texture);
 }
 
 void CMultiLoadingThread::NonTex_for_Tutorial()
@@ -424,6 +560,7 @@ unsigned int CMultiLoadingThread::Thread_Main(void* pArg)
             if (g_bDistroyWindowFlag) break; 
             if (!pOwner->m_pGraphicDev) break;
             (pOwner->*Func)();
+            pOwner->m_iCompletedCount++;
             bDidWork = true;
         }
 
@@ -485,7 +622,8 @@ CMultiLoadingThread* CMultiLoadingThread::Create(LPDIRECT3DDEVICE9 pGraphicDev, 
 void CMultiLoadingThread::Free()
 {
     // 안전장치 해당플래그는 윈도우 메세지루프에서 WM_DESTROY 메세지 처리 분기에 해당 플래그 켜줌
-    g_bDistroyWindowFlag = true;
+    //g_bDistroyWindowFlag = true;
+    // 아니 안돼 우리는 로딩씬 재사용하기때문에 이거 켜져있으면 다음 스레드 구동때 스레드가 일을 안함
 
     if (!m_vecThread.empty()) {
         WaitForMultipleObjects(WORKER_COUNT, m_vecThread.data(), TRUE, INFINITE);

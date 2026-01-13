@@ -20,6 +20,12 @@
 #include "CN2_AI.h"
 #include "CN3_AI.h"
 #include "CTutorial.h"
+#include "CTheGateWay.h"
+#include "CVillage.h"
+#include "CLogo.h"
+#include "CRealDungeon.h"
+#include "CAmdusiasRoom.h"
+#include "CLeshyRoom.h"
 //#include "LoadObjectList.h"
 
 
@@ -93,44 +99,76 @@ _int CLoading::Update_Scene(const _float& fTimeDelta)
 			Engine::CScene* pScene = nullptr;
 			switch (m_pLoading->Get_Loading())
 			{
-			case LOADING_TUTORIAL:
-				pScene = CTutorial::Create(m_pGraphicDev);
+					case LOADING_LOGO:
+						pScene = CLogo::Create(m_pGraphicDev);
 
-				if (nullptr == pScene)
-					return -1;
-				break;
+						if (nullptr == pScene)
+							return -1;
+						break;
+					case LOADING_STAGE:
+						pScene = CStage::Create(m_pGraphicDev);
 
-			case LOADING_STAGE:
-				pScene = CStage::Create(m_pGraphicDev);
+						if (nullptr == pScene)
+							return -1;
+						break;
+					case LOADING_BOSS:
+						// 이건 없어용~~
+						break;
+					case LOADING_TEST:
+						pScene = CTest::Create(m_pGraphicDev);
 
-				if (nullptr == pScene)
-					return -1;
-				break;
+						if (nullptr == pScene)
+							return -1;
+						break;
+					case LOADING_KNUCKLEBONE:
+						pScene = CKnuckleBone::Create(m_pGraphicDev);
 
-			case LOADING_TEST:
-				pScene = CTest::Create(m_pGraphicDev);
+						if (nullptr == pScene)
+							return -1;
+						break;
+					case LOADING_DUNGEON:
+						pScene = CDungeon::Create(m_pGraphicDev);
 
-				if (nullptr == pScene)
-					return -1;
-				break;
+						if (nullptr == pScene)
+							return -1;
+						break;
+					case LOADING_TUTORIAL:
+						pScene = CTutorial::Create(m_pGraphicDev);
 
-			case LOADING_KNUCKLEBONE:
-				pScene = CKnuckleBone::Create(m_pGraphicDev);
+						if (nullptr == pScene)
+							return -1;
+						break;
+					case LOADING_THEGATEWAY:
+						pScene = CTheGateway::Create(m_pGraphicDev);
 
-				if (nullptr == pScene)
-					return -1;
-				break;
+						if (nullptr == pScene)
+							return -1;
+						break;
+					case LOADING_VILLAGE:
+						pScene = CVillage::Create(m_pGraphicDev);
 
-			case LOADING_DUNGEON:
-				pScene = CDungeon::Create(m_pGraphicDev);
+						if (nullptr == pScene)
+							return -1;
+						break;
+					case LOADING_REALDUNGEON:
+						pScene = CRealDungeon::Create(m_pGraphicDev);
 
-				if (nullptr == pScene)
-					return -1;
-				break;
+						if (nullptr == pScene)
+							return -1;
+						break;
+					case LOADING_AMDUSIASROOM:
+						pScene = CAmdusiasRoom::Create(m_pGraphicDev);
 
-			case LOADING_BOSS:
-				break;
-			}
+						if (nullptr == pScene)
+							return -1;
+						break;
+					case LOADING_LESHYROOM:
+						pScene = CLeshyRoom::Create(m_pGraphicDev);
+
+						if (nullptr == pScene)
+							return -1;
+						break;
+			};
 
 			if (FAILED(CManagement::GetInstance()->Set_Scene(pScene)))
 			{
