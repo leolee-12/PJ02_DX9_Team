@@ -9,6 +9,7 @@ namespace Engine
 	class CTexture;
 }
 
+class CCookingMiniGameUI;
 
 class CCookingSelectUI :
 	public CUi
@@ -26,15 +27,25 @@ public:
 
 public:
 	static CCookingSelectUI* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+
+	void SetRender(_bool _bRender) { m_bRender = _bRender; }
+	void AddFood();
+	void MakeFood();
+
 private:
 	virtual			void		Free();
 
 
 private:
 	vector<CGameObject*> m_vecCookingSelectUI;
+	vector<CGameObject*> m_vecFoodSlot;
+
 
 	_bool		m_bRender;
 	float m_iCurCookingCount;
-	float m_iCookingCount;
+	float m_iCookingCountMax;
+
+	CCookingMiniGameUI* m_pCookingMiniGameUI;
+
 };
 

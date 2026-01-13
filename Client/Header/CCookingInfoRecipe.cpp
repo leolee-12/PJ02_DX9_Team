@@ -1,30 +1,30 @@
 #include "pch.h"
-#include "CCookingInfoCardFood.h"
+#include "CCookingInfoRecipe.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
 
-CCookingInfoCardFood::CCookingInfoCardFood(LPDIRECT3DDEVICE9 pGraphicDev)
+CCookingInfoRecipe::CCookingInfoRecipe(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CUi(pGraphicDev), m_pBufferCom(nullptr), m_pTransformCom(nullptr)
 {
 	ZeroMemory(&m_vPos, sizeof(_vec3));
 }
 
-CCookingInfoCardFood::~CCookingInfoCardFood()
+CCookingInfoRecipe::~CCookingInfoRecipe()
 {
 }
 
-HRESULT CCookingInfoCardFood::Ready_GameObject()
+HRESULT CCookingInfoRecipe::Ready_GameObject()
 {
 	if (FAILED(Add_Component()))
 		return E_FAIL;
 
-	m_pTransformCom->Set_Scale(256 * 1.5f, 256 * 2.0f, 0.f);
-	m_pTransformCom->Set_Pos(WINCX / 4, 0, 0.1f);
+	m_pTransformCom->Set_Scale(114.0f * 0.5f, 111.0f  * 0.5f, 0.f);
+	m_pTransformCom->Set_Pos(WINCX / 4, -100, 0.5f);
 
 	return S_OK;
 }
 
-HRESULT CCookingInfoCardFood::Ready_Material()
+HRESULT CCookingInfoRecipe::Ready_Material()
 {
 	D3DMATERIAL9			tMtrl;
 	ZeroMemory(&tMtrl, sizeof(D3DMATERIAL9));
@@ -41,7 +41,7 @@ HRESULT CCookingInfoCardFood::Ready_Material()
 	return S_OK;
 }
 
-_int CCookingInfoCardFood::Update_GameObject(const _float& fTimeDelta)
+_int CCookingInfoRecipe::Update_GameObject(const _float& fTimeDelta)
 {
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
@@ -50,14 +50,14 @@ _int CCookingInfoCardFood::Update_GameObject(const _float& fTimeDelta)
 	return iExit;
 }
 
-void CCookingInfoCardFood::LateUpdate_GameObject(const _float& fTimeDelta)
+void CCookingInfoRecipe::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
 	m_pTransformCom->Get_Info(INFO_POS, &m_vPos);
 	Compute_ViewDepth_Ortho(&m_vPos);
 }
 
-void CCookingInfoCardFood::Render_GameObject()
+void CCookingInfoRecipe::Render_GameObject()
 {
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
 
@@ -66,12 +66,12 @@ void CCookingInfoCardFood::Render_GameObject()
 	m_pBufferCom->Render_Buffer();
 }
 
-void CCookingInfoCardFood::OnCollision(CGameObject* pObject)
+void CCookingInfoRecipe::OnCollision(CGameObject* pObject)
 {
 
 }
 
-HRESULT CCookingInfoCardFood::Add_Component()
+HRESULT CCookingInfoRecipe::Add_Component()
 {
 	Engine::CComponent* pComponent = nullptr;
 
@@ -94,7 +94,7 @@ HRESULT CCookingInfoCardFood::Add_Component()
 	m_mapComponent[ID_DYNAMIC].insert({ L"Com_Transform", pComponent });
 
 	pComponent = m_pTextureCom = dynamic_cast<Engine::CTexture*>
-		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_CookingCardInfoRightPattern"));
+		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_CookingCardInfoRecipe"));
 
 	if (nullptr == pComponent)
 		return E_FAIL;
@@ -106,21 +106,21 @@ HRESULT CCookingInfoCardFood::Add_Component()
 
 
 
-CCookingInfoCardFood* CCookingInfoCardFood::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+CCookingInfoRecipe* CCookingInfoRecipe::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 {
-	CCookingInfoCardFood* pCookingInfoCardFood = new CCookingInfoCardFood(pGraphicDev);
+	CCookingInfoRecipe* pCookingSelectBack = new CCookingInfoRecipe(pGraphicDev);
 
-	if (FAILED(pCookingInfoCardFood->Ready_GameObject()))
+	if (FAILED(pCookingSelectBack->Ready_GameObject()))
 	{
-		Safe_Release(pCookingInfoCardFood);
-		MSG_BOX("pCCookingInfoCardFood Create Failed");
+		Safe_Release(pCookingSelectBack);
+		MSG_BOX("pCCookingInfoRecipe Create Failed");
 		return nullptr;
 	}
 
-	return pCookingInfoCardFood;
+	return pCookingSelectBack;
 }
 
-void CCookingInfoCardFood::Free()
+void CCookingInfoRecipe::Free()
 {
 	CUi::Free();
 }

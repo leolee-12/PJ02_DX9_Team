@@ -8,12 +8,12 @@ namespace Engine
 	class CTexture;
 }
 
-class CCookingInfoCardRightPattern :
+class CCookingInfoRecipe :
 	public CUi
 {
 private:
-	explicit CCookingInfoCardRightPattern(LPDIRECT3DDEVICE9 pGraphicDev);
-	virtual ~CCookingInfoCardRightPattern();
+	explicit CCookingInfoRecipe(LPDIRECT3DDEVICE9 pGraphicDev);
+	virtual ~CCookingInfoRecipe();
 
 public:
 	virtual			HRESULT		Ready_GameObject();
@@ -23,7 +23,7 @@ public:
 	virtual			void		OnCollision(CGameObject* pObject);
 
 public:
-	static CCookingInfoCardRightPattern* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	static CCookingInfoRecipe* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 
 private:
 	virtual			void		Free();

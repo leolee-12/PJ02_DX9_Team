@@ -358,14 +358,8 @@
     <Filter Include="02. GameObject\07. UI\05.CookingUI\01.CookingSelect\04.CookingInfoCard\04.CookingInfoRecipe">
       <UniqueIdentifier>{5a48922d-7be3-44a7-855e-ebfe34f5061a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\07. UI\05.CookingUI\01.CookingSelect\04.CookingInfoCard\05.CookingInfoCardFood">
-      <UniqueIdentifier>{d7269bea-6073-4466-a4e8-a33b406cff9f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\07. UI\05.CookingUI\01.CookingSelect\04.CookingInfoCard\02.CookingInfoCardLeftPattern">
-      <UniqueIdentifier>{dd3ecf39-6733-4b6e-90d9-86ad1c598c58}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\07. UI\05.CookingUI\01.CookingSelect\04.CookingInfoCard\03.CookingInfoCardRightParrtern">
-      <UniqueIdentifier>{5c0001aa-5425-458c-8a62-547a50b57e53}</UniqueIdentifier>
+    <Filter Include="02. GameObject\07. UI\05.CookingUI\01.CookingSelect\04.CookingInfoCard\06.CCookingStar">
+      <UniqueIdentifier>{36d9c4eb-2ff7-4719-9ff0-de85b45e9a67}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -714,17 +708,14 @@
     <ClInclude Include="..\Header\CCookingInfoCard.h">
       <Filter>02. GameObject\07. UI\05.CookingUI\01.CookingSelect\04.CookingInfoCard</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\CCookingInfoCardLeftPattern.h">
-      <Filter>02. GameObject\07. UI\05.CookingUI\01.CookingSelect\04.CookingInfoCard\02.CookingInfoCardLeftPattern</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Header\CCookingInfoCardFood.h">
-      <Filter>02. GameObject\07. UI\05.CookingUI\01.CookingSelect\04.CookingInfoCard\05.CookingInfoCardFood</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Header\CCookingInfoCardRightPattern.h">
-      <Filter>02. GameObject\07. UI\05.CookingUI\01.CookingSelect\04.CookingInfoCard\03.CookingInfoCardRightParrtern</Filter>
-    </ClInclude>
     <ClInclude Include="..\Header\CCookingTarget.h">
       <Filter>02. GameObject\07. UI\05.CookingUI\00.CookingMiniGame\04.CookingTarget</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CCookingStar.h">
+      <Filter>02. GameObject\07. UI\05.CookingUI\01.CookingSelect\04.CookingInfoCard\06.CCookingStar</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CCookingInfoRecipe.h">
+      <Filter>02. GameObject\07. UI\05.CookingUI\01.CookingSelect\04.CookingInfoCard\04.CookingInfoRecipe</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1046,20 +1037,17 @@
     <ClCompile Include="..\Code\CCookingInfoCardBack.cpp">
       <Filter>02. GameObject\07. UI\05.CookingUI\01.CookingSelect\04.CookingInfoCard\00.CookingInfoCardBack</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\CCookingTargetFood.cpp">
-      <Filter>02. GameObject\07. UI\05.CookingUI\01.CookingSelect\03.CCookingTargetFood</Filter>
-    </ClCompile>
     <ClCompile Include="..\Code\CCookingInfoCard.cpp">
       <Filter>02. GameObject\07. UI\05.CookingUI\01.CookingSelect\04.CookingInfoCard</Filter>
     </ClCompile>
-    <ClCompile Include="..\Header\CCookingInfoCardLeftPattern.cpp">
-      <Filter>02. GameObject\07. UI\05.CookingUI\01.CookingSelect\04.CookingInfoCard\02.CookingInfoCardLeftPattern</Filter>
+    <ClCompile Include="..\Code\CCookingStar.cpp">
+      <Filter>02. GameObject\07. UI\05.CookingUI\01.CookingSelect\04.CookingInfoCard\06.CCookingStar</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\CCookingInfoCardFood.cpp">
-      <Filter>02. GameObject\07. UI\05.CookingUI\01.CookingSelect\04.CookingInfoCard\05.CookingInfoCardFood</Filter>
+    <ClCompile Include="..\Header\CCookingTargetFood.cpp">
+      <Filter>02. GameObject\07. UI\05.CookingUI\01.CookingSelect\03.CCookingTargetFood</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\CCookingInfoCardRIghtPattern.cpp">
-      <Filter>02. GameObject\07. UI\05.CookingUI\01.CookingSelect\04.CookingInfoCard\03.CookingInfoCardRightParrtern</Filter>
+    <ClCompile Include="..\Header\CCookingInfoRecipe.cpp">
+      <Filter>02. GameObject\07. UI\05.CookingUI\01.CookingSelect\04.CookingInfoCard\04.CookingInfoRecipe</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

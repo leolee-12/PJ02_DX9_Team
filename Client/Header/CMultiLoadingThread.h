@@ -29,6 +29,7 @@ public:
 	void        Loading_for_Tutorial();
 	void		Loading_for_Dungeon();
 	void        Loading_for_KnuckleBone();
+	void		Loading_for_Test();
 
 	void		NonTex_for_Dungeon();
 	void		NonTex_for_Tutorial();

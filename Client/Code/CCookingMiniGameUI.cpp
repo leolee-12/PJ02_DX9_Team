@@ -87,7 +87,8 @@ HRESULT CCookingMiniGameUI::Ready_GameObject()
 
 	m_vecCookingUI.push_back(pGameObject);
 
-
+	m_fMarkerStopTime = 0.5f;
+	m_fMarkerCurStopTime = 0.0f;
 	m_bRender = false;
 	m_iCurCookingCount = 0;
 	m_iCookingCount = 0;
@@ -103,6 +104,27 @@ _int CCookingMiniGameUI::Update_GameObject(const _float& fTimeDelta)
 	}
 
 	CRenderer::GetInstance()->Add_RenderGroup(RENDER_UI, this);
+	
+	if (m_iCookingCount <= m_iCurCookingCount)
+	{
+		CookingEnd();
+	}
+
+
+	if (m_pMarker->Get_MarkerState() == CookingMarkerState::MS_STOP)
+	{
+		m_fMarkerCurStopTime += fTimeDelta;
+		if (m_fMarkerCurStopTime <= m_fMarkerStopTime)
+		{
+			m_fMarkerCurStopTime = 0.0f;
+			m_pMarker->Resume_Marker();
+			m_pGauge->Set_RandomPosX();
+
+		}
+	}
+
+
+
 
 	return NOEVENT;
 }
@@ -151,13 +173,10 @@ _bool CCookingMiniGameUI::Check_CookingResult()
 
 _bool CCookingMiniGameUI::CookingInput()
 {
-
+	if (m_pMarker->Get_MarkerState() == CookingMarkerState::MS_STOP) { return false; }
 	m_pMarker->Stop_Marker();
 	_bool bResult = Check_CookingResult();
-	m_pGauge->Set_RandomPosX();
-
-	if (bResult)
-		m_iCurCookingCount--;
+	m_iCurCookingCount--;
 
 	return bResult;
 }
@@ -177,16 +196,16 @@ CCookingMiniGameUI* CCookingMiniGameUI::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 	return pCookingMiniGame;
 }
 
-void CCookingMiniGameUI::SetRenderChange()
+void CCookingMiniGameUI::CookingStart(_int CookingCount)
 {
-	if (m_bRender == false)
-	{
-		m_bRender = true;
-	}
-	else
-	{
-		m_bRender = false;
-	}
+	Set_Render(true);
+	m_iCurCookingCount = 0;
+	m_iCookingCount = CookingCount;
+}
+
+void CCookingMiniGameUI::CookingEnd()
+{
+	Set_Render(false);
 }
 
 void CCookingMiniGameUI::Free()

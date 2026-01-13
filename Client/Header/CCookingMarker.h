@@ -38,6 +38,7 @@ public:
 	void Set_MarkerPos(_float fPos) { m_vPos.x = fPos; }
 	void Move_Marker(const _float fTimeDelta);
 	void Stop_Marker();
+	void Resume_Marker();
 	float Get_MarkerPos();
 	CookingMarkerState Get_MarkerState() { return m_eCurMarkerState; }
 private:
@@ -64,8 +65,5 @@ private:
 	// 좌우 이동 범위   게이지 * 0.5
 	float fMoveRange;
 
-	// 마커 Stop 관련 멤버변수
-	float m_fStopTime;
-	float m_fCurStopTime;
 };
 

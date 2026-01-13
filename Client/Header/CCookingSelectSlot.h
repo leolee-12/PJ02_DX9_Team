@@ -24,7 +24,7 @@ public:
 
 
 public:
-	static CCookingSelectSlot* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	static CCookingSelectSlot* Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vPos, _float fScale);
 
 private:
 	virtual			void		Free();
@@ -36,5 +36,9 @@ private:
 	CRcTex* m_pBufferCom;
 	CTransform* m_pTransformCom;
 	CTexture* m_pTextureCom;
+
+	_vec3 m_vPos;
+	_float m_fScale;
+
 };
 
