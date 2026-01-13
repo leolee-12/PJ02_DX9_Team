@@ -30,13 +30,33 @@ public:
 public:
 	HRESULT		Ready_Loading(LOADINGID eID);
 	HRESULT		Ready_Loadingqueue();
-	
-	void        Loading_for_Tutorial();
-	void		Loading_for_Dungeon();
-	void        Loading_for_KnuckleBone();
 
+	void        Loading_for_Logo();
+	void		Loading_for_Stage();
+	void        Loading_for_Boss();
+	void        Loading_for_Test();
+	void        Loading_for_KnuckleBone();
+	void		Loading_for_Dungeon();
+	void        Loading_for_Tutorial();
+	void        Loading_for_TheGateway();
+	void        Loading_for_Village();
+	void		Loading_for_RealDungeon();
+	void        Loading_for_AmdusiasRoom();
+	void        Loading_for_LeshyRoom();
+	
+
+	void        NonTex_for_Logo();
+	void		NonTex_for_Stage();
+	void        NonTex_for_Boss();
+	void        NonTex_for_Test();
+	void        NonTex_for_KnuckleBone();
 	void		NonTex_for_Dungeon();
-	void		NonTex_for_Tutorial();
+	void        NonTex_for_Tutorial();
+	void        NonTex_for_TheGateway();
+	void        NonTex_for_Village();
+	void		NonTex_for_RealDungeon();
+	void        NonTex_for_AmdusiasRoom();
+	void        NonTex_for_LeshyRoom();
 
 
 	void		Load_Object_Texture(const std::set<std::wstring>& textureSet);
