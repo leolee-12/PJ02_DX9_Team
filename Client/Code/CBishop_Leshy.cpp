@@ -24,7 +24,7 @@ HRESULT CBishop_Leshy::Ready_GameObject()
 	m_pTransformCom->Set_Scale(332.f * 0.025f, 422.f * 0.025f, 0.f);
 
 	m_pTransformCom->Set_Pos(m_tSpawndata.x * 0.8f, 2.f, m_tSpawndata.z * 0.8f);
-
+	
 	m_eCurState = Bishops::BS_IDLE;
 
 	return S_OK;

@@ -132,4 +132,18 @@ set<wstring> Teleport_Texture =
     L"Weed"
 };
 
+// RealDungeon.txt
+set<wstring> RealDungeon_Texture =
+{
+};
+
+// AmdusiasRoom.txt
+set<wstring> AmdusiasRoom_Texture =
+{
+};
+
+// LeshyRoom.txt
+set<wstring> LeshyRoom_Texture =
+{
+};
 
