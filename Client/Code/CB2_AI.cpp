@@ -1,8 +1,8 @@
 #include "pch.h"
-#include "CB1_AI.h"
+#include "CB2_AI.h"
 #include "CTransform.h"
 
-CB1_AI::CB1_AI(LPDIRECT3DDEVICE9 pGraphicDev)
+CB2_AI::CB2_AI(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CAIController(pGraphicDev),
 	m_fSpeed(0.f),
 	m_fAcmlTime(0.f),
@@ -16,7 +16,7 @@ CB1_AI::CB1_AI(LPDIRECT3DDEVICE9 pGraphicDev)
 	m_vecAtkPatterns.reserve(4);
 }
 
-CB1_AI::CB1_AI(const CB1_AI& rhs)
+CB2_AI::CB2_AI(const CB2_AI& rhs)
 	: CAIController(rhs),
 	m_fSpeed(rhs.m_fSpeed),
 	m_fAcmlTime(rhs.m_fAcmlTime),
@@ -31,11 +31,11 @@ CB1_AI::CB1_AI(const CB1_AI& rhs)
 	m_patternDeque = rhs.m_patternDeque;
 }
 
-CB1_AI::~CB1_AI()
+CB2_AI::~CB2_AI()
 {
 }
 
-HRESULT CB1_AI::Ready_AI(const _float& fDetectRange, const _float& fInteractRange, const _uint& iInitState)
+HRESULT CB2_AI::Ready_AI(const _float& fDetectRange, const _float& fInteractRange, const _uint& iInitState)
 {
 	if (FAILED(CAIController::Ready_AI(fDetectRange, fInteractRange, iInitState)))
 		return E_FAIL;
@@ -66,7 +66,7 @@ HRESULT CB1_AI::Ready_AI(const _float& fDetectRange, const _float& fInteractRang
 	return S_OK;
 }
 
-void CB1_AI::Enter_State(const _uint& iState)
+void CB2_AI::Enter_State(const _uint& iState)
 {
 	switch (iState)
 	{
@@ -138,7 +138,7 @@ void CB1_AI::Enter_State(const _uint& iState)
 	}
 }
 
-void CB1_AI::Exit_State(const _uint& iState)
+void CB2_AI::Exit_State(const _uint& iState)
 {
 	switch (iState)
 	{
@@ -184,7 +184,7 @@ void CB1_AI::Exit_State(const _uint& iState)
 	}
 }
 
-void CB1_AI::Generate_Pattern(CMonsterB1::MONSTER_B1_STATE eLastPattern)
+void CB2_AI::Generate_Pattern(CMonsterB1::MONSTER_B1_STATE eLastPattern)
 {
 	_uint iTotalWeight(0);
 
@@ -214,7 +214,7 @@ void CB1_AI::Generate_Pattern(CMonsterB1::MONSTER_B1_STATE eLastPattern)
 	}
 }
 
-void CB1_AI::Refill_Pattern()
+void CB2_AI::Refill_Pattern()
 {
 	while (m_patternDeque.size() < m_iDequeMinSize)
 	{
@@ -227,7 +227,7 @@ void CB1_AI::Refill_Pattern()
 	}
 }
 
-_int CB1_AI::Update_Component(const _float& fTimeDelta)
+_int CB2_AI::Update_Component(const _float& fTimeDelta)
 {
 	_int iExit(0);
 
@@ -276,7 +276,7 @@ _int CB1_AI::Update_Component(const _float& fTimeDelta)
 	return iExit;
 }
 
-void CB1_AI::Update_Crawl(const _float& fTimeDelta)
+void CB2_AI::Update_Crawl(const _float& fTimeDelta)
 {
 	if (m_bChase)
 	{	// 타겟을 이미 발견했을 때
@@ -307,7 +307,7 @@ void CB1_AI::Update_Crawl(const _float& fTimeDelta)
 	m_pOwnerTC->Set_Pos(vPos.x, vPos.y, vPos.z);
 }
 
-void CB1_AI::Update_Jump(const _float& fTimeDelta)
+void CB2_AI::Update_Jump(const _float& fTimeDelta)
 {
 	m_vSpeed.y += m_fGravity * fTimeDelta;
 	m_pOwnerTC->Move_Pos(&m_vSpeed, fTimeDelta, 1.f);
@@ -321,7 +321,7 @@ void CB1_AI::Update_Jump(const _float& fTimeDelta)
 	}
 }
 
-void CB1_AI::Update_Land(const _float& fTimeDelta)
+void CB2_AI::Update_Land(const _float& fTimeDelta)
 {
 	if (m_fAcmlTime < 0.2f)  // 0.2초 동안
 	{
@@ -333,7 +333,7 @@ void CB1_AI::Update_Land(const _float& fTimeDelta)
 	}
 }
 
-void CB1_AI::Update_Prepare(const _float& fTimeDelta)
+void CB2_AI::Update_Prepare(const _float& fTimeDelta)
 {
 	_vec3 vDesiredDir = Compute_TargetDir();
 	m_vDir = Compute_LimitedDir(60.f * fTimeDelta, m_vDir, vDesiredDir);
@@ -346,7 +346,7 @@ void CB1_AI::Update_Prepare(const _float& fTimeDelta)
 	if (m_fAcmlTime >= 2.f) Change_State(CMonsterB1::B1S_ATTACK);
 }
 
-void CB1_AI::Update_Attack(const _float& fTimeDelta)
+void CB2_AI::Update_Attack(const _float& fTimeDelta)
 {
 	_vec3 vPos;
 	m_pOwnerTC->Get_Info(INFO_POS, &vPos);
@@ -354,7 +354,7 @@ void CB1_AI::Update_Attack(const _float& fTimeDelta)
 	m_pOwnerTC->Set_Pos(vPos.x, vPos.y, vPos.z);
 }
 
-void CB1_AI::Update_Shoot(const _float& fTimeDelta)
+void CB2_AI::Update_Shoot(const _float& fTimeDelta)
 {
 	if (m_bOnce)
 	{
@@ -365,7 +365,7 @@ void CB1_AI::Update_Shoot(const _float& fTimeDelta)
 	}
 }
 
-void CB1_AI::Update_Summon(const _float& fTimeDelta)
+void CB2_AI::Update_Summon(const _float& fTimeDelta)
 {
 	if (m_bOnce)
 	{
@@ -376,15 +376,15 @@ void CB1_AI::Update_Summon(const _float& fTimeDelta)
 	}
 }
 
-void CB1_AI::Update_Roar(const _float& fTimeDelta)
+void CB2_AI::Update_Roar(const _float& fTimeDelta)
 {
 }
 
-void CB1_AI::Update_Spawn(const _float& fTimeDelta)
+void CB2_AI::Update_Spawn(const _float& fTimeDelta)
 {
 }
 
-void CB1_AI::Update_Stop(const _float& fTimeDelta)
+void CB2_AI::Update_Stop(const _float& fTimeDelta)
 {
 	if ((!m_bChase) && (m_fDistance <= m_fDetectRange))
 	{
@@ -403,7 +403,7 @@ void CB1_AI::Update_Stop(const _float& fTimeDelta)
 	Change_State(CMonsterB1::B1S_CRAWL);
 }
 
-void CB1_AI::Anim_End(CMonsterB1::MONSTER_B1_STATE eState)
+void CB2_AI::Anim_End(CMonsterB1::MONSTER_B1_STATE eState)
 {
 	switch (eState)
 	{
@@ -441,7 +441,7 @@ void CB1_AI::Anim_End(CMonsterB1::MONSTER_B1_STATE eState)
 	}
 }
 
-void CB1_AI::Push_Front_Pattern(CMonsterB1::MONSTER_B1_STATE eState)
+void CB2_AI::Push_Front_Pattern(CMonsterB1::MONSTER_B1_STATE eState)
 {
 	size_t iSize = m_vecAtkPatterns.size();
 
@@ -455,7 +455,7 @@ void CB1_AI::Push_Front_Pattern(CMonsterB1::MONSTER_B1_STATE eState)
 	}
 }
 
-void CB1_AI::Set_Weight(CMonsterB1::MONSTER_B1_STATE eState, _uint iNewWeight)
+void CB2_AI::Set_Weight(CMonsterB1::MONSTER_B1_STATE eState, _uint iNewWeight)
 {
 	size_t iSize = m_vecAtkPatterns.size();
 
@@ -473,25 +473,25 @@ void CB1_AI::Set_Weight(CMonsterB1::MONSTER_B1_STATE eState, _uint iNewWeight)
 	}
 }
 
-CB1_AI* CB1_AI::Create(LPDIRECT3DDEVICE9 pGraphicDev, const _float& fDetectRange, const _float& fInteractRange, const _uint& iInitState)
+CB2_AI* CB2_AI::Create(LPDIRECT3DDEVICE9 pGraphicDev, const _float& fDetectRange, const _float& fInteractRange, const _uint& iInitState)
 {
-	CB1_AI* pB1_AI = new CB1_AI(pGraphicDev);
+	CB2_AI* pB1_AI = new CB2_AI(pGraphicDev);
 
 	if (FAILED(pB1_AI->Ready_AI(fDetectRange, fInteractRange, iInitState)))
 	{
 		Safe_Release(pB1_AI);
-		MSG_BOX("CB1_AI Create Failed");
+		MSG_BOX("CB2_AI Create Failed");
 		return nullptr;
 	}
 
 	return pB1_AI;
 }
 
-CComponent* CB1_AI::Clone()
+CComponent* CB2_AI::Clone()
 {
-	return new CB1_AI(*this);
+	return new CB2_AI(*this);
 }
 
-void CB1_AI::Free()
+void CB2_AI::Free()
 {
 }

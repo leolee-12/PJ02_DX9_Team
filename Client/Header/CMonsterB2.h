@@ -10,19 +10,28 @@ namespace Engine
 }
 
 class CNode;
-class CB1_AI;
+class CB2_AI;
 class CProjectile;
 
-class CMonsterB1 : public CMonster
+class CMonsterB2 : public CMonster
 {
 public:
-	enum MONSTER_B1_STATE { B1S_CRAWL, B1S_JUMP, B1S_LAND, B1S_PREPARE, B1S_ATTACK, B1S_SHOOT, B1S_SUMMON, B1S_ROAR, B1S_SPAWN, B1S_STOP, B1S_END };
+	enum MONSTER_B2_STATE { B2S_IDLE, B2S_MOVESTART, B2S_MOVEEND, B2S_HIT, B2S_SMASH, B2S_SHOOT, B2S_SUMMON, B2S_SPAWN, B2S_DIE, B2S_DEAD, B2S_END };
+	// 상태			폴더명
+	// MOVESTART	move-out
+	// MOVEEND		move-in
+	// HIT			hurt
+	// SMASH		head-smash
+	// SHOOT		trunk-strike
+	// SPAWN		transform
+	// DIE			die (죽음 애니메이션)
+	// DEAD			dead (죽어있는 상태(die 이후))
 
 private:
-	explicit	CMonsterB1(LPDIRECT3DDEVICE9 pGraphicDev);
-	explicit	CMonsterB1(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel);
-	explicit	CMonsterB1(const CMonsterB1& rhs);
-	virtual		~CMonsterB1();
+	explicit	CMonsterB2(LPDIRECT3DDEVICE9 pGraphicDev);
+	explicit	CMonsterB2(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel);
+	explicit	CMonsterB2(const CMonsterB2& rhs);
+	virtual		~CMonsterB2();
 
 public:
 	virtual HRESULT		Ready_GameObject();
@@ -55,15 +64,15 @@ private:
 
 private:
 	// 스프라이트 관련
-	MONSTER_B1_STATE	m_ePreState;
-	MONSTER_B1_STATE	m_eCurState;
+	MONSTER_B2_STATE	m_ePreState;
+	MONSTER_B2_STATE	m_eCurState;
 	_float				m_fFrame;
 	_float				m_fFrameEnd;
 	_float				m_fFrameSpeed;
 	_matrix				m_matTex;
 
 	// AI 관련
-	CB1_AI* m_pAICom;
+	CB2_AI* m_pAICom;
 
 	// 마디 관련
 	CNode* m_pNode[4];
@@ -75,7 +84,7 @@ private:
 	_float			m_fAcmlTime;
 
 public:
-	static CMonsterB1* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel);
+	static CMonsterB2* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel);
 
 private:
 	virtual void		Free();
