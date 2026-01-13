@@ -10,16 +10,16 @@
 #include "CB2_AI.h"
 
 CMultiLoadingThread::CMultiLoadingThread(LPDIRECT3DDEVICE9 pGraphicDev)
-    : m_eLoading(LOADING_END)
-    , m_pGraphicDev(pGraphicDev)
-    , m_iTotalProtoCount(0)
+	: m_eLoading(LOADING_END)
+	, m_pGraphicDev(pGraphicDev)
+	, m_iTotalProtoCount(0)
 {
-    m_pGraphicDev->AddRef();
-    m_vecThread.resize(WORKER_COUNT);
-    for (_uint i = 0; i < WORKER_COUNT; ++i)
-    {
-        m_vecThread[i] = nullptr;
-    }
+	m_pGraphicDev->AddRef();
+	m_vecThread.resize(WORKER_COUNT);
+	for (_uint i = 0; i < WORKER_COUNT; ++i)
+	{
+		m_vecThread[i] = nullptr;
+	}
 }
 
 CMultiLoadingThread::~CMultiLoadingThread()
@@ -34,43 +34,43 @@ HRESULT		CMultiLoadingThread::Ready_Loading(LOADINGID eID)
 
 	Ready_Loadingqueue();
 
-    for (_uint i = 0; i < WORKER_COUNT; ++i)
-    {
-        m_vecThread[i] = (HANDLE)_beginthreadex(NULL,
-            0,
-            Thread_Main,
-            this,
-            0,
-            NULL);
-        if (m_vecThread[i] == 0)
-        {
-            MSG_BOX("멀티 스레드 생성 실패");
-            return E_FAIL;
-        }
-    }
+	for (_uint i = 0; i < WORKER_COUNT; ++i)
+	{
+		m_vecThread[i] = (HANDLE)_beginthreadex(NULL,
+			0,
+			Thread_Main,
+			this,
+			0,
+			NULL);
+		if (m_vecThread[i] == 0)
+		{
+			MSG_BOX("멀티 스레드 생성 실패");
+			return E_FAIL;
+		}
+	}
 
 	return S_OK;
 }
 
 HRESULT CMultiLoadingThread::Ready_Loadingqueue()
 {
-    switch (m_eLoading)
-    {
-    case LOADING_LOGO:
-        Loading_for_Logo();
-        break;
+	switch (m_eLoading)
+	{
+	case LOADING_LOGO:
+		Loading_for_Logo();
+		break;
 
-    case LOADING_STAGE:
-        Loading_for_Stage();
-        break;
+	case LOADING_STAGE:
+		Loading_for_Stage();
+		break;
 
-    case LOADING_BOSS:
-        Loading_for_Boss();
-        break;
+	case LOADING_BOSS:
+		Loading_for_Boss();
+		break;
 
-    case LOADING_TEST:
-        Loading_for_Test();
-        break;
+	case LOADING_TEST:
+		Loading_for_Test();
+		break;
 
 	case LOADING_KNUCKLEBONE:
 		Loading_for_KnuckleBone();
@@ -80,129 +80,129 @@ HRESULT CMultiLoadingThread::Ready_Loadingqueue()
 		Loading_for_Dungeon();
 		break;
 
-    case LOADING_TUTORIAL:
-        Loading_for_Tutorial();
-        break;
+	case LOADING_TUTORIAL:
+		Loading_for_Tutorial();
+		break;
 
-    case LOADING_THEGATEWAY:
-        Loading_for_TheGateway();
-        break;
+	case LOADING_THEGATEWAY:
+		Loading_for_TheGateway();
+		break;
 
-    case LOADING_VILLAGE:
-        Loading_for_Village();
-        break;
+	case LOADING_VILLAGE:
+		Loading_for_Village();
+		break;
 
-    case LOADING_REALDUNGEON:
-        Loading_for_RealDungeon();
-        break;
+	case LOADING_REALDUNGEON:
+		Loading_for_RealDungeon();
+		break;
 
-    case LOADING_AMDUSIASROOM:
-        Loading_for_AmdusiasRoom();
-        break;
+	case LOADING_AMDUSIASROOM:
+		Loading_for_AmdusiasRoom();
+		break;
 
-    case LOADING_LESHYROOM:
-        Loading_for_LeshyRoom();
-        break;
+	case LOADING_LESHYROOM:
+		Loading_for_LeshyRoom();
+		break;
 
-    default:
-        MSG_BOX("스테이지 엔트리 플래그값 오류");
-        return E_FAIL;
-    }
+	default:
+		MSG_BOX("스테이지 엔트리 플래그값 오류");
+		return E_FAIL;
+	}
 
 	return S_OK;
 }
 
 void CMultiLoadingThread::Loading_for_Logo()
 {
-    m_iTotalProtoCount = 0;
+	m_iTotalProtoCount = 0;
 
-    m_NonTexReadyQueue.push(&CMultiLoadingThread::NonTex_for_Logo);
-    m_iTotalProtoCount++;
+	m_NonTexReadyQueue.push(&CMultiLoadingThread::NonTex_for_Logo);
+	m_iTotalProtoCount++;
 
-    m_TexturLoadingqueue.push(TEXLR(L"Proto_MainMenuTex", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Mainmenu(2)/animation_%04d.png", 48));
-    m_iTotalProtoCount++;
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_MainMenuTex", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Mainmenu(2)/animation_%04d.png", 48));
+	m_iTotalProtoCount++;
 
-    m_TexturLoadingqueue.push(TEXLR(L"Proto_MainLogoTex", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Mainmenu/Logo.png", 1));
-    m_iTotalProtoCount++;
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_MainLogoTex", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Mainmenu/Logo.png", 1));
+	m_iTotalProtoCount++;
 
-    m_TexturLoadingqueue.push(TEXLR(L"Proto_MainTabTex", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Mainmenu/Tab.png", 1));
-    m_iTotalProtoCount++;
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_MainTabTex", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Mainmenu/Tab.png", 1));
+	m_iTotalProtoCount++;
 }
 
 void CMultiLoadingThread::Loading_for_Stage()
 {
-    m_iTotalProtoCount = 0;
+	m_iTotalProtoCount = 0;
 
-    m_NonTexReadyQueue.push(&CMultiLoadingThread::NonTex_for_Stage);
-    m_iTotalProtoCount++;
+	m_NonTexReadyQueue.push(&CMultiLoadingThread::NonTex_for_Stage);
+	m_iTotalProtoCount++;
 }
 
 void CMultiLoadingThread::Loading_for_Boss()
 {
-    m_iTotalProtoCount = 0;
+	m_iTotalProtoCount = 0;
 
-    m_NonTexReadyQueue.push(&CMultiLoadingThread::NonTex_for_Boss);
-    m_iTotalProtoCount++;
+	m_NonTexReadyQueue.push(&CMultiLoadingThread::NonTex_for_Boss);
+	m_iTotalProtoCount++;
 }
 
 void CMultiLoadingThread::Loading_for_Test()
 {
-    m_iTotalProtoCount = 0;
+	m_iTotalProtoCount = 0;
 
-    m_NonTexReadyQueue.push(&CMultiLoadingThread::NonTex_for_Test);
-    m_iTotalProtoCount++;
+	m_NonTexReadyQueue.push(&CMultiLoadingThread::NonTex_for_Test);
+	m_iTotalProtoCount++;
 }
 
 void CMultiLoadingThread::Loading_for_KnuckleBone()
 {
-    m_iTotalProtoCount = 0;
+	m_iTotalProtoCount = 0;
 
-    m_NonTexReadyQueue.push(&CMultiLoadingThread::NonTex_for_Tutorial);
-    m_iTotalProtoCount++;
+	m_NonTexReadyQueue.push(&CMultiLoadingThread::NonTex_for_Tutorial);
+	m_iTotalProtoCount++;
 
 
-    m_TexturLoadingqueue.push(TEXLR(L"Proto_TTutorial", TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/TTutorial_%d.png", 2));
-    m_iTotalProtoCount++;
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_TTutorial", TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/TTutorial_%d.png", 2));
+	m_iTotalProtoCount++;
 
-    m_TexturLoadingqueue.push(TEXLR(L"Proto_KBCenter", TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/KnucklebonesIcon.png", 1));
-    m_iTotalProtoCount++;
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_KBCenter", TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/KnucklebonesIcon.png", 1));
+	m_iTotalProtoCount++;
 
-    m_TexturLoadingqueue.push(TEXLR(L"Proto_Divider", TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/TileDivider_%d.png", 2));
-    m_iTotalProtoCount++;
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_Divider", TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/TileDivider_%d.png", 2));
+	m_iTotalProtoCount++;
 
-    m_TexturLoadingqueue.push(TEXLR(L"Proto_KBMask", TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/Knucklebones_BW_MASK_%d.png", 2));
-    m_iTotalProtoCount++;
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_KBMask", TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/Knucklebones_BW_MASK_%d.png", 2));
+	m_iTotalProtoCount++;
 
-    m_TexturLoadingqueue.push(TEXLR(L"Proto_KBTab", TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/TabRed.png", 1));
-    m_iTotalProtoCount++;
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_KBTab", TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/TabRed.png", 1));
+	m_iTotalProtoCount++;
 
-    m_TexturLoadingqueue.push(TEXLR(L"Proto_KBSix", TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/Six.png", 1));
-    m_iTotalProtoCount++;
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_KBSix", TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/Six.png", 1));
+	m_iTotalProtoCount++;
 
-    m_TexturLoadingqueue.push(TEXLR(L"Proto_KBDice", TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/Dice_%d.png", 6));
-    m_iTotalProtoCount++;
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_KBDice", TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/Dice_%d.png", 6));
+	m_iTotalProtoCount++;
 
-    m_TexturLoadingqueue.push(TEXLR(L"Proto_KBBoardSlot", TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/Knucklebones_WhiteSquare.png", 1));
-    m_iTotalProtoCount++;
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_KBBoardSlot", TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/Knucklebones_WhiteSquare.png", 1));
+	m_iTotalProtoCount++;
 
-    m_TexturLoadingqueue.push(TEXLR(L"Proto_KBDiceBox", TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/DiceBox_A.png", 1));
-    m_iTotalProtoCount++;
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_KBDiceBox", TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/DiceBox_A.png", 1));
+	m_iTotalProtoCount++;
 
-    m_TexturLoadingqueue.push(TEXLR(L"Proto_KBBack", TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/DiceTubBG.png", 1));
-    m_iTotalProtoCount++;
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_KBBack", TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/DiceTubBG.png", 1));
+	m_iTotalProtoCount++;
 
-    //m_iTotalProtoCount = m_TexturLoadingqueue.unsafe_size();
+	//m_iTotalProtoCount = m_TexturLoadingqueue.unsafe_size();
 }
 
 void CMultiLoadingThread::Loading_for_Tutorial()
 {
-    m_iTotalProtoCount = 0;
+	m_iTotalProtoCount = 0;
 
-    m_NonTexReadyQueue.push(&CMultiLoadingThread::NonTex_for_Tutorial);
-    m_iTotalProtoCount++;
+	m_NonTexReadyQueue.push(&CMultiLoadingThread::NonTex_for_Tutorial);
+	m_iTotalProtoCount++;
 
 
-    // ===== 텍스처 큐 등록 (멀티스레드 로딩) =====
+	// ===== 텍스처 큐 등록 (멀티스레드 로딩) =====
 
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_SkyTexture", TEX_CUBE, L"../Bin/Resource/Texture/SkyBox/burger%d.dds", 4));
 	m_iTotalProtoCount++;
@@ -264,27 +264,14 @@ void CMultiLoadingThread::Loading_for_Tutorial()
 	vecBishopShamura.push_back(TEXSETLR(L"Bishop_Shamura_Talk", L"../Bin/Resource/Texture/Bishops/Shamura/Shamura-talk/dds/Shamura-talk-%d.dds", 267));
 	m_TexSetLoadingqueue.push(make_pair(TEXSETINFO(L"Proto_BishopShamura", TEX_NORMAL), vecBishopShamura));
 	m_iTotalProtoCount++;
-
-	vector<TEXSETLR> vecBossLeshy;
-	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Idle",		L"../Bin/Resource/Texture/Monster/Boss2/idle/idle_%04d.png",				80));
-	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_MoveStart",	L"../Bin/Resource/Texture/Monster/Boss2/move-out/move-out_%04d.png",		40));
-	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_MoveEnd",	L"../Bin/Resource/Texture/Monster/Boss2/move-in/Shamura-idle_%04d.png",		40));
-	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Hit",		L"../Bin/Resource/Texture/Monster/Boss2/hurt/hurt_%04d.png",				16));
-	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Smash",		L"../Bin/Resource/Texture/Monster/Boss2/head-smash/head-smash_%04d.png",	62));
-	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Shoot",		L"../Bin/Resource/Texture/Monster/Boss2/trunk-strike%04d.png",				71));
-	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Spawn",		L"../Bin/Resource/Texture/Monster/Boss2/transform/transform_%04d.png",      128));
-	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Die",		L"../Bin/Resource/Texture/Monster/Boss2/die/die_%04d.png",                  132));
-	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Dead",		L"../Bin/Resource/Texture/Monster/Boss2/dead/dead_%04d.png",                24));
-	m_TexSetLoadingqueue.push(make_pair(TEXSETINFO(L"Proto_MonsterB2Texture", TEX_NORMAL), vecBishopShamura));
-	m_iTotalProtoCount++;
 }
 
 void CMultiLoadingThread::Loading_for_Dungeon()
 {
-    m_iTotalProtoCount = 0;
+	m_iTotalProtoCount = 0;
 
-    m_NonTexReadyQueue.push(&CMultiLoadingThread::NonTex_for_Dungeon);
-    m_iTotalProtoCount++;
+	m_NonTexReadyQueue.push(&CMultiLoadingThread::NonTex_for_Dungeon);
+	m_iTotalProtoCount++;
 
 
 	// ===== 텍스처 큐 등록 (멀티스레드 로딩) =====
@@ -357,107 +344,120 @@ void CMultiLoadingThread::Loading_for_Dungeon()
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_PassionIcon", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Player/PassionGauge/dds/PassionIcon_%d.dds", 2));
 	m_iTotalProtoCount++;
 
-    m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingBarkCover", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingMiniGame/CookingBar_Border.png", 1));
-    m_iTotalProtoCount++;
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingBarkCover", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingMiniGame/CookingBar_Border.png", 1));
+	m_iTotalProtoCount++;
 
-    m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingBarRed", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingMiniGame/CookingBar_Red.png", 1));
-    m_iTotalProtoCount++;
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingBarRed", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingMiniGame/CookingBar_Red.png", 1));
+	m_iTotalProtoCount++;
 
-    m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingBarGreen", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingMiniGame/CookingBar_Green.png", 1));
-    m_iTotalProtoCount++;
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingBarGreen", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingMiniGame/CookingBar_Green.png", 1));
+	m_iTotalProtoCount++;
 
-    m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingMarker", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingMiniGame/Cooking_Marker.png", 1));
-    m_iTotalProtoCount++;
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingMarker", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingMiniGame/Cooking_Marker.png", 1));
+	m_iTotalProtoCount++;
 
-    m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingButton", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingMiniGame/CookingButton.png", 1));
-    m_iTotalProtoCount++;
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingButton", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingMiniGame/CookingButton.png", 1));
+	m_iTotalProtoCount++;
 
-    m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingTarget", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingMiniGame/FoodTexture_%d.png", 1));
-    m_iTotalProtoCount++;
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingTarget", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingMiniGame/FoodTexture_%d.png", 1));
+	m_iTotalProtoCount++;
 
-    m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingTargetBack", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingMiniGame/CookingTargetBack.png", 1));
-    m_iTotalProtoCount++;
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingTargetBack", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingMiniGame/CookingTargetBack.png", 1));
+	m_iTotalProtoCount++;
 
-    m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingSelectBack", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/CookingSelectBack.png", 1));
-    m_iTotalProtoCount++;
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingSelectBack", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/CookingSelectBack.png", 1));
+	m_iTotalProtoCount++;
 
-    m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingSelectSlot", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/SelectSlot.png", 1));
-    m_iTotalProtoCount++;
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingSelectSlot", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/SelectSlot.png", 1));
+	m_iTotalProtoCount++;
 
-    m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingSelectStartBtn", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/SelectFoodTexture.png", 1));
-    m_iTotalProtoCount++;
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingSelectStartBtn", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/SelectFoodTexture.png", 1));
+	m_iTotalProtoCount++;
 
-    m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingCardInfoStarFilled", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/StarFilled.png", 1));
-    m_iTotalProtoCount++;
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingCardInfoStarFilled", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/StarFilled.png", 1));
+	m_iTotalProtoCount++;
 
-    m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingCardInfoStar", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/Star.png", 1));
-    m_iTotalProtoCount++;
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingCardInfoStar", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/Star.png", 1));
+	m_iTotalProtoCount++;
 
-    m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingCardInfoRecipe", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/Star.png", 1));
-    m_iTotalProtoCount++;
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingCardInfoRecipe", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/Star.png", 1));
+	m_iTotalProtoCount++;
 
-    m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingCardInfoFaithArrow_Down", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/FaithArrow_Down.png", 1));
-    m_iTotalProtoCount++;
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingCardInfoFaithArrow_Down", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/FaithArrow_Down.png", 1));
+	m_iTotalProtoCount++;
 
-    m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingCardInfoFaithArrow_Up", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/FaithArrow_Up.png", 1));
-    m_iTotalProtoCount++;
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingCardInfoFaithArrow_Up", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/FaithArrow_Up.png", 1));
+	m_iTotalProtoCount++;
 
-    m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingCardInfoFaithTexture", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/FaithTexture.png", 1));
-    m_iTotalProtoCount++;
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingCardInfoFaithTexture", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/FaithTexture.png", 1));
+	m_iTotalProtoCount++;
 
-    m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingCardInfoRightPattern", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/Rightpattern.png", 1));
-    m_iTotalProtoCount++;
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingCardInfoRightPattern", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/Rightpattern.png", 1));
+	m_iTotalProtoCount++;
 
-    m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingCardInfoLeftPattern", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/Leftpattern.png", 1));
-    m_iTotalProtoCount++;
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingCardInfoLeftPattern", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/Leftpattern.png", 1));
+	m_iTotalProtoCount++;
+
+	vector<TEXSETLR> vecBossLeshy;
+	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Idle",		L"../Bin/Resource/Texture/Monster/Boss2/idle/idle_%04d.png", 80));
+	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_MoveStart",	L"../Bin/Resource/Texture/Monster/Boss2/move-out/move-out_%04d.png", 40));
+	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_MoveEnd",	L"../Bin/Resource/Texture/Monster/Boss2/move-in/move-in_%04d.png", 40));
+	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Hit",		L"../Bin/Resource/Texture/Monster/Boss2/hurt/hurt_%04d.png", 16));
+	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Smash",		L"../Bin/Resource/Texture/Monster/Boss2/head-smash/head-smash_%04d.png", 62));
+	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Shoot",		L"../Bin/Resource/Texture/Monster/Boss2/trunk-strike/trunk-strike_%04d.png", 51));
+	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Spawn",		L"../Bin/Resource/Texture/Monster/Boss2/transform/transform_%04d.png", 128));
+	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Die",		L"../Bin/Resource/Texture/Monster/Boss2/die/die_%04d.png", 132));
+	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Dead",		L"../Bin/Resource/Texture/Monster/Boss2/dead/dead_%04d.png", 24));
+	m_TexSetLoadingqueue.push(make_pair(TEXSETINFO(L"Proto_MonsterB2Texture", TEX_NORMAL), vecBossLeshy));
+	m_iTotalProtoCount++;
 }
 
 void CMultiLoadingThread::Loading_for_TheGateway()
 {
-    m_iTotalProtoCount = 0;
+	m_iTotalProtoCount = 0;
 
-    m_NonTexReadyQueue.push(&CMultiLoadingThread::NonTex_for_Dungeon);
-    m_iTotalProtoCount++;
+	m_NonTexReadyQueue.push(&CMultiLoadingThread::NonTex_for_Dungeon);
+	m_iTotalProtoCount++;
 }
 
 void CMultiLoadingThread::Loading_for_Village()
 {
-    m_iTotalProtoCount = 0;
+	m_iTotalProtoCount = 0;
 
-    m_NonTexReadyQueue.push(&CMultiLoadingThread::NonTex_for_Village);
-    m_iTotalProtoCount++;
+	m_NonTexReadyQueue.push(&CMultiLoadingThread::NonTex_for_Village);
+	m_iTotalProtoCount++;
 }
 
 void CMultiLoadingThread::Loading_for_RealDungeon()
 {
-    m_iTotalProtoCount = 0;
+	m_iTotalProtoCount = 0;
 
-    m_NonTexReadyQueue.push(&CMultiLoadingThread::NonTex_for_RealDungeon);
-    m_iTotalProtoCount++;
-    
+	m_NonTexReadyQueue.push(&CMultiLoadingThread::NonTex_for_RealDungeon);
+	m_iTotalProtoCount++;
+
 }
 
 void CMultiLoadingThread::Loading_for_AmdusiasRoom()
 {
 	m_iTotalProtoCount = 0;
 
-    m_NonTexReadyQueue.push(&CMultiLoadingThread::NonTex_for_AmdusiasRoom);
-    m_iTotalProtoCount++;
-    
+	m_NonTexReadyQueue.push(&CMultiLoadingThread::NonTex_for_AmdusiasRoom);
+	m_iTotalProtoCount++;
+
 }
 
 void CMultiLoadingThread::Loading_for_LeshyRoom()
 {
-    m_iTotalProtoCount = 0;
+	m_iTotalProtoCount = 0;
 
-    m_NonTexReadyQueue.push(&CMultiLoadingThread::NonTex_for_LeshyRoom);
-    m_iTotalProtoCount++;
-    
+	m_NonTexReadyQueue.push(&CMultiLoadingThread::NonTex_for_LeshyRoom);
+	m_iTotalProtoCount++;
+
 }
 
 void CMultiLoadingThread::NonTex_for_Logo()
 {
-    CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_RcColTitle", Engine::CRcColTitle::Create(m_pGraphicDev));
+	CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_RcColTitle", Engine::CRcColTitle::Create(m_pGraphicDev));
 }
 
 void CMultiLoadingThread::NonTex_for_Stage()
@@ -491,35 +491,35 @@ void CMultiLoadingThread::NonTex_for_Dungeon()
 	CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_N2_AI", CN2_AI::Create(m_pGraphicDev, 6.f, 4.f));
 	CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_N3_AI", CN3_AI::Create(m_pGraphicDev, 6.f, 3.f));
 	CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_B1_AI", CB1_AI::Create(m_pGraphicDev, 40.f, 10.f));
-	CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_B2_AI", CB1_AI::Create(m_pGraphicDev, 40.f, 20.f));
+	CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_B2_AI", CB2_AI::Create(m_pGraphicDev, 40.f, 20.f));
 
-    Load_Object_Texture(Dungeon_Texture);
+	Load_Object_Texture(Dungeon_Texture);
 }
 
 void CMultiLoadingThread::NonTex_for_TheGateway()
 {
-    CPersistentMgr::GetInstance()->Ready_GlobalObjects(m_pGraphicDev);
-    Load_Object_Texture(TheGateway_Texture);
+	CPersistentMgr::GetInstance()->Ready_GlobalObjects(m_pGraphicDev);
+	Load_Object_Texture(TheGateway_Texture);
 }
 
 void CMultiLoadingThread::NonTex_for_Village()
 {
-    Load_Object_Texture(Village_Texture);
+	Load_Object_Texture(Village_Texture);
 }
 
 void CMultiLoadingThread::NonTex_for_RealDungeon()
 {
-    //Load_Object_Texture(RealDungeon_Texture);
+	//Load_Object_Texture(RealDungeon_Texture);
 }
 
 void CMultiLoadingThread::NonTex_for_AmdusiasRoom()
 {
-    //Load_Object_Texture(AmdusiasRoom_Texture);
+	//Load_Object_Texture(AmdusiasRoom_Texture);
 }
 
 void CMultiLoadingThread::NonTex_for_LeshyRoom()
 {
-    //Load_Object_Texture(LeshyRoom_Texture);
+	//Load_Object_Texture(LeshyRoom_Texture);
 }
 
 void CMultiLoadingThread::NonTex_for_Tutorial()
@@ -564,55 +564,55 @@ unsigned int CMultiLoadingThread::Thread_Main(void* pArg)
 {
 	CMultiLoadingThread* pOwner = reinterpret_cast<CMultiLoadingThread*>(pArg);
 
-    if (!pOwner || !pOwner->m_pGraphicDev) { return 0; }
+	if (!pOwner || !pOwner->m_pGraphicDev) { return 0; }
 
-    while (!g_bDistroyWindowFlag) {
-        _bool bDidWork = false;
+	while (!g_bDistroyWindowFlag) {
+		_bool bDidWork = false;
 
-       
+
 		TaskFunc Func = nullptr;
-        if (pOwner->m_NonTexReadyQueue.try_pop(Func))
-        {
-            if (g_bDistroyWindowFlag) break; 
-            if (!pOwner->m_pGraphicDev) break;
-            (pOwner->*Func)();
-            pOwner->m_iCompletedCount++;
-            bDidWork = true;
-        }
+		if (pOwner->m_NonTexReadyQueue.try_pop(Func))
+		{
+			if (g_bDistroyWindowFlag) break;
+			if (!pOwner->m_pGraphicDev) break;
+			(pOwner->*Func)();
+			pOwner->m_iCompletedCount++;
+			bDidWork = true;
+		}
 
 		TEXLR Texrequest;
-        if (pOwner->m_TexturLoadingqueue.try_pop(Texrequest)) {
+		if (pOwner->m_TexturLoadingqueue.try_pop(Texrequest)) {
 
-            if (g_bDistroyWindowFlag) break;
-            if (!pOwner->m_pGraphicDev) break;
+			if (g_bDistroyWindowFlag) break;
+			if (!pOwner->m_pGraphicDev) break;
 
-            CProtoMgr::GetInstance()->Ready_Prototype(Texrequest.strProtoName,
-                CTexture::CreateFromThread(pOwner->m_pGraphicDev, Texrequest.eTexType, Texrequest.strFilepath, Texrequest.iTexIndex));
+			CProtoMgr::GetInstance()->Ready_Prototype(Texrequest.strProtoName,
+				CTexture::CreateFromThread(pOwner->m_pGraphicDev, Texrequest.eTexType, Texrequest.strFilepath, Texrequest.iTexIndex));
 
-            pOwner->m_iCompletedCount++;
-            bDidWork = true;
-        }
+			pOwner->m_iCompletedCount++;
+			bDidWork = true;
+		}
 
 		pair<TEXSETINFO, vector<TEXSETLR>> Pairrequest;
-        if (pOwner->m_TexSetLoadingqueue.try_pop(Pairrequest)) {
+		if (pOwner->m_TexSetLoadingqueue.try_pop(Pairrequest)) {
 
-            if (g_bDistroyWindowFlag) break;
-            if (!pOwner->m_pGraphicDev) break;
+			if (g_bDistroyWindowFlag) break;
+			if (!pOwner->m_pGraphicDev) break;
 
-            TEXSETINFO texsetinfo = std::move(Pairrequest.first);
-            vector<TEXSETLR> vecTexsetLR = std::move(Pairrequest.second);
+			TEXSETINFO texsetinfo = std::move(Pairrequest.first);
+			vector<TEXSETLR> vecTexsetLR = std::move(Pairrequest.second);
 
-            CProtoMgr::GetInstance()->Ready_Prototype(texsetinfo.strProtoName,
-                CTextureSet::CreateFromThered(pOwner->m_pGraphicDev, texsetinfo.eTexType, vecTexsetLR));
+			CProtoMgr::GetInstance()->Ready_Prototype(texsetinfo.strProtoName,
+				CTextureSet::CreateFromThered(pOwner->m_pGraphicDev, texsetinfo.eTexType, vecTexsetLR));
 
-            pOwner->m_iCompletedCount++;
-            bDidWork = true;
-        }
+			pOwner->m_iCompletedCount++;
+			bDidWork = true;
+		}
 
-        if (!bDidWork && pOwner->m_NonTexReadyQueue.empty() && pOwner->m_TexturLoadingqueue.empty() && pOwner->m_TexSetLoadingqueue.empty()) {
-            break;
-        }
-    }
+		if (!bDidWork && pOwner->m_NonTexReadyQueue.empty() && pOwner->m_TexturLoadingqueue.empty() && pOwner->m_TexSetLoadingqueue.empty()) {
+			break;
+		}
+	}
 
 
 
@@ -637,19 +637,19 @@ CMultiLoadingThread* CMultiLoadingThread::Create(LPDIRECT3DDEVICE9 pGraphicDev, 
 
 void CMultiLoadingThread::Free()
 {
-    // 안전장치 해당플래그는 윈도우 메세지루프에서 WM_DESTROY 메세지 처리 분기에 해당 플래그 켜줌
-    //g_bDistroyWindowFlag = true;
-    // 아니 안돼 우리는 로딩씬 재사용하기때문에 이거 켜져있으면 다음 스레드 구동때 스레드가 일을 안함
+	// 안전장치 해당플래그는 윈도우 메세지루프에서 WM_DESTROY 메세지 처리 분기에 해당 플래그 켜줌
+	//g_bDistroyWindowFlag = true;
+	// 아니 안돼 우리는 로딩씬 재사용하기때문에 이거 켜져있으면 다음 스레드 구동때 스레드가 일을 안함
 
-    if (!m_vecThread.empty()) {
-        WaitForMultipleObjects(WORKER_COUNT, m_vecThread.data(), TRUE, INFINITE);
+	if (!m_vecThread.empty()) {
+		WaitForMultipleObjects(WORKER_COUNT, m_vecThread.data(), TRUE, INFINITE);
 
-        for (HANDLE& hThread : m_vecThread) {
-            if (hThread) CloseHandle(hThread);
-        }
-        m_vecThread.clear();
-    }
+		for (HANDLE& hThread : m_vecThread) {
+			if (hThread) CloseHandle(hThread);
+		}
+		m_vecThread.clear();
+	}
 
-    Safe_Release(m_pGraphicDev);
+	Safe_Release(m_pGraphicDev);
 }
 

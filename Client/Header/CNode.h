@@ -16,7 +16,7 @@
 class CNode : public CGameObject
 {
 public:
-	enum USERID { MONSTER_N2, MONSTER_B1, USERID_END };
+	enum USERID { MONSTER_N2, MONSTER_B1, MONSTER_B2, USERID_END };
 
 private:
 	explicit	CNode(LPDIRECT3DDEVICE9 pGraphicDev);

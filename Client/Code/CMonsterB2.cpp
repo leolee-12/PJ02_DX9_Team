@@ -1,7 +1,5 @@
 #include "pch.h"
 #include "CMonsterB2.h"
-#include "CB2_AI.h"
-#include "CProjectile.h"
 #include "CMonsterN1.h"
 #include "CMonsterN2.h"
 #include "CProtoMgr.h"
@@ -9,6 +7,9 @@
 #include "CRenderer.h"
 #include "CPersistentMgr.h"
 #include "CCollisionMgr.h"
+#include "CNode.h"
+#include "CB2_AI.h"
+#include "CProjectile.h"
 
 CMonsterB2::CMonsterB2(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CMonster(pGraphicDev),
@@ -112,14 +113,25 @@ void CMonsterB2::LateUpdate_GameObject(const _float& fTimeDelta)
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
 
 	_vec3 vDir = *m_pAICom->Get_Dir();
+
+	//for (_uint i = 0; i < 4; ++i)
+	//{
+	//	m_pNode[i]->LateUpdate_GameObject(fTimeDelta);
+	//
+	//	if (vDir.z > 0.f)
+	//		m_pNode[i]->Set_Depth(m_fDepth - (i + 1) * 0.001f);
+	//
+	//	else
+	//		m_pNode[i]->Set_Depth(m_fDepth + (i + 1) * 0.001f);
+	//}
 }
 
 void CMonsterB2::Render_GameObject()
 {
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
 
-	Set_Texture();
-	Set_Material();
+	Set_TextureSet();
+	//Set_Material();
 
 	m_pGraphicDev->SetTextureStageState(0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_COUNT2);
 
@@ -127,7 +139,7 @@ void CMonsterB2::Render_GameObject()
 
 	m_pGraphicDev->SetTextureStageState(0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE);
 
-	Reset_Material();
+	//Reset_Material();
 }
 
 HRESULT CMonsterB2::Add_Component()
@@ -150,8 +162,8 @@ HRESULT CMonsterB2::Add_Component()
 
 		m_mapComponent[ID_DYNAMIC].insert({ L"Com_Transform", pComponent });
 
-	// Texture
-	pComponent = m_pTextureCom = dynamic_cast<Engine::CTexture*>
+	// TextureSet
+	pComponent = m_pTexSetCom = dynamic_cast<Engine::CTextureSet*>
 		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_MonsterB2Texture"));
 
 	NULL_CHECK_RETURN(pComponent, E_FAIL)
@@ -168,7 +180,7 @@ HRESULT CMonsterB2::Add_Component()
 
 	// AI
 	pComponent = m_pAICom = dynamic_cast<CB2_AI*>
-		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_B1_AI"));
+		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_B2_AI"));
 
 	NULL_CHECK_RETURN(pComponent, E_FAIL)
 
@@ -180,8 +192,9 @@ HRESULT CMonsterB2::Add_Component()
 void CMonsterB2::Ready_Variable()
 {
 	// 게임로직 변수 세팅
-	_float fScale = 10.f;
-	m_fGroundY = -2.5f + fScale * 0.5f;
+	_float fScale = 50.f;
+	m_fBtmPadding = fScale * 0.5f;
+	m_fGroundY = -2.5f + fScale * 0.5f - m_fBtmPadding;
 	m_iAttack = 1;
 	m_iMaxHp = m_iHp = 10;
 	m_iPhase = 1;
@@ -205,6 +218,30 @@ void CMonsterB2::Ready_Variable()
 	// Anim 관련 세팅
 	m_fFrameSpeed = 24.f;
 	D3DXMatrixIdentity(&m_matTex);
+
+	// 마디 세팅
+	//_vec3 vScale{};
+	//_float fScaleReduction(0.8f);
+	//m_pTransformCom->Get_Scale(&vScale);
+	//vScale *= fScaleReduction;
+	//m_pNode[0] = CNode::Create(m_pGraphicDev, m_pMessageChannel, m_pTransformCom, L"Proto_SpikeTexture");
+	//m_pNode[0]->Set_NodeScale(vScale);
+	//m_pNode[0]->Set_UserID(CNode::MONSTER_B2);
+
+	//vScale *= fScaleReduction;
+	//m_pNode[1] = CNode::Create(m_pGraphicDev, m_pMessageChannel, m_pTransformCom, L"Proto_SpikeTexture");
+	//m_pNode[1]->Set_NodeScale(vScale);
+	//m_pNode[1]->Set_UserID(CNode::MONSTER_B2);
+
+	//vScale *= fScaleReduction;
+	//m_pNode[2] = CNode::Create(m_pGraphicDev, m_pMessageChannel, m_pTransformCom, L"Proto_SpikeTexture");
+	//m_pNode[2]->Set_NodeScale(vScale);
+	//m_pNode[2]->Set_UserID(CNode::MONSTER_B2);
+
+	//vScale *= fScaleReduction;
+	//m_pNode[3] = CNode::Create(m_pGraphicDev, m_pMessageChannel, m_pTransformCom, L"Proto_SpikeTexture");
+	//m_pNode[3]->Set_NodeScale(vScale);
+	//m_pNode[3]->Set_UserID(CNode::MONSTER_B2);
 }
 
 void CMonsterB2::Ready_Event()
@@ -230,60 +267,44 @@ void CMonsterB2::Check_Frame()
 
 	switch (m_eCurState)
 	{
-	case B1S_CRAWL:
-		m_fFrameEnd = 16.f;
+	case B2S_IDLE:
+		m_fFrameEnd = m_pTexSetCom->Get_TextureEnd(L"BossLeshy_Idle");
 		break;
 
-	case B1S_JUMP:
-		m_fFrameEnd = 16.f;
+	case B2S_MOVESTART:
+		m_fFrameEnd = m_pTexSetCom->Get_TextureEnd(L"BossLeshy_MoveStart");
 		break;
 
-	case B1S_LAND:
-		m_fFrameEnd = 19.f;
+	case B2S_MOVEEND:
+		m_fFrameEnd = m_pTexSetCom->Get_TextureEnd(L"BossLeshy_MoveEnd");
 		break;
 
-	case B1S_PREPARE:
-	{
-		m_fFrameEnd = 8.f;
-		m_fAcmlTime = 0.f;
-
-		for (_uint i = 0; i < 4; ++i)
-		{
-			m_pNode[i]->Set_AcmlTime(0);
-			m_pNode[i]->Switch_UseMaterial();
-		}
-	}
-	break;
-
-	case B1S_ATTACK:
-	{
-		m_fFrameEnd = 19.f;
-
-		for (_uint i = 0; i < 4; ++i)
-		{
-			m_pNode[i]->Switch_UseMaterial();
-		}
-	}
-	break;
-
-	case B1S_SHOOT:
-		m_fFrameEnd = 36.f;
+	case B2S_HIT:
+		m_fFrameEnd = m_pTexSetCom->Get_TextureEnd(L"BossLeshy_Hit");
 		break;
 
-	case B1S_SUMMON:
-		m_fFrameEnd = 19.f;
+	case B2S_SMASH:
+		m_fFrameEnd = m_pTexSetCom->Get_TextureEnd(L"BossLeshy_Smash");
 		break;
 
-	case B1S_ROAR:
-		m_fFrameEnd = 48.f;
+	case B2S_SHOOT:
+		m_fFrameEnd = m_pTexSetCom->Get_TextureEnd(L"BossLeshy_Shoot");
 		break;
 
-	case B1S_SPAWN:
-		m_fFrameEnd = 19.f;
+	case B2S_SUMMON:
+		m_fFrameEnd = m_pTexSetCom->Get_TextureEnd(L"BossLeshy_Summon");
 		break;
 
-	case B1S_STOP:
-		m_fFrameEnd = 16.f;
+	case B2S_SPAWN:
+		m_fFrameEnd = m_pTexSetCom->Get_TextureEnd(L"BossLeshy_Spawn");
+		break;
+
+	case B2S_DIE:
+		m_fFrameEnd = m_pTexSetCom->Get_TextureEnd(L"BossLeshy_Die");
+		break;
+
+	case B2S_DEAD:
+		m_fFrameEnd = m_pTexSetCom->Get_TextureEnd(L"BossLeshy_Dead");
 		break;
 	}
 
@@ -302,50 +323,41 @@ void CMonsterB2::Move_Frame(const _float& fTimeDelta)
 
 		switch (m_eCurState)
 		{
-		case B1S_CRAWL:
-			m_pAICom->Anim_End(m_eCurState);
-			m_eCurState = B1S_STOP;
+		case B2S_MOVESTART:
+			m_fFrame = m_fFrameEnd;
 			break;
 
-		case B1S_JUMP:
-			m_fFrame = m_fFrameEnd - 0.001f;
+
+		case B2S_MOVEEND:
+		case B2S_HIT:
+		case B2S_SMASH:
+		case B2S_SHOOT:
+		case B2S_SUMMON:
+		case B2S_SPAWN:
+		{
+			m_pAICom->Anim_End(m_eCurState);
+			m_eCurState = B2S_IDLE;
+		}
 			break;
 
-		case B1S_LAND:
+		case B2S_DIE:
+		{
 			m_pAICom->Anim_End(m_eCurState);
-			m_eCurState = B1S_CRAWL;
-			break;
+			m_eCurState = B2S_DEAD;
+		}
+		break;
 
-		case B1S_ATTACK:
-			m_pAICom->Anim_End(m_eCurState);
-			m_eCurState = B1S_CRAWL;
-			break;
-
-		case B1S_SHOOT:
-			m_pAICom->Anim_End(m_eCurState);
-			m_eCurState = B1S_CRAWL;
-			break;
-
-		case B1S_SUMMON:
-			m_pAICom->Anim_End(m_eCurState);
-			m_eCurState = B1S_CRAWL;
-			break;
-
-		case B1S_SPAWN:
-			m_pAICom->Anim_End(m_eCurState);
-			m_eCurState = B1S_ROAR;
-			break;
-
-		case B1S_ROAR:
-			m_pAICom->Anim_End(m_eCurState);
-			m_eCurState = B1S_CRAWL;
+		case B2S_DEAD:
+			m_fFrame = m_fFrameEnd;
 			break;
 		}
 	}
 }
 
-void CMonsterB2::Set_Texture()
+void CMonsterB2::Set_TextureSet()
 {
+	wstring strPreKey = m_strFrameKey;
+
 	_vec3 vDir = *(m_pAICom->Get_Dir());		// AI로부터 받아온 방향
 	_bool bFlipX = vDir.x > 0.f ? true : false;	// 반전 여부
 	_uint iFrame = _uint(m_fFrame);				// 현재 프레임
@@ -355,56 +367,69 @@ void CMonsterB2::Set_Texture()
 	_uint iU = iFrame % 16;
 	_uint iV = iFrame / 16;
 
-	m_matTex._11 = 0.0625f;	// 가로는 16칸 고정
-	m_matTex._22 = 0.25f;	// 세로는 4칸 고정(MonsterB2)
+	//	L"BossLeshy_Idle",
+//		L"BossLeshy_MoveStart",
+//		L"BossLeshy_MoveEnd",
+//		L"BossLeshy_Hit",
+//		L"BossLeshy_Smash",
+//		L"BossLeshy_Shoot",
+//		L"BossLeshy_Spawn",
+//		L"BossLeshy_Die",
+//		L"BossLeshy_Dead",
 
 	switch (m_eCurState)
 	{
-	case B1S_CRAWL:
-	case B1S_JUMP:
-	case B1S_LAND:
-	case B1S_PREPARE:
-	case B1S_ATTACK:
-		if (vDir.z > 0.f) iV += 2;
+	case B2S_IDLE:
+		m_strFrameKey = L"BossLeshy_Idle";
 		break;
 
-	case B1S_SHOOT:
-	case B1S_SUMMON:
-	case B1S_ROAR:
+	case B2S_MOVESTART:
+		m_strFrameKey = L"BossLeshy_MoveStart";
 		break;
 
-	case B1S_SPAWN:
-		iTexIdx = 6;
+	case B2S_MOVEEND:
+		m_strFrameKey = L"BossLeshy_MoveEnd";
 		break;
 
-	case B1S_STOP:
-	{
-		iTexIdx = 0;
-		if (vDir.z > 0.f) iV += 2;
-	}
-	break;
+	case B2S_SMASH:
+		m_strFrameKey = L"BossLeshy_MoveSmash";
+		break;
+
+	case B2S_SHOOT:
+		m_strFrameKey = L"BossLeshy_Shoot";
+		break;
+
+	case B2S_SUMMON:
+		m_strFrameKey = L"BossLeshy_Summon";
+		break;
+
+	case B2S_SPAWN:
+		m_strFrameKey = L"BossLeshy_Spawn";
+		break;
+
+	case B2S_DIE:
+		m_strFrameKey = L"BossLeshy_Die";
+		break;
+
+	case B2S_DEAD:
+		m_strFrameKey = L"BossLeshy_Dead";
+		break;
 	}
 
 	if (bFlipX)
 	{
 		m_matTex._11 *= -1.f;
-		m_matTex._31 = _float(iU + 1) * 0.0625f;	// 반전 O : 오른쪽에서 왼쪽으로 읽음
+		m_matTex._31 = 1.f;	// 반전 O : 오른쪽에서 왼쪽으로 읽음
 	}
-	else
-	{
-		m_matTex._31 = _float(iU) * 0.0625f;	// 반전 X : 왼쪽에서 오른쪽으로 읽음
-	}
-
-	m_matTex._32 = _float(iV) * 0.25f;
 
 	m_pGraphicDev->SetTransform(D3DTS_TEXTURE0, &m_matTex);
 
-	m_pTextureCom->Set_Texture(iTexIdx);
+	m_pTexSetCom->Set_Texture(m_strFrameKey, _uint(m_fFrame));
 }
 
 void CMonsterB2::Set_Material()
 {
-	if (m_eCurState != B1S_PREPARE) return;
+	return;
 
 	_float fMax = 1.f;
 	_float fRatio = min(m_fAcmlTime / 2.f, 1.f);
@@ -456,9 +481,9 @@ void CMonsterB2::Attacked(const _int& iAttack)
 
 void CMonsterB2::Update_State()
 {
-	if (m_eCurState == B1S_SPAWN || m_eCurState == B1S_ROAR) return;
+	if (m_eCurState == B2S_SPAWN) return;
 
-	m_eCurState = m_pAICom->Get_RecommendState<MONSTER_B1_STATE>();
+	m_eCurState = m_pAICom->Get_RecommendState<MONSTER_B2_STATE>();
 }
 
 _vec3 CMonsterB2::Compute_LimitedDir(const _float& fMaxAngle, const _vec3& vCurDir, const _vec3& vDesiredDir)
@@ -484,7 +509,10 @@ _vec3 CMonsterB2::Compute_LimitedDir(const _float& fMaxAngle, const _vec3& vCurD
 }
 
 void CMonsterB2::Compute_NodePos(const _float& fTimeDelta)
-{	// Update에서 호출할 Node 위치 계산 함수
+{	
+	return;
+
+	// Update에서 호출할 Node 위치 계산 함수
 	_vec3 vCurPos;
 	_vec3 vPrevPos = m_vPos;						// LateUpdate에서 갱신되지 않았으므로 이전 위치
 	m_pTransformCom->Get_Info(INFO_POS, &vCurPos);	// AICom의 Update_Component에서 갱신된 현재 위치
@@ -506,8 +534,8 @@ void CMonsterB2::Compute_NodePos(const _float& fTimeDelta)
 		_float fLerp = min(1.f, fDistRatio * 0.5f);
 		_vec3 vTargetPos = vPrevPos - vNewDir * fAdaptiveDist;
 
-		if (m_eCurState != B1S_JUMP) vTargetPos.y = m_fGroundY * fScaleReduction;
-		fScaleReduction *= fScaleReduction;
+		//if (m_eCurState != B2S_JUMP) vTargetPos.y = m_fGroundY * fScaleReduction;
+		//fScaleReduction *= fScaleReduction;
 
 		vCurPos = m_pNode[i]->Get_NodePos();
 		_vec3 vNewPos;
@@ -530,9 +558,9 @@ void CMonsterB2::Check_Phase()
 	case 1:
 		if (fRatio <= 0.5f)
 		{
-			m_iPhase = 2;
-			m_pAICom->Push_Front_Pattern(B1S_SUMMON);
-			m_pAICom->Set_Weight(B1S_PREPARE, 10);
+			//m_iPhase = 2;
+			//m_pAICom->Push_Front_Pattern(B2S_SUMMON);
+			//m_pAICom->Set_Weight(B2S_PREPARE, 10);
 		}
 		return;
 

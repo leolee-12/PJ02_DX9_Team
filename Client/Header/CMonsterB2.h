@@ -5,7 +5,7 @@ namespace Engine
 {
 	class CRcTex;
 	class CTransform;
-	class CTexture;
+	class CTextureSet;
 	class CCollider;
 }
 
@@ -51,7 +51,7 @@ private:
 
 	void				Check_Frame();
 	void				Move_Frame(const _float& fTimeDelta);
-	void				Set_Texture();
+	void				Set_TextureSet();
 	void				Set_Material();
 	void				Reset_Material();
 
@@ -64,18 +64,20 @@ private:
 
 private:
 	// 스프라이트 관련
+	CTextureSet*		m_pTexSetCom;
+	wstring				m_strFrameKey;
 	MONSTER_B2_STATE	m_ePreState;
 	MONSTER_B2_STATE	m_eCurState;
 	_float				m_fFrame;
 	_float				m_fFrameEnd;
 	_float				m_fFrameSpeed;
 	_matrix				m_matTex;
-
+	_float				m_fBtmPadding;
 	// AI 관련
-	CB2_AI* m_pAICom;
+	CB2_AI*	m_pAICom;
 
 	// 마디 관련
-	CNode* m_pNode[4];
+	CNode*	m_pNode[4];
 
 	// 패턴 관련
 	_uint			m_iPhase;

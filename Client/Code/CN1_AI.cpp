@@ -2,6 +2,7 @@
 #include "CN1_AI.h"
 #include "CTransform.h"
 #include "CItem.h"
+#include "CB2_AI.h"
 
 CN1_AI::CN1_AI(LPDIRECT3DDEVICE9 pGraphicDev)
 	:	CAIController(pGraphicDev),

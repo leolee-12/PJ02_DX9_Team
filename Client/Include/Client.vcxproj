@@ -152,7 +152,7 @@
     <ClInclude Include="..\Header\CAmdusiasRoom.h" />
     <ClInclude Include="..\Header\CB1_AI.h" />
     <ClInclude Include="..\Header\CB2_AI.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\Header\CActiveItem.h" />
     <ClInclude Include="..\Header\CBackGround.h" />
@@ -217,7 +217,7 @@
     <ClInclude Include="..\Header\CMonster.h" />
     <ClInclude Include="..\Header\CMonsterB1.h" />
     <ClInclude Include="..\Header\CMonsterB2.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\Header\CMonsterN1.h" />
     <ClInclude Include="..\Header\CMultiLoadingThread.h" />
@@ -274,7 +274,7 @@
     <ClCompile Include="..\Code\CAmdusiasRoom.cpp" />
     <ClCompile Include="..\Code\CB1_AI.cpp" />
     <ClCompile Include="..\Code\CB2_AI.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\Code\CActiveItem.cpp" />
     <ClCompile Include="..\Code\CBackGround.cpp" />
@@ -338,7 +338,7 @@
     <ClCompile Include="..\Code\CMonster.cpp" />
     <ClCompile Include="..\Code\CMonsterB1.cpp" />
     <ClCompile Include="..\Code\CMonsterB2.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\Code\CMonsterN1.cpp" />
     <ClCompile Include="..\Code\CMonsterN2.cpp" />
