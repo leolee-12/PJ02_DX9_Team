@@ -119,6 +119,7 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>../Header; ../../Base; ../../Reference/Header; ../Include;</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -150,7 +151,9 @@
     <ClInclude Include="..\Header\Bishops_Enum.h" />
     <ClInclude Include="..\Header\CAmdusiasRoom.h" />
     <ClInclude Include="..\Header\CB1_AI.h" />
-    <ClInclude Include="..\Header\CB2_AI.h" />
+    <ClInclude Include="..\Header\CB2_AI.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="..\Header\CActiveItem.h" />
     <ClInclude Include="..\Header\CBackGround.h" />
     <ClInclude Include="..\Header\CCookingButton.h" />
@@ -213,7 +216,9 @@
     <ClInclude Include="..\Header\CMapWarp.h" />
     <ClInclude Include="..\Header\CMonster.h" />
     <ClInclude Include="..\Header\CMonsterB1.h" />
-    <ClInclude Include="..\Header\CMonsterB2.h" />
+    <ClInclude Include="..\Header\CMonsterB2.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="..\Header\CMonsterN1.h" />
     <ClInclude Include="..\Header\CMultiLoadingThread.h" />
     <ClInclude Include="..\Header\CMySkyBox.h" />
@@ -268,7 +273,9 @@
   <ItemGroup>
     <ClCompile Include="..\Code\CAmdusiasRoom.cpp" />
     <ClCompile Include="..\Code\CB1_AI.cpp" />
-    <ClCompile Include="..\Code\CB2_AI.cpp" />
+    <ClCompile Include="..\Code\CB2_AI.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\Code\CActiveItem.cpp" />
     <ClCompile Include="..\Code\CBackGround.cpp" />
     <ClCompile Include="..\Code\CCookingButton.cpp" />
@@ -330,7 +337,9 @@
     <ClCompile Include="..\Code\CMapWarp.cpp" />
     <ClCompile Include="..\Code\CMonster.cpp" />
     <ClCompile Include="..\Code\CMonsterB1.cpp" />
-    <ClCompile Include="..\Code\CMonsterB2.cpp" />
+    <ClCompile Include="..\Code\CMonsterB2.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\Code\CMonsterN1.cpp" />
     <ClCompile Include="..\Code\CMonsterN2.cpp" />
     <ClCompile Include="..\Code\CMonsterN3.cpp" />
