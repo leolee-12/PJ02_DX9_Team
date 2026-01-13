@@ -2,12 +2,12 @@
 #include "CAIController.h"
 #include "CMonsterB2.h"
 
-class CB2_AI : public CAIController
+class CB1_AI : public CAIController
 {
 protected:
-	explicit	CB2_AI(LPDIRECT3DDEVICE9 pGraphicDev);
-	explicit	CB2_AI(const CB2_AI& rhs);
-	virtual		~CB2_AI();
+	explicit	CB1_AI(LPDIRECT3DDEVICE9 pGraphicDev);
+	explicit	CB1_AI(const CB1_AI& rhs);
+	virtual		~CB1_AI();
 
 protected:
 	HRESULT		Ready_AI(const _float& fDetectRange, const _float& fInteractRange, const _uint& iInitState);
@@ -39,7 +39,7 @@ private:
 	_vec3		m_vLerpPos;		// Lerp¿ë À§Ä¡
 
 public:
-	static CB2_AI*		Create(LPDIRECT3DDEVICE9 pGraphicDev, const _float& fDetectRange, const _float& fInteractRange, const _uint& iInitState = 0);
+	static CB1_AI*		Create(LPDIRECT3DDEVICE9 pGraphicDev, const _float& fDetectRange, const _float& fInteractRange, const _uint& iInitState = 0);
 	CComponent*			Clone()	override;
 
 protected:

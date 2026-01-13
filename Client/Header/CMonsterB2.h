@@ -9,19 +9,20 @@ namespace Engine
 	class CCollider;
 }
 
-class CB2_AI;
+class CNode;
+class CB1_AI;
+class CProjectile;
 
-class CMonsterB2 : public CMonster 
+class CMonsterB1 : public CMonster
 {
 public:
-	enum MONSTER_B2_STATE { B2S_IDLE, B2S_RUN, B2S_ATTACK, B2S_HIT, B2S_SPAWN, B2S_JEER, B2S_PRAY, B2S_END };
-	enum ATTACK_PHASE { PREPARE, EXECUTE };
+	enum MONSTER_B1_STATE { B1S_CRAWL, B1S_JUMP, B1S_LAND, B1S_PREPARE, B1S_ATTACK, B1S_SHOOT, B1S_SUMMON, B1S_ROAR, B1S_SPAWN, B1S_STOP, B1S_END };
 
 private:
-	explicit	CMonsterB2(LPDIRECT3DDEVICE9 pGraphicDev);
-	explicit	CMonsterB2(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel);
-	explicit	CMonsterB2(const CMonsterB2& rhs);
-	virtual		~CMonsterB2();
+	explicit	CMonsterB1(LPDIRECT3DDEVICE9 pGraphicDev);
+	explicit	CMonsterB1(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel);
+	explicit	CMonsterB1(const CMonsterB1& rhs);
+	virtual		~CMonsterB1();
 
 public:
 	virtual HRESULT		Ready_GameObject();
@@ -29,6 +30,9 @@ public:
 	virtual void		LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual void		Render_GameObject();
 	virtual void		OnCollision(CGameObject* pObject) {};
+
+	void				Launch_Projectile(const _uint& iCount);
+	void				Summon_Minion(const _uint& iCount);
 
 private:
 	HRESULT				Add_Component();
@@ -39,25 +43,39 @@ private:
 	void				Check_Frame();
 	void				Move_Frame(const _float& fTimeDelta);
 	void				Set_Texture();
+	void				Set_Material();
+	void				Reset_Material();
 
 	void				Attack_HitBox();
 	void				Attacked(const _int& iAttack);
 	void				Update_State();
+	_vec3				Compute_LimitedDir(const _float& fAngle, const _vec3& vCurDir, const _vec3& vDesiredDir);
+	void				Compute_NodePos(const _float& fTimeDelta);
+	void				Check_Phase();
 
 private:
 	// 스프라이트 관련
-	MONSTER_B2_STATE	m_ePreState;
-	MONSTER_B2_STATE	m_eCurState;
+	MONSTER_B1_STATE	m_ePreState;
+	MONSTER_B1_STATE	m_eCurState;
 	_float				m_fFrame;
 	_float				m_fFrameEnd;
 	_float				m_fFrameSpeed;
 	_matrix				m_matTex;
 
 	// AI 관련
-	CB2_AI*				m_pAICom;
+	CB1_AI* m_pAICom;
+
+	// 마디 관련
+	CNode* m_pNode[4];
+
+	// 패턴 관련
+	_uint			m_iPhase;
+	_uint			m_iMaxHp;
+	_bool			m_bMtrl = false;
+	_float			m_fAcmlTime;
 
 public:
-	static CMonsterB2*	Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel);
+	static CMonsterB1* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel);
 
 private:
 	virtual void		Free();

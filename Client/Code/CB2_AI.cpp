@@ -1,125 +1,233 @@
 #include "pch.h"
-#include "CB2_AI.h"
+#include "CB1_AI.h"
 #include "CTransform.h"
 
-CB2_AI::CB2_AI(LPDIRECT3DDEVICE9 pGraphicDev)
-	:	CAIController(pGraphicDev),
-		m_fSpeed(0.f),
-		m_fAcmlTime(0.f),
-		m_bChase(false)
+CB1_AI::CB1_AI(LPDIRECT3DDEVICE9 pGraphicDev)
+	: CAIController(pGraphicDev),
+	m_fSpeed(0.f),
+	m_fAcmlTime(0.f),
+	m_bChase(false),
+	m_fAngle(0.f),
+	m_fGravity(0.f),
+	m_iDequeMinSize(3),
+	m_pOwner(nullptr),
+	m_bOnce(false)
+{
+	m_vecAtkPatterns.reserve(4);
+}
+
+CB1_AI::CB1_AI(const CB1_AI& rhs)
+	: CAIController(rhs),
+	m_fSpeed(rhs.m_fSpeed),
+	m_fAcmlTime(rhs.m_fAcmlTime),
+	m_bChase(false),
+	m_fAngle(rhs.m_fAngle),
+	m_fGravity(rhs.m_fGravity),
+	m_iDequeMinSize(rhs.m_iDequeMinSize),
+	m_pOwner(nullptr),
+	m_bOnce(false)
+{
+	m_vecAtkPatterns = rhs.m_vecAtkPatterns;
+	m_patternDeque = rhs.m_patternDeque;
+}
+
+CB1_AI::~CB1_AI()
 {
 }
 
-CB2_AI::CB2_AI(const CB2_AI& rhs)
-	:	CAIController(rhs),
-		m_fSpeed(rhs.m_fSpeed),
-		m_fAcmlTime(rhs.m_fAcmlTime),
-		m_bChase(false)
-{
-}
-
-CB2_AI::~CB2_AI()
-{
-}
-
-HRESULT CB2_AI::Ready_AI(const _float& fDetectRange, const _float& fInteractRange, const _uint& iInitState)
+HRESULT CB1_AI::Ready_AI(const _float& fDetectRange, const _float& fInteractRange, const _uint& iInitState)
 {
 	if (FAILED(CAIController::Ready_AI(fDetectRange, fInteractRange, iInitState)))
 		return E_FAIL;
 
-	m_fSpeed = 0.5f;
+	m_fSpeed = 1.f;
+	m_fAngle = 0.f;
+	m_vSpeed = { 0.f, 0.f, 0.f };
+	m_fGravity = -9.8f;
 	m_fAcmlTime = 0.f;
-	m_iRcmState = _uint(CMonsterB2::B2S_IDLE);
+	m_iRcmState = _uint(CMonsterB1::B1S_SPAWN);
+
+	// 공격 패턴 설정
+	m_iDequeMinSize = 3;
+	m_vecAtkPatterns.push_back({ CMonsterB1::B1S_JUMP, 40, true });
+	m_vecAtkPatterns.push_back({ CMonsterB1::B1S_PREPARE, 40, true });
+	m_vecAtkPatterns.push_back({ CMonsterB1::B1S_SHOOT, 40, true });
+	m_vecAtkPatterns.push_back({ CMonsterB1::B1S_SUMMON, 20, true });
+
+	// 시연용 : 모든 패턴이 순차적으로 실행
+	m_patternDeque.push_back(CMonsterB1::B1S_JUMP);
+	m_patternDeque.push_back(CMonsterB1::B1S_PREPARE);
+	m_patternDeque.push_back(CMonsterB1::B1S_SHOOT);
+	m_patternDeque.push_back(CMonsterB1::B1S_SUMMON);
+
+	// 게임용 : 가중치와 난수를 통해 패턴을 채워줌
+	Refill_Pattern();
 
 	return S_OK;
 }
 
-void CB2_AI::Enter_State(const _uint& iState)
+void CB1_AI::Enter_State(const _uint& iState)
 {
 	switch (iState)
 	{
-	case CMonsterB2::B2S_IDLE:
-		m_fAcmlTime = 0.f;
-		break;
-	case CMonsterB2::B2S_RUN:
+	case CMonsterB1::B1S_CRAWL:
 	{
-		m_fAcmlTime = 0.f;
+		m_fSpeed = 0.05f;
+		_vec3 vPrevPos, vDesiredDir;
 
-		if (m_pTargetTC) m_fSpeed = 2.f;
-		else m_fSpeed = 0.5f;
+		if ((!m_bChase) || (m_fAcmlTime < 2.f))			vDesiredDir = Randomize_Dir();
+		else if ((m_bChase) && (m_fAcmlTime >= 2.f))	vDesiredDir = Compute_TargetDir();
+
+		m_pOwnerTC->Get_Info(INFO_POS, &vPrevPos);
+		m_vDir = Compute_LimitedDir(120.f, m_vDir, vDesiredDir);
+		m_vLerpPos = vPrevPos + m_vDir * 3.f;
+		m_vLerpPos.x += Get_Rand_Int(-5, 5) * 0.3f;	// -1.5f ~ 1.5f 난수
+		m_vLerpPos.z += Get_Rand_Int(-5, 5) * 0.3f;	// -1.5f ~ 1.5f 난수
 	}
-		break;
-	case CMonsterB2::B2S_ATTACK:
+	break;
+	case CMonsterB1::B1S_JUMP:
 	{
-		m_fSpeed = 0.f;
+		m_vDir = Compute_TargetDir();
+		m_vSpeed = { m_vDir.x * 3.f, 10.f, m_vDir.z * 3.f };
+	}
+	break;
+	case CMonsterB1::B1S_LAND:
+	{
+		m_fAcmlTime = 0.f;
+		m_fSpeed = 1.f;
+	}
+	break;
+
+	case CMonsterB1::B1S_PREPARE:
+	{
+		m_fAcmlTime = 0.f;
+		m_fSpeed = 0.3f;
 		m_pOwnerTC->Get_Info(INFO_POS, &m_vLerpPos);
-		m_vLerpPos += m_vDir * 3.f;
+		m_vLerpPos -= m_vDir * 1.f;
 	}
-		break;
-	case CMonsterB2::B2S_HIT:
+	break;
+
+	case CMonsterB1::B1S_ATTACK:
 	{
+		m_fAcmlTime = 0.f;
 		m_fSpeed = 0.1f;
 		m_pOwnerTC->Get_Info(INFO_POS, &m_vLerpPos);
-		m_vLerpPos -= m_vDir * 2.f;
+		m_vLerpPos += m_vDir * 15.f;
 	}
+	break;
+
+	case CMonsterB1::B1S_SHOOT:
+		m_fAcmlTime = 0.f;
+		m_bOnce = true;
 		break;
-	case CMonsterB2::B2S_SPAWN:
+
+	case CMonsterB1::B1S_SUMMON:
+		m_fAcmlTime = 0.f;
+		m_bOnce = true;
+		break;
+
+	case CMonsterB1::B1S_ROAR:
+		break;
+
+	case CMonsterB1::B1S_SPAWN:
 		m_bActiveAI = false;
 		break;
-	case CMonsterB2::B2S_JEER:
-		break;
-	case CMonsterB2::B2S_PRAY:
+
+	case CMonsterB1::B1S_STOP:
 		break;
 	}
 }
 
-void CB2_AI::Exit_State(const _uint& iState)
+void CB1_AI::Exit_State(const _uint& iState)
 {
 	switch (iState)
 	{
-	case CMonsterB2::B2S_IDLE:
-	{
-		if (!m_pTargetTC) m_bChase = false;
-
-		_vec3 vDir;
-
-		if (!m_bChase)	Randomize_Dir();
-		else			Compute_TargetDir();
-	}
-	break;
-
-	case CMonsterB2::B2S_RUN:
+	case CMonsterB1::B1S_CRAWL:
 	{
 		if (!m_pTargetTC) m_bChase = false;
 	}
 	break;
 
-	case CMonsterB2::B2S_ATTACK:
+	case CMonsterB1::B1S_JUMP:
 	{
-		if (!m_pTargetTC) m_bChase = false;
-
-		_vec3 vDir;
-
-		Randomize_Dir();
 	}
 	break;
 
-	case CMonsterB2::B2S_HIT:
+	case CMonsterB1::B1S_LAND:
+	{
+		if (!m_pTargetTC) m_bChase = false;
+		m_vSpeed = { 0.f, 0.f, 0.f };
+	}
+	break;
+
+	case CMonsterB1::B1S_PREPARE:
 		break;
 
-	case CMonsterB2::B2S_SPAWN:
+	case CMonsterB1::B1S_ATTACK:
+		break;
+
+	case CMonsterB1::B1S_SUMMON:
+		break;
+
+	case CMonsterB1::B1S_ROAR:
 		m_bActiveAI = true;
 		break;
 
-	case CMonsterB2::B2S_JEER:
+	case CMonsterB1::B1S_SPAWN:
 		break;
 
-	case CMonsterB2::B2S_PRAY:
-		break;
+	case CMonsterB1::B1S_STOP:
+	{
+		if (!m_pTargetTC) m_bChase = false;
+	}
+	break;
 	}
 }
 
-_int CB2_AI::Update_Component(const _float& fTimeDelta)
+void CB1_AI::Generate_Pattern(CMonsterB1::MONSTER_B1_STATE eLastPattern)
+{
+	_uint iTotalWeight(0);
+
+	for (auto& pattern : m_vecAtkPatterns)
+	{
+		if (pattern.bIsActive && (pattern.eType != eLastPattern))
+		{
+			iTotalWeight += pattern.iWeight;
+		}
+	}
+
+	_uint iRandom = Get_Rand_Int(1, iTotalWeight);
+	_uint iAccumulated(0);
+
+	for (auto& pattern : m_vecAtkPatterns)
+	{
+		if (!pattern.bIsActive || (pattern.eType == eLastPattern))
+			continue;
+
+		iAccumulated += pattern.iWeight;
+
+		if (iRandom <= iAccumulated)
+		{
+			m_patternDeque.push_back(pattern.eType);
+			break;
+		}
+	}
+}
+
+void CB1_AI::Refill_Pattern()
+{
+	while (m_patternDeque.size() < m_iDequeMinSize)
+	{
+		CMonsterB1::MONSTER_B1_STATE eLastState;
+
+		if (m_patternDeque.empty()) eLastState = CMonsterB1::B1S_SUMMON;
+		else						eLastState = m_patternDeque.back();
+
+		Generate_Pattern(eLastState);
+	}
+}
+
+_int CB1_AI::Update_Component(const _float& fTimeDelta)
 {
 	_int iExit(0);
 
@@ -131,72 +239,57 @@ _int CB2_AI::Update_Component(const _float& fTimeDelta)
 
 	switch (m_iCurState)
 	{
-	case CMonsterB2::B2S_IDLE:
-		Update_Idle(fTimeDelta);
+	case CMonsterB1::B1S_CRAWL:
+		Update_Crawl(fTimeDelta);
 		break;
-	case CMonsterB2::B2S_RUN:
-		Update_Run(fTimeDelta);
+	case CMonsterB1::B1S_JUMP:
+		Update_Jump(fTimeDelta);
 		break;
-	case CMonsterB2::B2S_ATTACK:
+	case CMonsterB1::B1S_LAND:
+		Update_Land(fTimeDelta);
+		break;
+	case CMonsterB1::B1S_PREPARE:
+		Update_Prepare(fTimeDelta);
+		break;
+	case CMonsterB1::B1S_ATTACK:
 		Update_Attack(fTimeDelta);
 		break;
-	case CMonsterB2::B2S_HIT:
-		Update_Hit(fTimeDelta);
+	case CMonsterB1::B1S_SHOOT:
+		Update_Shoot(fTimeDelta);
 		break;
-	case CMonsterB2::B2S_SPAWN:
+	case CMonsterB1::B1S_SUMMON:
+		Update_Summon(fTimeDelta);
+		break;
+	case CMonsterB1::B1S_ROAR:
+		Update_Roar(fTimeDelta);
+		break;
+	case CMonsterB1::B1S_SPAWN:
 		Update_Spawn(fTimeDelta);
 		break;
-	case CMonsterB2::B2S_JEER:
-		Update_Jeer(fTimeDelta);
-		break;
-	case CMonsterB2::B2S_PRAY:
-		Update_Pray(fTimeDelta);
+	case CMonsterB1::B1S_STOP:
+		Update_Stop(fTimeDelta);
 		break;
 	}
+
+	Refill_Pattern();
 
 	return iExit;
 }
 
-void CB2_AI::Update_Idle(const _float& fTimeDelta)
+void CB1_AI::Update_Crawl(const _float& fTimeDelta)
 {
-	if (!m_pTargetTC) return;
-
 	if (m_bChase)
 	{	// 타겟을 이미 발견했을 때
 		if (m_fDistance <= m_fInteractRange)
-		{	// 타겟이 상호작용 범위 내에 있을 시 공격 상태로 전환
-			Change_State(CMonsterB2::B2S_ATTACK);
-			return;
-		}
-		else
-		{	// 타겟이 상호작용 범위 내에 없을 시 이동 상태로 전환하여 추적
-			Change_State(CMonsterB2::B2S_RUN);
-		}
-	}
-	else
-	{	
-		if (m_fDistance <= m_fDetectRange)
-		{	// 타겟이 감지 범위 내로 진입 시 발견 후 이동 상태로 전환하여 추적
-			m_bChase = true;
-			Change_State(CMonsterB2::B2S_RUN);
-		}
-		else if (m_fAcmlTime > 3.f)
-		{	// 타겟이 감지 범위 내에 없을 때는 대기하다 이동 상태로 전환하여 순찰
-			Change_State(CMonsterB2::B2S_RUN);
-		}
-	}
-}
-
-void CB2_AI::Update_Run(const _float& fTimeDelta)
-{
-	if (!m_pTargetTC) Change_State(CMonsterB2::B2S_IDLE);
-
-	if (m_bChase)
-	{	// 타겟을 이미 발견했을 때
-		if (m_fDistance <= m_fInteractRange)
-		{	
-			if ((m_iPreState != CMonsterB2::B2S_ATTACK) || (m_iPreState == CMonsterB2::B2S_ATTACK && m_fAcmlTime >= 5.f))
-				Change_State(CMonsterB2::B2S_ATTACK);
+		{
+			if (m_fAcmlTime >= 5.f)
+			{
+				if (!m_patternDeque.empty())
+				{
+					Change_State(m_patternDeque.front());
+					m_patternDeque.pop_front();
+				}
+			}
 		}
 	}
 	else
@@ -204,125 +297,201 @@ void CB2_AI::Update_Run(const _float& fTimeDelta)
 		if (m_fDistance <= m_fDetectRange)
 		{	// 타겟이 감지 범위 내로 진입 시 발견
 			m_bChase = true;
-			Compute_TargetDir();
 		}
-		else if (m_fAcmlTime > 3.f)
-		{	// 타겟이 감지 범위 내에 없을 때는 순찰하다 대기 상태로 전환
-			Change_State(CMonsterB2::B2S_IDLE);
+	}
+
+	//m_pOwnerTC->Move_Pos(&m_vDir, fTimeDelta, m_fSpeed);
+	_vec3 vPos;
+	m_pOwnerTC->Get_Info(INFO_POS, &vPos);
+	D3DXVec3Lerp(&vPos, &vPos, &m_vLerpPos, m_fSpeed);
+	m_pOwnerTC->Set_Pos(vPos.x, vPos.y, vPos.z);
+}
+
+void CB1_AI::Update_Jump(const _float& fTimeDelta)
+{
+	m_vSpeed.y += m_fGravity * fTimeDelta;
+	m_pOwnerTC->Move_Pos(&m_vSpeed, fTimeDelta, 1.f);
+
+	_vec3 vPos;
+	m_pOwnerTC->Get_Info(INFO_POS, &vPos);
+	if (vPos.y < m_fGroundY)
+	{
+		m_pOwnerTC->Set_Pos(vPos.x, m_fGroundY, vPos.z);
+		Change_State(CMonsterB1::B1S_LAND);
+	}
+}
+
+void CB1_AI::Update_Land(const _float& fTimeDelta)
+{
+	if (m_fAcmlTime < 0.2f)  // 0.2초 동안
+	{
+		_vec3 vPos;
+		m_pOwnerTC->Get_Info(INFO_POS, &vPos);
+		_float fDeceleration = 1.0f - (m_fAcmlTime / 0.2f);
+		vPos += m_vDir * 0.5f * fDeceleration * fTimeDelta;
+		m_pOwnerTC->Set_Pos(vPos.x, vPos.y, vPos.z);
+	}
+}
+
+void CB1_AI::Update_Prepare(const _float& fTimeDelta)
+{
+	_vec3 vDesiredDir = Compute_TargetDir();
+	m_vDir = Compute_LimitedDir(60.f * fTimeDelta, m_vDir, vDesiredDir);
+
+	_vec3 vPos;
+	m_pOwnerTC->Get_Info(INFO_POS, &vPos);
+	D3DXVec3Lerp(&vPos, &vPos, &m_vLerpPos, m_fSpeed);
+	m_pOwnerTC->Set_Pos(vPos.x, vPos.y, vPos.z);
+
+	if (m_fAcmlTime >= 2.f) Change_State(CMonsterB1::B1S_ATTACK);
+}
+
+void CB1_AI::Update_Attack(const _float& fTimeDelta)
+{
+	_vec3 vPos;
+	m_pOwnerTC->Get_Info(INFO_POS, &vPos);
+	D3DXVec3Lerp(&vPos, &vPos, &m_vLerpPos, m_fSpeed);
+	m_pOwnerTC->Set_Pos(vPos.x, vPos.y, vPos.z);
+}
+
+void CB1_AI::Update_Shoot(const _float& fTimeDelta)
+{
+	if (m_bOnce)
+	{
+		if (m_pOwner)
+			m_pOwner->Launch_Projectile(20);
+
+		m_bOnce = false;
+	}
+}
+
+void CB1_AI::Update_Summon(const _float& fTimeDelta)
+{
+	if (m_bOnce)
+	{
+		if (m_pOwner)
+			m_pOwner->Summon_Minion(7);
+
+		m_bOnce = false;
+	}
+}
+
+void CB1_AI::Update_Roar(const _float& fTimeDelta)
+{
+}
+
+void CB1_AI::Update_Spawn(const _float& fTimeDelta)
+{
+}
+
+void CB1_AI::Update_Stop(const _float& fTimeDelta)
+{
+	if ((!m_bChase) && (m_fDistance <= m_fDetectRange))
+	{
+		m_bChase = true;
+	}
+	else if ((m_bChase) && (m_fDistance <= m_fInteractRange) && (m_fAcmlTime >= 5.f))
+	{
+		if (!m_patternDeque.empty())
+		{
+			Change_State(m_patternDeque.front());
+			m_patternDeque.pop_front();
 			return;
 		}
 	}
-	if (m_fAcmlTime > 3.f) Compute_TargetDir();
 
-	m_pOwnerTC->Move_Pos(&m_vDir, fTimeDelta, m_fSpeed);
+	Change_State(CMonsterB1::B1S_CRAWL);
 }
 
-void CB2_AI::Update_Attack(const _float& fTimeDelta)
-{
-	if (!m_pTargetTC) Change_State(CMonsterB2::B2S_IDLE);
-
-	_vec3 vPos;
-	m_pOwnerTC->Get_Info(INFO_POS, &vPos);
-
-	D3DXVec3Lerp(&vPos, &vPos, &m_vLerpPos, m_fSpeed);
-
-	m_pOwnerTC->Set_Pos(vPos.x, vPos.y, vPos.z);
-}
-
-void CB2_AI::Update_Hit(const _float& fTimeDelta)
-{
-	_vec3 vPos;
-	m_pOwnerTC->Get_Info(INFO_POS, &vPos);
-
-	D3DXVec3Lerp(&vPos, &vPos, &m_vLerpPos, m_fSpeed);
-
-	m_pOwnerTC->Set_Pos(vPos.x, vPos.y, vPos.z);
-}
-
-void CB2_AI::Update_Spawn(const _float& fTimeDelta)
-{
-}
-
-void CB2_AI::Update_Jeer(const _float& fTimeDelta)
-{
-}
-
-void CB2_AI::Update_Pray(const _float& fTimeDelta)
-{
-}
-
-void CB2_AI::Compute_Distance()
-{
-	if (!m_pOwnerTC || !m_pTargetTC)
-	{
-		m_fDistance = FLT_MAX;
-		return;
-	}
-
-	_vec3 vOwnerPos, vTargetPos, vDir;
-	m_pOwnerTC->Get_Info(INFO_POS, &vOwnerPos);
-	m_pTargetTC->Get_Info(INFO_POS, &vTargetPos);
-	vDir = vTargetPos - vOwnerPos;
-
-	m_fDistance = D3DXVec3Length(&vDir);
-}
-
-void CB2_AI::Compute_TargetDir()
-{
-	if (!m_pOwnerTC || !m_pTargetTC) return;
-
-	_vec3 vOwnerPos, vTargetPos;
-	m_pOwnerTC->Get_Info(INFO_POS, &vOwnerPos);
-	m_pTargetTC->Get_Info(INFO_POS, &vTargetPos);
-	m_vDir = vTargetPos - vOwnerPos;
-	D3DXVec3Normalize(&m_vDir, &m_vDir);
-}
-
-void CB2_AI::Randomize_Dir()
-{
-	_float fAngle = D3DXToRadian(rand() % 360);
-	m_vDir.x = cosf(fAngle);
-	m_vDir.y = 0.f;
-	m_vDir.z = sinf(fAngle);
-}
-
-void CB2_AI::Anim_End(CMonsterB2::MONSTER_B2_STATE eState)
+void CB1_AI::Anim_End(CMonsterB1::MONSTER_B1_STATE eState)
 {
 	switch (eState)
 	{
-	case CMonsterB2::B2S_ATTACK:
-		Change_State(CMonsterB2::B2S_RUN);
+	case CMonsterB1::B1S_CRAWL:
+		Change_State(CMonsterB1::B1S_STOP);
 		break;
 
-	case CMonsterB2::B2S_HIT:
-		Change_State(CMonsterB2::B2S_RUN);
+	case CMonsterB1::B1S_LAND:
+		Change_State(CMonsterB1::B1S_CRAWL);
 		break;
 
-	case CMonsterB2::B2S_SPAWN:
-		Change_State(CMonsterB2::B2S_IDLE);
+	case CMonsterB1::B1S_PREPARE:
+		Change_State(CMonsterB1::B1S_ATTACK);
+		break;
+
+	case CMonsterB1::B1S_ATTACK:
+		Change_State(CMonsterB1::B1S_CRAWL);
+		break;
+
+	case CMonsterB1::B1S_SHOOT:
+		Change_State(CMonsterB1::B1S_CRAWL);
+		break;
+
+	case CMonsterB1::B1S_SUMMON:
+		Change_State(CMonsterB1::B1S_CRAWL);
+		break;
+
+	case CMonsterB1::B1S_ROAR:
+		Change_State(CMonsterB1::B1S_CRAWL);
+		break;
+
+	case CMonsterB1::B1S_SPAWN:
+		Change_State(CMonsterB1::B1S_ROAR);
 		break;
 	}
 }
 
-CB2_AI* CB2_AI::Create(LPDIRECT3DDEVICE9 pGraphicDev, const _float& fDetectRange, const _float& fInteractRange, const _uint& iInitState)
+void CB1_AI::Push_Front_Pattern(CMonsterB1::MONSTER_B1_STATE eState)
 {
-	CB2_AI* pB2_AI = new CB2_AI(pGraphicDev);
+	size_t iSize = m_vecAtkPatterns.size();
 
-	if (FAILED(pB2_AI->Ready_AI(fDetectRange, fInteractRange, iInitState)))
+	for (size_t i = 0; i < iSize; ++i)
 	{
-		Safe_Release(pB2_AI);
-		MSG_BOX("CB2_AI Create Failed");
+		if (m_vecAtkPatterns[i].eType == eState)
+		{
+			m_patternDeque.push_front(eState);
+			return;
+		}
+	}
+}
+
+void CB1_AI::Set_Weight(CMonsterB1::MONSTER_B1_STATE eState, _uint iNewWeight)
+{
+	size_t iSize = m_vecAtkPatterns.size();
+
+	for (size_t i = 0; i < iSize; ++i)
+	{
+		if (m_vecAtkPatterns[i].eType == eState)
+		{
+			m_vecAtkPatterns[i].iWeight = iNewWeight;
+
+			if (iNewWeight == 0)	m_vecAtkPatterns[i].bIsActive = false;
+			else					m_vecAtkPatterns[i].bIsActive = true;
+
+			return;
+		}
+	}
+}
+
+CB1_AI* CB1_AI::Create(LPDIRECT3DDEVICE9 pGraphicDev, const _float& fDetectRange, const _float& fInteractRange, const _uint& iInitState)
+{
+	CB1_AI* pB1_AI = new CB1_AI(pGraphicDev);
+
+	if (FAILED(pB1_AI->Ready_AI(fDetectRange, fInteractRange, iInitState)))
+	{
+		Safe_Release(pB1_AI);
+		MSG_BOX("CB1_AI Create Failed");
 		return nullptr;
 	}
 
-	return pB2_AI;
+	return pB1_AI;
 }
 
-CComponent* CB2_AI::Clone()
+CComponent* CB1_AI::Clone()
 {
-	return new CB2_AI(*this);
+	return new CB1_AI(*this);
 }
 
-void CB2_AI::Free()
+void CB1_AI::Free()
 {
 }

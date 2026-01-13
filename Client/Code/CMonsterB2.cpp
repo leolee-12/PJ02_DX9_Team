@@ -1,393 +1,75 @@
-#include "pch.h"
-#include "CMonsterB2.h"
-#include "CProtoMgr.h"
-#include "CManagement.h"
-#include "CRenderer.h"
-#include "CPersistentMgr.h"
-#include "CCollisionMgr.h"
-#include "CB2_AI.h"
+#pragma once
+#include "CAIController.h"
+#include "CMonsterB1.h"
 
-CMonsterB2::CMonsterB2(LPDIRECT3DDEVICE9 pGraphicDev)
-	:	CMonster(pGraphicDev),
-		m_ePreState(B2S_END),
-		m_eCurState(B2S_SPAWN),
-		m_fFrame(0.f),
-		m_fFrameEnd(0.f),
-		m_fFrameSpeed(0.f)
+class CB1_AI : public CAIController
 {
-	ZeroMemory(&m_vPos, sizeof(_vec3));
-}
-
-CMonsterB2::CMonsterB2(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel)
-	:	CMonster(pGraphicDev, StageChannel),
-		m_ePreState(B2S_END),
-		m_eCurState(B2S_SPAWN),
-		m_fFrame(0.f),
-		m_fFrameEnd(0.f),
-		m_fFrameSpeed(0.f)
-{
-	ZeroMemory(&m_vPos, sizeof(_vec3));
-}
-
-
-CMonsterB2::CMonsterB2(const CMonsterB2& rhs)
-	:	CMonster(rhs),
-		m_ePreState(B2S_END),
-		m_eCurState(B2S_SPAWN),
-		m_fFrame(0.f),
-		m_fFrameEnd(0.f),
-		m_fFrameSpeed(0.f)
-{
-}
-
-CMonsterB2::~CMonsterB2()
-{
-}
-
-HRESULT CMonsterB2::Ready_GameObject()
-{
-	m_eOBJID = OID_MONSTER;
-	if (FAILED(Add_Component()))
-		return E_FAIL;
-	
-	Ready_Variable();
-
-	Ready_Event();
-
-	return S_OK;
-}
-
-_int CMonsterB2::Update_GameObject(const _float& fTimeDelta)
-{
-	Move_Frame(fTimeDelta);
-
-	m_pColliderCom->UpdateFromTransform(m_pTransformCom);
-
-	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
-
-	if (iExit == DEAD)
+private:
+	typedef struct tagB1AttackPattern
 	{
-		m_pColliderCom->UnregisterFromManager();
-		return iExit;
-	}
-
-	CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHA, this);
-
-	return iExit;
-}
-
-void CMonsterB2::LateUpdate_GameObject(const _float& fTimeDelta)
-{
-	Update_State();
-
-	Check_Frame();
-
-	m_pTransformCom->Compute_Bilboard(BBD_X);
-	m_pTransformCom->Get_Info(INFO_POS, &m_vPos);
-	Compute_ViewDepth(&m_vPos);
-
-	CGameObject::LateUpdate_GameObject(fTimeDelta);
-}
-
-void CMonsterB2::Render_GameObject()
-{
-	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
-	
-	Set_Texture();
-
-	m_pGraphicDev->SetTextureStageState(0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_COUNT2);
-
-	m_pBufferCom->Render_Buffer();
-
-	m_pGraphicDev->SetTextureStageState(0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE);
-}
-
-HRESULT CMonsterB2::Add_Component()
-{
-	Engine::CComponent* pComponent = nullptr;
-
-	// RcCol
-	pComponent = m_pBufferCom = dynamic_cast<Engine::CRcTex*>
-		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_RcTex"));
-
-	NULL_CHECK_RETURN(pComponent, E_FAIL)
-
-	m_mapComponent[ID_STATIC].insert({ L"Com_Buffer", pComponent });
-
-	// Transform
-	pComponent = m_pTransformCom = dynamic_cast<Engine::CTransform*>
-		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Transform"));
-
-	NULL_CHECK_RETURN(pComponent, E_FAIL)
-
-	m_mapComponent[ID_DYNAMIC].insert({ L"Com_Transform", pComponent });
-
-	// Texture
-	pComponent = m_pTextureCom = dynamic_cast<Engine::CTexture*>
-		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_MonsterB2Texture"));
-
-	NULL_CHECK_RETURN(pComponent, E_FAIL)
-
-	m_mapComponent[ID_STATIC].insert({ L"Com_Texture", pComponent });
-
-	// Collider
-	pComponent = m_pColliderCom = dynamic_cast<Engine::CCollider*>
-		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Collider"));
-
-	NULL_CHECK_RETURN(pComponent, E_FAIL)
-
-	m_mapComponent[ID_STATIC].insert({ L"Com_Collider", pComponent });
-
-	// AI
-	pComponent = m_pAICom = dynamic_cast<CB2_AI*>
-		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_B2_AI"));
-
-	NULL_CHECK_RETURN(pComponent, E_FAIL)
-
-	m_mapComponent[ID_DYNAMIC].insert({ L"Com_AI", pComponent });
-
-	return S_OK;
-}
-
-void CMonsterB2::Ready_Variable()
-{
-	// Transform 세팅
-	m_pTransformCom->Set_Pos(_float(rand() % 20), 1.f, _float(rand() % 20));
-	m_pTransformCom->Set_Scale(3.f, 3.f, 3.f);
-
-	// Collider 세팅
-	m_pColliderCom->RegisterToManager(this, CL_MONSTER);
-
-	// AI 세팅
-	m_pAICom->Set_OwnerTransform(m_pTransformCom);
-	m_pAICom->Set_TargetTransform(CPersistentMgr::GetInstance()->Get_PlayerTransform());
-	m_pAICom->Set_State<MONSTER_B2_STATE>(B2S_SPAWN);
-
-	// 단위벡터 세팅
-	_float fAngle(0.f);
-
-	// Anim 관련 세팅
-	m_fFrameSpeed = 24.f;
-	D3DXMatrixIdentity(&m_matTex);
-
-	// 게임로직 변수 세팅
-	m_iAttack = 1;
-	m_iHp = 10;
-}
-
-void CMonsterB2::Ready_Event()
-{
-	m_hmapSubHandles.insert({ L"Monster_Damaged", m_pMessageChannel->Subscribe(L"Monster.Attacked", [this](const IMessageChannel::EVENT& Event) {
-	for (auto& Target : any_cast<vector<CGameObject*>>(Event.hmapData.find(L"Target")->second))
-	{
-		if (Target == this)
-		{
-			Attacked(any_cast<_int>(Event.hmapData.find(L"Attack")->second));
-			break;
-		}
-	}
-	}) });
-}
-
-void CMonsterB2::Check_Frame()
-{
-	if (m_ePreState == m_eCurState)
-		return;
-
-	m_fFrame = 0.f;
-
-	switch (m_eCurState)
-	{
-	case B2S_IDLE:
-	{
-		m_fFrameEnd = 24.f;
-	}
-	break;
-
-	case B2S_RUN:
-	{
-		m_fFrameEnd = 14.f;
-	}
-	break;
-
-	case B2S_ATTACK:
-	{
-		m_fFrameEnd = 18.f;
-	}
-	break;
-
-	case B2S_HIT:
-	{
-		m_fFrameEnd = 11.f;
-	}
-	break;
-
-	case B2S_SPAWN:
-	{
-		m_fFrameEnd = 36.f;
-	}
-	break;
-
-	case B2S_JEER:
-	{
-		m_fFrameEnd = 48.f;
-	}
-	break;
-
-	case B2S_PRAY:
-	{
-		m_fFrameEnd = 32.f;
-	}
-	break;
-	}
-
-	m_ePreState = m_eCurState;
-}
-
-void CMonsterB2::Move_Frame(const _float& fTimeDelta)
-{
-	m_fFrame += m_fFrameSpeed * fTimeDelta;
-
-	if (m_fFrame >= m_fFrameEnd)
-	{
-		m_fFrame = 0.f;
-
-		switch (m_eCurState)
-		{
-		case B2S_ATTACK:
-		{
-		}
-		break;
-
-		case B2S_HIT:
-			m_pAICom->Anim_End(m_eCurState);
-			m_eCurState = B2S_RUN;
-			break;
-
-		case B2S_SPAWN:
-			m_pAICom->Anim_End(m_eCurState);
-			m_eCurState = B2S_IDLE;
-			break;
-		}
-	}
-}
-
-void CMonsterB2::Set_Texture()
-{
-	_vec3 vDir = *(m_pAICom->Get_Dir());		// AI로부터 받아온 방향
-	_bool bFilpX = vDir.x > 0.f ? true : false;	// 반전 여부
-	_uint iFrame = _uint(m_fFrame);				// 현재 프레임
-
-	D3DXMatrixIdentity(&m_matTex);
-	_uint iU = iFrame % 16;
-	_uint iV = iFrame / 16;
-
-	m_matTex._11 = 0.0625f;	// 가로는 16칸 고정
-	m_matTex._22 = 0.25f;	// 세로는 4칸 고정(MonsterB2)
-
-	switch (m_eCurState)
-	{
-	case B2S_IDLE:
-	{
-		if (vDir.z > 0.f) iV += 2;
-	}
-	break;
-
-	case B2S_RUN:
-	{
-		if (vDir.z > 0.f) iV += 1;
-	}
-	break;
-
-	case B2S_ATTACK:
-	{
-	}
-	break;
-
-	case B2S_HIT:
-	{
-	}
-	break;
-
-	case B2S_SPAWN:
-	{
-	}
-	break;
-
-	case B2S_JEER:
-	{
-	}
-	break;
-
-	case B2S_PRAY:
-	{
-	}
-	break;
-	}
-
-	if (bFilpX)
-	{
-		m_matTex._11 *= -1.f;
-		m_matTex._31 = _float(iU + 1) * 0.0625f;	// 반전 O : 오른쪽에서 왼쪽으로 읽음
-	}
-	else
-	{
-		m_matTex._31 = _float(iU) * 0.0625f;	// 반전 X : 왼쪽에서 오른쪽으로 읽음
-	}
-
-	m_matTex._32 = _float(iV) * 0.25f;
-
-	m_pGraphicDev->SetTransform(D3DTS_TEXTURE0, &m_matTex);
-
-	m_pTextureCom->Set_Texture(_uint(m_eCurState));
-}
-
-void CMonsterB2::Attack_HitBox()
-{
-	AABB tAABB = { m_vPos.x, m_vPos.y, m_vPos.z,
-					2.f, 1.f, 2.f };
-
-	vector<CGameObject*> tempVec = CCollisionMgr::GetInstance()->Test_AABB(tAABB, CL_PLAYER);
-
-	if (!tempVec.empty())
-	{
-		IMessageChannel::EVENT EAttack;
-		EAttack.strType = L"Player.Attacked";
-		EAttack.eOBJID = Engine::OID_PLAYER;
-		EAttack.hmapData.emplace(L"Attack", m_iAttack);
-		EAttack.hmapData.emplace(L"Target", tempVec);
-		m_pMessageChannel->Publish(EAttack);
-	}
-}
-
-void CMonsterB2::Attacked(const _int& iAttack)
-{
-	m_iHp -= iAttack;
-}
-
-void CMonsterB2::Update_State()
-{
-	if (m_eCurState == B2S_SPAWN || m_eCurState == B2S_HIT)
-		return;
-
-	m_eCurState = m_pAICom->Get_RecommendState<MONSTER_B2_STATE>();
-}
-
-CMonsterB2* CMonsterB2::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel)
-{
-	CMonsterB2* pMonster = new CMonsterB2(pGraphicDev, StageChannel);
-
-	if (FAILED(pMonster->Ready_GameObject()))
-	{
-		Safe_Release(pMonster);
-		MSG_BOX("pMonster Create Failed");
-		return nullptr;
-	}
-
-	return pMonster;
-}
-
-void CMonsterB2::Free()
-{
-	CGameObject::Free();
-}
+		CMonsterB1::MONSTER_B1_STATE eType;
+		int iWeight;
+		bool bIsActive;  // 페이즈별 활성화
+	}B1_ATKPATTERN;
+
+protected:
+	explicit	CB1_AI(LPDIRECT3DDEVICE9 pGraphicDev);
+	explicit	CB1_AI(const CB1_AI& rhs);
+	virtual		~CB1_AI();
+
+protected:
+	HRESULT		Ready_AI(const _float& fDetectRange, const _float& fInteractRange, const _uint& iInitState);
+	void		Enter_State(const _uint& iState)	override;
+	void		Exit_State(const _uint& iState)		override;
+	void		Generate_Pattern(CMonsterB1::MONSTER_B1_STATE eState);
+	void		Refill_Pattern();
+
+public:
+	void		Set_Owner(CMonsterB1* pOwner) { m_pOwner = pOwner; }
+	void		Set_Speed(const _float& fSpeed) { m_fSpeed = fSpeed; }
+	void		Anim_End(CMonsterB1::MONSTER_B1_STATE eState);
+	void		Push_Front_Pattern(CMonsterB1::MONSTER_B1_STATE eState);
+	void		Set_Weight(CMonsterB1::MONSTER_B1_STATE eState, _uint iNewWeight);
+private:
+	_int		Update_Component(const _float& fTimeDelta)	override;
+	void		Update_Crawl(const _float& fTimeDelta);
+	void		Update_Jump(const _float& fTimeDelta);
+	void		Update_Land(const _float& fTimeDelta);
+	void		Update_Prepare(const _float& fTimeDelta);
+	void		Update_Attack(const _float& fTimeDelta);
+	void		Update_Shoot(const _float& fTimeDelta);
+	void		Update_Summon(const _float& fTimeDelta);
+	void		Update_Roar(const _float& fTimeDelta);
+	void		Update_Spawn(const _float& fTimeDelta);
+	void		Update_Stop(const _float& fTimeDelta);
+
+private:
+
+	_float		m_fSpeed;
+	_vec3		m_vSpeed;
+	_float		m_fAngle;
+	_float		m_fGravity;
+	_float		m_fAcmlTime;
+	_bool		m_bChase;
+	_vec3		m_vLerpPos;		// Lerp용 위치
+
+	// 패턴 관련
+	deque<CMonsterB1::MONSTER_B1_STATE> m_patternDeque;		// 공격 패턴을 담을 덱
+	vector<B1_ATKPATTERN>				m_vecAtkPatterns;	// 공격 패턴들의 정보(상태, 빈도, 활성화 여부)
+	_uint								m_iDequeMinSize;	// 덱에 담을 패턴의 최소 개수
+	CMonsterB1* m_pOwner;			// 메시지 발행은 Owner만 가능(컴포넌트는 메시지채널이 없어 불가)
+	_bool								m_bOnce;			// 패턴 관련 로직이 딱 한 번만 실행되도록
+
+	//-------------------------<패턴덱 사용 법>--------------------------
+	// - front()로 다음 패턴 가져온 뒤 pop_front()
+	// - back()으로 마지막 패턴 확인하여 중복아닌 다음 패턴을 push_back()
+	// - 강제 패턴 삽입은 push_front()
+	//-------------------------------------------------------------------
+
+public:
+	static CB1_AI* Create(LPDIRECT3DDEVICE9 pGraphicDev, const _float& fDetectRange, const _float& fInteractRange, const _uint& iInitState = 0);
+	CComponent* Clone()	override;
+
+protected:
+	void				Free()	override;
+};
