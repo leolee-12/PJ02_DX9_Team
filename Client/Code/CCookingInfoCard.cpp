@@ -36,14 +36,14 @@ HRESULT CCookingInfoCard::Ready_GameObject()
 
 	m_vecCookingSelectUI.push_back(pGameObject);
 
-	pGameObject = CCookingTargetFood::Create(m_pGraphicDev, {200.0f,60.0f,0.2f},0.1f, FOODTYPE::FT_NOMAL);
+	pGameObject = CCookingTargetFood::Create(m_pGraphicDev, {320.0f,150.0f,0.2f},0.3f, FOODTYPE::FT_NOMAL);
 
 	if (nullptr == pGameObject)
 		return E_FAIL;
 
 	m_vecCookingSelectUI.push_back(pGameObject);
 
-	pGameObject = CCookingSelectSlot::Create(m_pGraphicDev, {200.0f,60.0f,0.4f},0.3f);
+	pGameObject = CCookingSelectSlot::Create(m_pGraphicDev, {320.0f,150.0f,0.4f},0.3f);
 
 	if (nullptr == pGameObject)
 		return E_FAIL;
@@ -57,7 +57,7 @@ HRESULT CCookingInfoCard::Ready_GameObject()
 		return E_FAIL;
 
 	m_vecCookingSelectUI.push_back(pGameObject);
-	_vec3 DividerPos = _vec3(350.f, 160.f, 0.1f);
+	_vec3 DividerPos = _vec3(410.f, 140.f, 0.1f);
 
 	pGameObject = CDivider::Create(m_pGraphicDev, 1, DividerPos,0.5f);
 
@@ -66,7 +66,7 @@ HRESULT CCookingInfoCard::Ready_GameObject()
 
 	m_vecCookingSelectUI.push_back(pGameObject);
 
-	_vec3 DividerPos1 = _vec3(150.f, 160.f, 0.1f);
+	_vec3 DividerPos1 = _vec3(230.f, 140.f, 0.1f);
 
 	pGameObject = CDivider::Create(m_pGraphicDev, 0, DividerPos1,0.5f);
 
@@ -77,7 +77,7 @@ HRESULT CCookingInfoCard::Ready_GameObject()
 
 	for (int i = 0; i < 3; ++i)
 	{
-		pGameObject = CCookingStar::Create(m_pGraphicDev, 0, {200.0f+(i*50.0f),100.0f,0.1f}, 0.2f);
+		pGameObject = CCookingStar::Create(m_pGraphicDev, 0, {290.0f+(i*30.0f),50.0f,0.1f}, 0.2f);
 
 		if (nullptr == pGameObject)
 			return E_FAIL;
@@ -120,16 +120,20 @@ void CCookingInfoCard::Render_GameObject()
 	wchar_t szEffect[32];
 
 	swprintf_s(szFoodName, L"간장계란밥");
-	RECT rc0Player = { 0, 0, 1000, 250 };
+	RECT rc0Player = { 0, 0, 1000, 300 };
 	CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans30", szFoodName, rc0Player, FontColor, DT_RIGHT | DT_BOTTOM);
 
 	swprintf_s(szexexplanation, L"정말맛있다");
-	RECT rc1Player = { 0, 0, 1000,  350 };
+	RECT rc1Player = { 0, 0, 1000,  400 };
 	CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans30", szexexplanation, rc1Player, FontColor, DT_RIGHT | DT_BOTTOM);
 
-	swprintf_s(szEffect, L"15퍼센트의 확률로\n 추종자가 즉시 똥을 쌉니다");
-	RECT rc2Player = { 0, 0, 1100, 400 };
+	swprintf_s(szEffect, L"추종자가 설사합니다");
+	RECT rc2Player = { 0, 0, 1000, 500 };
 	CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans30", szEffect, rc2Player, FontColor, DT_RIGHT | DT_BOTTOM);
+
+	swprintf_s(szexexplanation, L"재료");
+	RECT rc3Player = { 0, 0, 1000,  550 };
+	CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans30", szexexplanation, rc3Player, FontColor, DT_RIGHT | DT_BOTTOM);
 
 
 }

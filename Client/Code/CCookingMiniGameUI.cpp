@@ -105,8 +105,9 @@ _int CCookingMiniGameUI::Update_GameObject(const _float& fTimeDelta)
 
 	CRenderer::GetInstance()->Add_RenderGroup(RENDER_UI, this);
 	
-	if (m_iCookingCount <= m_iCurCookingCount)
+	if (m_iCurCookingCount <= 0)
 	{
+		m_iCookingCount = 0;
 		CookingEnd();
 	}
 
@@ -114,9 +115,8 @@ _int CCookingMiniGameUI::Update_GameObject(const _float& fTimeDelta)
 	if (m_pMarker->Get_MarkerState() == CookingMarkerState::MS_STOP)
 	{
 		m_fMarkerCurStopTime += fTimeDelta;
-		if (m_fMarkerCurStopTime <= m_fMarkerStopTime)
+		if (m_fMarkerCurStopTime >= m_fMarkerStopTime)
 		{
-			m_fMarkerCurStopTime = 0.0f;
 			m_pMarker->Resume_Marker();
 			m_pGauge->Set_RandomPosX();
 
@@ -148,8 +148,6 @@ void CCookingMiniGameUI::Render_GameObject()
 	swprintf_s(szCookingCount, L"%d/%d", m_iCurCookingCount, m_iCookingCount);
 	RECT rcPlayer = { 0, 0, 700, 130 };
 	CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans30", szCookingCount, rcPlayer, FontColor, DT_RIGHT | DT_BOTTOM);
-
-	// 진짜 임시테스트용 멈추는지, 숫자 카운팅되는지, 랜덤하게 이동하는지확인용
 }
 
 void CCookingMiniGameUI::OnCollision(CGameObject* pObject)
@@ -175,6 +173,7 @@ _bool CCookingMiniGameUI::CookingInput()
 {
 	if (m_pMarker->Get_MarkerState() == CookingMarkerState::MS_STOP) { return false; }
 	m_pMarker->Stop_Marker();
+	m_fMarkerCurStopTime = 0.0f;
 	_bool bResult = Check_CookingResult();
 	m_iCurCookingCount--;
 
@@ -199,13 +198,14 @@ CCookingMiniGameUI* CCookingMiniGameUI::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 void CCookingMiniGameUI::CookingStart(_int CookingCount)
 {
 	Set_Render(true);
-	m_iCurCookingCount = 0;
+	m_iCurCookingCount = CookingCount;
 	m_iCookingCount = CookingCount;
 }
 
 void CCookingMiniGameUI::CookingEnd()
 {
 	Set_Render(false);
+	m_OnCookingEnd();
 }
 
 void CCookingMiniGameUI::Free()

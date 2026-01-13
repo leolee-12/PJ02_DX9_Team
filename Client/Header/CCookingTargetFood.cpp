@@ -37,7 +37,7 @@ HRESULT CCookingTargetFood::Ready_GameObject()
 		CGameObject* pGameObject = nullptr;
 		for (int i = 0; i < 3; ++i)
 		{
-			pGameObject = CCookingStar::Create(m_pGraphicDev, 1, { m_vPos.x - 50.0f + (i * 50.0f), m_vPos.y - 60.0f,0.1f }, 1.0f);
+			pGameObject = CCookingStar::Create(m_pGraphicDev, 1, { m_vPos.x - 25.0f + (i * 25.0f), m_vPos.y - 25.0f,0.1f }, 0.15f);
 
 			if (nullptr == pGameObject)
 				return E_FAIL;

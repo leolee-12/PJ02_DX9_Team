@@ -171,6 +171,7 @@
     <ClInclude Include="..\Header\CBishop_Kallamar.h" />
     <ClInclude Include="..\Header\CBishop_Leshy.h" />
     <ClInclude Include="..\Header\CBishop_Shamura.h" />
+    <ClInclude Include="..\Header\CCookingUIController.h" />
     <ClInclude Include="..\Header\CDivider.h" />
     <ClInclude Include="..\Header\CDungeon.h" />
     <ClInclude Include="..\Header\CDungeonBack.h" />
@@ -283,6 +284,7 @@
     <ClCompile Include="..\Code\CBishop_Kallamar.cpp" />
     <ClCompile Include="..\Code\CBishop_Leshy.cpp" />
     <ClCompile Include="..\Code\CBishop_Shamura.cpp" />
+    <ClCompile Include="..\Code\CCookingUIController.cpp" />
     <ClCompile Include="..\Code\CDivider.cpp" />
     <ClCompile Include="..\Code\CDungeon.cpp" />
     <ClCompile Include="..\Code\CDungeonBack.cpp" />

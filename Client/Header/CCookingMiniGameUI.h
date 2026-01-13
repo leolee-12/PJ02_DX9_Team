@@ -30,12 +30,26 @@ public:
 public:
 	static CCookingMiniGameUI* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 	_bool Check_CookingResult();
-	_bool CookingInput();
-
+	
 	void Set_Render(_bool _bRender) { m_bRender = _bRender; };
+	_bool CookingInput();
 	void CookingStart(_int CookingCount);
 	void CookingEnd();
+
+
+	//콜백 추가부분
+	using CookingEndCallback = std::function<void()>;
+
+	void Set_CookingEndCallback(CookingEndCallback cb)
+	{
+		m_OnCookingEnd = cb;
+	}
 private:
+	CookingEndCallback m_OnCookingEnd;
+	//
+
+private:
+
 	virtual			void		Free();
 
 private:

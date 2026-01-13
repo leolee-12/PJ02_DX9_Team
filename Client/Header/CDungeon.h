@@ -38,7 +38,6 @@ private:
 
 private:
 	CGauge*		 m_pGauge;
-	CCookingSelectUI* m_pCookingSelectUi;;
 
 };
 

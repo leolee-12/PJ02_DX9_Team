@@ -717,6 +717,9 @@
     <ClInclude Include="..\Header\CCookingInfoRecipe.h">
       <Filter>02. GameObject\07. UI\05.CookingUI\01.CookingSelect\04.CookingInfoCard\04.CookingInfoRecipe</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CCookingUIController.h">
+      <Filter>02. GameObject\07. UI\05.CookingUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1048,6 +1051,9 @@
     </ClCompile>
     <ClCompile Include="..\Header\CCookingInfoRecipe.cpp">
       <Filter>02. GameObject\07. UI\05.CookingUI\01.CookingSelect\04.CookingInfoCard\04.CookingInfoRecipe</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CCookingUIController.cpp">
+      <Filter>02. GameObject\07. UI\05.CookingUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

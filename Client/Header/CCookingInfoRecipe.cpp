@@ -18,8 +18,8 @@ HRESULT CCookingInfoRecipe::Ready_GameObject()
 	if (FAILED(Add_Component()))
 		return E_FAIL;
 
-	m_pTransformCom->Set_Scale(114.0f * 0.5f, 111.0f  * 0.5f, 0.f);
-	m_pTransformCom->Set_Pos(WINCX / 4, -100, 0.5f);
+	m_pTransformCom->Set_Scale(114.0f * 0.2f, 111.0f  * 0.2f, 0.f);
+	m_pTransformCom->Set_Pos(WINCX / 4, -200, 0.5f);
 
 	return S_OK;
 }
