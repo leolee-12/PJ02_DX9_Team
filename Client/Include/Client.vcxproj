@@ -119,6 +119,7 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>../Header; ../../Base; ../../Reference/Header; ../Include;</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -246,13 +247,13 @@
     <ClInclude Include="..\Header\CTitleCenter.h" />
     <ClInclude Include="..\Header\CTitleLogo.h" />
     <ClInclude Include="..\Header\CTitleTab.h" />
+    <ClInclude Include="..\Header\CTriggerPoint.h" />
     <ClInclude Include="..\Header\CTutorial.h" />
     <ClInclude Include="..\Header\CVillage.h" />
     <ClInclude Include="..\Header\CWarp.h" />
     <ClInclude Include="..\Header\Gage_Enum.h" />
     <ClInclude Include="..\Header\LoadObjectList.h" />
     <ClInclude Include="..\Header\PlayerUI.h" />
-    <ClInclude Include="..\Header\TestCube.h" />
     <ClInclude Include="..\Header\CTile.h" />
     <ClInclude Include="..\Header\CTileMgr.h" />
     <ClInclude Include="..\Header\CMapObject.h" />
@@ -363,10 +364,10 @@
     <ClCompile Include="..\Code\CTitleCenter.cpp" />
     <ClCompile Include="..\Code\CTitleLogo.cpp" />
     <ClCompile Include="..\Code\CTitleTab.cpp" />
+    <ClCompile Include="..\Code\CTriggerPoint.cpp" />
     <ClCompile Include="..\Code\CTutorial.cpp" />
     <ClCompile Include="..\Code\CVillage.cpp" />
     <ClCompile Include="..\Code\CWarp.cpp" />
-    <ClCompile Include="..\Code\TestCube.cpp" />
     <ClCompile Include="..\Code\CTileMgr.cpp" />
     <ClCompile Include="..\Code\CMapObject.cpp" />
     <ClCompile Include="..\Code\CGrass.cpp" />

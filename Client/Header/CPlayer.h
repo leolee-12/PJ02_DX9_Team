@@ -105,6 +105,10 @@ private:
 	// 메시지 채널 관련
 	_bool 			m_bMsgRegistered;
 
+	// 트리거 관련
+	_bool			m_bCanTrigger;
+	_int            m_iTID;
+
 public:
 	static CPlayer* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 	static CPlayer* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel);

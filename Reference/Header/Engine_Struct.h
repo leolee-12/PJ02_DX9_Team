@@ -63,6 +63,22 @@ namespace Engine
 	{
 		_float x, y, z;
 		_float hx, hy, hz;
+
+		tagAABB()
+			: x(0.f), y(0.f), z(0.f)
+			, hx(0.f), hy(0.f), hz(0.f)
+		{
+		}
+		tagAABB(_float _x, _float _y, _float _z, _float _hx, _float _hy, _float _hz)
+			: x(_x), y(_y), z(_z)
+			, hx(_hx), hy(_hy), hz(_hz)
+		{
+		}
+		tagAABB(_vec3 vPos, _vec3 vHalfSize)
+			: x(vPos.x), y(vPos.y), z(vPos.z)
+			, hx(vHalfSize.x), hy(vHalfSize.y), hz(vHalfSize.z)
+		{
+		}
 	}AABB;
 
     // Map Data Structures

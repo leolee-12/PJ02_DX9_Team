@@ -7,6 +7,7 @@
 #include "CCollisionMgr.h"
 #include "CWarp.h"
 #include "CSceneWarp.h"
+#include "CTriggerPoint.h"
 
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev),
@@ -117,6 +118,8 @@ void CPlayer::LateUpdate_GameObject(const _float& fTimeDelta)
 	Compute_ViewDepth(&m_vPos);
 
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
+
+	m_bCanTrigger = false;
 }
 
 void CPlayer::Render_GameObject()
@@ -130,6 +133,11 @@ void CPlayer::Render_GameObject()
 	m_pBufferCom->Render_Buffer();
 
 	m_pGraphicDev->SetTextureStageState(0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE);
+
+	_tchar szPos[64] = L"";
+	swprintf_s(szPos, L"[플레이어] 플레이어 중점 위치 X : %f, Y : %f, Z : %f", m_vPos.x, m_vPos.y, m_vPos.z);
+	OutputDebugString(szPos);
+	OutputDebugString(L"\n");
 }
 
 void CPlayer::Ready_Variable()
@@ -360,14 +368,17 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 		}
 	}
 
-	//if (CDInputMgr::GetInstance()->Get_DIMouseState(DIM_LB) & 0x80)
-	//{
-	//	_vec3		vPickPos = Picking_OnTerrain();
-
-	//	_vec3	vDir = vPickPos - m_pTransformCom->m_vInfo[INFO_POS];
-	//	
-	//	m_pTransformCom->Move_Pos(D3DXVec3Normalize(&vDir, &vDir), fTimeDelta, 10.f);
-	//}
+	if (CDInputMgr::GetInstance()->Key_Down(DIK_E))
+	{
+		if (m_bCanTrigger)
+		{
+			IMessageChannel::EVENT TriggerEvent;
+			TriggerEvent.strType = L"Trigger.Activate";
+			TriggerEvent.hmapData.insert({ L"TriggerID", m_iTID });
+			m_pMessageChannel->Publish(TriggerEvent);
+		}
+	}
+	
 
 	if (GetAsyncKeyState('P'))
 	{
@@ -657,6 +668,11 @@ void	CPlayer::OnCollision(CGameObject* pObject)
 	if (pObject->Get_OBJID() == OID_MONSTER)
 	{
 		//m_pTransformCom->Set_Pos(10.f, 10.f, 10.f);
+	}
+	if (pObject->Get_OBJID() == OID_TRIGGER)
+	{
+		m_bCanTrigger = true;
+		m_iTID = static_cast<CTriggerPoint*>(pObject)->Get_TID_for_int();
 	}
 }
 

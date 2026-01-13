@@ -21,6 +21,8 @@ HRESULT CCollisionMgr::Ready_CollisionMgr()
 	m_vecCollisionPool.push_back({ CL_PLAYER, CL_GRASS });    // 추가
 	m_vecCollisionPool.push_back({ CL_MONSTER, CL_GRASS });   // 추가
 	m_vecCollisionPool.push_back({ CL_PLAYER, CL_WARP });   // 추가
+	// 윤석현 추가
+	m_vecCollisionPool.push_back({ CL_PLAYER, CL_TRIGGER });
 	return S_OK;
 }
 

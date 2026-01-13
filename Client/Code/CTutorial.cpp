@@ -22,6 +22,7 @@
 #include "CBackGround.h"
 #include "CProtoMgr.h"
 #include "CDynamicCamera.h"
+#include "CTriggerPoint.h"
 
 CTutorial::CTutorial(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -247,6 +248,18 @@ HRESULT CTutorial::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	}
 
 	// 디버그용
+
+
+	_vec3 vTriggerPos, vTriggerHalfSize;
+	vTriggerPos = { -4.f, 2.f, 88.f };
+	vTriggerHalfSize = { 5.f, 5.f, 5.f };
+	pGameObject = CTriggerPoint::Create(m_pGraphicDev, m_pMessageChannel, vTriggerPos, vTriggerHalfSize, Trigger::TI_STAGING);
+
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+
+	if (FAILED(pLayer->Add_GameObject(L"TriggerPoint", pGameObject)))
+		return E_FAIL;
+
 
 	m_mapLayer.insert({ pLayerTag , pLayer });
 

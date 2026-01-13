@@ -52,9 +52,6 @@
     <Filter Include="02. GameObject\08. TestEffect">
       <UniqueIdentifier>{37f31870-dba2-4668-ad76-b1d69d78c68f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\99. TestObject">
-      <UniqueIdentifier>{5e8c73c1-37da-4a24-b395-d8e294c4be3f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObject\07. UI">
       <UniqueIdentifier>{0320c609-d491-42cf-96f0-e94adb951d41}</UniqueIdentifier>
     </Filter>
@@ -370,6 +367,9 @@
     <Filter Include="02. GameObject\14. Warp">
       <UniqueIdentifier>{afb959a5-02a0-4191-9f75-2c789c60d030}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\15. TriggerPoint">
+      <UniqueIdentifier>{5284baad-cc65-443f-8583-8ea20262c3bf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -422,9 +422,6 @@
     </ClInclude>
     <ClInclude Include="..\Header\CTestEffect.h">
       <Filter>02. GameObject\08. TestEffect</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Header\TestCube.h">
-      <Filter>02. GameObject\99. TestObject</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CEditScene.h">
       <Filter>01. Scene\01. Maps\01. EditScene</Filter>
@@ -726,9 +723,9 @@
     <ClInclude Include="..\Header\CCookingInfoCardRightPattern.h">
       <Filter>02. GameObject\07. UI\05.CookingUI\01.CookingSelect\04.CookingInfoCard\03.CookingInfoCardRightParrtern</Filter>
     </ClInclude>
-	<ClInclude Include="..\Header\CCookingTarget.h">
-		<Filter>02. GameObject\07. UI\05.CookingUI\00.CookingMiniGame\04.CookingTarget</Filter>
-	</ClInclude>
+    <ClInclude Include="..\Header\CCookingTarget.h">
+      <Filter>02. GameObject\07. UI\05.CookingUI\00.CookingMiniGame\04.CookingTarget</Filter>
+    </ClInclude>
     <ClInclude Include="..\Header\CSceneWarp.h">
       <Filter>02. GameObject\14. Warp</Filter>
     </ClInclude>
@@ -737,6 +734,9 @@
     </ClInclude>
     <ClInclude Include="..\Header\CWarp.h">
       <Filter>02. GameObject\14. Warp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CTriggerPoint.h">
+      <Filter>02. GameObject\15. TriggerPoint</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -781,9 +781,6 @@
     </ClCompile>
     <ClCompile Include="..\Code\CTestEffect.cpp">
       <Filter>02. GameObject\08. TestEffect</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\TestCube.cpp">
-      <Filter>02. GameObject\99. TestObject</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CEditScene.cpp">
       <Filter>01. Scene\01. Maps\01. EditScene</Filter>
@@ -1071,8 +1068,8 @@
       <Filter>02. GameObject\07. UI\05.CookingUI\01.CookingSelect\04.CookingInfoCard\05.CookingInfoCardFood</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CCookingInfoCardRIghtPattern.cpp">
-		<Filter>02. GameObject\07. UI\05.CookingUI\01.CookingSelect\04.CookingInfoCard\03.CookingInfoCardRightParrtern</Filter>
-	</ClCompile>
+      <Filter>02. GameObject\07. UI\05.CookingUI\01.CookingSelect\04.CookingInfoCard\03.CookingInfoCardRightParrtern</Filter>
+    </ClCompile>
     <ClCompile Include="..\Code\CSceneWarp.cpp">
       <Filter>02. GameObject\14. Warp</Filter>
     </ClCompile>
@@ -1081,6 +1078,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CWarp.cpp">
       <Filter>02. GameObject\14. Warp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CTriggerPoint.cpp">
+      <Filter>02. GameObject\15. TriggerPoint</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

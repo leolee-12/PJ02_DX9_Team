@@ -114,7 +114,7 @@ HRESULT CTextureSet::Add_Texture_FromThread(TEXTUREID eID, const TEXSETLR& TexSe
 
 	IDirect3DBaseTexture9* pTexture = nullptr;
 
-	for (_uint i = 0; i < TexSetLR.iTexIndex; ++i)
+	for (_int i = 0; i < TexSetLR.iTexIndex; ++i)
 	{
 		TCHAR szFileName[128] = L"";
 
