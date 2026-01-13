@@ -16,16 +16,20 @@ class CProjectile;
 class CMonsterB2 : public CMonster
 {
 public:
-	enum MONSTER_B2_STATE { B2S_IDLE, B2S_MOVESTART, B2S_MOVEEND, B2S_HIT, B2S_SMASH, B2S_SHOOT, B2S_SUMMON, B2S_SPAWN, B2S_DIE, B2S_DEAD, B2S_END };
-	// 상태			폴더명
-	// MOVESTART	move-out
-	// MOVEEND		move-in
-	// HIT			hurt
-	// SMASH		head-smash
-	// SHOOT		trunk-strike
-	// SPAWN		transform
-	// DIE			die (죽음 애니메이션)
-	// DEAD			dead (죽어있는 상태(die 이후))
+	enum MONSTER_B2_STATE {	B2S_IDLE,	B2S_DIG,	B2S_ESCAPE,
+							B2S_HIT,	B2S_SMASH,	B2S_SHOOT,
+							B2S_SUMMON,	B2S_SPAWN,	B2S_DIE,
+							B2S_DEAD,	B2S_JUMP,	B2S_DIVE,
+							B2S_SPIKE1,	B2S_SPIKE2,	B2S_END };
+	// 상태		폴더명
+	// DIG		move-out
+	// ESCAPE	move-in
+	// HIT		hurt
+	// SMASH	head-smash
+	// SHOOT	trunk-strike
+	// SPAWN	transform
+	// DIE		die (죽음 애니메이션)
+	// DEAD		dead (죽어있는 상태(die 이후))
 
 private:
 	explicit	CMonsterB2(LPDIRECT3DDEVICE9 pGraphicDev);
@@ -77,7 +81,7 @@ private:
 	CB2_AI*	m_pAICom;
 
 	// 마디 관련
-	CNode*	m_pNode[4];
+	CNode*	m_pNode[4]; //Spike로 사용?
 
 	// 패턴 관련
 	_uint			m_iPhase;

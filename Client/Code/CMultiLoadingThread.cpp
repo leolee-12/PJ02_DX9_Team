@@ -404,7 +404,7 @@ void CMultiLoadingThread::Loading_for_Dungeon()
 	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_MoveEnd",	L"../Bin/Resource/Texture/Monster/Boss2/move-in/move-in_%04d.png", 40));
 	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Hit",		L"../Bin/Resource/Texture/Monster/Boss2/hurt/hurt_%04d.png", 16));
 	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Smash",		L"../Bin/Resource/Texture/Monster/Boss2/head-smash/head-smash_%04d.png", 62));
-	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Shoot",		L"../Bin/Resource/Texture/Monster/Boss2/trunk-strike/trunk-strike_%04d.png", 51));
+	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Spike",		L"../Bin/Resource/Texture/Monster/Boss2/trunk-strike/trunk-strike_%04d.png", 51));
 	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Spawn",		L"../Bin/Resource/Texture/Monster/Boss2/transform/transform_%04d.png", 128));
 	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Die",		L"../Bin/Resource/Texture/Monster/Boss2/die/die_%04d.png", 132));
 	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Dead",		L"../Bin/Resource/Texture/Monster/Boss2/dead/dead_%04d.png", 24));

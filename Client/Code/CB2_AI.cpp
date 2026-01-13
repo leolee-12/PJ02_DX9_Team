@@ -49,17 +49,17 @@ HRESULT CB2_AI::Ready_AI(const _float& fDetectRange, const _float& fInteractRang
 
 	// 공격 패턴 설정
 	m_iDequeMinSize = 3;
-	m_vecAtkPatterns.push_back({ CMonsterB2::B2S_SMASH, 40, true });
-	m_vecAtkPatterns.push_back({ CMonsterB2::B2S_SHOOT, 40, true });
+	//m_vecAtkPatterns.push_back({ CMonsterB2::B2S_SMASH, 40, true });
+	//m_vecAtkPatterns.push_back({ CMonsterB2::B2S_SHOOT, 40, true });
 	m_vecAtkPatterns.push_back({ CMonsterB2::B2S_SUMMON, 40, true });
 
 	// 시연용 : 모든 패턴이 순차적으로 실행
-	m_patternDeque.push_back(CMonsterB2::B2S_SMASH);
-	m_patternDeque.push_back(CMonsterB2::B2S_SHOOT);
 	m_patternDeque.push_back(CMonsterB2::B2S_SUMMON);
+	//m_patternDeque.push_back(CMonsterB2::B2S_SMASH);
+	//m_patternDeque.push_back(CMonsterB2::B2S_SHOOT);
 
 	// 게임용 : 가중치와 난수를 통해 패턴을 채워줌
-	Refill_Pattern();
+	Refill_Pattern(true);
 
 	return S_OK;
 }
@@ -71,7 +71,7 @@ void CB2_AI::Enter_State(const _uint& iState)
 	case CMonsterB2::B2S_IDLE:
 		break;
 
-	case CMonsterB2::B2S_MOVESTART:
+	case CMonsterB2::B2S_DIG:
 	{
 		m_fSpeed = 0.05f;
 		_vec3 vPrevPos, vDesiredDir;
@@ -86,7 +86,7 @@ void CB2_AI::Enter_State(const _uint& iState)
 		m_vLerpPos.z += Get_Rand_Int(-5, 5) * 0.3f;	// -1.5f ~ 1.5f 난수
 	}
 	break;
-	case CMonsterB2::B2S_MOVEEND:
+	case CMonsterB2::B2S_ESCAPE:
 	{
 		m_vDir = Compute_TargetDir();
 		m_vSpeed = { m_vDir.x * 3.f, 10.f, m_vDir.z * 3.f };
@@ -98,39 +98,40 @@ void CB2_AI::Enter_State(const _uint& iState)
 
 	case CMonsterB2::B2S_SMASH:
 	{
-		m_fAcmlTime = 0.f;
-		m_fSpeed = 1.f;
 	}
 	break;
 
 	case CMonsterB2::B2S_SHOOT:
 	{
-		m_fAcmlTime = 0.f;
-		m_fSpeed = 0.3f;
-		m_pOwnerTC->Get_Info(INFO_POS, &m_vLerpPos);
-		m_vLerpPos -= m_vDir * 1.f;
 	}
 	break;
 
 	case CMonsterB2::B2S_SUMMON:
 	{
 		m_fAcmlTime = 0.f;
-		m_fSpeed = 0.1f;
-		m_pOwnerTC->Get_Info(INFO_POS, &m_vLerpPos);
-		m_vLerpPos += m_vDir * 15.f;
+		m_bOnce = true;
 	}
 	break;
 
 	case CMonsterB2::B2S_SPAWN:
-		m_fAcmlTime = 0.f;
-		m_bOnce = true;
 		break;
 
 	case CMonsterB2::B2S_DIE:
-		m_bActiveAI = false;
 		break;
 
 	case CMonsterB2::B2S_DEAD:
+		break;
+
+	case CMonsterB2::B2S_JUMP:
+		break;
+
+	case CMonsterB2::B2S_DIVE:
+		break;
+
+	case CMonsterB2::B2S_SPIKE1:
+		break;
+
+	case CMonsterB2::B2S_SPIKE2:
 		break;
 	}
 }
@@ -143,17 +144,18 @@ void CB2_AI::Exit_State(const _uint& iState)
 	{
 		if (!m_pTargetTC) m_bChase = false;
 	}
-	break;
+		break;
 
-	case CMonsterB2::B2S_MOVESTART:
+	case CMonsterB2::B2S_DIG:
 	{
 		if (!m_pTargetTC) m_bChase = false;
 	}
-	break;
+		break;
 
-	case CMonsterB2::B2S_MOVEEND:
+	case CMonsterB2::B2S_ESCAPE:
 	{
 		if (!m_pTargetTC) m_bChase = false;
+		m_fAcmlTime = 0.f;
 	}
 	break;
 
@@ -184,19 +186,58 @@ void CB2_AI::Exit_State(const _uint& iState)
 		if (!m_pTargetTC) m_bChase = false;
 	}
 	break;
+
+	case CMonsterB2::B2S_JUMP:
+		break;
+
+	case CMonsterB2::B2S_DIVE:
+		break;
+
+	case CMonsterB2::B2S_SPIKE1:
+		break;
+
+	case CMonsterB2::B2S_SPIKE2:
+		break;
 	}
 }
 
-void CB2_AI::Generate_Pattern(CMonsterB2::MONSTER_B2_STATE eLastPattern)
+void CB2_AI::Generate_Pattern(CMonsterB2::MONSTER_B2_STATE eLastPattern, _bool bAllowDuplicate)
 {
+	size_t iPatternCnt = m_vecAtkPatterns.size();
+
+	if (iPatternCnt == 0)	// error : 등록된 공격 패턴이 없음
+	{
+		m_patternDeque.push_back(CMonsterB2::MONSTER_B2_STATE(0));
+		return;
+	}
+
 	_uint iTotalWeight(0);
 
-	for (auto& pattern : m_vecAtkPatterns)
+	if (bAllowDuplicate || iPatternCnt == 1)
 	{
-		if (pattern.bIsActive && (pattern.eType != eLastPattern))
+		for (auto& pattern : m_vecAtkPatterns)
 		{
-			iTotalWeight += pattern.iWeight;
+			if (pattern.bIsActive)
+			{
+				iTotalWeight += pattern.iWeight;
+			}
 		}
+	}
+	else
+	{
+		for (auto& pattern : m_vecAtkPatterns)
+		{
+			if (pattern.bIsActive && (pattern.eType != eLastPattern))
+			{
+				iTotalWeight += pattern.iWeight;
+			}
+		}
+	}
+
+	if (iTotalWeight == 0)	// error : 활성화된 공격 패턴이 없음
+	{
+		m_patternDeque.push_back(CMonsterB2::MONSTER_B2_STATE(0));
+		return;
 	}
 
 	_uint iRandom = Get_Rand_Int(1, iTotalWeight);
@@ -204,20 +245,23 @@ void CB2_AI::Generate_Pattern(CMonsterB2::MONSTER_B2_STATE eLastPattern)
 
 	for (auto& pattern : m_vecAtkPatterns)
 	{
-		if (!pattern.bIsActive || (pattern.eType == eLastPattern))
-			continue;
+		if (!pattern.bIsActive) continue;
 
 		iAccumulated += pattern.iWeight;
 
 		if (iRandom <= iAccumulated)
 		{
+			// 정상 생성
 			m_patternDeque.push_back(pattern.eType);
-			break;
+			return;
 		}
 	}
+
+	// error : 정상적으로 생성되지 않음
+	m_patternDeque.push_back(CMonsterB2::MONSTER_B2_STATE(0));
 }
 
-void CB2_AI::Refill_Pattern()
+void CB2_AI::Refill_Pattern(_bool bAllowDuplicate)
 {
 	while (m_patternDeque.size() < m_iDequeMinSize)
 	{
@@ -226,7 +270,7 @@ void CB2_AI::Refill_Pattern()
 		if (m_patternDeque.empty()) eLastState = CMonsterB2::B2S_SUMMON;
 		else						eLastState = m_patternDeque.back();
 
-		Generate_Pattern(eLastState);
+		Generate_Pattern(eLastState, bAllowDuplicate);
 	}
 }
 
@@ -245,11 +289,11 @@ _int CB2_AI::Update_Component(const _float& fTimeDelta)
 	case CMonsterB2::B2S_IDLE:
 		Update_Idle(fTimeDelta);
 		break;
-	case CMonsterB2::B2S_MOVESTART:
-		Update_MoveStart(fTimeDelta);
+	case CMonsterB2::B2S_DIG:
+		Update_Dig(fTimeDelta);
 		break;
-	case CMonsterB2::B2S_MOVEEND:
-		Update_MoveEnd(fTimeDelta);
+	case CMonsterB2::B2S_ESCAPE:
+		Update_Escape(fTimeDelta);
 		break;
 	case CMonsterB2::B2S_HIT:
 		Update_Hit(fTimeDelta);
@@ -272,28 +316,56 @@ _int CB2_AI::Update_Component(const _float& fTimeDelta)
 	case CMonsterB2::B2S_DEAD:
 		Update_Dead(fTimeDelta);
 		break;
+	case CMonsterB2::B2S_JUMP:
+		Update_Jump(fTimeDelta);
+		break;
+	case CMonsterB2::B2S_DIVE:
+		Update_Dive(fTimeDelta);
+		break;
+	case CMonsterB2::B2S_SPIKE1:
+		Update_Spike1(fTimeDelta);
+		break;
+	case CMonsterB2::B2S_SPIKE2:
+		Update_Spike2(fTimeDelta);
+		break;
 	}
 
 	Refill_Pattern();
-
-	if (m_fAcmlTime >= 2.f)
-	{
-		Change_State(Get_Rand_Int(0, CMonsterB2::B2S_END));
-		m_fAcmlTime = 0.f;
-	}
 
 	return iExit;
 }
 
 void CB2_AI::Update_Idle(const _float& fTimeDelta)
 {
+	if (m_bChase)
+	{	// 타겟을 이미 발견했을 때
+		if (m_fDistance <= m_fInteractRange)
+		{
+			if (m_fAcmlTime >= 1.f)
+			{
+				if (!m_patternDeque.empty())
+				{
+					Change_State(m_patternDeque.front());
+					m_patternDeque.pop_front();
+				}
+			}
+		}
+	}
+	else
+	{	// 타겟을 발견하지 못했을 때
+		if (m_fDistance <= m_fDetectRange)
+		{	// 타겟이 감지 범위 내로 진입 시 발견
+			m_bChase = true;
+		}
+	}
 }
 
-void CB2_AI::Update_MoveStart(const _float& fTimeDelta)
+void CB2_AI::Update_Dig(const _float& fTimeDelta)
 {
+	if (m_fAcmlTime >= 5.f) Change_State(CMonsterB2::B2S_ESCAPE);
 }
 
-void CB2_AI::Update_MoveEnd(const _float& fTimeDelta)
+void CB2_AI::Update_Escape(const _float& fTimeDelta)
 {
 }
 
@@ -339,12 +411,46 @@ void CB2_AI::Update_Dead(const _float& fTimeDelta)
 {
 }
 
+void CB2_AI::Update_Jump(const _float& fTimeDelta)
+{
+}
+
+void CB2_AI::Update_Dive(const _float& fTimeDelta)
+{
+}
+
+void CB2_AI::Update_Spike1(const _float& fTimeDelta)
+{
+}
+
+void CB2_AI::Update_Spike2(const _float& fTimeDelta)
+{
+}
+
 void CB2_AI::Anim_End(CMonsterB2::MONSTER_B2_STATE eState)
 {
 	switch (eState)
 	{
-	case CMonsterB2::B2S_SPAWN:
+	case CMonsterB2::B2S_ESCAPE:
+	case CMonsterB2::B2S_HIT:
 		Change_State(CMonsterB2::B2S_IDLE);
+		break;
+
+	case CMonsterB2::B2S_SMASH:
+	case CMonsterB2::B2S_SHOOT:
+	case CMonsterB2::B2S_SUMMON:
+	case CMonsterB2::B2S_SPAWN:
+	case CMonsterB2::B2S_SPIKE1:
+	case CMonsterB2::B2S_SPIKE2:
+		Change_State(CMonsterB2::B2S_DIG);
+		break;
+
+	case CMonsterB2::B2S_DIE:
+		Change_State(CMonsterB2::B2S_DEAD);
+		break;
+
+	case CMonsterB2::B2S_DIVE:
+		Change_State(CMonsterB2::B2S_ESCAPE);
 		break;
 	}
 }

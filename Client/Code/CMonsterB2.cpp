@@ -193,7 +193,7 @@ void CMonsterB2::Ready_Variable()
 {
 	// 게임로직 변수 세팅
 	_float fScale = 50.f;
-	m_fBtmPadding = fScale * 0.5f;
+	m_fBtmPadding = fScale * 0.51f;
 	m_fGroundY = -2.5f + fScale * 0.5f - m_fBtmPadding;
 	m_iAttack = 1;
 	m_iMaxHp = m_iHp = 10;
@@ -271,11 +271,11 @@ void CMonsterB2::Check_Frame()
 		m_fFrameEnd = m_pTexSetCom->Get_TextureEnd(L"BossLeshy_Idle");
 		break;
 
-	case B2S_MOVESTART:
+	case B2S_DIG:
 		m_fFrameEnd = m_pTexSetCom->Get_TextureEnd(L"BossLeshy_MoveStart");
 		break;
 
-	case B2S_MOVEEND:
+	case B2S_ESCAPE:
 		m_fFrameEnd = m_pTexSetCom->Get_TextureEnd(L"BossLeshy_MoveEnd");
 		break;
 
@@ -288,7 +288,7 @@ void CMonsterB2::Check_Frame()
 		break;
 
 	case B2S_SHOOT:
-		m_fFrameEnd = m_pTexSetCom->Get_TextureEnd(L"BossLeshy_Shoot");
+		m_fFrameEnd = m_pTexSetCom->Get_TextureEnd(L"BossLeshy_Summon");
 		break;
 
 	case B2S_SUMMON:
@@ -305,6 +305,22 @@ void CMonsterB2::Check_Frame()
 
 	case B2S_DEAD:
 		m_fFrameEnd = m_pTexSetCom->Get_TextureEnd(L"BossLeshy_Dead");
+		break;
+
+	case B2S_JUMP:
+		m_fFrameEnd = m_pTexSetCom->Get_TextureEnd(L"BossLeshy_Jump");
+		break;
+
+	case B2S_DIVE:
+		m_fFrameEnd = m_pTexSetCom->Get_TextureEnd(L"BossLeshy_Dive");
+		break;
+
+	case B2S_SPIKE1:
+		m_fFrameEnd = m_pTexSetCom->Get_TextureEnd(L"BossLeshy_Spike");
+		break;
+
+	case B2S_SPIKE2:
+		m_fFrameEnd = m_pTexSetCom->Get_TextureEnd(L"BossLeshy_Spike");
 		break;
 	}
 
@@ -323,20 +339,27 @@ void CMonsterB2::Move_Frame(const _float& fTimeDelta)
 
 		switch (m_eCurState)
 		{
-		case B2S_MOVESTART:
+		case B2S_DIG:
 			m_fFrame = m_fFrameEnd;
 			break;
 
-
-		case B2S_MOVEEND:
+		case B2S_ESCAPE:
 		case B2S_HIT:
+		{
+			m_pAICom->Anim_End(m_eCurState);
+			m_eCurState = B2S_IDLE;
+		}
+		break;
+
 		case B2S_SMASH:
 		case B2S_SHOOT:
 		case B2S_SUMMON:
 		case B2S_SPAWN:
+		case B2S_SPIKE1:
+		case B2S_SPIKE2:
 		{
 			m_pAICom->Anim_End(m_eCurState);
-			m_eCurState = B2S_IDLE;
+			m_eCurState = B2S_DIG;
 		}
 			break;
 
@@ -349,6 +372,17 @@ void CMonsterB2::Move_Frame(const _float& fTimeDelta)
 
 		case B2S_DEAD:
 			m_fFrame = m_fFrameEnd;
+			break;
+
+		case B2S_JUMP:
+			m_fFrame = m_fFrameEnd;
+			break;
+
+		case B2S_DIVE:
+		{
+			m_pAICom->Anim_End(m_eCurState);
+			m_eCurState = B2S_ESCAPE;
+		}
 			break;
 		}
 	}
@@ -383,11 +417,11 @@ void CMonsterB2::Set_TextureSet()
 		m_strFrameKey = L"BossLeshy_Idle";
 		break;
 
-	case B2S_MOVESTART:
+	case B2S_DIG:
 		m_strFrameKey = L"BossLeshy_MoveStart";
 		break;
 
-	case B2S_MOVEEND:
+	case B2S_ESCAPE:
 		m_strFrameKey = L"BossLeshy_MoveEnd";
 		break;
 
@@ -481,7 +515,8 @@ void CMonsterB2::Attacked(const _int& iAttack)
 
 void CMonsterB2::Update_State()
 {
-	if (m_eCurState == B2S_SPAWN) return;
+	if (m_eCurState == B2S_SPAWN ||
+		m_eCurState == B2S_ESCAPE) return;
 
 	m_eCurState = m_pAICom->Get_RecommendState<MONSTER_B2_STATE>();
 }
