@@ -53,15 +53,15 @@ HRESULT CGrass::Ready_GameObject()
 
 	m_pColliderCom->RegisterToManager(this, CL_GRASS);
 
-	//m_hmapSubHandles.insert({ L"Monster_Damaged", m_pMessageChannel->Subscribe(L"Monster.Attacked", [this](const IMessageChannel::EVENT& Event) {
-	//	for (auto& Target : any_cast<vector<CGameObject*>>(Event.hmapData.find(L"Target")->second))
-	//	{
-	//		if (Target == this)
-	//		{
-	//			this->m_iHp = 0;
-	//		}
-	//	}
-	//}) });
+	m_hmapSubHandles.insert({ L"Monster_Damaged", m_pMessageChannel->Subscribe(L"Monster.Attacked", [this](const IMessageChannel::EVENT& Event) {
+		for (auto& Target : any_cast<vector<CGameObject*>>(Event.hmapData.find(L"Target")->second))
+		{
+			if (Target == this)
+			{
+				this->m_iHp = 0;
+			}
+		}
+	}) });
 
 	return S_OK;
 }

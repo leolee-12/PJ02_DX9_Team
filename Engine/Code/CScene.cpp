@@ -1,4 +1,4 @@
-#include "CScene.h"
+﻿#include "CScene.h"
 
 CScene::CScene(LPDIRECT3DDEVICE9 pGraphicDev)
     : m_pGraphicDev(pGraphicDev), m_pMessageChannel(nullptr)

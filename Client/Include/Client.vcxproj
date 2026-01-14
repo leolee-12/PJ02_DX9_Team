@@ -213,6 +213,7 @@
     <ClInclude Include="..\Header\CLogo.h" />
     <ClInclude Include="..\Header\CMainApp.h" />
     <ClInclude Include="..\Header\CMainCamera.h" />
+    <ClInclude Include="..\Header\CMapBorder.h" />
     <ClInclude Include="..\Header\CMapWarp.h" />
     <ClInclude Include="..\Header\CMonster.h" />
     <ClInclude Include="..\Header\CMonsterB1.h" />
@@ -335,6 +336,7 @@
     <ClCompile Include="..\Code\CLogo.cpp" />
     <ClCompile Include="..\Code\CMainApp.cpp" />
     <ClCompile Include="..\Code\CMainCamera.cpp" />
+    <ClCompile Include="..\Code\CMapBorder.cpp" />
     <ClCompile Include="..\Code\CMapWarp.cpp" />
     <ClCompile Include="..\Code\CMonster.cpp" />
     <ClCompile Include="..\Code\CMonsterB1.cpp" />

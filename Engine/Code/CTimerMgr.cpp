@@ -1,4 +1,4 @@
-#include "CTimerMgr.h"
+﻿#include "CTimerMgr.h"
 
 IMPLEMENT_SINGLETON(CTimerMgr)
 

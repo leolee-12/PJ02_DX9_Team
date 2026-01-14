@@ -1,12 +1,12 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CComponent.h"
 #include "Engine_Define.h"
 
 //-----------------------------------
-//	Ãæµ¹Ã¼ ´ã´ç Å¬·¡½ºÀÔ´Ï´Ù.
-//	Ãæµ¹Ã³¸®¸¦ ÇØ¾ßÇÏ´Â °´Ã¼µéÀº
-//	ÇØ´ç ÄÄÆ÷³ÍÆ® Æ÷ÇÔÇÏ¸éµË´Ï´Ù.
+//	ì¶©ëŒì²´ ë‹´ë‹¹ í´ë˜ìŠ¤ì…ë‹ˆë‹¤.
+//	ì¶©ëŒì²˜ë¦¬ë¥¼ í•´ì•¼í•˜ëŠ” ê°ì²´ë“¤ì€
+//	í•´ë‹¹ ì»´í¬ë„ŒíŠ¸ í¬í•¨í•˜ë©´ë©ë‹ˆë‹¤.
 //-----------------------------------
 
 
@@ -24,25 +24,26 @@ private:
 	
 public:
 	void Set_AABB(AABB tAABB) { m_tAABB = tAABB; }
+	AABB Get_AABB() { return m_tAABB; }
 
 	static CCollider* Create(LPDIRECT3DDEVICE9 pGraphicDev, optional<AABB> tInitAABB = nullopt);
 	CComponent* Clone() override;
 
-	void UpdateFromTransform(CTransform* pTransform);				// Ãæµ¹Ã¼À§Ä¡ °»½Å ÇÔ¼ö
-	void RegisterToManager(CGameObject* pOwner, COLGROUP Group);	// ¸Å´ÏÀú¿¡ Äİ¶óÀÌ´õ Á¤º¸ µî·Ï ÇÔ¼ö
-	void UnregisterFromManager();									// ¸Å´ÏÀú¿¡ Äİ¶óÀÌ´õ Á¤º¸ µî·Ï ÇØÁ¦ÇÔ¼ö
+	void UpdateFromTransform(CTransform* pTransform);				// ì¶©ëŒì²´ìœ„ì¹˜ ê°±ì‹  í•¨ìˆ˜
+	void RegisterToManager(CGameObject* pOwner, COLGROUP Group);	// ë§¤ë‹ˆì €ì— ì½œë¼ì´ë” ì •ë³´ ë“±ë¡ í•¨ìˆ˜
+	void UnregisterFromManager();									// ë§¤ë‹ˆì €ì— ì½œë¼ì´ë” ì •ë³´ ë“±ë¡ í•´ì œí•¨ìˆ˜
 
 	void Update_AABBforRender();
-	void Render_Collider();										// µğ¹ö±×¿ë Äİ¶óÀÌ´õ ·»´õ¸µ ÇÔ¼ö
+	void Render_Collider();										// ë””ë²„ê·¸ìš© ì½œë¼ì´ë” ë Œë”ë§ í•¨ìˆ˜
 
 
 private:
-	HRESULT Ready_Collider(optional<AABB> tInitAABB);  // Äİ¶óÀÌ´õ ¼Â¾÷ÇÔ¼ö
+	HRESULT Ready_Collider(optional<AABB> tInitAABB);  // ì½œë¼ì´ë” ì…‹ì—…í•¨ìˆ˜
 
 private:
-	AABB		 m_tAABB;		// AABB¿ë Ãæµ¹Ã¼ Á¤º¸
-	COLGROUP	 m_Group;		// Ãæµ¹Ã³¸® ±×·ì (¸Å´ÏÀú¿¡¼­ ±×·ìº°·Î Ãæµ¹Ã¼Å© ÇÏ±â À§ÇÔ)
-	CGameObject* m_pOwner;		// Ãæµ¹Ã¼ ¼ÒÀ¯ÀÚ Æ÷ÀÎÅÍ (¿¹½Ã. ÇÃ·¹ÀÌ¾îÀÇ Ãæµ¹Ã¼ = ÇÃ·¹ÀÌ¾îÀÇ Æ÷ÀÎÅÍ)
+	AABB		 m_tAABB;		// AABBìš© ì¶©ëŒì²´ ì •ë³´
+	COLGROUP	 m_Group;		// ì¶©ëŒì²˜ë¦¬ ê·¸ë£¹ (ë§¤ë‹ˆì €ì—ì„œ ê·¸ë£¹ë³„ë¡œ ì¶©ëŒì²´í¬ í•˜ê¸° ìœ„í•¨)
+	CGameObject* m_pOwner;		// ì¶©ëŒì²´ ì†Œìœ ì í¬ì¸í„° (ì˜ˆì‹œ. í”Œë ˆì´ì–´ì˜ ì¶©ëŒì²´ = í”Œë ˆì´ì–´ì˜ í¬ì¸í„°)
 private:
 	virtual void Free() override;
 };

@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "CMonsterB1.h"
 #include "CProtoMgr.h"
 #include "CManagement.h"
@@ -130,6 +130,11 @@ void CMonsterB1::Render_GameObject()
 	m_pGraphicDev->SetTextureStageState(0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE);
 }
 
+void CMonsterB1::OnCollision(CGameObject* pObject)
+{
+	CMonster::OnCollision(pObject);
+}
+
 HRESULT CMonsterB1::Add_Component()
 {
 	Engine::CComponent* pComponent = nullptr;
@@ -179,33 +184,33 @@ HRESULT CMonsterB1::Add_Component()
 
 void CMonsterB1::Ready_Variable()
 {
-	// °ÔÀÓ·ÎÁ÷ º¯¼ö ¼¼ÆÃ
+	// ê²Œì„ë¡œì§ ë³€ìˆ˜ ì„¸íŒ…
 	_float fScale = 10.f;
 	m_fGroundY = -2.5f + fScale * 0.5f;
 	m_iAttack = 1;
 	m_iMaxHp = m_iHp = 10;
 	m_iPhase = 1;
 
-	// Transform ¼¼ÆÃ
+	// Transform ì„¸íŒ…
 	m_pTransformCom->Set_Pos(_float(rand() % 10), m_fGroundY, _float(rand() % 10));
 	m_pTransformCom->Set_Scale(fScale, fScale, fScale);
 
-	// Collider ¼¼ÆÃ
+	// Collider ì„¸íŒ…
 	m_pColliderCom->RegisterToManager(this, CL_MONSTER);
 	AABB tAABB = { m_vPos.x, m_vPos.y, m_vPos.z, 2.5f, 2.5f, 2.5f };
 	m_pColliderCom->Set_AABB(tAABB);
 
-	// AI ¼¼ÆÃ
+	// AI ì„¸íŒ…
 	m_pAICom->Set_OwnerTransform(m_pTransformCom);
 	m_pAICom->Set_TargetTransform(CPersistentMgr::GetInstance()->Get_PlayerTransform());
 	m_pAICom->Set_State<MONSTER_B1_STATE>(B1S_SPAWN);
 	m_pAICom->Set_GroundY(m_fGroundY);
 
-	// Anim °ü·Ã ¼¼ÆÃ
+	// Anim ê´€ë ¨ ì„¸íŒ…
 	m_fFrameSpeed = 24.f;
 	D3DXMatrixIdentity(&m_matTex);
 
-	// ¸¶µğ ¼¼ÆÃ
+	// ë§ˆë”” ì„¸íŒ…
 	_vec3 vScale{};
 	_float fScaleReduction(0.8f);
 	m_pTransformCom->Get_Scale(&vScale);
@@ -352,17 +357,17 @@ void CMonsterB1::Move_Frame(const _float& fTimeDelta)
 
 void CMonsterB1::Set_Texture()
 {
-	_vec3 vDir = *(m_pAICom->Get_Dir());		// AI·ÎºÎÅÍ ¹Ş¾Æ¿Â ¹æÇâ
-	_bool bFlipX = vDir.x > 0.f ? true : false;	// ¹İÀü ¿©ºÎ
-	_uint iFrame = m_fFrame;					// ÇöÀç ÇÁ·¹ÀÓ
-	_uint iTexIdx = _uint(m_eCurState);			// ÅØ½ºÃ³ ÀÎµ¦½º
+	_vec3 vDir = *(m_pAICom->Get_Dir());		// AIë¡œë¶€í„° ë°›ì•„ì˜¨ ë°©í–¥
+	_bool bFlipX = vDir.x > 0.f ? true : false;	// ë°˜ì „ ì—¬ë¶€
+	_uint iFrame = m_fFrame;					// í˜„ì¬ í”„ë ˆì„
+	_uint iTexIdx = _uint(m_eCurState);			// í…ìŠ¤ì²˜ ì¸ë±ìŠ¤
 
 	D3DXMatrixIdentity(&m_matTex);
 	_uint iU = iFrame % 16;
 	_uint iV = iFrame / 16;
 
-	m_matTex._11 = 0.0625f;	// °¡·Î´Â 16Ä­ °íÁ¤
-	m_matTex._22 = 0.25f;	// ¼¼·Î´Â 4Ä­ °íÁ¤(MonsterB1)
+	m_matTex._11 = 0.0625f;	// ê°€ë¡œëŠ” 16ì¹¸ ê³ ì •
+	m_matTex._22 = 0.25f;	// ì„¸ë¡œëŠ” 4ì¹¸ ê³ ì •(MonsterB1)
 
 	switch (m_eCurState)
 	{
@@ -394,11 +399,11 @@ void CMonsterB1::Set_Texture()
 	if (bFlipX)
 	{
 		m_matTex._11 *= -1.f;
-		m_matTex._31 = _float(iU + 1) * 0.0625f;	// ¹İÀü O : ¿À¸¥ÂÊ¿¡¼­ ¿ŞÂÊÀ¸·Î ÀĞÀ½
+		m_matTex._31 = _float(iU + 1) * 0.0625f;	// ë°˜ì „ O : ì˜¤ë¥¸ìª½ì—ì„œ ì™¼ìª½ìœ¼ë¡œ ì½ìŒ
 	}
 	else
 	{
-		m_matTex._31 = _float(iU) * 0.0625f;	// ¹İÀü X : ¿ŞÂÊ¿¡¼­ ¿À¸¥ÂÊÀ¸·Î ÀĞÀ½
+		m_matTex._31 = _float(iU) * 0.0625f;	// ë°˜ì „ X : ì™¼ìª½ì—ì„œ ì˜¤ë¥¸ìª½ìœ¼ë¡œ ì½ìŒ
 	}
 
 	m_matTex._32 = _float(iV) * 0.25f;
@@ -449,9 +454,9 @@ _vec3 CMonsterB1::Compute_LimitedDir(const _float& fMaxAngle, const _vec3& vCurD
 	_float fMaxRad = D3DXToRadian(fMaxAngle);
 
 	if (fRad <= fMaxRad)
-		return v2;	// ÃÖ´ë È¸Àü °¢µµº¸´Ù ÀÛÀ¸¸é ±×´ë·Î »ç¿ë
+		return v2;	// ìµœëŒ€ íšŒì „ ê°ë„ë³´ë‹¤ ì‘ìœ¼ë©´ ê·¸ëŒ€ë¡œ ì‚¬ìš©
 
-	// ÃÖ´ë È¸Àü °¢µµº¸´Ù Å©¸é ÃÖ´ë È¸Àü °¢µµ·Î º¸Á¤
+	// ìµœëŒ€ íšŒì „ ê°ë„ë³´ë‹¤ í¬ë©´ ìµœëŒ€ íšŒì „ ê°ë„ë¡œ ë³´ì •
 	fRad = fMaxRad / fRad;
 
 	_vec3 vResult;
@@ -461,10 +466,10 @@ _vec3 CMonsterB1::Compute_LimitedDir(const _float& fMaxAngle, const _vec3& vCurD
 }
 
 void CMonsterB1::Compute_NodePos(const _float& fTimeDelta)
-{	// Update¿¡¼­ È£ÃâÇÒ Node À§Ä¡ °è»ê ÇÔ¼ö
+{	// Updateì—ì„œ í˜¸ì¶œí•  Node ìœ„ì¹˜ ê³„ì‚° í•¨ìˆ˜
 	_vec3 vCurPos;
-	_vec3 vPrevPos = m_vPos;						// LateUpdate¿¡¼­ °»½ÅµÇÁö ¾Ê¾ÒÀ¸¹Ç·Î ÀÌÀü À§Ä¡
-	m_pTransformCom->Get_Info(INFO_POS, &vCurPos);	// AIComÀÇ Update_Component¿¡¼­ °»½ÅµÈ ÇöÀç À§Ä¡
+	_vec3 vPrevPos = m_vPos;						// LateUpdateì—ì„œ ê°±ì‹ ë˜ì§€ ì•Šì•˜ìœ¼ë¯€ë¡œ ì´ì „ ìœ„ì¹˜
+	m_pTransformCom->Get_Info(INFO_POS, &vCurPos);	// AIComì˜ Update_Componentì—ì„œ ê°±ì‹ ëœ í˜„ì¬ ìœ„ì¹˜
 	_vec3 vDir = *m_pAICom->Get_Dir();
 
 	_vec3 vHeadVelocity = vCurPos - m_vPos;

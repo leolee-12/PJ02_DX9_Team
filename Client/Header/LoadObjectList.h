@@ -1,4 +1,4 @@
-#pragma once
+Ôªø#pragma once
 
 #include <set>
 #include <map>
@@ -7,7 +7,8 @@
 using namespace std;
 extern list<wstring>		g_MapProtoname;
 
-// ¿¸√º ø¿∫Í¡ß∆Æ ∏ÆΩ∫∆Æ
+
+// Ï†ÑÏ≤¥ Ïò§Î∏åÏ†ùÌä∏ Î¶¨Ïä§Ìä∏
 map<wstring, int> ObjectList =
 {
 	{L"Alter", 2},
@@ -94,15 +95,17 @@ set<wstring> Dungeon_Texture =
 // Village.txt
 set<wstring> Village_Texture =
 {
-    L"Circle",
-    L"DungeonDoor",
-    L"Gateway",
-    L"Grass",
-    L"Rock",
-    L"Rubble",
-    L"Teleport",
-    L"Tree",
-    L"VillageStructure"
+	L"Circle",
+	L"Dirt",          
+	L"DungeonDoor",
+	L"Gateway",
+	L"Grass",
+	L"Rock",
+	L"Rubble",
+	L"Teleport",
+	L"Tree",
+	L"VillageStructure",
+	L"WeaponPodium"  
 };
 
 // TheGateway.txt
@@ -114,22 +117,16 @@ set<wstring> TheGateway_Texture =
     L"Twig"
 };
 
-// Teleport.txt
-set<wstring> Teleport_Texture =
+// Real_Dungeon.txt
+set<wstring> Real_Dungeon_Texture =
 {
-    L"Bush",
-    L"Candle",
-    L"Circle",
-    L"DungeonDoor",
-    L"Grass",
-    L"Icon",
-    L"Mushroom",
-    L"Rock",
-    L"Teleport",
-    L"Tree",
-    L"Twig",
-    L"Web",
-    L"Weed"
+	L"Candle",
+	L"DungeonDoor",
+	L"Grass",
+	L"Mushroom",
+	L"Tree",
+	L"Twig",
+	L"Weed"
 };
 
 // RealDungeon.txt

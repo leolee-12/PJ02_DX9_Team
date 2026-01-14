@@ -1,4 +1,4 @@
-#include "CGameObject.h"
+﻿#include "CGameObject.h"
 
 CGameObject::CGameObject(LPDIRECT3DDEVICE9 pGraphicDev)
     : m_pGraphicDev(pGraphicDev), m_pMessageChannel(nullptr), m_eOBJID(OID_END)

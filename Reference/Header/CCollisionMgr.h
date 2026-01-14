@@ -1,15 +1,13 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CBase.h"
 #include "Engine_Define.h"
 
 //-----------------------------------
-//	Ãæµ¹ Ã³¸® ´ã´ç ¸Å´ÏÀú Å¬·¡½ºÀÔ´Ï´Ù.
-//	Äİ¶óÀÌ´õµéÀ» ÇØ´ç ¸Å´ÏÀú¿¡¼­ ¸ğ¾Æ¼­ °ü¸®ÇÕ´Ï´Ù.
-//	Ãæµ¹Ã³¸®´Â ¸ğµÎ ¿©±â¼­ ÇÕ´Ï´Ù.
+//	ì¶©ëŒ ì²˜ë¦¬ ë‹´ë‹¹ ë§¤ë‹ˆì € í´ë˜ìŠ¤ì…ë‹ˆë‹¤.
+//	ì½œë¼ì´ë”ë“¤ì„ í•´ë‹¹ ë§¤ë‹ˆì €ì—ì„œ ëª¨ì•„ì„œ ê´€ë¦¬í•©ë‹ˆë‹¤.
+//	ì¶©ëŒì²˜ë¦¬ëŠ” ëª¨ë‘ ì—¬ê¸°ì„œ í•©ë‹ˆë‹¤.
 //-----------------------------------
-
-
 
 BEGIN(Engine)
 
@@ -24,36 +22,36 @@ private:
 	virtual ~CCollisionMgr();
 
 public:
-	HRESULT Ready_CollisionMgr();													// ¼Â¾÷ÇÔ¼ö
-	void Check_Collisions(const _float& fDeltaTime);								// ¸ÅÇÁ·¹ÀÓ Ãæµ¹Ã¼Å© ÇÔ¼ö
-	void RequestUnregister(CGameObject* pOwner, COLGROUP Group);					// »èÁ¦¿äÃ»À» º¸³»´Â ÇÔ¼ö
-	void RegisterCollider(CGameObject* pOwner, const AABB& aabb, COLGROUP Group);	// Äİ¶óÀÌ´õ µî·Ï/°»½Å ÇÔ¼ö
+	HRESULT Ready_CollisionMgr();													// ì…‹ì—…í•¨ìˆ˜
+	void Check_Collisions(const _float& fDeltaTime);								// ë§¤í”„ë ˆì„ ì¶©ëŒì²´í¬ í•¨ìˆ˜
+	void RequestUnregister(CGameObject* pOwner, COLGROUP Group);					// ì‚­ì œìš”ì²­ì„ ë³´ë‚´ëŠ” í•¨ìˆ˜
+	void RegisterCollider(CGameObject* pOwner, const AABB& aabb, COLGROUP Group);	// ì½œë¼ì´ë” ë“±ë¡/ê°±ì‹  í•¨ìˆ˜
 
-	void Reset_For_SceneChange();		// ¾ÀÀüÈ¯¿ë µî·ÏµÈ Ãæµ¹Ã¼ ºñ¿ì±â ÇÔ¼ö
+	void Reset_For_SceneChange();		// ì”¬ì „í™˜ìš© ë“±ë¡ëœ ì¶©ëŒì²´ ë¹„ìš°ê¸° í•¨ìˆ˜
 
-	vector<CGameObject*> Test_AABB(const AABB& aabb, COLGROUP Groupflag = CL_ALL);	// ÀÓ½Ã Ãæµ¹Ã¼Å©ÇÔ¼ö (¹İÈ¯°ª Ãæµ¹ÇÑ ¸ğµç Ãæµ¹Ã¼ÀÇ ¿À³ÊÆ÷ÀÎÅÍ Áı´Ü)
-
-private:
-	// ¸Å´ÏÀú ³»ºÎ µ¥ÀÌÅÍ °ü¸® ÇÔ¼ö ¸ğÀ½ (ÇØ´ç ÇÔ¼öµéÀº ¿ÜºÎ¿¡¼­ ½ÇÇàµÇ¸é ¾ÈµÊ!!)
-	void Execute_UnregisterRequests();					// ¿äÃ»Å¥¿¡ ½×Àº »èÁ¦¿äÃ»µéÀ» ÇÑ¹ø¿¡ Á¤¸®ÇÏ´Â ÇÔ¼ö
-	void Execute_Release();								// »èÁ¦Å¥¿¡ ½×Àº Æ÷ÀÎÅÍµéÀ» ÇÑ¹ø¿¡ Á¤¸®ÇÏ´Â ÇÔ¼ö
-	void UnregisterCollider(CGameObject* pOwner, COLGROUP Group);					// Äİ¶óÀÌ´õ ÇØÁ¦/»èÁ¦ ÇÔ¼ö
+	vector<CGameObject*> Test_AABB(const AABB& aabb, COLGROUP Groupflag = CL_ALL);	// ì„ì‹œ ì¶©ëŒì²´í¬í•¨ìˆ˜ (ë°˜í™˜ê°’ ì¶©ëŒí•œ ëª¨ë“  ì¶©ëŒì²´ì˜ ì˜¤ë„ˆí¬ì¸í„° ì§‘ë‹¨)
 
 private:
+	// ë§¤ë‹ˆì € ë‚´ë¶€ ë°ì´í„° ê´€ë¦¬ í•¨ìˆ˜ ëª¨ìŒ (í•´ë‹¹ í•¨ìˆ˜ë“¤ì€ ì™¸ë¶€ì—ì„œ ì‹¤í–‰ë˜ë©´ ì•ˆë¨!!)
+	void Execute_UnregisterRequests();					// ìš”ì²­íì— ìŒ“ì€ ì‚­ì œìš”ì²­ë“¤ì„ í•œë²ˆì— ì •ë¦¬í•˜ëŠ” í•¨ìˆ˜
+	void Execute_Release();								// ì‚­ì œíì— ìŒ“ì€ í¬ì¸í„°ë“¤ì„ í•œë²ˆì— ì •ë¦¬í•˜ëŠ” í•¨ìˆ˜
+	void UnregisterCollider(CGameObject* pOwner, COLGROUP Group);					// ì½œë¼ì´ë” í•´ì œ/ì‚­ì œ í•¨ìˆ˜
 
-	static bool IntersectAABB(const AABB& a, const AABB& b)			// privateÁö¸¸ staticÀ» ºÙÇô¼­ ÇïÆÛÇÔ¼ö¶ó´Â°É ¸í½ÃÇÔ
+private:
+
+	static bool IntersectAABB(const AABB& a, const AABB& b)			// privateì§€ë§Œ staticì„ ë¶™í˜€ì„œ í—¬í¼í•¨ìˆ˜ë¼ëŠ”ê±¸ ëª…ì‹œí•¨
 	{
-		// Ãæµ¹°Ë»ç AABB 
-		if (fabsf(a.x - b.x) > (a.hx + b.hx)) { return false; }		// A,BÀÇ XÃà Áß½É±âÁØÀ¸·Î ¶³¾îÁø °Å¸®°¡ XÃà halfsize º¸´Ù Å©¸é = °ãÄ¡Áö¾ÊÀ½.
-		if (fabsf(a.y - b.y) > (a.hy + b.hy)) { return false; }		// A,BÀÇ YÃà Áß½É±âÁØÀ¸·Î ¶³¾îÁø °Å¸®°¡ YÃà halfsize º¸´Ù Å©¸é = °ãÄ¡Áö¾ÊÀ½.
-		if (fabsf(a.z - b.z) > (a.hz + b.hz)) { return false; }		// A,BÀÇ ZÃà Áß½É±âÁØÀ¸·Î ¶³¾îÁø °Å¸®°¡ ZÃà halfsize º¸´Ù Å©¸é = °ãÄ¡Áö¾ÊÀ½.
-		return true;												// ¸ğµçÃà±â °ãÄ£´Ù¸é = Ãæµ¹!
+		// ì¶©ëŒê²€ì‚¬ AABB 
+		if (fabsf(a.x - b.x) > (a.hx + b.hx)) { return false; }		// A,Bì˜ Xì¶• ì¤‘ì‹¬ê¸°ì¤€ìœ¼ë¡œ ë–¨ì–´ì§„ ê±°ë¦¬ê°€ Xì¶• halfsize ë³´ë‹¤ í¬ë©´ = ê²¹ì¹˜ì§€ì•ŠìŒ.
+		if (fabsf(a.y - b.y) > (a.hy + b.hy)) { return false; }		// A,Bì˜ Yì¶• ì¤‘ì‹¬ê¸°ì¤€ìœ¼ë¡œ ë–¨ì–´ì§„ ê±°ë¦¬ê°€ Yì¶• halfsize ë³´ë‹¤ í¬ë©´ = ê²¹ì¹˜ì§€ì•ŠìŒ.
+		if (fabsf(a.z - b.z) > (a.hz + b.hz)) { return false; }		// A,Bì˜ Zì¶• ì¤‘ì‹¬ê¸°ì¤€ìœ¼ë¡œ ë–¨ì–´ì§„ ê±°ë¦¬ê°€ Zì¶• halfsize ë³´ë‹¤ í¬ë©´ = ê²¹ì¹˜ì§€ì•ŠìŒ.
+		return true;												// ëª¨ë“ ì¶•ê¸° ê²¹ì¹œë‹¤ë©´ = ì¶©ëŒ!
 	}
 
-	typedef struct tagCollisionInfo			// Ãæµ¹Ã¼ÀÇ Á¤º¸¸¦ ´ãÀ» ¸Å´ÏÀú¿¡¼­¸¸ ¾µ ±¸Á¶Ã¼
+	typedef struct tagCollisionInfo			// ì¶©ëŒì²´ì˜ ì •ë³´ë¥¼ ë‹´ì„ ë§¤ë‹ˆì €ì—ì„œë§Œ ì“¸ êµ¬ì¡°ì²´
 	{	
-		CGameObject*	pOwner;				// Ãæµ¹Ã¼ ¿À³Ê(¼ÒÀ¯ÀÚ)
-		AABB			tAABB;				// AABB Á¤º¸
+		CGameObject*	pOwner;				// ì¶©ëŒì²´ ì˜¤ë„ˆ(ì†Œìœ ì)
+		AABB			tAABB;				// AABB ì •ë³´
 	}COLINFO;
 
 	typedef struct tagRequestInfo
@@ -62,11 +60,11 @@ private:
 		COLGROUP	 eGroup;
 	}REQINFO;
 
-	unordered_map<COLGROUP, vector<COLINFO>> m_hmapCollisionGroup;		// Ãæµ¹Ã¼µ¥ÀÌÅÍ ÁıÇÕ (±×·ìº°)
-	vector<pair<COLGROUP, COLGROUP>> m_vecCollisionPool;				// ¾î¶²±×·ì°ú ¾î¶²±×·ìÀÌ Ãæµ¹ÇÏ°ÔÇÒÁö Á¤ÇÏ´Â Ç®
-	_bool		m_bRoof;												// ÄÁÅ×ÀÌ³Ê ¼øÈ¸Áß¿¡ »ğÀÔ»èÁ¦ ¹æÁö¿ë º¯¼öÀÎµ¥ Áö±İÀº ¾È¾¸
-	vector<CGameObject*>	m_vecReleaseQueue;							// »èÁ¦´ë»ó Æ÷ÀÎÅÍµéÀ» ¸ğ¾ÆµÎ´Â ÄÁÅ×ÀÌ³Ê
-	vector<REQINFO>			m_vecUnregisterRequestQueue;				// »èÁ¦¿äÃ»À» ¸ğ¾ÆµÎ´Â ÄÁÅ×ÀÌ³Ê
+	unordered_map<COLGROUP, vector<COLINFO>> m_hmapCollisionGroup;		// ì¶©ëŒì²´ë°ì´í„° ì§‘í•© (ê·¸ë£¹ë³„)
+	vector<pair<COLGROUP, COLGROUP>> m_vecCollisionPool;				// ì–´ë–¤ê·¸ë£¹ê³¼ ì–´ë–¤ê·¸ë£¹ì´ ì¶©ëŒí•˜ê²Œí• ì§€ ì •í•˜ëŠ” í’€
+	_bool		m_bRoof;												// ì»¨í…Œì´ë„ˆ ìˆœíšŒì¤‘ì— ì‚½ì…ì‚­ì œ ë°©ì§€ìš© ë³€ìˆ˜ì¸ë° ì§€ê¸ˆì€ ì•ˆì”€
+	vector<CGameObject*>	m_vecReleaseQueue;							// ì‚­ì œëŒ€ìƒ í¬ì¸í„°ë“¤ì„ ëª¨ì•„ë‘ëŠ” ì»¨í…Œì´ë„ˆ
+	vector<REQINFO>			m_vecUnregisterRequestQueue;				// ì‚­ì œìš”ì²­ì„ ëª¨ì•„ë‘ëŠ” ì»¨í…Œì´ë„ˆ
 
 private:
 	virtual void Free() override;

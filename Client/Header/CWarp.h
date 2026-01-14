@@ -1,23 +1,28 @@
-#pragma once
+Ôªø#pragma once
 #include "CGameObject.h"
 
-enum WarpScene
+namespace Warp
 {
-	TO_GATEWAY,
-	TO_DUNGEON,
-	TO_VILLAGE,
-	TO_REALDUNGEON,
-	WARP_END,
-};
+	enum WarpScene
+	{
+		TO_GATEWAY,
+		TO_DUNGEON,
+		TO_VILLAGE,
+		TO_REALDUNGEON,
+		WARP_END,
+	};
 
-enum WarpDir
-{
-	WARP_LEFT,
-	WARP_RIGHT,
-	WARP_UP,
-	WARP_DOWN,
-	WARP_DIR_END,
-};
+	enum WarpDir
+	{
+		WARP_LEFT,
+		WARP_RIGHT,
+		WARP_UP,
+		WARP_DOWN,
+		WARP_DIR_END,
+	};
+}
+using namespace Warp;
+
 
 namespace Engine
 {
@@ -67,7 +72,7 @@ private:
 	CMapWarp* MapWarpOuter = nullptr;
 	WarpDir m_WarpDir = WARP_DIR_END;
 
-	_vec3 m_WarpPosition = { 0,0,0 }; // øˆ«¡∞° µ«æÓæﬂ«“ ¿Âº“
+	_vec3 m_WarpPosition = { 0,0,0 }; // ÏõåÌîÑÍ∞Ä ÎêòÏñ¥ÏïºÌï† Ïû•ÏÜå
 
 public:
 	static CWarp* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMessageChannel,

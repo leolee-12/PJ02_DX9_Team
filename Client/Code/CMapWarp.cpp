@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "CMapWarp.h"
 #include "CCollider.h"
 #include "CProtoMgr.h"
@@ -51,8 +51,8 @@ void CMapWarp::Render_GameObject()
 {
 	if (!bRender) return;
 
-	// ÀÏ´ÜÀº ±×³É »ç°¢Çü Âï±â (¹Ù´Ú¿¡)
-	// collider comp¿¡ ¸ÂÃç¼­ Âï¾îÁà¾ß ÇÔ
+	// ì¼ë‹¨ì€ ê·¸ëƒ¥ ì‚¬ê°í˜• ì°ê¸° (ë°”ë‹¥ì—)
+	// collider compì— ë§žì¶°ì„œ ì°ì–´ì¤˜ì•¼ í•¨
 	Warps.first->Render_GameObject();
 	Warps.second->Render_GameObject();
 }

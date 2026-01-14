@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CBishop_Shamura.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
