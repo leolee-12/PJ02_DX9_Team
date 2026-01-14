@@ -1,4 +1,4 @@
-#include "CTextureSet.h"
+ï»¿#include "CTextureSet.h"
 
 CTextureSet::CTextureSet()
 {
@@ -63,7 +63,7 @@ HRESULT CTextureSet::Add_Texture(TEXTUREID eID, const TEXINFO& tTexInfo)
 	if (iter != m_mapTexture.end())
 		return E_FAIL;
 
-	// ¸Ê ¹üÀ§ ¹ÛÀ» Á¢±ÙÇÏ¸é ·±Å¸ÀÓ ¿¡·¯, ¸ÕÀú ¿ä¼Ò Ãß°¡ÇØÁØ µÚ Á¢±Ù
+	// ë§µ ë²”ìœ„ ë°–ì„ ì ‘ê·¼í•˜ë©´ ëŸ°íƒ€ì„ ì—ëŸ¬, ë¨¼ì € ìš”ì†Œ ì¶”ê°€í•´ì¤€ ë’¤ ì ‘ê·¼
 	iter = m_mapTexture.emplace(tTexInfo.strState, vector<IDirect3DBaseTexture9*>()).first;
 
 	iter->second.reserve(tTexInfo.iCnt);
@@ -80,7 +80,7 @@ HRESULT CTextureSet::Add_Texture(TEXTUREID eID, const TEXINFO& tTexInfo)
 		{
 		case TEX_NORMAL:
 
-			// µğÄÚµù + µî·Ï
+			// ë””ì½”ë”© + ë“±ë¡
 			if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFileName, (LPDIRECT3DTEXTURE9*)&pTexture)))
 				return E_FAIL;
 
@@ -107,7 +107,7 @@ HRESULT CTextureSet::Add_Texture_FromThread(TEXTUREID eID, const TEXSETLR& TexSe
 	if (iter != m_mapTexture.end())
 		return E_FAIL;
 
-	// ¸Ê ¹üÀ§ ¹ÛÀ» Á¢±ÙÇÏ¸é ·±Å¸ÀÓ ¿¡·¯, ¸ÕÀú ¿ä¼Ò Ãß°¡ÇØÁØ µÚ Á¢±Ù
+	// ë§µ ë²”ìœ„ ë°–ì„ ì ‘ê·¼í•˜ë©´ ëŸ°íƒ€ì„ ì—ëŸ¬, ë¨¼ì € ìš”ì†Œ ì¶”ê°€í•´ì¤€ ë’¤ ì ‘ê·¼
 	iter = m_mapTexture.emplace(TexSetLR.strStateName, vector<IDirect3DBaseTexture9*>()).first;
 
 	iter->second.reserve(TexSetLR.iTexIndex);
@@ -124,7 +124,7 @@ HRESULT CTextureSet::Add_Texture_FromThread(TEXTUREID eID, const TEXSETLR& TexSe
 		{
 		case TEX_NORMAL:
 
-			// µğÄÚµù + µî·Ï
+			// ë””ì½”ë”© + ë“±ë¡
 			if (FAILED(D3DXCreateTextureFromFile(m_pGraphicDev, szFileName,(LPDIRECT3DTEXTURE9*) & pTexture)))
 				return E_FAIL;
 
@@ -163,8 +163,8 @@ _float CTextureSet::Get_TextureEnd(wstring strState)
 
 	if (iter == m_mapTexture.end())
 		return 0.f;
-	// Get_TextureEnd = º¤ÅÍÀÇ Å©±â = ¸¶Áö¸· ÀÌ¹ÌÁö ¹øÈ£ + 1 : ÅØ½ºÃ³ Å½»ö ¹Ì½ÌÀÌ ³¯ ¼ö ÀÖÀ¸¹Ç·Î ÀÛÀº ¼ö¸¦ »©ÁØ´Ù
-	return iter->second.size() - 0.001f;
+	// Get_TextureEnd = ë²¡í„°ì˜ í¬ê¸° = ë§ˆì§€ë§‰ ì´ë¯¸ì§€ ë²ˆí˜¸ + 1 : í…ìŠ¤ì²˜ íƒìƒ‰ ë¯¸ì‹±ì´ ë‚  ìˆ˜ ìˆìœ¼ë¯€ë¡œ ì‘ì€ ìˆ˜ë¥¼ ë¹¼ì¤€ë‹¤
+	return _float(iter->second.size() - 0.001f);
 }
 
 CTextureSet* CTextureSet::Create(LPDIRECT3DDEVICE9 pGraphicDev, TEXTUREID eID, vector<TEXINFO>& vecTexInfo)
@@ -174,7 +174,7 @@ CTextureSet* CTextureSet::Create(LPDIRECT3DDEVICE9 pGraphicDev, TEXTUREID eID, v
 	if (FAILED(pTexture->Ready_Texture(eID, vecTexInfo)))
 	{
 		Safe_Release(pTexture);
-		MSG_BOX("Texture Create Failed");
+		MSG_BOX("TextureSet Create Failed");
 		return nullptr;
 	}
 
@@ -188,7 +188,7 @@ CTextureSet* CTextureSet::CreateFromMemory(LPDIRECT3DDEVICE9 pGraphicDev, TEXTUR
 	if (FAILED(pTexture->Ready_Texture_FromThread(eID, vecTexSetLR)))
 	{
 		Safe_Release(pTexture);
-		MSG_BOX("Texture Create Failed");
+		MSG_BOX("TextureSet Create Failed");
 		return nullptr;
 	}
 
@@ -202,7 +202,7 @@ CTextureSet* CTextureSet::CreateFromThered(LPDIRECT3DDEVICE9 pGraphicDev, TEXTUR
 	if (FAILED(pTexture->Ready_Texture_FromThread(eID, vecTexSetLR)))
 	{
 		Safe_Release(pTexture);
-		MSG_BOX("Texture CreateFromThread Failed");
+		MSG_BOX("TextureSet CreateFromThread Failed");
 		return nullptr;
 	}
 

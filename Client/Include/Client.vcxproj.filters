@@ -145,9 +145,6 @@
     <Filter Include="02. GameObject\02. Monster\Boss1">
       <UniqueIdentifier>{4835642c-34bd-4f07-9943-87d66889933e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\02. Monster\Boss2">
-      <UniqueIdentifier>{a2bf76f1-004d-4e27-ad5f-a12e80a7f38a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObject\07. UI\03. KBUI\99. Test">
       <UniqueIdentifier>{c05846a8-0aa5-450d-bd73-73898a6a4ab8}</UniqueIdentifier>
     </Filter>
@@ -294,6 +291,12 @@
     </Filter>
     <Filter Include="01. Scene\01. Maps\07. Village">
       <UniqueIdentifier>{71467a02-ac11-4d7a-84a6-64382f2466ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\14. Projectile">
+      <UniqueIdentifier>{3ddb0c3c-fab8-47e2-abe4-23dee1d57a77}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\02. Monster\Boss2">
+      <UniqueIdentifier>{a2bf76f1-004d-4e27-ad5f-a12e80a7f38a}</UniqueIdentifier>
     </Filter>
     <Filter Include="02. GameObject\07. UI\06. WorldUI">
       <UniqueIdentifier>{e73b1d10-8c9c-4ebd-b776-aa32b789649c}</UniqueIdentifier>
@@ -684,6 +687,9 @@
     <ClInclude Include="..\Header\CLeshyRoom.h">
       <Filter>01. Scene\01. Maps\10. LeshyRoom</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CProjectile.h">
+      <Filter>02. GameObject\14. Projectile</Filter>
+    </ClInclude>
     <ClInclude Include="..\Header\CCookingGauge.h">
       <Filter>02. GameObject\07. UI\05. CookingUI\00.CookingMiniGame\01.CookingGauge</Filter>
     </ClInclude>
@@ -738,9 +744,9 @@
     <ClInclude Include="..\Header\CCookingTarget.h">
       <Filter>02. GameObject\07. UI\05.CookingUI\00.CookingMiniGame\04.CookingTarget</Filter>
     </ClInclude>
-	<ClInclude Include="..\Header\CCookingTarget.h">
-		<Filter>02. GameObject\07. UI\05.CookingUI\00.CookingMiniGame\04.CookingTarget</Filter>
-	</ClInclude>
+    <ClInclude Include="..\Header\CCookingTarget.h">
+      <Filter>02. GameObject\07. UI\05.CookingUI\00.CookingMiniGame\04.CookingTarget</Filter>
+    </ClInclude>
     <ClInclude Include="..\Header\CCookingTarget.h">
       <Filter>02. GameObject\07. UI\05.CookingUI\00.CookingMiniGame\04.CookingTarget</Filter>
     </ClInclude>
@@ -956,9 +962,6 @@
     <ClCompile Include="..\Code\CMonsterB1.cpp">
       <Filter>02. GameObject\02. Monster\Boss1</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\CB1_AI.cpp">
-      <Filter>02. GameObject\02. Monster\Boss1</Filter>
-    </ClCompile>
     <ClCompile Include="..\Code\CMonsterB2.cpp">
       <Filter>02. GameObject\02. Monster\Boss2</Filter>
     </ClCompile>
@@ -1051,6 +1054,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\CLeshyRoom.cpp">
       <Filter>01. Scene\01. Maps\10. LeshyRoom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CProjectile.cpp">
+      <Filter>02. GameObject\14. Projectile</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CB1_AI.cpp">
+      <Filter>02. GameObject\02. Monster\Boss1</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CCookingGauge.cpp">
       <Filter>02. GameObject\07. UI\05. CookingUI\00.CookingMiniGame\01.CookingGauge</Filter>

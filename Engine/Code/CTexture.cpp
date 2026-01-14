@@ -73,7 +73,6 @@ HRESULT CTexture::Ready_Texture_FromThread(TEXTUREID eID, const wstring& strFile
 
 	IDirect3DBaseTexture9* pTexture = nullptr;
 
-
 	for (_uint i = 0; i < iCnt; ++i)
 	{
 		TCHAR szFileName[256] = L"";
@@ -235,7 +234,7 @@ CTexture* CTexture::CreateFromThread(LPDIRECT3DDEVICE9 pGraphicDev, TEXTUREID eI
 CTexture* CTexture::CreateFromFolder(LPDIRECT3DDEVICE9 pGraphicDev, TEXTUREID eID, const _tchar* pFolderPath)
 {
 	CTexture* pTexture = new CTexture(pGraphicDev);
-
+	
 	if (FAILED(pTexture->Ready_Texture_FromFolder(eID, pFolderPath)))
 	{
 		Safe_Release(pTexture);

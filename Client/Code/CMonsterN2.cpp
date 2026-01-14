@@ -202,15 +202,15 @@ void CMonsterN2::Ready_Variable()
 	m_pTransformCom->Get_Scale(&vScale);
 	vScale *= fScaleReduction;
 	m_pNode[0] = CNode::Create(m_pGraphicDev, m_pMessageChannel, m_pTransformCom, L"Proto_N2Node1Texture");
-	m_pNode[0]->Set_NodeScale(vScale);
+	if(m_pNode[0]) m_pNode[0]->Set_NodeScale(vScale);
 
 	vScale *= fScaleReduction;
 	m_pNode[1] = CNode::Create(m_pGraphicDev, m_pMessageChannel, m_pTransformCom, L"Proto_N2Node2Texture");
-	m_pNode[1]->Set_NodeScale(vScale);
+	if (m_pNode[1]) m_pNode[1]->Set_NodeScale(vScale);
 
 	vScale *= fScaleReduction;
 	m_pNode[2] = CNode::Create(m_pGraphicDev, m_pMessageChannel, m_pTransformCom, L"Proto_N2Node3Texture");
-	m_pNode[2]->Set_NodeScale(vScale);
+	if (m_pNode[2]) m_pNode[2]->Set_NodeScale(vScale);
 }
 
 void CMonsterN2::Ready_Event()
@@ -301,7 +301,7 @@ void CMonsterN2::Set_Texture()
 {
 	_vec3 vDir = *(m_pAICom->Get_Dir());		// AI로부터 받아온 방향
 	_bool bFilpX = vDir.x > 0.f ? true : false;	// 반전 여부
-	_uint iFrame = m_fFrame;					// 현재 프레임
+	_uint iFrame = _uint(m_fFrame);					// 현재 프레임
 	_uint iTexIdx = _uint(m_eCurState);			// 텍스처 인덱스
 
 	D3DXMatrixIdentity(&m_matTex);
@@ -463,6 +463,23 @@ CMonsterN2* CMonsterN2::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* S
 		MSG_BOX("pMonster Create Failed");
 		return nullptr;
 	}
+
+	return pMonster;
+}
+
+CMonsterN2* CMonsterN2::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, _vec3 vPos)
+{
+	CMonsterN2* pMonster = new CMonsterN2(pGraphicDev, StageChannel);
+
+	if (FAILED(pMonster->Ready_GameObject()))
+	{
+		Safe_Release(pMonster);
+		MSG_BOX("pMonster Create Failed");
+		return nullptr;
+	}
+
+	pMonster->m_pTransformCom->Set_Pos(vPos.x, vPos.y, vPos.z);
+	pMonster->m_pTransformCom->Update_Component(0.f);
 
 	return pMonster;
 }

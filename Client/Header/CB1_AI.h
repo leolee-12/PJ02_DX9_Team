@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "CAIController.h"
 #include "CMonsterB1.h"
 
@@ -9,7 +9,7 @@ private:
 	{
 		CMonsterB1::MONSTER_B1_STATE eType;
 		int iWeight;
-		bool bIsActive;  // ÆäÀÌÁîº° È°¼ºÈ­
+		bool bIsActive;  // í˜ì´ì¦ˆë³„ í™œì„±í™”
 	}B1_ATKPATTERN;
 
 protected:
@@ -25,9 +25,11 @@ protected:
 	void		Refill_Pattern();
 
 public:
+	void		Set_Owner(CMonsterB1* pOwner) { m_pOwner = pOwner; }
 	void		Set_Speed(const _float& fSpeed) { m_fSpeed = fSpeed; }
 	void		Anim_End(CMonsterB1::MONSTER_B1_STATE eState);
-
+	void		Push_Front_Pattern(CMonsterB1::MONSTER_B1_STATE eState);
+	void		Set_Weight(CMonsterB1::MONSTER_B1_STATE eState, _uint iNewWeight);
 private:
 	_int		Update_Component(const _float& fTimeDelta)	override;
 	void		Update_Crawl(const _float& fTimeDelta);
@@ -39,27 +41,30 @@ private:
 	void		Update_Summon(const _float& fTimeDelta);
 	void		Update_Roar(const _float& fTimeDelta);
 	void		Update_Spawn(const _float& fTimeDelta);
+	void		Update_Die(const _float& fTimeDelta);
 	void		Update_Stop(const _float& fTimeDelta);
 
 private:
+
 	_float		m_fSpeed;
 	_vec3		m_vSpeed;
 	_float		m_fAngle;
 	_float		m_fGravity;
-	_float		m_fGroundY;
 	_float		m_fAcmlTime;
 	_bool		m_bChase;
-	_vec3		m_vLerpPos;		// Lerp¿ë À§Ä¡
+	_vec3		m_vLerpPos;		// Lerpìš© ìœ„ì¹˜
 
-	// ÆĞÅÏ °ü·Ã
-	deque<CMonsterB1::MONSTER_B1_STATE> m_patternDeque;		// °ø°İ ÆĞÅÏÀ» ´ãÀ» µ¦
-	vector<B1_ATKPATTERN>				m_vecAtkPatterns;	// °ø°İ ÆĞÅÏµéÀÇ Á¤º¸(»óÅÂ, ºóµµ, È°¼ºÈ­ ¿©ºÎ)
-	_uint								m_iDequeMinSize;	// µ¦¿¡ ´ãÀ» ÆĞÅÏÀÇ ÃÖ¼Ò °³¼ö
-	
-	//-------------------------<ÆĞÅÏµ¦ »ç¿ë ¹ı>--------------------------
-	// - front()·Î ´ÙÀ½ ÆĞÅÏ °¡Á®¿Â µÚ pop_front()
-	// - back()À¸·Î ¸¶Áö¸· ÆĞÅÏ È®ÀÎÇÏ¿© Áßº¹¾Æ´Ñ ´ÙÀ½ ÆĞÅÏÀ» push_back()
-	// - °­Á¦ ÆĞÅÏ »ğÀÔÀº push_front()
+	// íŒ¨í„´ ê´€ë ¨
+	deque<CMonsterB1::MONSTER_B1_STATE> m_patternDeque;		// ê³µê²© íŒ¨í„´ì„ ë‹´ì„ ë±
+	vector<B1_ATKPATTERN>				m_vecAtkPatterns;	// ê³µê²© íŒ¨í„´ë“¤ì˜ ì •ë³´(ìƒíƒœ, ë¹ˆë„, í™œì„±í™” ì—¬ë¶€)
+	_uint								m_iDequeMinSize;	// ë±ì— ë‹´ì„ íŒ¨í„´ì˜ ìµœì†Œ ê°œìˆ˜
+	CMonsterB1*							m_pOwner;			// ë©”ì‹œì§€ ë°œí–‰ì€ Ownerë§Œ ê°€ëŠ¥(ì»´í¬ë„ŒíŠ¸ëŠ” ë©”ì‹œì§€ì±„ë„ì´ ì—†ì–´ ë¶ˆê°€)
+	_bool								m_bOnce;			// íŒ¨í„´ ê´€ë ¨ ë¡œì§ì´ ë”± í•œ ë²ˆë§Œ ì‹¤í–‰ë˜ë„ë¡
+
+	//-------------------------<íŒ¨í„´ë± ì‚¬ìš© ë²•>--------------------------
+	// - front()ë¡œ ë‹¤ìŒ íŒ¨í„´ ê°€ì ¸ì˜¨ ë’¤ pop_front()
+	// - back()ìœ¼ë¡œ ë§ˆì§€ë§‰ íŒ¨í„´ í™•ì¸í•˜ì—¬ ì¤‘ë³µì•„ë‹Œ ë‹¤ìŒ íŒ¨í„´ì„ push_back()
+	// - ê°•ì œ íŒ¨í„´ ì‚½ì…ì€ push_front()
 	//-------------------------------------------------------------------
 
 public:

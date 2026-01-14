@@ -11,6 +11,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "00. Client", "00. Client", "{B38499E3-F154-45F3-A0D8-F665E6DDAB5C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01. Engine", "01. Engine", "{0475671A-40EF-4B59-9402-A4EF547D9754}"
+	ProjectSection(SolutionItems) = preProject
+		Client\Include\packages.config = Client\Include\packages.config
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02. Base", "02. Base", "{52F1F681-F674-4498-A583-C4E4CF8E763F}"
 	ProjectSection(SolutionItems) = preProject

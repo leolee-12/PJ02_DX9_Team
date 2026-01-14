@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "CB1_AI.h"
 #include "CTransform.h"
 
@@ -9,8 +9,9 @@ CB1_AI::CB1_AI(LPDIRECT3DDEVICE9 pGraphicDev)
 	m_bChase(false),
 	m_fAngle(0.f),
 	m_fGravity(0.f),
-	m_fGroundY(0.f),
-	m_iDequeMinSize(3)
+	m_iDequeMinSize(3),
+	m_pOwner(nullptr),
+	m_bOnce(false)
 {
 	m_vecAtkPatterns.reserve(4);
 }
@@ -22,10 +23,12 @@ CB1_AI::CB1_AI(const CB1_AI& rhs)
 	m_bChase(false),
 	m_fAngle(rhs.m_fAngle),
 	m_fGravity(rhs.m_fGravity),
-	m_fGroundY(rhs.m_fGroundY),
-	m_iDequeMinSize(rhs.m_iDequeMinSize)
+	m_iDequeMinSize(rhs.m_iDequeMinSize),
+	m_pOwner(nullptr),
+	m_bOnce(false)
 {
 	m_vecAtkPatterns = rhs.m_vecAtkPatterns;
+	m_patternDeque = rhs.m_patternDeque;
 }
 
 CB1_AI::~CB1_AI()
@@ -41,24 +44,23 @@ HRESULT CB1_AI::Ready_AI(const _float& fDetectRange, const _float& fInteractRang
 	m_fAngle = 0.f;
 	m_vSpeed = { 0.f, 0.f, 0.f };
 	m_fGravity = -9.8f;
-	m_fGroundY = 1.f;
 	m_fAcmlTime = 0.f;
 	m_iRcmState = _uint(CMonsterB1::B1S_SPAWN);
 
-	// °ø°İ ÆĞÅÏ ¼³Á¤
+	// ê³µê²© íŒ¨í„´ ì„¤ì •
 	m_iDequeMinSize = 3;
 	m_vecAtkPatterns.push_back({ CMonsterB1::B1S_JUMP, 40, true });
 	m_vecAtkPatterns.push_back({ CMonsterB1::B1S_PREPARE, 40, true });
 	m_vecAtkPatterns.push_back({ CMonsterB1::B1S_SHOOT, 40, true });
-	m_vecAtkPatterns.push_back({ CMonsterB1::B1S_SUMMON, 20, false });
+	m_vecAtkPatterns.push_back({ CMonsterB1::B1S_SUMMON, 20, true });
 
-	// ½Ã¿¬¿ë : ¸ğµç ÆĞÅÏÀÌ ¼øÂ÷ÀûÀ¸·Î ½ÇÇà
+	// ì‹œì—°ìš© : ëª¨ë“  íŒ¨í„´ì´ ìˆœì°¨ì ìœ¼ë¡œ ì‹¤í–‰
 	m_patternDeque.push_back(CMonsterB1::B1S_JUMP);
 	m_patternDeque.push_back(CMonsterB1::B1S_PREPARE);
 	m_patternDeque.push_back(CMonsterB1::B1S_SHOOT);
 	m_patternDeque.push_back(CMonsterB1::B1S_SUMMON);
 
-	// °ÔÀÓ¿ë : °¡ÁßÄ¡¿Í ³­¼ö¸¦ ÅëÇØ ÆĞÅÏÀ» Ã¤¿öÁÜ
+	// ê²Œì„ìš© : ê°€ì¤‘ì¹˜ì™€ ë‚œìˆ˜ë¥¼ í†µí•´ íŒ¨í„´ì„ ì±„ì›Œì¤Œ
 	Refill_Pattern();
 
 	return S_OK;
@@ -70,17 +72,17 @@ void CB1_AI::Enter_State(const _uint& iState)
 	{
 	case CMonsterB1::B1S_CRAWL:
 	{
-		m_fSpeed = 0.03f;
+		m_fSpeed = 0.05f;
 		_vec3 vPrevPos, vDesiredDir;
 
 		if ((!m_bChase) || (m_fAcmlTime < 2.f))			vDesiredDir = Randomize_Dir();
 		else if ((m_bChase) && (m_fAcmlTime >= 2.f))	vDesiredDir = Compute_TargetDir();
 
 		m_pOwnerTC->Get_Info(INFO_POS, &vPrevPos);
-		m_vDir = Compute_LimitedDir(60.f, m_vDir, vDesiredDir);
+		m_vDir = Compute_LimitedDir(120.f, m_vDir, vDesiredDir);
 		m_vLerpPos = vPrevPos + m_vDir * 3.f;
-		m_vLerpPos.x += Get_Rand_Int(-5, 5) * 0.3f;	// -1.5f ~ 1.5f ³­¼ö
-		m_vLerpPos.z += Get_Rand_Int(-5, 5) * 0.3f;	// -1.5f ~ 1.5f ³­¼ö
+		m_vLerpPos.x += Get_Rand_Int(-5, 5) * 0.3f;	// -1.5f ~ 1.5f ë‚œìˆ˜
+		m_vLerpPos.z += Get_Rand_Int(-5, 5) * 0.3f;	// -1.5f ~ 1.5f ë‚œìˆ˜
 	}
 	break;
 	case CMonsterB1::B1S_JUMP:
@@ -97,24 +99,41 @@ void CB1_AI::Enter_State(const _uint& iState)
 	break;
 
 	case CMonsterB1::B1S_PREPARE:
-		break;
+	{
+		m_fAcmlTime = 0.f;
+		m_fSpeed = 0.3f;
+		m_pOwnerTC->Get_Info(INFO_POS, &m_vLerpPos);
+		m_vLerpPos -= m_vDir * 1.f;
+	}
+	break;
 
 	case CMonsterB1::B1S_ATTACK:
+	{
 		m_fAcmlTime = 0.f;
-		break;
+		m_fSpeed = 0.1f;
+		m_pOwnerTC->Get_Info(INFO_POS, &m_vLerpPos);
+		m_vLerpPos += m_vDir * 15.f;
+	}
+	break;
 
 	case CMonsterB1::B1S_SHOOT:
 		m_fAcmlTime = 0.f;
+		m_bOnce = true;
 		break;
 
 	case CMonsterB1::B1S_SUMMON:
 		m_fAcmlTime = 0.f;
+		m_bOnce = true;
 		break;
 
 	case CMonsterB1::B1S_ROAR:
 		break;
 
 	case CMonsterB1::B1S_SPAWN:
+		m_bActiveAI = false;
+		break;
+
+	case CMonsterB1::B1S_DIE:
 		m_bActiveAI = false;
 		break;
 
@@ -251,6 +270,9 @@ _int CB1_AI::Update_Component(const _float& fTimeDelta)
 	case CMonsterB1::B1S_SPAWN:
 		Update_Spawn(fTimeDelta);
 		break;
+	case CMonsterB1::B1S_DIE:
+		Update_Die(fTimeDelta);
+		break;
 	case CMonsterB1::B1S_STOP:
 		Update_Stop(fTimeDelta);
 		break;
@@ -264,7 +286,7 @@ _int CB1_AI::Update_Component(const _float& fTimeDelta)
 void CB1_AI::Update_Crawl(const _float& fTimeDelta)
 {
 	if (m_bChase)
-	{	// Å¸°ÙÀ» ÀÌ¹Ì ¹ß°ßÇßÀ» ¶§
+	{	// íƒ€ê²Ÿì„ ì´ë¯¸ ë°œê²¬í–ˆì„ ë•Œ
 		if (m_fDistance <= m_fInteractRange)
 		{
 			if (m_fAcmlTime >= 5.f)
@@ -278,9 +300,9 @@ void CB1_AI::Update_Crawl(const _float& fTimeDelta)
 		}
 	}
 	else
-	{	// Å¸°ÙÀ» ¹ß°ßÇÏÁö ¸øÇßÀ» ¶§
+	{	// íƒ€ê²Ÿì„ ë°œê²¬í•˜ì§€ ëª»í–ˆì„ ë•Œ
 		if (m_fDistance <= m_fDetectRange)
-		{	// Å¸°ÙÀÌ °¨Áö ¹üÀ§ ³»·Î ÁøÀÔ ½Ã ¹ß°ß
+		{	// íƒ€ê²Ÿì´ ê°ì§€ ë²”ìœ„ ë‚´ë¡œ ì§„ì… ì‹œ ë°œê²¬
 			m_bChase = true;
 		}
 	}
@@ -301,14 +323,14 @@ void CB1_AI::Update_Jump(const _float& fTimeDelta)
 	m_pOwnerTC->Get_Info(INFO_POS, &vPos);
 	if (vPos.y < m_fGroundY)
 	{
-		m_pOwnerTC->Set_Pos(vPos.x, m_fGroundY, vPos.z);
+ 		m_pOwnerTC->Set_Pos(vPos.x, m_fGroundY, vPos.z);
 		Change_State(CMonsterB1::B1S_LAND);
 	}
 }
 
 void CB1_AI::Update_Land(const _float& fTimeDelta)
 {
-	if (m_fAcmlTime < 0.2f)  // 0.2ÃÊ µ¿¾È
+	if (m_fAcmlTime < 0.2f)  // 0.2ì´ˆ ë™ì•ˆ
 	{
 		_vec3 vPos;
 		m_pOwnerTC->Get_Info(INFO_POS, &vPos);
@@ -320,18 +342,45 @@ void CB1_AI::Update_Land(const _float& fTimeDelta)
 
 void CB1_AI::Update_Prepare(const _float& fTimeDelta)
 {
+	_vec3 vDesiredDir = Compute_TargetDir();
+	m_vDir = Compute_LimitedDir(60.f * fTimeDelta, m_vDir, vDesiredDir);
+
+	_vec3 vPos;
+	m_pOwnerTC->Get_Info(INFO_POS, &vPos);
+	D3DXVec3Lerp(&vPos, &vPos, &m_vLerpPos, m_fSpeed);
+	m_pOwnerTC->Set_Pos(vPos.x, vPos.y, vPos.z);
+
+	if (m_fAcmlTime >= 2.f) Change_State(CMonsterB1::B1S_ATTACK);
 }
 
 void CB1_AI::Update_Attack(const _float& fTimeDelta)
 {
+	_vec3 vPos;
+	m_pOwnerTC->Get_Info(INFO_POS, &vPos);
+	D3DXVec3Lerp(&vPos, &vPos, &m_vLerpPos, m_fSpeed);
+	m_pOwnerTC->Set_Pos(vPos.x, vPos.y, vPos.z);
 }
 
 void CB1_AI::Update_Shoot(const _float& fTimeDelta)
 {
+	if (m_bOnce)
+	{
+		if(m_pOwner)
+			m_pOwner->Launch_Projectile(20);
+
+		m_bOnce = false;
+	}
 }
 
 void CB1_AI::Update_Summon(const _float& fTimeDelta)
 {
+	if (m_bOnce)
+	{
+		if (m_pOwner)
+			m_pOwner->Summon_Minion(7);
+
+		m_bOnce = false;
+	}
 }
 
 void CB1_AI::Update_Roar(const _float& fTimeDelta)
@@ -339,6 +388,10 @@ void CB1_AI::Update_Roar(const _float& fTimeDelta)
 }
 
 void CB1_AI::Update_Spawn(const _float& fTimeDelta)
+{
+}
+
+void CB1_AI::Update_Die(const _float& fTimeDelta)
 {
 }
 
@@ -350,8 +403,12 @@ void CB1_AI::Update_Stop(const _float& fTimeDelta)
 	}
 	else if ((m_bChase) && (m_fDistance <= m_fInteractRange) && (m_fAcmlTime >= 5.f))
 	{
-		Change_State(CMonsterB1::B1S_JUMP);
-		return;
+		if (!m_patternDeque.empty())
+		{
+			Change_State(m_patternDeque.front());
+			m_patternDeque.pop_front();
+			return;
+		}
 	}
 
 	Change_State(CMonsterB1::B1S_CRAWL);
@@ -392,6 +449,38 @@ void CB1_AI::Anim_End(CMonsterB1::MONSTER_B1_STATE eState)
 	case CMonsterB1::B1S_SPAWN:
 		Change_State(CMonsterB1::B1S_ROAR);
 		break;
+	}
+}
+
+void CB1_AI::Push_Front_Pattern(CMonsterB1::MONSTER_B1_STATE eState)
+{
+	size_t iSize = m_vecAtkPatterns.size();
+
+	for (size_t i = 0; i < iSize; ++i)
+	{
+		if (m_vecAtkPatterns[i].eType == eState)
+		{
+			m_patternDeque.push_front(eState);
+			return;
+		}
+	}
+}
+
+void CB1_AI::Set_Weight(CMonsterB1::MONSTER_B1_STATE eState, _uint iNewWeight)
+{
+	size_t iSize = m_vecAtkPatterns.size();
+
+	for (size_t i = 0; i < iSize; ++i)
+	{
+		if (m_vecAtkPatterns[i].eType == eState)
+		{
+			m_vecAtkPatterns[i].iWeight = iNewWeight;
+
+			if (iNewWeight == 0)	m_vecAtkPatterns[i].bIsActive = false;
+			else					m_vecAtkPatterns[i].bIsActive = true;
+
+			return;
+		}
 	}
 }
 

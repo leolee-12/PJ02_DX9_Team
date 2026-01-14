@@ -30,6 +30,7 @@ private:
 	HRESULT			Ready_Const_Layer();
 
 	HRESULT			Ready_Light();
+	void			Ready_Event();
 
 public:
 	static CDungeon* Create(LPDIRECT3DDEVICE9 pGraphicDev);

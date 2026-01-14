@@ -17,6 +17,8 @@
 #include "CMonsterN1.h"
 #include "CMonsterN2.h"
 #include "CMonsterN3.h"
+#include "CMonsterB1.h"
+#include "CMonsterB2.h"
 #include "CMapLoader.h"
 #include "CTileMgr.h"
 #include "CMapObject.h"
@@ -24,12 +26,12 @@
 #include "CCollisionMgr.h"
 #include "CGauge.h"
 #include "CBishop_Leshy.h"
-#include "CMonsterB1.h"
 #include "CBishop_Heket.h"
 #include "CBishop_Kallamar.h"
 #include "CBishop_Shamura.h"
 #include "CCookingUIController.h"
 #include "CCookingMiniGameUI.h"
+#include "CProjectile.h"
 #include "CMapWarp.h"
 #include "CWarp.h"
 #include "CMapBorder.h"
@@ -58,6 +60,10 @@ HRESULT CDungeon::Ready_Scene()
 		return E_FAIL;
 
 	Ready_Light();
+
+	CCollisionMgr::GetInstance()->Ready_CollisionMgr();
+
+	Ready_Event();
 
 	return S_OK;
 }
@@ -125,6 +131,8 @@ _int CDungeon::Update_Scene(const _float& fTimeDelta)
 void CDungeon::LateUpdate_Scene(const _float& fTimeDelta)
 {
 	Engine::CScene::LateUpdate_Scene(fTimeDelta);
+
+	CCollisionMgr::GetInstance()->Check_Collisions(fTimeDelta);
 }
 
 void CDungeon::Render_Scene()
@@ -287,7 +295,7 @@ HRESULT CDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 					pLayer->Add_GameObject(L"MapObject", pGameObject);
 			}
 		}
-		// Process Lights - Point Light 
+		// Process Lights - Point Light 생성
 		for (const auto& light : mapData.lights)
 		{
 			Engine::CLightMgr::GetInstance()->Ready_PointLight(m_pGraphicDev, light);
@@ -325,12 +333,15 @@ HRESULT CDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	}
 	else
 	{
+		// 맵 로드 실패 시 기본 SkyBox (Day) 생성
 		pGameObject = CMySkyBox::Create(m_pGraphicDev, 0);
 		if (pGameObject)
 			pLayer->Add_GameObject(L"SkyBox", pGameObject);
 	}
 
-	for (_uint i = 0; i < 5; ++i)
+	// 디버그용
+
+	for (_uint i = 0; i < 20; ++i)
 	{
 		//pGameObject = CMonsterN2::Create(m_pGraphicDev, m_pMessageChannel);
 		//
@@ -338,21 +349,22 @@ HRESULT CDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 		//
 		//	if (FAILED(pLayer->Add_GameObject(L"Monster", pGameObject)))
 		//		return E_FAIL;
-
-		pGameObject = CMonsterN2::Create(m_pGraphicDev, m_pMessageChannel);
-
-		NULL_CHECK_RETURN(pGameObject, E_FAIL)
-
-			if (FAILED(pLayer->Add_GameObject(L"Monster", pGameObject)))
-				return E_FAIL;
 	}
 
 	pGameObject = CMonsterB1::Create(m_pGraphicDev, m_pMessageChannel);
-
+	
 	NULL_CHECK_RETURN(pGameObject, E_FAIL)
-
-		if (FAILED(pLayer->Add_GameObject(L"Monster", pGameObject)))
+	
+		if (FAILED(pLayer->Add_GameObject(L"Boss", pGameObject)))
 			return E_FAIL;
+
+	//pGameObject = CMonsterB2::Create(m_pGraphicDev, m_pMessageChannel);
+	//
+	//NULL_CHECK_RETURN(pGameObject, E_FAIL)
+	//
+	//	if (FAILED(pLayer->Add_GameObject(L"Boss", pGameObject)))
+	//		return E_FAIL;
+
 
 	m_mapLayer.insert({ pLayerTag , pLayer });
 
@@ -441,7 +453,6 @@ HRESULT CDungeon::Ready_UI_Layer(const _tchar* pLayerTag)
 
 	 
 
-
 	m_mapLayer.insert({ pLayerTag , pLayer });
 
 	return S_OK;
@@ -469,6 +480,25 @@ HRESULT CDungeon::Ready_Light()
 		return E_FAIL;
 
 	return S_OK;
+}
+
+void CDungeon::Ready_Event()
+{
+	m_hmapSubHandles.insert({ L"Obj_Add", m_pMessageChannel->Subscribe(L"Obj.Add", [this](const IMessageChannel::EVENT& Event) {
+	{
+		CGameObject* pGObj = any_cast<CGameObject*>(Event.hmapData.find(L"Obj")->second);
+
+		if (pGObj != nullptr)
+		{
+			wstring strLayerTag = any_cast<const _tchar*>(Event.hmapData.find(L"LayerTag")->second);
+			wstring strObjTag = any_cast<const _tchar*>(Event.hmapData.find(L"ObjTag")->second);
+			auto iter = m_mapLayer.find(strLayerTag);
+
+			if(iter != m_mapLayer.end())
+				iter->second->Add_GameObject(strObjTag, pGObj);
+		}
+	}
+	}) });
 }
 
 CDungeon* CDungeon::Create(LPDIRECT3DDEVICE9 pGraphicDev)

@@ -51,13 +51,6 @@ int CMainApp::Update_MainApp(const float& fTimeDelta)
 	// 타일 매니저 업데이트
 	CTileMgr::GetInstance()->Update(fTimeDelta);
 
-	// _ulong dwDst = 0;
-
-	//if (dwDst = CDInputMgr::GetInstance()->Get_DIMouseMove(DIMS_Z))
-	//{
-	//	int a = 0;
-	//}
-
 	return 0;
 }
 
@@ -100,7 +93,6 @@ HRESULT CMainApp::Ready_DefaultSetting(LPDIRECT3DDEVICE9* ppGraphicDev)
 	(*ppGraphicDev)->SetRenderState(D3DRS_LIGHTING, FALSE);
 
 	// DInputMgr
-
 	if (FAILED(CDInputMgr::GetInstance()->Ready_InputDev(g_hInst, g_hWnd)))
 		return E_FAIL;
 

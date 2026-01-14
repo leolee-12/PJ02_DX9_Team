@@ -1,4 +1,4 @@
-#include "CCollider.h"
+ï»¿#include "CCollider.h"
 #include "CTransform.h"
 #include "CCollisionMgr.h"
 #include "CGameObject.h"
@@ -40,16 +40,23 @@ void CCollider::UpdateFromTransform(CTransform* pTransform)
 	m_tAABB.y = vPos.y;
 	m_tAABB.z = vPos.z;
 
-	// ¸Å´ÏÀú¿¡ °»½Å: µî·ÏµÈ ¼ÒÀ¯ÀÚ°¡ ÀÖÀ¸¸é ¸Å´ÏÀú¿¡ °»½Å Àü´Ş
+	// ë§¤ë‹ˆì €ì— ê°±ì‹ : ë“±ë¡ëœ ì†Œìœ ìê°€ ìˆìœ¼ë©´ ë§¤ë‹ˆì €ì— ê°±ì‹  ì „ë‹¬
 	if (m_pOwner)
 		Engine::CCollisionMgr::GetInstance()->RegisterCollider(m_pOwner, m_tAABB, m_Group);
 }
 
+void CCollider::UpdateFromCustom(AABB& tAABB)
+{
+	// ë§¤ë‹ˆì €ì— ê°±ì‹ : ë“±ë¡ëœ ì†Œìœ ìê°€ ìˆìœ¼ë©´ ë§¤ë‹ˆì €ì— ê°±ì‹  ì „ë‹¬
+	if (m_pOwner)
+		Engine::CCollisionMgr::GetInstance()->RegisterCollider(m_pOwner, tAABB, m_Group);
+}
+
 void CCollider::RegisterToManager(CGameObject* pOwner, COLGROUP Layerflag)
 {
-	// ¼ÒÀ¯ÀÚ Æ÷ÀÎÅÍ´Â ¸Å´ÏÀú°¡ AddRef/Release °ü¸®¸¦ ´ã´çÇÔ
-	// ¼ÒÀ¯±ÇÀº ¸Å´ÏÀú or ÄÄÆ÷³ÍÆ® µÑÁßÇÏ³ª°¡ Ã¥ÀÓ
-	// Áß¾Ó°ü¸®ÀÚÀÎ ¸Å´ÏÀú°¡ ÃÑ°ıÇÏ´Â°É ¼±ÅÃÇÔ
+	// ì†Œìœ ì í¬ì¸í„°ëŠ” ë§¤ë‹ˆì €ê°€ AddRef/Release ê´€ë¦¬ë¥¼ ë‹´ë‹¹í•¨
+	// ì†Œìœ ê¶Œì€ ë§¤ë‹ˆì € or ì»´í¬ë„ŒíŠ¸ ë‘˜ì¤‘í•˜ë‚˜ê°€ ì±…ì„
+	// ì¤‘ì•™ê´€ë¦¬ìì¸ ë§¤ë‹ˆì €ê°€ ì´ê´„í•˜ëŠ”ê±¸ ì„ íƒí•¨
 	if (pOwner == nullptr) { return; }
 	m_pOwner = pOwner;
 	m_Group = Layerflag;
@@ -73,10 +80,10 @@ void CCollider::Update_AABBforRender()
 void CCollider::Render_Collider()
 {
 	if (!m_pGraphicDev) return; 
-	// AABB Á¤º¸¿¡¼­ center¿Í half-size °¡Á®¿À±â 
+	// AABB ì •ë³´ì—ì„œ centerì™€ half-size ê°€ì ¸ì˜¤ê¸° 
 	D3DXVECTOR3 c = { m_tAABB.x, m_tAABB.y, m_tAABB.z };
 	D3DXVECTOR3 h = { m_tAABB.hx, m_tAABB.hy, m_tAABB.hz };
-	// 8°³ ²ÀÁşÁ¡ °è»ê 
+	// 8ê°œ ê¼­ì§“ì  ê³„ì‚° 
 	D3DXVECTOR3 v[8] = { 
 		{c.x - h.x, c.y - h.y, c.z - h.z}, 
 		{c.x - h.x, c.y - h.y, c.z + h.z}, 
@@ -87,7 +94,7 @@ void CCollider::Render_Collider()
 		{c.x + h.x, c.y + h.y, c.z - h.z}, 
 		{c.x + h.x, c.y + h.y, c.z + h.z}, 
 	}; 
-	// 12°³ ¿§Áö¸¦ ¿¬°áÇÏ´Â ÀÎµ¦½º 
+	// 12ê°œ ì—£ì§€ë¥¼ ì—°ê²°í•˜ëŠ” ì¸ë±ìŠ¤ 
 	WORD indices[24] = 
 	{ 
 		0,1, 0,2, 0,4, 

@@ -5,17 +5,31 @@ namespace Engine
 {
 	class CRcTex;
 	class CTransform;
-	class CTexture;
+	class CTextureSet;
 	class CCollider;
 }
 
+class CNode;
 class CB2_AI;
+class CProjectile;
 
-class CMonsterB2 : public CMonster 
+class CMonsterB2 : public CMonster
 {
 public:
-	enum MONSTER_B2_STATE { B2S_IDLE, B2S_RUN, B2S_ATTACK, B2S_HIT, B2S_SPAWN, B2S_JEER, B2S_PRAY, B2S_END };
-	enum ATTACK_PHASE { PREPARE, EXECUTE };
+	enum MONSTER_B2_STATE {	B2S_IDLE,	B2S_DIG,	B2S_ESCAPE,
+							B2S_HIT,	B2S_SMASH,	B2S_SHOOT,
+							B2S_SUMMON,	B2S_SPAWN,	B2S_DIE,
+							B2S_DEAD,	B2S_JUMP,	B2S_DIVE,
+							B2S_SPIKE1,	B2S_SPIKE2,	B2S_END };
+	// 상태		폴더명
+	// DIG		move-out
+	// ESCAPE	move-in
+	// HIT		hurt
+	// SMASH	head-smash
+	// SHOOT	trunk-strike
+	// SPAWN	transform
+	// DIE		die (죽음 애니메이션)
+	// DEAD		dead (죽어있는 상태(die 이후))
 
 private:
 	explicit	CMonsterB2(LPDIRECT3DDEVICE9 pGraphicDev);
@@ -30,6 +44,10 @@ public:
 	virtual void		Render_GameObject();
 	virtual void		OnCollision(CGameObject* pObject);
 
+	void				Launch_Projectile(const _uint& iCount, const _vec3& vTargetDir);
+	void				Summon_Minion(const _uint& iCount);
+	void				Attack_HitBox(_vec3 vPos);
+
 private:
 	HRESULT				Add_Component();
 
@@ -38,26 +56,43 @@ private:
 
 	void				Check_Frame();
 	void				Move_Frame(const _float& fTimeDelta);
-	void				Set_Texture();
+	void				Set_TextureSet();
+	void				Set_Material();
+	void				Reset_Material();
 
-	void				Attack_HitBox();
 	void				Attacked(const _int& iAttack);
 	void				Update_State();
-
+	_vec3				Compute_LimitedDir(const _float& fAngle, const _vec3& vCurDir, const _vec3& vDesiredDir);
+	void				Compute_NodePos(const _float& fTimeDelta);
+	void				Check_Phase();
+	void				Check_Status();
 private:
 	// 스프라이트 관련
+	CTextureSet*		m_pTexSetCom;
+	wstring				m_strFrameKey;
 	MONSTER_B2_STATE	m_ePreState;
 	MONSTER_B2_STATE	m_eCurState;
 	_float				m_fFrame;
 	_float				m_fFrameEnd;
 	_float				m_fFrameSpeed;
 	_matrix				m_matTex;
+	_float				m_fBtmPadding;
 
 	// AI 관련
-	CB2_AI*				m_pAICom;
+	CB2_AI*	m_pAICom;
+
+	// 마디 관련
+	CNode*	m_pNode[4]; //Spike로 사용?
+
+	// 패턴 관련
+	_uint			m_iPhase;
+	_uint			m_iMaxHp;
+	_bool			m_bMtrl = false;
+	_float			m_fAcmlTime;
 
 public:
-	static CMonsterB2*	Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel);
+	static CMonsterB2* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel);
+	static CMonsterB2* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, _vec3 vPos);
 
 private:
 	virtual void		Free();

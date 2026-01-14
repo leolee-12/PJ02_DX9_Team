@@ -25,7 +25,8 @@ namespace Engine
 	enum OBJID 
 	{ 
 		OID_PLAYER, 
-		OID_MONSTER, 
+		OID_MONSTER,
+		OID_PROJECTILE,
 		OID_ITEM, 
 		OID_WEAPON, 
 		OID_DCAM, 
@@ -65,8 +66,8 @@ namespace Engine
 		CL_ITEM		= 1 << 2,
 		CL_GRASS	= 1 << 3,
 		CL_WARP		= 1 << 4,
-		CL_6		= 1 << 5,
-		CL_7		= 1 << 6,
+		CL_PBULLET	= 1 << 5,
+		CL_MBULLET	= 1 << 6,
 		CL_TRIGGER	= 1 << 7,
 		CL_BORDER   = 1 << 8,
 		CL_10		= 1 << 9,

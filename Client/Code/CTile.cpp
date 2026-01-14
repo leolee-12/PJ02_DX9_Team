@@ -111,7 +111,7 @@ void CTile::Render_Masks()
 	if (nullptr == m_pMaskTextureCom)
 		return;
 
-	DWORD oldAlphaop, oldColorop, oldAlphaTest;
+	DWORD oldAlphaop, oldColorop;
 
 	// Enable alpha blending (standard settings)
 	m_pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);

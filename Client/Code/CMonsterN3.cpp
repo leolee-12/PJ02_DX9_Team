@@ -271,7 +271,7 @@ void CMonsterN3::Set_Texture()
 {
 	_vec3 vDir = *(m_pAICom->Get_Dir());		// AI로부터 받아온 방향
 	_bool bFilpX = vDir.x > 0.f ? true : false;	// 반전 여부
-	_uint iFrame = m_fFrame;					// 현재 프레임
+	_uint iFrame = _uint(m_fFrame);					// 현재 프레임
 	_uint iTexIdx = _uint(m_eCurState);			// 텍스처 인덱스
 	
 	if (!m_pAICom->Is_Chasing() || m_eCurState == N3S_RUSH)

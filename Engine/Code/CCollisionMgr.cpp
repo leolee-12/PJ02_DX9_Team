@@ -18,13 +18,17 @@ HRESULT CCollisionMgr::Ready_CollisionMgr()
 {
 	m_vecCollisionPool.push_back({ CL_PLAYER, CL_MONSTER });		// 어떤 그룹끼리 충돌체크할 것인지 등록
 	m_vecCollisionPool.push_back({ CL_PLAYER, CL_ITEM});
-	m_vecCollisionPool.push_back({ CL_PLAYER, CL_GRASS });    // 추가
-	m_vecCollisionPool.push_back({ CL_MONSTER, CL_GRASS });   // 추가
-	m_vecCollisionPool.push_back({ CL_PLAYER, CL_WARP });   // 추가
+	m_vecCollisionPool.push_back({ CL_PLAYER, CL_GRASS });
+	m_vecCollisionPool.push_back({ CL_PLAYER, CL_WARP });
+	m_vecCollisionPool.push_back({ CL_PLAYER, CL_WARP });
+	m_vecCollisionPool.push_back({ CL_PLAYER, CL_MBULLET });
+	m_vecCollisionPool.push_back({ CL_MONSTER, CL_GRASS });
+	m_vecCollisionPool.push_back({ CL_MONSTER, CL_PBULLET });
 	// 윤석현 추가
 	m_vecCollisionPool.push_back({ CL_PLAYER, CL_TRIGGER });
 	m_vecCollisionPool.push_back({ CL_PLAYER, CL_BORDER });
 	m_vecCollisionPool.push_back({ CL_MONSTER, CL_BORDER });
+
 	return S_OK;
 }
 

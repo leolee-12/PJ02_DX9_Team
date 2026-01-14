@@ -1,21 +1,34 @@
-#include "pch.h"
+Ôªø#include "pch.h"
 #include "CB2_AI.h"
 #include "CTransform.h"
 
 CB2_AI::CB2_AI(LPDIRECT3DDEVICE9 pGraphicDev)
-	:	CAIController(pGraphicDev),
-		m_fSpeed(0.f),
-		m_fAcmlTime(0.f),
-		m_bChase(false)
+	: CAIController(pGraphicDev),
+	m_fSpeed(0.f),
+	m_fAcmlTime(0.f),
+	m_bChase(false),
+	m_fAngle(0.f),
+	m_fGravity(0.f),
+	m_iDequeMinSize(3),
+	m_pOwner(nullptr),
+	m_bOnce(false)
 {
+	m_vecAtkPatterns.reserve(4);
 }
 
 CB2_AI::CB2_AI(const CB2_AI& rhs)
-	:	CAIController(rhs),
-		m_fSpeed(rhs.m_fSpeed),
-		m_fAcmlTime(rhs.m_fAcmlTime),
-		m_bChase(false)
+	: CAIController(rhs),
+	m_fSpeed(rhs.m_fSpeed),
+	m_fAcmlTime(rhs.m_fAcmlTime),
+	m_bChase(false),
+	m_fAngle(rhs.m_fAngle),
+	m_fGravity(rhs.m_fGravity),
+	m_iDequeMinSize(rhs.m_iDequeMinSize),
+	m_pOwner(nullptr),
+	m_bOnce(false)
 {
+	m_vecAtkPatterns = rhs.m_vecAtkPatterns;
+	m_patternDeque = rhs.m_patternDeque;
 }
 
 CB2_AI::~CB2_AI()
@@ -27,9 +40,26 @@ HRESULT CB2_AI::Ready_AI(const _float& fDetectRange, const _float& fInteractRang
 	if (FAILED(CAIController::Ready_AI(fDetectRange, fInteractRange, iInitState)))
 		return E_FAIL;
 
-	m_fSpeed = 0.5f;
+	m_fSpeed = 1.f;
+	m_fAngle = 0.f;
+	m_vSpeed = { 0.f, 0.f, 0.f };
+	m_fGravity = -9.8f;
 	m_fAcmlTime = 0.f;
-	m_iRcmState = _uint(CMonsterB2::B2S_IDLE);
+	m_iRcmState = _uint(CMonsterB2::B2S_SPAWN);
+
+	// Í≥µÍ≤© Ìå®ÌÑ¥ ÏÑ§Ï†ï
+	m_iDequeMinSize = 3;
+	m_vecAtkPatterns.push_back({ CMonsterB2::B2S_SMASH, 40, true });
+	m_vecAtkPatterns.push_back({ CMonsterB2::B2S_SHOOT, 40, true });
+	m_vecAtkPatterns.push_back({ CMonsterB2::B2S_SUMMON, 40, true });
+
+	// ÏãúÏó∞Ïö© : Î™®Îì† Ìå®ÌÑ¥Ïù¥ ÏàúÏ∞®Ï†ÅÏúºÎ°ú Ïã§Ìñâ
+	m_patternDeque.push_back(CMonsterB2::B2S_SMASH);
+	m_patternDeque.push_back(CMonsterB2::B2S_SHOOT);
+	m_patternDeque.push_back(CMonsterB2::B2S_SUMMON);
+
+	// Í≤åÏûÑÏö© : Í∞ÄÏ§ëÏπòÏôÄ ÎÇúÏàòÎ•º ÌÜµÌï¥ Ìå®ÌÑ¥ÏùÑ Ï±ÑÏõåÏ§å
+	Refill_Pattern(true);
 
 	return S_OK;
 }
@@ -39,36 +69,65 @@ void CB2_AI::Enter_State(const _uint& iState)
 	switch (iState)
 	{
 	case CMonsterB2::B2S_IDLE:
-		m_fAcmlTime = 0.f;
 		break;
-	case CMonsterB2::B2S_RUN:
+
+	case CMonsterB2::B2S_DIG:
 	{
 		m_fAcmlTime = 0.f;
 
-		if (m_pTargetTC) m_fSpeed = 2.f;
-		else m_fSpeed = 0.5f;
+		m_fSpeed = 0.01f;
+		_vec3 vPrevPos, vDesiredDir;
+		m_pOwnerTC->Get_Info(INFO_POS, &vPrevPos);
+		vDesiredDir = Randomize_Dir();
+
+		m_vDir = Compute_LimitedDir(120.f, m_vDir, vDesiredDir);
+		m_vLerpPos = vPrevPos + m_vDir * 10.f;
 	}
-		break;
-	case CMonsterB2::B2S_ATTACK:
+	break;
+	case CMonsterB2::B2S_ESCAPE:
 	{
-		m_fSpeed = 0.f;
-		m_pOwnerTC->Get_Info(INFO_POS, &m_vLerpPos);
-		m_vLerpPos += m_vDir * 3.f;
+		m_vDir = Compute_TargetDir();
+		m_vSpeed = { m_vDir.x * 3.f, 10.f, m_vDir.z * 3.f };
 	}
-		break;
+	break;
+
 	case CMonsterB2::B2S_HIT:
+		break;
+
+	case CMonsterB2::B2S_SMASH:
 	{
-		m_fSpeed = 0.1f;
-		m_pOwnerTC->Get_Info(INFO_POS, &m_vLerpPos);
-		m_vLerpPos -= m_vDir * 2.f;
 	}
-		break;
+	break;
+
+	case CMonsterB2::B2S_SHOOT:
+	{
+	}
+	break;
+
+	case CMonsterB2::B2S_SUMMON:
+	{
+	}
+	break;
+
 	case CMonsterB2::B2S_SPAWN:
-		m_bActiveAI = false;
 		break;
-	case CMonsterB2::B2S_JEER:
+
+	case CMonsterB2::B2S_DIE:
 		break;
-	case CMonsterB2::B2S_PRAY:
+
+	case CMonsterB2::B2S_DEAD:
+		break;
+
+	case CMonsterB2::B2S_JUMP:
+		break;
+
+	case CMonsterB2::B2S_DIVE:
+		break;
+
+	case CMonsterB2::B2S_SPIKE1:
+		break;
+
+	case CMonsterB2::B2S_SPIKE2:
 		break;
 	}
 }
@@ -80,42 +139,134 @@ void CB2_AI::Exit_State(const _uint& iState)
 	case CMonsterB2::B2S_IDLE:
 	{
 		if (!m_pTargetTC) m_bChase = false;
-
-		_vec3 vDir;
-
-		if (!m_bChase)	Randomize_Dir();
-		else			Compute_TargetDir();
 	}
-	break;
+		break;
 
-	case CMonsterB2::B2S_RUN:
+	case CMonsterB2::B2S_DIG:
 	{
 		if (!m_pTargetTC) m_bChase = false;
 	}
-	break;
+		break;
 
-	case CMonsterB2::B2S_ATTACK:
+	case CMonsterB2::B2S_ESCAPE:
 	{
 		if (!m_pTargetTC) m_bChase = false;
-
-		_vec3 vDir;
-
-		Randomize_Dir();
+		m_fAcmlTime = 0.f;
 	}
 	break;
 
 	case CMonsterB2::B2S_HIT:
 		break;
 
+	case CMonsterB2::B2S_SMASH:
+	{
+		if (!m_pTargetTC) m_bChase = false;
+	}
+	break;
+
+	case CMonsterB2::B2S_SHOOT:
+		break;
+
+	case CMonsterB2::B2S_SUMMON:
+		break;
+
 	case CMonsterB2::B2S_SPAWN:
 		m_bActiveAI = true;
 		break;
 
-	case CMonsterB2::B2S_JEER:
+	case CMonsterB2::B2S_DIE:
 		break;
 
-	case CMonsterB2::B2S_PRAY:
+	case CMonsterB2::B2S_DEAD:
+	{
+		if (!m_pTargetTC) m_bChase = false;
+	}
+	break;
+
+	case CMonsterB2::B2S_JUMP:
 		break;
+
+	case CMonsterB2::B2S_DIVE:
+		break;
+
+	case CMonsterB2::B2S_SPIKE1:
+		break;
+
+	case CMonsterB2::B2S_SPIKE2:
+		break;
+	}
+}
+
+void CB2_AI::Generate_Pattern(CMonsterB2::MONSTER_B2_STATE eLastPattern, _bool bAllowDuplicate)
+{
+	size_t iPatternCnt = m_vecAtkPatterns.size();
+
+	if (iPatternCnt == 0)	// error : Îì±Î°ùÎêú Í≥µÍ≤© Ìå®ÌÑ¥Ïù¥ ÏóÜÏùå
+	{
+		m_patternDeque.push_back(CMonsterB2::MONSTER_B2_STATE(0));
+		return;
+	}
+
+	_uint iTotalWeight(0);
+
+	if (bAllowDuplicate || iPatternCnt == 1)
+	{
+		for (auto& pattern : m_vecAtkPatterns)
+		{
+			if (pattern.bIsActive)
+			{
+				iTotalWeight += pattern.iWeight;
+			}
+		}
+	}
+	else
+	{
+		for (auto& pattern : m_vecAtkPatterns)
+		{
+			if (pattern.bIsActive && (pattern.eType != eLastPattern))
+			{
+				iTotalWeight += pattern.iWeight;
+			}
+		}
+	}
+
+	if (iTotalWeight == 0)	// error : ÌôúÏÑ±ÌôîÎêú Í≥µÍ≤© Ìå®ÌÑ¥Ïù¥ ÏóÜÏùå
+	{
+		m_patternDeque.push_back(CMonsterB2::MONSTER_B2_STATE(0));
+		return;
+	}
+
+	_uint iRandom = Get_Rand_Int(1, iTotalWeight);
+	_uint iAccumulated(0);
+
+	for (auto& pattern : m_vecAtkPatterns)
+	{
+		if (!pattern.bIsActive) continue;
+
+		iAccumulated += pattern.iWeight;
+
+		if (iRandom <= iAccumulated)
+		{
+			// Ï†ïÏÉÅ ÏÉùÏÑ±
+			m_patternDeque.push_back(pattern.eType);
+			return;
+		}
+	}
+
+	// error : Ï†ïÏÉÅÏ†ÅÏúºÎ°ú ÏÉùÏÑ±ÎêòÏßÄ ÏïäÏùå
+	m_patternDeque.push_back(CMonsterB2::MONSTER_B2_STATE(0));
+}
+
+void CB2_AI::Refill_Pattern(_bool bAllowDuplicate)
+{
+	while (m_patternDeque.size() < m_iDequeMinSize)
+	{
+		CMonsterB2::MONSTER_B2_STATE eLastState;
+
+		if (m_patternDeque.empty()) eLastState = CMonsterB2::B2S_SUMMON;
+		else						eLastState = m_patternDeque.back();
+
+		Generate_Pattern(eLastState, bAllowDuplicate);
 	}
 }
 
@@ -134,174 +285,251 @@ _int CB2_AI::Update_Component(const _float& fTimeDelta)
 	case CMonsterB2::B2S_IDLE:
 		Update_Idle(fTimeDelta);
 		break;
-	case CMonsterB2::B2S_RUN:
-		Update_Run(fTimeDelta);
+	case CMonsterB2::B2S_DIG:
+		Update_Dig(fTimeDelta);
 		break;
-	case CMonsterB2::B2S_ATTACK:
-		Update_Attack(fTimeDelta);
+	case CMonsterB2::B2S_ESCAPE:
+		Update_Escape(fTimeDelta);
 		break;
 	case CMonsterB2::B2S_HIT:
 		Update_Hit(fTimeDelta);
 		break;
+	case CMonsterB2::B2S_SMASH:
+		Update_Smash(fTimeDelta);
+		break;
+	case CMonsterB2::B2S_SHOOT:
+		Update_Shoot(fTimeDelta);
+		break;
+	case CMonsterB2::B2S_SUMMON:
+		Update_Summon(fTimeDelta);
+		break;
 	case CMonsterB2::B2S_SPAWN:
 		Update_Spawn(fTimeDelta);
 		break;
-	case CMonsterB2::B2S_JEER:
-		Update_Jeer(fTimeDelta);
+	case CMonsterB2::B2S_DIE:
+		Update_Die(fTimeDelta);
 		break;
-	case CMonsterB2::B2S_PRAY:
-		Update_Pray(fTimeDelta);
+	case CMonsterB2::B2S_DEAD:
+		Update_Dead(fTimeDelta);
+		break;
+	case CMonsterB2::B2S_JUMP:
+		Update_Jump(fTimeDelta);
+		break;
+	case CMonsterB2::B2S_DIVE:
+		Update_Dive(fTimeDelta);
+		break;
+	case CMonsterB2::B2S_SPIKE1:
+		Update_Spike1(fTimeDelta);
+		break;
+	case CMonsterB2::B2S_SPIKE2:
+		Update_Spike2(fTimeDelta);
 		break;
 	}
+
+	Refill_Pattern();
 
 	return iExit;
 }
 
 void CB2_AI::Update_Idle(const _float& fTimeDelta)
 {
-	if (!m_pTargetTC) return;
-
-	if (m_bChase)
-	{	// ≈∏∞Ÿ¿ª ¿ÃπÃ πﬂ∞ﬂ«ﬂ¿ª ∂ß
-		if (m_fDistance <= m_fInteractRange)
-		{	// ≈∏∞Ÿ¿Ã ªÛ»£¿€øÎ π¸¿ß ≥ªø° ¿÷¿ª Ω√ ∞¯∞› ªÛ≈¬∑Œ ¿¸»Ø
-			Change_State(CMonsterB2::B2S_ATTACK);
-			return;
-		}
-		else
-		{	// ≈∏∞Ÿ¿Ã ªÛ»£¿€øÎ π¸¿ß ≥ªø° æ¯¿ª Ω√ ¿Ãµø ªÛ≈¬∑Œ ¿¸»Ø«œø© √ﬂ¿˚
-			Change_State(CMonsterB2::B2S_RUN);
-		}
-	}
-	else
-	{	
+	if(!m_bChase)
+	{	// ÌÉÄÍ≤üÏùÑ Î∞úÍ≤¨ÌïòÏßÄ Î™ªÌñàÏùÑ Îïå
 		if (m_fDistance <= m_fDetectRange)
-		{	// ≈∏∞Ÿ¿Ã ∞®¡ˆ π¸¿ß ≥ª∑Œ ¡¯¿‘ Ω√ πﬂ∞ﬂ »ƒ ¿Ãµø ªÛ≈¬∑Œ ¿¸»Ø«œø© √ﬂ¿˚
+		{	// ÌÉÄÍ≤üÏù¥ Í∞êÏßÄ Î≤îÏúÑ ÎÇ¥Î°ú ÏßÑÏûÖ Ïãú Î∞úÍ≤¨
 			m_bChase = true;
-			Change_State(CMonsterB2::B2S_RUN);
-		}
-		else if (m_fAcmlTime > 3.f)
-		{	// ≈∏∞Ÿ¿Ã ∞®¡ˆ π¸¿ß ≥ªø° æ¯¿ª ∂ß¥¬ ¥Î±‚«œ¥Ÿ ¿Ãµø ªÛ≈¬∑Œ ¿¸»Ø«œø© º¯¬˚
-			Change_State(CMonsterB2::B2S_RUN);
 		}
 	}
 }
 
-void CB2_AI::Update_Run(const _float& fTimeDelta)
+void CB2_AI::Update_Dig(const _float& fTimeDelta)
 {
-	if (!m_pTargetTC) Change_State(CMonsterB2::B2S_IDLE);
-
-	if (m_bChase)
-	{	// ≈∏∞Ÿ¿ª ¿ÃπÃ πﬂ∞ﬂ«ﬂ¿ª ∂ß
-		if (m_fDistance <= m_fInteractRange)
-		{	
-			if ((m_iPreState != CMonsterB2::B2S_ATTACK) || (m_iPreState == CMonsterB2::B2S_ATTACK && m_fAcmlTime >= 5.f))
-				Change_State(CMonsterB2::B2S_ATTACK);
-		}
+	if (m_fAcmlTime >= 5.f) Change_State(CMonsterB2::B2S_ESCAPE);
+	else if (m_fAcmlTime >= 1.5f)
+	{
+		_vec3 vPos;
+		m_pOwnerTC->Get_Info(INFO_POS, &vPos);
+		D3DXVec3Lerp(&vPos, &vPos, &m_vLerpPos, m_fSpeed);
+		m_pOwnerTC->Set_Pos(vPos.x, vPos.y, vPos.z);
 	}
-	else
-	{	// ≈∏∞Ÿ¿ª πﬂ∞ﬂ«œ¡ˆ ∏¯«ﬂ¿ª ∂ß
-		if (m_fDistance <= m_fDetectRange)
-		{	// ≈∏∞Ÿ¿Ã ∞®¡ˆ π¸¿ß ≥ª∑Œ ¡¯¿‘ Ω√ πﬂ∞ﬂ
-			m_bChase = true;
-			Compute_TargetDir();
-		}
-		else if (m_fAcmlTime > 3.f)
-		{	// ≈∏∞Ÿ¿Ã ∞®¡ˆ π¸¿ß ≥ªø° æ¯¿ª ∂ß¥¬ º¯¬˚«œ¥Ÿ ¥Î±‚ ªÛ≈¬∑Œ ¿¸»Ø
-			Change_State(CMonsterB2::B2S_IDLE);
-			return;
-		}
-	}
-	if (m_fAcmlTime > 3.f) Compute_TargetDir();
-
-	m_pOwnerTC->Move_Pos(&m_vDir, fTimeDelta, m_fSpeed);
 }
 
-void CB2_AI::Update_Attack(const _float& fTimeDelta)
+void CB2_AI::Update_Escape(const _float& fTimeDelta)
 {
-	if (!m_pTargetTC) Change_State(CMonsterB2::B2S_IDLE);
-
-	_vec3 vPos;
-	m_pOwnerTC->Get_Info(INFO_POS, &vPos);
-
-	D3DXVec3Lerp(&vPos, &vPos, &m_vLerpPos, m_fSpeed);
-
-	m_pOwnerTC->Set_Pos(vPos.x, vPos.y, vPos.z);
 }
 
 void CB2_AI::Update_Hit(const _float& fTimeDelta)
 {
-	_vec3 vPos;
-	m_pOwnerTC->Get_Info(INFO_POS, &vPos);
+	if (m_fAcmlTime >= 3.f)
+	{
+		if (!m_patternDeque.empty())
+		{
+			Change_State(m_patternDeque.front());
+			m_patternDeque.pop_front();
+		}
+	}
+}
 
-	D3DXVec3Lerp(&vPos, &vPos, &m_vLerpPos, m_fSpeed);
+void CB2_AI::Update_Smash(const _float& fTimeDelta)
+{
+	if (m_bOnce)
+	{
+		if (m_pOwner)
+		{
+			_vec3 vPos;
+			m_pOwnerTC->Get_Info(INFO_POS, &vPos);
+			vPos.y += 2.5f;
 
-	m_pOwnerTC->Set_Pos(vPos.x, vPos.y, vPos.z);
+			switch (m_iSwitch)
+			{
+			case 1:
+				vPos.x -= 5.f;
+				m_pOwner->Attack_HitBox(vPos);
+				break;
+
+			case 2:
+				vPos.x += 5.f;
+				m_pOwner->Attack_HitBox(vPos);
+				break;
+
+			case 3:
+				m_pOwner->Attack_HitBox(vPos);
+				break;
+			}
+		}
+
+		m_bOnce = false;
+	}
+}
+
+void CB2_AI::Update_Shoot(const _float& fTimeDelta)
+{
+	if (m_bOnce)
+	{
+		if (m_pOwner)
+			m_pOwner->Launch_Projectile(10, Compute_TargetDir());
+
+		m_bOnce = false;
+	}
+}
+
+void CB2_AI::Update_Summon(const _float& fTimeDelta)
+{
+	if (m_bOnce)
+	{
+		if (m_pOwner)
+			m_pOwner->Summon_Minion(7);
+
+		m_bOnce = false;
+	}
 }
 
 void CB2_AI::Update_Spawn(const _float& fTimeDelta)
 {
 }
 
-void CB2_AI::Update_Jeer(const _float& fTimeDelta)
+void CB2_AI::Update_Die(const _float& fTimeDelta)
 {
 }
 
-void CB2_AI::Update_Pray(const _float& fTimeDelta)
+void CB2_AI::Update_Dead(const _float& fTimeDelta)
 {
 }
 
-void CB2_AI::Compute_Distance()
+void CB2_AI::Update_Jump(const _float& fTimeDelta)
 {
-	if (!m_pOwnerTC || !m_pTargetTC)
-	{
-		m_fDistance = FLT_MAX;
-		return;
-	}
-
-	_vec3 vOwnerPos, vTargetPos, vDir;
-	m_pOwnerTC->Get_Info(INFO_POS, &vOwnerPos);
-	m_pTargetTC->Get_Info(INFO_POS, &vTargetPos);
-	vDir = vTargetPos - vOwnerPos;
-
-	m_fDistance = D3DXVec3Length(&vDir);
 }
 
-void CB2_AI::Compute_TargetDir()
+void CB2_AI::Update_Dive(const _float& fTimeDelta)
 {
-	if (!m_pOwnerTC || !m_pTargetTC) return;
-
-	_vec3 vOwnerPos, vTargetPos;
-	m_pOwnerTC->Get_Info(INFO_POS, &vOwnerPos);
-	m_pTargetTC->Get_Info(INFO_POS, &vTargetPos);
-	m_vDir = vTargetPos - vOwnerPos;
-	D3DXVec3Normalize(&m_vDir, &m_vDir);
 }
 
-void CB2_AI::Randomize_Dir()
+void CB2_AI::Update_Spike1(const _float& fTimeDelta)
 {
-	_float fAngle = D3DXToRadian(rand() % 360);
-	m_vDir.x = cosf(fAngle);
-	m_vDir.y = 0.f;
-	m_vDir.z = sinf(fAngle);
+}
+
+void CB2_AI::Update_Spike2(const _float& fTimeDelta)
+{
 }
 
 void CB2_AI::Anim_End(CMonsterB2::MONSTER_B2_STATE eState)
 {
 	switch (eState)
 	{
-	case CMonsterB2::B2S_ATTACK:
-		Change_State(CMonsterB2::B2S_RUN);
-		break;
+	case CMonsterB2::B2S_IDLE:
+	{
+		if ((m_bChase) && (m_fDistance <= m_fInteractRange))
+		{
+			if (!m_patternDeque.empty())
+			{
+				Change_State(m_patternDeque.front());
+				m_patternDeque.pop_front();
+			}
+		}
+	}
+	break;
 
+	case CMonsterB2::B2S_ESCAPE:
 	case CMonsterB2::B2S_HIT:
-		Change_State(CMonsterB2::B2S_RUN);
-		break;
-
 	case CMonsterB2::B2S_SPAWN:
 		Change_State(CMonsterB2::B2S_IDLE);
 		break;
+
+	case CMonsterB2::B2S_SMASH:
+	case CMonsterB2::B2S_SHOOT:
+	case CMonsterB2::B2S_SUMMON:
+	case CMonsterB2::B2S_SPIKE1:
+	case CMonsterB2::B2S_SPIKE2:
+		Change_State(CMonsterB2::B2S_DIG);
+		break;
+
+	case CMonsterB2::B2S_DIE:
+		Change_State(CMonsterB2::B2S_DEAD);
+		break;
+
+	case CMonsterB2::B2S_DIVE:
+		Change_State(CMonsterB2::B2S_ESCAPE);
+		break;
 	}
+}
+
+void CB2_AI::Push_Front_Pattern(CMonsterB2::MONSTER_B2_STATE eState)
+{
+	size_t iSize = m_vecAtkPatterns.size();
+
+	for (size_t i = 0; i < iSize; ++i)
+	{
+		if (m_vecAtkPatterns[i].eType == eState)
+		{
+			m_patternDeque.push_front(eState);
+			return;
+		}
+	}
+}
+
+void CB2_AI::Set_Weight(CMonsterB2::MONSTER_B2_STATE eState, _uint iNewWeight)
+{
+	size_t iSize = m_vecAtkPatterns.size();
+
+	for (size_t i = 0; i < iSize; ++i)
+	{
+		if (m_vecAtkPatterns[i].eType == eState)
+		{
+			m_vecAtkPatterns[i].iWeight = iNewWeight;
+
+			if (iNewWeight == 0)	m_vecAtkPatterns[i].bIsActive = false;
+			else					m_vecAtkPatterns[i].bIsActive = true;
+
+			return;
+		}
+	}
+}
+
+void CB2_AI::Set_Signal(_uint iNum)
+{
+	m_bOnce = true;
+
+	if (iNum != 0) m_iSwitch = iNum;
 }
 
 CB2_AI* CB2_AI::Create(LPDIRECT3DDEVICE9 pGraphicDev, const _float& fDetectRange, const _float& fInteractRange, const _uint& iInitState)

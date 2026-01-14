@@ -506,59 +506,6 @@ void CPlayer::Move_Frame(const _float& fTimeDelta)
 	}
 }
 
-void CPlayer::Set_Texture()
-{
-	_uint iFrame = _uint(m_fFrame);
-
-	D3DXMatrixIdentity(&m_matTex);
-	_uint iU = iFrame % 16;
-	_uint iV = iFrame / 16;
-
-	m_matTex._11 = 0.0625f;	// 가로는 16칸 고정
-	m_matTex._22 = 0.0625f;	// 세로는 16칸 고정(Player)
-
-	switch (m_eCurState)
-	{
-	case PS_IDLE:
-	{
-		//if (m_vDir == m_vNormDir[DIR_UP] || m_vDir == m_vNormDir[DIR_LU] || m_vDir == m_vNormDir[DIR_RU]) iU += 2;
-	}
-	break;
-
-	case PS_RUN:
-	{
-	}
-	break;
-
-	case PS_ROLL:
-	{
-	}
-	break;
-
-	case PS_ATTACK:
-	{
-	}
-	break;
-
-	case PS_CHARGE:
-	{
-	}
-	break;
-
-	case PS_ACTION:
-	{
-	}
-	break;
-	}
-
-	m_matTex._31 = _float(iU) * 0.0625f;
-	m_matTex._32 = _float(iV) * 0.0625f;
-
-	m_pGraphicDev->SetTransform(D3DTS_TEXTURE0, &m_matTex);
-
-	//m_pTextureCom2->Set_Texture(_uint(m_eCurState));
-}
-
 void CPlayer::Set_TextureSet()
 {
 	wstring strPreKey = m_strFrameKey;
@@ -647,8 +594,8 @@ void CPlayer::Attack_HitBox()
 	else					fX = m_vPos.x - 1.2f;
 
 
-	AABB tAABB = { fX, m_vPos.y, m_vPos.z,
-					1.5f, 1.f, 1.5f };
+	AABB tAABB = { fX, m_vPos.y, m_vPos.z - 1.f,
+					2.f, 1.f, 2.f };
 
 	if(g_bDebug) CRenderer::GetInstance()->Add_TestCollider(tAABB, 60);
 

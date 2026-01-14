@@ -12,8 +12,8 @@ CMapObject::CMapObject(LPDIRECT3DDEVICE9 pGraphicDev)
 	, m_iTextureIndex(0)
 	, m_fScale(1.f)
 	, m_ePlacement(PLACEMENT_STANDING)
-	, m_TextureWidth(0.f)
-	, m_TextureHeight(0.f)
+	, m_iTextureWidth(0)
+	, m_iTextureHeight(0)
 {
 }
 
@@ -26,8 +26,8 @@ CMapObject::CMapObject(const CMapObject& rhs)
 	, m_iTextureIndex(rhs.m_iTextureIndex)
 	, m_fScale(rhs.m_fScale)
 	, m_ePlacement(rhs.m_ePlacement)
-	, m_TextureWidth(rhs.m_TextureWidth)
-	, m_TextureHeight(rhs.m_TextureHeight)
+	, m_iTextureWidth(rhs.m_iTextureWidth)
+	, m_iTextureHeight(rhs.m_iTextureHeight)
 {
 }
 
@@ -97,9 +97,9 @@ void CMapObject::Set_ObjectData(const Engine::OBJECTDATA& objData)
 	m_ePlacement = static_cast<PLACEMENT_TYPE>(objData.placement);
 
 	// Get Texture H,W
-	m_pTextureCom->Get_TextureSize(&m_TextureWidth, &m_TextureHeight, m_iTextureIndex);
+	m_pTextureCom->Get_TextureSize(&m_iTextureWidth, &m_iTextureHeight, m_iTextureIndex);
 
-	float aspectRatio = static_cast<float>(m_TextureWidth) / static_cast<float>(m_TextureHeight);
+	float aspectRatio = static_cast<float>(m_iTextureWidth) / static_cast<float>(m_iTextureHeight);
 	float HelfWidth = m_fScale * aspectRatio * 0.5f;
 	float baseY = -2.4f;
 
