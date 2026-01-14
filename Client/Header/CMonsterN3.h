@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "CMonster.h"
 
 namespace Engine
@@ -27,7 +27,7 @@ public:
 	virtual _int		Update_GameObject(const _float& fTimeDelta);
 	virtual void		LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual void		Render_GameObject();
-	virtual void		OnCollision(CGameObject* pObject) {};
+	virtual void		OnCollision(CGameObject* pObject);
 
 private:
 	HRESULT				Add_Component();
@@ -44,7 +44,7 @@ private:
 	void				Update_State();
 
 private:
-	// ½ºÇÁ¶óÀÌÆ® °ü·Ã
+	// ìŠ¤í”„ë¼ì´íŠ¸ ê´€ë ¨
 	MONSTER_N3_STATE	m_ePreState;
 	MONSTER_N3_STATE	m_eCurState;
 	_float				m_fFrame;
@@ -52,10 +52,10 @@ private:
 	_float				m_fFrameSpeed;
 	_matrix				m_matTex;
 
-	// ½ºÅ×ÀÌÅÍ½º °ü·Ã
+	// ìŠ¤í…Œì´í„°ìŠ¤ ê´€ë ¨
 	_float				m_fHeight;
 
-	// AI °ü·Ã
+	// AI ê´€ë ¨
 	CN3_AI*				m_pAICom;
 
 public:

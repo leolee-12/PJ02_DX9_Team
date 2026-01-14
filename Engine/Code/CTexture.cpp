@@ -64,7 +64,7 @@ HRESULT CTexture::Ready_Texture(TEXTUREID eID, const _tchar* pPath, const _uint&
 		m_vecTexture.push_back(pTexture);
 	}
 
-	return S_OK;
+ 	return S_OK;
 }
 
 HRESULT CTexture::Ready_Texture_FromThread(TEXTUREID eID, const wstring& strFilepath, const _uint& iCnt)

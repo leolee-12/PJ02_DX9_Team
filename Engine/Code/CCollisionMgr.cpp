@@ -18,9 +18,11 @@ HRESULT CCollisionMgr::Ready_CollisionMgr()
 {
 	m_vecCollisionPool.push_back({ CL_PLAYER, CL_MONSTER });		// 어떤 그룹끼리 충돌체크할 것인지 등록
 	m_vecCollisionPool.push_back({ CL_PLAYER, CL_ITEM});
-	m_vecCollisionPool.push_back({ CL_PLAYER, CL_GRASS });    // 추가
-	m_vecCollisionPool.push_back({ CL_MONSTER, CL_GRASS });   // 추가
-	m_vecCollisionPool.push_back({ CL_PLAYER, CL_WARP });   // 추가
+	m_vecCollisionPool.push_back({ CL_PLAYER, CL_GRASS });   
+	m_vecCollisionPool.push_back({ CL_MONSTER, CL_GRASS });   
+	m_vecCollisionPool.push_back({ CL_PLAYER, CL_WARP });   
+	m_vecCollisionPool.push_back({ CL_PLAYER, CL_BORDER });
+	m_vecCollisionPool.push_back({ CL_MONSTER, CL_BORDER });
 	return S_OK;
 }
 
@@ -62,9 +64,9 @@ void CCollisionMgr::RegisterCollider(CGameObject* pOwner, const AABB& aabb, COLG
 			colliderinfo.tAABB.x = aabb.x;			// AABB 중심값 갱신
 			colliderinfo.tAABB.y = aabb.y;
 			colliderinfo.tAABB.z = aabb.z;
-			colliderinfo.tAABB.hx = aabb.hx; 
-			colliderinfo.tAABB.hy = aabb.hy; 
-			colliderinfo.tAABB.hz = aabb.hz; 
+			colliderinfo.tAABB.hx = aabb.hx;
+			colliderinfo.tAABB.hy = aabb.hy;
+			colliderinfo.tAABB.hz = aabb.hz;
 			return;
 		}
 	}

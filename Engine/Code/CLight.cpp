@@ -1,4 +1,4 @@
-#include "CLight.h"
+﻿#include "CLight.h"
 
 CLight::CLight(LPDIRECT3DDEVICE9 pGraphicDev)
 	: m_pGraphicDev(pGraphicDev), m_iIndex(0)

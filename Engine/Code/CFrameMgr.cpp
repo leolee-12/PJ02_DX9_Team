@@ -1,4 +1,4 @@
-#include "CFrameMgr.h"
+﻿#include "CFrameMgr.h"
 
 IMPLEMENT_SINGLETON(CFrameMgr)
 

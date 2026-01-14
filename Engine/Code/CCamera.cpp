@@ -1,4 +1,4 @@
-#include "CCamera.h"
+﻿#include "CCamera.h"
 
 CCamera::CCamera(LPDIRECT3DDEVICE9 pGraphicDev)
     : CGameObject(pGraphicDev)

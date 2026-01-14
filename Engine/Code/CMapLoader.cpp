@@ -42,6 +42,9 @@ HRESULT CMapLoader::LoadMapA(const char* pFilePath, MAPDATA& outMap)
 	outMap.spawns.clear();
 	outMap.objects.clear();
 	outMap.lights.clear();
+	outMap.mapWarps.clear();    
+	outMap.sceneWarps.clear();
+	outMap.collisions.clear();
 
 	std::string line;
 	std::string currentSection;
@@ -150,8 +153,50 @@ void CMapLoader::ParseSection(const std::string& section, const std::string& lin
 	{
 		sscanf_s(line.c_str(), "%d", &outMap.skyType);
 	}
+	else if (section == "[MapWarps]")
+	{
+		MAPWARPDATA warp;
+		int count = sscanf_s(line.c_str(), "%d,%f,%f,%d",
+			&warp.pairId, &warp.x, &warp.z, &warp.direction);
+		if (count >= 4)
+		{
+			// Scale ratio adjustment (10 -> 8)
+			const float SCALE_RATIO = 0.8f;
+			warp.x *= SCALE_RATIO;
+			warp.z *= SCALE_RATIO;
+
+			outMap.mapWarps.push_back(warp);
+		}
+	}
+	else if (section == "[SceneWarps]")
+	{
+		SCENEWARPDATA warp;
+		char destScene[64] = "";
+		int count = sscanf_s(line.c_str(), "%f,%f,%d,%[^\n]",
+			&warp.x, &warp.z, &warp.direction,
+			destScene, (unsigned)_countof(destScene));
+		if (count >= 4)
+		{
+			// Scale ratio adjustment
+			const float SCALE_RATIO = 0.8f;
+			warp.x *= SCALE_RATIO;
+			warp.z *= SCALE_RATIO;
+
+			warp.destinationScene = destScene;
+			outMap.sceneWarps.push_back(warp);
+		}
+	}
+	else if (section == "[Collisions]")
+	{
+		COLLISIONDATA col;
+		if (sscanf_s(line.c_str(), "%d,%d", &col.x, &col.z) == 2)
+		{
+			outMap.collisions.push_back(col);
+		}
+	}
 }
 
 void CMapLoader::Free()
 {
+
 }

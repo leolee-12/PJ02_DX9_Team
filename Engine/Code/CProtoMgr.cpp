@@ -1,4 +1,4 @@
-#include "CProtoMgr.h"
+﻿#include "CProtoMgr.h"
 
 IMPLEMENT_SINGLETON(CProtoMgr)
 

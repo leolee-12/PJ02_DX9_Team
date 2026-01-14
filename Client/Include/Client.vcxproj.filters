@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="소스 파일">
@@ -735,6 +735,12 @@
     <ClInclude Include="..\Header\CCookingTarget.h">
       <Filter>02. GameObject\07. UI\05.CookingUI\00.CookingMiniGame\04.CookingTarget</Filter>
     </ClInclude>
+	<ClInclude Include="..\Header\CCookingTarget.h">
+		<Filter>02. GameObject\07. UI\05.CookingUI\00.CookingMiniGame\04.CookingTarget</Filter>
+	</ClInclude>
+    <ClInclude Include="..\Header\CCookingTarget.h">
+      <Filter>02. GameObject\07. UI\05.CookingUI\00.CookingMiniGame\04.CookingTarget</Filter>
+    </ClInclude>
     <ClInclude Include="..\Header\CSceneWarp.h">
       <Filter>02. GameObject\14. Warp</Filter>
     </ClInclude>
@@ -743,6 +749,9 @@
     </ClInclude>
     <ClInclude Include="..\Header\CWarp.h">
       <Filter>02. GameObject\14. Warp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CMapBorder.h">
+      <Filter>02. GameObject\12. MapObject</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1082,6 +1091,11 @@
     <ClCompile Include="..\Code\CSpeechBubble.cpp">
       <Filter>02. GameObject\07. UI\06. WorldUI\00.SpeechBubble</Filter>
     </ClCompile>
+    <ClCompile Include="..\Code\CCookingInfoCardRIghtPattern.cpp">
+		<Filter>02. GameObject\07. UI\05.CookingUI\01.CookingSelect\04.CookingInfoCard\03.CookingInfoCardRightParrtern</Filter>
+	</ClCompile>
+      <Filter>02. GameObject\07. UI\05.CookingUI\01.CookingSelect\04.CookingInfoCard\03.CookingInfoCardRightParrtern</Filter>
+    </ClCompile>
     <ClCompile Include="..\Code\CSceneWarp.cpp">
       <Filter>02. GameObject\14. Warp</Filter>
     </ClCompile>
@@ -1090,6 +1104,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CWarp.cpp">
       <Filter>02. GameObject\14. Warp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CMapBorder.cpp">
+      <Filter>02. GameObject\12. MapObject</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "CPlayer.h"
 #include "CProtoMgr.h"
 #include "CManagement.h"
@@ -7,6 +7,8 @@
 #include "CCollisionMgr.h"
 #include "CWarp.h"
 #include "CSceneWarp.h"
+#include "Engine_Struct.h"
+#include "CCollider.h"
 
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev),
@@ -87,13 +89,13 @@ _int CPlayer::Update_GameObject(const _float& fTimeDelta)
 
 	m_pColliderCom->UpdateFromTransform(m_pTransformCom);
 	
-	//------½ºÇÁ¶óÀÌÆ® ³ôÀÌ¿Í Ãæµ¹Ã¼ À§Ä¡ ¸ÂÃã---------
+	//------ìŠ¤í”„ë¼ì´íŠ¸ ë†’ì´ì™€ ì¶©ëŒì²´ ìœ„ì¹˜ ë§žì¶¤---------
 	_float fY(m_vPos.y - m_pTransformCom->Get_Scale(ROT_Y) * 0.125f);
 	AABB tAABB = { m_vPos.x, fY, m_vPos.z, 1.f, 1.f, 1.f };
 	m_pColliderCom->Set_AABB(tAABB);
 	//-------------------------------------------------
 
-	// Ãæµ¹Ã¼ µð¹ö±×¿ë
+	// ì¶©ëŒì²´ ë””ë²„ê·¸ìš©
 	if(g_bDebug) m_pColliderCom->Update_AABBforRender();
 
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
@@ -107,6 +109,8 @@ _int CPlayer::Update_GameObject(const _float& fTimeDelta)
 
 void CPlayer::LateUpdate_GameObject(const _float& fTimeDelta)
 {
+	m_pTransformCom->Get_Info(INFO_POS, &m_vPrevPos);
+
 	Key_Input(fTimeDelta);
 	Move_Roll(fTimeDelta);
 	Charge(fTimeDelta);
@@ -140,10 +144,10 @@ void CPlayer::Ready_Variable()
 
 	m_eOBJID = OID_PLAYER;
 	_float fScale = 10.f;
-	//m_pTransformCom->Set_Scale(5.f, 5.f, 5.f);			// Player Æú´õ
+	//m_pTransformCom->Set_Scale(5.f, 5.f, 5.f);			// Player í´ë”
 	//m_pTransformCom->Set_Scale(7.f, 7.f, 7.f);			// Tex2
-	m_pTransformCom->Set_Scale(fScale, fScale, fScale);		// Player(3) Æú´õ
-	m_pTransformCom->Set_Pos(10.f, 0.f, 10.f);
+	m_pTransformCom->Set_Scale(fScale, fScale, fScale);		// Player(3) í´ë”
+	m_pTransformCom->Set_Pos(0.f, 0.f, 0.f);
 	m_fFrameSpeed = 24.f;
 
 	m_pColliderCom->RegisterToManager(this, CL_PLAYER);
@@ -330,7 +334,7 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 		m_vRollPos = m_vPos + m_vDir * 5.f;
 	}
 
-	if (GetAsyncKeyState(VK_LBUTTON) & 0x0001)	// ´­·¶À» ¶§ ÇÑ ¹ø¸¸ true
+	if (GetAsyncKeyState(VK_LBUTTON) & 0x0001)	// ëˆŒë €ì„ ë•Œ í•œ ë²ˆë§Œ true
 	{			
 		if ((m_iCombo == 3) || (m_fCharge)) return;
 
@@ -342,7 +346,7 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 		Attack_HitBox();
 	}
 
-	if (GetAsyncKeyState(VK_RBUTTON) & 0x0001)	// ´­·¶À» ¶§ ÇÑ ¹ø¸¸ true
+	if (GetAsyncKeyState(VK_RBUTTON) & 0x0001)	// ëˆŒë €ì„ ë•Œ í•œ ë²ˆë§Œ true
 	{
 		if ((m_bRoll) || (m_iCombo)) return;
 	
@@ -472,7 +476,7 @@ void CPlayer::Move_Frame(const _float& fTimeDelta)
 	{
 		m_fFrame = 0.f;
 		
-		// ±¸¸£±â ¹× °ø°ÝÀº ÇÁ·¹ÀÓÀÌ ³¡³¯ ¶§±îÁö À¯ÁöµÇ¾ú´Ù°¡ Á¾·á
+		// êµ¬ë¥´ê¸° ë° ê³µê²©ì€ í”„ë ˆìž„ì´ ëë‚  ë•Œê¹Œì§€ ìœ ì§€ë˜ì—ˆë‹¤ê°€ ì¢…ë£Œ
 		if (m_eCurState == PS_ROLL)
 		{
 			m_bRoll = false;
@@ -501,8 +505,8 @@ void CPlayer::Set_Texture()
 	_uint iU = iFrame % 16;
 	_uint iV = iFrame / 16;
 
-	m_matTex._11 = 0.0625f;	// °¡·Î´Â 16Ä­ °íÁ¤
-	m_matTex._22 = 0.0625f;	// ¼¼·Î´Â 16Ä­ °íÁ¤(Player)
+	m_matTex._11 = 0.0625f;	// ê°€ë¡œëŠ” 16ì¹¸ ê³ ì •
+	m_matTex._22 = 0.0625f;	// ì„¸ë¡œëŠ” 16ì¹¸ ê³ ì •(Player)
 
 	switch (m_eCurState)
 	{
@@ -587,7 +591,7 @@ void CPlayer::Set_TextureSet()
 
 	case PS_CHARGE:
 	{
-		// Å°ÀÎÇ² & Move_Frame¿¡¼­ °ü¸®
+		// í‚¤ì¸í’‹ & Move_Frameì—ì„œ ê´€ë¦¬
 	}
 	break;
 	}
@@ -596,13 +600,13 @@ void CPlayer::Set_TextureSet()
 	
 	m_fFrameEnd = m_pTextureCom->Get_TextureEnd(m_strFrameKey); 
 
-	_bool bFilpX = m_vDir.x > 0.f ? true : false;	// ¹ÝÀü ¿©ºÎ
+	_bool bFilpX = m_vDir.x > 0.f ? true : false;	// ë°˜ì „ ì—¬ë¶€
 	D3DXMatrixIdentity(&m_matTex);
 
 	if (bFilpX)
 	{
 		m_matTex._11 *= -1.f;
-		m_matTex._31 = 1.f;	// ¹ÝÀü O : ¿À¸¥ÂÊ¿¡¼­ ¿ÞÂÊÀ¸·Î ÀÐÀ½
+		m_matTex._31 = 1.f;	// ë°˜ì „ O : ì˜¤ë¥¸ìª½ì—ì„œ ì™¼ìª½ìœ¼ë¡œ ì½ìŒ
 	}
 
 	m_pGraphicDev->SetTransform(D3DTS_TEXTURE0, &m_matTex);
@@ -657,6 +661,46 @@ void	CPlayer::OnCollision(CGameObject* pObject)
 	if (pObject->Get_OBJID() == OID_MONSTER)
 	{
 		//m_pTransformCom->Set_Pos(10.f, 10.f, 10.f);
+	}
+	if (pObject->Get_OBJID() == OID_BORDER)
+	{
+		_vec3 vCurPos;
+		m_pTransformCom->Get_Info(INFO_POS, &vCurPos);
+
+		Engine::CCollider* pBorderCol = dynamic_cast<Engine::CCollider*>(
+			pObject->Get_Component(ID_STATIC, L"Com_Collider"));
+
+		if (nullptr == pBorderCol)
+			return;
+
+		const Engine::AABB& borderAABB = pBorderCol->Get_AABB();
+
+		const _float fPlayerHalf = 0.5f;
+
+		_float fOverlapX = (borderAABB.hx + fPlayerHalf) - abs(vCurPos.x - borderAABB.x);
+		_float fOverlapZ = (borderAABB.hz + fPlayerHalf) - abs(vCurPos.z - borderAABB.z);
+
+		if (fOverlapX > 0.f && fOverlapZ > 0.f)
+		{
+			if (fOverlapX < fOverlapZ)
+			{
+				if (vCurPos.x < borderAABB.x)
+					vCurPos.x -= fOverlapX + 0.1f;
+				else
+					vCurPos.x += fOverlapX + 0.1f;
+			}
+			else
+			{
+				if (vCurPos.z < borderAABB.z)
+					vCurPos.z -= fOverlapZ + 0.1f;
+				else
+					vCurPos.z += fOverlapZ + 0.1f;
+			}
+
+			m_pTransformCom->Set_Pos(vCurPos.x, vCurPos.y, vCurPos.z);
+		}
+
+		return;
 	}
 }
 

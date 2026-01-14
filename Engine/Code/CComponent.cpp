@@ -1,4 +1,4 @@
-#include "CComponent.h"
+﻿#include "CComponent.h"
 
 CComponent::CComponent()
     : m_pGraphicDev(nullptr), m_bClone(false)

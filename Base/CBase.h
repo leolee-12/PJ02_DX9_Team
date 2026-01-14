@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 class  _declspec(dllexport) CBase abstract
 {
