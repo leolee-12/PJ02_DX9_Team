@@ -304,68 +304,68 @@
     <Filter Include="01. Scene\01. Maps\07. Village">
       <UniqueIdentifier>{71467a02-ac11-4d7a-84a6-64382f2466ef}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\07. UI\05.CookingUI">
+    <Filter Include="02. GameObject\07. UI\06. WorldUI">
+      <UniqueIdentifier>{e73b1d10-8c9c-4ebd-b776-aa32b789649c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. UI\05. CookingUI">
       <UniqueIdentifier>{dc3b3542-a529-4553-af20-e3c386005aa2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\07. UI\05.CookingUI\00.CookingMiniGame">
+    <Filter Include="02. GameObject\07. UI\05. CookingUI\00.CookingMiniGame">
       <UniqueIdentifier>{bdd3b457-cda3-4b83-aa25-943358fc34e1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\07. UI\05.CookingUI\00.CookingMiniGame\00.CookingCover">
+    <Filter Include="02. GameObject\07. UI\05. CookingUI\00.CookingMiniGame\00.CookingCover">
       <UniqueIdentifier>{8f39f952-09fc-4655-87cf-ac7602837bb1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\07. UI\05.CookingUI\00.CookingMiniGame\01.CookingGauge">
+    <Filter Include="02. GameObject\07. UI\05. CookingUI\00.CookingMiniGame\01.CookingGauge">
       <UniqueIdentifier>{0c60bd9c-2465-4d37-b129-6d27f1e4b73d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\07. UI\05.CookingUI\00.CookingMiniGame\02.CookingGaugeBack">
+    <Filter Include="02. GameObject\07. UI\05. CookingUI\00.CookingMiniGame\02.CookingGaugeBack">
       <UniqueIdentifier>{106c8aeb-b75c-4a73-8a1b-2e61f93e5250}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\07. UI\05.CookingUI\00.CookingMiniGame\03.CookingMarker">
+    <Filter Include="02. GameObject\07. UI\05. CookingUI\00.CookingMiniGame\03.CookingMarker">
       <UniqueIdentifier>{29e7e3da-c400-4e75-8c1c-24ea4d55657e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\07. UI\05.CookingUI\00.CookingMiniGame\04.CookingTarget">
+    <Filter Include="02. GameObject\07. UI\05. CookingUI\00.CookingMiniGame\04.CookingTarget">
       <UniqueIdentifier>{ad038098-eb51-4061-8b8b-064d8d2175ad}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\07. UI\05.CookingUI\01.CookingSelect">
-      <UniqueIdentifier>{d729c590-a48c-4319-8ad4-8280b2a9ad08}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\07. UI\05.CookingUI\01.CookingSelect\00.CookingSeletBack">
-      <UniqueIdentifier>{62ce806b-dfa2-4946-b1ee-7ca7bffe45a0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\07. UI\05.CookingUI\01.CookingSelect\01.CookngSeleltSlot">
-      <UniqueIdentifier>{0401f4e0-a651-47eb-97d4-9bf21426e873}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\07. UI\05.CookingUI\01.CookingSelect\02.CookingStartBtn">
-      <UniqueIdentifier>{e3629f52-2d39-4408-a2f3-98be8820e465}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\07. UI\05.CookingUI\00.CookingMiniGame\05.CookingTargetBack">
+    <Filter Include="02. GameObject\07. UI\05. CookingUI\00.CookingMiniGame\05.CookingTargetBack">
       <UniqueIdentifier>{1fc325c0-fe06-4401-ad06-1bd47a20fa3f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\07. UI\05.CookingUI\00.CookingMiniGame\06.CookButton">
+    <Filter Include="02. GameObject\07. UI\05. CookingUI\00.CookingMiniGame\06.CookButton">
       <UniqueIdentifier>{c757017b-26da-4fc1-996e-f271ea0fd99d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\07. UI\05.CookingUI\01.CookingSelect\03.CCookingTargetFood">
+    <Filter Include="02. GameObject\07. UI\05. CookingUI\01.CookingSelect">
+      <UniqueIdentifier>{d729c590-a48c-4319-8ad4-8280b2a9ad08}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. UI\05. CookingUI\01.CookingSelect\00.CookingSeletBack">
+      <UniqueIdentifier>{62ce806b-dfa2-4946-b1ee-7ca7bffe45a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. UI\05. CookingUI\01.CookingSelect\01.CookngSeleltSlot">
+      <UniqueIdentifier>{0401f4e0-a651-47eb-97d4-9bf21426e873}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. UI\05. CookingUI\01.CookingSelect\02.CookingStartBtn">
+      <UniqueIdentifier>{e3629f52-2d39-4408-a2f3-98be8820e465}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. UI\05. CookingUI\01.CookingSelect\03.CCookingTargetFood">
       <UniqueIdentifier>{7787fd15-4d48-4306-afe7-b928f0d70081}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\07. UI\05.CookingUI\01.CookingSelect\04.CookingInfoCard">
+    <Filter Include="02. GameObject\07. UI\05. CookingUI\01.CookingSelect\04.CookingInfoCard">
       <UniqueIdentifier>{d1384f25-b03d-4930-8ba8-f5f8447768e4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\07. UI\05.CookingUI\01.CookingSelect\04.CookingInfoCard\00.CookingInfoCardBack">
+    <Filter Include="02. GameObject\07. UI\05. CookingUI\01.CookingSelect\04.CookingInfoCard\00.CookingInfoCardBack">
       <UniqueIdentifier>{900390a2-06be-4711-9e5b-047f100f1b53}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\07. UI\05.CookingUI\01.CookingSelect\04.CookingInfoCard\01.CookingInfoCardFaith">
+    <Filter Include="02. GameObject\07. UI\05. CookingUI\01.CookingSelect\04.CookingInfoCard\01.CookingInfoCardFaith">
       <UniqueIdentifier>{604ebf45-8879-4a9c-96f3-8e4ea11619ce}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\07. UI\05.CookingUI\01.CookingSelect\04.CookingInfoCard\04.CookingInfoRecipe">
+    <Filter Include="02. GameObject\07. UI\05. CookingUI\01.CookingSelect\04.CookingInfoCard\04.CookingInfoRecipe">
       <UniqueIdentifier>{5a48922d-7be3-44a7-855e-ebfe34f5061a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\07. UI\05.CookingUI\01.CookingSelect\04.CookingInfoCard\05.CookingInfoCardFood">
-      <UniqueIdentifier>{d7269bea-6073-4466-a4e8-a33b406cff9f}</UniqueIdentifier>
+    <Filter Include="02. GameObject\07. UI\05. CookingUI\01.CookingSelect\04.CookingInfoCard\06.CCookingStar">
+      <UniqueIdentifier>{36d9c4eb-2ff7-4719-9ff0-de85b45e9a67}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\07. UI\05.CookingUI\01.CookingSelect\04.CookingInfoCard\02.CookingInfoCardLeftPattern">
-      <UniqueIdentifier>{dd3ecf39-6733-4b6e-90d9-86ad1c598c58}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\07. UI\05.CookingUI\01.CookingSelect\04.CookingInfoCard\03.CookingInfoCardRightParrtern">
-      <UniqueIdentifier>{5c0001aa-5425-458c-8a62-547a50b57e53}</UniqueIdentifier>
+    <Filter Include="02. GameObject\07. UI\06. WorldUI\00.SpeechBubble">
+      <UniqueIdentifier>{9bbddfdc-4fa4-4b1b-9ae6-a3c6b8490f73}</UniqueIdentifier>
     </Filter>
     <Filter Include="02. GameObject\14. Warp">
       <UniqueIdentifier>{afb959a5-02a0-4191-9f75-2c789c60d030}</UniqueIdentifier>
@@ -679,52 +679,61 @@
       <Filter>01. Scene\01. Maps\10. LeshyRoom</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CCookingGauge.h">
-      <Filter>02. GameObject\07. UI\05.CookingUI\00.CookingMiniGame\01.CookingGauge</Filter>
+      <Filter>02. GameObject\07. UI\05. CookingUI\00.CookingMiniGame\01.CookingGauge</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CCookingCover.h">
-      <Filter>02. GameObject\07. UI\05.CookingUI\00.CookingMiniGame\00.CookingCover</Filter>
+      <Filter>02. GameObject\07. UI\05. CookingUI\00.CookingMiniGame\00.CookingCover</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CCookingGaugeBack.h">
-      <Filter>02. GameObject\07. UI\05.CookingUI\00.CookingMiniGame\02.CookingGaugeBack</Filter>
+      <Filter>02. GameObject\07. UI\05. CookingUI\00.CookingMiniGame\02.CookingGaugeBack</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CCookingTargetBack.h">
-      <Filter>02. GameObject\07. UI\05.CookingUI\00.CookingMiniGame\05.CookingTargetBack</Filter>
+      <Filter>02. GameObject\07. UI\05. CookingUI\00.CookingMiniGame\05.CookingTargetBack</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CCookingButton.h">
-      <Filter>02. GameObject\07. UI\05.CookingUI\00.CookingMiniGame\06.CookButton</Filter>
+      <Filter>02. GameObject\07. UI\05. CookingUI\00.CookingMiniGame\06.CookButton</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CCookingMiniGameUI.h">
-      <Filter>02. GameObject\07. UI\05.CookingUI\00.CookingMiniGame</Filter>
+      <Filter>02. GameObject\07. UI\05. CookingUI\00.CookingMiniGame</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CCookingMarker.h">
-      <Filter>02. GameObject\07. UI\05.CookingUI\00.CookingMiniGame\03.CookingMarker</Filter>
+      <Filter>02. GameObject\07. UI\05. CookingUI\00.CookingMiniGame\03.CookingMarker</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CCookingSelectBack.h">
-      <Filter>02. GameObject\07. UI\05.CookingUI\01.CookingSelect\00.CookingSeletBack</Filter>
+      <Filter>02. GameObject\07. UI\05. CookingUI\01.CookingSelect\00.CookingSeletBack</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CCookingSelectSlot.h">
-      <Filter>02. GameObject\07. UI\05.CookingUI\01.CookingSelect\01.CookngSeleltSlot</Filter>
+      <Filter>02. GameObject\07. UI\05. CookingUI\01.CookingSelect\01.CookngSeleltSlot</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CCookingSelectUI.h">
-      <Filter>02. GameObject\07. UI\05.CookingUI\01.CookingSelect</Filter>
+      <Filter>02. GameObject\07. UI\05. CookingUI\01.CookingSelect</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CCookingInfoCardBack.h">
-      <Filter>02. GameObject\07. UI\05.CookingUI\01.CookingSelect\04.CookingInfoCard\00.CookingInfoCardBack</Filter>
+      <Filter>02. GameObject\07. UI\05. CookingUI\01.CookingSelect\04.CookingInfoCard\00.CookingInfoCardBack</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CCookingTargetFood.h">
-      <Filter>02. GameObject\07. UI\05.CookingUI\01.CookingSelect\03.CCookingTargetFood</Filter>
+      <Filter>02. GameObject\07. UI\05. CookingUI\01.CookingSelect\03.CCookingTargetFood</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CCookingInfoCard.h">
-      <Filter>02. GameObject\07. UI\05.CookingUI\01.CookingSelect\04.CookingInfoCard</Filter>
+      <Filter>02. GameObject\07. UI\05. CookingUI\01.CookingSelect\04.CookingInfoCard</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\CCookingInfoCardLeftPattern.h">
-      <Filter>02. GameObject\07. UI\05.CookingUI\01.CookingSelect\04.CookingInfoCard\02.CookingInfoCardLeftPattern</Filter>
+    <ClInclude Include="..\Header\CCookingTarget.h">
+      <Filter>02. GameObject\07. UI\05. CookingUI\00.CookingMiniGame\04.CookingTarget</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\CCookingInfoCardFood.h">
-      <Filter>02. GameObject\07. UI\05.CookingUI\01.CookingSelect\04.CookingInfoCard\05.CookingInfoCardFood</Filter>
+    <ClInclude Include="..\Header\CCookingStar.h">
+      <Filter>02. GameObject\07. UI\05. CookingUI\01.CookingSelect\04.CookingInfoCard\06.CCookingStar</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\CCookingInfoCardRightPattern.h">
-      <Filter>02. GameObject\07. UI\05.CookingUI\01.CookingSelect\04.CookingInfoCard\03.CookingInfoCardRightParrtern</Filter>
+    <ClInclude Include="..\Header\CCookingInfoRecipe.h">
+      <Filter>02. GameObject\07. UI\05. CookingUI\01.CookingSelect\04.CookingInfoCard\04.CookingInfoRecipe</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CCookingUIController.h">
+      <Filter>02. GameObject\07. UI\05. CookingUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CSpeechBubble.h">
+      <Filter>02. GameObject\07. UI\06. WorldUI\00.SpeechBubble</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CCookingTarget.h">
+      <Filter>02. GameObject\07. UI\05.CookingUI\00.CookingMiniGame\04.CookingTarget</Filter>
     </ClInclude>
 	<ClInclude Include="..\Header\CCookingTarget.h">
 		<Filter>02. GameObject\07. UI\05.CookingUI\00.CookingMiniGame\04.CookingTarget</Filter>
@@ -1029,52 +1038,58 @@
       <Filter>01. Scene\01. Maps\10. LeshyRoom</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CCookingGauge.cpp">
-      <Filter>02. GameObject\07. UI\05.CookingUI\00.CookingMiniGame\01.CookingGauge</Filter>
+      <Filter>02. GameObject\07. UI\05. CookingUI\00.CookingMiniGame\01.CookingGauge</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CCookingCover.cpp">
-      <Filter>02. GameObject\07. UI\05.CookingUI\00.CookingMiniGame\00.CookingCover</Filter>
+      <Filter>02. GameObject\07. UI\05. CookingUI\00.CookingMiniGame\00.CookingCover</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CCookingGaugeBack.cpp">
-      <Filter>02. GameObject\07. UI\05.CookingUI\00.CookingMiniGame\02.CookingGaugeBack</Filter>
+      <Filter>02. GameObject\07. UI\05. CookingUI\00.CookingMiniGame\02.CookingGaugeBack</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CCookingTarget.cpp">
-      <Filter>02. GameObject\07. UI\05.CookingUI\00.CookingMiniGame\04.CookingTarget</Filter>
+      <Filter>02. GameObject\07. UI\05. CookingUI\00.CookingMiniGame\04.CookingTarget</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CCookingTargetBack.cpp">
-      <Filter>02. GameObject\07. UI\05.CookingUI\00.CookingMiniGame\05.CookingTargetBack</Filter>
+      <Filter>02. GameObject\07. UI\05. CookingUI\00.CookingMiniGame\05.CookingTargetBack</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CCookingButton.cpp">
-      <Filter>02. GameObject\07. UI\05.CookingUI\00.CookingMiniGame\06.CookButton</Filter>
+      <Filter>02. GameObject\07. UI\05. CookingUI\00.CookingMiniGame\06.CookButton</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CCookingMiniGameUI.cpp">
-      <Filter>02. GameObject\07. UI\05.CookingUI\00.CookingMiniGame</Filter>
+      <Filter>02. GameObject\07. UI\05. CookingUI\00.CookingMiniGame</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CCookingMarker.cpp">
-      <Filter>02. GameObject\07. UI\05.CookingUI\00.CookingMiniGame\03.CookingMarker</Filter>
+      <Filter>02. GameObject\07. UI\05. CookingUI\00.CookingMiniGame\03.CookingMarker</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CCookingSelectBack.cpp">
-      <Filter>02. GameObject\07. UI\05.CookingUI\01.CookingSelect\00.CookingSeletBack</Filter>
+      <Filter>02. GameObject\07. UI\05. CookingUI\01.CookingSelect\00.CookingSeletBack</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CCookingSelectSlot.cpp">
-      <Filter>02. GameObject\07. UI\05.CookingUI\01.CookingSelect\01.CookngSeleltSlot</Filter>
+      <Filter>02. GameObject\07. UI\05. CookingUI\01.CookingSelect\01.CookngSeleltSlot</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CCookingSelectUI.cpp">
-      <Filter>02. GameObject\07. UI\05.CookingUI\01.CookingSelect</Filter>
+      <Filter>02. GameObject\07. UI\05. CookingUI\01.CookingSelect</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CCookingInfoCardBack.cpp">
-      <Filter>02. GameObject\07. UI\05.CookingUI\01.CookingSelect\04.CookingInfoCard\00.CookingInfoCardBack</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\CCookingTargetFood.cpp">
-      <Filter>02. GameObject\07. UI\05.CookingUI\01.CookingSelect\03.CCookingTargetFood</Filter>
+      <Filter>02. GameObject\07. UI\05. CookingUI\01.CookingSelect\04.CookingInfoCard\00.CookingInfoCardBack</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CCookingInfoCard.cpp">
-      <Filter>02. GameObject\07. UI\05.CookingUI\01.CookingSelect\04.CookingInfoCard</Filter>
+      <Filter>02. GameObject\07. UI\05. CookingUI\01.CookingSelect\04.CookingInfoCard</Filter>
     </ClCompile>
-    <ClCompile Include="..\Header\CCookingInfoCardLeftPattern.cpp">
-      <Filter>02. GameObject\07. UI\05.CookingUI\01.CookingSelect\04.CookingInfoCard\02.CookingInfoCardLeftPattern</Filter>
+    <ClCompile Include="..\Code\CCookingStar.cpp">
+      <Filter>02. GameObject\07. UI\05. CookingUI\01.CookingSelect\04.CookingInfoCard\06.CCookingStar</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\CCookingInfoCardFood.cpp">
-      <Filter>02. GameObject\07. UI\05.CookingUI\01.CookingSelect\04.CookingInfoCard\05.CookingInfoCardFood</Filter>
+    <ClCompile Include="..\Header\CCookingTargetFood.cpp">
+      <Filter>02. GameObject\07. UI\05. CookingUI\01.CookingSelect\03.CCookingTargetFood</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Header\CCookingInfoRecipe.cpp">
+      <Filter>02. GameObject\07. UI\05. CookingUI\01.CookingSelect\04.CookingInfoCard\04.CookingInfoRecipe</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CCookingUIController.cpp">
+      <Filter>02. GameObject\07. UI\05. CookingUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CSpeechBubble.cpp">
+      <Filter>02. GameObject\07. UI\06. WorldUI\00.SpeechBubble</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CCookingInfoCardRIghtPattern.cpp">
 		<Filter>02. GameObject\07. UI\05.CookingUI\01.CookingSelect\04.CookingInfoCard\03.CookingInfoCardRightParrtern</Filter>

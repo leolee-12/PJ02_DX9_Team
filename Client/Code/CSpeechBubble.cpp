@@ -1,30 +1,29 @@
-﻿#include "pch.h"
-#include "CCookingInfoCardFood.h"
+#include "pch.h"
+#include "CSpeechBubble.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
 
-CCookingInfoCardFood::CCookingInfoCardFood(LPDIRECT3DDEVICE9 pGraphicDev)
+CSpeechBubble::CSpeechBubble(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CUi(pGraphicDev), m_pBufferCom(nullptr), m_pTransformCom(nullptr)
 {
 	ZeroMemory(&m_vPos, sizeof(_vec3));
 }
 
-CCookingInfoCardFood::~CCookingInfoCardFood()
+CSpeechBubble::~CSpeechBubble()
 {
 }
 
-HRESULT CCookingInfoCardFood::Ready_GameObject()
+HRESULT CSpeechBubble::Ready_GameObject()
 {
-	if (FAILED(Add_Component()))
-		return E_FAIL;
-
-	m_pTransformCom->Set_Scale(256 * 1.5f, 256 * 2.0f, 0.f);
-	m_pTransformCom->Set_Pos(WINCX / 4, 0, 0.1f);
-
-	return S_OK;
+    if (FAILED(Add_Component()))
+        return E_FAIL;
+	m_pTransformCom->Set_Scale(632 * m_fScale, 374 * m_fScale, 0.f);
+	m_pTransformCom->Set_Pos(m_vPos.x, m_vPos.y, m_vPos.z);
+    return S_OK;
 }
 
-HRESULT CCookingInfoCardFood::Ready_Material()
+
+HRESULT CSpeechBubble::Ready_Material()
 {
 	D3DMATERIAL9			tMtrl;
 	ZeroMemory(&tMtrl, sizeof(D3DMATERIAL9));
@@ -41,23 +40,39 @@ HRESULT CCookingInfoCardFood::Ready_Material()
 	return S_OK;
 }
 
-_int CCookingInfoCardFood::Update_GameObject(const _float& fTimeDelta)
+_int CSpeechBubble::Update_GameObject(const _float& fTimeDelta)
 {
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
 	CRenderer::GetInstance()->Add_RenderGroup(RENDER_UI, this);
-
 	return iExit;
 }
 
-void CCookingInfoCardFood::LateUpdate_GameObject(const _float& fTimeDelta)
+void CSpeechBubble::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
+
+	D3DXMATRIX matView, matProj, matWorld;
+	D3DXMatrixIdentity(&matWorld);
+	m_pGraphicDev->GetTransform(D3DTS_VIEW, &matView);
+	m_pGraphicDev->GetTransform(D3DTS_PROJECTION, &matProj);
+
+	D3DXVECTOR3 vScreenPos;
+	D3DVIEWPORT9 vp;
+	m_pGraphicDev->GetViewport(&vp);
+
+	D3DXVec3Project(&vScreenPos, &m_vTargetPos, &vp, &matProj, &matView, &matWorld);
+
+	m_pTransformCom->Set_Pos(vScreenPos.x - (WINCX / 2), - vScreenPos.y + (WINCY / 2), vScreenPos.z);
+
 	m_pTransformCom->Get_Info(INFO_POS, &m_vPos);
 	Compute_ViewDepth_Ortho(&m_vPos);
+
+
+	CRenderer::GetInstance()->Add_RenderGroup(RENDER_UI, this);
 }
 
-void CCookingInfoCardFood::Render_GameObject()
+void CSpeechBubble::Render_GameObject()
 {
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
 
@@ -66,12 +81,12 @@ void CCookingInfoCardFood::Render_GameObject()
 	m_pBufferCom->Render_Buffer();
 }
 
-void CCookingInfoCardFood::OnCollision(CGameObject* pObject)
+void CSpeechBubble::OnCollision(CGameObject* pObject)
 {
 
 }
 
-HRESULT CCookingInfoCardFood::Add_Component()
+HRESULT CSpeechBubble::Add_Component()
 {
 	Engine::CComponent* pComponent = nullptr;
 
@@ -94,7 +109,7 @@ HRESULT CCookingInfoCardFood::Add_Component()
 	m_mapComponent[ID_DYNAMIC].insert({ L"Com_Transform", pComponent });
 
 	pComponent = m_pTextureCom = dynamic_cast<Engine::CTexture*>
-		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_CookingCardInfoRightPattern"));
+		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_CookingSelectSlot"));
 
 	if (nullptr == pComponent)
 		return E_FAIL;
@@ -106,21 +121,24 @@ HRESULT CCookingInfoCardFood::Add_Component()
 
 
 
-CCookingInfoCardFood* CCookingInfoCardFood::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+CSpeechBubble* CSpeechBubble::Create(LPDIRECT3DDEVICE9 pGraphicDev,_vec3 _vTargetPos,_float _fScale)
 {
-	CCookingInfoCardFood* pCookingInfoCardFood = new CCookingInfoCardFood(pGraphicDev);
+	CSpeechBubble* pSpeechBubble = new CSpeechBubble(pGraphicDev);
 
-	if (FAILED(pCookingInfoCardFood->Ready_GameObject()))
+	pSpeechBubble->m_vTargetPos = _vTargetPos;
+	pSpeechBubble->m_fScale = _fScale;
+
+	if (FAILED(pSpeechBubble->Ready_GameObject()))
 	{
-		Safe_Release(pCookingInfoCardFood);
-		MSG_BOX("pCCookingInfoCardFood Create Failed");
+		Safe_Release(pSpeechBubble);
+		MSG_BOX("pSpeechBubble Create Failed");
 		return nullptr;
 	}
 
-	return pCookingInfoCardFood;
+	return pSpeechBubble;
 }
 
-void CCookingInfoCardFood::Free()
+void CSpeechBubble::Free()
 {
 	CUi::Free();
 }

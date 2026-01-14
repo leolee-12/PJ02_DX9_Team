@@ -8,12 +8,12 @@ namespace Engine
 	class CTexture;
 }
 
-class CCookingInfoCardLeftPattern :
+class CCookingStar :
 	public CUi
 {
 private:
-	explicit CCookingInfoCardLeftPattern(LPDIRECT3DDEVICE9 pGraphicDev);
-	virtual ~CCookingInfoCardLeftPattern();
+	explicit CCookingStar(LPDIRECT3DDEVICE9 pGraphicDev);
+	virtual ~CCookingStar();
 
 public:
 	virtual			HRESULT		Ready_GameObject();
@@ -22,8 +22,9 @@ public:
 	virtual			void		Render_GameObject();
 	virtual			void		OnCollision(CGameObject* pObject);
 
+
 public:
-	static CCookingInfoCardLeftPattern* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	static CCookingStar* Create(LPDIRECT3DDEVICE9 pGraphicDev, _int iPage, _vec3 vPos, _float fScale);
 
 private:
 	virtual			void		Free();
@@ -35,5 +36,9 @@ private:
 	CRcTex* m_pBufferCom;
 	CTransform* m_pTransformCom;
 	CTexture* m_pTextureCom;
+
+	_vec3 m_vPos;
+	_float m_fScale;
+	_int m_iPage;
 };
 

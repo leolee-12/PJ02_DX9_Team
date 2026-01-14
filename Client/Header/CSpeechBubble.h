@@ -1,5 +1,4 @@
 ﻿#pragma once
-#pragma once
 #include "CUi.h"
 
 namespace Engine
@@ -9,12 +8,12 @@ namespace Engine
 	class CTexture;
 }
 
-class CCookingInfoCardFood :
+class CSpeechBubble :
 	public CUi
 {
 private:
-	explicit CCookingInfoCardFood(LPDIRECT3DDEVICE9 pGraphicDev);
-	virtual ~CCookingInfoCardFood();
+	explicit CSpeechBubble(LPDIRECT3DDEVICE9 pGraphicDev);
+	virtual ~CSpeechBubble();
 
 public:
 	virtual			HRESULT		Ready_GameObject();
@@ -24,7 +23,7 @@ public:
 	virtual			void		OnCollision(CGameObject* pObject);
 
 public:
-	static CCookingInfoCardFood* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	static CSpeechBubble* Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 _vPos, _float _fScale);
 
 private:
 	virtual			void		Free();
@@ -36,5 +35,9 @@ private:
 	CRcTex* m_pBufferCom;
 	CTransform* m_pTransformCom;
 	CTexture* m_pTextureCom;
+
+	_vec3 m_vTargetPos;
+	_vec3 m_vPos;
+	_float m_fScale;
 };
 

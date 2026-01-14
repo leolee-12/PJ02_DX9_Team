@@ -18,7 +18,7 @@ HRESULT CCookingTargetBack::Ready_GameObject()
 	if (FAILED(Add_Component()))
 		return E_FAIL;
 
-	m_pTransformCom->Set_Scale(632 * 0.3, 374 * 0.2, 0.f);
+	m_pTransformCom->Set_Scale(632 * 0.3f, 374 * 0.2f, 0.f);
 	m_pTransformCom->Set_Pos(0, WINCY / 3, 0.2f);
 
 	return S_OK;
