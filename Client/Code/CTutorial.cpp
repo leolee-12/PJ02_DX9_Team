@@ -257,7 +257,36 @@ HRESULT CTutorial::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 		{
 			Engine::CLightMgr::GetInstance()->Ready_PointLight(m_pGraphicDev, light);
 		}
+		// Process MapWarps - Group by PairId and create CMapWarp
+		std::map<_int, std::vector<MAPWARPDATA>> warpGroups;
+		for (const auto& warp : mapData.mapWarps)
+		{
+			warpGroups[warp.pairId].push_back(warp);
+		}
+		for (const auto& group : warpGroups)
+		{
+			if (group.second.size() >= 2)
+			{
+				const MAPWARPDATA& w1 = group.second[0];
+				const MAPWARPDATA& w2 = group.second[1];
 
+				_vec3 pos1 = { w1.x, 0.f, w1.z };
+				_vec3 pos2 = { w2.x, 0.f, w2.z };
+
+				pGameObject = CMapWarp::Create(m_pGraphicDev, m_pMessageChannel,
+					pos1, w1.direction, pos2, w2.direction);
+
+				if (pGameObject)
+					pLayer->Add_GameObject(L"MapWarp", pGameObject);
+			}
+		}
+		// Border
+		for (const auto& col : mapData.collisions)
+		{
+			pGameObject = CMapBorder::Create(m_pGraphicDev, col.x, col.z);
+			if (pGameObject)
+				pLayer->Add_GameObject(L"MapBorder", pGameObject);
+		}
 	}
 	else
 	{
