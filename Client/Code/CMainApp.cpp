@@ -1,7 +1,5 @@
 ﻿#include "pch.h"
 #include "CMainApp.h"
-#include "CLogo.h"
-#include "CStage.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
 #include "CDInputMgr.h"
@@ -12,6 +10,7 @@
 #include "CSoundMgr.h"
 #include "CTileMgr.h"
 #include "CMapLoader.h"
+#include "CLoading.h"
 
 bool g_bDebug = false;
 list<wstring>		g_MapProtoname;
@@ -34,6 +33,7 @@ HRESULT CMainApp::Ready_MainApp()
 
 	if (FAILED(Ready_Scene(m_pGraphicDev)))
 		return E_FAIL;
+
 
 	CCollisionMgr::GetInstance()->Ready_CollisionMgr();
 	CSoundMgr::GetInstance()->Ready_SoundMgr();
@@ -106,6 +106,7 @@ HRESULT CMainApp::Ready_DefaultSetting(LPDIRECT3DDEVICE9* ppGraphicDev)
 	(*ppGraphicDev)->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
 
 	Ready_Font();
+	Ready_Proto();
 
 
 	return S_OK;
@@ -113,7 +114,7 @@ HRESULT CMainApp::Ready_DefaultSetting(LPDIRECT3DDEVICE9* ppGraphicDev)
 
 HRESULT CMainApp::Ready_Scene(LPDIRECT3DDEVICE9 pGraphicDev)
 {
-	Engine::CScene* pLogo = CLogo::Create(pGraphicDev);
+	Engine::CScene* pLogo = CLoading::Create(pGraphicDev, Engine::LOADINGID::LOADING_LOGO);
 
 	if (nullptr == pLogo)
 		return E_FAIL;
@@ -164,6 +165,34 @@ HRESULT CMainApp::Ready_Font()
 	return S_OK;
 }
 
+HRESULT CMainApp::Ready_Proto()
+{
+	if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_LoadingCenterTex", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Loading/LoadingCenter.png", 1))))
+		return E_FAIL;
+
+	if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_LoadingFGTex", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Loading/LoadingFG.png", 1))))
+		return E_FAIL;
+
+	if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_LoadingLogoTex", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Loading/LoadingLogo.png", 1))))
+		return E_FAIL;
+
+	if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_LoadingCircleTex", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Loading/LoadingCircle.png", 1))))
+		return E_FAIL;
+
+	if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_RcTex", Engine::CRcTex::Create(m_pGraphicDev, 100))))
+		return E_FAIL;
+
+	if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_RcTexUI", Engine::CRcTex::Create(m_pGraphicDev))))
+		return E_FAIL;
+
+	if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Transform", Engine::CTransform::Create(m_pGraphicDev))))
+		return E_FAIL;
+
+	if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_RcCol", Engine::CRcCol::Create(m_pGraphicDev))))
+		return E_FAIL;
+
+}
+
 CMainApp* CMainApp::Create()
 {
 	CMainApp* pMainApp = new CMainApp;
@@ -186,15 +215,15 @@ void CMainApp::Free()
 
 	CMapLoader::DestroyInstance();
 	CTileMgr::DestroyInstance();
-	CPersistentMgr::DestroyInstance();
 	CLightMgr::DestroyInstance();
 	CFontMgr::DestroyInstance();
 	CDInputMgr::DestroyInstance();
 	CRenderer::DestroyInstance();
-	CProtoMgr::DestroyInstance();
 	CFrameMgr::DestroyInstance();
 	CTimerMgr::DestroyInstance();
 	CManagement::DestroyInstance();
+	CPersistentMgr::DestroyInstance();
+	CProtoMgr::DestroyInstance();
 	CCollisionMgr::DestroyInstance();
 	CSoundMgr::DestroyInstance();
 	m_pDeviceClass->DestroyInstance();

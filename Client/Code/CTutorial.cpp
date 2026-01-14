@@ -248,7 +248,6 @@ HRESULT CTutorial::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 
 	// 디버그용
 
-
 	m_mapLayer.insert({ pLayerTag , pLayer });
 
 	return S_OK;

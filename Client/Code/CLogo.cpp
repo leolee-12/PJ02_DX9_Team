@@ -103,13 +103,11 @@ void CLogo::LateUpdate_Scene(const _float& fTimeDelta)
 void CLogo::Render_Scene()
 {
 	// debug 용
-
 	_vec2		vPlay{ _float(WINCX / 2) - 200.f, 320.f };
 	_vec2		vEdit{ _float(WINCX / 2) - 200.f, 420.f };
 	_vec2		vExit{ _float(WINCX / 2) - 200.f, 520.f };
 
 	//D3DXCOLOR 
-
 	switch (m_eLogoState) {
 	case LS_START:
 		CFontMgr::GetInstance()->Render_Font(L"Font_Lapture40", L"플레이", &vPlay, D3DXCOLOR(1.f, 1.f, 1.f, 1.f), DT_CENTER | DT_NOCLIP);
@@ -179,44 +177,14 @@ HRESULT CLogo::Ready_UI_Layer(const _tchar* pLayerTag)
 HRESULT CLogo::Ready_Prototype()
 {
 
-	if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_RcTex", Engine::CRcTex::Create(m_pGraphicDev, 100))))
-		return E_FAIL;
-
-	if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_RcTexUI", Engine::CRcTex::Create(m_pGraphicDev))))
-		return E_FAIL;
-
-	if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_RcCol", Engine::CRcCol::Create(m_pGraphicDev))))
-		return E_FAIL;
-
-	if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_RcColTitle", Engine::CRcColTitle::Create(m_pGraphicDev))))
-		return E_FAIL;
-
-	if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_MainMenuTex", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Mainmenu(2)/animation_%04d.png", 48))))
+	/*if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_MainMenuTex", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Mainmenu(2)/animation_%04d.png", 48))))
 		return E_FAIL;
 
 	if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_MainLogoTex", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Mainmenu/Logo.png", 1))))
 		return E_FAIL;
 
 	if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_MainTabTex", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Mainmenu/Tab.png", 1))))
-		return E_FAIL;
-
-	if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Transform", Engine::CTransform::Create(m_pGraphicDev))))
-		return E_FAIL;
-
-
-	// 로딩씬 미리 로딩
-
-	if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_LoadingCenterTex", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Loading/LoadingCenter.png", 1))))
-		return E_FAIL;
-
-	if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_LoadingFGTex", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Loading/LoadingFG.png", 1))))
-		return E_FAIL;
-
-	if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_LoadingLogoTex", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Loading/LoadingLogo.png", 1))))
-		return E_FAIL;
-
-	if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_LoadingCircleTex", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Loading/LoadingCircle.png", 1))))
-		return E_FAIL;
+		return E_FAIL;*/
 
 
 	return S_OK;

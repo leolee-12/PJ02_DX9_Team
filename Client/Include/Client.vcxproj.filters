@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="소스 파일">
@@ -367,6 +367,9 @@
     <Filter Include="02. GameObject\07. UI\06. WorldUI\00.SpeechBubble">
       <UniqueIdentifier>{9bbddfdc-4fa4-4b1b-9ae6-a3c6b8490f73}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\14. Warp">
+      <UniqueIdentifier>{afb959a5-02a0-4191-9f75-2c789c60d030}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -729,6 +732,18 @@
     <ClInclude Include="..\Header\CSpeechBubble.h">
       <Filter>02. GameObject\07. UI\06. WorldUI\00.SpeechBubble</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CCookingTarget.h">
+      <Filter>02. GameObject\07. UI\05.CookingUI\00.CookingMiniGame\04.CookingTarget</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CSceneWarp.h">
+      <Filter>02. GameObject\14. Warp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CMapWarp.h">
+      <Filter>02. GameObject\14. Warp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CWarp.h">
+      <Filter>02. GameObject\14. Warp</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1066,6 +1081,15 @@
     </ClCompile>
     <ClCompile Include="..\Code\CSpeechBubble.cpp">
       <Filter>02. GameObject\07. UI\06. WorldUI\00.SpeechBubble</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CSceneWarp.cpp">
+      <Filter>02. GameObject\14. Warp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CMapWarp.cpp">
+      <Filter>02. GameObject\14. Warp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CWarp.cpp">
+      <Filter>02. GameObject\14. Warp</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
