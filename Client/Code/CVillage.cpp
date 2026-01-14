@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CVillage.h"
 
 CVillage::CVillage(LPDIRECT3DDEVICE9 pGraphicDev)

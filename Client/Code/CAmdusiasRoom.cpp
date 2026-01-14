@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CAmdusiasRoom.h"
 
 CAmdusiasRoom::CAmdusiasRoom(LPDIRECT3DDEVICE9 pGraphicDev)

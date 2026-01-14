@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "CGameObject.h"
 
 namespace Engine
@@ -17,8 +17,8 @@ public:
 	enum PLAYERSTATE { PS_IDLE, PS_RUN, PS_ROLL, PS_ATTACK, PS_CHARGE, PS_HIT, PS_ACTION, PS_TALK, PS_INTROIDLE, PS_INTRORUN, PS_INTROKNEE, PS_END };
 
 	// ==========================
-	//	PLAYERSTATE : ÇÃ·¹ÀÌ¾î »óÅÂ °ü¸®¿ë enum
-	//	DIRECTIONID : ÇÃ·¹ÀÌ¾î ¹× °¢Á¾ ¹æÇâ °ü¸®¿ë enum 
+	//	PLAYERSTATE : í”Œë ˆì´ì–´ ìƒíƒœ ê´€ë¦¬ìš© enum
+	//	DIRECTIONID : í”Œë ˆì´ì–´ ë° ê°ì¢… ë°©í–¥ ê´€ë¦¬ìš© enum 
 	// ==========================
 
 private:
@@ -44,7 +44,7 @@ private:
 	_vec3			Picking_OnTerrain();
 
 	// ==========================
-	//	Key_Input : WSAD ÀÌµ¿ / SPACE ±¸¸£±â / LBUTTON °ø°İ ¹× »óÈ£ÀÛ¿ë
+	//	Key_Input : WSAD ì´ë™ / SPACE êµ¬ë¥´ê¸° / LBUTTON ê³µê²© ë° ìƒí˜¸ì‘ìš©
 	// ==========================
 
 	void			Check_Frame();
@@ -53,9 +53,9 @@ private:
 	void			Set_TextureSet();
 
 	// ==========================
-	//	Check_Frame : »óÅÂ º¯°æ ½Ã Frame ÃÊ±âÈ­ ¹× ¼³Á¤ÇØÁÙ °ªÀ» ´ëÀÔÇØÁÜ
-	// 	Move_Frame : ½Ã°£ °æ°ú¿¡ µû¶ó Frame °ª ´©Àû, Æ¯Á¤ »óÅÂ´Â ½ºÇÁ¶óÀÌÆ® Á¾·á ½Ã IDLE »óÅÂ·Î µ¹¾Æ°¡µµ·Ï ¼¼ÆÃµÊ
-	//  Set_TextureSet : Set_Texture¿Í °°Àº ¸ñÀû, »óÅÂ°ª±îÁö TextureSet ÄÄÆ÷³ÍÆ®¿¡ Àü´ŞÇÏ¿© ¾Ë¸Â´Â ÅØ½ºÃ³°¡ ¼¼ÆÃµÇµµ·Ï ÇÔ
+	//	Check_Frame : ìƒíƒœ ë³€ê²½ ì‹œ Frame ì´ˆê¸°í™” ë° ì„¤ì •í•´ì¤„ ê°’ì„ ëŒ€ì…í•´ì¤Œ
+	// 	Move_Frame : ì‹œê°„ ê²½ê³¼ì— ë”°ë¼ Frame ê°’ ëˆ„ì , íŠ¹ì • ìƒíƒœëŠ” ìŠ¤í”„ë¼ì´íŠ¸ ì¢…ë£Œ ì‹œ IDLE ìƒíƒœë¡œ ëŒì•„ê°€ë„ë¡ ì„¸íŒ…ë¨
+	//  Set_TextureSet : Set_Textureì™€ ê°™ì€ ëª©ì , ìƒíƒœê°’ê¹Œì§€ TextureSet ì»´í¬ë„ŒíŠ¸ì— ì „ë‹¬í•˜ì—¬ ì•Œë§ëŠ” í…ìŠ¤ì²˜ê°€ ì„¸íŒ…ë˜ë„ë¡ í•¨
 	// ==========================
 
 	void			Move_Roll(const _float& fTimeDelta);
@@ -63,7 +63,7 @@ private:
 	void			Attack_HitBox();
 
 	// ==========================
-	//	Move_Roll : ±¸¸£±â »óÅÂÀÏ ¶§ ÇöÀç À§Ä¡¸¦ Lerp¸¦ Àû¿ëÇÏ¿© °è»ê ¹× ÀÌµ¿
+	//	Move_Roll : êµ¬ë¥´ê¸° ìƒíƒœì¼ ë•Œ í˜„ì¬ ìœ„ì¹˜ë¥¼ Lerpë¥¼ ì ìš©í•˜ì—¬ ê³„ì‚° ë° ì´ë™
 	// ==========================
 
 private:
@@ -74,7 +74,7 @@ private:
 	Engine::CCalculator* m_pCalculatorCom;
 	Engine::CCollider*	m_pColliderCom;
 
-	// ½ºÇÁ¶óÀÌÆ® °ü·Ã
+	// ìŠ¤í”„ë¼ì´íŠ¸ ê´€ë ¨
 	PLAYERSTATE		m_ePreState;
 	PLAYERSTATE		m_eCurState;
 	wstring			m_strFrameKey;
@@ -83,27 +83,30 @@ private:
 	_float			m_fFrameSpeed;
 	_matrix			m_matTex;
 
-	// Ä³¸¯ÅÍ ½ºÅ×ÀÌÅÍ½º °ü·Ã
+	// ìºë¦­í„° ìŠ¤í…Œì´í„°ìŠ¤ ê´€ë ¨
 	_vec3			m_vNormDir[DIR_END];
 	_vec3			m_vDir;
 	_float			m_fSpeed;
 	_int			m_iAttack;
-	_bool			m_bRoll;	// ±¸¸£±â ÁßÀÎÁö?
-	_int			m_iCombo;	// °ø°İ ÁßÀÎÁö? + ¸î¹øÂ° ÄŞº¸»óÅÂÀÎÁö?
+	_bool			m_bRoll;	// êµ¬ë¥´ê¸° ì¤‘ì¸ì§€?
+	_int			m_iCombo;	// ê³µê²© ì¤‘ì¸ì§€? + ëª‡ë²ˆì§¸ ì½¤ë³´ìƒíƒœì¸ì§€?
 
-	// ¾ËÆÄ ¼ÒÆÃ °ü·Ã
+	// ì•ŒíŒŒ ì†ŒíŒ… ê´€ë ¨
 	_vec3			m_vPos;
 
-	// ±¸¸£±â °ü·Ã
-	_vec3			m_vRollPos;		// Lerp¿ë À§Ä¡
-	_float			m_fLerp;		// Lerp¿ë °ª
+	// êµ¬ë¥´ê¸° ê´€ë ¨
+	_vec3			m_vRollPos;		// Lerpìš© ìœ„ì¹˜
+	_float			m_fLerp;		// Lerpìš© ê°’
 
-	// Â÷Áö °ø°İ °ü·Ã
+	// ì°¨ì§€ ê³µê²© ê´€ë ¨
 	_float			m_fCharge;
 	_float			m_fChargeMax;
 
-	// ¸Ş½ÃÁö Ã¤³Î °ü·Ã
+	// ë©”ì‹œì§€ ì±„ë„ ê´€ë ¨
 	_bool 			m_bMsgRegistered;
+
+	// ìºë¦­í„° border ì²˜ë¦¬ ê´€ë ¨
+	_vec3 m_vPrevPos;
 
 public:
 	static CPlayer* Create(LPDIRECT3DDEVICE9 pGraphicDev);

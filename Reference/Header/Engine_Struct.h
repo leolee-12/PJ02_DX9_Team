@@ -1,4 +1,4 @@
-#ifndef Engine_Struct_h__
+ï»¿#ifndef Engine_Struct_h__
 #define Engine_Struct_h__
 
 #include "Engine_Typedef.h"
@@ -32,7 +32,7 @@ namespace Engine
 
 	}VTXCUBE;
 
-	const _ulong	FVF_CUBE = D3DFVF_XYZ | D3DFVF_TEX1 | D3DFVF_TEXCOORDSIZE3(0); // ÅØ½ºÃ³ÀÇ UV ÁÂÇ¥ °ªÀ» FLOATÇü 3°³·Î Ç¥ÇöÇÏ°Ú´Ù´Â ¸ÅÅ©·Î(°ıÈ£¾ÈÀÇ ¼ıÀÚ 0ÀÇ ÀÇ¹Ì´Â º»·¡ ¹öÅØ½º¿¡ ÅØ½ºÃÄ UV°ªÀÌ ¿©·¯°³°¡ ¿Ã ¼ö ÀÖ´Âµ¥ ±×Áß 0¹øÂ° °ªÀ» ÁöÁ¤ÇÏ°Ú´Ù´Â ÀÇ¹Ì)
+	const _ulong	FVF_CUBE = D3DFVF_XYZ | D3DFVF_TEX1 | D3DFVF_TEXCOORDSIZE3(0); // í…ìŠ¤ì²˜ì˜ UV ì¢Œí‘œ ê°’ì„ FLOATí˜• 3ê°œë¡œ í‘œí˜„í•˜ê² ë‹¤ëŠ” ë§¤í¬ë¡œ(ê´„í˜¸ì•ˆì˜ ìˆ«ì 0ì˜ ì˜ë¯¸ëŠ” ë³¸ë˜ ë²„í…ìŠ¤ì— í…ìŠ¤ì³ UVê°’ì´ ì—¬ëŸ¬ê°œê°€ ì˜¬ ìˆ˜ ìˆëŠ”ë° ê·¸ì¤‘ 0ë²ˆì§¸ ê°’ì„ ì§€ì •í•˜ê² ë‹¤ëŠ” ì˜ë¯¸)
 
 	typedef struct DebugVertex 
 	{ 
@@ -95,6 +95,28 @@ namespace Engine
         _int intensity;     // 0=Strong, 1=Medium, 2=Weak
     }LIGHTDATA;
 
+
+	// Map Warp Data (same map teleport, paired by PairId)
+	typedef struct tagMapWarpData
+	{
+		_int pairId;
+		_float x, z;
+		_int direction;     // 0=Left, 1=Right, 2=Up, 3=Down
+	}MAPWARPDATA;
+
+	// Scene Warp Data (different scene teleport)
+	typedef struct tagSceneWarpData
+	{
+		_float x, z;
+		_int direction;
+		std::string destinationScene;
+	}SCENEWARPDATA;
+
+	typedef struct tagCollisionData
+	{
+		_int x, z;  // Tile coordinates
+	}COLLISIONDATA;
+
     typedef struct tagMapData
     {
         _int width, height;
@@ -103,6 +125,9 @@ namespace Engine
         std::vector<OBJECTDATA> objects;
         _int skyType;
         std::vector<LIGHTDATA> lights;
+		std::vector<MAPWARPDATA> mapWarps;    
+		std::vector<SCENEWARPDATA> sceneWarps;
+		std::vector<COLLISIONDATA> collisions;
     }MAPDATA;
 
     // Mask Flags
@@ -165,7 +190,6 @@ namespace Engine
 			eTexType = _eTexType;
 		}
 	}TEXSETINFO;
-
 
 }
 

@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CMonster.h"
 #include "CProtoMgr.h"
 #include "CManagement.h"
@@ -109,6 +109,50 @@ void CMonster::Render_GameObject()
 
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 
+}
+
+void CMonster::OnCollision(CGameObject* pObject)
+{
+	if (pObject->Get_OBJID() == OID_BORDER)
+	{
+		_vec3 vCurPos;
+		m_pTransformCom->Get_Info(INFO_POS, &vCurPos);
+
+		Engine::CCollider* pBorderCol = dynamic_cast<Engine::CCollider*>(
+			pObject->Get_Component(ID_STATIC, L"Com_Collider"));
+
+		if (nullptr == pBorderCol)
+			return;
+
+		const Engine::AABB& borderAABB = pBorderCol->Get_AABB();
+
+		const _float fPlayerHalf = 0.5f;
+
+		_float fOverlapX = (borderAABB.hx + fPlayerHalf) - abs(vCurPos.x - borderAABB.x);
+		_float fOverlapZ = (borderAABB.hz + fPlayerHalf) - abs(vCurPos.z - borderAABB.z);
+
+		if (fOverlapX > 0.f && fOverlapZ > 0.f)
+		{
+			if (fOverlapX < fOverlapZ)
+			{
+				if (vCurPos.x < borderAABB.x)
+					vCurPos.x -= fOverlapX + 0.1f;
+				else
+					vCurPos.x += fOverlapX + 0.1f;
+			}
+			else
+			{
+				if (vCurPos.z < borderAABB.z)
+					vCurPos.z -= fOverlapZ + 0.1f;
+				else
+					vCurPos.z += fOverlapZ + 0.1f;
+			}
+
+			m_pTransformCom->Set_Pos(vCurPos.x, vCurPos.y, vCurPos.z);
+		}
+
+		return;
+	}
 }
 
 HRESULT CMonster::Add_Component()

@@ -348,7 +348,7 @@ void CMultiLoadingThread::NonTex_for_Dungeon()
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_N3_AI", CN3_AI::Create(m_pGraphicDev, 6.f, 3.f));
     CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_B1_AI", CB1_AI::Create(m_pGraphicDev, 40.f, 5.f));
 
-    Load_Object_Texture(Tutorial_Texture);
+    Load_Object_Texture(Dungeon_Texture);
 }
 
 void CMultiLoadingThread::NonTex_for_Tutorial()

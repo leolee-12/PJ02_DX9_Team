@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CBase.h"
 #include "CFrame.h"

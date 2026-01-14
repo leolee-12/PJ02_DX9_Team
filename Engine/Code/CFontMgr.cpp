@@ -1,4 +1,4 @@
-#include "CFontMgr.h"
+﻿#include "CFontMgr.h"
 
 IMPLEMENT_SINGLETON(CFontMgr)
 

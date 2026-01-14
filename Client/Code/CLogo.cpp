@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "CLogo.h"
 #include "CProtoMgr.h"
 #include "CManagement.h"
@@ -22,7 +22,7 @@ CLogo::~CLogo()
 
 HRESULT CLogo::Ready_Scene()
 {
-	//Å×½ºÆ®¿ë
+	//í…ŒìŠ¤íŠ¸ìš©
 	m_pMessageChannel = CStageMessage::Create();
 
 	if (FAILED(Ready_Light()))
@@ -71,7 +71,7 @@ _int CLogo::Update_Scene(const _float& fTimeDelta)
 				LSTmp = LOADING_TUTORIAL;
 				break;
 			case LS_EDIT:
-				// ÀÓ½ÃÀÔ´Ï´Ù.
+				// ìž„ì‹œìž…ë‹ˆë‹¤.
 				LSTmp = LOADING_DUNGEON;
 				break;	
 			case LS_EXIT:
@@ -102,7 +102,7 @@ void CLogo::LateUpdate_Scene(const _float& fTimeDelta)
 
 void CLogo::Render_Scene()
 {
-	// debug ¿ë
+	// debug ìš©
 	_vec2		vPlay{ _float(WINCX / 2) - 200.f, 320.f };
 	_vec2		vEdit{ _float(WINCX / 2) - 200.f, 420.f };
 	_vec2		vExit{ _float(WINCX / 2) - 200.f, 520.f };
@@ -110,19 +110,19 @@ void CLogo::Render_Scene()
 	//D3DXCOLOR 
 	switch (m_eLogoState) {
 	case LS_START:
-		CFontMgr::GetInstance()->Render_Font(L"Font_Lapture40", L"ÇÃ·¹ÀÌ", &vPlay, D3DXCOLOR(1.f, 1.f, 1.f, 1.f), DT_CENTER | DT_NOCLIP);
-		CFontMgr::GetInstance()->Render_Font(L"Font_Lapture40", L"°³¹ßÀÚ ¸ðµå", &vEdit, D3DXCOLOR(0.f, 0.f, 0.f, 1.f), DT_CENTER | DT_NOCLIP);
-		CFontMgr::GetInstance()->Render_Font(L"Font_Lapture40", L"Á¾·á", &vExit, D3DXCOLOR(0.f, 0.f, 0.f, 1.f), DT_CENTER | DT_NOCLIP);
+		CFontMgr::GetInstance()->Render_Font(L"Font_Lapture40", L"í”Œë ˆì´", &vPlay, D3DXCOLOR(1.f, 1.f, 1.f, 1.f), DT_CENTER | DT_NOCLIP);
+		CFontMgr::GetInstance()->Render_Font(L"Font_Lapture40", L"ê°œë°œìž ëª¨ë“œ", &vEdit, D3DXCOLOR(0.f, 0.f, 0.f, 1.f), DT_CENTER | DT_NOCLIP);
+		CFontMgr::GetInstance()->Render_Font(L"Font_Lapture40", L"ì¢…ë£Œ", &vExit, D3DXCOLOR(0.f, 0.f, 0.f, 1.f), DT_CENTER | DT_NOCLIP);
 		break;
 	case LS_EDIT:
-		CFontMgr::GetInstance()->Render_Font(L"Font_Lapture40", L"ÇÃ·¹ÀÌ", &vPlay, D3DXCOLOR(0.f, 0.f, 0.f, 1.f), DT_CENTER | DT_NOCLIP);
-		CFontMgr::GetInstance()->Render_Font(L"Font_Lapture40", L"°³¹ßÀÚ ¸ðµå", &vEdit, D3DXCOLOR(1.f, 1.f, 1.f, 1.f), DT_CENTER | DT_NOCLIP);
-		CFontMgr::GetInstance()->Render_Font(L"Font_Lapture40", L"Á¾·á", &vExit, D3DXCOLOR(0.f, 0.f, 0.f, 1.f), DT_CENTER | DT_NOCLIP);
+		CFontMgr::GetInstance()->Render_Font(L"Font_Lapture40", L"í”Œë ˆì´", &vPlay, D3DXCOLOR(0.f, 0.f, 0.f, 1.f), DT_CENTER | DT_NOCLIP);
+		CFontMgr::GetInstance()->Render_Font(L"Font_Lapture40", L"ê°œë°œìž ëª¨ë“œ", &vEdit, D3DXCOLOR(1.f, 1.f, 1.f, 1.f), DT_CENTER | DT_NOCLIP);
+		CFontMgr::GetInstance()->Render_Font(L"Font_Lapture40", L"ì¢…ë£Œ", &vExit, D3DXCOLOR(0.f, 0.f, 0.f, 1.f), DT_CENTER | DT_NOCLIP);
 		break;
 	case LS_EXIT:
-		CFontMgr::GetInstance()->Render_Font(L"Font_Lapture40", L"ÇÃ·¹ÀÌ", &vPlay, D3DXCOLOR(0.f, 0.f, 0.f, 1.f), DT_CENTER | DT_NOCLIP);
-		CFontMgr::GetInstance()->Render_Font(L"Font_Lapture40", L"°³¹ßÀÚ ¸ðµå", &vEdit, D3DXCOLOR(0.f, 0.f, 0.f, 1.f), DT_CENTER | DT_NOCLIP);
-		CFontMgr::GetInstance()->Render_Font(L"Font_Lapture40", L"Á¾·á", &vExit, D3DXCOLOR(1.f, 1.f, 1.f, 1.f), DT_CENTER | DT_NOCLIP);
+		CFontMgr::GetInstance()->Render_Font(L"Font_Lapture40", L"í”Œë ˆì´", &vPlay, D3DXCOLOR(0.f, 0.f, 0.f, 1.f), DT_CENTER | DT_NOCLIP);
+		CFontMgr::GetInstance()->Render_Font(L"Font_Lapture40", L"ê°œë°œìž ëª¨ë“œ", &vEdit, D3DXCOLOR(0.f, 0.f, 0.f, 1.f), DT_CENTER | DT_NOCLIP);
+		CFontMgr::GetInstance()->Render_Font(L"Font_Lapture40", L"ì¢…ë£Œ", &vExit, D3DXCOLOR(1.f, 1.f, 1.f, 1.f), DT_CENTER | DT_NOCLIP);
 		break;
 	}
 }
@@ -167,9 +167,7 @@ HRESULT CLogo::Ready_UI_Layer(const _tchar* pLayerTag)
 	if (FAILED(pLayer->Add_GameObject(L"TitleTab", pGameObject)))
 		return E_FAIL;
 
-
 	m_mapLayer.insert({ pLayerTag , pLayer });
-
 
 	return S_OK;
 }
@@ -202,7 +200,7 @@ HRESULT CLogo::Ready_Prototype()
 		return E_FAIL;
 
 
-	// ·Îµù¾À ¹Ì¸® ·Îµù
+	// ë¡œë”©ì”¬ ë¯¸ë¦¬ ë¡œë”©
 
 	if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_LoadingCenterTex", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Loading/LoadingCenter.png", 1))))
 		return E_FAIL;

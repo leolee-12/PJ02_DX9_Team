@@ -1,4 +1,4 @@
-#include "CFont.h"
+﻿#include "CFont.h"
 
 CFont::CFont(LPDIRECT3DDEVICE9 pGraphicDev)
 	: m_pGraphicDev(pGraphicDev), m_pSprite(nullptr), m_pFont(nullptr)
