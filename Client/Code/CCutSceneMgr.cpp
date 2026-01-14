@@ -16,9 +16,9 @@ CCutSceneMgr::~CCutSceneMgr()
 	Free();
 }
 
-void CCutSceneMgr::Register_CutScene(const wstring& strName, const CUTSCENE& tCutScene)
+void CCutSceneMgr::Register_CutScene(const CUTSCENE& tCutScene)
 {
-	m_hmapCutScenes[strName] = tCutScene;
+	m_hmapCutScenes[tCutScene.strName] = tCutScene;
 }
 
 _int CCutSceneMgr::Update_CutScene(const _float fTimeDelta)
@@ -116,10 +116,13 @@ void CCutSceneMgr::Execute_Step(_uint iStep)
 void CCutSceneMgr::End_CutScene()
 {
 	m_bPlaying = false;
+	wstring CurSceneName = m_pCurrentCutScene->strName;
+
 	m_pCurrentCutScene = nullptr;
 
 	IMessageChannel::EVENT tEndEvent;
 	tEndEvent.strType = L"CutScene.End";
+	tEndEvent.hmapData[L"SceneName"] = CurSceneName;
 	m_pMessageChannel->Publish(tEndEvent);
 }
 

@@ -40,6 +40,8 @@ private:
 	HRESULT						Ready_Material();
 	void						Ready_Event();
 
+	HRESULT						Ready_Dialogue(const _vec3& vDialoguePos);
+
 private:
 	CRcTex* m_pBufferCom;
 	CTransform* m_pTransformCom;

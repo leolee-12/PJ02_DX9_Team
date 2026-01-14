@@ -19,7 +19,7 @@ typedef struct tagCutStep
 
 typedef struct tagCutScene
 {
-	//wstring strName;
+	wstring strName;
 	vector<CUTSCENE_STEP> vecSteps;
 
 } CUTSCENE ;
@@ -33,7 +33,7 @@ private:
 	virtual ~CCutSceneMgr();
 
 public:
-	void		Register_CutScene(const wstring& strName, const CUTSCENE& tCutScene);
+	void		Register_CutScene(const CUTSCENE& tCutScene);
 
 	HRESULT		Ready_CutsceneMgr(IMessageChannel* pMessageChannel)
 	{

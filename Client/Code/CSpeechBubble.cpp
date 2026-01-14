@@ -18,7 +18,7 @@ HRESULT CSpeechBubble::Ready_GameObject()
 {
     if (FAILED(Add_Component()))
         return E_FAIL;
-	m_pTransformCom->Set_Scale(m_fScale, m_fScale, 0.f);
+	m_pTransformCom->Set_Scale(m_vScale.x, m_vScale.y, 0.f);
     return S_OK;
 }
 
@@ -56,7 +56,7 @@ _int CSpeechBubble::Update_GameObject(const _float& fTimeDelta)
 		vScreenPos.x = (vndcPos.x * 0.5f + 0.5f) * _float(WINCX);
 		vScreenPos.y = (-vndcPos.y * 0.5f + 0.5f) * _float(WINCY);
 
-		m_pTransformCom->Set_Pos(vScreenPos.x, vScreenPos.y, 0.1f);
+		m_pTransformCom->Set_Pos(vScreenPos.x - _float(WINCX / 2), -vScreenPos.y + _float(WINCY / 2), 0.1f);
 
 		CRenderer::GetInstance()->Add_RenderGroup(RENDER_UI, this);
 	}
@@ -107,7 +107,7 @@ HRESULT CSpeechBubble::Add_Component()
 	m_mapComponent[ID_DYNAMIC].insert({ L"Com_Transform", pComponent });
 
 	pComponent = m_pTextureCom = dynamic_cast<Engine::CTexture*>
-		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_CookingSelectSlot"));
+		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_SpeechBubble"));
 
 	if (nullptr == pComponent)
 		return E_FAIL;
@@ -119,12 +119,12 @@ HRESULT CSpeechBubble::Add_Component()
 
 
 
-CSpeechBubble* CSpeechBubble::Create(LPDIRECT3DDEVICE9 pGraphicDev,_vec3 _vTargetPos,_float _fScale)
+CSpeechBubble* CSpeechBubble::Create(LPDIRECT3DDEVICE9 pGraphicDev,_vec3 _vTargetPos, _vec2 _vScale)
 {
 	CSpeechBubble* pSpeechBubble = new CSpeechBubble(pGraphicDev);
 
 	pSpeechBubble->m_vTargetPos = _vTargetPos;
-	pSpeechBubble->m_fScale = _fScale;
+	pSpeechBubble->m_vScale = _vScale;
 
 	if (FAILED(pSpeechBubble->Ready_GameObject()))
 	{

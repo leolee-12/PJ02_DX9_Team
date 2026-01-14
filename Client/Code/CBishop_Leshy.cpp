@@ -9,7 +9,7 @@ CBishop_Leshy::CBishop_Leshy(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev), m_pBufferCom(nullptr), m_pTransformCom(nullptr), m_pTextureCom(nullptr)
 	, m_iFrame(0), m_iFrameEnd(0)
 	, m_eCurState(Bishops::BS_END), m_ePreState(Bishops::BS_END)
-	, m_pFontUI(nullptr)
+	, m_pFontUI(nullptr), m_pSpeechBubble(nullptr)
 {
 	ZeroMemory(&m_vPos, sizeof(_vec3));
 	ZeroMemory(&m_tSpawndata, sizeof(Engine::SPAWNDATA));
@@ -33,21 +33,8 @@ HRESULT CBishop_Leshy::Ready_GameObject()
 
 	m_eCurState = Bishops::BS_IDLE;
 
-
-	m_pFontUI = CFontUI::Create(m_pGraphicDev);
-
-	if (m_pFontUI == nullptr) { return E_FAIL; }
-
-	m_pFontUI->Set_Font(L"Font_Lapture30");
-	m_pFontUI->Set_FontColor(D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
-	//DT_CENTER | DT_VCENTER
-	m_pFontUI->Set_Flags(DT_CENTER | DT_BOTTOM);
-	m_pFontUI->Set_Scale(_vec2(200.f, 100.f));
-
-	vPos.y += 2.f;
-	m_pFontUI->Set_WorldPos(vPos);
-
-	m_pSpeechBubble = CSpeechBubble::Create(m_pGraphicDev, );
+	vPos.y += 10.f;
+	Ready_Dialogue(vPos);
 
 	return S_OK;
 }
@@ -76,6 +63,7 @@ _int CBishop_Leshy::Update_GameObject(const _float& fTimeDelta)
 
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 	m_pFontUI->Update_GameObject(fTimeDelta);
+	m_pSpeechBubble->Update_GameObject(fTimeDelta);
 
 	CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHA, this);
 
@@ -195,7 +183,9 @@ void CBishop_Leshy::Ready_Event()
 			if (TargetNameiter == Event.hmapData.end()) { return; }
 			if (any_cast<wstring>(TargetNameiter->second) != L"Bishop_Leshy")
 			{ 
+				m_pSpeechBubble->UnActive();
 				m_pFontUI->UnActive();
+				m_eCurState = Bishops::BS_IDLE;
 				return;
 			}
 
@@ -203,9 +193,44 @@ void CBishop_Leshy::Ready_Event()
 			if (Textiter == Event.hmapData.end()) { return; }
 
 			m_pFontUI->Set_Text(any_cast<wstring>(Textiter->second));
+			m_pSpeechBubble->Active();
 			m_pFontUI->Active();
+			m_eCurState = Bishops::BS_TALK;
 		}
 	) });
+
+	m_hmapSubHandles.insert({ L"CutScene.End", m_pMessageChannel->Subscribe(L"CutScene.End", [this](const IMessageChannel::EVENT& Event)
+		{
+			auto SceneNameiter = Event.hmapData.find(L"SceneName");
+			if (SceneNameiter == Event.hmapData.end()) { return; }
+			if (any_cast<wstring>(SceneNameiter->second) != L"Tutorial_01")
+			{
+				m_pSpeechBubble->UnActive();
+				m_pFontUI->UnActive();
+				m_eCurState = Bishops::BS_IDLE;
+				return;
+			}
+		}
+	) });
+}
+
+HRESULT CBishop_Leshy::Ready_Dialogue(const _vec3& vDialoguePos)
+{
+	m_pFontUI = CFontUI::Create(m_pGraphicDev);
+
+	if (m_pFontUI == nullptr) { return E_FAIL; }
+
+	m_pFontUI->Set_Font(L"Font_Lapture30");
+	m_pFontUI->Set_FontColor(D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
+	//DT_CENTER | DT_VCENTER
+	m_pFontUI->Set_Flags(DT_CENTER | DT_VCENTER);
+	m_pFontUI->Set_Scale(_vec2(500.f, 150.f));
+
+	m_pFontUI->Set_WorldPos(vDialoguePos);
+
+	m_pSpeechBubble = CSpeechBubble::Create(m_pGraphicDev, vDialoguePos, _vec2(500.f, 150.f));
+
+	if (m_pSpeechBubble == nullptr) { return E_FAIL; }
 }
 
 
@@ -230,6 +255,7 @@ CBishop_Leshy* CBishop_Leshy::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChan
 
 void CBishop_Leshy::Free()
 {
+	Safe_Release(m_pSpeechBubble);
 	Safe_Release(m_pFontUI);
 	CGameObject::Free();
 }

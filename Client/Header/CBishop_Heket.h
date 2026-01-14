@@ -9,6 +9,9 @@ namespace Engine
 	class CTextureSet;
 }
 
+class CFontUI;
+class CSpeechBubble;
+
 class CBishop_Heket :
 	public CGameObject
 {
@@ -35,11 +38,17 @@ private:
 
 	HRESULT						Add_Component();
 	HRESULT						Ready_Material();
+	void						Ready_Event();
+
+	HRESULT						Ready_Dialogue(const _vec3& vDialoguePos);
 
 private:
 	CRcTex* m_pBufferCom;
 	CTransform* m_pTransformCom;
 	CTextureSet* m_pTextureCom;
+
+	CFontUI* m_pFontUI;
+	CSpeechBubble* m_pSpeechBubble;
 
 	wstring      m_strStateKey;
 	_int		 m_iFrame;
