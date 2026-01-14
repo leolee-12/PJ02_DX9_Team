@@ -120,6 +120,7 @@ void CPlayer::LateUpdate_GameObject(const _float& fTimeDelta)
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
 
 	m_bCanTrigger = false;
+	m_pTriggerPoint = nullptr;
 }
 
 void CPlayer::Render_GameObject()
@@ -368,15 +369,12 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 		}
 	}
 
+	// 트리거 키인풋
 	if (CDInputMgr::GetInstance()->Key_Down(DIK_E))
 	{
-		if (m_bCanTrigger)
-		{
-			IMessageChannel::EVENT TriggerEvent;
-			TriggerEvent.strType = L"Trigger.Activate";
-			TriggerEvent.hmapData.insert({ L"TriggerID", m_iTID });
-			m_pMessageChannel->Publish(TriggerEvent);
-		}
+		if (!m_pTriggerPoint) { return; }
+
+		m_pTriggerPoint->Activate();
 	}
 	
 
@@ -672,7 +670,7 @@ void	CPlayer::OnCollision(CGameObject* pObject)
 	if (pObject->Get_OBJID() == OID_TRIGGER)
 	{
 		m_bCanTrigger = true;
-		m_iTID = static_cast<CTriggerPoint*>(pObject)->Get_TID_for_int();
+		m_pTriggerPoint = static_cast<CTriggerPoint*>(pObject);
 	}
 }
 

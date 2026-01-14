@@ -93,7 +93,16 @@ HRESULT CTriggerPoint::Add_Component()
 	return S_OK;
 }
 
-CTriggerPoint* CTriggerPoint::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMessageChannel, _vec3 vPos, _vec3 vHalfSize, Trigger::TRIGGERID eTID)
+void CTriggerPoint::Activate()
+{
+	IMessageChannel::EVENT TriggerEvent;
+	TriggerEvent.strType = L"Trigger.Activate";
+	TriggerEvent.hmapData[L"Trigger_TID"] = m_eTID;
+	TriggerEvent.hmapData[L"Trigger_Name"] = m_strTriggerName;
+	m_pMessageChannel->Publish(TriggerEvent);
+}
+
+CTriggerPoint* CTriggerPoint::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMessageChannel, _vec3 vPos, _vec3 vHalfSize, Trigger::TRIGGERID eTID, const wstring& strTriggerName)
 {
 	CTriggerPoint* pTrigger = new CTriggerPoint(pGraphicDev);
 
@@ -103,6 +112,7 @@ CTriggerPoint* CTriggerPoint::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChan
 	pTrigger->m_vPos = vPos;
 	pTrigger->m_vColHalfSize = vHalfSize;
 	pTrigger->m_eTID = eTID;
+	pTrigger->m_strTriggerName = strTriggerName;
 
 	if (FAILED(pTrigger->Ready_GameObject()))
 	{

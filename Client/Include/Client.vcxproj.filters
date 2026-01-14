@@ -16,9 +16,6 @@
     <Filter Include="00. MainApp">
       <UniqueIdentifier>{21f60bca-e0f3-45e8-a17c-6be69ba5f684}</UniqueIdentifier>
     </Filter>
-    <Filter Include="09. CPersistentMgr">
-      <UniqueIdentifier>{153d294d-a813-4bb7-9dee-2e2680526024}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01. Scene">
       <UniqueIdentifier>{60ad0de0-adf1-440e-987a-796e2ff8332f}</UniqueIdentifier>
     </Filter>
@@ -27,9 +24,6 @@
     </Filter>
     <Filter Include="01. Scene\99. Loading\LoadingThread">
       <UniqueIdentifier>{bec13d5c-cc47-4d5b-a2eb-0fb3bafdcfdd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="10. TileMgr">
-      <UniqueIdentifier>{01b64606-77a6-499b-92aa-0bad3eff8f84}</UniqueIdentifier>
     </Filter>
     <Filter Include="02. GameObject">
       <UniqueIdentifier>{51b52b49-f21d-4d34-bf24-26f7774a4f3b}</UniqueIdentifier>
@@ -370,6 +364,18 @@
     <Filter Include="02. GameObject\15. TriggerPoint">
       <UniqueIdentifier>{5284baad-cc65-443f-8583-8ea20262c3bf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03. Manager">
+      <UniqueIdentifier>{f4a5af23-1cb1-4c65-b73d-7132d05ea4c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Manager\01. CPersistentMgr">
+      <UniqueIdentifier>{153d294d-a813-4bb7-9dee-2e2680526024}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Manager\02. TileMgr">
+      <UniqueIdentifier>{01b64606-77a6-499b-92aa-0bad3eff8f84}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Manager\00. CutSceneMgr">
+      <UniqueIdentifier>{37f20989-8197-4784-9469-9d8b5aef87c6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -433,7 +439,7 @@
       <Filter>01. Scene\99. Loading</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CPersistentMgr.h">
-      <Filter>09. CPersistentMgr</Filter>
+      <Filter>03. Manager\01. CPersistentMgr</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CLoadingBack.h">
       <Filter>02. GameObject\07. UI\00. LoadingUI\00. LoadingBack</Filter>
@@ -607,7 +613,7 @@
       <Filter>02. GameObject\12. MapObject</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CTileMgr.h">
-      <Filter>10. TileMgr</Filter>
+      <Filter>03. Manager\02. TileMgr</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CMySkyBox.h">
       <Filter>02. GameObject\05. SkyBox</Filter>
@@ -738,6 +744,12 @@
     <ClInclude Include="..\Header\CTriggerPoint.h">
       <Filter>02. GameObject\15. TriggerPoint</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\Trigger_Enum.h">
+      <Filter>02. GameObject\15. TriggerPoint</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CCutSceneMgr.h">
+      <Filter>03. Manager\00. CutSceneMgr</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -792,7 +804,7 @@
       <Filter>01. Scene\99. Loading</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CPersistentMgr.cpp">
-      <Filter>09. CPersistentMgr</Filter>
+      <Filter>03. Manager\01. CPersistentMgr</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CLoadingBack.cpp">
       <Filter>02. GameObject\07. UI\00. LoadingUI\00. LoadingBack</Filter>
@@ -960,7 +972,7 @@
       <Filter>02. GameObject\12. MapObject</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CTileMgr.cpp">
-      <Filter>10. TileMgr</Filter>
+      <Filter>03. Manager\02. TileMgr</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CTile.cpp">
       <Filter>02. GameObject\10. Tile</Filter>
@@ -1081,6 +1093,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CTriggerPoint.cpp">
       <Filter>02. GameObject\15. TriggerPoint</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CCutSceneMgr.cpp">
+      <Filter>03. Manager\00. CutSceneMgr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

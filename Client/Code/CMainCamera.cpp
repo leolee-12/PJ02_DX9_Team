@@ -49,6 +49,8 @@ HRESULT CMainCamera::Ready_GameObject(
 
 	m_fSpeed = 10.f;
 
+	m_eCamState = MCAM_DEFAULT;
+
 	m_pTargetTransformCom = CPersistentMgr::GetInstance()->Get_PlayerTransform();
 	m_pTargetTransformCom->AddRef();
 
@@ -58,8 +60,8 @@ HRESULT CMainCamera::Ready_GameObject(
 	m_pTargetTransformCom->Get_Info(INFO_POS, &vTargetPos);
 
 	m_vAt = vTargetPos;
-	vTargetPos.z -= 15.f;
-	vTargetPos.y += 10.f;
+	vTargetPos.z -= m_fZoom;
+	vTargetPos.y += (m_fZoom * DEFAULTGAPY) / DEFAULTGAPZ;
 	m_vEye = vTargetPos;
 	m_vUp = { 0.f, 1.f, 0.f };
 
@@ -76,7 +78,7 @@ HRESULT CMainCamera::Ready_GameObject(
 	D3DXVec3Cross(&m_vDirUp, &m_vLook, &m_vRight);
 	D3DXVec3Normalize(&m_vDirUp, &m_vDirUp);
 
-	m_fZoom = 18.f;
+	m_fZoom = DEFAULTZOOM;
 
 
 	return S_OK;
@@ -84,8 +86,15 @@ HRESULT CMainCamera::Ready_GameObject(
 
 _int CMainCamera::Update_GameObject(const _float& fTimeDelta)
 {
-	Default_CameraSetting(fTimeDelta);
-	Shaking_CameraSetting(fTimeDelta);
+	switch (m_eCamState) 
+	{
+	case MCAM_DEFAULT:
+		Default_CameraSetting(fTimeDelta);
+		Shaking_CameraSetting(fTimeDelta);
+		break;
+	case MCAM_STAGING:
+		Staging_CameraSetting(fTimeDelta);
+	}
 
 
 	_int		iExit = CCamera::Update_GameObject(fTimeDelta);
@@ -106,7 +115,7 @@ void CMainCamera::Default_CameraSetting(const _float& fTimeDelta)
 	m_pTargetTransformCom->Get_Info(INFO_POS, &vTargetPos);
 	D3DXVec3Lerp(&m_vAt, &m_vAt, &vTargetPos, fTimeDelta * m_fLerpSpeed);
 	vTargetPos.z -= m_fZoom;
-	vTargetPos.y += (m_fZoom * 13.f) / 15.f;
+	vTargetPos.y += (m_fZoom * DEFAULTGAPY) / DEFAULTGAPZ;
 	D3DXVec3Lerp(&m_vEye, &m_vEye, &vTargetPos, fTimeDelta * m_fLerpSpeed);
 }
 
@@ -139,10 +148,37 @@ void CMainCamera::Shaking_CameraSetting(const _float& fTimeDelta)
 	}
 }
 
+void CMainCamera::Staging_CameraSetting(const _float& fTimeDelta)
+{
+	_vec3 vTargetPos = m_vAtStatic;
+	D3DXVec3Lerp(&m_vAt, &m_vAt, &vTargetPos, fTimeDelta * m_fLerpSpeed);
+	vTargetPos.z -= m_fZoom;
+	vTargetPos.y += (m_fZoom * DEFAULTGAPY) / DEFAULTGAPZ;
+	D3DXVec3Lerp(&m_vEye, &m_vEye, &vTargetPos, fTimeDelta * m_fLerpSpeed);
+}
+
 void CMainCamera::Ready_Event_MainCam()
 {
 	m_hmapSubHandles.insert({ L"Player_Attacked", m_pMessageChannel->Subscribe(L"Monster.Attacked", [this](const IMessageChannel::EVENT& Event) {
 		Set_Shake(0.3f, 0.2f, 20.f);
+	}) });
+
+	m_hmapSubHandles.insert({ L"Set_CutSceneTarget", m_pMessageChannel->Subscribe(L"CutScene.CameraTarget", [this](const IMessageChannel::EVENT& Event) {
+		auto TargetPositer = Event.hmapData.find(L"TargetPos");
+		if (TargetPositer == Event.hmapData.end()) { return; }
+		auto Zoomiter = Event.hmapData.find(L"Zoom");
+		if (Zoomiter == Event.hmapData.end()) { return; }
+
+
+		Set_CutScene_LookAt(any_cast<_vec3>(TargetPositer->second));
+		Reset_Zoom();
+		Set_Zoom(any_cast<_float>(Zoomiter->second));
+		m_eCamState = MCAM_STAGING;
+	}) });
+
+	m_hmapSubHandles.insert({ L"End_CutScene", m_pMessageChannel->Subscribe(L"CutScene.End", [this](const IMessageChannel::EVENT& Event) {
+		Reset_Zoom();
+		m_eCamState = MCAM_DEFAULT;
 	}) });
 }
 
@@ -162,9 +198,14 @@ void CMainCamera::Set_Zoom(_float fZoom)
 	m_fZoom /= fZoom;
 }
 
+void CMainCamera::Set_CutScene_LookAt(_vec3 vAt)
+{
+	m_vAtStatic = vAt;
+}
+
 void CMainCamera::Reset_Zoom()
 {
-	m_fZoom = 30.f;
+	m_fZoom = DEFAULTZOOM;
 }
 
 

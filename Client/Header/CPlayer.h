@@ -11,6 +11,8 @@ namespace Engine
 	class CCollider;
 }
 
+class CTriggerPoint;
+
 class CPlayer : public CGameObject
 {
 public:
@@ -107,7 +109,7 @@ private:
 
 	// 트리거 관련
 	_bool			m_bCanTrigger;
-	_int            m_iTID;
+	CTriggerPoint*	m_pTriggerPoint = nullptr;
 
 public:
 	static CPlayer* Create(LPDIRECT3DDEVICE9 pGraphicDev);
