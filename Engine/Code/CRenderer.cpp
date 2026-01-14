@@ -37,6 +37,7 @@ void CRenderer::Render_GameObject(LPDIRECT3DDEVICE9& pGraphicDev)
 	Render_Floor(pGraphicDev);
 	Render_Alpha(pGraphicDev);
 	Render_UI(pGraphicDev);
+	Render_Font(pGraphicDev);
 
 	Render_ColliderDebug(pGraphicDev);
 
@@ -181,6 +182,12 @@ void CRenderer::Render_UI(LPDIRECT3DDEVICE9& pGraphicDev)
 
 	pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
 	pGraphicDev->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
+}
+
+void CRenderer::Render_Font(LPDIRECT3DDEVICE9& pGraphicDev)
+{
+	for (auto& pObj : m_RenderGroup[RENDER_FONT])
+		pObj->Render_GameObject();
 }
 
 void CRenderer::Render_Floor(LPDIRECT3DDEVICE9& pGraphicDev)

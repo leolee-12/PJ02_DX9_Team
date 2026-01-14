@@ -63,7 +63,8 @@ void CMySkyBox::Render_GameObject()
 	m_pGraphicDev->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
 
 	// 단색 렌더링 (텍스처 없음)
-	m_pGraphicDev->SetRenderState(D3DRS_TEXTUREFACTOR, m_dwColor);
+	//m_pGraphicDev->SetRenderState(D3DRS_TEXTUREFACTOR, m_dwColor);
+	m_pGraphicDev->SetRenderState(D3DRS_TEXTUREFACTOR, 0xFFBFBFBF);
 	m_pGraphicDev->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
 	m_pGraphicDev->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TFACTOR);
 

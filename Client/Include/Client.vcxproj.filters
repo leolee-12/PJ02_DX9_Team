@@ -16,9 +16,6 @@
     <Filter Include="00. MainApp">
       <UniqueIdentifier>{21f60bca-e0f3-45e8-a17c-6be69ba5f684}</UniqueIdentifier>
     </Filter>
-    <Filter Include="09. CPersistentMgr">
-      <UniqueIdentifier>{153d294d-a813-4bb7-9dee-2e2680526024}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01. Scene">
       <UniqueIdentifier>{60ad0de0-adf1-440e-987a-796e2ff8332f}</UniqueIdentifier>
     </Filter>
@@ -27,9 +24,6 @@
     </Filter>
     <Filter Include="01. Scene\99. Loading\LoadingThread">
       <UniqueIdentifier>{bec13d5c-cc47-4d5b-a2eb-0fb3bafdcfdd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="10. TileMgr">
-      <UniqueIdentifier>{01b64606-77a6-499b-92aa-0bad3eff8f84}</UniqueIdentifier>
     </Filter>
     <Filter Include="02. GameObject">
       <UniqueIdentifier>{51b52b49-f21d-4d34-bf24-26f7774a4f3b}</UniqueIdentifier>
@@ -51,9 +45,6 @@
     </Filter>
     <Filter Include="02. GameObject\08. TestEffect">
       <UniqueIdentifier>{37f31870-dba2-4668-ad76-b1d69d78c68f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\99. TestObject">
-      <UniqueIdentifier>{5e8c73c1-37da-4a24-b395-d8e294c4be3f}</UniqueIdentifier>
     </Filter>
     <Filter Include="02. GameObject\07. UI">
       <UniqueIdentifier>{0320c609-d491-42cf-96f0-e94adb951d41}</UniqueIdentifier>
@@ -370,6 +361,24 @@
     <Filter Include="02. GameObject\14. Warp">
       <UniqueIdentifier>{afb959a5-02a0-4191-9f75-2c789c60d030}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\15. TriggerPoint">
+      <UniqueIdentifier>{5284baad-cc65-443f-8583-8ea20262c3bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Manager">
+      <UniqueIdentifier>{f4a5af23-1cb1-4c65-b73d-7132d05ea4c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Manager\01. CPersistentMgr">
+      <UniqueIdentifier>{153d294d-a813-4bb7-9dee-2e2680526024}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Manager\02. TileMgr">
+      <UniqueIdentifier>{01b64606-77a6-499b-92aa-0bad3eff8f84}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Manager\00. CutSceneMgr">
+      <UniqueIdentifier>{37f20989-8197-4784-9469-9d8b5aef87c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\16. Font">
+      <UniqueIdentifier>{a8d8fe86-d6e2-4ff9-b0d0-76f833c3f75a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -423,9 +432,6 @@
     <ClInclude Include="..\Header\CTestEffect.h">
       <Filter>02. GameObject\08. TestEffect</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\TestCube.h">
-      <Filter>02. GameObject\99. TestObject</Filter>
-    </ClInclude>
     <ClInclude Include="..\Header\CEditScene.h">
       <Filter>01. Scene\01. Maps\01. EditScene</Filter>
     </ClInclude>
@@ -436,7 +442,7 @@
       <Filter>01. Scene\99. Loading</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CPersistentMgr.h">
-      <Filter>09. CPersistentMgr</Filter>
+      <Filter>03. Manager\01. CPersistentMgr</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CLoadingBack.h">
       <Filter>02. GameObject\07. UI\00. LoadingUI\00. LoadingBack</Filter>
@@ -610,7 +616,7 @@
       <Filter>02. GameObject\12. MapObject</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CTileMgr.h">
-      <Filter>10. TileMgr</Filter>
+      <Filter>03. Manager\02. TileMgr</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CMySkyBox.h">
       <Filter>02. GameObject\05. SkyBox</Filter>
@@ -717,9 +723,6 @@
     <ClInclude Include="..\Header\CCookingInfoCard.h">
       <Filter>02. GameObject\07. UI\05. CookingUI\01.CookingSelect\04.CookingInfoCard</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\CCookingTarget.h">
-      <Filter>02. GameObject\07. UI\05. CookingUI\00.CookingMiniGame\04.CookingTarget</Filter>
-    </ClInclude>
     <ClInclude Include="..\Header\CCookingStar.h">
       <Filter>02. GameObject\07. UI\05. CookingUI\01.CookingSelect\04.CookingInfoCard\06.CCookingStar</Filter>
     </ClInclude>
@@ -752,6 +755,21 @@
     </ClInclude>
     <ClInclude Include="..\Header\CMapBorder.h">
       <Filter>02. GameObject\12. MapObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CTriggerPoint.h">
+      <Filter>02. GameObject\15. TriggerPoint</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\Trigger_Enum.h">
+      <Filter>02. GameObject\15. TriggerPoint</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CCutSceneMgr.h">
+      <Filter>03. Manager\00. CutSceneMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CFontUI.h">
+      <Filter>02. GameObject\16. Font</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CCookingTarget.h">
+      <Filter>02. GameObject\07. UI\05. CookingUI\00.CookingMiniGame\04.CookingTarget</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -797,9 +815,6 @@
     <ClCompile Include="..\Code\CTestEffect.cpp">
       <Filter>02. GameObject\08. TestEffect</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\TestCube.cpp">
-      <Filter>02. GameObject\99. TestObject</Filter>
-    </ClCompile>
     <ClCompile Include="..\Code\CEditScene.cpp">
       <Filter>01. Scene\01. Maps\01. EditScene</Filter>
     </ClCompile>
@@ -810,7 +825,7 @@
       <Filter>01. Scene\99. Loading</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CPersistentMgr.cpp">
-      <Filter>09. CPersistentMgr</Filter>
+      <Filter>03. Manager\01. CPersistentMgr</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CLoadingBack.cpp">
       <Filter>02. GameObject\07. UI\00. LoadingUI\00. LoadingBack</Filter>
@@ -978,7 +993,7 @@
       <Filter>02. GameObject\12. MapObject</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CTileMgr.cpp">
-      <Filter>10. TileMgr</Filter>
+      <Filter>03. Manager\02. TileMgr</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CTile.cpp">
       <Filter>02. GameObject\10. Tile</Filter>
@@ -1079,12 +1094,6 @@
     <ClCompile Include="..\Code\CCookingStar.cpp">
       <Filter>02. GameObject\07. UI\05. CookingUI\01.CookingSelect\04.CookingInfoCard\06.CCookingStar</Filter>
     </ClCompile>
-    <ClCompile Include="..\Header\CCookingTargetFood.cpp">
-      <Filter>02. GameObject\07. UI\05. CookingUI\01.CookingSelect\03.CCookingTargetFood</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Header\CCookingInfoRecipe.cpp">
-      <Filter>02. GameObject\07. UI\05. CookingUI\01.CookingSelect\04.CookingInfoCard\04.CookingInfoRecipe</Filter>
-    </ClCompile>
     <ClCompile Include="..\Code\CCookingUIController.cpp">
       <Filter>02. GameObject\07. UI\05. CookingUI</Filter>
     </ClCompile>
@@ -1094,8 +1103,6 @@
     <ClCompile Include="..\Code\CCookingInfoCardRIghtPattern.cpp">
 		<Filter>02. GameObject\07. UI\05.CookingUI\01.CookingSelect\04.CookingInfoCard\03.CookingInfoCardRightParrtern</Filter>
 	</ClCompile>
-      <Filter>02. GameObject\07. UI\05.CookingUI\01.CookingSelect\04.CookingInfoCard\03.CookingInfoCardRightParrtern</Filter>
-    </ClCompile>
     <ClCompile Include="..\Code\CSceneWarp.cpp">
       <Filter>02. GameObject\14. Warp</Filter>
     </ClCompile>
@@ -1107,6 +1114,21 @@
     </ClCompile>
     <ClCompile Include="..\Code\CMapBorder.cpp">
       <Filter>02. GameObject\12. MapObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CTriggerPoint.cpp">
+      <Filter>02. GameObject\15. TriggerPoint</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CCutSceneMgr.cpp">
+      <Filter>03. Manager\00. CutSceneMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CFontUI.cpp">
+      <Filter>02. GameObject\16. Font</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CCookingInfoRecipe.cpp">
+      <Filter>02. GameObject\07. UI\05. CookingUI\01.CookingSelect\04.CookingInfoCard\04.CookingInfoRecipe</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CCookingTargetFood.cpp">
+      <Filter>02. GameObject\07. UI\05. CookingUI\01.CookingSelect\03.CCookingTargetFood</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

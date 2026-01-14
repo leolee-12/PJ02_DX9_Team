@@ -22,6 +22,9 @@
 #include "CBackGround.h"
 #include "CProtoMgr.h"
 #include "CDynamicCamera.h"
+#include "CMapWarp.h"
+#include "CWarp.h"
+#include "CMapBorder.h"
 
 CLeshyRoom::CLeshyRoom(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -107,7 +110,7 @@ HRESULT CLeshyRoom::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 
 	CGameObject* pGameObject = nullptr;
 
-	// ÇÃ·¹ÀÌ¾î¸¦ ÃÖ»ó´Ü¿¡
+	// ï¿½Ã·ï¿½ï¿½Ì¾î¸¦ ï¿½Ö»ï¿½Ü¿ï¿½
 	pGameObject = CPersistentMgr::GetInstance()->Get_GlobalObjects(GOBJ_PLAYER);
 
 	if (nullptr == pGameObject)
@@ -126,7 +129,7 @@ HRESULT CLeshyRoom::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	if (SUCCEEDED(Engine::CMapLoader::GetInstance()->LoadMapA(
 		"../Bin/Resource/Maps/MapData/LeshyRoom.txt", mapData)))
 	{
-		// ¸Ê µ¥ÀÌÅÍÀÇ skyTypeÀ¸·Î SkyBox »ý¼º
+		// ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ skyTypeï¿½ï¿½ï¿½ï¿½ SkyBox ï¿½ï¿½ï¿½ï¿½
 		pGameObject = CMySkyBox::Create(m_pGraphicDev, mapData.skyType);
 		if (pGameObject)
 			pLayer->Add_GameObject(L"SkyBox", pGameObject);
@@ -140,16 +143,16 @@ HRESULT CLeshyRoom::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 			switch (spawn.type)
 			{
 			case 0:
-				//ÇÃ·¹ÀÌ¾î ½ºÆùÀ§Ä¡, ¿öÇÁÀ§Ä¡ Àû¿ë
+				//í”Œë ˆì´ì–´ ìŠ¤í°ìœ„ì¹˜, ì›Œí”„ìœ„ì¹˜ ì ìš©
 				break;
 			case 1:
 				switch (spawn.monsterType)
 				{
 				case 0:
-					// Bat | ÀÏ¹Ý¸ó½ºÅÍ |
+					// Bat | ì¼ë°˜ëª¬ìŠ¤í„° |
 					break;
 				case 1:
-					// Worm | ÀÏ¹Ý¸ó½ºÅÍ |
+					// Worm | ì¼ë°˜ëª¬ìŠ¤í„° |
 					pGameObject = CMonsterN1::Create(m_pGraphicDev, m_pMessageChannel);
 					if (pGameObject)
 					{
@@ -161,18 +164,18 @@ HRESULT CLeshyRoom::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 					}
 					break;
 				case 2:
-					// Humanoid | ÀÏ¹Ý¸ó½ºÅÍ |
+					// Humanoid | ì¼ë°˜ëª¬ìŠ¤í„° |
 					break;
-				case 10:
-					// Amdusias | Áß°£º¸½º |
+				case 3:
+					// Amdusias | ì¤‘ê°„ë³´ìŠ¤ |
 					break;
-				case 20:
-					// Rash | ÃÖÁ¾º¸½º |
+				case 4:
+					// Rash | ìµœì¢…ë³´ìŠ¤ |
 					break;
-				case 30:
-					// WaitingOne | ¿¬Ãâ¿ë |
+				case 5:
+					// WaitingOne | ì—°ì¶œìš© |
 					break;
-				case 31:
+				case 6:
 					pGameObject = CBishop_Leshy::Create(m_pGraphicDev, m_pMessageChannel, spawn);
 
 					NULL_CHECK_RETURN(pGameObject, E_FAIL)
@@ -181,7 +184,7 @@ HRESULT CLeshyRoom::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 							return E_FAIL;
 
 					break;
-				case 32:
+				case 7:
 					pGameObject = CBishop_Heket::Create(m_pGraphicDev, m_pMessageChannel, spawn);
 
 					NULL_CHECK_RETURN(pGameObject, E_FAIL)
@@ -191,7 +194,7 @@ HRESULT CLeshyRoom::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 
 					break;
 
-				case 33:
+				case 8:
 					pGameObject = CBishop_Kallamar::Create(m_pGraphicDev, m_pMessageChannel, spawn);
 
 					NULL_CHECK_RETURN(pGameObject, E_FAIL)
@@ -201,7 +204,7 @@ HRESULT CLeshyRoom::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 
 					break;
 
-				case 34:
+				case 9:
 					pGameObject = CBishop_Shamura::Create(m_pGraphicDev, m_pMessageChannel, spawn);
 
 					NULL_CHECK_RETURN(pGameObject, E_FAIL)
@@ -213,7 +216,7 @@ HRESULT CLeshyRoom::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 				}
 				break;
 			default:
-				MSG_BOX("½ºÆù¼½¼Ç Å¸ÀÔ¿À·ù");
+				MSG_BOX("ìŠ¤í°ì„¹ì…˜ íƒ€ìž…ì˜¤ë¥˜");
 				return E_FAIL;
 			}
 		}
@@ -234,21 +237,51 @@ HRESULT CLeshyRoom::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 					pLayer->Add_GameObject(L"MapObject", pGameObject);
 			}
 		}
-		// Process Lights - Point Light »ý¼º
+		// Process Lights - Point Light ï¿½ï¿½ï¿½ï¿½
 		for (const auto& light : mapData.lights)
 		{
 			Engine::CLightMgr::GetInstance()->Ready_PointLight(m_pGraphicDev, light);
 		}
+		// Process MapWarps - Group by PairId and create CMapWarp
+		std::map<_int, std::vector<MAPWARPDATA>> warpGroups;
+		for (const auto& warp : mapData.mapWarps)
+		{
+			warpGroups[warp.pairId].push_back(warp);
+		}
+		for (const auto& group : warpGroups)
+		{
+			if (group.second.size() >= 2)
+			{
+				const MAPWARPDATA& w1 = group.second[0];
+				const MAPWARPDATA& w2 = group.second[1];
+
+				_vec3 pos1 = { w1.x, 0.f, w1.z };
+				_vec3 pos2 = { w2.x, 0.f, w2.z };
+
+				pGameObject = CMapWarp::Create(m_pGraphicDev, m_pMessageChannel,
+					pos1, w1.direction, pos2, w2.direction);
+
+				if (pGameObject)
+					pLayer->Add_GameObject(L"MapWarp", pGameObject);
+			}
+		}
+		// Border
+		for (const auto& col : mapData.collisions)
+		{
+			pGameObject = CMapBorder::Create(m_pGraphicDev, col.x, col.z);
+			if (pGameObject)
+				pLayer->Add_GameObject(L"MapBorder", pGameObject);
+		}
 	}
 	else
 	{
-		// ¸Ê ·Îµå ½ÇÆÐ ½Ã ±âº» SkyBox (Day) »ý¼º
+		// ï¿½ï¿½ ï¿½Îµï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½âº» SkyBox (Day) ï¿½ï¿½ï¿½ï¿½
 		pGameObject = CMySkyBox::Create(m_pGraphicDev, 0);
 		if (pGameObject)
 			pLayer->Add_GameObject(L"SkyBox", pGameObject);
 	}
 
-	// µð¹ö±×¿ë
+	// ï¿½ï¿½ï¿½ï¿½×¿ï¿½
 
 	m_mapLayer.insert({ pLayerTag , pLayer });
 
