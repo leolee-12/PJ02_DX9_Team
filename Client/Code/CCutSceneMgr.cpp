@@ -105,6 +105,12 @@ void CCutSceneMgr::Execute_Step(_uint iStep)
 	tCamEvent.hmapData[L"Zoom"] = tStep.fZoom;
 	m_pMessageChannel->Publish(tCamEvent);
 
+	IMessageChannel::EVENT tDialogueEvent;
+	tDialogueEvent.strType = L"CutScene.Dialogue";
+	tDialogueEvent.hmapData[L"Text"] = tStep.strFont;
+	tDialogueEvent.hmapData[L"TargetName"] = tStep.strTargetName;
+	m_pMessageChannel->Publish(tDialogueEvent);
+
 }
 
 void CCutSceneMgr::End_CutScene()

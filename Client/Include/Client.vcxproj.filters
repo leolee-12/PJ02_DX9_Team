@@ -376,6 +376,9 @@
     <Filter Include="03. Manager\00. CutSceneMgr">
       <UniqueIdentifier>{37f20989-8197-4784-9469-9d8b5aef87c6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\16. Font">
+      <UniqueIdentifier>{a8d8fe86-d6e2-4ff9-b0d0-76f833c3f75a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -750,6 +753,9 @@
     <ClInclude Include="..\Header\CCutSceneMgr.h">
       <Filter>03. Manager\00. CutSceneMgr</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CFontUI.h">
+      <Filter>02. GameObject\16. Font</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1096,6 +1102,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CCutSceneMgr.cpp">
       <Filter>03. Manager\00. CutSceneMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CFontUI.cpp">
+      <Filter>02. GameObject\16. Font</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

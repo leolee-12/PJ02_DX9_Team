@@ -9,6 +9,8 @@ namespace Engine
 	class CTextureSet;
 }
 
+class CFontUI;
+
 class CBishop_Leshy :
 	public CGameObject
 {
@@ -35,11 +37,14 @@ private:
 
 	HRESULT						Add_Component();
 	HRESULT						Ready_Material();
+	void						Ready_Event();
 
 private:
 	CRcTex* m_pBufferCom;
 	CTransform* m_pTransformCom;
 	CTextureSet* m_pTextureCom;
+
+	CFontUI* m_pFontUI;
 
 	wstring      m_strStateKey;
 	_int		 m_iFrame;
