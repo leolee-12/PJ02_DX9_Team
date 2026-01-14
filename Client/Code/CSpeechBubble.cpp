@@ -5,6 +5,7 @@
 
 CSpeechBubble::CSpeechBubble(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CUi(pGraphicDev), m_pBufferCom(nullptr), m_pTransformCom(nullptr)
+	, m_bActive(false)
 {
 	ZeroMemory(&m_vPos, sizeof(_vec3));
 }
@@ -17,8 +18,7 @@ HRESULT CSpeechBubble::Ready_GameObject()
 {
     if (FAILED(Add_Component()))
         return E_FAIL;
-	m_pTransformCom->Set_Scale(632 * m_fScale, 374 * m_fScale, 0.f);
-	m_pTransformCom->Set_Pos(m_vPos.x, m_vPos.y, m_vPos.z);
+	m_pTransformCom->Set_Scale(m_vScale.x, m_vScale.y, 0.f);
     return S_OK;
 }
 
@@ -42,34 +42,32 @@ HRESULT CSpeechBubble::Ready_Material()
 
 _int CSpeechBubble::Update_GameObject(const _float& fTimeDelta)
 {
+	if (m_bActive)
+	{
+		_matrix matView, matProj;
+
+		m_pGraphicDev->GetTransform(D3DTS_VIEW, &matView);
+		m_pGraphicDev->GetTransform(D3DTS_PROJECTION, &matProj);
+
+		_vec3 vViewPos, vndcPos, vScreenPos;
+		D3DXVec3TransformCoord(&vViewPos, &m_vTargetPos, &matView);
+		D3DXVec3TransformCoord(&vndcPos, &vViewPos, &matProj);
+
+		vScreenPos.x = (vndcPos.x * 0.5f + 0.5f) * _float(WINCX);
+		vScreenPos.y = (-vndcPos.y * 0.5f + 0.5f) * _float(WINCY);
+
+		m_pTransformCom->Set_Pos(vScreenPos.x - _float(WINCX / 2), -vScreenPos.y + _float(WINCY / 2), 0.1f);
+
+		CRenderer::GetInstance()->Add_RenderGroup(RENDER_UI, this);
+	}
+
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
-	CRenderer::GetInstance()->Add_RenderGroup(RENDER_UI, this);
 	return iExit;
 }
 
 void CSpeechBubble::LateUpdate_GameObject(const _float& fTimeDelta)
 {
-	CGameObject::LateUpdate_GameObject(fTimeDelta);
-
-	D3DXMATRIX matView, matProj, matWorld;
-	D3DXMatrixIdentity(&matWorld);
-	m_pGraphicDev->GetTransform(D3DTS_VIEW, &matView);
-	m_pGraphicDev->GetTransform(D3DTS_PROJECTION, &matProj);
-
-	D3DXVECTOR3 vScreenPos;
-	D3DVIEWPORT9 vp;
-	m_pGraphicDev->GetViewport(&vp);
-
-	D3DXVec3Project(&vScreenPos, &m_vTargetPos, &vp, &matProj, &matView, &matWorld);
-
-	m_pTransformCom->Set_Pos(vScreenPos.x - (WINCX / 2), - vScreenPos.y + (WINCY / 2), vScreenPos.z);
-
-	m_pTransformCom->Get_Info(INFO_POS, &m_vPos);
-	Compute_ViewDepth_Ortho(&m_vPos);
-
-
-	CRenderer::GetInstance()->Add_RenderGroup(RENDER_UI, this);
 }
 
 void CSpeechBubble::Render_GameObject()
@@ -92,7 +90,7 @@ HRESULT CSpeechBubble::Add_Component()
 
 	// CubeTex
 	pComponent = m_pBufferCom = dynamic_cast<Engine::CRcTex*>
-		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_RcTex"));
+		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_RcTexUI"));
 
 	if (nullptr == pComponent)
 		return E_FAIL;
@@ -109,7 +107,7 @@ HRESULT CSpeechBubble::Add_Component()
 	m_mapComponent[ID_DYNAMIC].insert({ L"Com_Transform", pComponent });
 
 	pComponent = m_pTextureCom = dynamic_cast<Engine::CTexture*>
-		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_CookingSelectSlot"));
+		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_SpeechBubble"));
 
 	if (nullptr == pComponent)
 		return E_FAIL;
@@ -121,12 +119,12 @@ HRESULT CSpeechBubble::Add_Component()
 
 
 
-CSpeechBubble* CSpeechBubble::Create(LPDIRECT3DDEVICE9 pGraphicDev,_vec3 _vTargetPos,_float _fScale)
+CSpeechBubble* CSpeechBubble::Create(LPDIRECT3DDEVICE9 pGraphicDev,_vec3 _vTargetPos, _vec2 _vScale)
 {
 	CSpeechBubble* pSpeechBubble = new CSpeechBubble(pGraphicDev);
 
 	pSpeechBubble->m_vTargetPos = _vTargetPos;
-	pSpeechBubble->m_fScale = _fScale;
+	pSpeechBubble->m_vScale = _vScale;
 
 	if (FAILED(pSpeechBubble->Ready_GameObject()))
 	{

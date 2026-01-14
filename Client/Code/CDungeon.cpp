@@ -34,7 +34,6 @@
 #include "CProjectile.h"
 #include "CMapWarp.h"
 #include "CWarp.h"
-#include "Engine_Struct.h"
 #include "CMapBorder.h"
 
 
@@ -201,14 +200,17 @@ HRESULT CDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 		{
 			switch (spawn.type)
 			{
-				case 1:
+			case 0:
+				//플레이어 스폰위치, 워프위치 적용
+				break;
+			case 1:
 				switch (spawn.monsterType)
 				{
 				case 0:
-					// Bat
+					// Bat | 일반몬스터 |
 					break;
 				case 1:
-					// Worm
+					// Worm | 일반몬스터 |
 					pGameObject = CMonsterN1::Create(m_pGraphicDev, m_pMessageChannel);
 					if (pGameObject)
 					{
@@ -222,17 +224,16 @@ HRESULT CDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 				case 2:
 					// Humanoid | 일반몬스터 |
 					break;
-				case 10:
+				case 3:
 					// Amdusias | 중간보스 |
 					break;
-				case 20:
+				case 4:
 					// Rash | 최종보스 |
 					break;
-				case 30:
+				case 5:
 					// WaitingOne | 연출용 |
 					break;
 				case 6:
-					// GrassCultist (Bishop_Leshy)
 					pGameObject = CBishop_Leshy::Create(m_pGraphicDev, m_pMessageChannel, spawn);
 
 					NULL_CHECK_RETURN(pGameObject, E_FAIL)
@@ -242,7 +243,6 @@ HRESULT CDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 
 					break;
 				case 7:
-					// FrogCultist (Bishop_Heket)
 					pGameObject = CBishop_Heket::Create(m_pGraphicDev, m_pMessageChannel, spawn);
 
 					NULL_CHECK_RETURN(pGameObject, E_FAIL)
@@ -253,7 +253,6 @@ HRESULT CDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 					break;
 
 				case 8:
-					// SquidCultist (Bishop_Kallamar)
 					pGameObject = CBishop_Kallamar::Create(m_pGraphicDev, m_pMessageChannel, spawn);
 
 					NULL_CHECK_RETURN(pGameObject, E_FAIL)
@@ -264,7 +263,6 @@ HRESULT CDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 					break;
 
 				case 9:
-					// SpiderCultist (Bishop_Shamura)
 					pGameObject = CBishop_Shamura::Create(m_pGraphicDev, m_pMessageChannel, spawn);
 
 					NULL_CHECK_RETURN(pGameObject, E_FAIL)
@@ -276,7 +274,7 @@ HRESULT CDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 				}
 				break;
 			default:
-				//MSG_BOX("스폰섹션 타입오류");
+				MSG_BOX("스폰섹션 타입오류");
 				return E_FAIL;
 			}
 		}

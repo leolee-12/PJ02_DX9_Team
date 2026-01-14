@@ -11,6 +11,8 @@ namespace Engine
 	class CCollider;
 }
 
+class CTriggerPoint;
+
 class CPlayer : public CGameObject
 {
 public:
@@ -104,6 +106,10 @@ private:
 
 	// 메시지 채널 관련
 	_bool 			m_bMsgRegistered;
+
+	// 트리거 관련
+	_bool			m_bCanTrigger;
+	CTriggerPoint*	m_pTriggerPoint = nullptr;
 
 	// 캐릭터 border 처리 관련
 	_vec3 m_vPrevPos;

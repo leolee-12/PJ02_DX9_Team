@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "CAIController.h"
 #include "CMonsterB2.h"
 
@@ -9,7 +9,7 @@ private:
 	{
 		CMonsterB2::MONSTER_B2_STATE eType;
 		int iWeight;
-		bool bIsActive;  // ÆäÀÌÁîº° È°¼ºÈ­
+		bool bIsActive;  // í˜ì´ì¦ˆë³„ í™œì„±í™”
 	}B2_ATKPATTERN;
 
 protected:
@@ -31,8 +31,8 @@ public:
 	void		Push_Front_Pattern(CMonsterB2::MONSTER_B2_STATE eState);
 	void		Set_Weight(CMonsterB2::MONSTER_B2_STATE eState, _uint iNewWeight);
 	
-	void		Set_Signal() { if (!m_bReceived) m_bOnce = true; m_bReceived = true; }
-	// Owner°¡ Æ¯Á¤ ¼ø°£¿¡ AI¿¡°Ô ½ÅÈ£¸¦ º¸³»´Â ¿ëµµ
+	void		Set_Signal(_uint iNum = 0);
+	// Ownerê°€ íŠ¹ì • ìˆœê°„ì— AIì—ê²Œ ì‹ í˜¸ë¥¼ ë³´ë‚´ëŠ” ìš©ë„
 
 private:
 	_int		Update_Component(const _float& fTimeDelta)	override;
@@ -59,15 +59,15 @@ private:
 	_float		m_fGravity;
 	_float		m_fAcmlTime;
 	_bool		m_bChase;
-	_vec3		m_vLerpPos;		// Lerp¿ë À§Ä¡
+	_vec3		m_vLerpPos;		// Lerpìš© ìœ„ì¹˜
 
-	// ÆĞÅÏ °ü·Ã
+	// íŒ¨í„´ ê´€ë ¨
 	deque<CMonsterB2::MONSTER_B2_STATE> m_patternDeque;
 	vector<B2_ATKPATTERN>	m_vecAtkPatterns;
 	_uint		m_iDequeMinSize;
 	CMonsterB2*	m_pOwner;
-	_bool		m_bOnce;
-	_bool		m_bReceived;
+	_bool		m_bOnce;	// íŒ¨í„´ìš© í•¨ìˆ˜ê°€ ë‹¨ í•œ ë²ˆë§Œ ì‹¤í–‰ë˜ë„ë¡ ì œì–´
+	_uint		m_iSwitch;	// íŒ¨í„´ì„ ìœ„í•´ Ownerë¡œë¶€í„° ì „ë‹¬ë°›ì„ ë‹¤ëª©ì ìš© ê°’
 
 public:
 	static CB2_AI*	Create(LPDIRECT3DDEVICE9 pGraphicDev, const _float& fDetectRange, const _float& fInteractRange, const _uint& iInitState = 0);

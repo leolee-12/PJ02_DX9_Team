@@ -11,6 +11,7 @@
 #include "CTileMgr.h"
 #include "CMapLoader.h"
 #include "CLoading.h"
+#include "CCutSceneMgr.h"
 
 bool g_bDebug = false;
 list<wstring>		g_MapProtoname;
@@ -44,6 +45,7 @@ HRESULT CMainApp::Ready_MainApp()
 int CMainApp::Update_MainApp(const float& fTimeDelta)
 {
 	m_pManagementClass->Update_Scene(fTimeDelta);
+	CCutSceneMgr::GetInstance()->Update_CutScene(fTimeDelta);
 	CDInputMgr::GetInstance()->Update_InputDev();
 
 	// 타일 매니저 업데이트
@@ -55,6 +57,7 @@ int CMainApp::Update_MainApp(const float& fTimeDelta)
 void CMainApp::LateUpdate_MainApp(const float& fTimeDelta)
 {
 	m_pManagementClass->LateUpdate_Scene(fTimeDelta);
+	CCutSceneMgr::GetInstance()->LateUpdate_CutScene(fTimeDelta);
 
 	// 타일 매니저 레이트 업데이트
 	CTileMgr::GetInstance()->LateUpdate(fTimeDelta);
@@ -205,6 +208,7 @@ void CMainApp::Free()
 	Safe_Release(m_pGraphicDev);
 	Safe_Release(m_pDeviceClass);
 
+	CCutSceneMgr::DestroyInstance();
 	CMapLoader::DestroyInstance();
 	CTileMgr::DestroyInstance();
 	CLightMgr::DestroyInstance();

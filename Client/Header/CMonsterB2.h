@@ -46,6 +46,7 @@ public:
 
 	void				Launch_Projectile(const _uint& iCount, const _vec3& vTargetDir);
 	void				Summon_Minion(const _uint& iCount);
+	void				Attack_HitBox(_vec3 vPos);
 
 private:
 	HRESULT				Add_Component();
@@ -59,13 +60,12 @@ private:
 	void				Set_Material();
 	void				Reset_Material();
 
-	void				Attack_HitBox();
 	void				Attacked(const _int& iAttack);
 	void				Update_State();
 	_vec3				Compute_LimitedDir(const _float& fAngle, const _vec3& vCurDir, const _vec3& vDesiredDir);
 	void				Compute_NodePos(const _float& fTimeDelta);
 	void				Check_Phase();
-
+	void				Check_Status();
 private:
 	// 스프라이트 관련
 	CTextureSet*		m_pTexSetCom;
@@ -77,6 +77,7 @@ private:
 	_float				m_fFrameSpeed;
 	_matrix				m_matTex;
 	_float				m_fBtmPadding;
+
 	// AI 관련
 	CB2_AI*	m_pAICom;
 

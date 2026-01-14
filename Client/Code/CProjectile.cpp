@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "CProjectile.h"
 #include "CProtoMgr.h"
 #include "CManagement.h"
@@ -66,7 +66,7 @@ _int CProjectile::Update_GameObject(const _float& fTimeDelta)
 	m_fAcmlTime += fTimeDelta;
 
 	m_pColliderCom->UpdateFromTransform(m_pTransformCom);
-	// Ãæµ¹Ã¼ µð¹ö±×¿ë
+	// ì¶©ëŒì²´ ë””ë²„ê·¸ìš©
 	if (g_bDebug) m_pColliderCom->Update_AABBforRender();
 
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
@@ -158,23 +158,23 @@ HRESULT CProjectile::Add_Component()
 
 void CProjectile::Ready_Variable()
 {
-	// °ÔÀÓ·ÎÁ÷ º¯¼ö ¼¼ÆÃ
+	// ê²Œìž„ë¡œì§ ë³€ìˆ˜ ì„¸íŒ…
 	_float fScale = 1.f;
 	m_fGroundY = -2.5f + fScale * 0.5f;
 	m_iAttack = 1;
 	m_iHp = 1;
 	m_fAcmlTime = 0.f;
 	m_fLifeTime = 10.f;
-	m_fGravity = -9.8f;
+	m_fGravity = -9.8f * 2.f;
 
-	// Transform ¼¼ÆÃ
+	// Transform ì„¸íŒ…
 	m_pTransformCom->Set_Pos(_float(rand() % 20), m_fGroundY, _float(rand() % 20));
 	m_pTransformCom->Set_Scale(fScale, fScale, fScale);
 
-	// Collider ¼¼ÆÃ
+	// Collider ì„¸íŒ…
 	m_pColliderCom->RegisterToManager(this, CL_MBULLET);
 
-	// Anim °ü·Ã ¼¼ÆÃ
+	// Anim ê´€ë ¨ ì„¸íŒ…
 	m_fFrameSpeed = 24.f;
 	D3DXMatrixIdentity(&m_matTex);
 }

@@ -18,8 +18,10 @@ CMonsterB2::CMonsterB2(LPDIRECT3DDEVICE9 pGraphicDev)
 	m_fFrame(0.f),
 	m_fFrameEnd(0.f),
 	m_fFrameSpeed(0.f),
+	m_fBtmPadding(0.f),
 	m_iPhase(0),
-	m_iMaxHp(0)
+	m_iMaxHp(0),
+	m_fAcmlTime(0.f)
 {
 	ZeroMemory(m_pNode, sizeof(m_pNode));
 }
@@ -31,8 +33,10 @@ CMonsterB2::CMonsterB2(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChan
 	m_fFrame(0.f),
 	m_fFrameEnd(0.f),
 	m_fFrameSpeed(0.f),
+	m_fBtmPadding(0.f),
 	m_iPhase(0),
-	m_iMaxHp(0)
+	m_iMaxHp(0),
+	m_fAcmlTime(0.f)
 {
 	ZeroMemory(m_pNode, sizeof(m_pNode));
 }
@@ -45,8 +49,10 @@ CMonsterB2::CMonsterB2(const CMonsterB2& rhs)
 	m_fFrame(0.f),
 	m_fFrameEnd(0.f),
 	m_fFrameSpeed(0.f),
+	m_fBtmPadding(rhs.m_fBtmPadding),
 	m_iPhase(rhs.m_iPhase),
-	m_iMaxHp(rhs.m_iPhase)
+	m_iMaxHp(rhs.m_iPhase),
+	m_fAcmlTime(0.f)
 {
 	memcpy(m_pNode, rhs.m_pNode, sizeof(m_pNode));
 }
@@ -74,30 +80,22 @@ _int CMonsterB2::Update_GameObject(const _float& fTimeDelta)
 
 	Move_Frame(fTimeDelta);
 
-	m_pColliderCom->UpdateFromTransform(m_pTransformCom);
+	Check_Status();
 
-	//------스프라이트 높이와 충돌체 위치 맞춤---------
-	_float fY(m_vPos.y - m_pTransformCom->Get_Scale(ROT_Y) * 0.125f);
-	AABB tAABB = { m_vPos.x, fY, m_vPos.z, 2.5f, 2.5f, 2.5f };
-	m_pColliderCom->Set_AABB(tAABB);
-	//-------------------------------------------------
+	for (auto& pComponent : m_mapComponent[ID_DYNAMIC])
+		pComponent.second->Update_Component(fTimeDelta);
 
-	// 충돌체 디버그용
-	if (g_bDebug) m_pColliderCom->Update_AABBforRender();
-
-	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
-
-	if (iExit == DEAD)
-	{
-		m_pColliderCom->UnregisterFromManager();
-		return iExit;
-	}
+	//if (iExit == DEAD)
+	//{
+	//	m_pColliderCom->UnregisterFromManager();
+	//	return iExit;
+	//}
 
 	CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHA, this);
 
 	Compute_NodePos(fTimeDelta);
 
-	return iExit;
+	return NOEVENT;
 }
 
 void CMonsterB2::LateUpdate_GameObject(const _float& fTimeDelta)
@@ -201,7 +199,7 @@ void CMonsterB2::Ready_Variable()
 	m_fBtmPadding = fScale * 0.51f;
 	m_fGroundY = -2.5f + fScale * 0.5f - m_fBtmPadding;
 	m_iAttack = 1;
-	m_iMaxHp = m_iHp = 10;
+	m_iMaxHp = m_iHp = 30;
 	m_iPhase = 1;
 
 	// Transform 세팅
@@ -210,7 +208,7 @@ void CMonsterB2::Ready_Variable()
 
 	// Collider 세팅
 	m_pColliderCom->RegisterToManager(this, CL_MONSTER);
-	AABB tAABB = { m_vPos.x, m_vPos.y - 1.f, m_vPos.z, 2.5f, 2.5f, 2.5f };
+	AABB tAABB = { m_vPos.x, m_vPos.y, m_vPos.z, 5.f, 5.f, 5.f };
 	m_pColliderCom->Set_AABB(tAABB);
 
 	// AI 세팅
@@ -277,11 +275,11 @@ void CMonsterB2::Check_Frame()
 		break;
 
 	case B2S_DIG:
-		m_fFrameEnd = m_pTexSetCom->Get_TextureEnd(L"BossLeshy_MoveStart");
+		m_fFrameEnd = m_pTexSetCom->Get_TextureEnd(L"BossLeshy_Dig");
 		break;
 
 	case B2S_ESCAPE:
-		m_fFrameEnd = m_pTexSetCom->Get_TextureEnd(L"BossLeshy_MoveEnd");
+		m_fFrameEnd = m_pTexSetCom->Get_TextureEnd(L"BossLeshy_Escape");
 		break;
 
 	case B2S_HIT:
@@ -334,7 +332,9 @@ void CMonsterB2::Check_Frame()
 
 void CMonsterB2::Move_Frame(const _float& fTimeDelta)
 {
+	_uint iPreAnimFrame = _uint(m_fFrame);
 	m_fFrame += m_fFrameSpeed * fTimeDelta;
+	_uint iCurAnimFrame = _uint(m_fFrame);
 
 	if(m_eCurState == B2S_IDLE) m_fFrame += m_fFrameSpeed * fTimeDelta;
 
@@ -397,15 +397,29 @@ void CMonsterB2::Move_Frame(const _float& fTimeDelta)
 		break;
 		}
 	}
-	else
+	else if(iPreAnimFrame != iCurAnimFrame)
 	{
 		switch (m_eCurState)
 		{
+		case B2S_SMASH:
+		{
+			if		(iCurAnimFrame == 12) m_pAICom->Set_Signal(1);
+			else if (iCurAnimFrame == 27) m_pAICom->Set_Signal(2);
+			else if (iCurAnimFrame == 48) m_pAICom->Set_Signal(3);
+		}
+		break;
+
 		case B2S_SHOOT:
+		{
+			if (iCurAnimFrame == 56 ||
+				iCurAnimFrame == 62 ||
+				iCurAnimFrame == 68) m_pAICom->Set_Signal();
+		}
+		break;
+
 		case B2S_SUMMON:
 		{
-			if (m_fFrame >= 56.f)
-				m_pAICom->Set_Signal();
+			if (iCurAnimFrame == 56) m_pAICom->Set_Signal();
 		}
 		break;
 		}
@@ -433,7 +447,7 @@ void CMonsterB2::Set_TextureSet()
 		break;
 
 	case B2S_SMASH:
-		m_strFrameKey = L"BossLeshy_MoveSmash";
+		m_strFrameKey = L"BossLeshy_Smash";
 		break;
 
 	case B2S_SHOOT:
@@ -506,12 +520,14 @@ void CMonsterB2::Reset_Material()
 	m_bMtrl = false;
 }
 
-void CMonsterB2::Attack_HitBox()
+void CMonsterB2::Attack_HitBox(_vec3 vPos)
 {
-	AABB tAABB = { m_vPos.x, m_vPos.y, m_vPos.z,
-					2.f, 1.f, 2.f };
+	AABB tAABB = { vPos.x, vPos.y, vPos.z,
+					3.f, 1.f, 3.f };
 
 	vector<CGameObject*> tempVec = CCollisionMgr::GetInstance()->Test_AABB(tAABB, CL_PLAYER);
+
+	if (g_bDebug) CRenderer::GetInstance()->Add_TestCollider(tAABB, 60);
 
 	if (!tempVec.empty())
 	{
@@ -527,12 +543,20 @@ void CMonsterB2::Attack_HitBox()
 void CMonsterB2::Attacked(const _int& iAttack)
 {
 	m_iHp -= iAttack;
+
+	if (m_eCurState == B2S_IDLE)
+	{
+		m_pAICom->Set_State(B2S_HIT);
+		m_eCurState = B2S_HIT;
+		m_fFrame = 0.f;
+	}
 }
 
 void CMonsterB2::Update_State()
 {
 	if (m_eCurState == B2S_SPAWN ||
-		m_eCurState == B2S_ESCAPE) return;
+		m_eCurState == B2S_ESCAPE ||
+		m_eCurState == B2S_HIT) return;
 
 	m_eCurState = m_pAICom->Get_RecommendState<MONSTER_B2_STATE>();
 }
@@ -620,20 +644,45 @@ void CMonsterB2::Check_Phase()
 	}
 }
 
+void CMonsterB2::Check_Status()
+{
+	//m_pColliderCom->UpdateFromTransform(m_pTransformCom);
+
+	//------스프라이트 높이와 충돌체 위치 맞춤---------
+	_float fY(0.f);
+	if (m_eCurState == B2S_SPAWN || m_eCurState == B2S_DIG ||
+		m_eCurState == B2S_JUMP || m_eCurState == B2S_DIVE)
+		 fY = m_vPos.y - m_pTransformCom->Get_Scale(ROT_Y) * 0.24f;	// 충돌체 위치를 내려서 공격받지 않게 무적상태 구현
+	else fY = m_vPos.y + m_pTransformCom->Get_Scale(ROT_Y) * 0.06f;
+	AABB tAABB = { m_vPos.x, fY, m_vPos.z + 2.5f, 2.5f, 2.5f, 2.5f };
+	m_pColliderCom->Set_AABB(tAABB);
+	m_pColliderCom->UpdateFromCustom(tAABB);
+	//-------------------------------------------------
+
+	// 충돌체 디버그용
+	if (g_bDebug) m_pColliderCom->Update_AABBforRender();
+
+	if ((m_iPhase != 0) && (m_iHp <= 0))
+	{
+		m_pAICom->Set_State(B2S_DIE);
+		m_iPhase = 0;
+	}
+}
+
 void CMonsterB2::Launch_Projectile(const _uint& iCount, const _vec3& vTargetDir)
 {
 	if (iCount > 1000) return;
 
-	_float fBaseSpeed = 6.f;
-	_float fBaseYSpeed = 6.f;
+	_float fBaseSpeed = 8.f;
+	_float fBaseYSpeed = 10.f;
 	_vec3 vPos{ m_vPos.x, m_vPos.y + 10.f, m_vPos.z };
 
 
 	for (_uint i = 0; i < iCount; ++i)
 	{
-		_float fRandX = Get_Rand_Float(-3.f, 3.f);
-		_float fRandY = Get_Rand_Float(-3.f, 3.f);
-		_float fRandZ = Get_Rand_Float(-3.f, 3.f);
+		_float fRandX = Get_Rand_Float(-5.f, 5.f);
+		_float fRandY = Get_Rand_Float(-5.f, 5.f);
+		_float fRandZ = Get_Rand_Float(-5.f, 5.f);
 
 		_vec3 vSpeed{	vTargetDir.x * fBaseSpeed + fRandX,
 						fBaseYSpeed + fRandY,

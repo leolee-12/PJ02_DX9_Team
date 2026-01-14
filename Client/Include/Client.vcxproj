@@ -174,6 +174,7 @@
     <ClInclude Include="..\Header\CBishop_Kallamar.h" />
     <ClInclude Include="..\Header\CBishop_Leshy.h" />
     <ClInclude Include="..\Header\CBishop_Shamura.h" />
+    <ClInclude Include="..\Header\CCutSceneMgr.h" />
     <ClInclude Include="..\Header\CCookingUIController.h" />
     <ClInclude Include="..\Header\CDivider.h" />
     <ClInclude Include="..\Header\CDungeon.h" />
@@ -182,6 +183,7 @@
     <ClInclude Include="..\Header\CDungeonLine.h" />
     <ClInclude Include="..\Header\CDynamicCamera.h" />
     <ClInclude Include="..\Header\CEditScene.h" />
+    <ClInclude Include="..\Header\CFontUI.h" />
     <ClInclude Include="..\Header\CGauge.h" />
     <ClInclude Include="..\Header\CGaugeCover.h" />
     <ClInclude Include="..\Header\CGaugeStar.h" />
@@ -253,6 +255,7 @@
     <ClInclude Include="..\Header\CTitleCenter.h" />
     <ClInclude Include="..\Header\CTitleLogo.h" />
     <ClInclude Include="..\Header\CTitleTab.h" />
+    <ClInclude Include="..\Header\CTriggerPoint.h" />
     <ClInclude Include="..\Header\CTutorial.h" />
     <ClInclude Include="..\Header\CVillage.h" />
     <ClInclude Include="..\Header\CWarp.h" />
@@ -260,12 +263,12 @@
     <ClInclude Include="..\Header\LoadObjectList.h" />
     <ClInclude Include="..\Header\PlayerUI.h" />
     <ClInclude Include="..\Header\CSpeechBubble.h" />
-    <ClInclude Include="..\Header\TestCube.h" />
     <ClInclude Include="..\Header\CTile.h" />
     <ClInclude Include="..\Header\CTileMgr.h" />
     <ClInclude Include="..\Header\CMapObject.h" />
     <ClInclude Include="..\Header\CGrass.h" />
     <ClInclude Include="..\Header\SaveLoad.h" />
+    <ClInclude Include="..\Header\Trigger_Enum.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="pch.h" />
@@ -285,6 +288,7 @@
     <ClCompile Include="..\Code\CCookingCover.cpp" />
     <ClCompile Include="..\Code\CCookingGauge.cpp" />
     <ClCompile Include="..\Code\CCookingGaugeBack.cpp" />
+    <ClCompile Include="..\Code\CCookingInfoRecipe.cpp" />
     <ClCompile Include="..\Code\CCookingMarker.cpp" />
     <ClCompile Include="..\Code\CCookingMiniGameUI.cpp" />
     <ClCompile Include="..\Code\CCookingInfoCardBack.cpp" />
@@ -297,6 +301,8 @@
     <ClCompile Include="..\Code\CBishop_Kallamar.cpp" />
     <ClCompile Include="..\Code\CBishop_Leshy.cpp" />
     <ClCompile Include="..\Code\CBishop_Shamura.cpp" />
+    <ClCompile Include="..\Code\CCookingTargetFood.cpp" />
+    <ClCompile Include="..\Code\CCutSceneMgr.cpp" />
     <ClCompile Include="..\Code\CCookingUIController.cpp" />
     <ClCompile Include="..\Code\CDivider.cpp" />
     <ClCompile Include="..\Code\CDungeon.cpp" />
@@ -305,6 +311,7 @@
     <ClCompile Include="..\Code\CDungeonLine.cpp" />
     <ClCompile Include="..\Code\CDynamicCamera.cpp" />
     <ClCompile Include="..\Code\CEditScene.cpp" />
+    <ClCompile Include="..\Code\CFontUI.cpp" />
     <ClCompile Include="..\Code\CGauge.cpp" />
     <ClCompile Include="..\Code\CGaugeCover.cpp" />
     <ClCompile Include="..\Code\CGaugeStar.cpp" />
@@ -377,15 +384,13 @@
     <ClCompile Include="..\Code\CTitleCenter.cpp" />
     <ClCompile Include="..\Code\CTitleLogo.cpp" />
     <ClCompile Include="..\Code\CTitleTab.cpp" />
+    <ClCompile Include="..\Code\CTriggerPoint.cpp" />
     <ClCompile Include="..\Code\CTutorial.cpp" />
     <ClCompile Include="..\Code\CVillage.cpp" />
     <ClCompile Include="..\Code\CWarp.cpp" />
-    <ClCompile Include="..\Code\TestCube.cpp" />
     <ClCompile Include="..\Code\CTileMgr.cpp" />
     <ClCompile Include="..\Code\CMapObject.cpp" />
     <ClCompile Include="..\Code\CGrass.cpp" />
-    <ClCompile Include="..\Header\CCookingTargetFood.cpp" />
-    <ClCompile Include="..\Header\CCookingInfoRecipe.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

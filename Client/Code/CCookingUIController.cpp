@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "CCookingUIController.h"
 
 #include "CRenderer.h"
@@ -34,7 +34,7 @@ HRESULT CCookingUIController::Ready_GameObject()
 
 _int CCookingUIController::Update_GameObject(const _float& fTimeDelta)
 {
-	// ÀÓ½ÃÅ×½ºÆ®¿ë »èÁ¦¿¹Á¤
+	// ìž„ì‹œí…ŒìŠ¤íŠ¸ìš© ì‚­ì œì˜ˆì •
 	if (CDInputMgr::GetInstance()->Key_Down(DIK_G))
 	{
 		Set_CookingState(COOKINGUISTATE::CS_SELECT);
@@ -49,8 +49,8 @@ _int CCookingUIController::Update_GameObject(const _float& fTimeDelta)
 	}
 
 
-	// ÄÝ¹é °øºÎ´õÇØ¾ßÇÔ ÀÏ´Ü³Ö¾îµÒ
-	// µî·ÏµÈ ÇÔ¼ö°¡ È£ÃâµÇ¸é ¾Æ·¡ ÄÚµå°¡ ½ÇÇàµÇ´Â´À³¦
+	// ì½œë°± ê³µë¶€ë”í•´ì•¼í•¨ ì¼ë‹¨ë„£ì–´ë‘ 
+	// ë“±ë¡ëœ í•¨ìˆ˜ê°€ í˜¸ì¶œë˜ë©´ ì•„ëž˜ ì½”ë“œê°€ ì‹¤í–‰ë˜ëŠ”ëŠë‚Œ
 	m_pMiniGameUI->Set_CookingEndCallback([this]()
 		{
 			Set_CookingState(COOKINGUISTATE::CS_COOKINGEND);

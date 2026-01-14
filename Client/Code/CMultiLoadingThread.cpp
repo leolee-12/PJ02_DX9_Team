@@ -240,12 +240,15 @@ void CMultiLoadingThread::Loading_for_Tutorial()
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_B1Node4Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Boss1/dds/B1Node_03.dds", 1));
 	m_iTotalProtoCount++;
 
-	// ===== TextureSet 큐 등록 (멀티스레드 로딩) =====
-	vector<TEXSETLR> vecBishopLeshy;
-	vecBishopLeshy.push_back(TEXSETLR(L"Bishop_Leshy_Idle", L"../Bin/Resource/Texture/Bishops/Leshy/Leshy-idle/dds/Leshy_idle-%d.dds", 500));
-	vecBishopLeshy.push_back(TEXSETLR(L"Bishop_Leshy_Talk", L"../Bin/Resource/Texture/Bishops/Leshy/Leshy-talk/dds/Leshy-talk-%d.dds", 167));
-	m_TexSetLoadingqueue.push(make_pair(TEXSETINFO(L"Proto_BishopLeshy", TEX_NORMAL), vecBishopLeshy));
-	m_iTotalProtoCount++;
+    m_TexturLoadingqueue.push(TEXLR(L"Proto_SpeechBubble", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Etc/SpeechBubble.png", 1));
+    m_iTotalProtoCount++;
+
+    // ===== TextureSet 큐 등록 (멀티스레드 로딩) =====
+    vector<TEXSETLR> vecBishopLeshy;
+    vecBishopLeshy.push_back(TEXSETLR(L"Bishop_Leshy_Idle", L"../Bin/Resource/Texture/Bishops/Leshy/Leshy-idle/dds/Leshy_idle-%d.dds", 500));
+    vecBishopLeshy.push_back(TEXSETLR(L"Bishop_Leshy_Talk", L"../Bin/Resource/Texture/Bishops/Leshy/Leshy-talk/dds/Leshy-talk-%d.dds", 167));
+    m_TexSetLoadingqueue.push(make_pair(TEXSETINFO(L"Proto_BishopLeshy", TEX_NORMAL), vecBishopLeshy));
+    m_iTotalProtoCount++;
 
 	vector<TEXSETLR> vecBishopHeket;
 	vecBishopHeket.push_back(TEXSETLR(L"Bishop_Heket_Idle", L"../Bin/Resource/Texture/Bishops/Heket/Heket-idle/dds/Heket-idle-%d.dds", 267));

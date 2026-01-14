@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "CB2_AI.h"
 #include "CTransform.h"
 
@@ -47,18 +47,18 @@ HRESULT CB2_AI::Ready_AI(const _float& fDetectRange, const _float& fInteractRang
 	m_fAcmlTime = 0.f;
 	m_iRcmState = _uint(CMonsterB2::B2S_SPAWN);
 
-	// °ø°İ ÆĞÅÏ ¼³Á¤
+	// ê³µê²© íŒ¨í„´ ì„¤ì •
 	m_iDequeMinSize = 3;
-	//m_vecAtkPatterns.push_back({ CMonsterB2::B2S_SMASH, 40, true });
-	m_vecAtkPatterns.push_back({ CMonsterB2::B2S_SHOOT, 40, true });
+	m_vecAtkPatterns.push_back({ CMonsterB2::B2S_SMASH, 40, true });
+	//m_vecAtkPatterns.push_back({ CMonsterB2::B2S_SHOOT, 40, true });
 	//m_vecAtkPatterns.push_back({ CMonsterB2::B2S_SUMMON, 40, true });
 
-	// ½Ã¿¬¿ë : ¸ğµç ÆĞÅÏÀÌ ¼øÂ÷ÀûÀ¸·Î ½ÇÇà
+	// ì‹œì—°ìš© : ëª¨ë“  íŒ¨í„´ì´ ìˆœì°¨ì ìœ¼ë¡œ ì‹¤í–‰
+	m_patternDeque.push_back(CMonsterB2::B2S_SMASH);
+	//m_patternDeque.push_back(CMonsterB2::B2S_SHOOT);
 	//m_patternDeque.push_back(CMonsterB2::B2S_SUMMON);
-	//m_patternDeque.push_back(CMonsterB2::B2S_SMASH);
-	m_patternDeque.push_back(CMonsterB2::B2S_SHOOT);
 
-	// °ÔÀÓ¿ë : °¡ÁßÄ¡¿Í ³­¼ö¸¦ ÅëÇØ ÆĞÅÏÀ» Ã¤¿öÁÜ
+	// ê²Œì„ìš© : ê°€ì¤‘ì¹˜ì™€ ë‚œìˆ˜ë¥¼ í†µí•´ íŒ¨í„´ì„ ì±„ì›Œì¤Œ
 	Refill_Pattern(true);
 
 	return S_OK;
@@ -75,13 +75,13 @@ void CB2_AI::Enter_State(const _uint& iState)
 	{
 		m_fAcmlTime = 0.f;
 
-		m_fSpeed = 0.05f;
+		m_fSpeed = 0.01f;
 		_vec3 vPrevPos, vDesiredDir;
 		m_pOwnerTC->Get_Info(INFO_POS, &vPrevPos);
 		vDesiredDir = Randomize_Dir();
 
 		m_vDir = Compute_LimitedDir(120.f, m_vDir, vDesiredDir);
-		m_vLerpPos = vPrevPos + m_vDir * 5.f;
+		m_vLerpPos = vPrevPos + m_vDir * 10.f;
 	}
 	break;
 	case CMonsterB2::B2S_ESCAPE:
@@ -130,8 +130,6 @@ void CB2_AI::Enter_State(const _uint& iState)
 	case CMonsterB2::B2S_SPIKE2:
 		break;
 	}
-
-	m_bReceived = false;
 }
 
 void CB2_AI::Exit_State(const _uint& iState)
@@ -203,7 +201,7 @@ void CB2_AI::Generate_Pattern(CMonsterB2::MONSTER_B2_STATE eLastPattern, _bool b
 {
 	size_t iPatternCnt = m_vecAtkPatterns.size();
 
-	if (iPatternCnt == 0)	// error : µî·ÏµÈ °ø°İ ÆĞÅÏÀÌ ¾øÀ½
+	if (iPatternCnt == 0)	// error : ë“±ë¡ëœ ê³µê²© íŒ¨í„´ì´ ì—†ìŒ
 	{
 		m_patternDeque.push_back(CMonsterB2::MONSTER_B2_STATE(0));
 		return;
@@ -232,7 +230,7 @@ void CB2_AI::Generate_Pattern(CMonsterB2::MONSTER_B2_STATE eLastPattern, _bool b
 		}
 	}
 
-	if (iTotalWeight == 0)	// error : È°¼ºÈ­µÈ °ø°İ ÆĞÅÏÀÌ ¾øÀ½
+	if (iTotalWeight == 0)	// error : í™œì„±í™”ëœ ê³µê²© íŒ¨í„´ì´ ì—†ìŒ
 	{
 		m_patternDeque.push_back(CMonsterB2::MONSTER_B2_STATE(0));
 		return;
@@ -249,13 +247,13 @@ void CB2_AI::Generate_Pattern(CMonsterB2::MONSTER_B2_STATE eLastPattern, _bool b
 
 		if (iRandom <= iAccumulated)
 		{
-			// Á¤»ó »ı¼º
+			// ì •ìƒ ìƒì„±
 			m_patternDeque.push_back(pattern.eType);
 			return;
 		}
 	}
 
-	// error : Á¤»óÀûÀ¸·Î »ı¼ºµÇÁö ¾ÊÀ½
+	// error : ì •ìƒì ìœ¼ë¡œ ìƒì„±ë˜ì§€ ì•ŠìŒ
 	m_patternDeque.push_back(CMonsterB2::MONSTER_B2_STATE(0));
 }
 
@@ -335,24 +333,10 @@ _int CB2_AI::Update_Component(const _float& fTimeDelta)
 
 void CB2_AI::Update_Idle(const _float& fTimeDelta)
 {
-	//if (m_bChase)
-	//{	// Å¸°ÙÀ» ÀÌ¹Ì ¹ß°ßÇßÀ» ¶§
-	//	if (m_fDistance <= m_fInteractRange)
-	//	{
-	//		if (m_fAcmlTime >= 1.f)
-	//		{
-	//			if (!m_patternDeque.empty())
-	//			{
-	//				Change_State(m_patternDeque.front());
-	//				m_patternDeque.pop_front();
-	//			}
-	//		}
-	//	}
-	//}
 	if(!m_bChase)
-	{	// Å¸°ÙÀ» ¹ß°ßÇÏÁö ¸øÇßÀ» ¶§
+	{	// íƒ€ê²Ÿì„ ë°œê²¬í•˜ì§€ ëª»í–ˆì„ ë•Œ
 		if (m_fDistance <= m_fDetectRange)
-		{	// Å¸°ÙÀÌ °¨Áö ¹üÀ§ ³»·Î ÁøÀÔ ½Ã ¹ß°ß
+		{	// íƒ€ê²Ÿì´ ê°ì§€ ë²”ìœ„ ë‚´ë¡œ ì§„ì… ì‹œ ë°œê²¬
 			m_bChase = true;
 		}
 	}
@@ -361,6 +345,13 @@ void CB2_AI::Update_Idle(const _float& fTimeDelta)
 void CB2_AI::Update_Dig(const _float& fTimeDelta)
 {
 	if (m_fAcmlTime >= 5.f) Change_State(CMonsterB2::B2S_ESCAPE);
+	else if (m_fAcmlTime >= 1.5f)
+	{
+		_vec3 vPos;
+		m_pOwnerTC->Get_Info(INFO_POS, &vPos);
+		D3DXVec3Lerp(&vPos, &vPos, &m_vLerpPos, m_fSpeed);
+		m_pOwnerTC->Set_Pos(vPos.x, vPos.y, vPos.z);
+	}
 }
 
 void CB2_AI::Update_Escape(const _float& fTimeDelta)
@@ -369,10 +360,46 @@ void CB2_AI::Update_Escape(const _float& fTimeDelta)
 
 void CB2_AI::Update_Hit(const _float& fTimeDelta)
 {
+	if (m_fAcmlTime >= 3.f)
+	{
+		if (!m_patternDeque.empty())
+		{
+			Change_State(m_patternDeque.front());
+			m_patternDeque.pop_front();
+		}
+	}
 }
 
 void CB2_AI::Update_Smash(const _float& fTimeDelta)
 {
+	if (m_bOnce)
+	{
+		if (m_pOwner)
+		{
+			_vec3 vPos;
+			m_pOwnerTC->Get_Info(INFO_POS, &vPos);
+			vPos.y += 2.5f;
+
+			switch (m_iSwitch)
+			{
+			case 1:
+				vPos.x -= 5.f;
+				m_pOwner->Attack_HitBox(vPos);
+				break;
+
+			case 2:
+				vPos.x += 5.f;
+				m_pOwner->Attack_HitBox(vPos);
+				break;
+
+			case 3:
+				m_pOwner->Attack_HitBox(vPos);
+				break;
+			}
+		}
+
+		m_bOnce = false;
+	}
 }
 
 void CB2_AI::Update_Shoot(const _float& fTimeDelta)
@@ -380,7 +407,7 @@ void CB2_AI::Update_Shoot(const _float& fTimeDelta)
 	if (m_bOnce)
 	{
 		if (m_pOwner)
-			m_pOwner->Launch_Projectile(30, Compute_TargetDir());
+			m_pOwner->Launch_Projectile(10, Compute_TargetDir());
 
 		m_bOnce = false;
 	}
@@ -496,6 +523,13 @@ void CB2_AI::Set_Weight(CMonsterB2::MONSTER_B2_STATE eState, _uint iNewWeight)
 			return;
 		}
 	}
+}
+
+void CB2_AI::Set_Signal(_uint iNum)
+{
+	m_bOnce = true;
+
+	if (iNum != 0) m_iSwitch = iNum;
 }
 
 CB2_AI* CB2_AI::Create(LPDIRECT3DDEVICE9 pGraphicDev, const _float& fDetectRange, const _float& fInteractRange, const _uint& iInitState)
