@@ -3,6 +3,7 @@
 #include "CProtoMgr.h"
 #include "CRenderer.h"
 #include "CFontUI.h"
+#include "CSpeechBubble.h"
 
 CBishop_Leshy::CBishop_Leshy(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev), m_pBufferCom(nullptr), m_pTransformCom(nullptr), m_pTextureCom(nullptr)
@@ -39,13 +40,14 @@ HRESULT CBishop_Leshy::Ready_GameObject()
 
 	m_pFontUI->Set_Font(L"Font_Lapture30");
 	m_pFontUI->Set_FontColor(D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
+	//DT_CENTER | DT_VCENTER
 	m_pFontUI->Set_Flags(DT_CENTER | DT_BOTTOM);
 	m_pFontUI->Set_Scale(_vec2(200.f, 100.f));
 
 	vPos.y += 2.f;
 	m_pFontUI->Set_WorldPos(vPos);
 
-	//DT_CENTER | DT_VCENTER
+	m_pSpeechBubble = CSpeechBubble::Create(m_pGraphicDev, );
 
 	return S_OK;
 }

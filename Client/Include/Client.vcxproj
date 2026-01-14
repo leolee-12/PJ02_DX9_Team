@@ -257,7 +257,6 @@
     <ClInclude Include="..\Header\LoadObjectList.h" />
     <ClInclude Include="..\Header\PlayerUI.h" />
     <ClInclude Include="..\Header\CSpeechBubble.h" />
-    <ClInclude Include="..\Header\TestCube.h" />
     <ClInclude Include="..\Header\CTile.h" />
     <ClInclude Include="..\Header\CTileMgr.h" />
     <ClInclude Include="..\Header\CMapObject.h" />
@@ -281,6 +280,7 @@
     <ClCompile Include="..\Code\CCookingCover.cpp" />
     <ClCompile Include="..\Code\CCookingGauge.cpp" />
     <ClCompile Include="..\Code\CCookingGaugeBack.cpp" />
+    <ClCompile Include="..\Code\CCookingInfoRecipe.cpp" />
     <ClCompile Include="..\Code\CCookingMarker.cpp" />
     <ClCompile Include="..\Code\CCookingMiniGameUI.cpp" />
     <ClCompile Include="..\Code\CCookingInfoCardBack.cpp" />
@@ -293,6 +293,7 @@
     <ClCompile Include="..\Code\CBishop_Kallamar.cpp" />
     <ClCompile Include="..\Code\CBishop_Leshy.cpp" />
     <ClCompile Include="..\Code\CBishop_Shamura.cpp" />
+    <ClCompile Include="..\Code\CCookingTargetFood.cpp" />
     <ClCompile Include="..\Code\CCutSceneMgr.cpp" />
     <ClCompile Include="..\Code\CCookingUIController.cpp" />
     <ClCompile Include="..\Code\CDivider.cpp" />
@@ -378,8 +379,6 @@
     <ClCompile Include="..\Code\CTileMgr.cpp" />
     <ClCompile Include="..\Code\CMapObject.cpp" />
     <ClCompile Include="..\Code\CGrass.cpp" />
-    <ClCompile Include="..\Header\CCookingTargetFood.cpp" />
-    <ClCompile Include="..\Header\CCookingInfoRecipe.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

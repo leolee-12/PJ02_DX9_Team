@@ -23,6 +23,10 @@ public:
 	virtual			void		OnCollision(CGameObject* pObject);
 
 public:
+	void			Active() { m_bActive = true; }
+	void			UnActive() { m_bActive = false; }
+
+public:
 	static CSpeechBubble* Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 _vPos, _float _fScale);
 
 private:
@@ -36,6 +40,7 @@ private:
 	CTransform* m_pTransformCom;
 	CTexture* m_pTextureCom;
 
+	_bool m_bActive;
 	_vec3 m_vTargetPos;
 	_vec3 m_vPos;
 	_float m_fScale;

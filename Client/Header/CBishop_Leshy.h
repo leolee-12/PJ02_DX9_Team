@@ -10,6 +10,7 @@ namespace Engine
 }
 
 class CFontUI;
+class CSpeechBubble;
 
 class CBishop_Leshy :
 	public CGameObject
@@ -45,6 +46,7 @@ private:
 	CTextureSet* m_pTextureCom;
 
 	CFontUI* m_pFontUI;
+	CSpeechBubble* m_pSpeechBubble;
 
 	wstring      m_strStateKey;
 	_int		 m_iFrame;
