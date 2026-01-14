@@ -29,6 +29,7 @@
 #include "CBishop_Kallamar.h"
 #include "CBishop_Shamura.h"
 #include "CCookingUIController.h"
+#include "CSpeechBubble.h"
 
 
 CDungeon::CDungeon(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -408,6 +409,14 @@ HRESULT CDungeon::Ready_UI_Layer(const _tchar* pLayerTag)
 		return E_FAIL;
 
 	if (FAILED(pLayer->Add_GameObject(L"CookingUIController", pGameObject)))
+		return E_FAIL;
+
+	pGameObject = CSpeechBubble::Create(m_pGraphicDev, {10,1,10},0.5f);
+
+	if (nullptr == pGameObject)
+		return E_FAIL;
+
+	if (FAILED(pLayer->Add_GameObject(L"TestBubble", pGameObject)))
 		return E_FAIL;
 	 
 

@@ -9,6 +9,8 @@ namespace Engine
 	class CTextureSet;
 }
 
+class CSpeechBubble;
+
 class CBishop_Leshy :
 	public CGameObject
 {
@@ -51,5 +53,7 @@ private:
 	Bishops::BISHOPSSTATE  m_ePreState;
 
 	Engine::SPAWNDATA      m_tSpawndata;
+
+	CSpeechBubble* m_pSpeechBubble;
 };
 

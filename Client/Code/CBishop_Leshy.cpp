@@ -2,6 +2,7 @@
 #include "CBishop_Leshy.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
+#include "CSpeechBubble.h"
 
 CBishop_Leshy::CBishop_Leshy(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev), m_pBufferCom(nullptr), m_pTransformCom(nullptr), m_pTextureCom(nullptr)
@@ -26,6 +27,12 @@ HRESULT CBishop_Leshy::Ready_GameObject()
 	m_pTransformCom->Set_Pos(m_tSpawndata.x * 0.8f, 2.f, m_tSpawndata.z * 0.8f);
 
 	m_eCurState = Bishops::BS_IDLE;
+
+	CGameObject* pGameObject = nullptr;
+
+	pGameObject = CSpeechBubble::Create(m_pGraphicDev, {m_vPos.x,m_vPos.y+10,m_vPos.z},0.5f);
+	if (nullptr == pGameObject)
+		return E_FAIL;
 
 	return S_OK;
 }
