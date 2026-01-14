@@ -399,15 +399,16 @@ void CMultiLoadingThread::Loading_for_Dungeon()
 	m_iTotalProtoCount++;
 
 	vector<TEXSETLR> vecBossLeshy;
-	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Idle",		L"../Bin/Resource/Texture/Monster/Boss2/idle/idle_%04d.png", 80));
-	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_MoveStart",	L"../Bin/Resource/Texture/Monster/Boss2/move-out/move-out_%04d.png", 40));
-	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_MoveEnd",	L"../Bin/Resource/Texture/Monster/Boss2/move-in/move-in_%04d.png", 40));
-	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Hit",		L"../Bin/Resource/Texture/Monster/Boss2/hurt/hurt_%04d.png", 16));
-	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Smash",		L"../Bin/Resource/Texture/Monster/Boss2/head-smash/head-smash_%04d.png", 62));
-	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Spike",		L"../Bin/Resource/Texture/Monster/Boss2/trunk-strike/trunk-strike_%04d.png", 51));
-	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Spawn",		L"../Bin/Resource/Texture/Monster/Boss2/transform/transform_%04d.png", 128));
-	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Die",		L"../Bin/Resource/Texture/Monster/Boss2/die/die_%04d.png", 132));
-	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Dead",		L"../Bin/Resource/Texture/Monster/Boss2/dead/dead_%04d.png", 24));
+	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Idle",		L"../Bin/Resource/Texture/Monster/Boss2(2)/idle/idle_%04d.png", 80));
+	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Dig",		L"../Bin/Resource/Texture/Monster/Boss2(2)/move-out/move-out_%04d.png", 40));
+	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Escape",	L"../Bin/Resource/Texture/Monster/Boss2(2)/move-in/move-in_%04d.png", 40));
+	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Hit",		L"../Bin/Resource/Texture/Monster/Boss2(2)/hurt/hurt_%04d.png", 16));
+	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Smash",		L"../Bin/Resource/Texture/Monster/Boss2(2)/head-smash/head-smash_%04d.png", 62));
+	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Spike",		L"../Bin/Resource/Texture/Monster/Boss2(2)/trunk-strike/trunk-strike_%04d.png", 51));
+	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Summon",	L"../Bin/Resource/Texture/Monster/Boss2(2)/summon/summon_%04d.png", 71));
+	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Spawn",		L"../Bin/Resource/Texture/Monster/Boss2(2)/transform/transform_%04d.png", 128));
+	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Die",		L"../Bin/Resource/Texture/Monster/Boss2(2)/die-noheart/die-noheart_%04d.png", 132));
+	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Dead",		L"../Bin/Resource/Texture/Monster/Boss2(2)/dead/dead_%04d.png", 24));
 	m_TexSetLoadingqueue.push(make_pair(TEXSETINFO(L"Proto_MonsterB2Texture", TEX_NORMAL), vecBossLeshy));
 	m_iTotalProtoCount++;
 }

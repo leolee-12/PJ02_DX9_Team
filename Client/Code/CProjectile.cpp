@@ -87,6 +87,8 @@ _int CProjectile::Update_GameObject(const _float& fTimeDelta)
 
 void CProjectile::LateUpdate_GameObject(const _float& fTimeDelta)
 {
+	if (m_bUseGravity) m_vSpeed.y += m_fGravity * fTimeDelta;
+
 	m_pTransformCom->Move_Pos(&m_vSpeed, fTimeDelta, 1.f);
 	m_pTransformCom->Compute_Bilboard(BBD_X);
 	m_pTransformCom->Get_Info(INFO_POS, &m_vPos);
@@ -162,8 +164,8 @@ void CProjectile::Ready_Variable()
 	m_iAttack = 1;
 	m_iHp = 1;
 	m_fAcmlTime = 0.f;
-	m_fLifeTime = 5.f;
-	m_fGravity = 9.8f;
+	m_fLifeTime = 10.f;
+	m_fGravity = -9.8f;
 
 	// Transform ¼¼ÆÃ
 	m_pTransformCom->Set_Pos(_float(rand() % 20), m_fGroundY, _float(rand() % 20));

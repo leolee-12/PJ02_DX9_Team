@@ -50,13 +50,13 @@ HRESULT CB2_AI::Ready_AI(const _float& fDetectRange, const _float& fInteractRang
 	// 공격 패턴 설정
 	m_iDequeMinSize = 3;
 	//m_vecAtkPatterns.push_back({ CMonsterB2::B2S_SMASH, 40, true });
-	//m_vecAtkPatterns.push_back({ CMonsterB2::B2S_SHOOT, 40, true });
-	m_vecAtkPatterns.push_back({ CMonsterB2::B2S_SUMMON, 40, true });
+	m_vecAtkPatterns.push_back({ CMonsterB2::B2S_SHOOT, 40, true });
+	//m_vecAtkPatterns.push_back({ CMonsterB2::B2S_SUMMON, 40, true });
 
 	// 시연용 : 모든 패턴이 순차적으로 실행
-	m_patternDeque.push_back(CMonsterB2::B2S_SUMMON);
+	//m_patternDeque.push_back(CMonsterB2::B2S_SUMMON);
 	//m_patternDeque.push_back(CMonsterB2::B2S_SMASH);
-	//m_patternDeque.push_back(CMonsterB2::B2S_SHOOT);
+	m_patternDeque.push_back(CMonsterB2::B2S_SHOOT);
 
 	// 게임용 : 가중치와 난수를 통해 패턴을 채워줌
 	Refill_Pattern(true);
@@ -73,17 +73,15 @@ void CB2_AI::Enter_State(const _uint& iState)
 
 	case CMonsterB2::B2S_DIG:
 	{
+		m_fAcmlTime = 0.f;
+
 		m_fSpeed = 0.05f;
 		_vec3 vPrevPos, vDesiredDir;
-
-		if ((!m_bChase) || (m_fAcmlTime < 2.f))			vDesiredDir = Randomize_Dir();
-		else if ((m_bChase) && (m_fAcmlTime >= 2.f))	vDesiredDir = Compute_TargetDir();
-
 		m_pOwnerTC->Get_Info(INFO_POS, &vPrevPos);
+		vDesiredDir = Randomize_Dir();
+
 		m_vDir = Compute_LimitedDir(120.f, m_vDir, vDesiredDir);
-		m_vLerpPos = vPrevPos + m_vDir * 3.f;
-		m_vLerpPos.x += Get_Rand_Int(-5, 5) * 0.3f;	// -1.5f ~ 1.5f 난수
-		m_vLerpPos.z += Get_Rand_Int(-5, 5) * 0.3f;	// -1.5f ~ 1.5f 난수
+		m_vLerpPos = vPrevPos + m_vDir * 5.f;
 	}
 	break;
 	case CMonsterB2::B2S_ESCAPE:
@@ -108,8 +106,6 @@ void CB2_AI::Enter_State(const _uint& iState)
 
 	case CMonsterB2::B2S_SUMMON:
 	{
-		m_fAcmlTime = 0.f;
-		m_bOnce = true;
 	}
 	break;
 
@@ -134,6 +130,8 @@ void CB2_AI::Enter_State(const _uint& iState)
 	case CMonsterB2::B2S_SPIKE2:
 		break;
 	}
+
+	m_bReceived = false;
 }
 
 void CB2_AI::Exit_State(const _uint& iState)
@@ -337,21 +335,21 @@ _int CB2_AI::Update_Component(const _float& fTimeDelta)
 
 void CB2_AI::Update_Idle(const _float& fTimeDelta)
 {
-	if (m_bChase)
-	{	// 타겟을 이미 발견했을 때
-		if (m_fDistance <= m_fInteractRange)
-		{
-			if (m_fAcmlTime >= 1.f)
-			{
-				if (!m_patternDeque.empty())
-				{
-					Change_State(m_patternDeque.front());
-					m_patternDeque.pop_front();
-				}
-			}
-		}
-	}
-	else
+	//if (m_bChase)
+	//{	// 타겟을 이미 발견했을 때
+	//	if (m_fDistance <= m_fInteractRange)
+	//	{
+	//		if (m_fAcmlTime >= 1.f)
+	//		{
+	//			if (!m_patternDeque.empty())
+	//			{
+	//				Change_State(m_patternDeque.front());
+	//				m_patternDeque.pop_front();
+	//			}
+	//		}
+	//	}
+	//}
+	if(!m_bChase)
 	{	// 타겟을 발견하지 못했을 때
 		if (m_fDistance <= m_fDetectRange)
 		{	// 타겟이 감지 범위 내로 진입 시 발견
@@ -382,7 +380,7 @@ void CB2_AI::Update_Shoot(const _float& fTimeDelta)
 	if (m_bOnce)
 	{
 		if (m_pOwner)
-			m_pOwner->Launch_Projectile(20);
+			m_pOwner->Launch_Projectile(30, Compute_TargetDir());
 
 		m_bOnce = false;
 	}
@@ -431,15 +429,28 @@ void CB2_AI::Anim_End(CMonsterB2::MONSTER_B2_STATE eState)
 {
 	switch (eState)
 	{
+	case CMonsterB2::B2S_IDLE:
+	{
+		if ((m_bChase) && (m_fDistance <= m_fInteractRange))
+		{
+			if (!m_patternDeque.empty())
+			{
+				Change_State(m_patternDeque.front());
+				m_patternDeque.pop_front();
+			}
+		}
+	}
+	break;
+
 	case CMonsterB2::B2S_ESCAPE:
 	case CMonsterB2::B2S_HIT:
+	case CMonsterB2::B2S_SPAWN:
 		Change_State(CMonsterB2::B2S_IDLE);
 		break;
 
 	case CMonsterB2::B2S_SMASH:
 	case CMonsterB2::B2S_SHOOT:
 	case CMonsterB2::B2S_SUMMON:
-	case CMonsterB2::B2S_SPAWN:
 	case CMonsterB2::B2S_SPIKE1:
 	case CMonsterB2::B2S_SPIKE2:
 		Change_State(CMonsterB2::B2S_DIG);

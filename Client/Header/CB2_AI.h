@@ -30,6 +30,10 @@ public:
 	void		Anim_End(CMonsterB2::MONSTER_B2_STATE eState);
 	void		Push_Front_Pattern(CMonsterB2::MONSTER_B2_STATE eState);
 	void		Set_Weight(CMonsterB2::MONSTER_B2_STATE eState, _uint iNewWeight);
+	
+	void		Set_Signal() { if (!m_bReceived) m_bOnce = true; m_bReceived = true; }
+	// Owner가 특정 순간에 AI에게 신호를 보내는 용도
+
 private:
 	_int		Update_Component(const _float& fTimeDelta)	override;
 	void		Update_Idle(const _float& fTimeDelta);
@@ -62,7 +66,8 @@ private:
 	vector<B2_ATKPATTERN>	m_vecAtkPatterns;
 	_uint		m_iDequeMinSize;
 	CMonsterB2*	m_pOwner;
-	_bool		m_bOnce;			
+	_bool		m_bOnce;
+	_bool		m_bReceived;
 
 public:
 	static CB2_AI*	Create(LPDIRECT3DDEVICE9 pGraphicDev, const _float& fDetectRange, const _float& fInteractRange, const _uint& iInitState = 0);

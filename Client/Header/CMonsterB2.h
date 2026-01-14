@@ -44,7 +44,7 @@ public:
 	virtual void		Render_GameObject();
 	virtual void		OnCollision(CGameObject* pObject) {};
 
-	void				Launch_Projectile(const _uint& iCount);
+	void				Launch_Projectile(const _uint& iCount, const _vec3& vTargetDir);
 	void				Summon_Minion(const _uint& iCount);
 
 private:

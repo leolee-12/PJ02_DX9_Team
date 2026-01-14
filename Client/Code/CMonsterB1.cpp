@@ -8,7 +8,7 @@
 #include "CNode.h"
 #include "CB1_AI.h"
 #include "CProjectile.h"
-#include <CMonsterN2.h>
+#include "CMonsterN2.h"
 
 CMonsterB1::CMonsterB1(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CMonster(pGraphicDev),

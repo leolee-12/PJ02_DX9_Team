@@ -133,11 +133,11 @@ void CMonsterB2::Render_GameObject()
 	Set_TextureSet();
 	//Set_Material();
 
-	m_pGraphicDev->SetTextureStageState(0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_COUNT2);
+	//m_pGraphicDev->SetTextureStageState(0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_COUNT2);
 
 	m_pBufferCom->Render_Buffer();
 
-	m_pGraphicDev->SetTextureStageState(0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE);
+	//m_pGraphicDev->SetTextureStageState(0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE);
 
 	//Reset_Material();
 }
@@ -331,6 +331,8 @@ void CMonsterB2::Move_Frame(const _float& fTimeDelta)
 {
 	m_fFrame += m_fFrameSpeed * fTimeDelta;
 
+	if(m_eCurState == B2S_IDLE) m_fFrame += m_fFrameSpeed * fTimeDelta;
+
 	m_fAcmlTime += fTimeDelta;
 
 	if (m_fFrame >= m_fFrameEnd)
@@ -339,12 +341,17 @@ void CMonsterB2::Move_Frame(const _float& fTimeDelta)
 
 		switch (m_eCurState)
 		{
+		case B2S_IDLE:
+			m_pAICom->Anim_End(m_eCurState);
+			break;
+
 		case B2S_DIG:
 			m_fFrame = m_fFrameEnd;
 			break;
 
 		case B2S_ESCAPE:
 		case B2S_HIT:
+		case B2S_SPAWN:
 		{
 			m_pAICom->Anim_End(m_eCurState);
 			m_eCurState = B2S_IDLE;
@@ -354,7 +361,6 @@ void CMonsterB2::Move_Frame(const _float& fTimeDelta)
 		case B2S_SMASH:
 		case B2S_SHOOT:
 		case B2S_SUMMON:
-		case B2S_SPAWN:
 		case B2S_SPIKE1:
 		case B2S_SPIKE2:
 		{
@@ -383,7 +389,20 @@ void CMonsterB2::Move_Frame(const _float& fTimeDelta)
 			m_pAICom->Anim_End(m_eCurState);
 			m_eCurState = B2S_ESCAPE;
 		}
-			break;
+		break;
+		}
+	}
+	else
+	{
+		switch (m_eCurState)
+		{
+		case B2S_SHOOT:
+		case B2S_SUMMON:
+		{
+			if (m_fFrame >= 56.f)
+				m_pAICom->Set_Signal();
+		}
+		break;
 		}
 	}
 }
@@ -392,24 +411,7 @@ void CMonsterB2::Set_TextureSet()
 {
 	wstring strPreKey = m_strFrameKey;
 
-	_vec3 vDir = *(m_pAICom->Get_Dir());		// AI로부터 받아온 방향
-	_bool bFlipX = vDir.x > 0.f ? true : false;	// 반전 여부
 	_uint iFrame = _uint(m_fFrame);				// 현재 프레임
-	_uint iTexIdx = _uint(m_eCurState);			// 텍스처 인덱스
-
-	D3DXMatrixIdentity(&m_matTex);
-	_uint iU = iFrame % 16;
-	_uint iV = iFrame / 16;
-
-	//	L"BossLeshy_Idle",
-//		L"BossLeshy_MoveStart",
-//		L"BossLeshy_MoveEnd",
-//		L"BossLeshy_Hit",
-//		L"BossLeshy_Smash",
-//		L"BossLeshy_Shoot",
-//		L"BossLeshy_Spawn",
-//		L"BossLeshy_Die",
-//		L"BossLeshy_Dead",
 
 	switch (m_eCurState)
 	{
@@ -418,11 +420,11 @@ void CMonsterB2::Set_TextureSet()
 		break;
 
 	case B2S_DIG:
-		m_strFrameKey = L"BossLeshy_MoveStart";
+		m_strFrameKey = L"BossLeshy_Dig";
 		break;
 
 	case B2S_ESCAPE:
-		m_strFrameKey = L"BossLeshy_MoveEnd";
+		m_strFrameKey = L"BossLeshy_Escape";
 		break;
 
 	case B2S_SMASH:
@@ -430,7 +432,7 @@ void CMonsterB2::Set_TextureSet()
 		break;
 
 	case B2S_SHOOT:
-		m_strFrameKey = L"BossLeshy_Shoot";
+		m_strFrameKey = L"BossLeshy_Summon";
 		break;
 
 	case B2S_SUMMON:
@@ -450,13 +452,22 @@ void CMonsterB2::Set_TextureSet()
 		break;
 	}
 
-	if (bFlipX)
-	{
-		m_matTex._11 *= -1.f;
-		m_matTex._31 = 1.f;	// 반전 O : 오른쪽에서 왼쪽으로 읽음
-	}
+	if (m_strFrameKey != strPreKey) m_fFrame = 0.f;
 
-	m_pGraphicDev->SetTransform(D3DTS_TEXTURE0, &m_matTex);
+	m_fFrameEnd = m_pTexSetCom->Get_TextureEnd(m_strFrameKey);
+
+	//_vec3 vDir = *(m_pAICom->Get_Dir());		// AI로부터 받아온 방향
+	//_bool bFlipX = vDir.x > 0.f ? true : false;	// 반전 여부
+	//
+	//if (bFlipX)
+	//{
+	//	m_matTex._11 *= -1.f;
+	//	m_matTex._31 = 1.f;	// 반전 O : 오른쪽에서 왼쪽으로 읽음
+	//}
+	//
+	//m_pGraphicDev->SetTransform(D3DTS_TEXTURE0, &m_matTex);
+	//
+	//D3DXMatrixIdentity(&m_matTex);
 
 	m_pTexSetCom->Set_Texture(m_strFrameKey, _uint(m_fFrame));
 }
@@ -604,21 +615,26 @@ void CMonsterB2::Check_Phase()
 	}
 }
 
-void CMonsterB2::Launch_Projectile(const _uint& iCount)
+void CMonsterB2::Launch_Projectile(const _uint& iCount, const _vec3& vTargetDir)
 {
 	if (iCount > 1000) return;
 
-	_float fRadian = 0.f;
-	_float fGap = 2.f * D3DX_PI / iCount;
-	_float fProjectileSpeed = 5.f;
-	_vec3 vPos{ m_vPos.x, m_vPos.y - m_fGroundY, m_vPos.z };
+	_float fBaseSpeed = 6.f;
+	_float fBaseYSpeed = 6.f;
+	_vec3 vPos{ m_vPos.x, m_vPos.y + 10.f, m_vPos.z };
 
 
 	for (_uint i = 0; i < iCount; ++i)
 	{
-		_vec3 vSpeed{ cosf(fRadian) * fProjectileSpeed, 0.f, sinf(fRadian) * fProjectileSpeed };
+		_float fRandX = Get_Rand_Float(-3.f, 3.f);
+		_float fRandY = Get_Rand_Float(-3.f, 3.f);
+		_float fRandZ = Get_Rand_Float(-3.f, 3.f);
 
-		CGameObject* pProjectile = CProjectile::Create(m_pGraphicDev, vPos, vSpeed, false);
+		_vec3 vSpeed{	vTargetDir.x * fBaseSpeed + fRandX,
+						fBaseYSpeed + fRandY,
+						vTargetDir.z * fBaseSpeed + fRandZ };
+
+		CGameObject* pProjectile = CProjectile::Create(m_pGraphicDev, vPos, vSpeed, true);
 
 		if (pProjectile)
 		{
@@ -630,8 +646,6 @@ void CMonsterB2::Launch_Projectile(const _uint& iCount)
 			EProjectile.hmapData.emplace(L"ObjTag", L"Projectile");
 			m_pMessageChannel->Publish(EProjectile);
 		}
-
-		fRadian += fGap;
 	}
 }
 
@@ -663,7 +677,6 @@ void CMonsterB2::Summon_Minion(const _uint& iCount)
 		fRadian += fGap;
 	}
 }
-
 
 CMonsterB2* CMonsterB2::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel)
 {
