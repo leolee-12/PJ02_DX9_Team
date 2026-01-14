@@ -8,6 +8,14 @@ namespace Engine
 	class CTexture;
 }
 
+enum FOODTYPE
+{
+	FT_NOMAL,
+	FT_COUNT,
+	FT_QUALITY,
+	FT_END
+};
+
 class CCookingTargetFood :
 	public CUi
 {
@@ -23,7 +31,7 @@ public:
 	virtual			void		OnCollision(CGameObject* pObject);
 
 public:
-	static CCookingTargetFood* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	static CCookingTargetFood* Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vPos, _float fScale, FOODTYPE ft, _int iQulity = 0);
 
 private:
 	virtual			void		Free();
@@ -35,5 +43,13 @@ private:
 	CRcTex* m_pBufferCom;
 	CTransform* m_pTransformCom;
 	CTexture* m_pTextureCom;
+
+	vector<CGameObject*> m_vecQualityStar;
+
+	_vec3 m_vPos;
+	_float m_fScale;
+	FOODTYPE m_eFoodType;
+	_int	m_iQualityStar;
+	_int	m_iCraftableCount;
 };
 

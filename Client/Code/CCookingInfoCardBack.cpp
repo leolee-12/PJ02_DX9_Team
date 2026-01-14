@@ -19,7 +19,7 @@ HRESULT CCookingInfoCardBack::Ready_GameObject()
 		return E_FAIL;
 
 	m_pTransformCom->Set_Scale(256*1.5f, 256*2.0f, 0.f);
-	m_pTransformCom->Set_Pos(WINCX / 4, 0, 0.1f);
+	m_pTransformCom->Set_Pos(WINCX / 4, 0, 0.5f);
 
 	return S_OK;
 }

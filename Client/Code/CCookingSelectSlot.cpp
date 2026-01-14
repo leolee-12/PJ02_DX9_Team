@@ -18,8 +18,8 @@ HRESULT CCookingSelectSlot::Ready_GameObject()
 	if (FAILED(Add_Component()))
 		return E_FAIL;
 
-	m_pTransformCom->Set_Scale(232 * 0.4, 232 * 0.4, 0.f);
-	m_pTransformCom->Set_Pos(-WINCX/4, WINCY/4, 0.4f);
+	m_pTransformCom->Set_Scale(232 * m_fScale, 232 * m_fScale, 0.f);
+	m_pTransformCom->Set_Pos(m_vPos.x, m_vPos.y, m_vPos.z);
 
 	return S_OK;
 }
@@ -106,9 +106,13 @@ HRESULT CCookingSelectSlot::Add_Component()
 
 
 
-CCookingSelectSlot* CCookingSelectSlot::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+CCookingSelectSlot* CCookingSelectSlot::Create(LPDIRECT3DDEVICE9 pGraphicDev,_vec3 vPos,_float fScale)
 {
 	CCookingSelectSlot* pCookingSlot = new CCookingSelectSlot(pGraphicDev);
+
+	pCookingSlot->m_vPos = vPos;
+	pCookingSlot->m_fScale = fScale;
+
 
 	if (FAILED(pCookingSlot->Ready_GameObject()))
 	{
