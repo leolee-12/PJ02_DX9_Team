@@ -18,6 +18,8 @@
 #include <list>
 #include <map>
 #include <algorithm>
+#include <thread>
+#include <atomic>
 
 #include <process.h>
 
@@ -40,6 +42,7 @@ extern HINSTANCE g_hInst;
 extern HWND g_hWnd;
 extern WNDCLASSEXW wndclass;
 extern bool g_bDebug;
+extern std::atomic<bool> g_bDistroyWindowFlag;
 
 using namespace std;
 

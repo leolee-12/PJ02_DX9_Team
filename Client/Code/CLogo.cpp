@@ -175,19 +175,7 @@ HRESULT CLogo::Ready_UI_Layer(const _tchar* pLayerTag)
 HRESULT CLogo::Ready_Prototype()
 {
 
-	if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_RcTex", Engine::CRcTex::Create(m_pGraphicDev, 100))))
-		return E_FAIL;
-
-	if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_RcTexUI", Engine::CRcTex::Create(m_pGraphicDev))))
-		return E_FAIL;
-
-	if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_RcCol", Engine::CRcCol::Create(m_pGraphicDev))))
-		return E_FAIL;
-
-	if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_RcColTitle", Engine::CRcColTitle::Create(m_pGraphicDev))))
-		return E_FAIL;
-
-	if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_MainMenuTex", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Mainmenu(2)/animation_%04d.png", 48))))
+	/*if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_MainMenuTex", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Mainmenu(2)/animation_%04d.png", 48))))
 		return E_FAIL;
 
 	if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_MainLogoTex", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Mainmenu/Logo.png", 1))))

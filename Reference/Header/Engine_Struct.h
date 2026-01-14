@@ -148,9 +148,10 @@ namespace Engine
 
 		TEXTUREID eTexType;
 
-		std::vector<std::vector<BYTE>> vecTexBuffer;
+		tagProtoLoadRequest()
+			: strProtoName(L""), strFilepath(L""), iTexIndex(0), eTexType(TEX_END)
+		{}
 
-		tagProtoLoadRequest() {}
 		tagProtoLoadRequest(const std::wstring& _strProtoName, const TEXTUREID _eTexType, const std::wstring& _strFilepath, const _int _iTexIndex)
 		{
 			strProtoName = _strProtoName;
@@ -166,9 +167,11 @@ namespace Engine
 		std::wstring strFilepath;
 		_int	iTexIndex;
 
-		std::vector<std::vector<BYTE>> vecTexBuffer;
+		tagProtoLoadRequestTexSet()
+			: strStateName(L""), strFilepath(L""), iTexIndex(0)
+		{
+		}
 
-		tagProtoLoadRequestTexSet() {}
 		tagProtoLoadRequestTexSet(const std::wstring& _strStateName, const std::wstring& _strFilepath, const _int _iTexIndex)
 		{
 			strStateName = _strStateName;
@@ -183,7 +186,11 @@ namespace Engine
 
 		TEXTUREID eTexType;
 
-		tagTexSetLoadInfo() {}
+		tagTexSetLoadInfo()
+			: strProtoName(L""), eTexType(TEX_END)
+		{
+		}
+
 		tagTexSetLoadInfo(const std::wstring& _strProtoName, const TEXTUREID _eTexType)
 		{
 			strProtoName = _strProtoName;

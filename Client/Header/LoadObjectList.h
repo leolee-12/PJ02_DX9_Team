@@ -128,3 +128,19 @@ set<wstring> Real_Dungeon_Texture =
 	L"Twig",
 	L"Weed"
 };
+
+// RealDungeon.txt
+set<wstring> RealDungeon_Texture =
+{
+};
+
+// AmdusiasRoom.txt
+set<wstring> AmdusiasRoom_Texture =
+{
+};
+
+// LeshyRoom.txt
+set<wstring> LeshyRoom_Texture =
+{
+};
+
