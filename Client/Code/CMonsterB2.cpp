@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "CMonsterB2.h"
 #include "CMonsterN1.h"
 #include "CMonsterN2.h"
@@ -76,13 +76,13 @@ _int CMonsterB2::Update_GameObject(const _float& fTimeDelta)
 
 	m_pColliderCom->UpdateFromTransform(m_pTransformCom);
 
-	//------½ºÇÁ¶óÀÌÆ® ³ôÀÌ¿Í Ãæµ¹Ã¼ À§Ä¡ ¸ÂÃã---------
+	//------ìŠ¤í”„ë¼ì´íŠ¸ ë†’ì´ì™€ ì¶©ëŒì²´ ìœ„ì¹˜ ë§žì¶¤---------
 	_float fY(m_vPos.y - m_pTransformCom->Get_Scale(ROT_Y) * 0.125f);
 	AABB tAABB = { m_vPos.x, fY, m_vPos.z, 2.5f, 2.5f, 2.5f };
 	m_pColliderCom->Set_AABB(tAABB);
 	//-------------------------------------------------
 
-	// Ãæµ¹Ã¼ µð¹ö±×¿ë
+	// ì¶©ëŒì²´ ë””ë²„ê·¸ìš©
 	if (g_bDebug) m_pColliderCom->Update_AABBforRender();
 
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
@@ -142,6 +142,11 @@ void CMonsterB2::Render_GameObject()
 	//Reset_Material();
 }
 
+void CMonsterB2::OnCollision(CGameObject* pObject)
+{
+	CMonster::OnCollision(pObject);
+}
+
 HRESULT CMonsterB2::Add_Component()
 {
 	Engine::CComponent* pComponent = nullptr;
@@ -191,7 +196,7 @@ HRESULT CMonsterB2::Add_Component()
 
 void CMonsterB2::Ready_Variable()
 {
-	// °ÔÀÓ·ÎÁ÷ º¯¼ö ¼¼ÆÃ
+	// ê²Œìž„ë¡œì§ ë³€ìˆ˜ ì„¸íŒ…
 	_float fScale = 50.f;
 	m_fBtmPadding = fScale * 0.51f;
 	m_fGroundY = -2.5f + fScale * 0.5f - m_fBtmPadding;
@@ -199,27 +204,27 @@ void CMonsterB2::Ready_Variable()
 	m_iMaxHp = m_iHp = 10;
 	m_iPhase = 1;
 
-	// Transform ¼¼ÆÃ
+	// Transform ì„¸íŒ…
 	m_pTransformCom->Set_Pos(_float(rand() % 10), m_fGroundY, _float(rand() % 10));
 	m_pTransformCom->Set_Scale(fScale, fScale, fScale);
 
-	// Collider ¼¼ÆÃ
+	// Collider ì„¸íŒ…
 	m_pColliderCom->RegisterToManager(this, CL_MONSTER);
 	AABB tAABB = { m_vPos.x, m_vPos.y - 1.f, m_vPos.z, 2.5f, 2.5f, 2.5f };
 	m_pColliderCom->Set_AABB(tAABB);
 
-	// AI ¼¼ÆÃ
+	// AI ì„¸íŒ…
 	m_pAICom->Set_Owner(this);
 	m_pAICom->Set_OwnerTransform(m_pTransformCom);
 	m_pAICom->Set_TargetTransform(CPersistentMgr::GetInstance()->Get_PlayerTransform());
 	m_pAICom->Set_State<MONSTER_B2_STATE>(B2S_SPAWN);
 	m_pAICom->Set_GroundY(m_fGroundY);
 
-	// Anim °ü·Ã ¼¼ÆÃ
+	// Anim ê´€ë ¨ ì„¸íŒ…
 	m_fFrameSpeed = 24.f;
 	D3DXMatrixIdentity(&m_matTex);
 
-	// ¸¶µð ¼¼ÆÃ
+	// ë§ˆë”” ì„¸íŒ…
 	//_vec3 vScale{};
 	//_float fScaleReduction(0.8f);
 	//m_pTransformCom->Get_Scale(&vScale);
@@ -411,7 +416,7 @@ void CMonsterB2::Set_TextureSet()
 {
 	wstring strPreKey = m_strFrameKey;
 
-	_uint iFrame = _uint(m_fFrame);				// ÇöÀç ÇÁ·¹ÀÓ
+	_uint iFrame = _uint(m_fFrame);				// í˜„ìž¬ í”„ë ˆìž„
 
 	switch (m_eCurState)
 	{
@@ -456,13 +461,13 @@ void CMonsterB2::Set_TextureSet()
 
 	m_fFrameEnd = m_pTexSetCom->Get_TextureEnd(m_strFrameKey);
 
-	//_vec3 vDir = *(m_pAICom->Get_Dir());		// AI·ÎºÎÅÍ ¹Þ¾Æ¿Â ¹æÇâ
-	//_bool bFlipX = vDir.x > 0.f ? true : false;	// ¹ÝÀü ¿©ºÎ
+	//_vec3 vDir = *(m_pAICom->Get_Dir());		// AIë¡œë¶€í„° ë°›ì•„ì˜¨ ë°©í–¥
+	//_bool bFlipX = vDir.x > 0.f ? true : false;	// ë°˜ì „ ì—¬ë¶€
 	//
 	//if (bFlipX)
 	//{
 	//	m_matTex._11 *= -1.f;
-	//	m_matTex._31 = 1.f;	// ¹ÝÀü O : ¿À¸¥ÂÊ¿¡¼­ ¿ÞÂÊÀ¸·Î ÀÐÀ½
+	//	m_matTex._31 = 1.f;	// ë°˜ì „ O : ì˜¤ë¥¸ìª½ì—ì„œ ì™¼ìª½ìœ¼ë¡œ ì½ìŒ
 	//}
 	//
 	//m_pGraphicDev->SetTransform(D3DTS_TEXTURE0, &m_matTex);
@@ -479,7 +484,7 @@ void CMonsterB2::Set_Material()
 	_float fMax = 1.f;
 	_float fRatio = min(m_fAcmlTime / 2.f, 1.f);
 
-	// ÅØ½ºÃ³ »ö»ó È¥ÇÕ
+	// í…ìŠ¤ì²˜ ìƒ‰ìƒ í˜¼í•©
 	m_pGraphicDev->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_ADD);
 	m_pGraphicDev->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
 	m_pGraphicDev->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_TFACTOR);
@@ -543,9 +548,9 @@ _vec3 CMonsterB2::Compute_LimitedDir(const _float& fMaxAngle, const _vec3& vCurD
 	_float fMaxRad = D3DXToRadian(fMaxAngle);
 
 	if (fRad <= fMaxRad)
-		return v2;	// ÃÖ´ë È¸Àü °¢µµº¸´Ù ÀÛÀ¸¸é ±×´ë·Î »ç¿ë
+		return v2;	// ìµœëŒ€ íšŒì „ ê°ë„ë³´ë‹¤ ìž‘ìœ¼ë©´ ê·¸ëŒ€ë¡œ ì‚¬ìš©
 
-	// ÃÖ´ë È¸Àü °¢µµº¸´Ù Å©¸é ÃÖ´ë È¸Àü °¢µµ·Î º¸Á¤
+	// ìµœëŒ€ íšŒì „ ê°ë„ë³´ë‹¤ í¬ë©´ ìµœëŒ€ íšŒì „ ê°ë„ë¡œ ë³´ì •
 	fRad = fMaxRad / fRad;
 
 	_vec3 vResult;
@@ -558,10 +563,10 @@ void CMonsterB2::Compute_NodePos(const _float& fTimeDelta)
 {	
 	return;
 
-	// Update¿¡¼­ È£ÃâÇÒ Node À§Ä¡ °è»ê ÇÔ¼ö
+	// Updateì—ì„œ í˜¸ì¶œí•  Node ìœ„ì¹˜ ê³„ì‚° í•¨ìˆ˜
 	_vec3 vCurPos;
-	_vec3 vPrevPos = m_vPos;						// LateUpdate¿¡¼­ °»½ÅµÇÁö ¾Ê¾ÒÀ¸¹Ç·Î ÀÌÀü À§Ä¡
-	m_pTransformCom->Get_Info(INFO_POS, &vCurPos);	// AIComÀÇ Update_Component¿¡¼­ °»½ÅµÈ ÇöÀç À§Ä¡
+	_vec3 vPrevPos = m_vPos;						// LateUpdateì—ì„œ ê°±ì‹ ë˜ì§€ ì•Šì•˜ìœ¼ë¯€ë¡œ ì´ì „ ìœ„ì¹˜
+	m_pTransformCom->Get_Info(INFO_POS, &vCurPos);	// AIComì˜ Update_Componentì—ì„œ ê°±ì‹ ëœ í˜„ìž¬ ìœ„ì¹˜
 	_vec3 vDir = *m_pAICom->Get_Dir();
 
 	_vec3 vHeadVelocity = vCurPos - m_vPos;

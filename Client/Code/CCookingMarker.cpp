@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CCookingMarker.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
@@ -27,8 +27,6 @@ HRESULT CCookingMarker::Ready_GameObject()
 
 	m_fMarkerOffset = 0.f;
 	m_fMoveSpeed = 2.0f;
-	m_fStopTime = 0.5f;
-	m_fCurStopTime = 0.f;
 	m_eCurMarkerState = MS_MOVELEFT;
 	m_ePreMarkerState = MS_END;
 	fMoveRange = 598 * 0.4 * 0.5;
@@ -84,11 +82,6 @@ void CCookingMarker::Move_Marker(const _float fTimeDelta)
 		break;
 
 	case CookingMarkerState::MS_STOP:
-		m_fCurStopTime += fTimeDelta;
-		if (m_fCurStopTime >= m_fStopTime)
-		{
-			m_eCurMarkerState = m_ePreMarkerState;
-		}
 		break;
 	}
 	float fX = m_fMarkerOffset * fMoveRange;
@@ -101,10 +94,13 @@ void CCookingMarker::Stop_Marker()
 	if (m_eCurMarkerState == MS_STOP)
 		return;
 
-
-	m_fCurStopTime = 0.0f;
 	m_ePreMarkerState = m_eCurMarkerState;
 	m_eCurMarkerState = MS_STOP;
+}
+
+void CCookingMarker::Resume_Marker()
+{
+	m_eCurMarkerState = m_ePreMarkerState;
 }
 
 float CCookingMarker::Get_MarkerPos()

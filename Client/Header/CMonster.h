@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "CGameObject.h"
 
 namespace Engine
@@ -22,7 +22,7 @@ public:
 	virtual _int		Update_GameObject(const _float& fTimeDelta);
 	virtual void		LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual void		Render_GameObject();
-	virtual void		OnCollision(CGameObject* pObject) {};
+	virtual void		OnCollision(CGameObject* pObject);
 
 protected:
 	HRESULT			Add_Component();
@@ -35,7 +35,7 @@ protected:
 
 	_vec3				m_vPos;
 
-	// ½ºÅ×ÀÌÅÍ½º °ü·Ã
+	// ìŠ¤í…Œì´í„°ìŠ¤ ê´€ë ¨
 	_int				m_iAttack;
 	_float				m_fGroundY;
 

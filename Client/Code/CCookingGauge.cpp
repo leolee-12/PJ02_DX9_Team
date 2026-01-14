@@ -19,7 +19,7 @@ HRESULT CCookingGauge::Ready_GameObject()
 	if (FAILED(Add_Component()))
 		return E_FAIL;
 
-	m_pTransformCom->Set_Scale(598 * 0.4* 0.3f, 76 * 0.4, 0.f);
+	m_pTransformCom->Set_Scale(598 * 0.4f* 0.3f, 76 * 0.4f, 0.f);
 	m_pTransformCom->Set_Pos(0, WINCY / 5, 0.2f);
 
 	fxRange = 50.0f;

@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "CWarp.h"
 #include "CCollider.h"
 #include "CProtoMgr.h"
@@ -56,8 +56,8 @@ void CWarp::Render_GameObject()
 {
 	if (!bRender) return;
 
-	// ÀÏ´ÜÀº ±×³É »ç°¢Çü Âï±â (¹Ù´Ú¿¡)
-	// collider comp¿¡ ¸ÂÃç¼­ Âï¾îÁà¾ß ÇÔ
+	// ì¼ë‹¨ì€ ê·¸ëƒ¥ ì‚¬ê°í˜• ì°ê¸° (ë°”ë‹¥ì—)
+	// collider compì— ë§ì¶°ì„œ ì°ì–´ì¤˜ì•¼ í•¨
 }
 
 void CWarp::OnCollision(CGameObject* pObject)
@@ -81,7 +81,7 @@ void CWarp::Set_Position(float x, float z)
 
 void CWarp::Set_Scale(float size)
 {
-	// Á¤»ç°¢ÇüÀÌ¹Ç·Î »çÀÌÁî ÀüºÎ °°ÀÌ ³Ö¾îÁÖ±â
+	// ì •ì‚¬ê°í˜•ì´ë¯€ë¡œ ì‚¬ì´ì¦ˆ ì „ë¶€ ê°™ì´ ë„£ì–´ì£¼ê¸°
 	m_pTransformCom->Set_Scale(size, size, size);
 
 	Engine::AABB aabb;
@@ -148,6 +148,11 @@ CWarp* CWarp::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMessageCha
 {
 	CWarp* pWarp = new CWarp(pGraphicDev);
 
+
+	pWarp->m_pMessageChannel = pMessageChannel;
+	pWarp->m_pMessageChannel->AddRef();
+
+
 	if (FAILED(pWarp->Ready_GameObject()))
 	{
 		Safe_Release(pWarp);
@@ -155,17 +160,15 @@ CWarp* CWarp::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMessageCha
 		return nullptr;
 	}
 
-	pWarp->m_pMessageChannel = pMessageChannel;
-	pWarp->m_pMessageChannel->AddRef();
-
 	pWarp->Set_Outer(outer);
 	pWarp->Set_WarpDir(dir);
 	pWarp->Set_Position(pos.x, pos.z);
 	pWarp->Set_Scale(10.f);
 
 	_vec3 tmpPos = { pos.x, 0.f, pos.z };
-	float posOffset = 70.0f;
-	// ¿öÇÁ Æ÷Áö¼Ç Á¶Á¤
+	float posOffset = 10.0f;
+
+	// ì›Œí”„ í¬ì§€ì…˜ ì¡°ì •.
 	switch (dir)
 	{
 	case WARP_LEFT:

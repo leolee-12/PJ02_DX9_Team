@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "CMonsterN1.h"
 #include "CProtoMgr.h"
 #include "CManagement.h"
@@ -62,7 +62,7 @@ _int CMonsterN1::Update_GameObject(const _float& fTimeDelta)
 	Move_Frame(fTimeDelta);
 
 	m_pColliderCom->UpdateFromTransform(m_pTransformCom);
-	// Ãæµ¹Ã¼ µğ¹ö±×¿ë
+	// ì¶©ëŒì²´ ë””ë²„ê·¸ìš©
 	if (g_bDebug) m_pColliderCom->Update_AABBforRender();
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
@@ -101,6 +101,11 @@ void CMonsterN1::Render_GameObject()
 	m_pBufferCom->Render_Buffer();
 
 	m_pGraphicDev->SetTextureStageState(0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE);
+}
+
+void CMonsterN1::OnCollision(CGameObject* pObject)
+{
+	CMonster::OnCollision(pObject);
 }
 
 HRESULT CMonsterN1::Add_Component()
@@ -152,26 +157,26 @@ HRESULT CMonsterN1::Add_Component()
 
 void CMonsterN1::Ready_Variable()
 {
-	// °ÔÀÓ·ÎÁ÷ º¯¼ö ¼¼ÆÃ
+	// ê²Œì„ë¡œì§ ë³€ìˆ˜ ì„¸íŒ…
 	_float fScale = 3.f;
 	m_fGroundY = -2.5f + fScale * 0.5f;
 	m_iAttack = 1;
 	m_iHp = 10;
 
-	// Transform ¼¼ÆÃ
+	// Transform ì„¸íŒ…
 	m_pTransformCom->Set_Pos(_float(rand() % 20), m_fGroundY, _float(rand() % 20));
 	m_pTransformCom->Set_Scale(fScale, fScale, fScale);
 
-	// Collider ¼¼ÆÃ
+	// Collider ì„¸íŒ…
 	m_pColliderCom->RegisterToManager(this, CL_MONSTER);
 
-	// AI ¼¼ÆÃ
+	// AI ì„¸íŒ…
 	m_pAICom->Set_OwnerTransform(m_pTransformCom);
 	m_pAICom->Set_TargetTransform(CPersistentMgr::GetInstance()->Get_PlayerTransform());
 	m_pAICom->Set_State<MONSTER_N1_STATE>(N1S_SPAWN);
 	m_pAICom->Set_GroundY(m_fGroundY);
 
-	// Anim °ü·Ã ¼¼ÆÃ
+	// Anim ê´€ë ¨ ì„¸íŒ…
 	m_fFrameSpeed = 24.f;
 	D3DXMatrixIdentity(&m_matTex);
 }
@@ -266,8 +271,8 @@ void CMonsterN1::Move_Frame(const _float& fTimeDelta)
 				Attack_HitBox();
 			}
 			else if (m_eAttackPhase == EXECUTE)
-			{	// »óÅÂ À¯Áö°¡ ¾Ö´Ï¸ŞÀÌ¼Ç¿¡ Á¾¼ÓÀûÀÎ °æ¿ì(Update¿¡¼­ »óÅÂ ÀüÈ¯À» ÇÏÁö ¾ÊÀ½)
-				//  : ¾Ö´Ï¸ŞÀÌ¼Ç Á¾·á¸¦ AI ÄÄÆ÷³ÍÆ®¿¡°Ô ¾Ë¸®¸ç »óÅÂ º¯°æ
+			{	// ìƒíƒœ ìœ ì§€ê°€ ì• ë‹ˆë©”ì´ì…˜ì— ì¢…ì†ì ì¸ ê²½ìš°(Updateì—ì„œ ìƒíƒœ ì „í™˜ì„ í•˜ì§€ ì•ŠìŒ)
+				//  : ì• ë‹ˆë©”ì´ì…˜ ì¢…ë£Œë¥¼ AI ì»´í¬ë„ŒíŠ¸ì—ê²Œ ì•Œë¦¬ë©° ìƒíƒœ ë³€ê²½
 				m_pAICom->Anim_End(m_eCurState);
 				m_eCurState = N1S_RUN;
 				m_eAttackPhase = PREPARE;
@@ -290,16 +295,16 @@ void CMonsterN1::Move_Frame(const _float& fTimeDelta)
 
 void CMonsterN1::Set_Texture()
 {
-	_vec3 vDir = *(m_pAICom->Get_Dir());		// AI·ÎºÎÅÍ ¹Ş¾Æ¿Â ¹æÇâ
-	_bool bFilpX = vDir.x > 0.f ? true : false;	// ¹İÀü ¿©ºÎ
-	_uint iFrame = _uint(m_fFrame);					// ÇöÀç ÇÁ·¹ÀÓ
+	_vec3 vDir = *(m_pAICom->Get_Dir());		// AIë¡œë¶€í„° ë°›ì•„ì˜¨ ë°©í–¥
+	_bool bFilpX = vDir.x > 0.f ? true : false;	// ë°˜ì „ ì—¬ë¶€
+	_uint iFrame = _uint(m_fFrame);					// í˜„ì¬ í”„ë ˆì„
 
 	D3DXMatrixIdentity(&m_matTex);
 	_uint iU = iFrame % 16;
 	_uint iV = iFrame / 16;
 
-	m_matTex._11 = 0.0625f;	// °¡·Î´Â 16Ä­ °íÁ¤
-	m_matTex._22 = 0.25f;	// ¼¼·Î´Â 4Ä­ °íÁ¤(MonsterN1)
+	m_matTex._11 = 0.0625f;	// ê°€ë¡œëŠ” 16ì¹¸ ê³ ì •
+	m_matTex._22 = 0.25f;	// ì„¸ë¡œëŠ” 4ì¹¸ ê³ ì •(MonsterN1)
 
 	switch (m_eCurState)
 	{
@@ -355,11 +360,11 @@ void CMonsterN1::Set_Texture()
 	if (bFilpX)
 	{
 		m_matTex._11 *= -1.f;
-		m_matTex._31 = _float(iU + 1) * 0.0625f;	// ¹İÀü O : ¿À¸¥ÂÊ¿¡¼­ ¿ŞÂÊÀ¸·Î ÀĞÀ½
+		m_matTex._31 = _float(iU + 1) * 0.0625f;	// ë°˜ì „ O : ì˜¤ë¥¸ìª½ì—ì„œ ì™¼ìª½ìœ¼ë¡œ ì½ìŒ
 	}
 	else
 	{
-		m_matTex._31 = _float(iU) * 0.0625f;	// ¹İÀü X : ¿ŞÂÊ¿¡¼­ ¿À¸¥ÂÊÀ¸·Î ÀĞÀ½
+		m_matTex._31 = _float(iU) * 0.0625f;	// ë°˜ì „ X : ì™¼ìª½ì—ì„œ ì˜¤ë¥¸ìª½ìœ¼ë¡œ ì½ìŒ
 	}
 
 	m_matTex._32 = _float(iV) * 0.25f;

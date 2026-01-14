@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CCookingSelectBack.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
@@ -19,7 +19,7 @@ HRESULT CCookingSelectBack::Ready_GameObject()
 		return E_FAIL;
 
 	m_pTransformCom->Set_Scale(WINCX/2, WINCY, 0.f);
-	m_pTransformCom->Set_Pos(-WINCX/4, 0, 0.5f);
+	m_pTransformCom->Set_Pos(-WINCX/4, 0, 0.9f);
 
 	return S_OK;
 }

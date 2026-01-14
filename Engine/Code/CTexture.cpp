@@ -64,7 +64,7 @@ HRESULT CTexture::Ready_Texture(TEXTUREID eID, const _tchar* pPath, const _uint&
 		m_vecTexture.push_back(pTexture);
 	}
 
-	return S_OK;
+ 	return S_OK;
 }
 
 HRESULT CTexture::Ready_Texture_FromThread(TEXTUREID eID, const wstring& strFilepath, const _uint& iCnt)
@@ -234,7 +234,7 @@ CTexture* CTexture::CreateFromThread(LPDIRECT3DDEVICE9 pGraphicDev, TEXTUREID eI
 CTexture* CTexture::CreateFromFolder(LPDIRECT3DDEVICE9 pGraphicDev, TEXTUREID eID, const _tchar* pFolderPath)
 {
 	CTexture* pTexture = new CTexture(pGraphicDev);
-
+	
 	if (FAILED(pTexture->Ready_Texture_FromFolder(eID, pFolderPath)))
 	{
 		Safe_Release(pTexture);

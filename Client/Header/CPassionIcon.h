@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "CUi.h"
 #include "Gage_Enum.h"
 

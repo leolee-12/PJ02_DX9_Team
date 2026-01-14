@@ -30,13 +30,27 @@ public:
 public:
 	static CCookingMiniGameUI* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 	_bool Check_CookingResult();
+	
+	void Set_Render(_bool _bRender) { m_bRender = _bRender; };
 	_bool CookingInput();
+	void CookingStart(_int CookingCount);
+	void CookingEnd();
 
-	// 테스트용 임시용 나중에 선택창이랑 연결되면 변경될듯
-	void SetRenderChange();
+
+	//콜백 추가부분
+	using CookingEndCallback = std::function<void()>;
+
+	void Set_CookingEndCallback(CookingEndCallback cb)
+	{
+		m_OnCookingEnd = cb;
+	}
 private:
-	virtual			void		Free();
+	CookingEndCallback m_OnCookingEnd;
+	//
 
+private:
+
+	virtual			void		Free();
 
 private:
 	vector<CGameObject*> m_vecCookingUI;
@@ -45,7 +59,11 @@ private:
 	CCookingMarker* m_pMarker;
 	CCookingGauge* m_pGauge;
 
-	int m_iCookingCount;
-	int m_iCurCookingCount;
+	_int m_iCookingCount;
+	_int m_iCurCookingCount;
+
+	_float m_fMarkerStopTime;
+	_float m_fMarkerCurStopTime;
+
 };
 

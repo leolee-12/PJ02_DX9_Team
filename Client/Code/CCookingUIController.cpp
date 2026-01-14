@@ -1,0 +1,133 @@
+#include "pch.h"
+#include "CCookingUIController.h"
+
+#include "CRenderer.h"
+#include "CCookingSelectUI.h"
+#include "CCookingMiniGameUI.h"
+#include "CDInputMgr.h"
+CCookingUIController::CCookingUIController(LPDIRECT3DDEVICE9 pGraphicDev)
+	: CUi(pGraphicDev)
+	, m_pSelectUI(nullptr)
+	, m_pMiniGameUI(nullptr)
+	, m_eState(CS_IDLE)
+{
+}
+
+CCookingUIController::~CCookingUIController()
+{
+}
+
+HRESULT CCookingUIController::Ready_GameObject()
+{
+	m_pSelectUI = CCookingSelectUI::Create(m_pGraphicDev);
+	if (nullptr == m_pSelectUI)
+		return E_FAIL;
+
+	m_pMiniGameUI = CCookingMiniGameUI::Create(m_pGraphicDev);
+	if (nullptr == m_pMiniGameUI)
+		return E_FAIL;
+
+	m_eState = CS_IDLE;
+
+	return S_OK;
+}
+
+_int CCookingUIController::Update_GameObject(const _float& fTimeDelta)
+{
+	// 임시테스트용 삭제예정
+	if (CDInputMgr::GetInstance()->Key_Down(DIK_G))
+	{
+		Set_CookingState(COOKINGUISTATE::CS_SELECT);
+	}
+	if (CDInputMgr::GetInstance()->Key_Down(DIK_H))
+	{
+		m_pSelectUI->AddFood();
+	}
+	if (CDInputMgr::GetInstance()->Key_Down(DIK_J))
+	{
+		Start_Cooking(m_pSelectUI->Get_CookingCount());
+	}
+
+
+	// 콜백 공부더해야함 일단넣어둠
+	// 등록된 함수가 호출되면 아래 코드가 실행되는느낌
+	m_pMiniGameUI->Set_CookingEndCallback([this]()
+		{
+			Set_CookingState(COOKINGUISTATE::CS_COOKINGEND);
+		});
+
+
+	switch (m_eState)
+	{
+	case CS_IDLE:
+		m_pSelectUI->SetRender(false);
+		m_pMiniGameUI->Set_Render(false);
+		break;
+	case CS_SELECT:
+		m_pSelectUI->SetRender(true);
+		m_pMiniGameUI->Set_Render(false);
+		break;
+
+	case CS_MINIGAME:
+		m_pSelectUI->SetRender(false);
+		m_pMiniGameUI->Set_Render(true);
+		if (CDInputMgr::GetInstance()->Key_Down(DIK_K))
+		{
+			m_pMiniGameUI->CookingInput();
+		}
+		break;
+	case CS_COOKINGEND:
+		m_pSelectUI->SetRender(false);
+		m_pMiniGameUI->Set_Render(false);
+		break;
+	}
+
+	m_pSelectUI->Update_GameObject(fTimeDelta);
+	m_pMiniGameUI->Update_GameObject(fTimeDelta);
+
+	CRenderer::GetInstance()->Add_RenderGroup(RENDER_UI, this);
+
+	return NOEVENT;
+}
+
+void CCookingUIController::LateUpdate_GameObject(const _float& fTimeDelta)
+{
+	m_pSelectUI->LateUpdate_GameObject(fTimeDelta);
+	m_pMiniGameUI->LateUpdate_GameObject(fTimeDelta);
+}
+
+void CCookingUIController::Render_GameObject()
+{
+}
+
+void CCookingUIController::OnCollision(CGameObject* pObject)
+{
+}
+
+void CCookingUIController::Start_Cooking(_int iCookingCount)
+{
+	m_pMiniGameUI->CookingStart(iCookingCount);
+	Set_CookingState(COOKINGUISTATE::CS_MINIGAME);
+}
+
+CCookingUIController* CCookingUIController::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+{
+	CCookingUIController* pInstance = new CCookingUIController(pGraphicDev);
+
+	if (FAILED(pInstance->Ready_GameObject()))
+	{
+		Safe_Release(pInstance);
+		MSG_BOX("CCookingUIController Create Failed");
+		return nullptr;
+	}
+
+	return pInstance;
+}
+
+void CCookingUIController::Free()
+{
+	Safe_Release(m_pSelectUI);
+	Safe_Release(m_pMiniGameUI);
+
+	CUi::Free();
+}

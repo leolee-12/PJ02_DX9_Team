@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CCookingCover.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
@@ -18,7 +18,7 @@ HRESULT CCookingCover::Ready_GameObject()
 	if (FAILED(Add_Component()))
 		return E_FAIL;
 
-	m_pTransformCom->Set_Scale(796*0.4, 226 * 0.4, 0.f);
+	m_pTransformCom->Set_Scale(796*0.4f, 226 * 0.4f, 0.f);
 	m_pTransformCom->Set_Pos(0, WINCY/5 , 0.1f);
 
 	return S_OK;

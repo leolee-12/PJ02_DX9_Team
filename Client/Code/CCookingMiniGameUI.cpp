@@ -87,7 +87,8 @@ HRESULT CCookingMiniGameUI::Ready_GameObject()
 
 	m_vecCookingUI.push_back(pGameObject);
 
-
+	m_fMarkerStopTime = 0.5f;
+	m_fMarkerCurStopTime = 0.0f;
 	m_bRender = false;
 	m_iCurCookingCount = 0;
 	m_iCookingCount = 0;
@@ -103,6 +104,27 @@ _int CCookingMiniGameUI::Update_GameObject(const _float& fTimeDelta)
 	}
 
 	CRenderer::GetInstance()->Add_RenderGroup(RENDER_UI, this);
+	
+	if (m_iCurCookingCount <= 0)
+	{
+		m_iCookingCount = 0;
+		CookingEnd();
+	}
+
+
+	if (m_pMarker->Get_MarkerState() == CookingMarkerState::MS_STOP)
+	{
+		m_fMarkerCurStopTime += fTimeDelta;
+		if (m_fMarkerCurStopTime >= m_fMarkerStopTime)
+		{
+			m_pMarker->Resume_Marker();
+			m_pGauge->Set_RandomPosX();
+
+		}
+	}
+
+
+
 
 	return NOEVENT;
 }
@@ -126,8 +148,6 @@ void CCookingMiniGameUI::Render_GameObject()
 	swprintf_s(szCookingCount, L"%d/%d", m_iCurCookingCount, m_iCookingCount);
 	RECT rcPlayer = { 0, 0, 700, 130 };
 	CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans30", szCookingCount, rcPlayer, FontColor, DT_RIGHT | DT_BOTTOM);
-
-	// 진짜 임시테스트용 멈추는지, 숫자 카운팅되는지, 랜덤하게 이동하는지확인용
 }
 
 void CCookingMiniGameUI::OnCollision(CGameObject* pObject)
@@ -151,13 +171,11 @@ _bool CCookingMiniGameUI::Check_CookingResult()
 
 _bool CCookingMiniGameUI::CookingInput()
 {
-
+	if (m_pMarker->Get_MarkerState() == CookingMarkerState::MS_STOP) { return false; }
 	m_pMarker->Stop_Marker();
+	m_fMarkerCurStopTime = 0.0f;
 	_bool bResult = Check_CookingResult();
-	m_pGauge->Set_RandomPosX();
-
-	if (bResult)
-		m_iCurCookingCount--;
+	m_iCurCookingCount--;
 
 	return bResult;
 }
@@ -177,16 +195,17 @@ CCookingMiniGameUI* CCookingMiniGameUI::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 	return pCookingMiniGame;
 }
 
-void CCookingMiniGameUI::SetRenderChange()
+void CCookingMiniGameUI::CookingStart(_int CookingCount)
 {
-	if (m_bRender == false)
-	{
-		m_bRender = true;
-	}
-	else
-	{
-		m_bRender = false;
-	}
+	Set_Render(true);
+	m_iCurCookingCount = CookingCount;
+	m_iCookingCount = CookingCount;
+}
+
+void CCookingMiniGameUI::CookingEnd()
+{
+	Set_Render(false);
+	m_OnCookingEnd();
 }
 
 void CCookingMiniGameUI::Free()

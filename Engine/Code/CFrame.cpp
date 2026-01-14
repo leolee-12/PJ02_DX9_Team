@@ -1,4 +1,4 @@
-#include "CFrame.h"
+﻿#include "CFrame.h"
 
 CFrame::CFrame() : m_fAccTimeDelta(0.f), m_fCallLimit(0.f)
 {

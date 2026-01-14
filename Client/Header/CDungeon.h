@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CScene.h"
 
@@ -9,7 +9,7 @@
 
 class CGauge;
 class CCookingMiniGameUI;
-
+class CCookingSelectUI;
 
 class CDungeon : public CScene
 {
@@ -39,6 +39,6 @@ private:
 
 private:
 	CGauge*		 m_pGauge;
-	CCookingMiniGameUI* m_pCookingMiniGameUi;
+
 };
 
