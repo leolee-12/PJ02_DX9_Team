@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "CTutorial.h"
 #include "CLightMgr.h"
 #include "CMySkyBox.h"
@@ -24,6 +24,9 @@
 #include "CDynamicCamera.h"
 #include "CTriggerPoint.h"
 #include "CCutSceneMgr.h"
+#include "CMapWarp.h"
+#include "CWarp.h"
+#include "CMapBorder.h"
 
 CTutorial::CTutorial(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -53,10 +56,10 @@ HRESULT CTutorial::Ready_Scene()
 	tTutoCutScene.strName = L"Tutorial_01";
 	tTutoCutScene.vecSteps =
 	{
-		{_vec3(-10.f * 0.8f, 5.f, 135.f * 0.8f), 1.f, L"Bishop_Heket", L"¿ì¸®µé ¾Õ¿¡ ÀúµéÀÇ ¸¶Áö¸· Á¾ÀÚ°¡ ÀÖ´Ù.\n´Ù¸¥ ³ðµéÀº ÀÌ¹Ì ´Ù »ç³ÉÇÏ¿© È¿¼ö½ÃÄ×Áö."},
-		{_vec3(0.f * 0.8f, 5.f, 135.f * 0.8f), 1.f, L"Bishop_Kallamar", L"ÀÌ ¸¶Áö¸· ¹øÁ¦·Î,\nÀÌÁ¦ ¿¹¾ðÀº °áÄÚ ´Þ¼ºÇÒ ¼ö ¾øÀ» °ÍÀÌ´Ù."},
-		{_vec3(-22.f * 0.8f, 5.f, 135.f * 0.8f), 1.f, L"Bishop_Leshy", L"¾Æ·¡¿¡ ¹­¿©ÀÖ´Â Àú ÀÌ´ÜÀÚ´Â Ç®·Á³¯ ¼ö ¾ø´Ù."},
-		{_vec3(10.687412f * 0.8f, 5.f, 135.f * 0.8f), 1.f, L"Bishop_Shamura", L"±×¸®°í ¿¾ ½Å¾ÓÀº º¸Á¸µÇ¸®¶ó."}//,
+		{_vec3(-10.f * 0.8f, 5.f, 135.f * 0.8f), 1.f, L"Bishop_Heket", L"ìš°ë¦¬ë“¤ ì•žì— ì €ë“¤ì˜ ë§ˆì§€ë§‰ ì¢…ìžê°€ ìžˆë‹¤.\në‹¤ë¥¸ ë†ˆë“¤ì€ ì´ë¯¸ ë‹¤ ì‚¬ëƒ¥í•˜ì—¬ íš¨ìˆ˜ì‹œì¼°ì§€."},
+		{_vec3(0.f * 0.8f, 5.f, 135.f * 0.8f), 1.f, L"Bishop_Kallamar", L"ì´ ë§ˆì§€ë§‰ ë²ˆì œë¡œ,\nì´ì œ ì˜ˆì–¸ì€ ê²°ì½” ë‹¬ì„±í•  ìˆ˜ ì—†ì„ ê²ƒì´ë‹¤."},
+		{_vec3(-22.f * 0.8f, 5.f, 135.f * 0.8f), 1.f, L"Bishop_Leshy", L"ì•„ëž˜ì— ë¬¶ì—¬ìžˆëŠ” ì € ì´ë‹¨ìžëŠ” í’€ë ¤ë‚  ìˆ˜ ì—†ë‹¤."},
+		{_vec3(10.687412f * 0.8f, 5.f, 135.f * 0.8f), 1.f, L"Bishop_Shamura", L"ê·¸ë¦¬ê³  ì˜› ì‹ ì•™ì€ ë³´ì¡´ë˜ë¦¬ë¼."}//,
 		//{_vec3(- 4.f, 2.f, 88.f), 2.f, L"Player", L""}
 	};
 
@@ -122,7 +125,7 @@ HRESULT CTutorial::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 
 	CGameObject* pGameObject = nullptr;
 
-	// ÇÃ·¹ÀÌ¾î¸¦ ÃÖ»ó´Ü¿¡
+	// í”Œë ˆì´ì–´ë¥¼ ìµœìƒë‹¨ì—
 	pGameObject = CPersistentMgr::GetInstance()->Get_GlobalObjects(GOBJ_PLAYER);
 
 	if (nullptr == pGameObject)
@@ -141,7 +144,7 @@ HRESULT CTutorial::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	if (SUCCEEDED(Engine::CMapLoader::GetInstance()->LoadMapA(
 		"../Bin/Resource/Maps/MapData/Tutorial.txt", mapData)))
 	{
-		// ¸Ê µ¥ÀÌÅÍÀÇ skyTypeÀ¸·Î SkyBox »ý¼º
+		// ë§µ ë°ì´í„°ì˜ skyTypeìœ¼ë¡œ SkyBox ìƒì„±
 		pGameObject = CMySkyBox::Create(m_pGraphicDev, mapData.skyType);
 		if (pGameObject)
 			pLayer->Add_GameObject(L"SkyBox", pGameObject);
@@ -155,16 +158,16 @@ HRESULT CTutorial::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 			switch (spawn.type)
 			{
 			case 0:
-				//ÇÃ·¹ÀÌ¾î ½ºÆùÀ§Ä¡, ¿öÇÁÀ§Ä¡ Àû¿ë
+				//í”Œë ˆì´ì–´ ìŠ¤í°ìœ„ì¹˜, ì›Œí”„ìœ„ì¹˜ ì ìš©
 				break;
 			case 1:
 				switch (spawn.monsterType)
 				{
 				case 0:
-					// Bat | ÀÏ¹Ý¸ó½ºÅÍ |
+					// Bat | ì¼ë°˜ëª¬ìŠ¤í„° |
 					break;
 				case 1:
-					// Worm | ÀÏ¹Ý¸ó½ºÅÍ |
+					// Worm | ì¼ë°˜ëª¬ìŠ¤í„° |
 					pGameObject = CMonsterN1::Create(m_pGraphicDev, m_pMessageChannel);
 					if (pGameObject)
 					{
@@ -176,18 +179,18 @@ HRESULT CTutorial::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 					}
 					break;
 				case 2:
-					// Humanoid | ÀÏ¹Ý¸ó½ºÅÍ |
+					// Humanoid | ì¼ë°˜ëª¬ìŠ¤í„° |
 					break;
-				case 10:
-					// Amdusias | Áß°£º¸½º |
+				case 3:
+					// Amdusias | ì¤‘ê°„ë³´ìŠ¤ |
 					break;
-				case 20:
-					// Rash | ÃÖÁ¾º¸½º |
+				case 4:
+					// Rash | ìµœì¢…ë³´ìŠ¤ |
 					break;
-				case 30:
-					// WaitingOne | ¿¬Ãâ¿ë |
+				case 5:
+					// WaitingOne | ì—°ì¶œìš© |
 					break;
-				case 31:
+				case 6:
 					pGameObject = CBishop_Leshy::Create(m_pGraphicDev, m_pMessageChannel, spawn);
 
 					NULL_CHECK_RETURN(pGameObject, E_FAIL)
@@ -196,7 +199,7 @@ HRESULT CTutorial::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 							return E_FAIL;
 
 					break;
-				case 32:
+				case 7:
 					pGameObject = CBishop_Heket::Create(m_pGraphicDev, m_pMessageChannel, spawn);
 
 					NULL_CHECK_RETURN(pGameObject, E_FAIL)
@@ -206,7 +209,7 @@ HRESULT CTutorial::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 
 					break;
 
-				case 33:
+				case 8:
 					pGameObject = CBishop_Kallamar::Create(m_pGraphicDev, m_pMessageChannel, spawn);
 
 					NULL_CHECK_RETURN(pGameObject, E_FAIL)
@@ -216,7 +219,7 @@ HRESULT CTutorial::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 
 					break;
 
-				case 34:
+				case 9:
 					pGameObject = CBishop_Shamura::Create(m_pGraphicDev, m_pMessageChannel, spawn);
 
 					NULL_CHECK_RETURN(pGameObject, E_FAIL)
@@ -228,7 +231,7 @@ HRESULT CTutorial::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 				}
 				break;
 			default:
-				MSG_BOX("½ºÆù¼½¼Ç Å¸ÀÔ¿À·ù");
+				MSG_BOX("ìŠ¤í°ì„¹ì…˜ íƒ€ìž…ì˜¤ë¥˜");
 				return E_FAIL;
 			}
 		}
@@ -249,21 +252,22 @@ HRESULT CTutorial::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 					pLayer->Add_GameObject(L"MapObject", pGameObject);
 			}
 		}
-		// Process Lights - Point Light »ý¼º
+		// Process Lights - Point Light ìƒì„±
 		for (const auto& light : mapData.lights)
 		{
 			Engine::CLightMgr::GetInstance()->Ready_PointLight(m_pGraphicDev, light);
 		}
+
 	}
 	else
 	{
-		// ¸Ê ·Îµå ½ÇÆÐ ½Ã ±âº» SkyBox (Day) »ý¼º
+		// ë§µ ë¡œë“œ ì‹¤íŒ¨ ì‹œ ê¸°ë³¸ SkyBox (Day) ìƒì„±
 		pGameObject = CMySkyBox::Create(m_pGraphicDev, 0);
 		if (pGameObject)
 			pLayer->Add_GameObject(L"SkyBox", pGameObject);
 	}
 
-	// µð¹ö±×¿ë
+	// ë””ë²„ê·¸ìš©
 
 
 	_vec3 vTriggerPos, vTriggerHalfSize;

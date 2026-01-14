@@ -68,7 +68,7 @@ namespace Engine
 		CL_6		= 1 << 5,
 		CL_7		= 1 << 6,
 		CL_TRIGGER	= 1 << 7,
-		CL_BORDER	= 1 << 8,
+		CL_BORDER   = 1 << 8,
 		CL_10		= 1 << 9,
 		CL_11		= 1 << 10,
 		CL_12		= 1 << 11,

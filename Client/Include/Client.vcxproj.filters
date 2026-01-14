@@ -1103,8 +1103,6 @@
     <ClCompile Include="..\Code\CCookingInfoCardRIghtPattern.cpp">
 		<Filter>02. GameObject\07. UI\05.CookingUI\01.CookingSelect\04.CookingInfoCard\03.CookingInfoCardRightParrtern</Filter>
 	</ClCompile>
-      <Filter>02. GameObject\07. UI\05.CookingUI\01.CookingSelect\04.CookingInfoCard\03.CookingInfoCardRightParrtern</Filter>
-    </ClCompile>
     <ClCompile Include="..\Code\CSceneWarp.cpp">
       <Filter>02. GameObject\14. Warp</Filter>
     </ClCompile>
