@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "CB1_AI.h"
 #include "CTransform.h"
 
@@ -47,20 +47,20 @@ HRESULT CB1_AI::Ready_AI(const _float& fDetectRange, const _float& fInteractRang
 	m_fAcmlTime = 0.f;
 	m_iRcmState = _uint(CMonsterB1::B1S_SPAWN);
 
-	// °ø°İ ÆĞÅÏ ¼³Á¤
+	// ê³µê²© íŒ¨í„´ ì„¤ì •
 	m_iDequeMinSize = 3;
 	m_vecAtkPatterns.push_back({ CMonsterB1::B1S_JUMP, 40, true });
 	m_vecAtkPatterns.push_back({ CMonsterB1::B1S_PREPARE, 40, true });
 	m_vecAtkPatterns.push_back({ CMonsterB1::B1S_SHOOT, 40, true });
 	m_vecAtkPatterns.push_back({ CMonsterB1::B1S_SUMMON, 20, true });
 
-	// ½Ã¿¬¿ë : ¸ğµç ÆĞÅÏÀÌ ¼øÂ÷ÀûÀ¸·Î ½ÇÇà
+	// ì‹œì—°ìš© : ëª¨ë“  íŒ¨í„´ì´ ìˆœì°¨ì ìœ¼ë¡œ ì‹¤í–‰
 	m_patternDeque.push_back(CMonsterB1::B1S_JUMP);
 	m_patternDeque.push_back(CMonsterB1::B1S_PREPARE);
 	m_patternDeque.push_back(CMonsterB1::B1S_SHOOT);
 	m_patternDeque.push_back(CMonsterB1::B1S_SUMMON);
 
-	// °ÔÀÓ¿ë : °¡ÁßÄ¡¿Í ³­¼ö¸¦ ÅëÇØ ÆĞÅÏÀ» Ã¤¿öÁÜ
+	// ê²Œì„ìš© : ê°€ì¤‘ì¹˜ì™€ ë‚œìˆ˜ë¥¼ í†µí•´ íŒ¨í„´ì„ ì±„ì›Œì¤Œ
 	Refill_Pattern();
 
 	return S_OK;
@@ -81,8 +81,8 @@ void CB1_AI::Enter_State(const _uint& iState)
 		m_pOwnerTC->Get_Info(INFO_POS, &vPrevPos);
 		m_vDir = Compute_LimitedDir(120.f, m_vDir, vDesiredDir);
 		m_vLerpPos = vPrevPos + m_vDir * 3.f;
-		m_vLerpPos.x += Get_Rand_Int(-5, 5) * 0.3f;	// -1.5f ~ 1.5f ³­¼ö
-		m_vLerpPos.z += Get_Rand_Int(-5, 5) * 0.3f;	// -1.5f ~ 1.5f ³­¼ö
+		m_vLerpPos.x += Get_Rand_Int(-5, 5) * 0.3f;	// -1.5f ~ 1.5f ë‚œìˆ˜
+		m_vLerpPos.z += Get_Rand_Int(-5, 5) * 0.3f;	// -1.5f ~ 1.5f ë‚œìˆ˜
 	}
 	break;
 	case CMonsterB1::B1S_JUMP:
@@ -130,6 +130,10 @@ void CB1_AI::Enter_State(const _uint& iState)
 		break;
 
 	case CMonsterB1::B1S_SPAWN:
+		m_bActiveAI = false;
+		break;
+
+	case CMonsterB1::B1S_DIE:
 		m_bActiveAI = false;
 		break;
 
@@ -266,6 +270,9 @@ _int CB1_AI::Update_Component(const _float& fTimeDelta)
 	case CMonsterB1::B1S_SPAWN:
 		Update_Spawn(fTimeDelta);
 		break;
+	case CMonsterB1::B1S_DIE:
+		Update_Die(fTimeDelta);
+		break;
 	case CMonsterB1::B1S_STOP:
 		Update_Stop(fTimeDelta);
 		break;
@@ -279,7 +286,7 @@ _int CB1_AI::Update_Component(const _float& fTimeDelta)
 void CB1_AI::Update_Crawl(const _float& fTimeDelta)
 {
 	if (m_bChase)
-	{	// Å¸°ÙÀ» ÀÌ¹Ì ¹ß°ßÇßÀ» ¶§
+	{	// íƒ€ê²Ÿì„ ì´ë¯¸ ë°œê²¬í–ˆì„ ë•Œ
 		if (m_fDistance <= m_fInteractRange)
 		{
 			if (m_fAcmlTime >= 5.f)
@@ -293,9 +300,9 @@ void CB1_AI::Update_Crawl(const _float& fTimeDelta)
 		}
 	}
 	else
-	{	// Å¸°ÙÀ» ¹ß°ßÇÏÁö ¸øÇßÀ» ¶§
+	{	// íƒ€ê²Ÿì„ ë°œê²¬í•˜ì§€ ëª»í–ˆì„ ë•Œ
 		if (m_fDistance <= m_fDetectRange)
-		{	// Å¸°ÙÀÌ °¨Áö ¹üÀ§ ³»·Î ÁøÀÔ ½Ã ¹ß°ß
+		{	// íƒ€ê²Ÿì´ ê°ì§€ ë²”ìœ„ ë‚´ë¡œ ì§„ì… ì‹œ ë°œê²¬
 			m_bChase = true;
 		}
 	}
@@ -323,7 +330,7 @@ void CB1_AI::Update_Jump(const _float& fTimeDelta)
 
 void CB1_AI::Update_Land(const _float& fTimeDelta)
 {
-	if (m_fAcmlTime < 0.2f)  // 0.2ÃÊ µ¿¾È
+	if (m_fAcmlTime < 0.2f)  // 0.2ì´ˆ ë™ì•ˆ
 	{
 		_vec3 vPos;
 		m_pOwnerTC->Get_Info(INFO_POS, &vPos);
@@ -381,6 +388,10 @@ void CB1_AI::Update_Roar(const _float& fTimeDelta)
 }
 
 void CB1_AI::Update_Spawn(const _float& fTimeDelta)
+{
+}
+
+void CB1_AI::Update_Die(const _float& fTimeDelta)
 {
 }
 

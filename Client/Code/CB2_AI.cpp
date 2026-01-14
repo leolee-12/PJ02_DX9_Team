@@ -50,13 +50,13 @@ HRESULT CB2_AI::Ready_AI(const _float& fDetectRange, const _float& fInteractRang
 	// 공격 패턴 설정
 	m_iDequeMinSize = 3;
 	m_vecAtkPatterns.push_back({ CMonsterB2::B2S_SMASH, 40, true });
-	//m_vecAtkPatterns.push_back({ CMonsterB2::B2S_SHOOT, 40, true });
-	//m_vecAtkPatterns.push_back({ CMonsterB2::B2S_SUMMON, 40, true });
+	m_vecAtkPatterns.push_back({ CMonsterB2::B2S_SHOOT, 40, true });
+	m_vecAtkPatterns.push_back({ CMonsterB2::B2S_SUMMON, 40, true });
 
 	// 시연용 : 모든 패턴이 순차적으로 실행
 	m_patternDeque.push_back(CMonsterB2::B2S_SMASH);
-	//m_patternDeque.push_back(CMonsterB2::B2S_SHOOT);
-	//m_patternDeque.push_back(CMonsterB2::B2S_SUMMON);
+	m_patternDeque.push_back(CMonsterB2::B2S_SHOOT);
+	m_patternDeque.push_back(CMonsterB2::B2S_SUMMON);
 
 	// 게임용 : 가중치와 난수를 통해 패턴을 채워줌
 	Refill_Pattern(true);

@@ -16,7 +16,7 @@ class CProjectile;
 class CMonsterB1 : public CMonster
 {
 public:
-	enum MONSTER_B1_STATE { B1S_CRAWL, B1S_JUMP, B1S_LAND, B1S_PREPARE, B1S_ATTACK, B1S_SHOOT, B1S_SUMMON, B1S_ROAR, B1S_SPAWN, B1S_STOP, B1S_END };
+	enum MONSTER_B1_STATE { B1S_CRAWL, B1S_JUMP, B1S_LAND, B1S_PREPARE, B1S_ATTACK, B1S_SHOOT, B1S_SUMMON, B1S_ROAR, B1S_SPAWN, B1S_DIE, B1S_STOP, B1S_END };
 
 private:
 	explicit	CMonsterB1(LPDIRECT3DDEVICE9 pGraphicDev);
@@ -33,6 +33,7 @@ public:
 
 	void				Launch_Projectile(const _uint& iCount);
 	void				Summon_Minion(const _uint& iCount);
+	void				Summon_Boss();	// 디버그용
 
 private:
 	HRESULT				Add_Component();
@@ -42,6 +43,7 @@ private:
 
 	void				Check_Frame();
 	void				Move_Frame(const _float& fTimeDelta);
+	void				Check_Status();
 	void				Set_Texture();
 	void				Set_Material();
 	void				Reset_Material();

@@ -199,7 +199,7 @@ void CMonsterB2::Ready_Variable()
 	m_fBtmPadding = fScale * 0.51f;
 	m_fGroundY = -2.5f + fScale * 0.5f - m_fBtmPadding;
 	m_iAttack = 1;
-	m_iMaxHp = m_iHp = 30;
+	m_iMaxHp = m_iHp = 20;
 	m_iPhase = 1;
 
 	// Transform 세팅
@@ -446,6 +446,10 @@ void CMonsterB2::Set_TextureSet()
 		m_strFrameKey = L"BossLeshy_Escape";
 		break;
 
+	case B2S_HIT:
+		m_strFrameKey = L"BossLeshy_Hit";
+		break;
+
 	case B2S_SMASH:
 		m_strFrameKey = L"BossLeshy_Smash";
 		break;
@@ -555,8 +559,7 @@ void CMonsterB2::Attacked(const _int& iAttack)
 void CMonsterB2::Update_State()
 {
 	if (m_eCurState == B2S_SPAWN ||
-		m_eCurState == B2S_ESCAPE ||
-		m_eCurState == B2S_HIT) return;
+		m_eCurState == B2S_ESCAPE) return;
 
 	m_eCurState = m_pAICom->Get_RecommendState<MONSTER_B2_STATE>();
 }
@@ -664,6 +667,7 @@ void CMonsterB2::Check_Status()
 
 	if ((m_iPhase != 0) && (m_iHp <= 0))
 	{
+		m_pColliderCom->UnregisterFromManager();
 		m_pAICom->Set_State(B2S_DIE);
 		m_iPhase = 0;
 	}
@@ -742,6 +746,22 @@ CMonsterB2* CMonsterB2::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* S
 		MSG_BOX("pMonster Create Failed");
 		return nullptr;
 	}
+
+	return pMonster;
+}
+
+CMonsterB2* CMonsterB2::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, _vec3 vPos)
+{
+	CMonsterB2* pMonster = new CMonsterB2(pGraphicDev, StageChannel);
+
+	if (FAILED(pMonster->Ready_GameObject()))
+	{
+		Safe_Release(pMonster);
+		MSG_BOX("pMonster Create Failed");
+		return nullptr;
+	}
+
+	pMonster->m_pTransformCom->Set_Pos(vPos.x, vPos.y, vPos.z);
 
 	return pMonster;
 }

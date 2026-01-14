@@ -216,7 +216,7 @@ void CMultiLoadingThread::Loading_for_Tutorial()
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_MonsterN3Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal3/dds/MonsterN3_%02d.dds", 3));
 	m_iTotalProtoCount++;
 
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_MonsterB1Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Boss1/dds/MonsterB1_%02d.dds", 8));
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_MonsterB1Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Boss1/MonsterB1_%02d.png", 10));
 	m_iTotalProtoCount++;
 
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_N2Node1Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal2/dds/N2Node_00.dds", 1));
@@ -308,7 +308,7 @@ void CMultiLoadingThread::Loading_for_Dungeon()
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_MonsterN3Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal3/dds/MonsterN3_%02d.dds", 3));
 	m_iTotalProtoCount++;
 
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_MonsterB1Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Boss1/dds/MonsterB1_%02d.dds", 8));
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_MonsterB1Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Boss1/MonsterB1_%02d.png", 10));
 	m_iTotalProtoCount++;
 
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_N2Node1Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal2/dds/N2Node_00.dds", 1));
@@ -402,16 +402,16 @@ void CMultiLoadingThread::Loading_for_Dungeon()
 	m_iTotalProtoCount++;
 
 	vector<TEXSETLR> vecBossLeshy;
-	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Idle",		L"../Bin/Resource/Texture/Monster/Boss2(2)/idle/idle_%04d.png", 80));
-	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Dig",		L"../Bin/Resource/Texture/Monster/Boss2(2)/move-out/move-out_%04d.png", 40));
-	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Escape",	L"../Bin/Resource/Texture/Monster/Boss2(2)/move-in/move-in_%04d.png", 40));
-	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Hit",		L"../Bin/Resource/Texture/Monster/Boss2(2)/hurt/hurt_%04d.png", 16));
-	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Smash",		L"../Bin/Resource/Texture/Monster/Boss2(2)/head-smash/head-smash_%04d.png", 62));
-	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Spike",		L"../Bin/Resource/Texture/Monster/Boss2(2)/trunk-strike/trunk-strike_%04d.png", 51));
-	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Summon",	L"../Bin/Resource/Texture/Monster/Boss2(2)/summon/summon_%04d.png", 71));
-	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Spawn",		L"../Bin/Resource/Texture/Monster/Boss2(2)/transform/transform_%04d.png", 128));
-	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Die",		L"../Bin/Resource/Texture/Monster/Boss2(2)/die-noheart/die-noheart_%04d.png", 132));
-	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Dead",		L"../Bin/Resource/Texture/Monster/Boss2(2)/dead/dead_%04d.png", 24));
+	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Idle",		L"../Bin/Resource/Texture/Monster/Boss2/idle/idle_%04d.png", 80));
+	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Dig",		L"../Bin/Resource/Texture/Monster/Boss2/move-out/move-out_%04d.png", 40));
+	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Escape",	L"../Bin/Resource/Texture/Monster/Boss2/move-in/move-in_%04d.png", 40));
+	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Hit",		L"../Bin/Resource/Texture/Monster/Boss2/hurt/hurt_%04d.png", 16));
+	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Smash",		L"../Bin/Resource/Texture/Monster/Boss2/head-smash/head-smash_%04d.png", 62));
+	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Spike",		L"../Bin/Resource/Texture/Monster/Boss2/trunk-strike/trunk-strike_%04d.png", 51));
+	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Summon",	L"../Bin/Resource/Texture/Monster/Boss2/summon/summon_%04d.png", 71));
+	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Spawn",		L"../Bin/Resource/Texture/Monster/Boss2/transform/transform_%04d.png", 128));
+	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Die",		L"../Bin/Resource/Texture/Monster/Boss2/die-noheart/die-noheart_%04d.png", 132));
+	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Dead",		L"../Bin/Resource/Texture/Monster/Boss2/dead-noheart/dead-noheart_%04d.png", 1));
 	m_TexSetLoadingqueue.push(make_pair(TEXSETINFO(L"Proto_MonsterB2Texture", TEX_NORMAL), vecBossLeshy));
 	m_iTotalProtoCount++;
 }
@@ -542,7 +542,8 @@ void CMultiLoadingThread::NonTex_for_Tutorial()
 	CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_N1_AI", CN1_AI::Create(m_pGraphicDev, 6.f, 1.f));
 	CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_N2_AI", CN2_AI::Create(m_pGraphicDev, 6.f, 4.f));
 	CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_N3_AI", CN3_AI::Create(m_pGraphicDev, 6.f, 3.f));
-	CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_B1_AI", CB1_AI::Create(m_pGraphicDev, 40.f, 5.f));
+	CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_B1_AI", CB1_AI::Create(m_pGraphicDev, 40.f, 10.f));
+	CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_B2_AI", CB2_AI::Create(m_pGraphicDev, 40.f, 40.f));
 
 	Load_Object_Texture(Tutorial_Texture);
 }

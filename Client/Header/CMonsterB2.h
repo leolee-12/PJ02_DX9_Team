@@ -92,6 +92,7 @@ private:
 
 public:
 	static CMonsterB2* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel);
+	static CMonsterB2* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, _vec3 vPos);
 
 private:
 	virtual void		Free();

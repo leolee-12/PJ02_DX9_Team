@@ -202,15 +202,15 @@ void CMonsterN2::Ready_Variable()
 	m_pTransformCom->Get_Scale(&vScale);
 	vScale *= fScaleReduction;
 	m_pNode[0] = CNode::Create(m_pGraphicDev, m_pMessageChannel, m_pTransformCom, L"Proto_N2Node1Texture");
-	m_pNode[0]->Set_NodeScale(vScale);
+	if(m_pNode[0]) m_pNode[0]->Set_NodeScale(vScale);
 
 	vScale *= fScaleReduction;
 	m_pNode[1] = CNode::Create(m_pGraphicDev, m_pMessageChannel, m_pTransformCom, L"Proto_N2Node2Texture");
-	m_pNode[1]->Set_NodeScale(vScale);
+	if (m_pNode[1]) m_pNode[1]->Set_NodeScale(vScale);
 
 	vScale *= fScaleReduction;
 	m_pNode[2] = CNode::Create(m_pGraphicDev, m_pMessageChannel, m_pTransformCom, L"Proto_N2Node3Texture");
-	m_pNode[2]->Set_NodeScale(vScale);
+	if (m_pNode[2]) m_pNode[2]->Set_NodeScale(vScale);
 }
 
 void CMonsterN2::Ready_Event()

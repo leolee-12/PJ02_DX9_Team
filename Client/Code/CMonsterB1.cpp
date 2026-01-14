@@ -9,6 +9,7 @@
 #include "CB1_AI.h"
 #include "CProjectile.h"
 #include "CMonsterN2.h"
+#include <CMonsterB2.h>
 
 CMonsterB1::CMonsterB1(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CMonster(pGraphicDev),
@@ -73,30 +74,22 @@ _int CMonsterB1::Update_GameObject(const _float& fTimeDelta)
 
 	Move_Frame(fTimeDelta);
 
-	m_pColliderCom->UpdateFromTransform(m_pTransformCom);
-	
-	//------스프라이트 높이와 충돌체 위치 맞춤---------
-	_float fY(m_vPos.y - m_pTransformCom->Get_Scale(ROT_Y) * 0.125f);
-	AABB tAABB = { m_vPos.x, fY, m_vPos.z, 2.5f, 2.5f, 2.5f };
-	m_pColliderCom->Set_AABB(tAABB);
-	//-------------------------------------------------
+	Check_Status();
 
-	// 충돌체 디버그용
-	if (g_bDebug) m_pColliderCom->Update_AABBforRender();
+	for (auto& pComponent : m_mapComponent[ID_DYNAMIC])
+	pComponent.second->Update_Component(fTimeDelta);
 
-	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
-
-	if (iExit == DEAD)
-	{
-		m_pColliderCom->UnregisterFromManager();
-		return iExit;
-	}
+	//if (iExit == DEAD)
+	//{
+	//	m_pColliderCom->UnregisterFromManager();
+	//	return iExit;
+	//}
 
 	CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHA, this);
 
 	Compute_NodePos(fTimeDelta);
 
-	return iExit;
+	return NOEVENT;
 }
 
 void CMonsterB1::LateUpdate_GameObject(const _float& fTimeDelta)
@@ -325,6 +318,10 @@ void CMonsterB1::Check_Frame()
 		m_fFrameEnd = 19.f;
 		break;
 
+	case B1S_DIE:
+		m_fFrameEnd = 132.f;
+		break;
+
 	case B1S_STOP:
 		m_fFrameEnd = 16.f;
 		break;
@@ -374,14 +371,18 @@ void CMonsterB1::Move_Frame(const _float& fTimeDelta)
 			m_eCurState = B1S_CRAWL;
 			break;
 
+		case B1S_ROAR:
+			m_pAICom->Anim_End(m_eCurState);
+			m_eCurState = B1S_CRAWL;
+			break;
+
 		case B1S_SPAWN:
 			m_pAICom->Anim_End(m_eCurState);
 			m_eCurState = B1S_ROAR;
 			break;
 
-		case B1S_ROAR:
-			m_pAICom->Anim_End(m_eCurState);
-			m_eCurState = B1S_CRAWL;
+		case B1S_DIE:
+			m_fFrame = m_fFrameEnd - 0.001f;
 			break;
 		}
 	}
@@ -414,10 +415,13 @@ void CMonsterB1::Set_Texture()
 	case B1S_SHOOT:
 	case B1S_SUMMON:
 	case B1S_ROAR:
+	case B1S_SPAWN:
 		break;
 
-	case B1S_SPAWN:
-		iTexIdx = 6;
+	case B1S_DIE:
+	{
+		m_matTex._22 = 0.0625f;
+	}
 		break;
 
 	case B1S_STOP:
@@ -438,7 +442,8 @@ void CMonsterB1::Set_Texture()
 		m_matTex._31 = _float(iU) * 0.0625f;	// 반전 X : 왼쪽에서 오른쪽으로 읽음
 	}
 
-	m_matTex._32 = _float(iV) * 0.25f;
+	if (m_eCurState != B1S_DIE) m_matTex._32 = _float(iV) * 0.25f;
+	else						m_matTex._32 = _float(iV) * 0.0625f;
 
 	m_pGraphicDev->SetTransform(D3DTS_TEXTURE0, &m_matTex);
 
@@ -584,6 +589,35 @@ void CMonsterB1::Check_Phase()
 	}
 }
 
+void CMonsterB1::Check_Status()
+{
+	//m_pColliderCom->UpdateFromTransform(m_pTransformCom);
+
+	//------스프라이트 높이와 충돌체 위치 맞춤---------
+	_float fY(m_vPos.y - m_pTransformCom->Get_Scale(ROT_Y) * 0.125f);
+	AABB tAABB = { m_vPos.x, fY, m_vPos.z, 2.5f, 2.5f, 2.5f };
+	m_pColliderCom->Set_AABB(tAABB);
+	m_pColliderCom->UpdateFromCustom(tAABB);
+	//-------------------------------------------------
+
+	// 충돌체 디버그용
+	if (g_bDebug) m_pColliderCom->Update_AABBforRender();
+
+	if ((m_iPhase != 0) && (m_iHp <= 0))
+	{
+		m_pColliderCom->UnregisterFromManager();
+		m_pAICom->Set_State(B1S_DIE);
+		m_iPhase = 0;
+
+		for (_uint i = 0; i < 4; ++i)
+		{
+			m_pNode[i]->Set_NodeScale(_vec3{ 0.f, 0.f, 0.f });
+		}
+
+		Summon_Boss();
+	}
+}
+
 void CMonsterB1::Launch_Projectile(const _uint& iCount)
 {
 	if (iCount > 1000) return;
@@ -644,6 +678,22 @@ void CMonsterB1::Summon_Minion(const _uint& iCount)
 	}
 }
 
+// 디버그용
+void CMonsterB1::Summon_Boss()
+{
+	CGameObject* pMonster = CMonsterB2::Create(m_pGraphicDev, m_pMessageChannel);
+
+	if (pMonster)
+	{
+		IMessageChannel::EVENT ESummonMonster;
+		ESummonMonster.strType = L"Obj.Add";
+		ESummonMonster.eOBJID = Engine::OID_MONSTER;
+		ESummonMonster.hmapData.emplace(L"Obj", pMonster);
+		ESummonMonster.hmapData.emplace(L"LayerTag", L"GameLogic_Layer");
+		ESummonMonster.hmapData.emplace(L"ObjTag", L"Boss2");
+		m_pMessageChannel->Publish(ESummonMonster);
+	}
+}
 
 CMonsterB1* CMonsterB1::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel)
 {

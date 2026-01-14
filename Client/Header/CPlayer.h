@@ -5,7 +5,6 @@ namespace Engine
 {
 	class CRcTex;
 	class CTransform;
-	//class CTexture;
 	class CTextureSet;
 	class CCalculator;
 	class CCollider;
@@ -51,7 +50,6 @@ private:
 
 	void			Check_Frame();
 	void			Move_Frame(const _float& fTimeDelta);
-	void			Set_Texture();
 	void			Set_TextureSet();
 
 	// ==========================
@@ -71,7 +69,6 @@ private:
 private:
 	Engine::CRcTex* m_pBufferCom;
 	Engine::CTransform* m_pTransformCom;
-	//Engine::CTexture* m_pTextureCom2;
 	Engine::CTextureSet* m_pTextureCom;
 	Engine::CCalculator* m_pCalculatorCom;
 	Engine::CCollider*	m_pColliderCom;

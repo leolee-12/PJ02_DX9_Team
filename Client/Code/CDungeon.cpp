@@ -351,19 +351,19 @@ HRESULT CDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 		//		return E_FAIL;
 	}
 
-	//pGameObject = CMonsterB1::Create(m_pGraphicDev, m_pMessageChannel);
+	pGameObject = CMonsterB1::Create(m_pGraphicDev, m_pMessageChannel);
+	
+	NULL_CHECK_RETURN(pGameObject, E_FAIL)
+	
+		if (FAILED(pLayer->Add_GameObject(L"Boss", pGameObject)))
+			return E_FAIL;
+
+	//pGameObject = CMonsterB2::Create(m_pGraphicDev, m_pMessageChannel);
 	//
 	//NULL_CHECK_RETURN(pGameObject, E_FAIL)
 	//
 	//	if (FAILED(pLayer->Add_GameObject(L"Boss", pGameObject)))
 	//		return E_FAIL;
-
-	pGameObject = CMonsterB2::Create(m_pGraphicDev, m_pMessageChannel);
-
-	NULL_CHECK_RETURN(pGameObject, E_FAIL)
-
-		if (FAILED(pLayer->Add_GameObject(L"Boss", pGameObject)))
-			return E_FAIL;
 
 
 	m_mapLayer.insert({ pLayerTag , pLayer });
