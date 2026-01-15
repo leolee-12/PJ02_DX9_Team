@@ -87,6 +87,12 @@ _int CPlayer::Update_GameObject(const _float& fTimeDelta)
 	if(!m_pMessageChannel) m_bMsgRegistered = false;
 	else if (!m_bMsgRegistered) Ready_Event();
 
+	m_pTransformCom->Get_Info(INFO_POS, &m_vPrevPos);
+
+	Key_Input(fTimeDelta);
+	Move_Roll(fTimeDelta);
+	Charge(fTimeDelta);
+
 	Move_Frame(fTimeDelta);
 
 	//m_pColliderCom->UpdateFromTransform(m_pTransformCom);
@@ -112,11 +118,6 @@ _int CPlayer::Update_GameObject(const _float& fTimeDelta)
 
 void CPlayer::LateUpdate_GameObject(const _float& fTimeDelta)
 {
-	m_pTransformCom->Get_Info(INFO_POS, &m_vPrevPos);
-
-	Key_Input(fTimeDelta);
-	Move_Roll(fTimeDelta);
-	Charge(fTimeDelta);
 	Check_Frame();
 
 	m_pTransformCom->Compute_Bilboard(BBD_X);
@@ -155,9 +156,7 @@ void CPlayer::Ready_Variable()
 
 	m_eOBJID = OID_PLAYER;
 	_float fScale = 10.f;
-	//m_pTransformCom->Set_Scale(5.f, 5.f, 5.f);			// Player 폴더
-	//m_pTransformCom->Set_Scale(7.f, 7.f, 7.f);			// Tex2
-	m_pTransformCom->Set_Scale(fScale, fScale, fScale);		// Player(3) 폴더
+	m_pTransformCom->Set_Scale(fScale, fScale, fScale);		// Player 폴더
 	m_pTransformCom->Set_Pos(0.f, 0.f, 0.f);
 	m_fFrameSpeed = 24.f;
 
@@ -638,51 +637,34 @@ void	CPlayer::OnCollision(CGameObject* pObject)
 
 		const Engine::AABB& borderAABB = pBorderCol->Get_AABB();
 
-		const _float fPlayerHalf = 1.f;
+		const _float fHalf = 1.f;
 
-		_float fOverlapX = (borderAABB.hx + fPlayerHalf) - abs(vCurPos.x - borderAABB.x);
-		_float fOverlapZ = (borderAABB.hz + fPlayerHalf) - abs(vCurPos.z - borderAABB.z);
+		_float fOverlapX = (borderAABB.hx + fHalf) - abs(vCurPos.x - borderAABB.x);
+		_float fOverlapZ = (borderAABB.hz + fHalf) - abs(vCurPos.z - borderAABB.z);
 
 		if (fOverlapX > 0.f && fOverlapZ > 0.f)
 		{
-			//if (fOverlapX < fOverlapZ)
-			//{
-			//	if (vCurPos.x < borderAABB.x)
-			//		vCurPos.x -= fOverlapX /*- m_vDir.x + fPlayerHalf*/;
-			//	else
-			//		vCurPos.x += fOverlapX /*+ m_vDir.x + fPlayerHalf*/;
-			//}
-			//else
-			//{
-			//	if (vCurPos.z < borderAABB.z)
-			//		vCurPos.z -= fOverlapZ /*- m_vDir.z + fPlayerHalf*/;
-			//	else
-			//		vCurPos.z += fOverlapZ /*+ m_vDir.z + fPlayerHalf*/;
-			//}
-
 			if (fOverlapX < fOverlapZ)
 			{
 				// X축 보정
 				if (vCurPos.x < borderAABB.x)
-					vCurPos.x = borderAABB.x - borderAABB.hx - fPlayerHalf - 0.01f;  // 여유
+					vCurPos.x = borderAABB.x - borderAABB.hx - fHalf - 0.01f;
 				else
-					vCurPos.x = borderAABB.x + borderAABB.hx + fPlayerHalf + 0.01f;
+					vCurPos.x = borderAABB.x + borderAABB.hx + fHalf + 0.01f;
 			}
-			else
+			else if(fOverlapX > fOverlapZ)
 			{
 				// Z축 보정
 				if (vCurPos.z < borderAABB.z)
-					vCurPos.z = borderAABB.z - borderAABB.hz - fPlayerHalf - 0.01f;
+					vCurPos.z = borderAABB.z - borderAABB.hz - fHalf - 0.01f;
 				else
-					vCurPos.z = borderAABB.z + borderAABB.hz + fPlayerHalf + 0.01f;
+					vCurPos.z = borderAABB.z + borderAABB.hz + fHalf + 0.01f;
 			}
 
 			m_pTransformCom->Set_Pos(vCurPos.x, vCurPos.y, vCurPos.z);
-
+			m_pTransformCom->Update_Component(0.f);
+			m_pTransformCom->Compute_Bilboard(BBD_X);
 			m_vRollPos = vCurPos;
-
-			m_fSpeed = 0.f;
-			m_fLerp = 0.f;
 		}
 
 		return;

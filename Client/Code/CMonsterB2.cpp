@@ -142,7 +142,52 @@ void CMonsterB2::Render_GameObject()
 
 void CMonsterB2::OnCollision(CGameObject* pObject)
 {
-	CMonster::OnCollision(pObject);
+	if (pObject->Get_OBJID() == OID_BORDER)
+	{
+		_vec3 vCurPos;
+		m_pTransformCom->Get_Info(INFO_POS, &vCurPos);
+
+		Engine::CCollider* pBorderCol = dynamic_cast<Engine::CCollider*>(
+			pObject->Get_Component(ID_STATIC, L"Com_Collider"));
+
+		if (nullptr == pBorderCol)
+			return;
+
+		const Engine::AABB& borderAABB = pBorderCol->Get_AABB();
+
+		const _float fHalf = 1.f;
+
+		_float fOverlapX = (borderAABB.hx + fHalf) - abs(vCurPos.x - borderAABB.x);
+		_float fOverlapZ = (borderAABB.hz + fHalf) - abs(vCurPos.z - borderAABB.z);
+
+		if (fOverlapX > 0.f && fOverlapZ > 0.f)
+		{
+			if (fOverlapX < fOverlapZ)
+			{
+				// X축 보정
+				if (vCurPos.x < borderAABB.x)
+					vCurPos.x = borderAABB.x - borderAABB.hx - fHalf - 0.01f;
+				else
+					vCurPos.x = borderAABB.x + borderAABB.hx + fHalf + 0.01f;
+			}
+			else if (fOverlapX > fOverlapZ)
+			{
+				// Z축 보정
+				if (vCurPos.z < borderAABB.z)
+					vCurPos.z = borderAABB.z - borderAABB.hz - fHalf - 0.01f;
+				else
+					vCurPos.z = borderAABB.z + borderAABB.hz + fHalf + 0.01f;
+			}
+
+			m_pTransformCom->Set_Pos(vCurPos.x, vCurPos.y, vCurPos.z);
+			m_pTransformCom->Update_Component(0.f);
+			m_pTransformCom->Compute_Bilboard(BBD_X);
+			m_pAICom->Set_LerpPos(vCurPos);
+
+		}
+
+		return;
+	}
 }
 
 HRESULT CMonsterB2::Add_Component()

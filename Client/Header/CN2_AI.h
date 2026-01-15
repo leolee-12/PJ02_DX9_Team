@@ -18,6 +18,7 @@ public:
 	void		Set_Speed(const _float& fSpeed) { m_fSpeed = fSpeed; }
 	void		Set_Lerp(const _float& fLerp, const _vec3& vPos) { m_fSpeed = fLerp; m_vLerpPos = vPos; }
 	void		Anim_End(CMonsterN2::MONSTER_N2_STATE eState);
+	void		Set_LerpPos(const _vec3& vLerpPos) { m_vLerpPos = vLerpPos; }
 
 private:
 	_int		Update_Component(const _float& fTimeDelta)	override;
