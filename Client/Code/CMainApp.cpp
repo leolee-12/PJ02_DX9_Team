@@ -14,6 +14,7 @@
 #include "CCutSceneMgr.h"
 
 bool g_bDebug = false;
+bool g_bChangeScene = false;
 list<wstring>		g_MapProtoname;
 
 CMainApp::CMainApp() : m_pDeviceClass(nullptr), m_pGraphicDev(nullptr)

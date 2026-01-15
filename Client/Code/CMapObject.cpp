@@ -162,6 +162,7 @@ HRESULT CMapObject::Add_Component()
 		// 폴백: 특정 텍스처 없으면 Rock 텍스처 사용
 		pComponent = m_pTextureCom = dynamic_cast<Engine::CTexture*>
 			(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_RockTexture"));
+		return E_FAIL;
 	}
 
 	if (nullptr != pComponent)

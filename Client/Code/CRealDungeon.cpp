@@ -116,7 +116,7 @@ HRESULT CRealDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	// Map Load
 	Engine::MAPDATA mapData;
 	if (SUCCEEDED(Engine::CMapLoader::GetInstance()->LoadMapA(
-		"../Bin/Resource/Maps/MapData/RealDungeon.txt", mapData)))
+		"../Bin/Resource/Maps/MapData/Real_Dungeon.txt", mapData)))
 	{
 		// �� �������� skyType���� SkyBox ����
 		pGameObject = CMySkyBox::Create(m_pGraphicDev, mapData.skyType);
