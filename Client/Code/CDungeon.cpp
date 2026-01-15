@@ -490,7 +490,7 @@ void CDungeon::Ready_Event()
 		if (pGObj != nullptr)
 		{
 			wstring strLayerTag = any_cast<const _tchar*>(Event.hmapData.find(L"LayerTag")->second);
-			wstring strObjTag = any_cast<const _tchar*>(Event.hmapData.find(L"ObjTag")->second);
+			wstring strObjTag = any_cast<wstring>(Event.hmapData.find(L"ObjTag")->second);
 			auto iter = m_mapLayer.find(strLayerTag);
 
 			if(iter != m_mapLayer.end())

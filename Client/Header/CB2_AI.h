@@ -30,7 +30,7 @@ public:
 	void		Anim_End(CMonsterB2::MONSTER_B2_STATE eState);
 	void		Push_Front_Pattern(CMonsterB2::MONSTER_B2_STATE eState);
 	void		Set_Weight(CMonsterB2::MONSTER_B2_STATE eState, _uint iNewWeight);
-	
+	void		Set_LerpPos(const _vec3& vLerpPos) { m_vLerpPos = vLerpPos; }
 	void		Set_Signal(_uint iNum = 0);
 	// Owner가 특정 순간에 AI에게 신호를 보내는 용도
 

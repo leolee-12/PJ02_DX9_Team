@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "CNode.h"
 #include "CProtoMgr.h"
 #include "CManagement.h"
@@ -114,7 +114,7 @@ void CNode::Set_Material()
 		_float fMax = 1.f;
 		_float fRatio = min(m_fAcmlTime / 2.f, 1.f);
 
-		// ÅØ½ºÃ³ »ö»ó È¥ÇÕ
+		// í…ìŠ¤ì²˜ ìƒ‰ìƒ í˜¼í•©
 		m_pGraphicDev->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_ADD);
 		m_pGraphicDev->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
 		m_pGraphicDev->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_TFACTOR);
@@ -185,11 +185,11 @@ HRESULT CNode::Add_Component()
 
 void CNode::Ready_Variable()
 {
-	// Transform ¼¼ÆÃ
+	// Transform ì„¸íŒ…
 	m_pTransformCom->Set_Pos(_float(rand() % 20), 1.f, _float(rand() % 20));
 	m_pTransformCom->Set_Scale(2.f, 2.f, 2.f);
 
-	// Anim °ü·Ã ¼¼ÆÃ
+	// Anim ê´€ë ¨ ì„¸íŒ…
 	m_fFrameEnd = 16.f;
 	m_fFrameSpeed = 24.f;
 	D3DXMatrixIdentity(&m_matTex);
@@ -208,14 +208,14 @@ void CNode::Move_Frame(const _float& fTimeDelta)
 
 void CNode::Set_Texture()
 {
-	_uint iFrame = _uint(m_fFrame);					// ÇöÀç ÇÁ·¹ÀÓ
+	_uint iFrame = _uint(m_fFrame);					// í˜„ì¬ í”„ë ˆì„
 
 	D3DXMatrixIdentity(&m_matTex);
 	_uint iU = iFrame % 16;
 	_uint iV = iFrame / 16;
 
-	m_matTex._11 = 0.0625f;	// °¡·Î´Â 16Ä­ °íÁ¤
-	m_matTex._22 = 1.f;		// ¼¼·Î´Â 1Ä­ °íÁ¤(Node)
+	m_matTex._11 = 0.0625f;	// ê°€ë¡œëŠ” 16ì¹¸ ê³ ì •
+	m_matTex._22 = 1.f;		// ì„¸ë¡œëŠ” 1ì¹¸ ê³ ì •(Node)
 	m_matTex._31 = _float(iU) * 0.0625f;
 
 	m_pGraphicDev->SetTransform(D3DTS_TEXTURE0, &m_matTex);
@@ -227,7 +227,7 @@ CNode* CNode::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChanne
 {
 	CNode* pNode = new CNode(pGraphicDev, StageChannel);
 
-	pNode->m_pProtoTexKey = pProtoTexKey;	// Ready¿¡ ÇÊ¿ä
+	pNode->m_pProtoTexKey = pProtoTexKey;	// Readyì— í•„ìš”
 
 	if (FAILED(pNode->Ready_GameObject()))
 	{
@@ -236,7 +236,7 @@ CNode* CNode::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChanne
 		return nullptr;
 	}
 
-	pNode->m_pOwnerTC = pOwnerTC;	// Ready µµÁß Á¶ÀÛµÉ À§Çè Á¦°Å
+	pNode->m_pOwnerTC = pOwnerTC;	// Ready ë„ì¤‘ ì¡°ì‘ë  ìœ„í—˜ ì œê±°
 
 	return pNode;
 }

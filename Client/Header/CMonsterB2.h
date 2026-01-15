@@ -47,6 +47,8 @@ public:
 	void				Launch_Projectile(const _uint& iCount, const _vec3& vTargetDir);
 	void				Summon_Minion(const _uint& iCount);
 	void				Attack_HitBox(_vec3 vPos);
+	void				Summon_Spike(const _uint& iCount, const _vec3& vSpeed = _vec3{0.f, 0.f, 0.f});
+
 
 private:
 	HRESULT				Add_Component();
@@ -63,7 +65,6 @@ private:
 	void				Attacked(const _int& iAttack);
 	void				Update_State();
 	_vec3				Compute_LimitedDir(const _float& fAngle, const _vec3& vCurDir, const _vec3& vDesiredDir);
-	void				Compute_NodePos(const _float& fTimeDelta);
 	void				Check_Phase();
 	void				Check_Status();
 private:
@@ -80,9 +81,6 @@ private:
 
 	// AI 관련
 	CB2_AI*	m_pAICom;
-
-	// 마디 관련
-	CNode*	m_pNode[4]; //Spike로 사용?
 
 	// 패턴 관련
 	_uint			m_iPhase;

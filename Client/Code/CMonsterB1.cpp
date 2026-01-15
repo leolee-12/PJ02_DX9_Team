@@ -139,7 +139,52 @@ void CMonsterB1::Render_GameObject()
 
 void CMonsterB1::OnCollision(CGameObject* pObject)
 {
-	CMonster::OnCollision(pObject);
+	if (pObject->Get_OBJID() == OID_BORDER)
+	{
+		_vec3 vCurPos;
+		m_pTransformCom->Get_Info(INFO_POS, &vCurPos);
+
+		Engine::CCollider* pBorderCol = dynamic_cast<Engine::CCollider*>(
+			pObject->Get_Component(ID_STATIC, L"Com_Collider"));
+
+		if (nullptr == pBorderCol)
+			return;
+
+		const Engine::AABB& borderAABB = pBorderCol->Get_AABB();
+
+		const _float fHalf = 1.f;
+
+		_float fOverlapX = (borderAABB.hx + fHalf) - abs(vCurPos.x - borderAABB.x);
+		_float fOverlapZ = (borderAABB.hz + fHalf) - abs(vCurPos.z - borderAABB.z);
+
+		if (fOverlapX > 0.f && fOverlapZ > 0.f)
+		{
+			if (fOverlapX < fOverlapZ)
+			{
+				// X축 보정
+				if (vCurPos.x < borderAABB.x)
+					vCurPos.x = borderAABB.x - borderAABB.hx - fHalf - 0.01f;
+				else
+					vCurPos.x = borderAABB.x + borderAABB.hx + fHalf + 0.01f;
+			}
+			else if (fOverlapX > fOverlapZ)
+			{
+				// Z축 보정
+				if (vCurPos.z < borderAABB.z)
+					vCurPos.z = borderAABB.z - borderAABB.hz - fHalf - 0.01f;
+				else
+					vCurPos.z = borderAABB.z + borderAABB.hz + fHalf + 0.01f;
+			}
+
+			m_pTransformCom->Set_Pos(vCurPos.x, vCurPos.y, vCurPos.z);
+			m_pTransformCom->Update_Component(0.f);
+			m_pTransformCom->Compute_Bilboard(BBD_X);
+			m_pAICom->Set_LerpPos(vCurPos);
+
+		}
+
+		return;
+	}
 }
 
 HRESULT CMonsterB1::Add_Component()
@@ -199,7 +244,7 @@ void CMonsterB1::Ready_Variable()
 	m_iPhase = 1;
 
 	// Transform 세팅
-	m_pTransformCom->Set_Pos(_float(rand() % 10), m_fGroundY, _float(rand() % 10));
+	m_pTransformCom->Set_Pos(_float(rand() % 10), m_fGroundY, _float(rand() % 10) + 80.f);
 	m_pTransformCom->Set_Scale(fScale, fScale, fScale);
 
 	// Collider 세팅
@@ -636,12 +681,14 @@ void CMonsterB1::Launch_Projectile(const _uint& iCount)
 
 		if (pProjectile)
 		{
+			wstring strObjTag = L"Projectile";
+
 			IMessageChannel::EVENT EProjectile;
 			EProjectile.strType = L"Obj.Add";
 			EProjectile.eOBJID = Engine::OID_PROJECTILE;
 			EProjectile.hmapData.emplace(L"Obj", pProjectile);
 			EProjectile.hmapData.emplace(L"LayerTag", L"GameLogic_Layer");
-			EProjectile.hmapData.emplace(L"ObjTag", L"Projectile");
+			EProjectile.hmapData.emplace(L"ObjTag", strObjTag);
 			m_pMessageChannel->Publish(EProjectile);
 		}
 
@@ -655,7 +702,7 @@ void CMonsterB1::Summon_Minion(const _uint& iCount)
 
 	_float fRadian = 0.f;
 	_float fGap = 2.f * D3DX_PI / iCount;
-	_float fRadius = 10.f;
+	_float fRadius = 5.f;
 
 	for (_uint i = 0; i < iCount; ++i)
 	{
@@ -665,12 +712,14 @@ void CMonsterB1::Summon_Minion(const _uint& iCount)
 
 		if (pMonster)
 		{
+			wstring strObjTag = L"Monster";
+
 			IMessageChannel::EVENT ESummonMonster;
 			ESummonMonster.strType = L"Obj.Add";
 			ESummonMonster.eOBJID = Engine::OID_MONSTER;
 			ESummonMonster.hmapData.emplace(L"Obj", pMonster);
 			ESummonMonster.hmapData.emplace(L"LayerTag", L"GameLogic_Layer");
-			ESummonMonster.hmapData.emplace(L"ObjTag", L"Monster");
+			ESummonMonster.hmapData.emplace(L"ObjTag", strObjTag);
 			m_pMessageChannel->Publish(ESummonMonster);
 		}
 
@@ -685,12 +734,14 @@ void CMonsterB1::Summon_Boss()
 
 	if (pMonster)
 	{
+		wstring strObjTag = L"Boss2";
+
 		IMessageChannel::EVENT ESummonMonster;
 		ESummonMonster.strType = L"Obj.Add";
 		ESummonMonster.eOBJID = Engine::OID_MONSTER;
 		ESummonMonster.hmapData.emplace(L"Obj", pMonster);
 		ESummonMonster.hmapData.emplace(L"LayerTag", L"GameLogic_Layer");
-		ESummonMonster.hmapData.emplace(L"ObjTag", L"Boss2");
+		ESummonMonster.hmapData.emplace(L"ObjTag", strObjTag);
 		m_pMessageChannel->Publish(ESummonMonster);
 	}
 }

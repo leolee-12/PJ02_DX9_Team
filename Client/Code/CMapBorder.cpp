@@ -24,22 +24,35 @@ HRESULT CMapBorder::Ready_GameObject()
 	if (FAILED(Add_Component()))
 		return E_FAIL;
 
-	m_pColliderCom->RegisterToManager(this, CL_BORDER);
+	//m_pColliderCom->RegisterToManager(this, CL_BORDER);
 
 	return S_OK;
 }
 
 _int CMapBorder::Update_GameObject(const _float& fTimeDelta)
 {
-	if (g_bDebug) { m_pColliderCom->Update_AABBforRender(); }
+	//m_pColliderCom->UpdateFromTransform(m_pTransformCom);
+	const float TILE_SIZE = 8.0f;
+	float worldX = m_iTileX * TILE_SIZE + TILE_SIZE * 0.5f;
+	float worldZ = m_iTileZ * TILE_SIZE + TILE_SIZE * 0.5f;
+	Engine::AABB tAABB;
+	tAABB.x = worldX;
+	tAABB.y = 1.f;
+	tAABB.z = worldZ;
+	tAABB.hx = TILE_SIZE * 0.5f;
+	tAABB.hy = 2.f;
+	tAABB.hz = TILE_SIZE * 0.5f;
+	m_pColliderCom->Set_AABB(tAABB);
+	m_pColliderCom->UpdateFromCustom(tAABB);
+
+	if (g_bDebug) m_pColliderCom->Update_AABBforRender();
 
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
-	m_pColliderCom->UpdateFromTransform(m_pTransformCom);
 
 	// Debug mode only - render collider bo
-	if (g_bDebug)
-		CRenderer::GetInstance()->Add_RenderGroup(RENDER_NONALPHA, this);
+	//if (g_bDebug)
+	//	CRenderer::GetInstance()->Add_RenderGroup(RENDER_NONALPHA, this);
 
 	return iExit;
 }

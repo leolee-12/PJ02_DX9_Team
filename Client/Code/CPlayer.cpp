@@ -87,14 +87,21 @@ _int CPlayer::Update_GameObject(const _float& fTimeDelta)
 	if(!m_pMessageChannel) m_bMsgRegistered = false;
 	else if (!m_bMsgRegistered) Ready_Event();
 
+	m_pTransformCom->Get_Info(INFO_POS, &m_vPrevPos);
+
+	Key_Input(fTimeDelta);
+	Move_Roll(fTimeDelta);
+	Charge(fTimeDelta);
+
 	Move_Frame(fTimeDelta);
 
-	m_pColliderCom->UpdateFromTransform(m_pTransformCom);
+	//m_pColliderCom->UpdateFromTransform(m_pTransformCom);
 	
 	//------스프라이트 높이와 충돌체 위치 맞춤---------
 	_float fY(m_vPos.y - m_pTransformCom->Get_Scale(ROT_Y) * 0.125f);
 	AABB tAABB = { m_vPos.x, fY, m_vPos.z, 1.f, 1.f, 1.f };
 	m_pColliderCom->Set_AABB(tAABB);
+	m_pColliderCom->UpdateFromCustom(tAABB);
 	//-------------------------------------------------
 
 	// 충돌체 디버그용
@@ -111,11 +118,6 @@ _int CPlayer::Update_GameObject(const _float& fTimeDelta)
 
 void CPlayer::LateUpdate_GameObject(const _float& fTimeDelta)
 {
-	m_pTransformCom->Get_Info(INFO_POS, &m_vPrevPos);
-
-	Key_Input(fTimeDelta);
-	Move_Roll(fTimeDelta);
-	Charge(fTimeDelta);
 	Check_Frame();
 
 	m_pTransformCom->Compute_Bilboard(BBD_X);
@@ -142,7 +144,7 @@ void CPlayer::Render_GameObject()
 
 	m_pGraphicDev->SetTextureStageState(0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE);
 
-	_tchar szPos[64] = L"";
+	_tchar szPos[256] = L"";
 	swprintf_s(szPos, L"[플레이어] 플레이어 중점 위치 X : %f, Y : %f, Z : %f", m_vPos.x, m_vPos.y, m_vPos.z);
 	OutputDebugString(szPos);
 	OutputDebugString(L"\n");
@@ -156,9 +158,7 @@ void CPlayer::Ready_Variable()
 
 	m_eOBJID = OID_PLAYER;
 	_float fScale = 10.f;
-	//m_pTransformCom->Set_Scale(5.f, 5.f, 5.f);			// Player 폴더
-	//m_pTransformCom->Set_Scale(7.f, 7.f, 7.f);			// Tex2
-	m_pTransformCom->Set_Scale(fScale, fScale, fScale);		// Player(3) 폴더
+	m_pTransformCom->Set_Scale(fScale, fScale, fScale);		// Player 폴더
 	m_pTransformCom->Set_Pos(0.f, 0.f, 0.f);
 	m_fFrameSpeed = 24.f;
 
@@ -300,6 +300,8 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 
 	if (!m_bRoll && !m_iCombo && !m_fCharge)
 	{
+		m_fSpeed = 10.f;
+		
 		if (CDInputMgr::GetInstance()->Key_Pressing(DIK_W))
 		{
 			m_eCurState = PS_RUN;
@@ -353,6 +355,7 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 		m_bRoll = true;
 		m_eCurState = PS_ROLL;
 		m_vRollPos = m_vPos + m_vDir * 5.f;
+		m_fLerp = 0.2f;
 	}
 
 	if (GetAsyncKeyState(VK_LBUTTON) & 0x0001)	// 눌렀을 때 한 번만 true
@@ -649,29 +652,34 @@ void	CPlayer::OnCollision(CGameObject* pObject)
 
 		const Engine::AABB& borderAABB = pBorderCol->Get_AABB();
 
-		const _float fPlayerHalf = 0.5f;
+		const _float fHalf = 1.f;
 
-		_float fOverlapX = (borderAABB.hx + fPlayerHalf) - abs(vCurPos.x - borderAABB.x);
-		_float fOverlapZ = (borderAABB.hz + fPlayerHalf) - abs(vCurPos.z - borderAABB.z);
+		_float fOverlapX = (borderAABB.hx + fHalf) - abs(vCurPos.x - borderAABB.x);
+		_float fOverlapZ = (borderAABB.hz + fHalf) - abs(vCurPos.z - borderAABB.z);
 
 		if (fOverlapX > 0.f && fOverlapZ > 0.f)
 		{
 			if (fOverlapX < fOverlapZ)
 			{
+				// X축 보정
 				if (vCurPos.x < borderAABB.x)
-					vCurPos.x -= fOverlapX + 0.1f;
+					vCurPos.x = borderAABB.x - borderAABB.hx - fHalf - 0.01f;
 				else
-					vCurPos.x += fOverlapX + 0.1f;
+					vCurPos.x = borderAABB.x + borderAABB.hx + fHalf + 0.01f;
 			}
-			else
+			else if(fOverlapX > fOverlapZ)
 			{
+				// Z축 보정
 				if (vCurPos.z < borderAABB.z)
-					vCurPos.z -= fOverlapZ + 0.1f;
+					vCurPos.z = borderAABB.z - borderAABB.hz - fHalf - 0.01f;
 				else
-					vCurPos.z += fOverlapZ + 0.1f;
+					vCurPos.z = borderAABB.z + borderAABB.hz + fHalf + 0.01f;
 			}
 
 			m_pTransformCom->Set_Pos(vCurPos.x, vCurPos.y, vCurPos.z);
+			m_pTransformCom->Update_Component(0.f);
+			m_pTransformCom->Compute_Bilboard(BBD_X);
+			m_vRollPos = vCurPos;
 		}
 
 		return;

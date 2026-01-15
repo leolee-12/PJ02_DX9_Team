@@ -30,6 +30,8 @@ public:
 	void		Anim_End(CMonsterB1::MONSTER_B1_STATE eState);
 	void		Push_Front_Pattern(CMonsterB1::MONSTER_B1_STATE eState);
 	void		Set_Weight(CMonsterB1::MONSTER_B1_STATE eState, _uint iNewWeight);
+	void		Set_LerpPos(const _vec3& vLerpPos) { m_vLerpPos = vLerpPos; }
+
 private:
 	_int		Update_Component(const _float& fTimeDelta)	override;
 	void		Update_Crawl(const _float& fTimeDelta);

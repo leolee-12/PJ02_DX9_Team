@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "CAIController.h"
 #include "CMonsterN2.h"
 
@@ -16,7 +16,9 @@ protected:
 
 public:
 	void		Set_Speed(const _float& fSpeed) { m_fSpeed = fSpeed; }
+	void		Set_Lerp(const _float& fLerp, const _vec3& vPos) { m_fSpeed = fLerp; m_vLerpPos = vPos; }
 	void		Anim_End(CMonsterN2::MONSTER_N2_STATE eState);
+	void		Set_LerpPos(const _vec3& vLerpPos) { m_vLerpPos = vLerpPos; }
 
 private:
 	_int		Update_Component(const _float& fTimeDelta)	override;
@@ -33,7 +35,7 @@ private:
 	_float		m_fGravity;
 	_float		m_fAcmlTime;
 	_bool		m_bChase;
-	_vec3		m_vLerpPos;		// Lerp¿ë À§Ä¡
+	_vec3		m_vLerpPos;		// Lerpìš© ìœ„ì¹˜
 
 public:
 	static CN2_AI*		Create(LPDIRECT3DDEVICE9 pGraphicDev, const _float& fDetectRange, const _float& fInteractRange, const _uint& iInitState = 0);

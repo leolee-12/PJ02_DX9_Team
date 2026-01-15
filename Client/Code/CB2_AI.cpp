@@ -49,9 +49,11 @@ HRESULT CB2_AI::Ready_AI(const _float& fDetectRange, const _float& fInteractRang
 
 	// 공격 패턴 설정
 	m_iDequeMinSize = 3;
-	m_vecAtkPatterns.push_back({ CMonsterB2::B2S_SMASH, 40, true });
-	m_vecAtkPatterns.push_back({ CMonsterB2::B2S_SHOOT, 40, true });
-	m_vecAtkPatterns.push_back({ CMonsterB2::B2S_SUMMON, 40, true });
+	m_vecAtkPatterns.push_back({ CMonsterB2::B2S_SMASH,	 2, true });
+	m_vecAtkPatterns.push_back({ CMonsterB2::B2S_SHOOT,	 2, true });
+	m_vecAtkPatterns.push_back({ CMonsterB2::B2S_SUMMON, 2, true });
+	m_vecAtkPatterns.push_back({ CMonsterB2::B2S_SPIKE1, 0, false });
+	m_vecAtkPatterns.push_back({ CMonsterB2::B2S_SPIKE2, 0, false });
 
 	// 시연용 : 모든 패턴이 순차적으로 실행
 	m_patternDeque.push_back(CMonsterB2::B2S_SMASH);
@@ -59,7 +61,7 @@ HRESULT CB2_AI::Ready_AI(const _float& fDetectRange, const _float& fInteractRang
 	m_patternDeque.push_back(CMonsterB2::B2S_SUMMON);
 
 	// 게임용 : 가중치와 난수를 통해 패턴을 채워줌
-	Refill_Pattern(true);
+	Refill_Pattern();
 
 	return S_OK;
 }
@@ -75,10 +77,10 @@ void CB2_AI::Enter_State(const _uint& iState)
 	{
 		m_fAcmlTime = 0.f;
 
-		m_fSpeed = 0.01f;
+		m_fSpeed = 0.04f;
 		_vec3 vPrevPos, vDesiredDir;
 		m_pOwnerTC->Get_Info(INFO_POS, &vPrevPos);
-		vDesiredDir = Randomize_Dir();
+		vDesiredDir = Compute_TargetDir();
 
 		m_vDir = Compute_LimitedDir(120.f, m_vDir, vDesiredDir);
 		m_vLerpPos = vPrevPos + m_vDir * 10.f;
@@ -140,13 +142,13 @@ void CB2_AI::Exit_State(const _uint& iState)
 	{
 		if (!m_pTargetTC) m_bChase = false;
 	}
-		break;
+	break;
 
 	case CMonsterB2::B2S_DIG:
 	{
 		if (!m_pTargetTC) m_bChase = false;
 	}
-		break;
+	break;
 
 	case CMonsterB2::B2S_ESCAPE:
 	{
@@ -333,7 +335,7 @@ _int CB2_AI::Update_Component(const _float& fTimeDelta)
 
 void CB2_AI::Update_Idle(const _float& fTimeDelta)
 {
-	if(!m_bChase)
+	if (!m_bChase)
 	{	// 타겟을 발견하지 못했을 때
 		if (m_fDistance <= m_fDetectRange)
 		{	// 타겟이 감지 범위 내로 진입 시 발견
@@ -351,6 +353,15 @@ void CB2_AI::Update_Dig(const _float& fTimeDelta)
 		m_pOwnerTC->Get_Info(INFO_POS, &vPos);
 		D3DXVec3Lerp(&vPos, &vPos, &m_vLerpPos, m_fSpeed);
 		m_pOwnerTC->Set_Pos(vPos.x, vPos.y, vPos.z);
+	}
+
+	if (m_bOnce)
+	{
+		if (m_pOwner)
+		{
+			m_pOwner->Summon_Spike(1);
+		}
+		m_bOnce = false;
 	}
 }
 
@@ -446,10 +457,40 @@ void CB2_AI::Update_Dive(const _float& fTimeDelta)
 
 void CB2_AI::Update_Spike1(const _float& fTimeDelta)
 {
+	if (m_bOnce)
+	{
+		if (m_pOwner)
+		{
+			_float fSpeed = 8.f;
+
+			m_pOwner->Summon_Spike(6, _vec3{ fSpeed * cosf(D3DXToRadian(0.f)),		0.f, fSpeed * sinf(D3DXToRadian(0.f)) });
+			m_pOwner->Summon_Spike(6, _vec3{ fSpeed * cosf(D3DXToRadian(72.f)),		0.f, fSpeed * sinf(D3DXToRadian(72.f)) });
+			m_pOwner->Summon_Spike(6, _vec3{ fSpeed * cosf(D3DXToRadian(144.f)),	0.f, fSpeed * sinf(D3DXToRadian(144.f)) });
+			m_pOwner->Summon_Spike(6, _vec3{ fSpeed * cosf(D3DXToRadian(216.f)),	0.f, fSpeed * sinf(D3DXToRadian(216.f)) });
+			m_pOwner->Summon_Spike(6, _vec3{ fSpeed * cosf(D3DXToRadian(288.f)),	0.f, fSpeed * sinf(D3DXToRadian(288.f)) });
+		}
+		m_bOnce = false;
+	}
 }
 
 void CB2_AI::Update_Spike2(const _float& fTimeDelta)
 {
+	if (m_bOnce)
+	{
+		if (m_pOwner)
+		{
+			_float fSpeed = 6.f;
+			_float fRadian = 0.f;
+			_float fGap = 2.f * D3DX_PI * 0.05f;
+
+			for (int i = 0; i < 20; ++i)
+			{
+				m_pOwner->Summon_Spike(5, _vec3{ fSpeed * cosf(fRadian), 0.f, fSpeed * sinf(fRadian) });
+				fRadian += fGap;
+			}
+		}
+		m_bOnce = false;
+	}
 }
 
 void CB2_AI::Anim_End(CMonsterB2::MONSTER_B2_STATE eState)

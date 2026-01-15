@@ -243,6 +243,7 @@
     <ClInclude Include="..\Header\CRealDungeon.h" />
     <ClInclude Include="..\Header\CSceneWarp.h" />
     <ClInclude Include="..\Header\CSkyBox.h" />
+    <ClInclude Include="..\Header\CSpike.h" />
     <ClInclude Include="..\Header\CStage.h" />
     <ClInclude Include="..\Header\CTerrain.h" />
     <ClInclude Include="..\Header\CTerrainWall.h" />
@@ -371,6 +372,7 @@
     <ClCompile Include="..\Code\CSceneWarp.cpp" />
     <ClCompile Include="..\Code\CSkyBox.cpp" />
     <ClCompile Include="..\Code\CSpeechBubble.cpp" />
+    <ClCompile Include="..\Code\CSpike.cpp" />
     <ClCompile Include="..\Code\CStage.cpp" />
     <ClCompile Include="..\Code\CTerrain.cpp" />
     <ClCompile Include="..\Code\CTerrainWall.cpp" />

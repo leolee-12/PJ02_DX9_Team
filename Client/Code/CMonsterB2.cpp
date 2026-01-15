@@ -10,6 +10,7 @@
 #include "CNode.h"
 #include "CB2_AI.h"
 #include "CProjectile.h"
+#include "CSpike.h"
 
 CMonsterB2::CMonsterB2(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CMonster(pGraphicDev),
@@ -23,7 +24,6 @@ CMonsterB2::CMonsterB2(LPDIRECT3DDEVICE9 pGraphicDev)
 	m_iMaxHp(0),
 	m_fAcmlTime(0.f)
 {
-	ZeroMemory(m_pNode, sizeof(m_pNode));
 }
 
 CMonsterB2::CMonsterB2(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel)
@@ -38,7 +38,6 @@ CMonsterB2::CMonsterB2(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChan
 	m_iMaxHp(0),
 	m_fAcmlTime(0.f)
 {
-	ZeroMemory(m_pNode, sizeof(m_pNode));
 }
 
 
@@ -54,7 +53,6 @@ CMonsterB2::CMonsterB2(const CMonsterB2& rhs)
 	m_iMaxHp(rhs.m_iPhase),
 	m_fAcmlTime(0.f)
 {
-	memcpy(m_pNode, rhs.m_pNode, sizeof(m_pNode));
 }
 
 CMonsterB2::~CMonsterB2()
@@ -93,8 +91,6 @@ _int CMonsterB2::Update_GameObject(const _float& fTimeDelta)
 
 	CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHA, this);
 
-	Compute_NodePos(fTimeDelta);
-
 	return NOEVENT;
 }
 
@@ -111,17 +107,6 @@ void CMonsterB2::LateUpdate_GameObject(const _float& fTimeDelta)
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
 
 	_vec3 vDir = *m_pAICom->Get_Dir();
-
-	//for (_uint i = 0; i < 4; ++i)
-	//{
-	//	m_pNode[i]->LateUpdate_GameObject(fTimeDelta);
-	//
-	//	if (vDir.z > 0.f)
-	//		m_pNode[i]->Set_Depth(m_fDepth - (i + 1) * 0.001f);
-	//
-	//	else
-	//		m_pNode[i]->Set_Depth(m_fDepth + (i + 1) * 0.001f);
-	//}
 }
 
 void CMonsterB2::Render_GameObject()
@@ -129,20 +114,62 @@ void CMonsterB2::Render_GameObject()
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
 
 	Set_TextureSet();
-	//Set_Material();
 
 	//m_pGraphicDev->SetTextureStageState(0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_COUNT2);
 
 	m_pBufferCom->Render_Buffer();
 
 	//m_pGraphicDev->SetTextureStageState(0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE);
-
-	//Reset_Material();
 }
 
 void CMonsterB2::OnCollision(CGameObject* pObject)
 {
-	CMonster::OnCollision(pObject);
+	if (pObject->Get_OBJID() == OID_BORDER)
+	{
+		_vec3 vCurPos;
+		m_pTransformCom->Get_Info(INFO_POS, &vCurPos);
+
+		Engine::CCollider* pBorderCol = dynamic_cast<Engine::CCollider*>(
+			pObject->Get_Component(ID_STATIC, L"Com_Collider"));
+
+		if (nullptr == pBorderCol)
+			return;
+
+		const Engine::AABB& borderAABB = pBorderCol->Get_AABB();
+
+		const _float fHalf = 1.f;
+
+		_float fOverlapX = (borderAABB.hx + fHalf) - abs(vCurPos.x - borderAABB.x);
+		_float fOverlapZ = (borderAABB.hz + fHalf) - abs(vCurPos.z - borderAABB.z);
+
+		if (fOverlapX > 0.f && fOverlapZ > 0.f)
+		{
+			if (fOverlapX < fOverlapZ)
+			{
+				// X축 보정
+				if (vCurPos.x < borderAABB.x)
+					vCurPos.x = borderAABB.x - borderAABB.hx - fHalf - 0.01f;
+				else
+					vCurPos.x = borderAABB.x + borderAABB.hx + fHalf + 0.01f;
+			}
+			else if (fOverlapX > fOverlapZ)
+			{
+				// Z축 보정
+				if (vCurPos.z < borderAABB.z)
+					vCurPos.z = borderAABB.z - borderAABB.hz - fHalf - 0.01f;
+				else
+					vCurPos.z = borderAABB.z + borderAABB.hz + fHalf + 0.01f;
+			}
+
+			m_pTransformCom->Set_Pos(vCurPos.x, vCurPos.y, vCurPos.z);
+			m_pTransformCom->Update_Component(0.f);
+			m_pTransformCom->Compute_Bilboard(BBD_X);
+			m_pAICom->Set_LerpPos(vCurPos);
+
+		}
+
+		return;
+	}
 }
 
 HRESULT CMonsterB2::Add_Component()
@@ -199,11 +226,11 @@ void CMonsterB2::Ready_Variable()
 	m_fBtmPadding = fScale * 0.51f;
 	m_fGroundY = -2.5f + fScale * 0.5f - m_fBtmPadding;
 	m_iAttack = 1;
-	m_iMaxHp = m_iHp = 20;
+	m_iMaxHp = m_iHp = 10;
 	m_iPhase = 1;
 
 	// Transform 세팅
-	m_pTransformCom->Set_Pos(_float(rand() % 10), m_fGroundY, _float(rand() % 10));
+	m_pTransformCom->Set_Pos(_float(rand() % 10), m_fGroundY, _float(rand() % 10) + 80.f);
 	m_pTransformCom->Set_Scale(fScale, fScale, fScale);
 
 	// Collider 세팅
@@ -221,30 +248,6 @@ void CMonsterB2::Ready_Variable()
 	// Anim 관련 세팅
 	m_fFrameSpeed = 24.f;
 	D3DXMatrixIdentity(&m_matTex);
-
-	// 마디 세팅
-	//_vec3 vScale{};
-	//_float fScaleReduction(0.8f);
-	//m_pTransformCom->Get_Scale(&vScale);
-	//vScale *= fScaleReduction;
-	//m_pNode[0] = CNode::Create(m_pGraphicDev, m_pMessageChannel, m_pTransformCom, L"Proto_SpikeTexture");
-	//m_pNode[0]->Set_NodeScale(vScale);
-	//m_pNode[0]->Set_UserID(CNode::MONSTER_B2);
-
-	//vScale *= fScaleReduction;
-	//m_pNode[1] = CNode::Create(m_pGraphicDev, m_pMessageChannel, m_pTransformCom, L"Proto_SpikeTexture");
-	//m_pNode[1]->Set_NodeScale(vScale);
-	//m_pNode[1]->Set_UserID(CNode::MONSTER_B2);
-
-	//vScale *= fScaleReduction;
-	//m_pNode[2] = CNode::Create(m_pGraphicDev, m_pMessageChannel, m_pTransformCom, L"Proto_SpikeTexture");
-	//m_pNode[2]->Set_NodeScale(vScale);
-	//m_pNode[2]->Set_UserID(CNode::MONSTER_B2);
-
-	//vScale *= fScaleReduction;
-	//m_pNode[3] = CNode::Create(m_pGraphicDev, m_pMessageChannel, m_pTransformCom, L"Proto_SpikeTexture");
-	//m_pNode[3]->Set_NodeScale(vScale);
-	//m_pNode[3]->Set_UserID(CNode::MONSTER_B2);
 }
 
 void CMonsterB2::Ready_Event()
@@ -351,7 +354,7 @@ void CMonsterB2::Move_Frame(const _float& fTimeDelta)
 			break;
 
 		case B2S_DIG:
-			m_fFrame = m_fFrameEnd;
+			m_fFrame = 30.f;
 			break;
 
 		case B2S_ESCAPE:
@@ -401,6 +404,12 @@ void CMonsterB2::Move_Frame(const _float& fTimeDelta)
 	{
 		switch (m_eCurState)
 		{
+		case B2S_DIG:
+		{
+			if ((iCurAnimFrame >= 24) && (iCurAnimFrame % 3 == 0)) m_pAICom->Set_Signal();
+		}
+		break;
+
 		case B2S_SMASH:
 		{
 			if		(iCurAnimFrame == 12) m_pAICom->Set_Signal(1);
@@ -420,6 +429,19 @@ void CMonsterB2::Move_Frame(const _float& fTimeDelta)
 		case B2S_SUMMON:
 		{
 			if (iCurAnimFrame == 56) m_pAICom->Set_Signal();
+		}
+		break;
+
+		case B2S_SPIKE1:
+		{
+			if ((iCurAnimFrame >= 24) && (iCurAnimFrame % 3 == 0)) m_pAICom->Set_Signal();
+		}
+		break;
+
+		case B2S_SPIKE2:
+		{
+			if (iCurAnimFrame == 24) m_pAICom->Set_Signal();
+			if (iCurAnimFrame == 27) m_pAICom->Set_Signal();
 		}
 		break;
 		}
@@ -472,6 +494,11 @@ void CMonsterB2::Set_TextureSet()
 
 	case B2S_DEAD:
 		m_strFrameKey = L"BossLeshy_Dead";
+		break;
+
+	case B2S_SPIKE1:
+	case B2S_SPIKE2:
+		m_strFrameKey = L"BossLeshy_Spike";
 		break;
 	}
 
@@ -544,6 +571,26 @@ void CMonsterB2::Attack_HitBox(_vec3 vPos)
 	}
 }
 
+void CMonsterB2::Summon_Spike(const _uint& iRecurCount, const _vec3& vSpeed)
+{
+	_vec3 vPos{ m_vPos.x, 0.f, m_vPos.z };
+
+	CGameObject* pSpike = CSpike::Create(m_pGraphicDev, m_pMessageChannel, vPos, vSpeed, iRecurCount, Get_Rand_Int(0, 3));
+
+	if (pSpike)
+	{
+		wstring strObjTag = L"Spike" + to_wstring(iRecurCount);
+
+		IMessageChannel::EVENT ESpike;
+		ESpike.strType = L"Obj.Add";
+		ESpike.eOBJID = Engine::OID_PROJECTILE;
+		ESpike.hmapData.emplace(L"Obj", pSpike);
+		ESpike.hmapData.emplace(L"LayerTag", L"GameLogic_Layer");
+		ESpike.hmapData.emplace(L"ObjTag", strObjTag);
+		m_pMessageChannel->Publish(ESpike);
+	}
+}
+
 void CMonsterB2::Attacked(const _int& iAttack)
 {
 	m_iHp -= iAttack;
@@ -586,47 +633,6 @@ _vec3 CMonsterB2::Compute_LimitedDir(const _float& fMaxAngle, const _vec3& vCurD
 	return vResult;
 }
 
-void CMonsterB2::Compute_NodePos(const _float& fTimeDelta)
-{	
-	return;
-
-	// Update에서 호출할 Node 위치 계산 함수
-	_vec3 vCurPos;
-	_vec3 vPrevPos = m_vPos;						// LateUpdate에서 갱신되지 않았으므로 이전 위치
-	m_pTransformCom->Get_Info(INFO_POS, &vCurPos);	// AICom의 Update_Component에서 갱신된 현재 위치
-	_vec3 vDir = *m_pAICom->Get_Dir();
-
-	_vec3 vHeadVelocity = vCurPos - m_vPos;
-	_float fHeadSpeed = D3DXVec3Length(&vHeadVelocity) / fTimeDelta;
-	_float fBaseDist = 0.5f;
-	_float fAdaptiveDist = fBaseDist + fHeadSpeed * 0.02f;
-	_float fScaleReduction = 0.8f;
-
-	for (_uint i = 0; i < 4; ++i)
-	{
-		_vec3 vDesiredDir = vPrevPos - m_pNode[i]->Get_NodePos();
-		_vec3 vNewDir = Compute_LimitedDir(180.f * fTimeDelta, m_pNode[i]->Get_NodeDir(), vDesiredDir);
-
-		_float fCurDist = D3DXVec3Length(&vDesiredDir);
-		_float fDistRatio = fCurDist / fAdaptiveDist;
-		_float fLerp = min(1.f, fDistRatio * 0.5f);
-		_vec3 vTargetPos = vPrevPos - vNewDir * fAdaptiveDist;
-
-		//if (m_eCurState != B2S_JUMP) vTargetPos.y = m_fGroundY * fScaleReduction;
-		//fScaleReduction *= fScaleReduction;
-
-		vCurPos = m_pNode[i]->Get_NodePos();
-		_vec3 vNewPos;
-		D3DXVec3Lerp(&vNewPos, &vCurPos, &vTargetPos, fLerp);
-
-		m_pNode[i]->Set_NodePos(vNewPos);
-		m_pNode[i]->Set_NodeDir(vNewDir);
-		m_pNode[i]->Update_GameObject(fTimeDelta);
-
-		vPrevPos = vNewPos;
-	}
-}
-
 void CMonsterB2::Check_Phase()
 {
 	_float fRatio = _float(m_iHp) / m_iMaxHp;
@@ -636,9 +642,11 @@ void CMonsterB2::Check_Phase()
 	case 1:
 		if (fRatio <= 0.5f)
 		{
-			//m_iPhase = 2;
-			//m_pAICom->Push_Front_Pattern(B2S_SUMMON);
-			//m_pAICom->Set_Weight(B2S_PREPARE, 10);
+			m_iPhase = 2;
+			m_pAICom->Push_Front_Pattern(B2S_SPIKE1);
+			m_pAICom->Push_Front_Pattern(B2S_SPIKE2);
+			m_pAICom->Set_Weight(B2S_SPIKE1, 10);
+			m_pAICom->Set_Weight(B2S_SPIKE2, 10);
 		}
 		return;
 
@@ -688,7 +696,7 @@ void CMonsterB2::Launch_Projectile(const _uint& iCount, const _vec3& vTargetDir)
 		_float fRandY = Get_Rand_Float(-5.f, 5.f);
 		_float fRandZ = Get_Rand_Float(-5.f, 5.f);
 
-		_vec3 vSpeed{	vTargetDir.x * fBaseSpeed + fRandX,
+			_vec3 vSpeed{	vTargetDir.x * fBaseSpeed + fRandX,
 						fBaseYSpeed + fRandY,
 						vTargetDir.z * fBaseSpeed + fRandZ };
 
@@ -696,12 +704,14 @@ void CMonsterB2::Launch_Projectile(const _uint& iCount, const _vec3& vTargetDir)
 
 		if (pProjectile)
 		{
+			wstring strObjTag = L"Projectile";
+
 			IMessageChannel::EVENT EProjectile;
 			EProjectile.strType = L"Obj.Add";
 			EProjectile.eOBJID = Engine::OID_PROJECTILE;
 			EProjectile.hmapData.emplace(L"Obj", pProjectile);
 			EProjectile.hmapData.emplace(L"LayerTag", L"GameLogic_Layer");
-			EProjectile.hmapData.emplace(L"ObjTag", L"Projectile");
+			EProjectile.hmapData.emplace(L"ObjTag", strObjTag);
 			m_pMessageChannel->Publish(EProjectile);
 		}
 	}
@@ -713,7 +723,7 @@ void CMonsterB2::Summon_Minion(const _uint& iCount)
 
 	_float fRadian = 0.f;
 	_float fGap = 2.f * D3DX_PI / iCount;
-	_float fRadius = 10.f;
+	_float fRadius = 5.f;
 
 	for (_uint i = 0; i < iCount; ++i)
 	{
@@ -723,12 +733,14 @@ void CMonsterB2::Summon_Minion(const _uint& iCount)
 
 		if (pMonster)
 		{
+			wstring strObjTag = L"Monster";
+
 			IMessageChannel::EVENT ESummonMonster;
 			ESummonMonster.strType = L"Obj.Add";
 			ESummonMonster.eOBJID = Engine::OID_MONSTER;
 			ESummonMonster.hmapData.emplace(L"Obj", pMonster);
 			ESummonMonster.hmapData.emplace(L"LayerTag", L"GameLogic_Layer");
-			ESummonMonster.hmapData.emplace(L"ObjTag", L"Monster");
+			ESummonMonster.hmapData.emplace(L"ObjTag", strObjTag);
 			m_pMessageChannel->Publish(ESummonMonster);
 		}
 
@@ -768,10 +780,5 @@ CMonsterB2* CMonsterB2::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* S
 
 void CMonsterB2::Free()
 {
-	for (_uint i = 0; i < 4; ++i)
-	{
-		Safe_Release(m_pNode[i]);
-	}
-
 	CGameObject::Free();
 }
