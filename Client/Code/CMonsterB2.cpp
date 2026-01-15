@@ -230,7 +230,7 @@ void CMonsterB2::Ready_Variable()
 	m_iPhase = 1;
 
 	// Transform 세팅
-	m_pTransformCom->Set_Pos(_float(rand() % 10), m_fGroundY, _float(rand() % 10));
+	m_pTransformCom->Set_Pos(_float(rand() % 10), m_fGroundY, _float(rand() % 10) + 80.f);
 	m_pTransformCom->Set_Scale(fScale, fScale, fScale);
 
 	// Collider 세팅
@@ -441,6 +441,7 @@ void CMonsterB2::Move_Frame(const _float& fTimeDelta)
 		case B2S_SPIKE2:
 		{
 			if (iCurAnimFrame == 24) m_pAICom->Set_Signal();
+			if (iCurAnimFrame == 27) m_pAICom->Set_Signal();
 		}
 		break;
 		}
@@ -493,6 +494,11 @@ void CMonsterB2::Set_TextureSet()
 
 	case B2S_DEAD:
 		m_strFrameKey = L"BossLeshy_Dead";
+		break;
+
+	case B2S_SPIKE1:
+	case B2S_SPIKE2:
+		m_strFrameKey = L"BossLeshy_Spike";
 		break;
 	}
 
@@ -717,7 +723,7 @@ void CMonsterB2::Summon_Minion(const _uint& iCount)
 
 	_float fRadian = 0.f;
 	_float fGap = 2.f * D3DX_PI / iCount;
-	_float fRadius = 10.f;
+	_float fRadius = 5.f;
 
 	for (_uint i = 0; i < iCount; ++i)
 	{

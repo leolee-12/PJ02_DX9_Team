@@ -244,7 +244,7 @@ void CMonsterB1::Ready_Variable()
 	m_iPhase = 1;
 
 	// Transform 세팅
-	m_pTransformCom->Set_Pos(_float(rand() % 10), m_fGroundY, _float(rand() % 10));
+	m_pTransformCom->Set_Pos(_float(rand() % 10), m_fGroundY, _float(rand() % 10) + 80.f);
 	m_pTransformCom->Set_Scale(fScale, fScale, fScale);
 
 	// Collider 세팅
@@ -702,7 +702,7 @@ void CMonsterB1::Summon_Minion(const _uint& iCount)
 
 	_float fRadian = 0.f;
 	_float fGap = 2.f * D3DX_PI / iCount;
-	_float fRadius = 10.f;
+	_float fRadius = 5.f;
 
 	for (_uint i = 0; i < iCount; ++i)
 	{
