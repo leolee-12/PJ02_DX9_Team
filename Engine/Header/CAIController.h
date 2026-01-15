@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "CComponent.h"
 
 BEGIN(Engine)
@@ -23,7 +23,7 @@ public:
 	_float			Get_DetectRange() const { return m_fDetectRange; }
 	const _vec3*	Get_Dir() { return &m_vDir; }
 	_vec3			Get_TargetDir() { return Compute_TargetDir(); }
-	// ÀÏ´Ü ¸¸µé¾î³ùÀ¸³ª, ÇÊ¿ä¾ø´Â Set/Get ÇÔ¼ö´Â Áö¿ï ¿¹Á¤
+	// ì¼ë‹¨ ë§Œë“¤ì–´ë†¨ìœ¼ë‚˜, í•„ìš”ì—†ëŠ” Set/Get í•¨ìˆ˜ëŠ” ì§€ìš¸ ì˜ˆì •
 
 	template <typename T>
 	void		Set_State(T eState) { Change_State(eState); }
@@ -42,21 +42,21 @@ protected:
 	_vec3				Randomize_Dir();
 
 protected:
-	// AI È°¼ºÈ­ ¿©ºÎ
+	// AI í™œì„±í™” ì—¬ë¶€
 	_bool			m_bActiveAI;
 
-	// »óÅÂ °ü·Ã
-	_uint			m_iPreState;	// ÀÌÀü »óÅÂ
-	_uint			m_iCurState;	// ÇöÀç AI »óÅÂ
-	_uint			m_iRcmState;	// Owner¿¡°Ô ÃßÃµÇÒ »óÅÂ
+	// ìƒíƒœ ê´€ë ¨
+	_uint			m_iPreState;	// ì´ì „ ìƒíƒœ
+	_uint			m_iCurState;	// í˜„ì¬ AI ìƒíƒœ
+	_uint			m_iRcmState;	// Ownerì—ê²Œ ì¶”ì²œí•  ìƒíƒœ
 
-	// Å½»ö °ü·Ã
+	// íƒìƒ‰ ê´€ë ¨
 	CTransform*		m_pOwnerTC;
 	CTransform*		m_pTargetTC;
-	_float			m_fDetectRange;		// Å½Áö °Å¸®
-	_float			m_fInteractRange;	// »óÈ£ÀÛ¿ëÀ» ½ÃµµÇÏ´Â °Å¸®
-	_float			m_fDistance;		// ÇöÀç Å¸°Ù°úÀÇ °Å¸®
-	_vec3			m_vDir;				// ÇöÀç Å¸°ÙÀ¸·ÎÀÇ ¹æÇâ
+	_float			m_fDetectRange;		// íƒì§€ ê±°ë¦¬
+	_float			m_fInteractRange;	// ìƒí˜¸ì‘ìš©ì„ ì‹œë„í•˜ëŠ” ê±°ë¦¬
+	_float			m_fDistance;		// í˜„ì¬ íƒ€ê²Ÿê³¼ì˜ ê±°ë¦¬
+	_vec3			m_vDir;				// í˜„ì¬ íƒ€ê²Ÿìœ¼ë¡œì˜ ë°©í–¥
 	_float			m_fGroundY;
 	
 

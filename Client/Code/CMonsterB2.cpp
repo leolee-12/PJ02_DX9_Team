@@ -688,7 +688,7 @@ void CMonsterB2::Launch_Projectile(const _uint& iCount, const _vec3& vTargetDir)
 		_float fRandY = Get_Rand_Float(-5.f, 5.f);
 		_float fRandZ = Get_Rand_Float(-5.f, 5.f);
 
-		_vec3 vSpeed{	vTargetDir.x * fBaseSpeed + fRandX,
+			_vec3 vSpeed{	vTargetDir.x * fBaseSpeed + fRandX,
 						fBaseYSpeed + fRandY,
 						vTargetDir.z * fBaseSpeed + fRandZ };
 

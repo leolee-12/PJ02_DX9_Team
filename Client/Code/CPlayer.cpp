@@ -88,12 +88,13 @@ _int CPlayer::Update_GameObject(const _float& fTimeDelta)
 
 	Move_Frame(fTimeDelta);
 
-	m_pColliderCom->UpdateFromTransform(m_pTransformCom);
+	//m_pColliderCom->UpdateFromTransform(m_pTransformCom);
 	
 	//------스프라이트 높이와 충돌체 위치 맞춤---------
 	_float fY(m_vPos.y - m_pTransformCom->Get_Scale(ROT_Y) * 0.125f);
 	AABB tAABB = { m_vPos.x, fY, m_vPos.z, 1.f, 1.f, 1.f };
 	m_pColliderCom->Set_AABB(tAABB);
+	m_pColliderCom->UpdateFromCustom(tAABB);
 	//-------------------------------------------------
 
 	// 충돌체 디버그용
@@ -139,7 +140,7 @@ void CPlayer::Render_GameObject()
 
 	m_pGraphicDev->SetTextureStageState(0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE);
 
-	_tchar szPos[64] = L"";
+	_tchar szPos[256] = L"";
 	swprintf_s(szPos, L"[플레이어] 플레이어 중점 위치 X : %f, Y : %f, Z : %f", m_vPos.x, m_vPos.y, m_vPos.z);
 	OutputDebugString(szPos);
 	OutputDebugString(L"\n");
@@ -288,6 +289,8 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 
 	if (!m_bRoll && !m_iCombo && !m_fCharge)
 	{
+		m_fSpeed = 10.f;
+		
 		if (CDInputMgr::GetInstance()->Key_Pressing(DIK_W))
 		{
 			m_eCurState = PS_RUN;
@@ -341,6 +344,7 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 		m_bRoll = true;
 		m_eCurState = PS_ROLL;
 		m_vRollPos = m_vPos + m_vDir * 5.f;
+		m_fLerp = 0.2f;
 	}
 
 	if (GetAsyncKeyState(VK_LBUTTON) & 0x0001)	// 눌렀을 때 한 번만 true
@@ -631,29 +635,51 @@ void	CPlayer::OnCollision(CGameObject* pObject)
 
 		const Engine::AABB& borderAABB = pBorderCol->Get_AABB();
 
-		const _float fPlayerHalf = 0.5f;
+		const _float fPlayerHalf = 1.f;
 
 		_float fOverlapX = (borderAABB.hx + fPlayerHalf) - abs(vCurPos.x - borderAABB.x);
 		_float fOverlapZ = (borderAABB.hz + fPlayerHalf) - abs(vCurPos.z - borderAABB.z);
 
 		if (fOverlapX > 0.f && fOverlapZ > 0.f)
 		{
+			//if (fOverlapX < fOverlapZ)
+			//{
+			//	if (vCurPos.x < borderAABB.x)
+			//		vCurPos.x -= fOverlapX /*- m_vDir.x + fPlayerHalf*/;
+			//	else
+			//		vCurPos.x += fOverlapX /*+ m_vDir.x + fPlayerHalf*/;
+			//}
+			//else
+			//{
+			//	if (vCurPos.z < borderAABB.z)
+			//		vCurPos.z -= fOverlapZ /*- m_vDir.z + fPlayerHalf*/;
+			//	else
+			//		vCurPos.z += fOverlapZ /*+ m_vDir.z + fPlayerHalf*/;
+			//}
+
 			if (fOverlapX < fOverlapZ)
 			{
+				// X축 보정
 				if (vCurPos.x < borderAABB.x)
-					vCurPos.x -= fOverlapX + 0.1f;
+					vCurPos.x = borderAABB.x - borderAABB.hx - fPlayerHalf - 0.01f;  // 여유
 				else
-					vCurPos.x += fOverlapX + 0.1f;
+					vCurPos.x = borderAABB.x + borderAABB.hx + fPlayerHalf + 0.01f;
 			}
 			else
 			{
+				// Z축 보정
 				if (vCurPos.z < borderAABB.z)
-					vCurPos.z -= fOverlapZ + 0.1f;
+					vCurPos.z = borderAABB.z - borderAABB.hz - fPlayerHalf - 0.01f;
 				else
-					vCurPos.z += fOverlapZ + 0.1f;
+					vCurPos.z = borderAABB.z + borderAABB.hz + fPlayerHalf + 0.01f;
 			}
 
 			m_pTransformCom->Set_Pos(vCurPos.x, vCurPos.y, vCurPos.z);
+
+			m_vRollPos = vCurPos;
+
+			m_fSpeed = 0.f;
+			m_fLerp = 0.f;
 		}
 
 		return;
