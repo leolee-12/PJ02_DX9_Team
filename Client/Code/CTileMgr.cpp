@@ -86,6 +86,15 @@ CTile* CTileMgr::Get_Tile(_int iX, _int iZ)
 	return nullptr;
 }
 
+void CTileMgr::Reset_For_SceneChange()
+{
+	for (auto& pTile : m_vecTiles)
+	{
+		Safe_Release(pTile);
+	}
+	m_vecTiles.clear();
+}
+
 void CTileMgr::Free()
 {
 	for (auto& pTile : m_vecTiles)

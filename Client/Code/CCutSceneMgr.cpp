@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CCutSceneMgr.h"
 #include "CDInputMgr.h"
 #include "Trigger_Enum.h"
@@ -7,7 +7,7 @@ CCutSceneMgr* CCutSceneMgr::m_pInstance = nullptr;
 
 CCutSceneMgr::CCutSceneMgr()
 	: m_pCurrentCutScene(nullptr), m_pMessageChannel(nullptr), m_bPlaying(false)
-	, m_iCurrentStep(0)
+	, m_iCurrentStep(0), m_bDialogueEnd(true)
 {
 }
 
@@ -72,13 +72,27 @@ void CCutSceneMgr::Subscribe()
 		}
 		
 	}) });
+
+	m_hmapSubHandles.insert({ L"Dialogue.End", m_pMessageChannel->Subscribe(L"Dialogue.End", [this](const IMessageChannel::EVENT& Event) {
+		m_bDialogueEnd = true;
+	}) });
 }
 
 void CCutSceneMgr::Key_Input_CutScene()
 {
 	if (CDInputMgr::GetInstance()->Key_Down(DIK_RETURN))
 	{
-		Next_Step();
+		if (m_bDialogueEnd) { Next_Step(); }
+		else
+		{
+			CUTSCENE_STEP& tStep = m_pCurrentCutScene->vecSteps[m_iCurrentStep];
+
+			IMessageChannel::EVENT tDialogueEvent;
+			tDialogueEvent.strType = L"CutScene.Skip";
+			tDialogueEvent.hmapData[L"Text"] = tStep.strFont;
+			tDialogueEvent.hmapData[L"TargetName"] = tStep.strTargetName;
+			m_pMessageChannel->Publish(tDialogueEvent);
+		}
 	}
 }
 
@@ -102,8 +116,11 @@ void CCutSceneMgr::Execute_Step(_uint iStep)
 	IMessageChannel::EVENT tCamEvent;
 	tCamEvent.strType = L"CutScene.CameraTarget";
 	tCamEvent.hmapData[L"TargetPos"] = tStep.vTargetPos;
+	tCamEvent.hmapData[L"Lerp"] = tStep.fLerp;
 	tCamEvent.hmapData[L"Zoom"] = tStep.fZoom;
 	m_pMessageChannel->Publish(tCamEvent);
+
+
 
 	IMessageChannel::EVENT tDialogueEvent;
 	tDialogueEvent.strType = L"CutScene.Dialogue";
@@ -111,6 +128,9 @@ void CCutSceneMgr::Execute_Step(_uint iStep)
 	tDialogueEvent.hmapData[L"TargetName"] = tStep.strTargetName;
 	m_pMessageChannel->Publish(tDialogueEvent);
 
+	if (tStep.strFont.empty()) { return; }
+
+	m_bDialogueEnd = false;
 }
 
 void CCutSceneMgr::End_CutScene()

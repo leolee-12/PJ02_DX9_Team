@@ -19,6 +19,8 @@ private:
 	HRESULT			Ready_GameLogic_Layer(const _tchar* pLayerTag);
 	HRESULT			Ready_UI_Layer(const _tchar* pLayerTag);
 
+	void			Ready_Event();
+
 	HRESULT			Ready_Light();
 
 public:

@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CTriggerPoint.h"
 #include "CCollider.h"
 #include "CProtoMgr.h"
@@ -100,6 +100,9 @@ void CTriggerPoint::Activate()
 	TriggerEvent.hmapData[L"Trigger_TID"] = m_eTID;
 	TriggerEvent.hmapData[L"Trigger_Name"] = m_strTriggerName;
 	m_pMessageChannel->Publish(TriggerEvent);
+
+	if (m_eTID == Trigger::TI_STAGING)
+		m_iHp = 0;
 }
 
 CTriggerPoint* CTriggerPoint::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMessageChannel, _vec3 vPos, _vec3 vHalfSize, Trigger::TRIGGERID eTID, const wstring& strTriggerName)
