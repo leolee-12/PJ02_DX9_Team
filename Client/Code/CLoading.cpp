@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "CLoadingThread.h"
 #include "CLoading.h"
 #include "CProtoMgr.h"
@@ -43,7 +43,7 @@ CLoading::~CLoading()
 
 HRESULT CLoading::Ready_Scene()
 {
-	//Å×½ºÆ®¿ë
+	//í…ŒìŠ¤íŠ¸ìš©
 	m_pMessageChannel = CStageMessage::Create();
 
 	if (FAILED(Ready_UI_Layer(L"UI_Layer")))
@@ -71,7 +71,7 @@ _int CLoading::Update_Scene(const _float& fTimeDelta)
 	//m_iTotalCount;
 	Update_Count();
 
-	//ÅØ½ºÃÄ ·ÎµùÀÌ³¡³ª¸é -> °ÔÀÌÁö 50ÆÛº¸ÀÌ°Ô ÇÁ·ÎÅä·ÎµùÀÌ³¡³ª¸é -> °ÔÀÌÁö 100ÆÛ 
+	//í…ìŠ¤ì³ ë¡œë”©ì´ëë‚˜ë©´ -> ê²Œì´ì§€ 50í¼ë³´ì´ê²Œ í”„ë¡œí† ë¡œë”©ì´ëë‚˜ë©´ -> ê²Œì´ì§€ 100í¼ 
 
 	//_float LoadingClamp = _float(m_iLoadCount) / _float(m_iTotalCount);
 	_float ProtoClamp = _float(m_iCompletedCount) / _float(m_iTotalCount);
@@ -112,7 +112,7 @@ _int CLoading::Update_Scene(const _float& fTimeDelta)
 							return -1;
 						break;
 					case LOADING_BOSS:
-						// ÀÌ°Ç ¾ø¾î¿ë~~
+						// ì´ê±´ ì—†ì–´ìš©~~
 						break;
 					case LOADING_TEST:
 						pScene = CTest::Create(m_pGraphicDev);
@@ -176,7 +176,7 @@ _int CLoading::Update_Scene(const _float& fTimeDelta)
 				return -1;
 			}
 		}
-		_float fClampedDelta = min(fTimeDelta, 0.1f);  // ÃÖ´ë 100ms·Î Á¦ÇÑ
+		_float fClampedDelta = min(fTimeDelta, 0.1f);  // ìµœëŒ€ 100msë¡œ ì œí•œ
 		m_fLoadingDelay += fClampedDelta;
 	}
 
@@ -197,7 +197,7 @@ void CLoading::LateUpdate_Scene(const _float& fTimeDelta)
 
 void CLoading::Render_Scene()
 {
-	// debug ¿ë
+	// debug ìš©
 
 	_int iRenderPersent = _int(m_fLoadingPersent * 100.f);
 
@@ -210,16 +210,16 @@ void CLoading::Render_Scene()
 
 	if (m_iTotalCount / 2 < m_iCompletedCount) {
 		if (m_iTotalCount == m_iCompletedCount) {
-			CFontMgr::GetInstance()->Render_Font(L"Font_Lapture40", L"·Îµù ¿Ï·á!", &vPos, D3DXCOLOR(0.75f, 0.75f, 0.75f, 1.f), DT_NOCLIP);
+			CFontMgr::GetInstance()->Render_Font(L"Font_Lapture40", L"ë¡œë”© ì™„ë£Œ!", &vPos, D3DXCOLOR(0.75f, 0.75f, 0.75f, 1.f), DT_NOCLIP);
 			CFontMgr::GetInstance()->Render_Font(L"Font_Lapture40", szPersent, &vPos, D3DXCOLOR(0.75f, 0.75f, 0.75f, 1.f), DT_NOCLIP);
 		}
 		else {
-			CFontMgr::GetInstance()->Render_Font(L"Font_Lapture40", L"¿ÀºêÁ§Æ® »ı¼ºÁß", &vPos, D3DXCOLOR(0.75f, 0.75f, 0.75f, 1.f), DT_NOCLIP);
+			CFontMgr::GetInstance()->Render_Font(L"Font_Lapture40", L"ì˜¤ë¸Œì íŠ¸ ìƒì„±ì¤‘", &vPos, D3DXCOLOR(0.75f, 0.75f, 0.75f, 1.f), DT_NOCLIP);
 			CFontMgr::GetInstance()->Render_Font(L"Font_Lapture40", szPersent, &vPos, D3DXCOLOR(0.75f, 0.75f, 0.75f, 1.f), DT_NOCLIP);
 		}
 	}
 	else {
-		CFontMgr::GetInstance()->Render_Font(L"Font_Lapture40", L"ÅØ½ºÃÄ »ı¼ºÁß", &vPos, D3DXCOLOR(0.75f, 0.75f, 0.75f, 1.f), DT_NOCLIP);
+		CFontMgr::GetInstance()->Render_Font(L"Font_Lapture40", L"í…ìŠ¤ì³ ìƒì„±ì¤‘", &vPos, D3DXCOLOR(0.75f, 0.75f, 0.75f, 1.f), DT_NOCLIP);
 		CFontMgr::GetInstance()->Render_Font(L"Font_Lapture40", szPersent, &vPos, D3DXCOLOR(0.75f, 0.75f, 0.75f, 1.f), DT_NOCLIP);
 	}
 

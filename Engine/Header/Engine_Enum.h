@@ -33,6 +33,7 @@ namespace Engine
 		OID_MAINCAM,
 		OID_TRIGGER,
 		OID_BORDER,
+		OID_WARP,
 		OID_END 
 	};
 

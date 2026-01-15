@@ -42,6 +42,7 @@ extern HINSTANCE g_hInst;
 extern HWND g_hWnd;
 extern WNDCLASSEXW wndclass;
 extern bool g_bDebug;
+extern bool g_bChangeScene;
 extern std::atomic<bool> g_bDistroyWindowFlag;
 
 using namespace std;

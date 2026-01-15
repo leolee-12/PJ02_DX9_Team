@@ -2,6 +2,7 @@
 #include "CBase.h"
 #include "CGameObject.h"
 #include "Engine_Define.h"
+#include "CPlayer.h"
 
 namespace Engine
 {
@@ -18,8 +19,8 @@ private:
 
 public:
 	HRESULT		 Ready_GlobalObjects(LPDIRECT3DDEVICE9 pGraphicDev);
-	Engine::CGameObject* Get_GlobalObjects(GOBJID eGOBJID);
 	Engine::CTransform* Get_PlayerTransform();
+	CPlayer* Get_Player() { return m_pPlayer; }
 
 
 public:
@@ -41,8 +42,8 @@ public:
 	}
 
 private:
-	unordered_map<GOBJID, Engine::CGameObject*>  m_hmapGlobalObjects;
-	vector<Engine::CGameObject*>				 m_vecReleaseQueue;
+	CPlayer* m_pPlayer;
+
 
 private:
 	static CPersistentMgr* m_pInstance;

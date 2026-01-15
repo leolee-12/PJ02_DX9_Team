@@ -132,6 +132,22 @@ set<wstring> Real_Dungeon_Texture =
 // RealDungeon.txt
 set<wstring> RealDungeon_Texture =
 {
+	L"WeaponPodium",
+	L"VillageStructure",
+	L"Grass",
+	L"Dirt",
+	L"Tree",
+	L"BreakableStone",
+	L"Tarot",
+	L"Rock",
+	L"Candle",
+	L"DungeonDoor",
+	L"Circle",
+	L"Berry",
+	L"Skull",
+	L"Weed",
+	L"Boss",
+	L"Chain",
 };
 
 // AmdusiasRoom.txt

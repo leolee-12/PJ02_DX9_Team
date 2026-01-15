@@ -126,6 +126,8 @@ void CPlayer::LateUpdate_GameObject(const _float& fTimeDelta)
 
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
 
+	m_pColliderCom->UpdateFromTransform(m_pTransformCom);
+
 	m_bCanTrigger = false;
 	m_pTriggerPoint = nullptr;
 }
@@ -186,6 +188,13 @@ void CPlayer::Ready_Event()
 	//	}
 	//	}) });
 
+	m_hmapSubHandles.insert({ L"Player.Spawn", m_pMessageChannel->Subscribe(L"Player.Spawn", [this](const IMessageChannel::EVENT& Event) {
+	_vec3 vSpawnPos = any_cast<_vec3>(Event.hmapData.find(L"Postion")->second);
+
+	m_pTransformCom->Set_Pos(vSpawnPos.x, vSpawnPos.y, vSpawnPos.z);
+	m_pTransformCom->Update_Component(0.f);
+	}) });
+
 	m_hmapSubHandles.insert({ L"Player_Damaged", m_pMessageChannel->Subscribe(L"Player.Attacked", [this](const IMessageChannel::EVENT& Event) {
 	for (auto& Target : any_cast<vector<CGameObject*>>(Event.hmapData.find(L"Target")->second))
 	{
@@ -197,7 +206,7 @@ void CPlayer::Ready_Event()
 	}
 	}) });
 
-	m_hmapSubHandles.insert({ L"Player_MapWarp", m_pMessageChannel->Subscribe(L"Player.MapWarp", [this](const IMessageChannel::EVENT& Event)
+	/*m_hmapSubHandles.insert({ L"Player_MapWarp", m_pMessageChannel->Subscribe(L"Player.MapWarp", [this](const IMessageChannel::EVENT& Event)
 		{
 			CWarp* Warp = any_cast<CWarp*>(Event.hmapData.find(L"WarpPtr")->second);
 
@@ -207,7 +216,7 @@ void CPlayer::Ready_Event()
 				m_pTransformCom->Set_Pos(pos.x, 0, pos.z);
 			}
 		}
-	) });
+	) });*/
 
 //	m_hmapSubHandles.insert({ L"Player_SceneWarp", m_pMessageChannel->Subscribe(L"Player.SceneWarp", [this](const IMessageChannel::EVENT& Event)
 //	{
@@ -592,6 +601,12 @@ void CPlayer::Charge(const _float& fTimeDelta)
 	m_fCharge += fTimeDelta;
 }
 
+void CPlayer::Set_Pos(const _vec3& vPos)
+{
+	m_pTransformCom->Set_Pos(vPos.x, vPos.y, vPos.z);
+	m_pTransformCom->Update_Component(0.f);
+}
+
 void CPlayer::Attack_HitBox()
 {
 	_float fX(0.f);
@@ -673,6 +688,18 @@ void	CPlayer::OnCollision(CGameObject* pObject)
 	{
 		m_bCanTrigger = true;
 		m_pTriggerPoint = static_cast<CTriggerPoint*>(pObject);
+	}
+	if (pObject->Get_OBJID() == OID_WARP)
+	{
+		if (m_eCurState == PS_ROLL) { return; }
+
+		CWarp* Warp = static_cast<CWarp*>(pObject);
+
+		if (Warp != nullptr)
+		{
+			_vec3 pos = Warp->Get_OtherWarp()->Get_WarpPos();
+			m_pTransformCom->Set_Pos(pos.x, 0, pos.z);
+		}
 	}
 }
 
