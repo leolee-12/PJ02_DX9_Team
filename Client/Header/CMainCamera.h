@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CCamera.h"
 #include "Engine_Define.h"
@@ -12,6 +12,8 @@ namespace Engine
 const _float DEFAULTZOOM = 18.f;
 const _float DEFAULTGAPZ = 15.f;
 const _float DEFAULTGAPY = 13.f;
+
+const _float DEFAULTLERP = 6.f;
 
 class CMainCamera : public CCamera
 {
@@ -45,6 +47,9 @@ private:
 	void		Set_CutScene_LookAt(_vec3 vAt);
 	void		Reset_Zoom();
 
+	void		Set_Lerp(_float fLerp);
+	void		Reset_Lerp();
+
 
 private:
 	_float		m_fSpeed;
@@ -52,7 +57,7 @@ private:
 	_bool		m_bCheck;
 	_float		m_fLerpSpeed;
 
-	// Ä«¸Ş¶ó ¼ÎÀÌÅ· º¯¼ö
+	// ì¹´ë©”ë¼ ì…°ì´í‚¹ ë³€ìˆ˜
 	_bool		m_bShaking;
 	_float		m_fShakeStrength;
 	_float		m_fShakeTime;
@@ -61,15 +66,15 @@ private:
 	_vec3		m_vOriginAt;
 	_float		m_fShakeTempo;
 
-	// Ä«¸Ş¶ó±âÁØ ¹æÇâº¤ÅÍ
+	// ì¹´ë©”ë¼ê¸°ì¤€ ë°©í–¥ë²¡í„°
 	_vec3		m_vRight;
 	_vec3		m_vDirUp;
 	_vec3		m_vLook;
 
-	// Ä«¸Ş¶ó ÁÜ °ü·Ã º¯¼ö
+	// ì¹´ë©”ë¼ ì¤Œ ê´€ë ¨ ë³€ìˆ˜
 	_float		m_fZoom;
 	
-	// ¿¬Ãâ°ü·Ã º¯¼ö
+	// ì—°ì¶œê´€ë ¨ ë³€ìˆ˜
 	MAINCAMSTATE m_eCamState = { MCAM_END };
 	_vec3		 m_vAtStatic = {};
 

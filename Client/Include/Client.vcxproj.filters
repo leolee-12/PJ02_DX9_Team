@@ -211,9 +211,6 @@
     <Filter Include="02. GameObject\11. Grass">
       <UniqueIdentifier>{20638477-cadd-4aa2-94a1-d3b5098d0639}</UniqueIdentifier>
     </Filter>
-    <Filter Include="10. TileMgr">
-      <UniqueIdentifier>{01b64606-77a6-499b-92aa-0bad3eff8f84}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObject\07. UI\04. PlayerUI">
       <UniqueIdentifier>{42822674-7f0e-422b-9af0-ec007c6f798a}</UniqueIdentifier>
     </Filter>
@@ -747,9 +744,6 @@
     <ClInclude Include="..\Header\CCookingTarget.h">
       <Filter>02. GameObject\07. UI\05.CookingUI\00.CookingMiniGame\04.CookingTarget</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\CCookingTarget.h">
-      <Filter>02. GameObject\07. UI\05.CookingUI\00.CookingMiniGame\04.CookingTarget</Filter>
-    </ClInclude>
     <ClInclude Include="..\Header\CSceneWarp.h">
       <Filter>02. GameObject\14. Warp</Filter>
     </ClInclude>
@@ -776,6 +770,9 @@
     </ClInclude>
     <ClInclude Include="..\Header\CCookingTarget.h">
       <Filter>02. GameObject\07. UI\05. CookingUI\00.CookingMiniGame\04.CookingTarget</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CCookingTarget.h">
+      <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1109,9 +1106,6 @@
     <ClCompile Include="..\Code\CSpeechBubble.cpp">
       <Filter>02. GameObject\07. UI\06. WorldUI\00.SpeechBubble</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\CCookingInfoCardRIghtPattern.cpp">
-		<Filter>02. GameObject\07. UI\05.CookingUI\01.CookingSelect\04.CookingInfoCard\03.CookingInfoCardRightParrtern</Filter>
-	</ClCompile>
     <ClCompile Include="..\Code\CSceneWarp.cpp">
       <Filter>02. GameObject\14. Warp</Filter>
     </ClCompile>

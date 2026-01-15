@@ -193,6 +193,7 @@ void CBishop_Kallamar::Ready_Event()
 			if (Textiter == Event.hmapData.end()) { return; }
 
 			m_pFontUI->Set_Text(any_cast<wstring>(Textiter->second));
+			m_pFontUI->Set_OwnerName(any_cast<wstring>(TargetNameiter->second));
 			m_pSpeechBubble->Active();
 			m_pFontUI->Active();
 			m_eCurState = Bishops::BS_TALK;
@@ -216,7 +217,7 @@ void CBishop_Kallamar::Ready_Event()
 
 HRESULT CBishop_Kallamar::Ready_Dialogue(const _vec3& vDialoguePos)
 {
-	m_pFontUI = CFontUI::Create(m_pGraphicDev);
+	m_pFontUI = CFontUI::Create(m_pGraphicDev, m_pMessageChannel);
 
 	if (m_pFontUI == nullptr) { return E_FAIL; }
 

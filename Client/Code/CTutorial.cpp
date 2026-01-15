@@ -27,6 +27,8 @@
 #include "CMapWarp.h"
 #include "CWarp.h"
 #include "CMapBorder.h"
+#include "CLoading.h"
+#include "CManagement.h"
 
 CTutorial::CTutorial(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -50,17 +52,19 @@ HRESULT CTutorial::Ready_Scene()
 	if (FAILED(Ready_UI_Layer(L"UI_Layer")))
 		return E_FAIL;
 
+	Ready_Event();
+
 	CCutSceneMgr::GetInstance()->Ready_CutsceneMgr(m_pMessageChannel);
 
 	CUTSCENE tTutoCutScene;
 	tTutoCutScene.strName = L"Tutorial_01";
 	tTutoCutScene.vecSteps =
 	{
-		{_vec3(-10.f * 0.8f, 5.f, 135.f * 0.8f), 1.f, L"Bishop_Heket", L"우리들 앞에 저들의 마지막 종자가 있다.\n다른 놈들은 이미 다 사냥하여 효수시켰지."},
-		{_vec3(0.f * 0.8f, 5.f, 135.f * 0.8f), 1.f, L"Bishop_Kallamar", L"이 마지막 번제로,\n이제 예언은 결코 달성할 수 없을 것이다."},
-		{_vec3(-22.f * 0.8f, 5.f, 135.f * 0.8f), 1.f, L"Bishop_Leshy", L"아래에 묶여있는 저 이단자는 풀려날 수 없다."},
-		{_vec3(10.687412f * 0.8f, 5.f, 135.f * 0.8f), 1.f, L"Bishop_Shamura", L"그리고 옛 신앙은 보존되리라."}//,
-		//{_vec3(- 4.f, 2.f, 88.f), 2.f, L"Player", L""}
+		{_vec3(-10.f * 0.8f, 5.f, 135.f * 0.8f), 1.f, 1.f, L"Bishop_Heket", L"우리들 앞에 저들의 마지막 종자가 있다.\n다른 놈들은 이미 다 사냥하여 효수시켰지."},
+		{_vec3(0.f * 0.8f, 5.f, 135.f * 0.8f), 1.f, 1.f, L"Bishop_Kallamar", L"이 마지막 번제로,\n이제 예언은 결코 달성할 수 없을 것이다."},
+		{_vec3(-22.f * 0.8f, 5.f, 135.f * 0.8f), 1.f, 1.f, L"Bishop_Leshy", L"아래에 묶여있는 저 이단자는 풀려날 수 없다."},
+		{_vec3(10.687412f * 0.8f, 5.f, 135.f * 0.8f), 1.f, 1.f, L"Bishop_Shamura", L"그리고 옛 신앙은 보존되리라."},
+		{_vec3(- 4.f, 2.f, 88.f), 1.5f, 0.5f, L"Player", L""}
 	};
 
 	CCutSceneMgr::GetInstance()->Register_CutScene(tTutoCutScene);
@@ -320,6 +324,25 @@ HRESULT CTutorial::Ready_UI_Layer(const _tchar* pLayerTag)
 	return S_OK;
 }
 
+void CTutorial::Ready_Event()
+{
+	m_hmapSubHandles.insert({ L"CutScene.End", m_pMessageChannel->Subscribe(L"CutScene.End", [this](const IMessageChannel::EVENT& Event) {
+	if (any_cast<wstring>(Event.hmapData.find(L"SceneName")->second) == L"Tutorial_01")
+	{
+		Engine::CScene* pLoading = CLoading::Create(m_pGraphicDev, LOADING_THEGATEWAY);
+
+		if (nullptr == pLoading)
+			return -1;
+
+		if (FAILED(CManagement::GetInstance()->Set_Scene(pLoading)))
+		{
+			MSG_BOX("Stage Scene Failed");
+			return -1;
+		}
+	}
+	}) });
+}
+
 
 HRESULT CTutorial::Ready_Light()
 {
@@ -358,5 +381,6 @@ void CTutorial::Free()
 {
 	CScene::Free();
 	CCollisionMgr::GetInstance()->Reset_For_SceneChange();
+	CTileMgr::GetInstance()->Reset_For_SceneChange();
 	CLightMgr::GetInstance()->DestroyInstance();
 }

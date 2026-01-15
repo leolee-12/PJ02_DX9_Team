@@ -210,7 +210,6 @@ void CMainApp::Free()
 
 	CCutSceneMgr::DestroyInstance();
 	CMapLoader::DestroyInstance();
-	CTileMgr::DestroyInstance();
 	CLightMgr::DestroyInstance();
 	CFontMgr::DestroyInstance();
 	CDInputMgr::DestroyInstance();
@@ -218,6 +217,7 @@ void CMainApp::Free()
 	CFrameMgr::DestroyInstance();
 	CTimerMgr::DestroyInstance();
 	CManagement::DestroyInstance();
+	CTileMgr::DestroyInstance();
 	CPersistentMgr::DestroyInstance();
 	CProtoMgr::DestroyInstance();
 	CCollisionMgr::DestroyInstance();

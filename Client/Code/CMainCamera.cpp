@@ -45,7 +45,7 @@ HRESULT CMainCamera::Ready_GameObject(
 	m_fNear = fNear;
 	m_fFar = fFar;
 
-	m_fLerpSpeed = 6.f;
+	m_fLerpSpeed = DEFAULTLERP;
 
 	m_fSpeed = 10.f;
 
@@ -55,6 +55,8 @@ HRESULT CMainCamera::Ready_GameObject(
 	m_pTargetTransformCom->AddRef();
 
 	Ready_Event_MainCam();
+
+	m_fZoom = DEFAULTZOOM;
 
 	_vec3 vTargetPos;
 	m_pTargetTransformCom->Get_Info(INFO_POS, &vTargetPos);
@@ -77,8 +79,6 @@ HRESULT CMainCamera::Ready_GameObject(
 
 	D3DXVec3Cross(&m_vDirUp, &m_vLook, &m_vRight);
 	D3DXVec3Normalize(&m_vDirUp, &m_vDirUp);
-
-	m_fZoom = DEFAULTZOOM;
 
 
 	return S_OK;
@@ -168,16 +168,21 @@ void CMainCamera::Ready_Event_MainCam()
 		if (TargetPositer == Event.hmapData.end()) { return; }
 		auto Zoomiter = Event.hmapData.find(L"Zoom");
 		if (Zoomiter == Event.hmapData.end()) { return; }
+		auto Lerpiter = Event.hmapData.find(L"Lerp");
+		if (Lerpiter == Event.hmapData.end()) { return; }
 
 
 		Set_CutScene_LookAt(any_cast<_vec3>(TargetPositer->second));
 		Reset_Zoom();
+		Reset_Lerp();
 		Set_Zoom(any_cast<_float>(Zoomiter->second));
+		Set_Lerp(any_cast<_float>(Lerpiter->second));
 		m_eCamState = MCAM_STAGING;
 	}) });
 
 	m_hmapSubHandles.insert({ L"End_CutScene", m_pMessageChannel->Subscribe(L"CutScene.End", [this](const IMessageChannel::EVENT& Event) {
 		Reset_Zoom();
+		Reset_Lerp();
 		m_eCamState = MCAM_DEFAULT;
 	}) });
 }
@@ -206,6 +211,16 @@ void CMainCamera::Set_CutScene_LookAt(_vec3 vAt)
 void CMainCamera::Reset_Zoom()
 {
 	m_fZoom = DEFAULTZOOM;
+}
+
+void CMainCamera::Set_Lerp(_float fLerp)
+{
+	m_fLerpSpeed *= fLerp;
+}
+
+void CMainCamera::Reset_Lerp()
+{
+	m_fLerpSpeed = DEFAULTLERP;
 }
 
 

@@ -24,6 +24,8 @@ public:
 	_int	Get_MapHeight() const { return m_iMapHeight; }
 	CTile*	Get_Tile(_int iX, _int iZ);
 
+	void	Reset_For_SceneChange();
+
 private:
 	std::vector<CTile*>	m_vecTiles;
 	_int				m_iMapWidth;
