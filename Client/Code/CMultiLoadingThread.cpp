@@ -401,6 +401,9 @@ void CMultiLoadingThread::Loading_for_Dungeon()
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingCardInfoLeftPattern", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/Leftpattern.png", 1));
 	m_iTotalProtoCount++;
 
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_SpikeTexture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Spike/Spike%d.png", 4));
+	m_iTotalProtoCount++;
+
 	vector<TEXSETLR> vecBossLeshy;
 	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Idle",		L"../Bin/Resource/Texture/Monster/Boss2/idle/idle_%04d.png", 80));
 	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Dig",		L"../Bin/Resource/Texture/Monster/Boss2/move-out/move-out_%04d.png", 40));
@@ -414,6 +417,8 @@ void CMultiLoadingThread::Loading_for_Dungeon()
 	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Dead",		L"../Bin/Resource/Texture/Monster/Boss2/dead-noheart/dead-noheart_%04d.png", 1));
 	m_TexSetLoadingqueue.push(make_pair(TEXSETINFO(L"Proto_MonsterB2Texture", TEX_NORMAL), vecBossLeshy));
 	m_iTotalProtoCount++;
+
+
 }
 
 void CMultiLoadingThread::Loading_for_TheGateway()

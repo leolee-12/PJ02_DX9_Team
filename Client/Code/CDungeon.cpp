@@ -351,7 +351,7 @@ HRESULT CDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 		//		return E_FAIL;
 	}
 
-	pGameObject = CMonsterB1::Create(m_pGraphicDev, m_pMessageChannel);
+	pGameObject = CMonsterB2::Create(m_pGraphicDev, m_pMessageChannel);
 	
 	NULL_CHECK_RETURN(pGameObject, E_FAIL)
 	
@@ -491,7 +491,7 @@ void CDungeon::Ready_Event()
 		if (pGObj != nullptr)
 		{
 			wstring strLayerTag = any_cast<const _tchar*>(Event.hmapData.find(L"LayerTag")->second);
-			wstring strObjTag = any_cast<const _tchar*>(Event.hmapData.find(L"ObjTag")->second);
+			wstring strObjTag = any_cast<wstring>(Event.hmapData.find(L"ObjTag")->second);
 			auto iter = m_mapLayer.find(strLayerTag);
 
 			if(iter != m_mapLayer.end())

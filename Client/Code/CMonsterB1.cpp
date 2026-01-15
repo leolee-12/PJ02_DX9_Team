@@ -681,12 +681,14 @@ void CMonsterB1::Launch_Projectile(const _uint& iCount)
 
 		if (pProjectile)
 		{
+			wstring strObjTag = L"Projectile";
+
 			IMessageChannel::EVENT EProjectile;
 			EProjectile.strType = L"Obj.Add";
 			EProjectile.eOBJID = Engine::OID_PROJECTILE;
 			EProjectile.hmapData.emplace(L"Obj", pProjectile);
 			EProjectile.hmapData.emplace(L"LayerTag", L"GameLogic_Layer");
-			EProjectile.hmapData.emplace(L"ObjTag", L"Projectile");
+			EProjectile.hmapData.emplace(L"ObjTag", strObjTag);
 			m_pMessageChannel->Publish(EProjectile);
 		}
 
@@ -710,12 +712,14 @@ void CMonsterB1::Summon_Minion(const _uint& iCount)
 
 		if (pMonster)
 		{
+			wstring strObjTag = L"Monster";
+
 			IMessageChannel::EVENT ESummonMonster;
 			ESummonMonster.strType = L"Obj.Add";
 			ESummonMonster.eOBJID = Engine::OID_MONSTER;
 			ESummonMonster.hmapData.emplace(L"Obj", pMonster);
 			ESummonMonster.hmapData.emplace(L"LayerTag", L"GameLogic_Layer");
-			ESummonMonster.hmapData.emplace(L"ObjTag", L"Monster");
+			ESummonMonster.hmapData.emplace(L"ObjTag", strObjTag);
 			m_pMessageChannel->Publish(ESummonMonster);
 		}
 
@@ -730,12 +734,14 @@ void CMonsterB1::Summon_Boss()
 
 	if (pMonster)
 	{
+		wstring strObjTag = L"Boss2";
+
 		IMessageChannel::EVENT ESummonMonster;
 		ESummonMonster.strType = L"Obj.Add";
 		ESummonMonster.eOBJID = Engine::OID_MONSTER;
 		ESummonMonster.hmapData.emplace(L"Obj", pMonster);
 		ESummonMonster.hmapData.emplace(L"LayerTag", L"GameLogic_Layer");
-		ESummonMonster.hmapData.emplace(L"ObjTag", L"Boss2");
+		ESummonMonster.hmapData.emplace(L"ObjTag", strObjTag);
 		m_pMessageChannel->Publish(ESummonMonster);
 	}
 }

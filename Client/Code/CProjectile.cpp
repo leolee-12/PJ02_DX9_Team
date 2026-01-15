@@ -61,9 +61,12 @@ HRESULT CProjectile::Ready_GameObject()
 
 _int CProjectile::Update_GameObject(const _float& fTimeDelta)
 {
-	Move_Frame(fTimeDelta);
-
+	if (m_bUseGravity) m_vSpeed.y += m_fGravity * fTimeDelta;
 	m_fAcmlTime += fTimeDelta;
+
+	m_pTransformCom->Move_Pos(&m_vSpeed, fTimeDelta, 1.f);
+
+	Move_Frame(fTimeDelta);
 
 	m_pColliderCom->UpdateFromTransform(m_pTransformCom);
 	// 충돌체 디버그용
@@ -87,9 +90,6 @@ _int CProjectile::Update_GameObject(const _float& fTimeDelta)
 
 void CProjectile::LateUpdate_GameObject(const _float& fTimeDelta)
 {
-	if (m_bUseGravity) m_vSpeed.y += m_fGravity * fTimeDelta;
-
-	m_pTransformCom->Move_Pos(&m_vSpeed, fTimeDelta, 1.f);
 	m_pTransformCom->Compute_Bilboard(BBD_X);
 	m_pTransformCom->Get_Info(INFO_POS, &m_vPos);
 	Compute_ViewDepth(&m_vPos);

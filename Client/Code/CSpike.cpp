@@ -52,10 +52,20 @@ _int CSpike::Update_GameObject(const _float& fTimeDelta)
 {
 	Move_Frame(fTimeDelta);
 
+	m_pTransformCom->Move_Pos(&m_vSpeed, fTimeDelta, 1.f);
+
+	m_pColliderCom->UpdateFromTransform(m_pTransformCom);
+	// 충돌체 디버그용
+	if (g_bDebug) m_pColliderCom->Update_AABBforRender();
+
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
 	if (iExit == DEAD)
 	{
+		m_pColliderCom->UnregisterFromManager();
+
+		if (m_iRecurred) Recur_Spike();
+
 		return iExit;
 	}
 
@@ -68,7 +78,7 @@ void CSpike::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	m_pTransformCom->Compute_Bilboard(BBD_X);
 	m_pTransformCom->Get_Info(INFO_POS, &m_vPos);
-	//Compute_ViewDepth(&m_vPos);
+	Compute_ViewDepth(&m_vPos);
 
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
 }
@@ -118,20 +128,32 @@ HRESULT CSpike::Add_Component()
 
 	// Texture
 	pComponent = m_pTextureCom = dynamic_cast<Engine::CTexture*>
-		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(m_pProtoTexKey));
+		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_SpikeTexture"));
 
 	NULL_CHECK_RETURN(pComponent, E_FAIL)
 
 		m_mapComponent[ID_STATIC].insert({ L"Com_Texture", pComponent });
+
+	// Collider
+	pComponent = m_pColliderCom = dynamic_cast<Engine::CCollider*>
+		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Collider"));
+
+	NULL_CHECK_RETURN(pComponent, E_FAIL)
+
+		m_mapComponent[ID_STATIC].insert({ L"Com_Collider", pComponent });
 
 	return S_OK;
 }
 
 void CSpike::Ready_Variable()
 {
+	// 게임로직 변수 세팅
+	_float fScale = 10.f;
+	m_fGroundY = -2.5f + fScale * 0.5f;
+
 	// Transform 세팅
 	m_pTransformCom->Set_Pos(_float(rand() % 20), 1.f, _float(rand() % 20));
-	m_pTransformCom->Set_Scale(2.f, 2.f, 2.f);
+	m_pTransformCom->Set_Scale(fScale, fScale, fScale);
 
 	// Anim 관련 세팅
 	m_fFrameEnd = 16.f;
@@ -142,11 +164,11 @@ void CSpike::Ready_Variable()
 void CSpike::Move_Frame(const _float& fTimeDelta)
 {
 	m_fFrame += m_fFrameSpeed * fTimeDelta;
-	m_fAcmlTime += fTimeDelta;
 
 	if (m_fFrame >= m_fFrameEnd)
 	{
 		m_fFrame = 0.f;
+		m_iHp = 0;
 	}
 }
 
@@ -155,23 +177,42 @@ void CSpike::Set_Texture()
 	_uint iFrame = _uint(m_fFrame);					// 현재 프레임
 
 	D3DXMatrixIdentity(&m_matTex);
-	_uint iU = iFrame % 16;
-	_uint iV = iFrame / 16;
+	_uint iU = iFrame % 8;
+	_uint iV = iFrame / 8;
 
-	m_matTex._11 = 0.0625f;	// 가로는 16칸 고정
-	m_matTex._22 = 1.f;		// 세로는 1칸 고정(Node)
-	m_matTex._31 = _float(iU) * 0.0625f;
+	m_matTex._11 = 0.125f;	// 가로는 8칸 고정
+	m_matTex._22 = 0.25f;	// 세로는 4칸 고정(Spike)
+	m_matTex._31 = _float(iU) * 0.125f;
+	m_matTex._32 = _float(iV) * 0.25f;
 
 	m_pGraphicDev->SetTransform(D3DTS_TEXTURE0, &m_matTex);
 
-	m_pTextureCom->Set_Texture(0);
+	m_pTextureCom->Set_Texture(m_iTexIdx);
 }
 
-CSpike* CSpike::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, CTransform* pOwnerTC, const _tchar* pProtoTexKey)
+void CSpike::Recur_Spike()
+{
+	_vec3 vPos{ m_vPos.x, 0.f, m_vPos.z };
+
+	CGameObject* pSpike = CSpike::Create(m_pGraphicDev, m_pMessageChannel, m_vPos, m_vSpeed, --m_iRecurred, Get_Rand_Int(0, 3));
+
+	if (pSpike)
+	{
+		wstring strObjTag = L"Spike" + m_iRecurred;
+
+		IMessageChannel::EVENT ESpike;
+		ESpike.strType = L"Obj.Add";
+		ESpike.eOBJID = Engine::OID_PROJECTILE;
+		ESpike.hmapData.emplace(L"Obj", pSpike);
+		ESpike.hmapData.emplace(L"LayerTag", L"GameLogic_Layer");
+		ESpike.hmapData.emplace(L"ObjTag", strObjTag);
+		m_pMessageChannel->Publish(ESpike);
+	}
+}
+
+CSpike* CSpike::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, _vec3 vPos, _vec3 vSpeed, _uint iRecurred, _uint iTexIdx)
 {
 	CSpike* pSpike = new CSpike(pGraphicDev, StageChannel);
-
-	pSpike->m_pProtoTexKey = pProtoTexKey;	// Ready에 필요
 
 	if (FAILED(pSpike->Ready_GameObject()))
 	{
@@ -179,6 +220,11 @@ CSpike* CSpike::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChan
 		MSG_BOX("pSpike Create Failed");
 		return nullptr;
 	}
+
+	pSpike->m_pTransformCom->Set_Pos(vPos.x, pSpike->m_fGroundY, vPos.z);
+	pSpike->m_vSpeed = vSpeed;
+	pSpike->m_iTexIdx = iTexIdx;
+	pSpike->m_iRecurred = iRecurred;
 
 	return pSpike;
 }
