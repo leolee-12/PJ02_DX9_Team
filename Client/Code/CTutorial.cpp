@@ -43,10 +43,10 @@ HRESULT CTutorial::Ready_Scene()
 {
 	m_pMessageChannel = CStageMessage::Create();
 
-	if (FAILED(Ready_Environment_Layer(L"Environment_Layer")))
+	if (FAILED(Ready_GameLogic_Layer(L"GameLogic_Layer")))
 		return E_FAIL;
 
-	if (FAILED(Ready_GameLogic_Layer(L"GameLogic_Layer")))
+	if (FAILED(Ready_Environment_Layer(L"Environment_Layer")))
 		return E_FAIL;
 
 	if (FAILED(Ready_UI_Layer(L"UI_Layer")))
@@ -129,20 +129,6 @@ HRESULT CTutorial::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 
 	CGameObject* pGameObject = nullptr;
 
-	// 플레이어를 최상단에
-	pGameObject = CPersistentMgr::GetInstance()->Get_GlobalObjects(GOBJ_PLAYER);
-
-	if (nullptr == pGameObject)
-		return E_FAIL;
-
-	pGameObject->Set_MessageChannel(m_pMessageChannel);
-
-	if (FAILED(pLayer->Add_GameObject(L"Player", pGameObject)))
-		return E_FAIL;
-
-	pGameObject->AddRef();
-
-
 	// Map Load
 	Engine::MAPDATA mapData;
 	if (SUCCEEDED(Engine::CMapLoader::GetInstance()->LoadMapA(
@@ -156,13 +142,26 @@ HRESULT CTutorial::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 		// Tile
 		CTileMgr::GetInstance()->Initialize(m_pGraphicDev, mapData);
 
+		IMessageChannel::EVENT PlayerSpawnEvent;
+
 		// Spawns (Monster)
 		for (const auto& spawn : mapData.spawns)
 		{
 			switch (spawn.type)
 			{
 			case 0:
-				//플레이어 스폰위치, 워프위치 적용
+				CPersistentMgr::GetInstance()->Get_Player()->Set_Pos(_vec3(spawn.x, 0.f, spawn.z));
+				pGameObject = CPersistentMgr::GetInstance()->Get_Player();
+
+				if (nullptr == pGameObject)
+					return E_FAIL;
+
+				pGameObject->Set_MessageChannel(m_pMessageChannel);
+
+				if (FAILED(pLayer->Add_GameObject(L"Player", pGameObject)))
+					return E_FAIL;
+
+				pGameObject->AddRef();
 				break;
 			case 1:
 				switch (spawn.monsterType)
@@ -332,12 +331,12 @@ void CTutorial::Ready_Event()
 		Engine::CScene* pLoading = CLoading::Create(m_pGraphicDev, LOADING_THEGATEWAY);
 
 		if (nullptr == pLoading)
-			return -1;
+			return;
 
 		if (FAILED(CManagement::GetInstance()->Set_Scene(pLoading)))
 		{
 			MSG_BOX("Stage Scene Failed");
-			return -1;
+			return;
 		}
 	}
 	}) });

@@ -1,9 +1,9 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "CStage.h"
 #include "CBackGround.h"
 #include "CProtoMgr.h"
 #include "CDynamicCamera.h"
-// #include "CSkyBox.h"  // CMySkyBox·Î ´ëÃ¼
+// #include "CSkyBox.h"  // CMySkyBoxë¡œ ëŒ€ì²´
 #include "CMySkyBox.h"
 #include "CPersistentMgr.h"
 #include "CDungeonBack.h"
@@ -144,7 +144,7 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	if (SUCCEEDED(Engine::CMapLoader::GetInstance()->LoadMapA(
 		"../Bin/Resource/Maps/MapData/Tutorial.txt", mapData)))
 	{
-		// ¸Ê µ¥ÀÌÅÍÀÇ skyTypeÀ¸·Î SkyBox »ý¼º
+		// ë§µ ë°ì´í„°ì˜ skyTypeìœ¼ë¡œ SkyBox ìƒì„±
 		pGameObject = CMySkyBox::Create(m_pGraphicDev, mapData.skyType);
 		if (pGameObject)
 			pLayer->Add_GameObject(L"SkyBox", pGameObject);
@@ -169,7 +169,7 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 			}
 		}
 
-		// Process Lights - Point Light »ý¼º
+		// Process Lights - Point Light ìƒì„±
 		for (const auto& light : mapData.lights)
 		{
 			Engine::CLightMgr::GetInstance()->Ready_PointLight(m_pGraphicDev, light);
@@ -177,14 +177,14 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	}
 	else
 	{
-		// ¸Ê ·Îµå ½ÇÆÐ ½Ã ±âº» SkyBox (Day) »ý¼º
+		// ë§µ ë¡œë“œ ì‹¤íŒ¨ ì‹œ ê¸°ë³¸ SkyBox (Day) ìƒì„±
 		pGameObject = CMySkyBox::Create(m_pGraphicDev, 0);
 		if (pGameObject)
 			pLayer->Add_GameObject(L"SkyBox", pGameObject);
 	}
 
 	// Player
-	pGameObject = CPersistentMgr::GetInstance()->Get_GlobalObjects(GOBJ_PLAYER);
+	pGameObject = CPersistentMgr::GetInstance()->Get_Player();
 
 	if (nullptr == pGameObject)
 		return E_FAIL;

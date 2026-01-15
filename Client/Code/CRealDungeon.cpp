@@ -110,24 +110,13 @@ HRESULT CRealDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 
 	CGameObject* pGameObject = nullptr;
 
-	// �÷��̾ �ֻ�ܿ�
-	pGameObject = CPersistentMgr::GetInstance()->Get_GlobalObjects(GOBJ_PLAYER);
 
-	if (nullptr == pGameObject)
-		return E_FAIL;
-
-	pGameObject->Set_MessageChannel(m_pMessageChannel);
-
-	if (FAILED(pLayer->Add_GameObject(L"Player", pGameObject)))
-		return E_FAIL;
-
-	pGameObject->AddRef();
 
 
 	// Map Load
 	Engine::MAPDATA mapData;
 	if (SUCCEEDED(Engine::CMapLoader::GetInstance()->LoadMapA(
-		"../Bin/Resource/Maps/MapData/RealDungeon.txt", mapData)))
+		"../Bin/Resource/Maps/MapData/Real_Dungeon.txt", mapData)))
 	{
 		// �� �������� skyType���� SkyBox ����
 		pGameObject = CMySkyBox::Create(m_pGraphicDev, mapData.skyType);
@@ -143,7 +132,18 @@ HRESULT CRealDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 			switch (spawn.type)
 			{
 			case 0:
-				//플레이어 스폰위치, 워프위치 적용
+				CPersistentMgr::GetInstance()->Get_Player()->Set_Pos(_vec3(spawn.x, 0.f, spawn.z));
+				pGameObject = CPersistentMgr::GetInstance()->Get_Player();
+
+				if (nullptr == pGameObject)
+					return E_FAIL;
+
+				pGameObject->Set_MessageChannel(m_pMessageChannel);
+
+				if (FAILED(pLayer->Add_GameObject(L"Player", pGameObject)))
+					return E_FAIL;
+
+				pGameObject->AddRef();
 				break;
 			case 1:
 				switch (spawn.monsterType)

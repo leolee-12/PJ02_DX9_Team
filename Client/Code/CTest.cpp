@@ -176,7 +176,7 @@ HRESULT CTest::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 		return E_FAIL;
 
 	// Player
-	pGameObject = CPersistentMgr::GetInstance()->Get_GlobalObjects(GOBJ_PLAYER);
+	pGameObject = CPersistentMgr::GetInstance()->Get_Player();
 
 	if (nullptr == pGameObject)
 		return E_FAIL;

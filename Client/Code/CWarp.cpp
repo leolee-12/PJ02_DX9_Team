@@ -31,6 +31,8 @@ HRESULT CWarp::Ready_GameObject()
 	if (FAILED(Add_Component()))
 		return E_FAIL;
 
+	m_eOBJID = OID_WARP;
+
 	m_pColliderCom->RegisterToManager(this, CL_WARP);
 
 	return S_OK;
@@ -62,15 +64,7 @@ void CWarp::Render_GameObject()
 
 void CWarp::OnCollision(CGameObject* pObject)
 {
-	CWarp* pOtherWarp = Get_OtherWarp();
 
-	_vec3 warpPos = pOtherWarp->Get_Pos();
-
-	IMessageChannel::EVENT EWarp;
-	EWarp.strType = L"Player.MapWarp";
-	EWarp.eOBJID = Engine::OID_END;
-	EWarp.hmapData.emplace(L"WarpPtr", this);
-	m_pMessageChannel->Publish(EWarp);
 
 }
 

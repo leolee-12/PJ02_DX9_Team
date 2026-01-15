@@ -1,11 +1,11 @@
 ﻿#include "pch.h"
 #include "CPersistentMgr.h"
-#include "CPlayer.h"
 #include "CProtoMgr.h"
 
 CPersistentMgr* CPersistentMgr::m_pInstance = nullptr;
 
 CPersistentMgr::CPersistentMgr()
+	: m_pPlayer(nullptr)
 {
 }
 
@@ -16,7 +16,7 @@ CPersistentMgr::~CPersistentMgr()
 
 HRESULT CPersistentMgr::Ready_GlobalObjects(LPDIRECT3DDEVICE9 pGraphicDev)
 {
-	if (m_hmapGlobalObjects.empty())
+	if (m_pPlayer == nullptr)
 	{
 		vector<CTextureSet::TEXINFO> tempVec(16);
 		tempVec[0]	= CTextureSet::TEXINFO(L"idle",				L"../Bin/Resource/Texture/Player/idle/idle_%04d.png", 72);
@@ -45,43 +45,22 @@ HRESULT CPersistentMgr::Ready_GlobalObjects(LPDIRECT3DDEVICE9 pGraphicDev)
 		if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Calculator", Engine::CCalculator::Create(pGraphicDev))))
 			return E_FAIL;
 
-		CGameObject* pGameObject = CPlayer::Create(pGraphicDev);
+		m_pPlayer = CPlayer::Create(pGraphicDev);
 
-		if (nullptr == pGameObject)
+		if (nullptr == m_pPlayer)
 			return E_FAIL;
-
-		m_hmapGlobalObjects[GOBJ_PLAYER] = pGameObject;
 	}
 	return S_OK;
 }
 
-CGameObject* CPersistentMgr::Get_GlobalObjects(GOBJID eGOBJID)
-{
-	auto iter = m_hmapGlobalObjects.find(eGOBJID);
-	if (iter == m_hmapGlobalObjects.end()) { return nullptr; }
-
-	return iter->second;
-}
-
 Engine::CTransform* CPersistentMgr::Get_PlayerTransform()
 {
-	unordered_map<GOBJID, CGameObject*>::iterator iter = m_hmapGlobalObjects.find(GOBJ_PLAYER);
-	if (iter == m_hmapGlobalObjects.end()) { return nullptr; }
-
-	return static_cast<CTransform*>(iter->second->Get_Component(ID_DYNAMIC, L"Com_Transform"));
+	return static_cast<CTransform*>(m_pPlayer->Get_Component(ID_DYNAMIC, L"Com_Transform"));
 }
+
+
 
 void CPersistentMgr::Free()
 {
-	for (auto& hmap : m_hmapGlobalObjects)
-	{
-		m_vecReleaseQueue.push_back(hmap.second);
-		hmap.second = nullptr;
-	}
-
-	for (auto& Obj : m_vecReleaseQueue)
-	{
-		Safe_Release(Obj);
-	}
-	m_vecReleaseQueue.clear();
+	Safe_Release(m_pPlayer);
 }
