@@ -47,6 +47,8 @@ public:
 		}
 		m_pMessageChannel->AddRef();
 		Subscribe();
+
+		return S_OK;
 	}
 
 	_bool		Get_Playing() { return m_bPlaying; }

@@ -186,6 +186,13 @@ void CPlayer::Ready_Event()
 	//	}
 	//	}) });
 
+	m_hmapSubHandles.insert({ L"Player.Spawn", m_pMessageChannel->Subscribe(L"Player.Spawn", [this](const IMessageChannel::EVENT& Event) {
+	_vec3 vSpawnPos = any_cast<_vec3>(Event.hmapData.find(L"Postion")->second);
+
+	m_pTransformCom->Set_Pos(vSpawnPos.x, vSpawnPos.y, vSpawnPos.z);
+	m_pTransformCom->Update_Component(0.f);
+	}) });
+
 	m_hmapSubHandles.insert({ L"Player_Damaged", m_pMessageChannel->Subscribe(L"Player.Attacked", [this](const IMessageChannel::EVENT& Event) {
 	for (auto& Target : any_cast<vector<CGameObject*>>(Event.hmapData.find(L"Target")->second))
 	{
@@ -587,6 +594,12 @@ void CPlayer::Charge(const _float& fTimeDelta)
 	if (!m_fCharge) return;
 
 	m_fCharge += fTimeDelta;
+}
+
+void CPlayer::Set_Pos(const _vec3& vPos)
+{
+	m_pTransformCom->Set_Pos(vPos.x, vPos.y, vPos.z);
+	m_pTransformCom->Update_Component(0.f);
 }
 
 void CPlayer::Attack_HitBox()

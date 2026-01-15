@@ -35,6 +35,8 @@ public:
 	virtual			void		Render_GameObject();
 	virtual			void		OnCollision(CGameObject* pObject);
 
+	void			Set_Pos(const _vec3& vPos);
+
 private:
 	void			Ready_Variable();
 	void			Ready_Event();
