@@ -62,7 +62,7 @@ private:
 	// 패턴 관련
 	_vec3			m_vSpeed;
 	_float			m_fGroundY;
-	_uint			m_iRecurred;
+	_uint			m_iRecurCount;
 
 public:
 	static CSpike* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, _vec3 vPos, _vec3 vSpeed, _uint iRecurred = 0, _uint iTexIdx = 0);

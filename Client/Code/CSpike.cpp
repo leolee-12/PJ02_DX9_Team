@@ -64,7 +64,7 @@ _int CSpike::Update_GameObject(const _float& fTimeDelta)
 	{
 		m_pColliderCom->UnregisterFromManager();
 
-		if (m_iRecurred) Recur_Spike();
+		if (m_iRecurCount) Recur_Spike();
 
 		return iExit;
 	}
@@ -194,11 +194,11 @@ void CSpike::Recur_Spike()
 {
 	_vec3 vPos{ m_vPos.x, 0.f, m_vPos.z };
 
-	CGameObject* pSpike = CSpike::Create(m_pGraphicDev, m_pMessageChannel, m_vPos, m_vSpeed, --m_iRecurred, Get_Rand_Int(0, 3));
+	CGameObject* pSpike = CSpike::Create(m_pGraphicDev, m_pMessageChannel, m_vPos, m_vSpeed, --m_iRecurCount, Get_Rand_Int(0, 3));
 
 	if (pSpike)
 	{
-		wstring strObjTag = L"Spike" + m_iRecurred;
+		wstring strObjTag = L"Spike" + to_wstring(m_iRecurCount);
 
 		IMessageChannel::EVENT ESpike;
 		ESpike.strType = L"Obj.Add";
@@ -224,7 +224,7 @@ CSpike* CSpike::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChan
 	pSpike->m_pTransformCom->Set_Pos(vPos.x, pSpike->m_fGroundY, vPos.z);
 	pSpike->m_vSpeed = vSpeed;
 	pSpike->m_iTexIdx = iTexIdx;
-	pSpike->m_iRecurred = iRecurred;
+	pSpike->m_iRecurCount = iRecurred;
 
 	return pSpike;
 }

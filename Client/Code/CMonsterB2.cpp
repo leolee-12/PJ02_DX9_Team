@@ -573,7 +573,7 @@ void CMonsterB2::Summon_Spike(const _uint& iRecurCount, const _vec3& vSpeed)
 
 	if (pSpike)
 	{
-		wstring strObjTag = L"Spike" + iRecurCount;
+		wstring strObjTag = L"Spike" + to_wstring(iRecurCount);
 
 		IMessageChannel::EVENT ESpike;
 		ESpike.strType = L"Obj.Add";
