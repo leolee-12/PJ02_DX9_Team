@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "CBase.h"
 #include "CGameObject.h"
 #include "Engine_Define.h"
@@ -12,6 +12,7 @@ typedef struct tagCutStep
 {
 	_vec3 vTargetPos;
 	_float fZoom;
+	_float fLerp;
 	wstring strTargetName;
 	wstring strFont;
 
@@ -41,7 +42,7 @@ public:
 		m_pMessageChannel = pMessageChannel;
 		if (m_pMessageChannel == nullptr)
 		{
-			MSG_BOX("ÄÆ¾À¸Å´ÏÀú ¸Å¼¼ÁöÃ¤³Î µî·Ï ½ÇÆÐ");
+			MSG_BOX("ì»·ì”¬ë§¤ë‹ˆì € ë§¤ì„¸ì§€ì±„ë„ ë“±ë¡ ì‹¤íŒ¨");
 			return E_FAIL;
 		}
 		m_pMessageChannel->AddRef();
@@ -98,6 +99,8 @@ private:
 	CUTSCENE* m_pCurrentCutScene;
 	_uint m_iCurrentStep;
 	_bool m_bPlaying;
+
+	_bool m_bDialogueEnd;
 
 private:
 	static CCutSceneMgr* m_pInstance;

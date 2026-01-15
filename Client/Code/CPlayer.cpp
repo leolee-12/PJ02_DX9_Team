@@ -10,6 +10,7 @@
 #include "CTriggerPoint.h"
 #include "Engine_Struct.h"
 #include "CCollider.h"
+#include "CCutSceneMgr.h"
 
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev),
@@ -285,6 +286,8 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 	{
 		g_bDebug = !g_bDebug;
 	}
+
+	if (CCutSceneMgr::GetInstance()->Get_Playing()) { return; }
 
 	if (!m_bRoll && !m_iCombo && !m_fCharge)
 	{

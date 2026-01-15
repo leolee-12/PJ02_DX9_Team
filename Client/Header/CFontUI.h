@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "CGameObject.h"
 
 class CFontUI : public CGameObject
@@ -18,6 +18,8 @@ public:
 public:
 	void			Set_Font(const wstring& strFont) { m_strFont = strFont; }
 	void			Set_Text(const wstring& strText) { m_strText = strText; }
+	void			Set_OwnerName(const wstring& strOwnerName) { m_strOwnerName = strOwnerName; }
+	void			Set_RenderOwnerName(const wstring& strRenderOwnerName) { m_strRenderOwnerName = strRenderOwnerName; }
 	void			Set_FontColor(const D3DXCOLOR& tColor) { m_tFontColor = tColor; }
 	void			Set_Flags(DWORD dwFlags) { m_dwFlags = dwFlags; }
 
@@ -30,10 +32,12 @@ public:
 
 public:
 
-	static		CFontUI* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	static		CFontUI* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMessageChannel);
 
 
 private:
+	void					Update_CutText(const _float& fTimeDelta);
+	void					Ready_Event();
 	virtual		void		Free();
 
 private:
@@ -43,11 +47,19 @@ private:
 
 	wstring m_strFont;
 	wstring m_strText;
+	wstring m_strRenderOwnerName;
+
+	wstring m_strOwnerName;
+
 	D3DXCOLOR m_tFontColor;
 	DWORD	m_dwFlags;
 
 	_vec3  m_vWorldPos;
 	_vec2  m_vScale;
+
+	_uint  m_iCutText;
+	_float m_fCutDelay;
+	_bool  m_bEnd;
 };
 
 
