@@ -1,30 +1,30 @@
 ﻿#include "pch.h"
-#include "CCookingStar.h"
+#include "CCookingUpDownArrow.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
 
-CCookingStar::CCookingStar(LPDIRECT3DDEVICE9 pGraphicDev)
+CCookingUpDownArrow::CCookingUpDownArrow(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CUi(pGraphicDev), m_pBufferCom(nullptr), m_pTransformCom(nullptr)
 {
 	ZeroMemory(&m_vPos, sizeof(_vec3));
 }
 
-CCookingStar::~CCookingStar()
+CCookingUpDownArrow::~CCookingUpDownArrow()
 {
 }
 
-HRESULT CCookingStar::Ready_GameObject()
+HRESULT CCookingUpDownArrow::Ready_GameObject()
 {
 	if (FAILED(Add_Component()))
 		return E_FAIL;
 
-	m_pTransformCom->Set_Scale(128 * m_fScale, 124 * m_fScale, 0.f);
+	m_pTransformCom->Set_Scale(46 * m_fScale, 35 * m_fScale, 0.f);
 	m_pTransformCom->Set_Pos(m_vPos.x, m_vPos.y, m_vPos.z);
 
 	return S_OK;
 }
 
-HRESULT CCookingStar::Ready_Material()
+HRESULT CCookingUpDownArrow::Ready_Material()
 {
 	D3DMATERIAL9			tMtrl;
 	ZeroMemory(&tMtrl, sizeof(D3DMATERIAL9));
@@ -41,7 +41,7 @@ HRESULT CCookingStar::Ready_Material()
 	return S_OK;
 }
 
-_int CCookingStar::Update_GameObject(const _float& fTimeDelta)
+_int CCookingUpDownArrow::Update_GameObject(const _float& fTimeDelta)
 {
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
@@ -50,28 +50,28 @@ _int CCookingStar::Update_GameObject(const _float& fTimeDelta)
 	return iExit;
 }
 
-void CCookingStar::LateUpdate_GameObject(const _float& fTimeDelta)
+void CCookingUpDownArrow::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
 	m_pTransformCom->Get_Info(INFO_POS, &m_vPos);
 	Compute_ViewDepth_Ortho(&m_vPos);
 }
 
-void CCookingStar::Render_GameObject()
+void CCookingUpDownArrow::Render_GameObject()
 {
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
 
-	m_pTextureCom->Set_Texture(m_iPage);
+	m_pTextureCom->Set_Texture();
 
 	m_pBufferCom->Render_Buffer();
 }
 
-void CCookingStar::OnCollision(CGameObject* pObject)
+void CCookingUpDownArrow::OnCollision(CGameObject* pObject)
 {
 
 }
 
-HRESULT CCookingStar::Add_Component()
+HRESULT CCookingUpDownArrow::Add_Component()
 {
 	Engine::CComponent* pComponent = nullptr;
 
@@ -94,7 +94,7 @@ HRESULT CCookingStar::Add_Component()
 	m_mapComponent[ID_DYNAMIC].insert({ L"Com_Transform", pComponent });
 
 	pComponent = m_pTextureCom = dynamic_cast<Engine::CTexture*>
-		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_CookingStar"));
+		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_CookingArrowUpDown"));
 
 	if (nullptr == pComponent)
 		return E_FAIL;
@@ -106,25 +106,25 @@ HRESULT CCookingStar::Add_Component()
 
 
 
-CCookingStar* CCookingStar::Create(LPDIRECT3DDEVICE9 pGraphicDev, _int iPage, _vec3 vPos, _float fScale)
+CCookingUpDownArrow* CCookingUpDownArrow::Create(LPDIRECT3DDEVICE9 pGraphicDev, _int iPage, _vec3 vPos, _float fScale)
 {
-	CCookingStar* pCookingStar = new CCookingStar(pGraphicDev);
+	CCookingUpDownArrow* pCookArrow = new CCookingUpDownArrow(pGraphicDev);
 
-	pCookingStar->m_vPos = vPos;
-	pCookingStar->m_fScale = fScale;
-	pCookingStar->m_iPage = iPage;
+	pCookArrow->m_vPos = vPos;
+	pCookArrow->m_fScale = fScale;
+	pCookArrow->m_iPage = iPage;
 
-	if (FAILED(pCookingStar->Ready_GameObject()))
+	if (FAILED(pCookArrow->Ready_GameObject()))
 	{
-		Safe_Release(pCookingStar);
-		MSG_BOX("pCookingStar Create Failed");
+		Safe_Release(pCookArrow);
+		MSG_BOX("pCookArrow Create Failed");
 		return nullptr;
 	}
 
-	return pCookingStar;
+	return pCookArrow;
 }
 
-void CCookingStar::Free()
+void CCookingUpDownArrow::Free()
 {
 	CUi::Free();
 }
