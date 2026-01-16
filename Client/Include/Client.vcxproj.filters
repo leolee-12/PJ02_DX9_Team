@@ -379,6 +379,18 @@
     <Filter Include="02. GameObject\16. Font">
       <UniqueIdentifier>{a8d8fe86-d6e2-4ff9-b0d0-76f833c3f75a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\17. NPC">
+      <UniqueIdentifier>{02a83c6e-5555-44d8-bf13-46c921acb848}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\17. NPC\01. Ratau">
+      <UniqueIdentifier>{bd6b3898-6203-4641-b5e5-7960b264ed5b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\17. NPC\02. TarotSeller">
+      <UniqueIdentifier>{1f719df2-ba00-4951-a55d-64e71e6a52e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\17. NPC\03. Follower">
+      <UniqueIdentifier>{3d74a21e-77cb-40d2-a6d2-422d4a7c248f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -777,6 +789,15 @@
     <ClInclude Include="..\Header\CSpike.h">
       <Filter>02. GameObject\14. Projectile</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CRatau.h">
+      <Filter>02. GameObject\17. NPC\01. Ratau</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CTarotSeller.h">
+      <Filter>02. GameObject\17. NPC\02. TarotSeller</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CFollower.h">
+      <Filter>02. GameObject\17. NPC\03. Follower</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1138,6 +1159,15 @@
     </ClCompile>
     <ClCompile Include="..\Code\CSpike.cpp">
       <Filter>02. GameObject\14. Projectile</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CRatau.cpp">
+      <Filter>02. GameObject\17. NPC\01. Ratau</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CTarotSeller.cpp">
+      <Filter>02. GameObject\17. NPC\02. TarotSeller</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CFollower.cpp">
+      <Filter>02. GameObject\17. NPC\03. Follower</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

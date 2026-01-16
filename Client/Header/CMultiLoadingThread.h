@@ -4,7 +4,7 @@
 #include <concurrent_queue.h>
 
 const _uint WORKER_COUNT = []() {
-	unsigned int cores = std::thread::hardware_concurrency();
+	unsigned int cores = 5; //std::thread::hardware_concurrency();
 	return (cores > 1) ? cores - 1 : 1;
 	}();
 
@@ -87,7 +87,7 @@ private:
 	LOADINGID			m_eLoading;
 
 
-	LPDIRECT3DDEVICE9					m_pGraphicDev;
+	LPDIRECT3DDEVICE9	m_pGraphicDev;
 
 
 

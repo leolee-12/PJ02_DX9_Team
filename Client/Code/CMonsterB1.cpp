@@ -152,7 +152,7 @@ void CMonsterB1::OnCollision(CGameObject* pObject)
 
 		const Engine::AABB& borderAABB = pBorderCol->Get_AABB();
 
-		const _float fHalf = 1.f;
+		const _float fHalf = 0.5f;
 
 		_float fOverlapX = (borderAABB.hx + fHalf) - abs(vCurPos.x - borderAABB.x);
 		_float fOverlapZ = (borderAABB.hz + fHalf) - abs(vCurPos.z - borderAABB.z);
@@ -180,7 +180,6 @@ void CMonsterB1::OnCollision(CGameObject* pObject)
 			m_pTransformCom->Update_Component(0.f);
 			m_pTransformCom->Compute_Bilboard(BBD_X);
 			m_pAICom->Set_LerpPos(vCurPos);
-
 		}
 
 		return;

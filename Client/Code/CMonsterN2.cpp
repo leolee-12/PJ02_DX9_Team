@@ -132,33 +132,34 @@ void CMonsterN2::OnCollision(CGameObject* pObject)
 
 		const Engine::AABB& borderAABB = pBorderCol->Get_AABB();
 
-		const _float fPlayerHalf = 0.5f;
+		const _float fHalf = 0.5f;
 
-		_float fOverlapX = (borderAABB.hx + fPlayerHalf) - abs(vCurPos.x - borderAABB.x);
-		_float fOverlapZ = (borderAABB.hz + fPlayerHalf) - abs(vCurPos.z - borderAABB.z);
+		_float fOverlapX = (borderAABB.hx + fHalf) - abs(vCurPos.x - borderAABB.x);
+		_float fOverlapZ = (borderAABB.hz + fHalf) - abs(vCurPos.z - borderAABB.z);
 
 		if (fOverlapX > 0.f && fOverlapZ > 0.f)
 		{
 			if (fOverlapX < fOverlapZ)
 			{
+				// X축 보정
 				if (vCurPos.x < borderAABB.x)
-					vCurPos.x -= fOverlapX + 0.1f;
+					vCurPos.x = borderAABB.x - borderAABB.hx - fHalf - 0.01f;
 				else
-					vCurPos.x += fOverlapX + 0.1f;
+					vCurPos.x = borderAABB.x + borderAABB.hx + fHalf + 0.01f;
 			}
-			else
+			else if (fOverlapX > fOverlapZ)
 			{
+				// Z축 보정
 				if (vCurPos.z < borderAABB.z)
-					vCurPos.z -= fOverlapZ + 0.1f;
+					vCurPos.z = borderAABB.z - borderAABB.hz - fHalf - 0.01f;
 				else
-					vCurPos.z += fOverlapZ + 0.1f;
+					vCurPos.z = borderAABB.z + borderAABB.hz + fHalf + 0.01f;
 			}
-
-			vCurPos -= *(m_pAICom->Get_Dir());
 
 			m_pTransformCom->Set_Pos(vCurPos.x, vCurPos.y, vCurPos.z);
-
-			m_pAICom->Set_Lerp(0.f, vCurPos);
+			m_pTransformCom->Update_Component(0.f);
+			m_pTransformCom->Compute_Bilboard(BBD_X);
+			m_pAICom->Set_LerpPos(vCurPos);
 		}
 
 		return;

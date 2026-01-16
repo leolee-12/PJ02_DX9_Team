@@ -462,12 +462,12 @@ void CB2_AI::Update_Spike1(const _float& fTimeDelta)
 		if (m_pOwner)
 		{
 			_float fSpeed = 8.f;
+			_float fRadian = 2.f * D3DX_PI * 0.2f;
 
-			m_pOwner->Summon_Spike(6, _vec3{ fSpeed * cosf(D3DXToRadian(0.f)),		0.f, fSpeed * sinf(D3DXToRadian(0.f)) });
-			m_pOwner->Summon_Spike(6, _vec3{ fSpeed * cosf(D3DXToRadian(72.f)),		0.f, fSpeed * sinf(D3DXToRadian(72.f)) });
-			m_pOwner->Summon_Spike(6, _vec3{ fSpeed * cosf(D3DXToRadian(144.f)),	0.f, fSpeed * sinf(D3DXToRadian(144.f)) });
-			m_pOwner->Summon_Spike(6, _vec3{ fSpeed * cosf(D3DXToRadian(216.f)),	0.f, fSpeed * sinf(D3DXToRadian(216.f)) });
-			m_pOwner->Summon_Spike(6, _vec3{ fSpeed * cosf(D3DXToRadian(288.f)),	0.f, fSpeed * sinf(D3DXToRadian(288.f)) });
+			for (_float f = 0.f; f < 5.f; f += 1.f)
+			{
+				m_pOwner->Summon_Spike(10, _vec3{ fSpeed * cosf(f * fRadian),	0.f, fSpeed * sinf(f * fRadian) });
+			}
 		}
 		m_bOnce = false;
 	}

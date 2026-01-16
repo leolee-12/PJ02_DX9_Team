@@ -26,6 +26,7 @@ namespace Engine
 	{ 
 		OID_PLAYER, 
 		OID_MONSTER,
+		OID_NPC,
 		OID_PROJECTILE,
 		OID_ITEM, 
 		OID_WEAPON, 
