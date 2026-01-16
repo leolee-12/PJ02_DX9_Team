@@ -119,13 +119,13 @@ void CMultiLoadingThread::Loading_for_Logo()
 	m_NonTexReadyQueue.push(&CMultiLoadingThread::NonTex_for_Logo);
 	m_iTotalProtoCount++;
 
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_MainMenuTex", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Mainmenu(2)/animation_%04d.png", 48));
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_MainMenuTex", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Mainmenu(2)/dds/animation_%04d.dds", 48));
 	m_iTotalProtoCount++;
 
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_MainLogoTex", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Mainmenu/Logo.png", 1));
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_MainLogoTex", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Mainmenu/dds/Logo.dds", 1));
 	m_iTotalProtoCount++;
 
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_MainTabTex", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Mainmenu/Tab.png", 1));
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_MainTabTex", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Mainmenu/dds/Tab.dds", 1));
 	m_iTotalProtoCount++;
 }
 
@@ -161,34 +161,34 @@ void CMultiLoadingThread::Loading_for_KnuckleBone()
 	m_iTotalProtoCount++;
 
 
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_TTutorial", TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/TTutorial_%d.png", 2));
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_TTutorial", TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/dds/TTutorial_%d.dds", 2));
 	m_iTotalProtoCount++;
 
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_KBCenter", TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/KnucklebonesIcon.png", 1));
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_KBCenter", TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/dds/KnucklebonesIcon.dds", 1));
 	m_iTotalProtoCount++;
 
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_Divider", TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/TileDivider_%d.png", 2));
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_Divider", TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/dds/TileDivider_%d.dds", 2));
 	m_iTotalProtoCount++;
 
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_KBMask", TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/Knucklebones_BW_MASK_%d.png", 2));
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_KBMask", TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/dds/Knucklebones_BW_MASK_%d.dds", 2));
 	m_iTotalProtoCount++;
 
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_KBTab", TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/TabRed.png", 1));
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_KBTab", TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/dds/TabRed.dds", 1));
 	m_iTotalProtoCount++;
 
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_KBSix", TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/Six.png", 1));
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_KBSix", TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/dds/Six.dds", 1));
 	m_iTotalProtoCount++;
 
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_KBDice", TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/Dice_%d.png", 6));
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_KBDice", TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/dds/Dice_%d.dds", 6));
 	m_iTotalProtoCount++;
 
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_KBBoardSlot", TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/Knucklebones_WhiteSquare.png", 1));
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_KBBoardSlot", TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/dds/Knucklebones_WhiteSquare.dds", 1));
 	m_iTotalProtoCount++;
 
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_KBDiceBox", TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/DiceBox_A.png", 1));
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_KBDiceBox", TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/dds/DiceBox_A.dds", 1));
 	m_iTotalProtoCount++;
 
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_KBBack", TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/DiceTubBG.png", 1));
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_KBBack", TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/dds/DiceTubBG.dds", 1));
 	m_iTotalProtoCount++;
 
 	//m_iTotalProtoCount = m_TexturLoadingqueue.unsafe_size();
@@ -210,37 +210,7 @@ void CMultiLoadingThread::Loading_for_Tutorial()
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_MonsterN1Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal1/dds/MonsterN1_%02d.dds", 7));
 	m_iTotalProtoCount++;
 
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_MonsterN2Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal2/dds/MonsterN2_%02d.dds", 3));
-	m_iTotalProtoCount++;
-
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_MonsterN3Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal3/dds/MonsterN3_%02d.dds", 3));
-	m_iTotalProtoCount++;
-
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_MonsterB1Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Boss1/MonsterB1_%02d.png", 10));
-	m_iTotalProtoCount++;
-
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_N2Node1Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal2/dds/N2Node_00.dds", 1));
-	m_iTotalProtoCount++;
-
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_N2Node2Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal2/dds/N2Node_01.dds", 1));
-	m_iTotalProtoCount++;
-
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_N2Node3Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal2/dds/N2Node_02.dds", 1));
-	m_iTotalProtoCount++;
-
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_B1Node1Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Boss1/dds/B1Node_00.dds", 1));
-	m_iTotalProtoCount++;
-
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_B1Node2Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Boss1/dds/B1Node_01.dds", 1));
-	m_iTotalProtoCount++;
-
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_B1Node3Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Boss1/dds/B1Node_02.dds", 1));
-	m_iTotalProtoCount++;
-
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_B1Node4Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Boss1/dds/B1Node_03.dds", 1));
-	m_iTotalProtoCount++;
-
-    m_TexturLoadingqueue.push(TEXLR(L"Proto_SpeechBubble", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Etc/SpeechBubble.png", 1));
+    m_TexturLoadingqueue.push(TEXLR(L"Proto_SpeechBubble", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Etc/dds/SpeechBubble.dds", 1));
     m_iTotalProtoCount++;
 
     // ===== TextureSet 큐 등록 (멀티스레드 로딩) =====
@@ -308,7 +278,7 @@ void CMultiLoadingThread::Loading_for_Dungeon()
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_MonsterN3Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal3/dds/MonsterN3_%02d.dds", 3));
 	m_iTotalProtoCount++;
 
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_MonsterB1Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Boss1/MonsterB1_%02d.png", 10));
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_MonsterB1Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Boss1/dds/MonsterB1_%02d.dds", 10));
 	m_iTotalProtoCount++;
 
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_N2Node1Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal2/dds/N2Node_00.dds", 1));
@@ -332,7 +302,7 @@ void CMultiLoadingThread::Loading_for_Dungeon()
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_B1Node4Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Boss1/dds/B1Node_03.dds", 1));
 	m_iTotalProtoCount++;
 
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_ProjectileTexture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Projectile.png", 1));
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_ProjectileTexture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/dds/Projectile.dds", 1));
 	m_iTotalProtoCount++;
 
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_GaugeCover", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Player/PassionGauge/dds/GaugeCover.dds", 1));
@@ -347,129 +317,129 @@ void CMultiLoadingThread::Loading_for_Dungeon()
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_PassionIcon", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Player/PassionGauge/dds/PassionIcon_%d.dds", 2));
 	m_iTotalProtoCount++;
 
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingBarkCover", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingMiniGame/CookingBar_Border.png", 1));
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingBarkCover", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingMiniGame/dds/CookingBar_Border.dds", 1));
 	m_iTotalProtoCount++;
 
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingBarRed", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingMiniGame/CookingBar_Red.png", 1));
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingBarRed", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingMiniGame/dds/CookingBar_Red.dds", 1));
 	m_iTotalProtoCount++;
 
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingBarGreen", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingMiniGame/CookingBar_Green.png", 1));
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingBarGreen", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingMiniGame/dds/CookingBar_Green.dds", 1));
 	m_iTotalProtoCount++;
 
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingMarker", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingMiniGame/Cooking_Marker.png", 1));
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingMarker", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingMiniGame/dds/Cooking_Marker.dds", 1));
 	m_iTotalProtoCount++;
 
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingButton", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingMiniGame/CookingButton.png", 1));
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingButton", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingMiniGame/dds/CookingButton.dds", 1));
 	m_iTotalProtoCount++;
 
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingTarget", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingMiniGame/FoodTexture_%d.png", 1));
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingTarget", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingMiniGame/dds/FoodTexture_%d.dds", 1));
 	m_iTotalProtoCount++;
 
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingTargetBack", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingMiniGame/CookingTargetBack.png", 1));
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingTargetBack", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingMiniGame/dds/CookingTargetBack.dds", 1));
 	m_iTotalProtoCount++;
 
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingSelectBack", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/CookingSelectBack.png", 1));
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingSelectBack", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/dds/CookingSelectBack.dds", 1));
 	m_iTotalProtoCount++;
 
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingSelectSlot", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/SelectSlot.png", 1));
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingSelectSlot", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/dds/SelectSlot.dds", 1));
 	m_iTotalProtoCount++;
 
-    m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingSelectStartBtn", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/SelectFoodTexture.png", 1));
-    m_iTotalProtoCount++;
-    m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingStar", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/Star_%d.png", 2));
-    m_iTotalProtoCount++;
-    m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingCardInfoRecipe", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/Recipe.png", 1));
-    m_iTotalProtoCount++;
-    m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingCardInfoFaithArrow_Down", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/FaithArrow_Down.png", 1));
-    m_iTotalProtoCount++;
-
-    m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingCardInfoFaithArrow_Up", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/FaithArrow_Up.png", 1));
-    m_iTotalProtoCount++;
-
-    m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingCardInfoFaithTexture", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/FaithTexture.png", 1));
-    m_iTotalProtoCount++;
-    m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingCardInfoCardBack", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/InfoCardBackground.png", 1));
-    m_iTotalProtoCount++;
-    m_TexturLoadingqueue.push(TEXLR(L"Proto_Divider", TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/TileDivider_%d.png", 2));
-    m_iTotalProtoCount++;
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingCardInfoFaithTexture", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/FaithTexture.png", 1));
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingSelectStartBtn", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/dds/SelectFoodTexture.dds", 1));
+	m_iTotalProtoCount++;
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingStar", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/dds/Star_%d.dds", 2));
+	m_iTotalProtoCount++;
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingCardInfoRecipe", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/dds/Recipe.dds", 1));
+	m_iTotalProtoCount++;
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingCardInfoFaithArrow_Down", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/dds/FaithArrow_Down.dds", 1));
 	m_iTotalProtoCount++;
 
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingCardInfoRightPattern", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/Rightpattern.png", 1));
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingCardInfoFaithArrow_Up", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/dds/FaithArrow_Up.dds", 1));
 	m_iTotalProtoCount++;
 
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingCardInfoLeftPattern", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/Leftpattern.png", 1));
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingCardInfoFaithTexture", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/dds/FaithTexture.dds", 1));
+	m_iTotalProtoCount++;
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingCardInfoCardBack", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/dds/InfoCardBackground.dds", 1));
+	m_iTotalProtoCount++;
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_Divider", TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/dds/TileDivider_%d.dds", 2));
+	m_iTotalProtoCount++;
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingCardInfoFaithTexture", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/dds/FaithTexture.dds", 1));
 	m_iTotalProtoCount++;
 
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_SpikeTexture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Spike/Spike%d.png", 4));
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingCardInfoRightPattern", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/dds/Rightpattern.dds", 1));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingCardInfoLeftPattern", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/dds/Leftpattern.dds", 1));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_SpikeTexture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Spike/dds/Spike%d.dds", 4));
 	m_iTotalProtoCount++;
 
 	// NPC
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_RatauTexture", TEX_NORMAL, L"../Bin/Resource/Texture/NPC/Ratau/Ratau_%d.png", 4));
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_RatauTexture", TEX_NORMAL, L"../Bin/Resource/Texture/NPC/Ratau/dds/Ratau_%d.dds", 4));
 	m_iTotalProtoCount++;
 
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_TarotSellerTexture", TEX_NORMAL, L"../Bin/Resource/Texture/NPC/TarotSeller/TarotSeller_%d.png", 2));
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_TarotSellerTexture", TEX_NORMAL, L"../Bin/Resource/Texture/NPC/TarotSeller/dds/TarotSeller_%d.dds", 2));
 	m_iTotalProtoCount++;
 
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_ChestTexture", TEX_NORMAL, L"../Bin/Resource/Texture/NPC/Chest/Chest_%d.png", 2));
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_ChestTexture", TEX_NORMAL, L"../Bin/Resource/Texture/NPC/Chest/dds/Chest_%d.dds", 2));
 	m_iTotalProtoCount++;
 
 	// 메인보스
 	vector<TEXSETLR> vecBossLeshy;
-	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Idle",		L"../Bin/Resource/Texture/Monster/Boss2/idle/idle_%04d.png", 80));
-	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Dig",		L"../Bin/Resource/Texture/Monster/Boss2/move-out/move-out_%04d.png", 40));
-	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Escape",	L"../Bin/Resource/Texture/Monster/Boss2/move-in/move-in_%04d.png", 40));
-	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Hit",		L"../Bin/Resource/Texture/Monster/Boss2/hurt/hurt_%04d.png", 16));
-	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Smash",		L"../Bin/Resource/Texture/Monster/Boss2/head-smash/head-smash_%04d.png", 62));
-	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Spike",		L"../Bin/Resource/Texture/Monster/Boss2/trunk-strike/trunk-strike_%04d.png", 51));
-	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Summon",	L"../Bin/Resource/Texture/Monster/Boss2/summon/summon_%04d.png", 71));
-	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Spawn",		L"../Bin/Resource/Texture/Monster/Boss2/transform/transform_%04d.png", 128));
-	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Die",		L"../Bin/Resource/Texture/Monster/Boss2/die-noheart/die-noheart_%04d.png", 132));
-	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Dead",		L"../Bin/Resource/Texture/Monster/Boss2/dead-noheart/dead-noheart_%04d.png", 1));
+	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Idle", L"../Bin/Resource/Texture/Monster/Boss2/idle/dds/idle_%04d.dds", 80));
+	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Dig", L"../Bin/Resource/Texture/Monster/Boss2/move-out/dds/move-out_%04d.dds", 40));
+	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Escape", L"../Bin/Resource/Texture/Monster/Boss2/move-in/dds/move-in_%04d.dds", 40));
+	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Hit", L"../Bin/Resource/Texture/Monster/Boss2/hurt/dds/hurt_%04d.dds", 16));
+	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Smash", L"../Bin/Resource/Texture/Monster/Boss2/head-smash/dds/head-smash_%04d.dds", 62));
+	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Spike", L"../Bin/Resource/Texture/Monster/Boss2/trunk-strike/dds/trunk-strike_%04d.dds", 51));
+	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Summon", L"../Bin/Resource/Texture/Monster/Boss2/summon/dds/summon_%04d.dds", 71));
+	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Spawn", L"../Bin/Resource/Texture/Monster/Boss2/transform/dds/transform_%04d.dds", 128));
+	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Die", L"../Bin/Resource/Texture/Monster/Boss2/die-noheart/dds/die-noheart_%04d.dds", 132));
+	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Dead", L"../Bin/Resource/Texture/Monster/Boss2/dead-noheart/dds/dead-noheart_%04d.dds", 1));
 	m_TexSetLoadingqueue.push(make_pair(TEXSETINFO(L"Proto_MonsterB2Texture", TEX_NORMAL), vecBossLeshy));
 	m_iTotalProtoCount++;
 
 	// 팔로워
 	vector<TEXSETLR> vecFollower1;
-	vecFollower1.push_back(TEXSETLR(L"Follower1_idle",			L"../Bin/Resource/Texture/NPC/follower1/idle/idle_%04d.png", 24));
-	vecFollower1.push_back(TEXSETLR(L"Follower1_run",			L"../Bin/Resource/Texture/NPC/follower1/run/run_%04d.png", 14));
-	vecFollower1.push_back(TEXSETLR(L"Follower1_wood",			L"../Bin/Resource/Texture/NPC/follower1/chop-wood/chop-wood_%04d.png", 98));
-	vecFollower1.push_back(TEXSETLR(L"Follower1_rock",			L"../Bin/Resource/Texture/NPC/follower1/mining/mining_%04d.png", 46));
-	vecFollower1.push_back(TEXSETLR(L"Follower1_pray",			L"../Bin/Resource/Texture/NPC/follower1/pray/pray_%04d.png", 60));
-	vecFollower1.push_back(TEXSETLR(L"Follower1_build",			L"../Bin/Resource/Texture/NPC/follower1/build/build_%04d.png", 83));
-	vecFollower1.push_back(TEXSETLR(L"Follower1_dance",			L"../Bin/Resource/Texture/NPC/follower1/dance/dance_%04d.png", 47));
-	vecFollower1.push_back(TEXSETLR(L"Follower1_recruit-start",	L"../Bin/Resource/Texture/NPC/follower1/recruit-start/recruit-start_%04d.png", 20));
-	vecFollower1.push_back(TEXSETLR(L"Follower1_recruit-loop",	L"../Bin/Resource/Texture/NPC/follower1/recruit-loop/recruit-loop_%04d.png", 96));
-	vecFollower1.push_back(TEXSETLR(L"Follower1_recruit-end",	L"../Bin/Resource/Texture/NPC/follower1/recruit-end/recruit-end_%04d.png", 75));
+	vecFollower1.push_back(TEXSETLR(L"Follower1_idle", L"../Bin/Resource/Texture/NPC/follower1/idle/dds/idle_%04d.dds", 24));
+	vecFollower1.push_back(TEXSETLR(L"Follower1_run", L"../Bin/Resource/Texture/NPC/follower1/run/dds/run_%04d.dds", 14));
+	vecFollower1.push_back(TEXSETLR(L"Follower1_wood", L"../Bin/Resource/Texture/NPC/follower1/chop-wood/dds/chop-wood_%04d.dds", 98));
+	vecFollower1.push_back(TEXSETLR(L"Follower1_rock", L"../Bin/Resource/Texture/NPC/follower1/mining/dds/mining_%04d.dds", 46));
+	vecFollower1.push_back(TEXSETLR(L"Follower1_pray", L"../Bin/Resource/Texture/NPC/follower1/pray/dds/pray_%04d.dds", 60));
+	vecFollower1.push_back(TEXSETLR(L"Follower1_build", L"../Bin/Resource/Texture/NPC/follower1/build/dds/build_%04d.dds", 83));
+	vecFollower1.push_back(TEXSETLR(L"Follower1_dance", L"../Bin/Resource/Texture/NPC/follower1/dance/dds/dance_%04d.dds", 47));
+	vecFollower1.push_back(TEXSETLR(L"Follower1_recruit-start", L"../Bin/Resource/Texture/NPC/follower1/recruit-start/dds/recruit-start_%04d.dds", 20));
+	vecFollower1.push_back(TEXSETLR(L"Follower1_recruit-loop", L"../Bin/Resource/Texture/NPC/follower1/recruit-loop/dds/recruit-loop_%04d.dds", 96));
+	vecFollower1.push_back(TEXSETLR(L"Follower1_recruit-end", L"../Bin/Resource/Texture/NPC/follower1/recruit-end/dds/recruit-end_%04d.dds", 75));
 	m_TexSetLoadingqueue.push(make_pair(TEXSETINFO(L"Proto_Follower1Texture", TEX_NORMAL), vecFollower1));
 	m_iTotalProtoCount++;
 
 	vector<TEXSETLR> vecFollower2;
-	vecFollower2.push_back(TEXSETLR(L"Follower2_idle", L"../Bin/Resource/Texture/NPC/follower2/idle/idle_%04d.png", 24));
-	vecFollower2.push_back(TEXSETLR(L"Follower2_run", L"../Bin/Resource/Texture/NPC/follower2/run/run_%04d.png", 14));
-	vecFollower2.push_back(TEXSETLR(L"Follower2_wood", L"../Bin/Resource/Texture/NPC/follower2/chop-wood/chop-wood_%04d.png", 98));
-	vecFollower2.push_back(TEXSETLR(L"Follower2_rock", L"../Bin/Resource/Texture/NPC/follower2/mining/mining_%04d.png", 46));
-	vecFollower2.push_back(TEXSETLR(L"Follower2_pray", L"../Bin/Resource/Texture/NPC/follower2/pray/pray_%04d.png", 60));
-	vecFollower2.push_back(TEXSETLR(L"Follower2_build", L"../Bin/Resource/Texture/NPC/follower2/build/build_%04d.png", 83));
-	vecFollower2.push_back(TEXSETLR(L"Follower2_dance", L"../Bin/Resource/Texture/NPC/follower2/dance/dance_%04d.png", 47));
-	vecFollower2.push_back(TEXSETLR(L"Follower2_recruit-start", L"../Bin/Resource/Texture/NPC/follower2/recruit-start/recruit-start_%04d.png", 20));
-	vecFollower2.push_back(TEXSETLR(L"Follower2_recruit-loop", L"../Bin/Resource/Texture/NPC/follower2/recruit-loop/recruit-loop_%04d.png", 96));
-	vecFollower2.push_back(TEXSETLR(L"Follower2_recruit-end", L"../Bin/Resource/Texture/NPC/follower2/recruit-end/recruit-end_%04d.png", 75));
-	m_TexSetLoadingqueue.push(make_pair(TEXSETINFO(L"Proto_Follower1Texture", TEX_NORMAL), vecFollower2));
+	vecFollower2.push_back(TEXSETLR(L"Follower2_idle", L"../Bin/Resource/Texture/NPC/follower2/idle/dds/idle_%04d.dds", 24));
+	vecFollower2.push_back(TEXSETLR(L"Follower2_run", L"../Bin/Resource/Texture/NPC/follower2/run/dds/run_%04d.dds", 14));
+	vecFollower2.push_back(TEXSETLR(L"Follower2_wood", L"../Bin/Resource/Texture/NPC/follower2/chop-wood/dds/chop-wood_%04d.dds", 98));
+	vecFollower2.push_back(TEXSETLR(L"Follower2_rock", L"../Bin/Resource/Texture/NPC/follower2/mining/dds/mining_%04d.dds", 46));
+	vecFollower2.push_back(TEXSETLR(L"Follower2_pray", L"../Bin/Resource/Texture/NPC/follower2/pray/dds/pray_%04d.dds", 60));
+	vecFollower2.push_back(TEXSETLR(L"Follower2_build", L"../Bin/Resource/Texture/NPC/follower2/build/dds/build_%04d.dds", 83));
+	vecFollower2.push_back(TEXSETLR(L"Follower2_dance", L"../Bin/Resource/Texture/NPC/follower2/dance/dds/dance_%04d.dds", 47));
+	vecFollower2.push_back(TEXSETLR(L"Follower2_recruit-start", L"../Bin/Resource/Texture/NPC/follower2/recruit-start/dds/recruit-start_%04d.dds", 20));
+	vecFollower2.push_back(TEXSETLR(L"Follower2_recruit-loop", L"../Bin/Resource/Texture/NPC/follower2/recruit-loop/dds/recruit-loop_%04d.dds", 96));
+	vecFollower2.push_back(TEXSETLR(L"Follower2_recruit-end", L"../Bin/Resource/Texture/NPC/follower2/recruit-end/dds/recruit-end_%04d.dds", 75));
+	m_TexSetLoadingqueue.push(make_pair(TEXSETINFO(L"Proto_Follower2Texture", TEX_NORMAL), vecFollower2));
 	m_iTotalProtoCount++;
 
 	vector<TEXSETLR> vecFollower3;
-	vecFollower3.push_back(TEXSETLR(L"Follower3_idle", L"../Bin/Resource/Texture/NPC/follower3/idle/idle_%04d.png", 24));
-	vecFollower3.push_back(TEXSETLR(L"Follower3_run", L"../Bin/Resource/Texture/NPC/follower3/run/run_%04d.png", 14));
-	vecFollower3.push_back(TEXSETLR(L"Follower3_wood", L"../Bin/Resource/Texture/NPC/follower3/chop-wood/chop-wood_%04d.png", 98));
-	vecFollower3.push_back(TEXSETLR(L"Follower3_rock", L"../Bin/Resource/Texture/NPC/follower3/mining/mining_%04d.png", 46));
-	vecFollower3.push_back(TEXSETLR(L"Follower3_pray", L"../Bin/Resource/Texture/NPC/follower3/pray/pray_%04d.png", 60));
-	vecFollower3.push_back(TEXSETLR(L"Follower3_build", L"../Bin/Resource/Texture/NPC/follower3/build/build_%04d.png", 83));
-	vecFollower3.push_back(TEXSETLR(L"Follower3_dance", L"../Bin/Resource/Texture/NPC/follower3/dance/dance_%04d.png", 47));
-	vecFollower3.push_back(TEXSETLR(L"Follower3_recruit-start", L"../Bin/Resource/Texture/NPC/follower3/recruit-start/recruit-start_%04d.png", 20));
-	vecFollower3.push_back(TEXSETLR(L"Follower3_recruit-loop", L"../Bin/Resource/Texture/NPC/follower3/recruit-loop/recruit-loop_%04d.png", 96));
-	vecFollower3.push_back(TEXSETLR(L"Follower3_recruit-end", L"../Bin/Resource/Texture/NPC/follower3/recruit-end/recruit-end_%04d.png", 75));
-	m_TexSetLoadingqueue.push(make_pair(TEXSETINFO(L"Proto_Follower1Texture", TEX_NORMAL), vecFollower3));
+	vecFollower3.push_back(TEXSETLR(L"Follower3_idle", L"../Bin/Resource/Texture/NPC/follower3/idle/dds/idle_%04d.dds", 24));
+	vecFollower3.push_back(TEXSETLR(L"Follower3_run", L"../Bin/Resource/Texture/NPC/follower3/run/dds/run_%04d.dds", 14));
+	vecFollower3.push_back(TEXSETLR(L"Follower3_wood", L"../Bin/Resource/Texture/NPC/follower3/chop-wood/dds/chop-wood_%04d.dds", 98));
+	vecFollower3.push_back(TEXSETLR(L"Follower3_rock", L"../Bin/Resource/Texture/NPC/follower3/mining/dds/mining_%04d.dds", 46));
+	vecFollower3.push_back(TEXSETLR(L"Follower3_pray", L"../Bin/Resource/Texture/NPC/follower3/pray/dds/pray_%04d.dds", 60));
+	vecFollower3.push_back(TEXSETLR(L"Follower3_build", L"../Bin/Resource/Texture/NPC/follower3/build/dds/build_%04d.dds", 83));
+	vecFollower3.push_back(TEXSETLR(L"Follower3_dance", L"../Bin/Resource/Texture/NPC/follower3/dance/dds/dance_%04d.dds", 47));
+	vecFollower3.push_back(TEXSETLR(L"Follower3_recruit-start", L"../Bin/Resource/Texture/NPC/follower3/recruit-start/dds/recruit-start_%04d.dds", 20));
+	vecFollower3.push_back(TEXSETLR(L"Follower3_recruit-loop", L"../Bin/Resource/Texture/NPC/follower3/recruit-loop/dds/recruit-loop_%04d.dds", 96));
+	vecFollower3.push_back(TEXSETLR(L"Follower3_recruit-end", L"../Bin/Resource/Texture/NPC/follower3/recruit-end/dds/recruit-end_%04d.dds", 75));
+	m_TexSetLoadingqueue.push(make_pair(TEXSETINFO(L"Proto_Follower3Texture", TEX_NORMAL), vecFollower3));
 	m_iTotalProtoCount++;
 
 }
@@ -478,7 +448,7 @@ void CMultiLoadingThread::Loading_for_TheGateway()
 {
 	m_iTotalProtoCount = 0;
 
-	m_NonTexReadyQueue.push(&CMultiLoadingThread::NonTex_for_Dungeon);
+	m_NonTexReadyQueue.push(&CMultiLoadingThread::NonTex_for_TheGateway);
 	m_iTotalProtoCount++;
 }
 
@@ -645,7 +615,7 @@ void CMultiLoadingThread::Load_Object_Texture(const std::set<std::wstring>& text
 		std::wstring protoName = L"Proto_" + name + L"Texture";
 		g_MapProtoname.push_back(protoName);
 
-		std::wstring path = L"../Bin/Resource/Maps/Texture/Object/" + name + L"/" + name + L"%d.png";
+		std::wstring path = L"../Bin/Resource/Maps/Texture/Object/" + name + L"/dds/" + name + L"%d.dds";
 
 		CProtoMgr::GetInstance()->Ready_Prototype(
 			g_MapProtoname.back().c_str(),

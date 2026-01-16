@@ -228,7 +228,7 @@ HRESULT CBishop_Leshy::Ready_Dialogue(const _vec3& vDialoguePos)
 	m_pFontUI->Set_Scale(_vec2(500.f, 150.f));
 
 	m_pFontUI->Set_WorldPos(vDialoguePos);
-	m_pFontUI->Set_RenderOwnerName(L"래쉬");
+	//m_pFontUI->Set_RenderOwnerName(L"래쉬");
 
 	m_pSpeechBubble = CSpeechBubble::Create(m_pGraphicDev, vDialoguePos, _vec2(500.f, 150.f));
 
