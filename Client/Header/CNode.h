@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "CMonster.h"
 
 	namespace Engine
@@ -9,8 +9,8 @@
 }
 
 	// ==========================
-	//	CNode : ¸ó½ºÅÍ ¸¶µğ ±¸Çö¿ë Å¬·¡½º
-	//  - µ¶¸³Àû »ı¼ºX, ¸ó½ºÅÍ Å¬·¡½º¿¡¼­ ¼ÒÀ¯ ¹× °ü¸®
+	//	CNode : ëª¬ìŠ¤í„° ë§ˆë”” êµ¬í˜„ìš© í´ë˜ìŠ¤
+	//  - ë…ë¦½ì  ìƒì„±X, ëª¬ìŠ¤í„° í´ë˜ìŠ¤ì—ì„œ ì†Œìœ  ë° ê´€ë¦¬
 	// ==========================
 
 class CNode : public CGameObject
@@ -59,22 +59,21 @@ private:
 	_vec3				m_vPos;
 	_vec3				m_vDir;
 
-	// ½ºÇÁ¶óÀÌÆ® °ü·Ã
+	// ìŠ¤í”„ë¼ì´íŠ¸ ê´€ë ¨
 	_float				m_fFrame;
 	_float				m_fFrameEnd;
 	_float				m_fFrameSpeed;
 	_matrix				m_matTex;
-	CTransform*			m_pOwnerTC;
 	const _tchar*		m_pProtoTexKey;
 
-	// ÆĞÅÏ °ü·Ã
+	// íŒ¨í„´ ê´€ë ¨
 	USERID			m_eUserID;
 	_float			m_fAcmlTime;
 	_bool			m_bMtrl = false;
 	_bool			m_bUseMtrl = false;
 
 public:
-	static CNode* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, CTransform* pOwnerTC, const _tchar* pProtoTexKey);
+	static CNode* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, const _tchar* pProtoTexKey);
 
 private:
 	virtual void		Free();

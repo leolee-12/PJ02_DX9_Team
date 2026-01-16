@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "CItem.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
@@ -116,10 +116,10 @@ HRESULT CItem::Add_Component()
 
 void CItem::Ready_Variable()
 {
-	// Collider ¼¼ÆÃ
+	// Collider ì„¸íŒ…
 	m_pColliderCom->RegisterToManager(this, CL_ITEM);
 
-	// °ÔÀÓ·ÎÁ÷ º¯¼ö ¼¼ÆÃ
+	// ê²Œìž„ë¡œì§ ë³€ìˆ˜ ì„¸íŒ…
 
 	_float fX = (rand() % 20 - 10.f) * 0.3f;
 	_float fZ = (rand() % 20 - 10.f) * 0.3f;
@@ -131,16 +131,6 @@ void CItem::Ready_Variable()
 
 void CItem::Ready_Event()
 {
-	//m_hmapSubHandles.insert({ L"Monster_Damaged", m_pMessageChannel->Subscribe(L"Monster.Attacked", [this](const IMessageChannel::EVENT& Event) {
-	//for (auto& Target : any_cast<vector<CGameObject*>>(Event.hmapData.find(L"Target")->second))
-	//{
-	//	if (Target == this)
-	//	{
-	//		Attacked(any_cast<_int>(Event.hmapData.find(L"Attack")->second));
-	//		break;
-	//	}
-	//}
-	//}) });
 }
 
 void CItem::Check_State()

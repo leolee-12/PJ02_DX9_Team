@@ -5,11 +5,11 @@
 #include "CRenderer.h"
 #include "CPersistentMgr.h"
 #include "CCollisionMgr.h"
-#include "CNode.h"
 #include "CB1_AI.h"
+#include "CNode.h"
 #include "CProjectile.h"
 #include "CMonsterN2.h"
-#include <CMonsterB2.h>
+#include "CMonsterB2.h"
 
 CMonsterB1::CMonsterB1(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CMonster(pGraphicDev),
@@ -46,7 +46,7 @@ CMonsterB1::CMonsterB1(const CMonsterB1& rhs)
 	m_fFrameEnd(0.f),
 	m_fFrameSpeed(0.f),
 	m_iPhase(rhs.m_iPhase),
-	m_iMaxHp(rhs.m_iPhase)
+	m_iMaxHp(rhs.m_iMaxHp)
 {
 	memcpy(m_pNode, rhs.m_pNode, sizeof(m_pNode));
 }
@@ -267,22 +267,22 @@ void CMonsterB1::Ready_Variable()
 	_float fScaleReduction(0.8f);
 	m_pTransformCom->Get_Scale(&vScale);
 	vScale *= fScaleReduction;
-	m_pNode[0] = CNode::Create(m_pGraphicDev, m_pMessageChannel, m_pTransformCom, L"Proto_B1Node1Texture");
+	m_pNode[0] = CNode::Create(m_pGraphicDev, m_pMessageChannel, L"Proto_B1Node1Texture");
 	m_pNode[0]->Set_NodeScale(vScale);
 	m_pNode[0]->Set_UserID(CNode::MONSTER_B1);
 
 	vScale *= fScaleReduction;
-	m_pNode[1] = CNode::Create(m_pGraphicDev, m_pMessageChannel, m_pTransformCom, L"Proto_B1Node2Texture");
+	m_pNode[1] = CNode::Create(m_pGraphicDev, m_pMessageChannel, L"Proto_B1Node2Texture");
 	m_pNode[1]->Set_NodeScale(vScale);
 	m_pNode[1]->Set_UserID(CNode::MONSTER_B1);
 
 	vScale *= fScaleReduction;
-	m_pNode[2] = CNode::Create(m_pGraphicDev, m_pMessageChannel, m_pTransformCom, L"Proto_B1Node3Texture");
+	m_pNode[2] = CNode::Create(m_pGraphicDev, m_pMessageChannel, L"Proto_B1Node3Texture");
 	m_pNode[2]->Set_NodeScale(vScale);
 	m_pNode[2]->Set_UserID(CNode::MONSTER_B1);
 
 	vScale *= fScaleReduction;
-	m_pNode[3] = CNode::Create(m_pGraphicDev, m_pMessageChannel, m_pTransformCom, L"Proto_B1Node4Texture");
+	m_pNode[3] = CNode::Create(m_pGraphicDev, m_pMessageChannel, L"Proto_B1Node4Texture");
 	m_pNode[3]->Set_NodeScale(vScale);
 	m_pNode[3]->Set_UserID(CNode::MONSTER_B1);
 }

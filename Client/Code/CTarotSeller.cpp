@@ -290,7 +290,7 @@ void CTarotSeller::Set_Texture()
 	m_pTextureCom->Set_Texture(_uint(m_eCurState));
 }
 
-CTarotSeller* CTarotSeller::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel)
+CTarotSeller* CTarotSeller::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, _vec3 vPos)
 {
 	CTarotSeller* pTarotSeller = new CTarotSeller(pGraphicDev, StageChannel);
 
@@ -300,6 +300,8 @@ CTarotSeller* CTarotSeller::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChanne
 		MSG_BOX("pTarotSeller Create Failed");
 		return nullptr;
 	}
+
+	pTarotSeller->m_pTransformCom->Set_Pos(vPos.x, pTarotSeller->m_fGroundY, vPos.z);
 
 	return pTarotSeller;
 }

@@ -246,7 +246,7 @@ void CMonsterB2::Ready_Variable()
 
 	// Anim 관련 세팅
 	m_fFrameSpeed = 24.f;
-	D3DXMatrixIdentity(&m_matTex);
+	//D3DXMatrixIdentity(&m_matTex);
 }
 
 void CMonsterB2::Ready_Event()

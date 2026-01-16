@@ -76,7 +76,7 @@ private:
 	_float				m_fFrame;
 	_float				m_fFrameEnd;
 	_float				m_fFrameSpeed;
-	_matrix				m_matTex;
+	//_matrix				m_matTex;	// 거대한 보스여서 Flip 안해도 괜찮아보임
 	_float				m_fBtmPadding;
 
 	// AI 관련

@@ -26,7 +26,8 @@ CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
 	m_fLerp(0.2f),
 	m_fCharge(0.f),
 	m_fChargeMax(3.f),
-	m_bMsgRegistered(false)
+	m_bMsgRegistered(false),
+	m_bIntro(false)
 {
 }
 
@@ -44,7 +45,8 @@ CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel)
 		m_fLerp(0.2f),
 		m_fCharge(0.f),
 		m_fChargeMax(3.f),
-		m_bMsgRegistered(false)
+		m_bMsgRegistered(false),
+		m_bIntro(false)
 {
 }
 
@@ -63,7 +65,8 @@ CPlayer::CPlayer(const CPlayer& rhs)
 		m_fLerp(rhs.m_fLerp),
 		m_fCharge(0.f),
 		m_fChargeMax(rhs.m_fChargeMax),
-		m_bMsgRegistered(rhs.m_bMsgRegistered)
+		m_bMsgRegistered(rhs.m_bMsgRegistered),
+		m_bIntro(rhs.m_bIntro)
 {
 }
 
@@ -109,6 +112,8 @@ _int CPlayer::Update_GameObject(const _float& fTimeDelta)
 
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
+	Set_Size();
+
 	Set_OnTerrain();
 
 	CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHA, this);
@@ -152,6 +157,7 @@ void CPlayer::Render_GameObject()
 
 void CPlayer::Ready_Variable()
 {
+	m_bIntro = true;
 	m_fSpeed = 10.f;
 	m_iAttack = 1;
 	m_iHp = 10;
@@ -255,15 +261,6 @@ HRESULT CPlayer::Add_Component()
 
 	m_mapComponent[ID_DYNAMIC].insert({ L"Com_Transform", pComponent });
 
-	// Texture
-	//pComponent = m_pTextureCom2 = dynamic_cast<Engine::CTexture*>
-	//	(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_PlayerTexture2"));
-	//
-	//if (nullptr == pComponent)
-	//	return E_FAIL;
-	//
-	//m_mapComponent[ID_STATIC].insert({ L"Com_Texture", pComponent });
-
 	pComponent = m_pTextureCom = dynamic_cast<Engine::CTextureSet*>
 		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_PlayerTexture"));
 
@@ -296,12 +293,23 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 		g_bDebug = !g_bDebug;
 	}
 
+	if (CDInputMgr::GetInstance()->Key_Down(DIK_F1))
+	{	// 디버그용
+		m_bIntro = !m_bIntro;
+	}
+	if (CDInputMgr::GetInstance()->Key_Down(DIK_F2))
+	{	// 디버그용
+		m_eCurState = PS_ACTION;
+	}
+	if (CDInputMgr::GetInstance()->Key_Down(DIK_F3))
+	{	// 디버그용
+		m_eCurState = PS_REBIRTH;
+	}
+
 	if (CCutSceneMgr::GetInstance()->Get_Playing()) { return; }
 
 	if (!m_bRoll && !m_iCombo && !m_fCharge)
 	{
-		m_fSpeed = 10.f;
-		
 		if (CDInputMgr::GetInstance()->Key_Pressing(DIK_W))
 		{
 			m_eCurState = PS_RUN;
@@ -344,9 +352,25 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 
 		else
 		{
-			m_eCurState = PS_IDLE;
+				m_eCurState = PS_IDLE;
 		}
 	}
+
+	// 트리거 키인풋
+	if (CDInputMgr::GetInstance()->Key_Down(DIK_E))
+	{
+		if (!m_pTriggerPoint) { return; }
+
+		m_pTriggerPoint->Activate();
+	}
+
+	if (GetAsyncKeyState('P'))
+	{
+		m_iHp = 0;
+	}
+
+	// 인트로 상태에서는 사용 불가
+	if (m_bIntro) return;
 
 	if (CDInputMgr::GetInstance()->Key_Down(DIK_SPACE))
 	{
@@ -387,21 +411,6 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 			m_strFrameKey = L"charge-end";
 		}
 	}
-
-	// 트리거 키인풋
-	if (CDInputMgr::GetInstance()->Key_Down(DIK_E))
-	{
-		if (!m_pTriggerPoint) { return; }
-
-		m_pTriggerPoint->Activate();
-	}
-	
-
-	if (GetAsyncKeyState('P'))
-	{
-		m_iHp = 0;
-	}
-
 }
 
 void CPlayer::Set_OnTerrain()
@@ -460,13 +469,15 @@ void CPlayer::Check_Frame()
 	{
 	case PS_IDLE:
 	{
-		m_fFrameEnd = _float(m_pTextureCom->Get_TextureEnd(L"idle"));
+		if(m_bIntro)	m_fFrameEnd = _float(m_pTextureCom->Get_TextureEnd(L"intro_idle"));
+		else			m_fFrameEnd = _float(m_pTextureCom->Get_TextureEnd(L"idle"));
 	}
 	break;
 
 	case PS_RUN:
 	{
-		m_fFrameEnd = m_pTextureCom->Get_TextureEnd(L"run-up");
+		if (m_bIntro)	m_fFrameEnd = _float(m_pTextureCom->Get_TextureEnd(L"intro_run-up"));
+		else			m_fFrameEnd = _float(m_pTextureCom->Get_TextureEnd(L"run-up"));
 	}
 	break;
 
@@ -487,6 +498,19 @@ void CPlayer::Check_Frame()
 		m_fFrameEnd = m_pTextureCom->Get_TextureEnd(L"charge-start");
 	}
 	break;
+
+	case PS_ACTION:
+	{
+		if (m_bIntro)	m_fFrameEnd = _float(m_pTextureCom->Get_TextureEnd(L"intro_kneel"));
+		else			m_fFrameEnd = _float(m_pTextureCom->Get_TextureEnd(L"action"));
+	}
+	break;
+
+	case PS_REBIRTH:
+	{
+		m_fFrameEnd = m_pTextureCom->Get_TextureEnd(L"intro_rebirth");
+	}
+	break;
 	}
 
 	m_ePreState = m_eCurState;
@@ -499,17 +523,23 @@ void CPlayer::Move_Frame(const _float& fTimeDelta)
 	if (m_fFrame > m_fFrameEnd)
 	{
 		m_fFrame = 0.f;
-		
-		// 구르기 및 공격은 프레임이 끝날 때까지 유지되었다가 종료
-		if (m_eCurState == PS_ROLL)
+
+		switch (m_eCurState)
+		{
+			// 구르기 및 공격 등은 프레임이 끝날 때까지 유지되었다가 종료
+		case PS_ROLL:
 		{
 			m_bRoll = false;
 		}
-		else if (m_eCurState == PS_ATTACK)
+		break;
+
+		case PS_ATTACK:
 		{
 			m_iCombo = 0;
 		}
-		else if (m_eCurState == PS_CHARGE)
+		break;
+
+		case PS_CHARGE:
 		{
 			if (m_strFrameKey == L"charge-start") m_strFrameKey = L"charge-loop";
 			else if (m_strFrameKey == L"charge-end")
@@ -518,6 +548,19 @@ void CPlayer::Move_Frame(const _float& fTimeDelta)
 				m_fChargeMax = 3.f;
 			}
 		}
+		break;
+
+		case PS_ACTION:
+		{
+			if (m_strFrameKey == L"intro_kneel") m_strFrameKey = L"intro_kneel-loop";
+		}
+
+		case PS_REBIRTH:
+		{
+			m_eCurState = PS_IDLE;
+		}
+		break;
+		}
 	}
 }
 
@@ -525,47 +568,7 @@ void CPlayer::Set_TextureSet()
 {
 	wstring strPreKey = m_strFrameKey;
 
-	switch (m_eCurState)
-	{
-	case PS_IDLE:
-	{
-		if (m_vDir == m_vNormDir[DIR_UP] || m_vDir == m_vNormDir[DIR_LU] || m_vDir == m_vNormDir[DIR_RU] ) m_strFrameKey = L"idle-up";
-		else m_strFrameKey = L"idle";
-	}
-	break;
-
-	case PS_RUN:
-	{
-		if		(m_vDir == m_vNormDir[DIR_UP])										m_strFrameKey = L"run-up";
-		else if (m_vDir == m_vNormDir[DIR_DOWN])									m_strFrameKey = L"run-down";
-		else if (m_vDir == m_vNormDir[DIR_LD]	|| m_vDir == m_vNormDir[DIR_RD])	m_strFrameKey = L"run-diagonal";
-		else if (m_vDir == m_vNormDir[DIR_LEFT] || m_vDir == m_vNormDir[DIR_RIGHT])	m_strFrameKey = L"run-horizontal";
-		else if (m_vDir == m_vNormDir[DIR_LU]	|| m_vDir == m_vNormDir[DIR_RU])	m_strFrameKey = L"run-up-diagonal";
-	}
-	break;
-
-	case PS_ROLL:
-	{
-		if		(m_vDir == m_vNormDir[DIR_UP]	|| m_vDir == m_vNormDir[DIR_LU]	|| m_vDir == m_vNormDir[DIR_RU])	m_strFrameKey = L"roll-up";
-		else if (m_vDir == m_vNormDir[DIR_DOWN]	|| m_vDir == m_vNormDir[DIR_LD]	|| m_vDir == m_vNormDir[DIR_RD])	m_strFrameKey = L"roll-down";
-		else if (m_vDir == m_vNormDir[DIR_LEFT] || m_vDir == m_vNormDir[DIR_RIGHT])									m_strFrameKey = L"roll-horizontal";
-	}
-	break;
-
-	case PS_ATTACK:
-	{
-		if		(m_iCombo == 1)	m_strFrameKey = L"attack-combo1";
-		else if (m_iCombo == 2)	m_strFrameKey = L"attack-combo2";
-		else if (m_iCombo == 3)	m_strFrameKey = L"attack-combo3";
-	}
-	break;
-
-	case PS_CHARGE:
-	{
-		// 키인풋 & Move_Frame에서 관리
-	}
-	break;
-	}
+	Set_FrameKey();
 
 	if (m_strFrameKey != strPreKey) m_fFrame = 0.f;
 	
@@ -583,6 +586,104 @@ void CPlayer::Set_TextureSet()
 	m_pGraphicDev->SetTransform(D3DTS_TEXTURE0, &m_matTex);
 
 	m_pTextureCom->Set_Texture(m_strFrameKey, _uint(m_fFrame));
+}
+
+void CPlayer::Set_FrameKey()
+{
+	if (m_bIntro)
+	{
+		switch (m_eCurState)
+		{
+		case PS_IDLE:
+		{
+
+			if (m_vDir == m_vNormDir[DIR_UP] || m_vDir == m_vNormDir[DIR_LU] || m_vDir == m_vNormDir[DIR_RU]) m_strFrameKey = L"intro_idle-up";
+			else m_strFrameKey = L"intro_idle";
+		}
+		break;
+
+		case PS_RUN:
+		{
+			if		(m_vDir == m_vNormDir[DIR_UP])										m_strFrameKey = L"intro_run-up";
+			else if (m_vDir == m_vNormDir[DIR_DOWN])									m_strFrameKey = L"intro_run-down";
+			else if (m_vDir == m_vNormDir[DIR_LD]	|| m_vDir == m_vNormDir[DIR_RD])	m_strFrameKey = L"intro_run-diagonal";
+			else if (m_vDir == m_vNormDir[DIR_LEFT] || m_vDir == m_vNormDir[DIR_RIGHT])	m_strFrameKey = L"intro_run-horizontal";
+			else if (m_vDir == m_vNormDir[DIR_LU]	|| m_vDir == m_vNormDir[DIR_RU])	m_strFrameKey = L"intro_run-up-diagonal";
+		}
+		break;
+
+		case PS_CHARGE:
+		case PS_ACTION:
+		{
+			// 키인풋 & Move_Frame에서 관리
+		}
+		break;
+		}
+	}
+	else
+	{
+		switch (m_eCurState)
+		{
+		case PS_IDLE:
+		{
+
+			if (m_vDir == m_vNormDir[DIR_UP] || m_vDir == m_vNormDir[DIR_LU] || m_vDir == m_vNormDir[DIR_RU]) m_strFrameKey = L"idle-up";
+			else m_strFrameKey = L"idle";
+		}
+		break;
+
+		case PS_RUN:
+		{
+			if		(m_vDir == m_vNormDir[DIR_UP])										m_strFrameKey = L"run-up";
+			else if (m_vDir == m_vNormDir[DIR_DOWN])									m_strFrameKey = L"run-down";
+			else if (m_vDir == m_vNormDir[DIR_LD]	|| m_vDir == m_vNormDir[DIR_RD])	m_strFrameKey = L"run-diagonal";
+			else if (m_vDir == m_vNormDir[DIR_LEFT] || m_vDir == m_vNormDir[DIR_RIGHT])	m_strFrameKey = L"run-horizontal";
+			else if (m_vDir == m_vNormDir[DIR_LU]	|| m_vDir == m_vNormDir[DIR_RU])	m_strFrameKey = L"run-up-diagonal";
+		}
+		break;
+
+		case PS_ROLL:
+		{
+			if		(m_vDir == m_vNormDir[DIR_UP]	|| m_vDir == m_vNormDir[DIR_LU] || m_vDir == m_vNormDir[DIR_RU])	m_strFrameKey = L"roll-up";
+			else if (m_vDir == m_vNormDir[DIR_DOWN] || m_vDir == m_vNormDir[DIR_LD] || m_vDir == m_vNormDir[DIR_RD])	m_strFrameKey = L"roll-down";
+			else if (m_vDir == m_vNormDir[DIR_LEFT] || m_vDir == m_vNormDir[DIR_RIGHT])									m_strFrameKey = L"roll-horizontal";
+		}
+		break;
+
+		case PS_ATTACK:
+		{
+			if		(m_iCombo == 1)	m_strFrameKey = L"attack-combo1";
+			else if (m_iCombo == 2)	m_strFrameKey = L"attack-combo2";
+			else if (m_iCombo == 3)	m_strFrameKey = L"attack-combo3";
+		}
+		break;
+
+		case PS_CHARGE:
+		case PS_ACTION:
+		{
+			// 키인풋 & Move_Frame에서 관리
+		}
+		break;
+		}
+	}
+}
+
+void CPlayer::Set_Size()
+{
+	if (m_bIntro)
+	{
+		m_fSpeed = 8.f;
+		_float fScale = 4.f;
+		m_pTransformCom->Set_Scale(fScale, fScale, fScale);
+		m_pTransformCom->Set_Pos(m_vPos.x, -1.f, m_vPos.z);
+	}
+	else
+	{
+		m_fSpeed = 10.f;
+		_float fScale = 10.f;
+		m_pTransformCom->Set_Scale(fScale, fScale, fScale);
+		m_pTransformCom->Set_Pos(m_vPos.x, 0.f, m_vPos.z);
+	}
 }
 
 void CPlayer::Move_Roll(const _float& fTimeDelta)

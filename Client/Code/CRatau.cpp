@@ -187,11 +187,11 @@ void CRatau::Ready_Variable()
 {
 	// 게임로직 변수 세팅
 	_float fScale = 10.f;
-	m_fGroundY = -2.5f + fScale * 0.5f - 2.5f;
+	m_fGroundY = -2.5f + fScale * 0.5f - 3.f;
 	m_iHp = 10;
 
 	// Transform 세팅
-	m_pTransformCom->Set_Pos(_float(rand() % 20), m_fGroundY, _float(rand() % 20) + 80.f);
+	m_pTransformCom->Set_Pos(125.f, m_fGroundY, 15.f);
 	m_pTransformCom->Set_Scale(fScale, fScale, fScale);
 
 	// Collider 세팅
@@ -316,7 +316,7 @@ void CRatau::Set_Texture()
 	m_pTextureCom->Set_Texture(_uint(m_eCurState));
 }
 
-CRatau* CRatau::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel)
+CRatau* CRatau::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, _vec3 vPos)
 {
 	CRatau* pRatau = new CRatau(pGraphicDev, StageChannel);
 
@@ -326,6 +326,8 @@ CRatau* CRatau::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChan
 		MSG_BOX("pRatau Create Failed");
 		return nullptr;
 	}
+
+	pRatau->m_pTransformCom->Set_Pos(vPos.x, pRatau->m_fGroundY, vPos.z);
 
 	return pRatau;
 }
