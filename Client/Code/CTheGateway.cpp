@@ -25,6 +25,9 @@
 #include "CMapWarp.h"
 #include "CWarp.h"
 #include "CMapBorder.h"
+#include "CNarinder.h"
+#include "CTriggerPoint.h"
+#include "CCutSceneMgr.h"
 
 CTheGateway::CTheGateway(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -39,10 +42,10 @@ HRESULT CTheGateway::Ready_Scene()
 {
 	m_pMessageChannel = CStageMessage::Create();
 
-	if (FAILED(Ready_Environment_Layer(L"Environment_Layer")))
+	if (FAILED(Ready_GameLogic_Layer(L"GameLogic_Layer")))
 		return E_FAIL;
 
-	if (FAILED(Ready_GameLogic_Layer(L"GameLogic_Layer")))
+	if (FAILED(Ready_Environment_Layer(L"Environment_Layer")))
 		return E_FAIL;
 
 	if (FAILED(Ready_UI_Layer(L"UI_Layer")))
@@ -50,7 +53,21 @@ HRESULT CTheGateway::Ready_Scene()
 
 	Ready_Light();
 
-	CCollisionMgr::GetInstance()->Ready_CollisionMgr();
+	CCutSceneMgr::GetInstance()->Ready_CutsceneMgr(m_pMessageChannel);
+
+	CUTSCENE tTutoCutScene;
+	tTutoCutScene.strName = L"TheGateway_01";
+	tTutoCutScene.vecSteps =
+	{
+		{_vec3(0.f, 8.f, 68.f * 0.8f), 1.f, 0.5f, L"Narinder", L"가까이 오거라. 두려워 말라, 너는 이미 죽었건만,\n내 아직 너를 필요로 함이라."},
+		{_vec3(0.f, 8.f, 68.f * 0.8f), 1.f, 0.5f, L"Narinder", L"저 어리석은 주교들은 죽음으로 나와 너를 가를 수 있다\n생각하였다. 허나 이는 너를 내게 곧바로 보냄이라."},
+		{_vec3(0.f, 8.f, 68.f * 0.8f), 1.f, 0.5f, L"Narinder", L"내 너에게 생명을 주나니,\n허나 거기에는 대가가 따름이라!"},
+		{_vec3(0.f, 8.f, 68.f * 0.8f), 1.f, 0.5f, L"Narinder", L"내 바라는 것은 오직 하나, 나의 이름을 내세운 교단을\n만드는 것 뿐이니라. 어떻게 생각하느냐?"}
+	};
+
+	CCutSceneMgr::GetInstance()->Register_CutScene(tTutoCutScene);
+
+	CSoundMgr::GetInstance()->PlayBGM(L"01.TheGateway.mp3", 0.1f);
 
 	return S_OK;
 }
@@ -169,7 +186,14 @@ HRESULT CTheGateway::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 					// Rash | 최종보스 |
 					break;
 				case 5:
-					// WaitingOne | 연출용 |
+					pGameObject = CNarinder::Create(m_pGraphicDev, m_pMessageChannel, spawn);
+
+					NULL_CHECK_RETURN(pGameObject, E_FAIL)
+
+						if (FAILED(pLayer->Add_GameObject(L"Narinder", pGameObject)))
+							return E_FAIL;
+
+					break;
 					break;
 				case 6:
 					pGameObject = CBishop_Leshy::Create(m_pGraphicDev, m_pMessageChannel, spawn);
@@ -274,6 +298,16 @@ HRESULT CTheGateway::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 		if (pGameObject)
 			pLayer->Add_GameObject(L"SkyBox", pGameObject);
 	}
+
+	_vec3 vTriggerPos, vTriggerHalfSize;
+	vTriggerPos = { 0.f, 0.f, 35.f };
+	vTriggerHalfSize = { 5.f, 5.f, 5.f };
+	pGameObject = CTriggerPoint::Create(m_pGraphicDev, m_pMessageChannel, vTriggerPos, vTriggerHalfSize, Trigger::TI_STAGING, L"TheGateway_01");
+
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+
+	if (FAILED(pLayer->Add_GameObject(L"TriggerPoint", pGameObject)))
+		return E_FAIL;
 
 	m_mapLayer.insert({ pLayerTag , pLayer });
 

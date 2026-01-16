@@ -39,10 +39,10 @@ HRESULT CLeshyRoom::Ready_Scene()
 {
 	m_pMessageChannel = CStageMessage::Create();
 
-	if (FAILED(Ready_Environment_Layer(L"Environment_Layer")))
+	if (FAILED(Ready_GameLogic_Layer(L"GameLogic_Layer")))
 		return E_FAIL;
 
-	if (FAILED(Ready_GameLogic_Layer(L"GameLogic_Layer")))
+	if (FAILED(Ready_Environment_Layer(L"Environment_Layer")))
 		return E_FAIL;
 
 	if (FAILED(Ready_UI_Layer(L"UI_Layer")))
@@ -50,7 +50,7 @@ HRESULT CLeshyRoom::Ready_Scene()
 
 	Ready_Light();
 
-	CCollisionMgr::GetInstance()->Ready_CollisionMgr();
+	//CCollisionMgr::GetInstance()->Ready_CollisionMgr();
 
 	return S_OK;
 }

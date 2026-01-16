@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "CUi.h"
 
 class CCookingSelectUI;
@@ -44,4 +44,5 @@ private:
 	CCookingMiniGameUI* m_pMiniGameUI;
 
 	COOKINGUISTATE m_eState;
+	COOKINGUISTATE m_ePrevState;
 };

@@ -161,9 +161,11 @@
     <ClInclude Include="..\Header\CCookingGauge.h" />
     <ClInclude Include="..\Header\CCookingGaugeBack.h" />
     <ClInclude Include="..\Header\CCookingInfoCard.h" />
+    <ClInclude Include="..\Header\CCookingInfoFaith.h" />
     <ClInclude Include="..\Header\CCookingMarker.h" />
     <ClInclude Include="..\Header\CCookingMiniGameUI.h" />
     <ClInclude Include="..\Header\CCookingInfoCardBack.h" />
+    <ClInclude Include="..\Header\CCookingSelectButton.h" />
     <ClInclude Include="..\Header\CCookingSelectUI.h" />
     <ClInclude Include="..\Header\CCookingSelectSlot.h" />
     <ClInclude Include="..\Header\CCookingStar.h" />
@@ -174,6 +176,7 @@
     <ClInclude Include="..\Header\CBishop_Kallamar.h" />
     <ClInclude Include="..\Header\CBishop_Leshy.h" />
     <ClInclude Include="..\Header\CBishop_Shamura.h" />
+    <ClInclude Include="..\Header\CCookingUpDownArrow.h" />
     <ClInclude Include="..\Header\CCutSceneMgr.h" />
     <ClInclude Include="..\Header\CCookingUIController.h" />
     <ClInclude Include="..\Header\CDivider.h" />
@@ -184,7 +187,7 @@
     <ClInclude Include="..\Header\CDynamicCamera.h" />
     <ClInclude Include="..\Header\CEditScene.h" />
     <ClInclude Include="..\Header\CFollower.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\Header\CFontUI.h" />
     <ClInclude Include="..\Header\CGauge.h" />
@@ -233,6 +236,7 @@
     <ClInclude Include="..\Header\CN1_AI.h" />
     <ClInclude Include="..\Header\CCookingSelectBack.h" />
     <ClInclude Include="..\Header\CCookingInfoRecipe.h" />
+    <ClInclude Include="..\Header\CNarinder.h" />
     <ClInclude Include="..\Header\CPassionGauge.h" />
     <ClInclude Include="..\Header\CPassionIcon.h" />
     <ClInclude Include="..\Header\CN2_AI.h" />
@@ -296,10 +300,12 @@
     <ClCompile Include="..\Code\CCookingCover.cpp" />
     <ClCompile Include="..\Code\CCookingGauge.cpp" />
     <ClCompile Include="..\Code\CCookingGaugeBack.cpp" />
+    <ClCompile Include="..\Code\CCookingInfoFaith.cpp" />
     <ClCompile Include="..\Code\CCookingInfoRecipe.cpp" />
     <ClCompile Include="..\Code\CCookingMarker.cpp" />
     <ClCompile Include="..\Code\CCookingMiniGameUI.cpp" />
     <ClCompile Include="..\Code\CCookingInfoCardBack.cpp" />
+    <ClCompile Include="..\Code\CCookingSelectButton.cpp" />
     <ClCompile Include="..\Code\CCookingSelectUI.cpp" />
     <ClCompile Include="..\Code\CCookingSelectSlot.cpp" />
     <ClCompile Include="..\Code\CCookingStar.cpp" />
@@ -310,6 +316,7 @@
     <ClCompile Include="..\Code\CBishop_Leshy.cpp" />
     <ClCompile Include="..\Code\CBishop_Shamura.cpp" />
     <ClCompile Include="..\Code\CCookingTargetFood.cpp" />
+    <ClCompile Include="..\Code\CCookingUpDownArrow.cpp" />
     <ClCompile Include="..\Code\CCutSceneMgr.cpp" />
     <ClCompile Include="..\Code\CCookingUIController.cpp" />
     <ClCompile Include="..\Code\CDivider.cpp" />
@@ -320,7 +327,7 @@
     <ClCompile Include="..\Code\CDynamicCamera.cpp" />
     <ClCompile Include="..\Code\CEditScene.cpp" />
     <ClCompile Include="..\Code\CFollower.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\Code\CFontUI.cpp" />
     <ClCompile Include="..\Code\CGauge.cpp" />
@@ -368,6 +375,7 @@
     <ClCompile Include="..\Code\CMySkyBox.cpp" />
     <ClCompile Include="..\Code\CN1_AI.cpp" />
     <ClCompile Include="..\Code\CCookingSelectBack.cpp" />
+    <ClCompile Include="..\Code\CNarinder.cpp" />
     <ClCompile Include="..\Code\CPassionGauge.cpp" />
     <ClCompile Include="..\Code\CPassionIcon.cpp" />
     <ClCompile Include="..\Code\CN2_AI.cpp" />

@@ -4,6 +4,7 @@
 #include "CRenderer.h"
 #include "CFontUI.h"
 #include "CSpeechBubble.h"
+#include "CSoundMgr.h"
 
 CBishop_Shamura::CBishop_Shamura(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev), m_pBufferCom(nullptr), m_pTransformCom(nullptr), m_pTextureCom(nullptr)
@@ -197,6 +198,7 @@ void CBishop_Shamura::Ready_Event()
 			m_pSpeechBubble->Active();
 			m_pFontUI->Active();
 			m_eCurState = Bishops::BS_TALK;
+			CSoundMgr::GetInstance()->Play(L"bc_shamura.wav", SOUND_DIALOUGE, 0.1f);
 		}
 	) });
 

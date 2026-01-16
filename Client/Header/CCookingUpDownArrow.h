@@ -8,20 +8,12 @@ namespace Engine
 	class CTexture;
 }
 
-enum FOODTYPE
-{
-	FT_NOMAL,
-	FT_COUNT,
-	FT_QUALITY,
-	FT_END
-};
-
-class CCookingTargetFood :
+class CCookingUpDownArrow :
 	public CUi
 {
 private:
-	explicit CCookingTargetFood(LPDIRECT3DDEVICE9 pGraphicDev);
-	virtual ~CCookingTargetFood();
+	explicit CCookingUpDownArrow(LPDIRECT3DDEVICE9 pGraphicDev);
+	virtual ~CCookingUpDownArrow();
 
 public:
 	virtual			HRESULT		Ready_GameObject();
@@ -30,12 +22,9 @@ public:
 	virtual			void		Render_GameObject();
 	virtual			void		OnCollision(CGameObject* pObject);
 
-public:
-	static CCookingTargetFood* Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vPos, _float fScale, FOODTYPE ft, _int iQulity = 0);
 
-	void Set_Render(_bool _bRender) { m_bRender = _bRender; };
-	void CalcuCraftableCount(_int _ihave, _int _ineed);
-	_int Get_CrftableCount() { return m_iCraftableCount; }
+public:
+	static CCookingUpDownArrow* Create(LPDIRECT3DDEVICE9 pGraphicDev, _int iPage, _vec3 vPos, _float fScale);
 
 private:
 	virtual			void		Free();
@@ -48,14 +37,8 @@ private:
 	CTransform* m_pTransformCom;
 	CTexture* m_pTextureCom;
 
-	vector<CGameObject*> m_vecQualityStar;
-
 	_vec3 m_vPos;
 	_float m_fScale;
-	FOODTYPE m_eFoodType;
-	_int	m_iQualityStar;
-	_int	m_iCraftableCount;
-
-	_bool m_bRender;
+	_int m_iPage;
 };
 

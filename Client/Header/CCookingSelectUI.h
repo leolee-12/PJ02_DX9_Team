@@ -1,12 +1,16 @@
 ﻿#pragma once
 #include "CUi.h"
 
+
 namespace Engine
 {
 	class CTransform;
 	class CRcTex;
 	class CTexture;
 }
+
+class CCookingTargetFood;
+class CCookingSelectButton;
 
 class CCookingSelectUI :
 	public CUi
@@ -27,6 +31,9 @@ public:
 	void SetRender(_bool _bRender) { m_bRender = _bRender; }
 
 	void AddFood();
+	void DeleteFood();
+	void ReSetSelecting();
+	void Set_CookingCount(_int num) { m_iCurCookingCount = num; }
 	_int Get_CookingCount() { return m_iCurCookingCount; }
 
 private:
@@ -35,10 +42,15 @@ private:
 private:
 	vector<CGameObject*> m_vecCookingSelectUI;
 	vector<CGameObject*> m_vecFoodSlot;
+	vector<CCookingTargetFood*> m_vecFood;
 
+	CCookingTargetFood* m_pCookingtargetFood;
+	CCookingSelectButton* m_pCookingBtn;
 	_bool  m_bRender;
 
 	_int   m_iCurCookingCount;
 	_int   m_iCookingCountMax;
 
+	_int tempResourceCount;
+	_int tempNeedRecipeCount;
 };

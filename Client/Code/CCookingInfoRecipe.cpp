@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CCookingInfoRecipe.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
@@ -18,8 +18,8 @@ HRESULT CCookingInfoRecipe::Ready_GameObject()
 	if (FAILED(Add_Component()))
 		return E_FAIL;
 
-	m_pTransformCom->Set_Scale(114.0f * 0.2f, 111.0f  * 0.2f, 0.f);
-	m_pTransformCom->Set_Pos(WINCX / 4, -200, 0.5f);
+	m_pTransformCom->Set_Scale(114.0f * m_fScale, 111.0f * m_fScale, 0.f);
+	m_pTransformCom->Set_Pos(m_vPos.x, m_vPos.y, m_vPos.z);
 
 	return S_OK;
 }
@@ -106,9 +106,12 @@ HRESULT CCookingInfoRecipe::Add_Component()
 
 
 
-CCookingInfoRecipe* CCookingInfoRecipe::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+CCookingInfoRecipe* CCookingInfoRecipe::Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 _vPos, _float _fScale)
 {
 	CCookingInfoRecipe* pCookingSelectBack = new CCookingInfoRecipe(pGraphicDev);
+	pCookingSelectBack->m_vPos = _vPos;
+	pCookingSelectBack->m_fScale = _fScale;
+
 
 	if (FAILED(pCookingSelectBack->Ready_GameObject()))
 	{

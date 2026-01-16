@@ -3,7 +3,6 @@
 #include "CBackGround.h"
 #include "CProtoMgr.h"
 #include "CDynamicCamera.h"
-// #include "CSkyBox.h"  // CMySkyBox占쏙옙 占쏙옙체
 #include "CMySkyBox.h"
 #include "CPersistentMgr.h"
 #include "CDungeonBack.h"
@@ -51,10 +50,10 @@ HRESULT CDungeon::Ready_Scene()
 {
 	m_pMessageChannel = CStageMessage::Create();
 
-	if (FAILED(Ready_Environment_Layer(L"Environment_Layer")))
+	if (FAILED(Ready_GameLogic_Layer(L"GameLogic_Layer")))
 		return E_FAIL;
 
-	if (FAILED(Ready_GameLogic_Layer(L"GameLogic_Layer")))
+	if (FAILED(Ready_Environment_Layer(L"Environment_Layer")))
 		return E_FAIL;
 
 	if (FAILED(Ready_UI_Layer(L"UI_Layer")))
@@ -62,7 +61,7 @@ HRESULT CDungeon::Ready_Scene()
 
 	Ready_Light();
 
-	CCollisionMgr::GetInstance()->Ready_CollisionMgr();
+	//CCollisionMgr::GetInstance()->Ready_CollisionMgr();
 
 	Ready_Event();
 
@@ -177,9 +176,9 @@ HRESULT CDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 		"../Bin/Resource/Maps/MapData/Dungeon.txt", mapData)))
 	{
 
-		pGameObject = CMySkyBox::Create(m_pGraphicDev, mapData.skyType);
-		if (pGameObject)
-			pLayer->Add_GameObject(L"SkyBox", pGameObject);
+//		pGameObject = CMySkyBox::Create(m_pGraphicDev, mapData.skyType);
+//		if (pGameObject)
+//			pLayer->Add_GameObject(L"SkyBox", pGameObject);
 
 		// Tile
 		CTileMgr::GetInstance()->Initialize(m_pGraphicDev, mapData);

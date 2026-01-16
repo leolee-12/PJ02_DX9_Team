@@ -12,12 +12,12 @@ namespace Engine
 class CFontUI;
 class CSpeechBubble;
 
-class CBishop_Leshy :
+class CNarinder :
 	public CGameObject
 {
 private:
-	explicit CBishop_Leshy(LPDIRECT3DDEVICE9 pGraphicDev);
-	virtual ~CBishop_Leshy();
+	explicit CNarinder(LPDIRECT3DDEVICE9 pGraphicDev);
+	virtual ~CNarinder();
 
 public:
 	virtual			HRESULT		Ready_GameObject();
@@ -27,7 +27,7 @@ public:
 	virtual			void		OnCollision(CGameObject* pObject);
 
 public:
-	static CBishop_Leshy* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMessageChannel, const Engine::SPAWNDATA& tSpawndata);
+	static CNarinder* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMessageChannel, const Engine::SPAWNDATA& tSpawndata);
 
 	void		Update_State();
 	void        Update_Frame(const _float& fTimeDelta);
@@ -60,7 +60,5 @@ private:
 	Bishops::BISHOPSSTATE  m_ePreState;
 
 	Engine::SPAWNDATA      m_tSpawndata;
-
-	_float m_fFrameTime;
 };
 
