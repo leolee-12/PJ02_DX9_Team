@@ -763,9 +763,6 @@
       <Filter>02. GameObject\16. Font</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CCookingTarget.h">
-      <Filter>02. GameObject\07. UI\05. CookingUI\00.CookingMiniGame\04.CookingTarget</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Header\CCookingTarget.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CCookingTarget.h">
@@ -776,6 +773,9 @@
     </ClInclude>
     <ClInclude Include="..\Header\CSpike.h">
       <Filter>02. GameObject\14. Projectile</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CCookingTarget.h">
+      <Filter>02. GameObject\07. UI\05. CookingUI\00.CookingMiniGame\04.CookingTarget</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

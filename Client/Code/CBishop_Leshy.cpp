@@ -9,7 +9,7 @@ CBishop_Leshy::CBishop_Leshy(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev), m_pBufferCom(nullptr), m_pTransformCom(nullptr), m_pTextureCom(nullptr)
 	, m_iFrame(0), m_iFrameEnd(0)
 	, m_eCurState(Bishops::BS_END), m_ePreState(Bishops::BS_END)
-	, m_pFontUI(nullptr), m_pSpeechBubble(nullptr)
+	, m_pFontUI(nullptr), m_pSpeechBubble(nullptr), m_fFrameTime(0.f)
 {
 	ZeroMemory(&m_vPos, sizeof(_vec3));
 	ZeroMemory(&m_tSpawndata, sizeof(Engine::SPAWNDATA));
@@ -157,16 +157,21 @@ void		CBishop_Leshy::Update_State()
 
 void CBishop_Leshy::Update_Frame(const _float& fTimeDelta)
 {
+	m_fFrameTime += fTimeDelta;
 	if (m_iFrame < m_iFrameEnd)
 	{
-		switch (m_eCurState)
-		{
-		case Bishops::BS_IDLE:
-			m_iFrame += 1;
-			break;
-		case Bishops::BS_TALK:
-			m_iFrame += 1;
-			break;
+		if (m_fFrameTime > 0.040f) {
+			switch (m_eCurState)
+			{
+			case Bishops::BS_IDLE:
+				m_iFrame += 1;
+				m_fFrameTime = 0.f;
+				break;
+			case Bishops::BS_TALK:
+				m_iFrame += 1;
+				m_fFrameTime = 0.f;
+				break;
+			}
 		}
 	}
 	else
@@ -228,7 +233,7 @@ HRESULT CBishop_Leshy::Ready_Dialogue(const _vec3& vDialoguePos)
 	m_pFontUI->Set_Scale(_vec2(500.f, 150.f));
 
 	m_pFontUI->Set_WorldPos(vDialoguePos);
-	m_pFontUI->Set_RenderOwnerName(L"래쉬");
+	//m_pFontUI->Set_RenderOwnerName(L"래쉬");
 
 	m_pSpeechBubble = CSpeechBubble::Create(m_pGraphicDev, vDialoguePos, _vec2(500.f, 150.f));
 

@@ -60,5 +60,7 @@ private:
 	Bishops::BISHOPSSTATE  m_ePreState;
 
 	Engine::SPAWNDATA      m_tSpawndata;
+
+	_float m_fFrameTime;
 };
 
