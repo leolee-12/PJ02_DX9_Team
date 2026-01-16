@@ -71,6 +71,8 @@ HRESULT CTutorial::Ready_Scene()
 
 	Ready_Light();
 
+	CSoundMgr::GetInstance()->PlayBGM(L"00.Tutorial.mp3", 0.1f);
+
 	return S_OK;
 }
 
@@ -378,8 +380,9 @@ CTutorial* CTutorial::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 
 void CTutorial::Free()
 {
-	CScene::Free();
+	CSoundMgr::GetInstance()->StopAll();
 	CCollisionMgr::GetInstance()->Reset_For_SceneChange();
 	CTileMgr::GetInstance()->Reset_For_SceneChange();
 	CLightMgr::GetInstance()->DestroyInstance();
+	CScene::Free();
 }
