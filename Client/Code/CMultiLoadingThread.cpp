@@ -344,16 +344,15 @@ void CMultiLoadingThread::Loading_for_Dungeon()
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingSelectSlot", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/dds/SelectSlot.dds", 1));
 	m_iTotalProtoCount++;
 
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingSelectStartBtn", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/dds/SelectFoodTexture.dds", 1));
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingSelectStartBtn", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/SelectFoodTexture.png", 1));
 	m_iTotalProtoCount++;
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingStar", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/dds/Star_%d.dds", 2));
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingStar", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/Star_%d.png", 2));
 	m_iTotalProtoCount++;
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingCardInfoRecipe", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/dds/Recipe.dds", 1));
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingCardInfoRecipe", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/Recipe.png", 1));
 	m_iTotalProtoCount++;
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingCardInfoFaithArrow_Down", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/dds/FaithArrow_Down.dds", 1));
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingArrowUpDown", TEX_NORMAL, L"../Bin/Resource/YSD/CookingSelect/FaithArrowUpDown_%d.png", 2));
 	m_iTotalProtoCount++;
-
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingCardInfoFaithArrow_Up", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/dds/FaithArrow_Up.dds", 1));
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingSelectButton", TEX_NORMAL, L"../Bin/Resource/YSD/CookingSelect/Button_%d.png", 2));
 	m_iTotalProtoCount++;
 
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingCardInfoFaithTexture", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/dds/FaithTexture.dds", 1));

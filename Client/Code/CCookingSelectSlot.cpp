@@ -106,7 +106,7 @@ HRESULT CCookingSelectSlot::Add_Component()
 
 
 
-CCookingSelectSlot* CCookingSelectSlot::Create(LPDIRECT3DDEVICE9 pGraphicDev,_vec3 vPos,_float fScale)
+CCookingSelectSlot* CCookingSelectSlot::Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vPos, _float fScale)
 {
 	CCookingSelectSlot* pCookingSlot = new CCookingSelectSlot(pGraphicDev);
 

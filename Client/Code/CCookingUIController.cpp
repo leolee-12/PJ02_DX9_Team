@@ -43,6 +43,10 @@ _int CCookingUIController::Update_GameObject(const _float& fTimeDelta)
 	{
 		m_pSelectUI->AddFood();
 	}
+	if (CDInputMgr::GetInstance()->Key_Down(DIK_N))
+	{
+		m_pSelectUI->DeleteFood();
+	}
 	if (CDInputMgr::GetInstance()->Key_Down(DIK_J))
 	{
 		Start_Cooking(m_pSelectUI->Get_CookingCount());
@@ -57,29 +61,38 @@ _int CCookingUIController::Update_GameObject(const _float& fTimeDelta)
 		});
 
 
-	switch (m_eState)
+	if (m_ePrevState != m_eState)
 	{
-	case CS_IDLE:
-		m_pSelectUI->SetRender(false);
-		m_pMiniGameUI->Set_Render(false);
-		break;
-	case CS_SELECT:
-		m_pSelectUI->SetRender(true);
-		m_pMiniGameUI->Set_Render(false);
-		break;
+		m_ePrevState = m_eState;
+		switch (m_eState)
+		{
+		case CS_IDLE:
+			m_pSelectUI->SetRender(false);
+			m_pMiniGameUI->Set_Render(false);
+			break;
+		case CS_SELECT:
+			m_pSelectUI->SetRender(true);
+			m_pMiniGameUI->Set_Render(false);
+			break;
 
-	case CS_MINIGAME:
-		m_pSelectUI->SetRender(false);
-		m_pMiniGameUI->Set_Render(true);
+		case CS_MINIGAME:
+			m_pSelectUI->ReSetSelecting();
+			m_pSelectUI->SetRender(false);
+			m_pMiniGameUI->Set_Render(true);
+			break;
+		case CS_COOKINGEND:
+			m_pSelectUI->SetRender(false);
+			m_pMiniGameUI->Set_Render(false);
+			m_pSelectUI->Set_CookingCount(0);
+			break;
+		}
+	}
+	if (m_eState == CS_MINIGAME)
+	{
 		if (CDInputMgr::GetInstance()->Key_Down(DIK_K))
 		{
 			m_pMiniGameUI->CookingInput();
 		}
-		break;
-	case CS_COOKINGEND:
-		m_pSelectUI->SetRender(false);
-		m_pMiniGameUI->Set_Render(false);
-		break;
 	}
 
 	m_pSelectUI->Update_GameObject(fTimeDelta);
@@ -106,6 +119,7 @@ void CCookingUIController::OnCollision(CGameObject* pObject)
 
 void CCookingUIController::Start_Cooking(_int iCookingCount)
 {
+	if (m_pSelectUI->Get_CookingCount() <= 0) { return; }
 	m_pMiniGameUI->CookingStart(iCookingCount);
 	Set_CookingState(COOKINGUISTATE::CS_MINIGAME);
 }

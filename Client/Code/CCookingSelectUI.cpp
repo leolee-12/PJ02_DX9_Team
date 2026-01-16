@@ -7,8 +7,8 @@
 #include "CCookingSelectSlot.h"
 #include "CCookingInfoCard.h"
 #include "CCookingTargetFood.h"
-
-#include "CCookingUIController.h" // [ADD]
+#include "CCookingUIController.h"
+#include "CCookingSelectButton.h"
 
 #include "CFontMgr.h"
 #include "CDInputMgr.h"
@@ -36,26 +36,25 @@ HRESULT CCookingSelectUI::Ready_GameObject()
 
 	m_vecCookingSelectUI.push_back(pGameObject);
 
-	pGameObject = CCookingTargetFood::Create(
-		m_pGraphicDev, { -300.0f,200.0f,0.1f }, 0.3f, FOODTYPE::FT_QUALITY, 3);
+	pGameObject = m_pCookingtargetFood = CCookingTargetFood::Create(
+		m_pGraphicDev, { -300.0f,200.0f,0.0001f }, 0.3f, FOODTYPE::FT_COUNT);
 
 	if (nullptr == pGameObject)
 		return E_FAIL;
 	m_vecCookingSelectUI.push_back(pGameObject);
 
+	pGameObject = CCookingSelectSlot::Create(m_pGraphicDev, { -300.0f, 200.0f, 0.4f }, 0.3f);
 
-	//pGameObject = CCookingSelectSlot::Create(m_pGraphicDev, { -300.0f, 200.0f, 0.4f }, 0.3f);
+	if (nullptr == pGameObject)
+		return E_FAIL;
 
-	//if (nullptr == pGameObject)
-	//	return E_FAIL;
-
-	//m_vecCookingSelectUI.push_back(pGameObject);
+	m_vecCookingSelectUI.push_back(pGameObject);
 
 	for (int i = 0; i < 2; ++i)
 	{
 		for (int j = 0; j < 6; ++j)
 		{
-			pGameObject = CCookingSelectSlot::Create(m_pGraphicDev,{ -500.f + (75.f * j), -150.f + (75.f * i), 0.4f },0.3f);
+			pGameObject = CCookingSelectSlot::Create(m_pGraphicDev, { -500.f + (75.f * j), -150.f + (75.f * i), 0.001f }, 0.3f);
 
 			if (nullptr == pGameObject)
 				return E_FAIL;
@@ -65,6 +64,29 @@ HRESULT CCookingSelectUI::Ready_GameObject()
 		}
 	}
 
+	for (int i = 0; i < 2; ++i)
+	{
+		for (int j = 0; j < 6; ++j)
+		{
+			pGameObject = CCookingTargetFood::Create(m_pGraphicDev, { -500.f + (75.f * j), -150.f + (75.f * i), 0.0001f }, 0.3f, FOODTYPE::FT_QUALITY, 3.0f);
+			CCookingTargetFood* pFood =
+				dynamic_cast<CCookingTargetFood*>(pGameObject);
+			pFood->Set_Render(false);
+			if (nullptr == pGameObject)
+				return E_FAIL;
+
+			m_vecCookingSelectUI.push_back(pGameObject);
+			m_vecFood.push_back(pFood);
+		}
+	}
+
+	pGameObject = m_pCookingBtn = CCookingSelectButton::Create(m_pGraphicDev, 1, { -300.0f,-280.0f,0.01f }, 0.5f);
+	if (nullptr == pGameObject)
+		return E_FAIL;
+	m_vecCookingSelectUI.push_back(pGameObject);
+
+
+
 	pGameObject = CCookingInfoCard::Create(m_pGraphicDev);
 	if (nullptr == pGameObject)
 		return E_FAIL;
@@ -72,7 +94,9 @@ HRESULT CCookingSelectUI::Ready_GameObject()
 
 	m_iCookingCountMax = 12;
 	m_iCurCookingCount = 0;
-
+	tempNeedRecipeCount = 5;
+	tempResourceCount = 100;
+	m_pCookingtargetFood->CalcuCraftableCount(tempResourceCount, tempNeedRecipeCount);
 	return S_OK;
 }
 
@@ -94,6 +118,14 @@ void CCookingSelectUI::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	if (!m_bRender) return;
 
+	if (m_iCurCookingCount >= 1)
+	{
+		m_pCookingBtn->Changeimage(1);
+	}
+	else
+		m_pCookingBtn->Changeimage(0);
+
+
 	for (CGameObject* CookingUI : m_vecCookingSelectUI)
 	{
 		CookingUI->LateUpdate_GameObject(fTimeDelta);
@@ -102,10 +134,12 @@ void CCookingSelectUI::LateUpdate_GameObject(const _float& fTimeDelta)
 
 void CCookingSelectUI::Render_GameObject()
 {
+
 }
 
 void CCookingSelectUI::OnCollision(CGameObject* pObject)
 {
+
 }
 
 CCookingSelectUI* CCookingSelectUI::Create(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -124,9 +158,35 @@ CCookingSelectUI* CCookingSelectUI::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 
 void CCookingSelectUI::AddFood()
 {
-	if (m_iCurCookingCount < m_iCookingCountMax)
+
+	if (m_iCurCookingCount < m_iCookingCountMax && m_pCookingtargetFood->Get_CrftableCount() > 0)
+	{
+		m_vecFood[m_iCurCookingCount]->Set_Render(true);
 		++m_iCurCookingCount;
+		tempResourceCount -= tempNeedRecipeCount;
+		m_pCookingtargetFood->CalcuCraftableCount(tempResourceCount, tempNeedRecipeCount);
+	}
 }
+
+void CCookingSelectUI::DeleteFood()
+{
+	if (m_iCurCookingCount > 0)
+	{
+		--m_iCurCookingCount;
+		m_vecFood[m_iCurCookingCount]->Set_Render(false);
+		tempResourceCount += tempNeedRecipeCount;
+		m_pCookingtargetFood->CalcuCraftableCount(tempResourceCount, tempNeedRecipeCount);
+	}
+}
+
+void CCookingSelectUI::ReSetSelecting()
+{
+	for (CCookingTargetFood* pFood : m_vecFood)
+	{
+		pFood->Set_Render(false);
+	}
+}
+
 
 void CCookingSelectUI::Free()
 {

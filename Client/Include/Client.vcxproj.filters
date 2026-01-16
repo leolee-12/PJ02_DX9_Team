@@ -379,6 +379,9 @@
     <Filter Include="02. GameObject\16. Font">
       <UniqueIdentifier>{a8d8fe86-d6e2-4ff9-b0d0-76f833c3f75a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\07. UI\05. CookingUI\01.CookingSelect\04.CookingInfoCard\02.CookingUpDownArrow">
+      <UniqueIdentifier>{68e905df-c0a4-4262-afb2-b3bb80e5ea4a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -774,6 +777,15 @@
     <ClInclude Include="..\Header\CSpike.h">
       <Filter>02. GameObject\14. Projectile</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CCookingSelectButton.h">
+      <Filter>02. GameObject\07. UI\05. CookingUI\01.CookingSelect\02.CookingStartBtn</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CCookingInfoFaith.h">
+      <Filter>02. GameObject\07. UI\05. CookingUI\01.CookingSelect\04.CookingInfoCard\01.CookingInfoCardFaith</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CCookingUpDownArrow.h">
+      <Filter>02. GameObject\07. UI\05. CookingUI\01.CookingSelect\04.CookingInfoCard\02.CookingUpDownArrow</Filter>
+    </ClInclude>
     <ClInclude Include="..\Header\CCookingTarget.h">
       <Filter>02. GameObject\07. UI\05. CookingUI\00.CookingMiniGame\04.CookingTarget</Filter>
     </ClInclude>
@@ -1138,6 +1150,15 @@
     </ClCompile>
     <ClCompile Include="..\Code\CSpike.cpp">
       <Filter>02. GameObject\14. Projectile</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CCookingUpDownArrow.cpp">
+      <Filter>02. GameObject\07. UI\05. CookingUI\01.CookingSelect\04.CookingInfoCard\02.CookingUpDownArrow</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CCookingSelectButton.cpp">
+      <Filter>02. GameObject\07. UI\05. CookingUI\01.CookingSelect\02.CookingStartBtn</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CCookingInfoFaith.cpp">
+      <Filter>02. GameObject\07. UI\05. CookingUI\01.CookingSelect\04.CookingInfoCard\01.CookingInfoCardFaith</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
