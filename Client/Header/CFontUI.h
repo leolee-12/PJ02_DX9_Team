@@ -26,8 +26,17 @@ public:
 	void			Set_WorldPos(const _vec3& vPos) { m_vWorldPos = vPos; }
 	void			Set_Scale(const _vec2& vScale) { m_vScale = vScale; }
 
-	void			Active() { m_bActive = true; }
-	void			UnActive() { m_bActive = false; }
+	void			Active()
+					{
+						m_bActive = true;
+						m_iCutText = 0;
+						m_bEnd = false;
+					}
+	void			UnActive()
+					{
+						m_bActive = false;
+						m_bEnd = true;
+					}
 
 
 public:

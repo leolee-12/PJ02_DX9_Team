@@ -50,7 +50,7 @@ HRESULT CLeshyRoom::Ready_Scene()
 
 	Ready_Light();
 
-	CCollisionMgr::GetInstance()->Ready_CollisionMgr();
+	//CCollisionMgr::GetInstance()->Ready_CollisionMgr();
 
 	return S_OK;
 }
