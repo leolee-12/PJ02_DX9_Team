@@ -233,6 +233,7 @@
     <ClInclude Include="..\Header\CN1_AI.h" />
     <ClInclude Include="..\Header\CCookingSelectBack.h" />
     <ClInclude Include="..\Header\CCookingInfoRecipe.h" />
+    <ClInclude Include="..\Header\CNarinder.h" />
     <ClInclude Include="..\Header\CPassionGauge.h" />
     <ClInclude Include="..\Header\CPassionIcon.h" />
     <ClInclude Include="..\Header\CN2_AI.h" />
@@ -364,6 +365,7 @@
     <ClCompile Include="..\Code\CMySkyBox.cpp" />
     <ClCompile Include="..\Code\CN1_AI.cpp" />
     <ClCompile Include="..\Code\CCookingSelectBack.cpp" />
+    <ClCompile Include="..\Code\CNarinder.cpp" />
     <ClCompile Include="..\Code\CPassionGauge.cpp" />
     <ClCompile Include="..\Code\CPassionIcon.cpp" />
     <ClCompile Include="..\Code\CN2_AI.cpp" />

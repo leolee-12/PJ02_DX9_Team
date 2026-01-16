@@ -449,6 +449,12 @@ void CMultiLoadingThread::Loading_for_TheGateway()
 
 	m_NonTexReadyQueue.push(&CMultiLoadingThread::NonTex_for_TheGateway);
 	m_iTotalProtoCount++;
+
+	vector<TEXSETLR> vecNarinder;
+	vecNarinder.push_back(TEXSETLR(L"Narinder_Idle", L"../Bin/Resource/YSH/Narinder/Narinder-idle/dds/Narinder-idle-%d.dds", 167));
+	vecNarinder.push_back(TEXSETLR(L"Narinder_Talk", L"../Bin/Resource/YSH/Narinder/Narinder-talk/dds/Narinder-talk-%d.dds", 167));
+	m_TexSetLoadingqueue.push(make_pair(TEXSETINFO(L"Proto_Narinder", TEX_NORMAL), vecNarinder));
+	m_iTotalProtoCount++;
 }
 
 void CMultiLoadingThread::Loading_for_Village()
