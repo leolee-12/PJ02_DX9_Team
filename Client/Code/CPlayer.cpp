@@ -83,6 +83,7 @@ HRESULT CPlayer::Ready_GameObject()
 		return E_FAIL;
 
 	Ready_Variable();
+
 	Ready_Event();
 
 	return S_OK;

@@ -3,6 +3,7 @@
 #include "CProtoMgr.h"
 #include "CRenderer.h"
 
+#include "CFontMgr.h"
 
 CBossHpBarFront::CBossHpBarFront(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CUi(pGraphicDev), m_pBufferCom(nullptr), m_pTransformCom(nullptr)
@@ -22,7 +23,7 @@ HRESULT CBossHpBarFront::Ready_GameObject()
 	m_pTransformCom->Set_Scale(59 * 2*m_fScale, 7 * m_fScale, 0.1f);
 	m_pTransformCom->Set_Pos(m_vPos.x, m_vPos.y, m_vPos.z);
 
-	m_fRadio = 1.0f;
+	m_fRatio = 1.0f;
 
 	return S_OK;
 }
@@ -55,9 +56,6 @@ _int CBossHpBarFront::Update_GameObject(const _float& fTimeDelta)
 
 void CBossHpBarFront::LateUpdate_GameObject(const _float& fTimeDelta)
 {
-	// 임시테스트용 셰이더 넣고 삭제 요망
-	m_pTransformCom->Set_Scale(59 * 2 * m_fScale*m_fRadio, 7 * m_fScale, 0.1f);
-
 
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
 	m_pTransformCom->Get_Info(INFO_POS, &m_vPos);
@@ -68,11 +66,15 @@ void CBossHpBarFront::Render_GameObject()
 {
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
 
-
 	m_pTextureCom->Set_Texture();
-
-
+	
 	m_pBufferCom->Render_Buffer();
+	D3DXCOLOR FontColor = D3DXCOLOR(240.f / 256.f, 240.f / 256.f, 240.f / 256.f, 1.f);
+	wchar_t szGauge[16];
+
+	swprintf_s(szGauge, L" Front : %.3f", m_fRatio);
+	RECT rcPlayer = { 0, 0, 200, 300 };
+	CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans30", szGauge, rcPlayer, FontColor, DT_RIGHT | DT_BOTTOM);
 }
 
 void CBossHpBarFront::OnCollision(CGameObject* pObject)

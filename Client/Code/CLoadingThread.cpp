@@ -551,7 +551,7 @@ unsigned int CLoadingThread::Thread_Main(void* pArg)
         iFlag = pLoading->Loading_ForTutorial();
         break;
 
-    case LOADING_DUNGEON:
+	case LOADING_DUNGEON:
         iFlag = pLoading->Loading_ForDungeon();
         break;
 
