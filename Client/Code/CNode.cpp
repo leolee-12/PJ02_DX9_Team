@@ -173,7 +173,7 @@ HRESULT CNode::Add_Component()
 
 	// Texture
 	pComponent = m_pTextureCom = dynamic_cast<Engine::CTexture*>
-		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(m_pProtoTexKey));
+		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(m_strProtoTexKey));
 
 	NULL_CHECK_RETURN(pComponent, E_FAIL)
 
@@ -226,7 +226,7 @@ CNode* CNode::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChanne
 {
 	CNode* pNode = new CNode(pGraphicDev, StageChannel);
 
-	pNode->m_pProtoTexKey = pProtoTexKey;	// Ready에 필요
+	pNode->m_strProtoTexKey = pProtoTexKey;	// Ready에 필요
 
 	if (FAILED(pNode->Ready_GameObject()))
 	{

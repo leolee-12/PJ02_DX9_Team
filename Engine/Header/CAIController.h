@@ -19,6 +19,7 @@ public:
 	void		Set_DetectRange(_float fRange)					{ m_fDetectRange = fRange; }
 	void		Set_InteractRange(_float fRange)				{ m_fInteractRange = fRange; }
 	void		Set_GroundY(_float fGroundY)					{ m_fGroundY = fGroundY; }
+	void		Set_Dir(const _vec3& vDir)						{ m_vDir = vDir; }
 
 	_float			Get_DetectRange() const { return m_fDetectRange; }
 	const _vec3*	Get_Dir() { return &m_vDir; }

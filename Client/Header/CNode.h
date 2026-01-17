@@ -64,7 +64,7 @@ private:
 	_float				m_fFrameEnd;
 	_float				m_fFrameSpeed;
 	_matrix				m_matTex;
-	const _tchar*		m_pProtoTexKey;
+	wstring				m_strProtoTexKey;
 
 	// 패턴 관련
 	USERID			m_eUserID;

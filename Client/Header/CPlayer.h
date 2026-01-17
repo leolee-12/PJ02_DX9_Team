@@ -55,7 +55,6 @@ private:
 	void			Move_Frame(const _float& fTimeDelta);
 	void			Set_TextureSet();
 	void			Set_FrameKey();
-	void			Set_Size();
 	// ==========================
 	//	Check_Frame : 상태 변경 시 Frame 초기화 및 설정해줄 값을 대입해줌
 	// 	Move_Frame : 시간 경과에 따라 Frame 값 누적, 특정 상태는 스프라이트 종료 시 IDLE 상태로 돌아가도록 세팅됨
@@ -65,6 +64,7 @@ private:
 	void			Move_Roll(const _float& fTimeDelta);
 	void			Charge(const _float& fTimeDelta);
 	void			Attack_HitBox();
+	void			Attacked(_int iDamage);
 
 	// ==========================
 	//	Move_Roll : 구르기 상태일 때 현재 위치를 Lerp를 적용하여 계산 및 이동
@@ -94,6 +94,7 @@ private:
 	_bool			m_bRoll;	// 구르기 중인지?
 	_int			m_iCombo;	// 공격 중인지? + 몇번째 콤보상태인지?
 	_bool			m_bAction;	// Action 중인지?
+	_float			m_fAcmlTime;
 
 	// 알파 소팅 관련
 	_vec3			m_vPos;
@@ -117,6 +118,9 @@ private:
 
 	// 캐릭터 border 처리 관련
 	_vec3 m_vPrevPos;
+
+	// 상수
+	static constexpr _float INVINCIBLE_TIME = 3.f;
 
 public:
 	static CPlayer* Create(LPDIRECT3DDEVICE9 pGraphicDev);

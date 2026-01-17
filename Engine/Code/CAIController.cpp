@@ -1,4 +1,4 @@
-#include "CAIController.h"
+ï»¿#include "CAIController.h"
 #include "CTransform.h"
 
 CAIController::CAIController(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -104,9 +104,9 @@ _vec3 CAIController::Compute_LimitedDir(const _float& fMaxAngle, const _vec3& vC
 	_float fMaxRad = D3DXToRadian(fMaxAngle);
 
 	if (fRad <= fMaxRad)
-		return v2;	// ÃÖ´ë È¸Àü °¢µµº¸´Ù ÀÛÀ¸¸é ±×´ë·Î »ç¿ë
+		return v2;	// ìµœëŒ€ íšŒì „ ê°ë„ë³´ë‹¤ ìž‘ìœ¼ë©´ ê·¸ëŒ€ë¡œ ì‚¬ìš©
 
-	// ÃÖ´ë È¸Àü °¢µµº¸´Ù Å©¸é ÃÖ´ë È¸Àü °¢µµ·Î º¸Á¤
+	// ìµœëŒ€ íšŒì „ ê°ë„ë³´ë‹¤ í¬ë©´ ìµœëŒ€ íšŒì „ ê°ë„ë¡œ ë³´ì •
 	fRad = fMaxRad / fRad;
 
 	_vec3 vResult;
