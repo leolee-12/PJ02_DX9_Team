@@ -71,6 +71,12 @@ void CTriggerPoint::Render_GameObject()
 
 void CTriggerPoint::OnCollision(CGameObject* pObject)
 {
+	if (pObject->Get_OBJID() == OID_PLAYER)
+	{
+		if (!m_bPassive) return;
+
+		Activate();
+	}
 }
 
 HRESULT CTriggerPoint::Add_Component()
@@ -111,7 +117,7 @@ void CTriggerPoint::Activate()
 		m_iHp = 0;
 }
 
-CTriggerPoint* CTriggerPoint::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMessageChannel, _vec3 vPos, _vec3 vHalfSize, Trigger::TRIGGERID eTID, const wstring& strTriggerName)
+CTriggerPoint* CTriggerPoint::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMessageChannel, _vec3 vPos, _vec3 vHalfSize, Trigger::TRIGGERID eTID, const wstring& strTriggerName, _bool bPassive)
 {
 	CTriggerPoint* pTrigger = new CTriggerPoint(pGraphicDev);
 
@@ -122,6 +128,7 @@ CTriggerPoint* CTriggerPoint::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChan
 	pTrigger->m_vColHalfSize = vHalfSize;
 	pTrigger->m_eTID = eTID;
 	pTrigger->m_strTriggerName = strTriggerName;
+	pTrigger->m_bPassive = bPassive;
 
 	if (FAILED(pTrigger->Ready_GameObject()))
 	{

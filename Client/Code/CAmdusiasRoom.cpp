@@ -138,7 +138,7 @@ HRESULT CAmdusiasRoom::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 				if (nullptr == pGameObject)
 					return E_FAIL;
 
-				pGameObject->Set_MessageChannel(m_pMessageChannel);
+				CPersistentMgr::GetInstance()->Get_Player()->Set_MessageChannel(m_pMessageChannel);
 
 				if (FAILED(pLayer->Add_GameObject(L"Player", pGameObject)))
 					return E_FAIL;

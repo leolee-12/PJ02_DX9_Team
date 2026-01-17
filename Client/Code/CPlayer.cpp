@@ -94,6 +94,7 @@ _int CPlayer::Update_GameObject(const _float& fTimeDelta)
 	else if (!m_bMsgRegistered) Ready_Event();
 
 	m_pTransformCom->Get_Info(INFO_POS, &m_vPrevPos);
+	m_hmapSubHandles;
 
 	Key_Input(fTimeDelta);
 	Move_Roll(fTimeDelta);
@@ -213,29 +214,25 @@ void CPlayer::Ready_Event()
 	}
 	}) });
 
-	/*m_hmapSubHandles.insert({ L"Player_MapWarp", m_pMessageChannel->Subscribe(L"Player.MapWarp", [this](const IMessageChannel::EVENT& Event)
-		{
-			CWarp* Warp = any_cast<CWarp*>(Event.hmapData.find(L"WarpPtr")->second);
-
-			if (Warp != nullptr)
+	m_hmapSubHandles.insert({ L"CutScene.Dialogue", m_pMessageChannel->Subscribe(L"CutScene.Dialogue", [this](const IMessageChannel::EVENT& Event) {
+	{
+			auto CinemaTargetNameiter = Event.hmapData.find(L"CinemaTargetName");
+			if (CinemaTargetNameiter == Event.hmapData.end()) { return; }
+			auto Dothisiter = Event.hmapData.find(L"Dothis");
+			if (Dothisiter == Event.hmapData.end()) { return; }
+			if (any_cast<wstring>(CinemaTargetNameiter->second) == L"Player")
 			{
-				_vec3 pos = Warp->Get_OtherWarp()->Get_WarpPos();
-				m_pTransformCom->Set_Pos(pos.x, 0, pos.z);
+				if (any_cast<wstring>(Dothisiter->second) == L"Start_Crying") {
+					Set_Crying();
+					return;
+				}
+				if (any_cast<wstring>(Dothisiter->second) == L"Stop_Crying") {
+					Set_StopCrying();
+					return;
+				}
 			}
 		}
-	) });*/
-
-//	m_hmapSubHandles.insert({ L"Player_SceneWarp", m_pMessageChannel->Subscribe(L"Player.SceneWarp", [this](const IMessageChannel::EVENT& Event)
-//	{
-//		CSceneWarp* Warp = any_cast<CSceneWarp*>(Event.hmapData.find(L"Warp")->second);
-//
-//		if (Warp != nullptr)
-//		{/*
-//			_vec3 pos = Warp->Get_Pos();
-//			m_pTransformCom->Set_Pos(pos.x, pos.y, pos.z);*/
-//		}
-//	}
-//) });
+	}) });
 
 	m_bMsgRegistered = true;
 }
@@ -747,6 +744,97 @@ void CPlayer::Set_Pos(const _vec3& vPos)
 {
 	m_pTransformCom->Set_Pos(vPos.x, vPos.y, vPos.z);
 	m_pTransformCom->Update_Component(0.f);
+}
+
+//if (CDInputMgr::GetInstance()->Key_Down(DIK_F1))
+//{	// 디버그용
+//	m_bIntro = !m_bIntro;
+//	if (m_bIntro)
+//	{
+//		m_fSpeed = 7.f;
+//		_float fScale = 11.f;
+//		m_pTransformCom->Set_Scale(fScale, fScale, fScale);
+//	}
+//	else
+//	{
+//		m_fSpeed = 10.f;
+//		_float fScale = 10.f;
+//		m_pTransformCom->Set_Scale(fScale, fScale, fScale);
+//	}
+//}
+//if (CDInputMgr::GetInstance()->Key_Down(DIK_F2))
+//{	// 디버그용
+//	if (!m_bIntro) return;
+//
+//	if (!m_bAction)
+//	{
+//		m_bAction = true;
+//		m_eCurState = PS_ACTION;
+//		m_strFrameKey = L"intro_kneel";
+//	}
+//	else
+//	{
+//		m_strFrameKey = L"intro_kneel-wake";
+//	}
+//}
+//if (CDInputMgr::GetInstance()->Key_Down(DIK_F3))
+//{	// 디버그용
+//	if (!m_bIntro) return;
+//
+//	m_eCurState = PS_REBIRTH;
+//	m_strFrameKey = L"intro_rebirth";
+//	_float fScale = 20.f;
+//	m_pTransformCom->Set_Scale(fScale, fScale, fScale);
+//	m_pTransformCom->Set_Pos(m_vPos.x, 2.f, m_vPos.z);
+//}
+
+void CPlayer::Set_Tied()
+{
+	m_bIntro = true;
+	m_fSpeed = 7.f;
+	_float fScale = 11.f;
+	m_pTransformCom->Set_Scale(fScale, fScale, fScale);
+}
+
+void CPlayer::Set_Crying()
+{
+	if (!m_bAction)
+	{
+		m_bAction = true;
+		m_eCurState = PS_ACTION;
+		m_strFrameKey = L"intro_kneel";
+	}
+}
+
+void CPlayer::Set_StopCrying()
+{
+	if (m_bAction)
+	{
+		m_strFrameKey = L"intro_kneel-wake";
+	}
+}
+
+void CPlayer::Set_Reborn()
+{
+	m_eCurState = PS_REBIRTH;
+	m_strFrameKey = L"intro_rebirth";
+	_float fScale = 20.f;
+	m_pTransformCom->Set_Scale(fScale, fScale, fScale);
+	m_pTransformCom->Set_Pos(m_vPos.x, 2.f, m_vPos.z);
+}
+
+void CPlayer::Set_MessageChannel(IMessageChannel* pMessageChannel)
+{
+	if (pMessageChannel == nullptr) { return; }
+	if (m_pMessageChannel) {
+		CGameObject::Unsubscribe_Handles();
+		Safe_Release(m_pMessageChannel);
+		m_bMsgRegistered = false;
+	}
+	m_pMessageChannel = pMessageChannel;
+	m_pMessageChannel->AddRef();
+
+	Ready_Event();
 }
 
 void CPlayer::Attack_HitBox()

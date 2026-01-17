@@ -74,6 +74,18 @@ HRESULT CTheGateway::Ready_Scene()
 
 	CCutSceneMgr::GetInstance()->Register_CutScene(tTutoCutScene);
 
+	CUTSCENE tGateIntro;
+	tGateIntro.strName = L"TheGateway_00";
+	tGateIntro.vecSteps =
+	{
+		{_vec3(0.f, 0.f, 0.f), 2.f, 1.0f, L"", L"", ADV_TIMED, 1.0f},
+		{_vec3(0.f, 0.f, 0.f), 1.f, 0.25f, L"Player", L"Stop_Crying", ADV_TIMED, 3.0f}
+
+	};
+
+	CCutSceneMgr::GetInstance()->Register_CutScene(tGateIntro);
+
+
 	CSoundMgr::GetInstance()->PlayBGM(L"01.TheGateway.mp3", 0.1f);
 
 	return S_OK;
@@ -115,6 +127,8 @@ HRESULT CTheGateway::Ready_Environment_Layer(const _tchar* pLayerTag)
 
 	pGameObject = CMainCamera::Create(m_pGraphicDev, m_pMessageChannel);
 
+	static_cast<CMainCamera*>(pGameObject)->Set_Intro();
+
 	if (nullptr == pGameObject)
 		return E_FAIL;
 
@@ -154,13 +168,14 @@ HRESULT CTheGateway::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 			switch (spawn.type)
 			{
 			case 0:
+				//CPersistentMgr::GetInstance()->Get_Player()->Set_StopCrying();
 				CPersistentMgr::GetInstance()->Get_Player()->Set_Pos(_vec3(spawn.x, 0.f, spawn.z));
 				pGameObject = CPersistentMgr::GetInstance()->Get_Player();
 
 				if (nullptr == pGameObject)
 					return E_FAIL;
 
-				pGameObject->Set_MessageChannel(m_pMessageChannel);
+				CPersistentMgr::GetInstance()->Get_Player()->Set_MessageChannel(m_pMessageChannel);
 
 				if (FAILED(pLayer->Add_GameObject(L"Player", pGameObject)))
 					return E_FAIL;
@@ -312,6 +327,15 @@ HRESULT CTheGateway::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	vTriggerPos = { 0.f, 0.f, 35.f };
 	vTriggerHalfSize = { 5.f, 5.f, 5.f };
 	pGameObject = CTriggerPoint::Create(m_pGraphicDev, m_pMessageChannel, vTriggerPos, vTriggerHalfSize, Trigger::TI_STAGING, L"TheGateway_01");
+
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+
+	if (FAILED(pLayer->Add_GameObject(L"TriggerPoint", pGameObject)))
+		return E_FAIL;
+
+	vTriggerPos = { 0.f, 0.f, 0.f };
+	vTriggerHalfSize = { 5.f, 5.f, 5.f };
+	pGameObject = CTriggerPoint::Create(m_pGraphicDev, m_pMessageChannel, vTriggerPos, vTriggerHalfSize, Trigger::TI_STAGING, L"TheGateway_00", true);
 
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 

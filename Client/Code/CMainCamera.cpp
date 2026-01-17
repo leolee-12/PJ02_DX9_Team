@@ -223,6 +223,16 @@ void CMainCamera::Reset_Lerp()
 	m_fLerpSpeed = DEFAULTLERP;
 }
 
+void CMainCamera::Set_Intro()
+{
+	m_fZoom /= 2.f;
+	_vec3 vIntroPos = m_vAt;
+	vIntroPos.z -= m_fZoom;
+	vIntroPos.y += (m_fZoom * DEFAULTGAPY) / DEFAULTGAPZ;
+	m_vEye = vIntroPos;
+	CCamera::Update_GameObject(0.f);
+}
+
 
 CMainCamera* CMainCamera::Create(LPDIRECT3DDEVICE9 pGraphicDev,
 	IMessageChannel* pMessageChannel,

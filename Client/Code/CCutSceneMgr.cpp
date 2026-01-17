@@ -200,9 +200,12 @@ void CCutSceneMgr::Execute_Step(_uint iStep)
 	}
 	else
 	{
-		// 시네마틱: 빈 타겟으로 발행 → 모든 캐릭터가 UI 닫음
-		tDialogueEvent.hmapData[L"Text"] = wstring(L"");
+		// 시네마틱: 빈 타겟을 보내서 다이얼로그를 전부 닫게하고,
+		// 타겟네임을 시네마 타겟 네임으로 보내고,
+		// 다이얼로그의 텍스트에 해당하는 내용을 특정 행동을 하는 키로 보냄.
 		tDialogueEvent.hmapData[L"TargetName"] = wstring(L"");
+		tDialogueEvent.hmapData[L"CinemaTargetName"] = tStep.strTargetName;
+		tDialogueEvent.hmapData[L"Dothis"] = tStep.strFont;
 	}
 	m_pMessageChannel->Publish(tDialogueEvent);
 

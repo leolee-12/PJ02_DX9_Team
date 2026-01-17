@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "CGameObject.h"
 #include "Trigger_Enum.h" 
 
@@ -28,7 +28,7 @@ public:
 	void				Activate();
 
 public:
-	static CTriggerPoint* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMessageChannel, _vec3 vPos, _vec3 vHalfSize, Trigger::TRIGGERID eTID, const wstring& strTriggerName);
+	static CTriggerPoint* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMessageChannel, _vec3 vPos, _vec3 vHalfSize, Trigger::TRIGGERID eTID, const wstring& strTriggerName, _bool bPassive = false);
 
 private:
 	HRESULT	Add_Component();
@@ -45,5 +45,6 @@ private:
 
 	Trigger::TRIGGERID  m_eTID;
 	wstring				m_strTriggerName;
+	_bool				m_bPassive = false;
 };
 

@@ -30,7 +30,12 @@ private:
 
 public:
 	void			Set_Pos(const _vec3& vPos);
-	void			Set_Intro(_bool bUseIntro) { m_bIntro = bUseIntro; }
+	void			Set_Tied();
+	void			Set_Crying();
+	void			Set_StopCrying();
+	void			Set_Reborn();
+
+	void			Set_MessageChannel(IMessageChannel* pMessageChannel);
 
 	virtual			HRESULT		Ready_GameObject();
 	virtual			_int		Update_GameObject(const _float& fTimeDelta);

@@ -64,10 +64,19 @@ HRESULT CTutorial::Ready_Scene()
 		{_vec3(0.f * 0.8f, 5.f, 135.f * 0.8f), 1.f, 1.f, L"Bishop_Kallamar", L"이 마지막 번제로,\n이제 예언은 결코 달성할 수 없을 것이다."},
 		{_vec3(-22.f * 0.8f, 5.f, 135.f * 0.8f), 1.f, 1.f, L"Bishop_Leshy", L"아래에 묶여있는 저 이단자는 풀려날 수 없다."},
 		{_vec3(10.687412f * 0.8f, 5.f, 135.f * 0.8f), 1.f, 1.f, L"Bishop_Shamura", L"그리고 옛 신앙은 보존되리라."},
-		{_vec3(- 4.f, 2.f, 88.f), 1.5f, 0.5f, L"Player", L"", ADV_TIMED, 1.f}
+		{_vec3(- 4.f, 2.f, 88.f), 1.5f, 0.5f, L"Player", L"Start_Crying", ADV_TIMED, 3.f}
 	};
 
 	CCutSceneMgr::GetInstance()->Register_CutScene(tTutoCutScene);
+
+	CUTSCENE tTutoIntro;
+	tTutoIntro.strName = L"Tutorial_00";
+	tTutoIntro.vecSteps =
+	{
+		{_vec3(-3.8f, 0.f, 3.6f), 1.f, 0.25f, L"Intro", L"",ADV_TIMED, 3.f}
+	};
+
+	CCutSceneMgr::GetInstance()->Register_CutScene(tTutoIntro);
 
 	Ready_Light();
 
@@ -113,6 +122,8 @@ HRESULT CTutorial::Ready_Environment_Layer(const _tchar* pLayerTag)
 	if (nullptr == pGameObject)
 		return E_FAIL;
 
+	static_cast<CMainCamera*>(pGameObject)->Set_Intro();
+
 	if (FAILED(pLayer->Add_GameObject(L"MainCamera", pGameObject)))
 		return E_FAIL;
 
@@ -152,13 +163,14 @@ HRESULT CTutorial::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 			switch (spawn.type)
 			{
 			case 0:
+				CPersistentMgr::GetInstance()->Get_Player()->Set_Tied();
 				CPersistentMgr::GetInstance()->Get_Player()->Set_Pos(_vec3(spawn.x, 0.f, spawn.z));
 				pGameObject = CPersistentMgr::GetInstance()->Get_Player();
 
 				if (nullptr == pGameObject)
 					return E_FAIL;
 
-				pGameObject->Set_MessageChannel(m_pMessageChannel);
+				CPersistentMgr::GetInstance()->Get_Player()->Set_MessageChannel(m_pMessageChannel);
 
 				if (FAILED(pLayer->Add_GameObject(L"Player", pGameObject)))
 					return E_FAIL;
@@ -308,6 +320,15 @@ HRESULT CTutorial::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	vTriggerPos = { -4.f, 2.f, 88.f };
 	vTriggerHalfSize = { 5.f, 5.f, 5.f };
 	pGameObject = CTriggerPoint::Create(m_pGraphicDev, m_pMessageChannel, vTriggerPos, vTriggerHalfSize, Trigger::TI_STAGING, L"Tutorial_01");
+
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+
+	if (FAILED(pLayer->Add_GameObject(L"TriggerPoint", pGameObject)))
+		return E_FAIL;
+
+	vTriggerPos = { -4.f, 0.f, 4.f };
+	vTriggerHalfSize = { 5.f, 5.f, 5.f };
+	pGameObject = CTriggerPoint::Create(m_pGraphicDev, m_pMessageChannel, vTriggerPos, vTriggerHalfSize, Trigger::TI_STAGING, L"Tutorial_00", true);
 
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 

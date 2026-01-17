@@ -37,6 +37,9 @@ public:
 	virtual			_int		Update_GameObject(const _float& fTimeDelta);
 	virtual			void		LateUpdate_GameObject(const _float& fTimeDelta);
 
+public:
+	void		Set_Intro();
+
 private:
 	void		Default_CameraSetting(const _float& fTimeDelta);
 	void		Shaking_CameraSetting(const _float& fTimeDelta);
