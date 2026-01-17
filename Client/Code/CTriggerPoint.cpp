@@ -47,7 +47,11 @@ _int CTriggerPoint::Update_GameObject(const _float& fTimeDelta)
 {
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
-	m_pColliderCom->UpdateFromTransform(m_pTransformCom);
+	if (iExit == DEAD)
+	{
+		m_pColliderCom->UnregisterFromManager();
+		return iExit;
+	}
 
 	if (g_bDebug) { m_pColliderCom->Update_AABBforRender(); }
 
@@ -57,6 +61,8 @@ _int CTriggerPoint::Update_GameObject(const _float& fTimeDelta)
 void CTriggerPoint::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
+
+	m_pColliderCom->UpdateFromTransform(m_pTransformCom);
 }
 
 void CTriggerPoint::Render_GameObject()

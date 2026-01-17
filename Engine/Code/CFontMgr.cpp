@@ -11,14 +11,14 @@ CFontMgr::~CFontMgr()
 	Free();
 }
 
-HRESULT CFontMgr::Ready_Font(LPDIRECT3DDEVICE9 pGraphicDev, const _tchar* pFontTag, const _tchar* pFontType, const _uint& iWidth, const _uint& iHeight, const _uint& iWeight)
+HRESULT CFontMgr::Ready_Font(LPDIRECT3DDEVICE9 pGraphicDev, const _tchar* pFontTag, const _tchar* pFontType, const _uint& iWidth, const _uint& iHeight, const _uint& iWeight, const DWORD& dwCharsetFlag)
 {
 	CFont* pMyFont = Find_Font(pFontTag);
 
 	if (nullptr != pMyFont)
 		return E_FAIL;
 
-	pMyFont = CFont::Create(pGraphicDev, pFontType, iWidth, iHeight, iWeight);
+	pMyFont = CFont::Create(pGraphicDev, pFontType, iWidth, iHeight, iWeight, dwCharsetFlag);
 
 	if (nullptr == pMyFont)
 		return E_FAIL;

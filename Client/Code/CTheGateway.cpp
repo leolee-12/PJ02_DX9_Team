@@ -28,6 +28,8 @@
 #include "CNarinder.h"
 #include "CTriggerPoint.h"
 #include "CCutSceneMgr.h"
+#include "CFontUIOrtho.h"
+#include "CSpeechBubbleOrtho.h"
 
 CTheGateway::CTheGateway(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -53,6 +55,8 @@ HRESULT CTheGateway::Ready_Scene()
 
 	Ready_Light();
 
+	Ready_Event();
+
 	CCutSceneMgr::GetInstance()->Ready_CutsceneMgr(m_pMessageChannel);
 
 	CUTSCENE tTutoCutScene;
@@ -62,7 +66,9 @@ HRESULT CTheGateway::Ready_Scene()
 		{_vec3(0.f, 8.f, 68.f * 0.8f), 1.f, 0.5f, L"Narinder", L"가까이 오거라. 두려워 말라, 너는 이미 죽었건만,\n내 아직 너를 필요로 함이라."},
 		{_vec3(0.f, 8.f, 68.f * 0.8f), 1.f, 0.5f, L"Narinder", L"저 어리석은 주교들은 죽음으로 나와 너를 가를 수 있다\n생각하였다. 허나 이는 너를 내게 곧바로 보냄이라."},
 		{_vec3(0.f, 8.f, 68.f * 0.8f), 1.f, 0.5f, L"Narinder", L"내 너에게 생명을 주나니,\n허나 거기에는 대가가 따름이라!"},
-		{_vec3(0.f, 8.f, 68.f * 0.8f), 1.f, 0.5f, L"Narinder", L"내 바라는 것은 오직 하나, 나의 이름을 내세운 교단을\n만드는 것 뿐이니라. 어떻게 생각하느냐?"}
+		{_vec3(0.f, 8.f, 68.f * 0.8f), 1.f, 0.5f, L"Narinder", L"내 바라는 것은 오직 하나, 나의 이름을 내세운 교단을\n만드는 것 뿐이니라. 어떻게 생각하느냐?",
+		ADV_DIALOGUE, 0.f, L"", vector<wstring>({L"예.", L"물론입니다."})}
+		
 	};
 
 	CCutSceneMgr::GetInstance()->Register_CutScene(tTutoCutScene);
@@ -74,6 +80,7 @@ HRESULT CTheGateway::Ready_Scene()
 
 _int CTheGateway::Update_Scene(const _float& fTimeDelta)
 {
+	Select_Key_Input();
 	Engine::CTransform* pPlayerTransform = CPersistentMgr::GetInstance()->Get_PlayerTransform();
 	if (pPlayerTransform)
 	{
@@ -81,6 +88,7 @@ _int CTheGateway::Update_Scene(const _float& fTimeDelta)
 		pPlayerTransform->Get_Info(INFO_POS, &vPlayerPos);
 		Engine::CLightMgr::GetInstance()->Update_PointLights(vPlayerPos);
 	}
+
 
 	_int iExit = Engine::CScene::Update_Scene(fTimeDelta);
 
@@ -316,6 +324,43 @@ HRESULT CTheGateway::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 
 HRESULT CTheGateway::Ready_UI_Layer(const _tchar* pLayerTag)
 {
+	CLayer* pLayer = CLayer::Create();
+	if (nullptr == pLayer)
+		return E_FAIL;
+
+	CGameObject* pGameObject = nullptr;
+
+	_vec2 vDialoguePos = _vec2(0.f, -250.f);
+
+	pGameObject = m_pLeftSelect = CFontUIOrtho::Create(m_pGraphicDev, m_pMessageChannel);
+
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+
+	m_pLeftSelect->Set_Pos(_vec2(-125.f, -250.f));
+	m_pLeftSelect->Set_Scale(_vec2(250.f, 100.f));
+
+	if (FAILED(pLayer->Add_GameObject(L"Font", pGameObject)))
+		return E_FAIL;
+
+	pGameObject = m_pRightSelect = CFontUIOrtho::Create(m_pGraphicDev, m_pMessageChannel);
+
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+
+	m_pRightSelect->Set_Pos(_vec2(125.f, -250.f));
+	m_pRightSelect->Set_Scale(_vec2(250.f, 100.f));
+
+	if (FAILED(pLayer->Add_GameObject(L"Font", pGameObject)))
+		return E_FAIL;
+
+	pGameObject = m_pSpeechBubble = CSpeechBubbleOrtho::Create(m_pGraphicDev, _vec2(0.f, -250.f), _vec2(500.f, 100.f));
+
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+
+	if (FAILED(pLayer->Add_GameObject(L"Font", pGameObject)))
+		return E_FAIL;
+
+	m_mapLayer.insert({ pLayerTag , pLayer });
+
 	return S_OK;
 }
 
@@ -337,6 +382,72 @@ HRESULT CTheGateway::Ready_Light()
 		return E_FAIL;
 
 	return S_OK;
+}
+
+void	CTheGateway::Ready_Event()
+{
+	m_hmapSubHandles.insert({ L"CutScene.ShowChoice", m_pMessageChannel->Subscribe(L"CutScene.ShowChoice", [this](const IMessageChannel::EVENT& Event) {
+		auto SceneNameiter = Event.hmapData.find(L"SceneName");
+		if (SceneNameiter == Event.hmapData.end()) { return; }
+
+		if (any_cast<wstring>(SceneNameiter->second) == L"TheGateway_01")
+		{
+			auto Choiceiter = Event.hmapData.find(L"Choices");
+			if (Choiceiter == Event.hmapData.end()) { return; }
+
+			vector<wstring> vecChoiceTex = std::move(any_cast<vector<wstring>>(Choiceiter->second));
+
+			m_pLeftSelect->Set_Text(vecChoiceTex[0].c_str());
+			m_pLeftSelect->Set_FontColor(D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
+			m_pLeftSelect->Set_Flags(DT_CENTER | DT_VCENTER);
+
+			m_pRightSelect->Set_Text(vecChoiceTex[1].c_str());
+			m_pRightSelect->Set_FontColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+			m_pRightSelect->Set_Flags(DT_CENTER | DT_VCENTER);
+
+			m_iSelectSlot = 0;
+
+			m_pLeftSelect->Active();
+			m_pRightSelect->Active();
+			m_pSpeechBubble->Active();
+
+			m_bSelect = true;
+		}
+	}) });
+}
+
+void CTheGateway::Select_Key_Input()
+{
+	if (!m_bSelect) { return; }
+
+	if (CDInputMgr::GetInstance()->Key_Down(DIK_LEFT))
+	{
+		if (m_iSelectSlot == 1)
+		{
+			m_iSelectSlot = 0;
+			m_pRightSelect->Set_FontColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+			m_pLeftSelect->Set_FontColor(D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
+		}
+	}
+	if (CDInputMgr::GetInstance()->Key_Down(DIK_RIGHT))
+	{
+		if (m_iSelectSlot == 0)
+		{
+			m_iSelectSlot = 1;
+			m_pLeftSelect->Set_FontColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+			m_pRightSelect->Set_FontColor(D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
+		}
+	}
+	if (CDInputMgr::GetInstance()->Key_Down(DIK_RETURN))
+	{
+		IMessageChannel::EVENT tSelectEvent;
+		tSelectEvent.strType = L"Choice.Selected";
+		m_pLeftSelect->UnActive();
+		m_pRightSelect->UnActive();
+		m_pSpeechBubble->UnActive();
+		m_pMessageChannel->Publish(tSelectEvent);
+	}
+
 }
 
 CTheGateway* CTheGateway::Create(LPDIRECT3DDEVICE9 pGraphicDev)

@@ -795,6 +795,12 @@
     <ClInclude Include="..\Header\CNarinder.h">
       <Filter>02. GameObject\13. Bishops\04. Narinder</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CSpeechBubbleOrtho.h">
+      <Filter>02. GameObject\07. UI\06. WorldUI\00.SpeechBubble</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CFontUIOrtho.h">
+      <Filter>02. GameObject\16. Font</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1168,6 +1174,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\CNarinder.cpp">
       <Filter>02. GameObject\13. Bishops\04. Narinder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CSpeechBubbleOrtho.cpp">
+      <Filter>02. GameObject\07. UI\06. WorldUI\00.SpeechBubble</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CFontUIOrtho.cpp">
+      <Filter>02. GameObject\16. Font</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

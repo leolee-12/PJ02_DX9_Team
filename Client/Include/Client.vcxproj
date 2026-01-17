@@ -187,6 +187,7 @@
     <ClInclude Include="..\Header\CDynamicCamera.h" />
     <ClInclude Include="..\Header\CEditScene.h" />
     <ClInclude Include="..\Header\CFontUI.h" />
+    <ClInclude Include="..\Header\CFontUIOrtho.h" />
     <ClInclude Include="..\Header\CGauge.h" />
     <ClInclude Include="..\Header\CGaugeCover.h" />
     <ClInclude Include="..\Header\CGaugeStar.h" />
@@ -247,6 +248,7 @@
     <ClInclude Include="..\Header\CRealDungeon.h" />
     <ClInclude Include="..\Header\CSceneWarp.h" />
     <ClInclude Include="..\Header\CSkyBox.h" />
+    <ClInclude Include="..\Header\CSpeechBubbleOrtho.h" />
     <ClInclude Include="..\Header\CSpike.h" />
     <ClInclude Include="..\Header\CStage.h" />
     <ClInclude Include="..\Header\CTerrain.h" />
@@ -320,6 +322,7 @@
     <ClCompile Include="..\Code\CDynamicCamera.cpp" />
     <ClCompile Include="..\Code\CEditScene.cpp" />
     <ClCompile Include="..\Code\CFontUI.cpp" />
+    <ClCompile Include="..\Code\CFontUIOrtho.cpp" />
     <ClCompile Include="..\Code\CGauge.cpp" />
     <ClCompile Include="..\Code\CGaugeCover.cpp" />
     <ClCompile Include="..\Code\CGaugeStar.cpp" />
@@ -380,6 +383,7 @@
     <ClCompile Include="..\Code\CSceneWarp.cpp" />
     <ClCompile Include="..\Code\CSkyBox.cpp" />
     <ClCompile Include="..\Code\CSpeechBubble.cpp" />
+    <ClCompile Include="..\Code\CSpeechBubbleOrtho.cpp" />
     <ClCompile Include="..\Code\CSpike.cpp" />
     <ClCompile Include="..\Code\CStage.cpp" />
     <ClCompile Include="..\Code\CTerrain.cpp" />

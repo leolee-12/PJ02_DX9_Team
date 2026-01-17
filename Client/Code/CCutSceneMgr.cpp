@@ -25,6 +25,39 @@ void CCutSceneMgr::Register_CutScene(const CUTSCENE& tCutScene)
 _int CCutSceneMgr::Update_CutScene(const _float fTimeDelta)
 {
 	if (!m_bPlaying) { return NOEVENT; }
+	if (!m_pCurrentCutScene) { return NOEVENT; }
+
+	CUTSCENE_STEP& tStep = m_pCurrentCutScene->vecSteps[m_iCurrentStep];
+
+	switch (tStep.eAdvanceType)
+	{
+	case ADV_DIALOGUE:
+		Key_Input_CutScene();
+		break;
+
+	case ADV_TIMED:
+		m_fAccTime += fTimeDelta;
+		if (m_fAccTime >= tStep.fDuration)
+		{
+			m_fAccTime = 0.f;
+			Next_Step();
+		}
+		break;
+
+	case ADV_EVENT:
+		// Execute_Step에서 이벤트 구독해둠 → 이벤트 수신시 m_bEventReceived = true
+		if (m_bEventReceived)
+		{
+			m_bEventReceived = false;
+			Next_Step();
+		}
+		break;
+
+	case ADV_IMMEDIATE:
+		// 즉시 다음 스텝 (카메라 이동만 하고 바로 넘어가는 용도)
+		Next_Step();
+		break;
+	}
 
 	return NOEVENT;
 }
@@ -32,8 +65,6 @@ _int CCutSceneMgr::Update_CutScene(const _float fTimeDelta)
 void CCutSceneMgr::LateUpdate_CutScene(const _float fTimeDelta)
 {
 	if (!m_bPlaying) { return; }
-
-	Key_Input_CutScene();
 }
 
 void CCutSceneMgr::Play_CutScene(const wstring& strName)
@@ -77,14 +108,34 @@ void CCutSceneMgr::Subscribe()
 	m_hmapSubHandles.insert({ L"Dialogue.End", m_pMessageChannel->Subscribe(L"Dialogue.End", [this](const IMessageChannel::EVENT& Event) {
 		m_bDialogueEnd = true;
 	}) });
+
+	m_hmapSubHandles.insert({ L"Choice.Selected", m_pMessageChannel->Subscribe(L"Choice.Selected", [this](const IMessageChannel::EVENT& Event) {
+		m_bChoiceSelected = true;
+		Next_Step();
+	}) });
 }
 
 void CCutSceneMgr::Key_Input_CutScene()
 {
 	if (CDInputMgr::GetInstance()->Key_Down(DIK_RETURN))
 	{
+		if (m_bChoiceShow) { return; }
 		if (m_bDialogueEnd)
 		{
+			CUTSCENE_STEP& tStep = m_pCurrentCutScene->vecSteps[m_iCurrentStep];
+
+			if (!tStep.vecChoiceTexts.empty())
+			{
+				IMessageChannel::EVENT tChoiceEvent;
+				tChoiceEvent.strType = L"CutScene.ShowChoice";
+				tChoiceEvent.hmapData[L"SceneName"] = m_pCurrentCutScene->strName;
+				tChoiceEvent.hmapData[L"Choices"] = tStep.vecChoiceTexts;
+				m_pMessageChannel->Publish(tChoiceEvent);
+
+				m_bChoiceShow = true;
+				return;
+			}
+
 			CSoundMgr::GetInstance()->StopSound(SOUND_DIALOUGE);
 			Next_Step();
 		}
@@ -103,6 +154,16 @@ void CCutSceneMgr::Key_Input_CutScene()
 
 void CCutSceneMgr::Next_Step()
 {
+	m_bChoiceSelected = false;
+	m_bChoiceShow = false;
+
+	// 이전 스텝이 ADV_EVENT였으면 구독 해제
+	if (m_bHasWaitHandle)
+	{
+		m_pMessageChannel->Unsubscribe(m_hWaitEventHandle);
+		m_bHasWaitHandle = false;
+	}
+
 	++m_iCurrentStep;
 
 	if (m_iCurrentStep >= _uint(m_pCurrentCutScene->vecSteps.size()))
@@ -129,9 +190,39 @@ void CCutSceneMgr::Execute_Step(_uint iStep)
 
 	IMessageChannel::EVENT tDialogueEvent;
 	tDialogueEvent.strType = L"CutScene.Dialogue";
-	tDialogueEvent.hmapData[L"Text"] = tStep.strFont;
-	tDialogueEvent.hmapData[L"TargetName"] = tStep.strTargetName;
+	if (tStep.eAdvanceType == ADV_DIALOGUE)
+	{
+		tDialogueEvent.hmapData[L"Text"] = tStep.strFont;
+		tDialogueEvent.hmapData[L"TargetName"] = tStep.strTargetName;
+		m_bDialogueEnd = tStep.strFont.empty();
+	}
+	else
+	{
+		// 시네마틱: 빈 타겟으로 발행 → 모든 캐릭터가 UI 닫음
+		tDialogueEvent.hmapData[L"Text"] = wstring(L"");
+		tDialogueEvent.hmapData[L"TargetName"] = wstring(L"");
+	}
 	m_pMessageChannel->Publish(tDialogueEvent);
+
+	switch (tStep.eAdvanceType)
+	{
+	case ADV_TIMED:
+		m_fAccTime = 0.f;
+		break;
+	case ADV_EVENT:
+		m_bEventReceived = false;
+		m_hWaitEventHandle = m_pMessageChannel->Subscribe(
+			tStep.strWaitEventType,
+			[this](const IMessageChannel::EVENT& Event) {
+				m_bEventReceived = true;
+			}
+		);
+		m_bHasWaitHandle = true;
+		break;
+	case ADV_IMMEDIATE:
+		break;
+	}
+
 
 	if (tStep.strFont.empty()) { return; }
 

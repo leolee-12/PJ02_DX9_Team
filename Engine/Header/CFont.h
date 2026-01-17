@@ -1,4 +1,4 @@
-#pragma once
+Ôªø#pragma once
 #include "CBase.h"
 #include "Engine_Define.h"
 
@@ -12,14 +12,15 @@ private:
 
 private:
 	LPDIRECT3DDEVICE9			m_pGraphicDev;
-	LPD3DXSPRITE				m_pSprite;		// 2d ≈ÿΩ∫√≥ √‚∑¬ ¥„¥Á
-	LPD3DXFONT					m_pFont;		// ∆˘∆Æ √‚∑¬ ¥„¥Á
+	LPD3DXSPRITE				m_pSprite;		// 2d ÌÖçÏä§Ï≤ò Ï∂úÎ†• Îã¥Îãπ
+	LPD3DXFONT					m_pFont;		// Ìè∞Ìä∏ Ï∂úÎ†• Îã¥Îãπ
 
 public:
 	HRESULT			Ready_Font(const _tchar* pFontType,
 								const _uint& iWidth,
 								const _uint& iHeight,
-								const _uint& iWeight);
+								const _uint& iWeight,
+								const DWORD& dwCharsetFlag);
 
 	void			Render_Font(const _tchar* pString, 
 								const _vec2* pPos,
@@ -37,7 +38,8 @@ public:
 						const _tchar* pFontType, 
 						const _uint& iWidth, 
 						const _uint& iHeight, 
-						const _uint& iWeight);
+						const _uint& iWeight,
+						const DWORD& dwCharsetFlag);
 
 private:
 	virtual void		Free();
