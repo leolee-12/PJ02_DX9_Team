@@ -30,6 +30,7 @@
 #include "CLoading.h"
 #include "CManagement.h"
 #include "CFade.h"
+#include "CBrute.h"
 
 CTutorial::CTutorial(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -65,7 +66,11 @@ HRESULT CTutorial::Ready_Scene()
 		{_vec3(0.f * 0.8f, 5.f, 135.f * 0.8f), 1.f, 1.f, L"Bishop_Kallamar", L"이 마지막 번제로,\n이제 예언은 결코 달성할 수 없을 것이다."},
 		{_vec3(-22.f * 0.8f, 5.f, 135.f * 0.8f), 1.f, 1.f, L"Bishop_Leshy", L"아래에 묶여있는 저 이단자는 풀려날 수 없다."},
 		{_vec3(10.687412f * 0.8f, 5.f, 135.f * 0.8f), 1.f, 1.f, L"Bishop_Shamura", L"그리고 옛 신앙은 보존되리라."},
-		{_vec3(- 4.f, 2.f, 88.f), 1.5f, 0.5f, L"Player", L"Start_Crying", ADV_TIMED, 3.f}
+		{_vec3(-4.f, 2.f, 88.f), 1.5f, 0.5f, L"", L"", ADV_TIMED, 1.f},
+		{_vec3(-4.f, 2.f, 88.f), 1.5f, 0.5f, L"Player", L"Start_Crying", ADV_IMMEDIATE},
+		{_vec3(- 4.f, 2.f, 88.f), 1.5f, 0.5f, L"Brute", L"Brute_Move", ADV_EVENT, 0.f, L"Brute.RunEnd" },
+		{_vec3(-4.f, 2.f, 88.f), 1.5f, 0.5f, L"Brute", L"Brute_Execute", ADV_EVENT, 0.f, L"Brute.ExecuteEnd" }
+
 	};
 
 	CCutSceneMgr::GetInstance()->Register_CutScene(tTutoCutScene);
@@ -350,6 +355,42 @@ HRESULT CTutorial::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	if (FAILED(pLayer->Add_GameObject(L"TriggerPoint", pGameObject)))
 		return E_FAIL;
 
+	CMonsterN1* pTemp = nullptr;
+	pGameObject = pTemp = CMonsterN1::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ -8.f, 0.f, 92.5f }, CMonsterN1::N1S_PRAY);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	pTemp->Set_Dir(_vec3{ 1.f, 0.f, 0.f });
+	if (FAILED(pLayer->Add_GameObject(L"NPC", pGameObject)))
+		return E_FAIL;
+
+	pGameObject = pTemp = CMonsterN1::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ 0.f, 0.f, 92.5f }, CMonsterN1::N1S_PRAY);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	pTemp->Set_Dir(_vec3{ -1.f, 0.f, 0.f });
+	if (FAILED(pLayer->Add_GameObject(L"NPC", pGameObject)))
+		return E_FAIL;
+
+	pGameObject = pTemp = CMonsterN1::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ -8.5f, 0.f, 82.f }, CMonsterN1::N1S_PRAY);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	pTemp->Set_Dir(_vec3{ 1.f, 0.f, 0.f });
+	if (FAILED(pLayer->Add_GameObject(L"NPC", pGameObject)))
+		return E_FAIL;
+
+	pGameObject = pTemp = CMonsterN1::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ 0.5f, 0.f, 82.f }, CMonsterN1::N1S_PRAY);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	pTemp->Set_Dir(_vec3{ -1.f, 0.f, 0.f });
+	if (FAILED(pLayer->Add_GameObject(L"NPC", pGameObject)))
+		return E_FAIL;
+
+	pGameObject = pTemp = CMonsterN1::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ -13.f, 0.f, 87.5f }, CMonsterN1::N1S_PRAY);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	pTemp->Set_Dir(_vec3{ 1.f, 0.f, 0.f });
+	if (FAILED(pLayer->Add_GameObject(L"NPC", pGameObject)))
+		return E_FAIL;
+
+	pGameObject = CBrute::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ 8.f, 0.f, 90.f });
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	if (FAILED(pLayer->Add_GameObject(L"NPC", pGameObject)))
+		return E_FAIL;
+
 
 	m_mapLayer.insert({ pLayerTag , pLayer });
 
@@ -394,7 +435,7 @@ HRESULT CTutorial::Ready_Light()
 
 	tLightInfo.Type = D3DLIGHT_DIRECTIONAL;
 
-	tLightInfo.Diffuse = D3DXCOLOR(0.8f, 0.2f, 0.2f, 1.f);
+	tLightInfo.Diffuse = D3DXCOLOR(0.9f, 0.1f, 0.1f, 1.f);
 	tLightInfo.Specular = D3DXCOLOR(0.4f, 0.2f, 0.6f, 1.f);
 	tLightInfo.Ambient = D3DXCOLOR(0.3f, 0.12f, 0.4f, 1.f);
 

@@ -428,11 +428,6 @@ HRESULT CDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	pTemp->Set_Dir(_vec3{ 1.f, 0.f, 0.f });
 	if (FAILED(pLayer->Add_GameObject(L"NPC", pGameObject)))
 		return E_FAIL;
-
-	pGameObject = CBrute::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ 8.f, 0.f, 90.f });
-	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	if (FAILED(pLayer->Add_GameObject(L"NPC", pGameObject)))
-		return E_FAIL;
 	//---------------------------------------------------------------------------
 
 	pGameObject = CRatau::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ 123.5f, 0.f, 12.f });
@@ -605,7 +600,7 @@ HRESULT CDungeon::Ready_Light()
 
 	tLightInfo.Type = D3DLIGHT_DIRECTIONAL;
 
-	tLightInfo.Diffuse = D3DXCOLOR(0.6f, 0.3f, 0.85f, 1.f);
+	tLightInfo.Diffuse = D3DXCOLOR(0.4f, 0.3f, 0.85f, 1.f);
 	tLightInfo.Specular = D3DXCOLOR(0.4f, 0.2f, 0.6f, 1.f);
 	tLightInfo.Ambient = D3DXCOLOR(0.3f, 0.12f, 0.4f, 1.f);
 

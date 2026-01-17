@@ -216,6 +216,9 @@ void CMultiLoadingThread::Loading_for_Tutorial()
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_Fade", TEX_NORMAL, L"../Bin/Resource/YSH/Etc/Fade.png", 1));
 	m_iTotalProtoCount++;
 
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_BruteTexture", TEX_NORMAL, L"../Bin/Resource/LWY//NPC/Brute/dds/Brute_%d.dds", 5));
+	m_iTotalProtoCount++;
+
     // ===== TextureSet 큐 등록 (멀티스레드 로딩) =====
     vector<TEXSETLR> vecBishopLeshy;
     vecBishopLeshy.push_back(TEXSETLR(L"Bishop_Leshy_Idle", L"../Bin/Resource/Texture/Bishops/Leshy/Leshy-idle/dds/Leshy_idle-%d.dds", 250));
@@ -240,6 +243,8 @@ void CMultiLoadingThread::Loading_for_Tutorial()
 	vecBishopShamura.push_back(TEXSETLR(L"Bishop_Shamura_Talk", L"../Bin/Resource/Texture/Bishops/Shamura/Shamura-talk/dds/Shamura-talk-%d.dds", 267));
 	m_TexSetLoadingqueue.push(make_pair(TEXSETINFO(L"Proto_BishopShamura", TEX_NORMAL), vecBishopShamura));
 	m_iTotalProtoCount++;
+
+	
 }
 
 void CMultiLoadingThread::Loading_for_Dungeon()
@@ -424,6 +429,11 @@ void CMultiLoadingThread::Loading_for_Dungeon()
 	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Dead", L"../Bin/Resource/Texture/Monster/Boss2/dead-noheart/dds/dead-noheart_%04d.dds", 1));
 	m_TexSetLoadingqueue.push(make_pair(TEXSETINFO(L"Proto_MonsterB2Texture", TEX_NORMAL), vecBossLeshy));
 	m_iTotalProtoCount++;
+
+	//디버그용 바로진입 프로토타입
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_SpeechBubble", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Etc/dds/SpeechBubble.dds", 1));
+	m_iTotalProtoCount++;
+	//디버그용 바로진입 프로토타입
 }
 
 void CMultiLoadingThread::Loading_for_TheGateway()

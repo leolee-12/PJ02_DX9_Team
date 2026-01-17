@@ -31,13 +31,16 @@ private:
 	HRESULT				Add_Component();
 
 	void				Ready_Variable();
-	void				Ready_Event();
 
 	void				Check_Frame();
 	void				Move_Frame(const _float& fTimeDelta);
 	void				Set_Texture();
 
 	void				Update_State();
+
+	void				Ready_Event_Brute();
+
+	void				Move_For_Execute();
 
 private:
 	Engine::CRcTex* m_pBufferCom;
@@ -58,6 +61,9 @@ private:
 	// 스테이터스 관련
 	_float		m_fGroundY;
 	_float		m_fAcmlTime;
+
+	_bool		m_bRunning = false;
+
 
 
 public:
