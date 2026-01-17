@@ -158,7 +158,7 @@ void CPlayer::Render_GameObject()
 
 void CPlayer::Ready_Variable()
 {
-	m_bIntro = true;
+	m_bIntro = false;
 	m_fSpeed = 10.f;
 	m_iAttack = 1;
 	m_iHp = 10;
@@ -297,11 +297,22 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 	if (CDInputMgr::GetInstance()->Key_Down(DIK_F1))
 	{	// 디버그용
 		m_bIntro = !m_bIntro;
-		if (m_bIntro)	m_fSpeed = 7.f;
-		else			m_fSpeed = 10.f;
+		if (m_bIntro)
+		{
+			m_fSpeed = 7.f;
+			_float fScale = 11.f;
+			m_pTransformCom->Set_Scale(fScale, fScale, fScale);
+		}
+		else
+		{
+			m_fSpeed = 10.f;
+			_float fScale = 10.f;
+			m_pTransformCom->Set_Scale(fScale, fScale, fScale);
+		}
 	}
 	if (CDInputMgr::GetInstance()->Key_Down(DIK_F2))
 	{	// 디버그용
+		if (!m_bIntro) return;
 
 		if (!m_bAction)
 		{
@@ -316,6 +327,8 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 	}
 	if (CDInputMgr::GetInstance()->Key_Down(DIK_F3))
 	{	// 디버그용
+		if (!m_bIntro) return;
+
 		m_eCurState = PS_REBIRTH;
 		m_strFrameKey = L"intro_rebirth";
 		_float fScale = 20.f;
