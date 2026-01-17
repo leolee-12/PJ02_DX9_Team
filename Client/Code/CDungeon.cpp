@@ -36,6 +36,7 @@
 #include "CMapBorder.h"
 #include "CRatau.h"
 #include "CTarotSeller.h"
+#include "CBossHpBar.h"
 
 CDungeon::CDungeon(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -463,7 +464,13 @@ HRESULT CDungeon::Ready_UI_Layer(const _tchar* pLayerTag)
 	if (FAILED(pLayer->Add_GameObject(L"CookingUIController", pGameObject)))
 		return E_FAIL;
 
-	 
+	pGameObject = CBossHpBar::Create(m_pGraphicDev);
+
+	if (nullptr == pGameObject)
+		return E_FAIL;
+
+	if (FAILED(pLayer->Add_GameObject(L"BossHpBar", pGameObject)))
+		return E_FAIL;
 
 	m_mapLayer.insert({ pLayerTag , pLayer });
 
