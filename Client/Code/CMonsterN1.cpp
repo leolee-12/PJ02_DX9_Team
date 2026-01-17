@@ -44,6 +44,11 @@ CMonsterN1::~CMonsterN1()
 {
 }
 
+void CMonsterN1::Set_Dir(const _vec3& vDir)
+{
+	m_pAICom->Set_Dir(vDir);
+}
+
 HRESULT CMonsterN1::Ready_GameObject()
 {
 	m_eOBJID = OID_MONSTER;
@@ -202,8 +207,8 @@ HRESULT CMonsterN1::Add_Component()
 void CMonsterN1::Ready_Variable()
 {
 	// 게임로직 변수 세팅
-	_float fScale = 3.f;
-	m_fGroundY = -2.5f + fScale * 0.5f;
+	_float fScale = 5.f;
+	m_fGroundY = -2.5f + fScale * 0.5f - 1.f;
 	m_iAttack = 1;
 	m_iHp = 10;
 
@@ -479,6 +484,24 @@ CMonsterN1* CMonsterN1::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* S
 		MSG_BOX("pMonster Create Failed");
 		return nullptr;
 	}
+
+	return pMonster;
+}
+
+CMonsterN1* CMonsterN1::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, const _vec3& vPos, MONSTER_N1_STATE eState)
+{
+	CMonsterN1* pMonster = new CMonsterN1(pGraphicDev, StageChannel);
+
+	if (FAILED(pMonster->Ready_GameObject()))
+	{
+		Safe_Release(pMonster);
+		MSG_BOX("pMonster Create Failed");
+		return nullptr;
+	}
+
+	pMonster->m_pTransformCom->Set_Pos(vPos.x, pMonster->m_fGroundY, vPos.z);
+	pMonster->m_eCurState = eState;
+	pMonster->m_pAICom->Set_State(eState);
 
 	return pMonster;
 }

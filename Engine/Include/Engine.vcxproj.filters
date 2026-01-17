@@ -488,9 +488,6 @@
     <ClInclude Include="..\Header\CSoundMgr.h">
       <Filter>00. Manager\99. SoundMgr</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\CAIController.h">
-      <Filter>05. ComponentEx\05. AIController</Filter>
-    </ClInclude>
     <ClInclude Include="..\Header\perlin_jitter.h">
       <Filter>98. RandomEngine</Filter>
     </ClInclude>
@@ -499,6 +496,9 @@
     </ClInclude>
     <ClInclude Include="..\Header\CGrassBuffer.h">
       <Filter>05. ComponentEx\00. VIBuffer\06. GrassBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CAIController.h">
+      <Filter>05. ComponentEx\05. AIController</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -392,6 +392,9 @@ void CMultiLoadingThread::Loading_for_Dungeon()
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_ChestTexture", TEX_NORMAL, L"../Bin/Resource/Texture/NPC/Chest/dds/Chest_%d.dds", 2));
 	m_iTotalProtoCount++;
 
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_BruteTexture", TEX_NORMAL, L"../Bin/Resource/LWY//NPC/Brute/dds/Brute_%d.dds", 5));
+	m_iTotalProtoCount++;
+
 	// 메인보스
 	vector<TEXSETLR> vecBossLeshy;
 	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Idle", L"../Bin/Resource/Texture/Monster/Boss2/idle/dds/idle_%04d.dds", 80));
