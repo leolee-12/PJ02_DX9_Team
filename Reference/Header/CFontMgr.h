@@ -20,7 +20,8 @@ public:
 		const _tchar* pFontType,
 		const _uint& iWidth,
 		const _uint& iHeight,
-		const _uint& iWeight);
+		const _uint& iWeight,
+		const DWORD& dwCharsetFlag);
 
 	void				Render_Font(const _tchar* pFontTag,
 									const _tchar* pString,

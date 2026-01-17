@@ -27,4 +27,7 @@ public:
 	static CTutorial* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 private:
 	virtual void Free();
+
+private:
+	_bool		m_bSceneChangeFlag = false;
 };

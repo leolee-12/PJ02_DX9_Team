@@ -38,6 +38,8 @@
 #include "CTarotSeller.h"
 #include "CBrute.h"
 #include "CBossHpBar.h"
+#include "CTriggerPoint.h"
+#include "CCutSceneMgr.h"
 #include "CFollower.h"
 
 CDungeon::CDungeon(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -64,9 +66,36 @@ HRESULT CDungeon::Ready_Scene()
 
 	Ready_Light();
 
-	//CCollisionMgr::GetInstance()->Ready_CollisionMgr();
-
 	Ready_Event();
+
+	CCutSceneMgr::GetInstance()->Ready_CutsceneMgr(m_pMessageChannel);
+
+	CUTSCENE tDungeonScene;
+	tDungeonScene.strName = L"Ratau_00";
+	tDungeonScene.vecSteps =
+	{
+		{_vec3(123.5f, 0.f, 12.f), 0.75f, 0.5f, L"Ratau", L"Ratau_Intro", ADV_EVENT, 0.f, L"Ratau.Done"},
+		{_vec3(123.5f, 0.f, 12.f), 1.5f, 0.5f, L"Ratau", L"두려워 마시오! 나는 라타우. 한때 그대처럼\n선택받은 그릇이었소."},
+		{_vec3(123.5f, 0.f, 12.f), 1.5f, 0.5f, L"Ratau", L"우리는 현재 옛 신앙의 땅 깊은곳에 있고,\n엄청난 위험에 빠져있소."},
+		{_vec3(123.5f, 0.f, 12.f), 1.5f, 0.5f, L"Ratau", L"내 가르침으로 그대를 인도하겠소. 숲을 향해\n계속 나아가시오. 내 가까이서 있을테니."},
+		{_vec3(123.5f, 0.f, 12.f), 0.75f, 0.5f, L"Ratau", L"Ratau_Outro", ADV_EVENT, 0.f, L"Ratau.Done"}
+	};
+
+	CCutSceneMgr::GetInstance()->Register_CutScene(tDungeonScene);
+
+	tDungeonScene.strName = L"Ratau_01";
+	tDungeonScene.vecSteps =
+	{
+		{_vec3(-236.f, 0.f, 4.f), 1.f, 1.f, L"Player", L"LookforCam", ADV_TIMED, 2.f},
+		{_vec3(-231.f, 0.f, 4.f), 0.75f, 0.5f, L"Ratau", L"Ratau_Intro", ADV_EVENT, 0.f, L"Ratau.Done"},
+		{_vec3(-231.f, 0.f, 4.f), 1.5f, 0.5f, L"Ratau", L"보시오! 제물로 바쳐지는 또다른 가녀린 영혼이오."},
+		{_vec3(-231.f, 0.f, 4.f), 1.5f, 0.5f, L"Ratau", L"저 자를 구출하면 분명 우리 교단에 들어와줄 것이오."},
+		{_vec3(-231.f, 0.f, 4.f), 0.75f, 0.5f, L"Ratau", L"Ratau_Outro", ADV_EVENT, 0.f, L"Ratau.Done"}
+	};
+
+	CCutSceneMgr::GetInstance()->Register_CutScene(tDungeonScene);
+
+	CSoundMgr::GetInstance()->PlayBGM(L"03.Dungeon.mp3", 0.1f);
 
 	return S_OK;
 }
@@ -193,12 +222,13 @@ HRESULT CDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 			{
 			case 0:
 				CPersistentMgr::GetInstance()->Get_Player()->Set_Pos(_vec3(spawn.x * 0.8f, 0.f, spawn.z * 0.8f));
+				CPersistentMgr::GetInstance()->Get_Player()->Set_Reborn();
 				pGameObject = CPersistentMgr::GetInstance()->Get_Player();
 
 				if (nullptr == pGameObject)
 					return E_FAIL;
 
-				pGameObject->Set_MessageChannel(m_pMessageChannel);
+				CPersistentMgr::GetInstance()->Get_Player()->Set_MessageChannel(m_pMessageChannel);
 
 				if (FAILED(pLayer->Add_GameObject(L"Player", pGameObject)))
 					return E_FAIL;
@@ -398,11 +428,6 @@ HRESULT CDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	pTemp->Set_Dir(_vec3{ 1.f, 0.f, 0.f });
 	if (FAILED(pLayer->Add_GameObject(L"NPC", pGameObject)))
 		return E_FAIL;
-
-	pGameObject = CBrute::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ 8.f, 0.f, 90.f });
-	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	if (FAILED(pLayer->Add_GameObject(L"NPC", pGameObject)))
-		return E_FAIL;
 	//---------------------------------------------------------------------------
 
 	pGameObject = CRatau::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ 123.5f, 0.f, 12.f });
@@ -411,6 +436,13 @@ HRESULT CDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 
 	if (FAILED(pLayer->Add_GameObject(L"NPC", pGameObject)))
 		return E_FAIL;
+
+	pGameObject = CRatau::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ -231.f, 0.f, 4.f });
+
+	NULL_CHECK_RETURN(pGameObject, E_FAIL)
+
+		if (FAILED(pLayer->Add_GameObject(L"NPC", pGameObject)))
+			return E_FAIL;
 
 	pGameObject = CTarotSeller::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ 330.f, 0.f, 11.5f });
 
@@ -437,6 +469,25 @@ HRESULT CDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	pGameObject = CFollower::Create(m_pGraphicDev, m_pMessageChannel, L"Proto_Follower4Texture");
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	if (FAILED(pLayer->Add_GameObject(L"NPC", pGameObject)))
+		return E_FAIL;
+
+	_vec3 vTriggerPos, vTriggerHalfSize;
+	vTriggerPos = { 121.f, 0.f, 12.f };
+	vTriggerHalfSize = { 3.f, 3.f, 3.f };
+	pGameObject = CTriggerPoint::Create(m_pGraphicDev, m_pMessageChannel, vTriggerPos, vTriggerHalfSize, Trigger::TI_STAGING, L"Ratau_00", true);
+
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+
+	if (FAILED(pLayer->Add_GameObject(L"TriggerPoint", pGameObject)))
+		return E_FAIL;
+
+	vTriggerPos = { -236.f, 0.f, 4.f };
+	vTriggerHalfSize = { 3.f, 3.f, 3.f };
+	pGameObject = CTriggerPoint::Create(m_pGraphicDev, m_pMessageChannel, vTriggerPos, vTriggerHalfSize, Trigger::TI_STAGING, L"Ratau_01", true);
+
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+
+	if (FAILED(pLayer->Add_GameObject(L"TriggerPoint", pGameObject)))
 		return E_FAIL;
 
 	m_mapLayer.insert({ pLayerTag , pLayer });
@@ -549,7 +600,7 @@ HRESULT CDungeon::Ready_Light()
 
 	tLightInfo.Type = D3DLIGHT_DIRECTIONAL;
 
-	tLightInfo.Diffuse = D3DXCOLOR(0.6f, 0.3f, 0.85f, 1.f);
+	tLightInfo.Diffuse = D3DXCOLOR(0.4f, 0.3f, 0.85f, 1.f);
 	tLightInfo.Specular = D3DXCOLOR(0.4f, 0.2f, 0.6f, 1.f);
 	tLightInfo.Ambient = D3DXCOLOR(0.3f, 0.12f, 0.4f, 1.f);
 

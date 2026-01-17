@@ -50,7 +50,7 @@ private:
 	vector<CGameObject*> m_vecHpBarUI;
 
 	CBossHpBarFront* m_pBossHpBarFront;
-	CBossHpBarMiddle* m_pBossHpBarMiddle;
+	//CBossHpBarMiddle* m_pBossHpBarMiddle;
 
 	_bool		m_bRender;
 

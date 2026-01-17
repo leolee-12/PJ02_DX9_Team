@@ -52,7 +52,7 @@ HRESULT CBrute::Ready_GameObject()
 		return E_FAIL;
 
 	Ready_Variable();
-	Ready_Event();
+	Ready_Event_Brute();
 
 	return S_OK;
 }
@@ -60,6 +60,8 @@ HRESULT CBrute::Ready_GameObject()
 _int CBrute::Update_GameObject(const _float& fTimeDelta)
 {
 	Move_Frame(fTimeDelta);
+
+	Move_For_Execute();
 
 	m_pColliderCom->UpdateFromTransform(m_pTransformCom);
 	// 충돌체 디버그용
@@ -84,6 +86,11 @@ void CBrute::LateUpdate_GameObject(const _float& fTimeDelta)
 	m_pTransformCom->Compute_Bilboard(BBD_X);
 	m_pTransformCom->Get_Info(INFO_POS, &m_vPos);
 	Compute_ViewDepth(&m_vPos);
+
+	if (m_eCurState == BRUTE_EXECUTE1)
+	{
+		m_fDepth = 0.f;
+	}
 
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
 }
@@ -164,10 +171,6 @@ void CBrute::Ready_Variable()
 	D3DXMatrixIdentity(&m_matTex);
 }
 
-void CBrute::Ready_Event()
-{
-}
-
 void CBrute::Check_Frame()
 {
 	if (m_ePreState == m_eCurState)
@@ -219,20 +222,27 @@ void CBrute::Move_Frame(const _float& fTimeDelta)
 	if (m_fFrame >= m_fFrameEnd)
 	{
 		m_fFrame = 0.f;
+		IMessageChannel::EVENT ExecuteEndEvent;
 
 		switch (m_eCurState)
 		{
 		case BRUTE_JEER:
-			m_eCurState = BRUTE_IDLE;
 			break;
 
 		case BRUTE_EXECUTE1:
-			m_eCurState = BRUTE_EXECUTE2;
 			break;
 
 		case BRUTE_EXECUTE2:
-			m_eCurState = BRUTE_IDLE;
 			break;
+		}
+	}
+	else if (m_eCurState == BRUTE_EXECUTE1)
+	{
+		if (m_fFrame >= m_fFrameEnd - 2.f)
+		{
+			IMessageChannel::EVENT ExecuteEndEvent;
+			ExecuteEndEvent.strType = L"Brute.ExecuteEnd";
+			m_pMessageChannel->Publish(ExecuteEndEvent);
 		}
 	}
 }
@@ -282,6 +292,48 @@ void CBrute::Set_Texture()
 	m_pGraphicDev->SetTransform(D3DTS_TEXTURE0, &m_matTex);
 
 	m_pTextureCom->Set_Texture(_uint(m_eCurState));
+}
+
+void CBrute::Ready_Event_Brute()
+{
+	m_hmapSubHandles.insert({ L"Dialogue", m_pMessageChannel->Subscribe(L"CutScene.Dialogue", [this](const IMessageChannel::EVENT& Event)
+		{
+			auto CinemaTargetNameiter = Event.hmapData.find(L"CinemaTargetName");
+			if (CinemaTargetNameiter == Event.hmapData.end()) { return; }
+			auto Dothisiter = Event.hmapData.find(L"Dothis");
+			if (Dothisiter == Event.hmapData.end()) { return; }
+			if (any_cast<wstring>(CinemaTargetNameiter->second) == L"Brute")
+			{
+				wstring strDothis = any_cast<wstring>(Dothisiter->second);
+				if (strDothis == L"Brute_Move") {
+					m_eCurState = BRUTE_RUN;
+					m_bRunning = true;
+					return;
+				}
+				if (strDothis == L"Brute_Execute") {
+					m_eCurState = BRUTE_EXECUTE1;
+					return;
+				}
+			}
+		}
+	) });
+}
+
+void CBrute::Move_For_Execute()
+{
+	if (m_bRunning)
+	{
+		m_vPos.x -= 0.05f;
+		if (m_vPos.x <= 2.f)
+		{
+			m_vPos.x = 2.f;
+			IMessageChannel::EVENT RunEndEvent;
+			RunEndEvent.strType = L"Brute.RunEnd";
+			m_pMessageChannel->Publish(RunEndEvent);
+			m_bRunning = false;
+		}
+		m_pTransformCom->Set_Pos(m_vPos.x, m_vPos.y, m_vPos.z);
+	}
 }
 
 CBrute* CBrute::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, _vec3 vPos)

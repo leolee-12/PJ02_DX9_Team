@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "CPassionGauge.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
@@ -57,14 +57,14 @@ HRESULT CPassionGauge::Ready_PixelShader()
 	LPD3DXBUFFER pCode = NULL; 
 	LPD3DXBUFFER pError = NULL; 
 
-	// HLSL ÆÄÀÏ ÄÄÆÄÀÏ 
+	// HLSL íŒŒì¼ ì»´íŒŒì¼ 
 	HRESULT hr = D3DXCompileShaderFromFile( 
-		L"../Shader/Gage.hlsl", // ÆÄÀÏ¸í 
-		NULL, // ¸ÅÅ©·Î 
+		L"../Shader/Gage.hlsl", // íŒŒì¼ëª… 
+		NULL, // ë§¤í¬ë¡œ 
 		NULL, // include 
-		"PS_Gauge", // ¿£Æ®¸® Æ÷ÀÎÆ® 
-		"ps_2_0", // ¼ÎÀÌ´õ ¸ðµ¨ 
-		0, // ÇÃ·¡±× 
+		"PS_Gauge", // ì—”íŠ¸ë¦¬ í¬ì¸íŠ¸ 
+		"ps_2_0", // ì…°ì´ë” ëª¨ë¸ 
+		0, // í”Œëž˜ê·¸ 
 		&pCode, 
 		&pError, 
 		NULL ); 
@@ -80,7 +80,7 @@ HRESULT CPassionGauge::Ready_PixelShader()
 			pError->Release();
 		} 
 		return E_FAIL;
-	} // ÇÈ¼¿ ¼ÎÀÌ´õ »ý¼º 
+	} // í”½ì…€ ì…°ì´ë” ìƒì„± 
 
 	if (pCode) {
 		m_pGraphicDev->CreatePixelShader((DWORD*)pCode->GetBufferPointer(), &m_pPixelShader);
@@ -226,5 +226,6 @@ CPassionGauge* CPassionGauge::Create(LPDIRECT3DDEVICE9 pGraphicDev, Gauge::GAUGE
 
 void CPassionGauge::Free()
 {
+	m_pPixelShader->Release();
 	CUi::Free();
 }

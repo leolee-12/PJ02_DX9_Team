@@ -19,25 +19,8 @@ HRESULT CBossHpBarBackground::Ready_GameObject()
 	if (FAILED(Add_Component()))
 		return E_FAIL;
 
-	m_pTransformCom->Set_Scale(67 * 2 * m_fScale, 13 * m_fScale, 0.1f);
+	m_pTransformCom->Set_Scale((61.f * 2.f *m_fScale) - 4.f, 9.f * m_fScale, 0.1f);
 	m_pTransformCom->Set_Pos(m_vPos.x, m_vPos.y, m_vPos.z);
-
-	return S_OK;
-}
-
-HRESULT CBossHpBarBackground::Ready_Material()
-{
-	D3DMATERIAL9			tMtrl;
-	ZeroMemory(&tMtrl, sizeof(D3DMATERIAL9));
-
-	tMtrl.Diffuse = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-	tMtrl.Specular = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-	tMtrl.Ambient = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-
-	tMtrl.Emissive = D3DXCOLOR(1.f, 0.f, 0.f, 1.f);
-	tMtrl.Power = 0.f;
-
-	m_pGraphicDev->SetMaterial(&tMtrl);
 
 	return S_OK;
 }
@@ -97,7 +80,7 @@ HRESULT CBossHpBarBackground::Add_Component()
 	m_mapComponent[ID_DYNAMIC].insert({ L"Com_Transform", pComponent });
 
 	pComponent = m_pTextureCom = dynamic_cast<Engine::CTexture*>
-		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_BossHpBarBackground"));
+		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_BossHpBarCover"));
 
 	if (nullptr == pComponent)
 		return E_FAIL;

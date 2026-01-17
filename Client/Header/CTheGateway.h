@@ -2,6 +2,10 @@
 
 #include "CScene.h"
 
+class CFontUIOrtho;
+class CSpeechBubbleOrtho;
+class CSelectionArrow;
+
 class CTheGateway : public CScene
 {
 private:
@@ -21,8 +25,25 @@ private:
 
 	HRESULT			Ready_Light();
 
+	void			Ready_Event();
+
+	void			Select_Key_Input();
+
 public:
 	static CTheGateway* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 private:
 	virtual void Free();
+
+private:
+	CFontUIOrtho* m_pLeftSelect;
+	CFontUIOrtho* m_pRightSelect;
+
+	CSpeechBubbleOrtho* m_pSpeechBubble;
+
+	CSelectionArrow* m_pSelectionArrow;
+
+	_bool		  m_bShowSelect = false;
+	_uint		  m_iSelectSlot = 0;
+
+	_bool		  m_bSceneChangeFlag = false;
 };

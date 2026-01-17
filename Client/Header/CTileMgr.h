@@ -35,4 +35,7 @@ private:
 
 private:
 	virtual void Free();
+
+private:
+	_bool m_bSkipFirstFrame = false;
 };

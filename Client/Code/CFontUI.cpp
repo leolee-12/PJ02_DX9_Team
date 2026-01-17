@@ -69,8 +69,8 @@ void CFontUI::Render_GameObject()
 	rcOwnerRect.bottom -= _long(m_vScale.y * 0.5f);
 
 	//DT_CENTER | DT_VCENTER
-	CFontMgr::GetInstance()->Render_Font(m_strFont.c_str(), m_strRenderOwnerName.c_str(), rcOwnerRect, D3DXCOLOR(0.85f, 0.8f, 0.3f, 1.f), DT_CENTER | DT_VCENTER);
-    CFontMgr::GetInstance()->Render_Font(m_strFont.c_str(), strDynamicText.c_str(), m_tRenderRect, m_tFontColor, m_dwFlags);
+	CFontMgr::GetInstance()->Render_Font(L"Font_Default30_Heavy", m_strRenderOwnerName.c_str(), rcOwnerRect, D3DXCOLOR(0.85f, 0.8f, 0.3f, 1.f), DT_CENTER | DT_VCENTER);
+    CFontMgr::GetInstance()->Render_Font(L"Font_Default24", strDynamicText.c_str(), m_tRenderRect, m_tFontColor, m_dwFlags);
 }
 
 void CFontUI::OnCollision(CGameObject* pObject)

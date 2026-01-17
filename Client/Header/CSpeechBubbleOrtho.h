@@ -8,12 +8,12 @@ namespace Engine
 	class CTexture;
 }
 
-class CSpeechBubble :
+class CSpeechBubbleOrtho :
 	public CUi
 {
 private:
-	explicit CSpeechBubble(LPDIRECT3DDEVICE9 pGraphicDev);
-	virtual ~CSpeechBubble();
+	explicit CSpeechBubbleOrtho(LPDIRECT3DDEVICE9 pGraphicDev);
+	virtual ~CSpeechBubbleOrtho();
 
 public:
 	virtual			HRESULT		Ready_GameObject();
@@ -27,7 +27,7 @@ public:
 	void			UnActive() { m_bActive = false; }
 
 public:
-	static CSpeechBubble* Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 _vPos, _vec2 _vScale);
+	static CSpeechBubbleOrtho* Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec2 _vPos, _vec2 _vScale);
 
 private:
 	virtual			void		Free();
@@ -41,8 +41,9 @@ private:
 	CTexture* m_pTextureCom;
 
 	_bool m_bActive;
-	_vec3 m_vTargetPos;
 
+
+	_vec2 m_vCenterPos;
 	_vec2 m_vScale;
 };
 

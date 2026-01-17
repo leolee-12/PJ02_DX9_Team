@@ -213,6 +213,12 @@ void CMultiLoadingThread::Loading_for_Tutorial()
     m_TexturLoadingqueue.push(TEXLR(L"Proto_SpeechBubble", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Etc/dds/SpeechBubble.dds", 1));
     m_iTotalProtoCount++;
 
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_Fade", TEX_NORMAL, L"../Bin/Resource/YSH/Etc/Fade.png", 1));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_BruteTexture", TEX_NORMAL, L"../Bin/Resource/LWY//NPC/Brute/dds/Brute_%d.dds", 5));
+	m_iTotalProtoCount++;
+
     // ===== TextureSet 큐 등록 (멀티스레드 로딩) =====
     vector<TEXSETLR> vecBishopLeshy;
     vecBishopLeshy.push_back(TEXSETLR(L"Bishop_Leshy_Idle", L"../Bin/Resource/Texture/Bishops/Leshy/Leshy-idle/dds/Leshy_idle-%d.dds", 250));
@@ -237,6 +243,8 @@ void CMultiLoadingThread::Loading_for_Tutorial()
 	vecBishopShamura.push_back(TEXSETLR(L"Bishop_Shamura_Talk", L"../Bin/Resource/Texture/Bishops/Shamura/Shamura-talk/dds/Shamura-talk-%d.dds", 267));
 	m_TexSetLoadingqueue.push(make_pair(TEXSETINFO(L"Proto_BishopShamura", TEX_NORMAL), vecBishopShamura));
 	m_iTotalProtoCount++;
+
+	
 }
 
 void CMultiLoadingThread::Loading_for_Dungeon()
@@ -356,12 +364,17 @@ void CMultiLoadingThread::Loading_for_Dungeon()
 	m_iTotalProtoCount++;
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingSelectButton", TEX_NORMAL, L"../Bin/Resource/YSD/CookingSelect/Button_%d.png", 2));
 	m_iTotalProtoCount++;
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_BossHpBarFront", TEX_NORMAL, L"../Bin/Resource/YSD/BossHpBar/BossHpBarRed.png", 1));
+	/*m_TexturLoadingqueue.push(TEXLR(L"Proto_BossHpBarFront", TEX_NORMAL, L"../Bin/Resource/YSD/BossHpBar/BossHpBarRed.png", 1));
 	m_iTotalProtoCount++;
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_BossHpBarMiddle", TEX_NORMAL, L"../Bin/Resource/YSD/BossHpBar/BossHpBarWhite.png", 1));
 	m_iTotalProtoCount++;
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_BossHpBarBackground", TEX_NORMAL, L"../Bin/Resource/YSD/BossHpBar/BossHpBarBackgorund.png", 1));
+	m_iTotalProtoCount++;*/
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_BossHpBarCover", TEX_NORMAL, L"../Bin/Resource/YSH/UI/BossHpBarCover.png", 1));
 	m_iTotalProtoCount++;
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_BossHpBar", TEX_NORMAL, L"../Bin/Resource/YSH/UI/BossHpBarRed.png", 1));
+	m_iTotalProtoCount++;
+
 	// 덴저러스 수동 PNG존 지뢰밟지않게 조심할것
 
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingCardInfoFaithTexture", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/dds/FaithTexture.dds", 1));
@@ -421,6 +434,11 @@ void CMultiLoadingThread::Loading_for_Dungeon()
 	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Dead", L"../Bin/Resource/Texture/Monster/Boss2/dead-noheart/dds/dead-noheart_%04d.dds", 1));
 	m_TexSetLoadingqueue.push(make_pair(TEXSETINFO(L"Proto_MonsterB2Texture", TEX_NORMAL), vecBossLeshy));
 	m_iTotalProtoCount++;
+
+	//디버그용 바로진입 프로토타입
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_SpeechBubble", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Etc/dds/SpeechBubble.dds", 1));
+	m_iTotalProtoCount++;
+	//디버그용 바로진입 프로토타입
 }
 
 void CMultiLoadingThread::Loading_for_TheGateway()
@@ -435,6 +453,17 @@ void CMultiLoadingThread::Loading_for_TheGateway()
 	vecNarinder.push_back(TEXSETLR(L"Narinder_Talk", L"../Bin/Resource/YSH/Narinder/Narinder-talk/dds/Narinder-talk-%d.dds", 167));
 	m_TexSetLoadingqueue.push(make_pair(TEXSETINFO(L"Proto_Narinder", TEX_NORMAL), vecNarinder));
 	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_SelectionArrow", TEX_NORMAL, L"../Bin/Resource/YSH/Etc/dds/Selection_Arrow.dds", 1));
+	m_iTotalProtoCount++;
+
+	//디버그용 바로진입 프로토타입
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_SpeechBubble", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Etc/dds/SpeechBubble.dds", 1));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_Fade", TEX_NORMAL, L"../Bin/Resource/YSH/Etc/Fade.png", 1));
+	m_iTotalProtoCount++;
+	//디버그용 바로진입 프로토타입
 }
 
 void CMultiLoadingThread::Loading_for_Village()
@@ -490,6 +519,7 @@ void CMultiLoadingThread::NonTex_for_Boss()
 
 void CMultiLoadingThread::NonTex_for_Test()
 {
+	CPersistentMgr::GetInstance()->Ready_GlobalObjects(m_pGraphicDev);
 }
 
 void CMultiLoadingThread::NonTex_for_KnuckleBone()
@@ -521,6 +551,18 @@ void CMultiLoadingThread::NonTex_for_Dungeon()
 void CMultiLoadingThread::NonTex_for_TheGateway()
 {
 	CPersistentMgr::GetInstance()->Ready_GlobalObjects(m_pGraphicDev);
+
+	// 디버그용 바로진입위한 프로토타입
+	CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_CubeTex", Engine::CCubeTex::Create(m_pGraphicDev));
+	CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_TerrainTex", Engine::CTerrainTex::Create(m_pGraphicDev, VTXCNTX, VTXCNTZ, VTXITV, L"../Bin/Resource/Texture/Terrain/Height.bmp"));
+	CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_TerrainWallTex", Engine::CTerrainWallTex::Create(m_pGraphicDev, 51, 51, VTXITV));
+	CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_RcTexXZ", Engine::CRcTexXZ::Create(m_pGraphicDev));
+	CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_TileTexture", Engine::CTexture::CreateFromFolder(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Maps/Texture/Tile"));
+	CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_TileMaskTexture", Engine::CTexture::CreateFromFolder(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Maps/Texture/TileMasking"));
+	CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_GrassBuffer", Engine::CGrassBuffer::Create(m_pGraphicDev));
+	CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Collider", Engine::CCollider::Create(m_pGraphicDev));
+	// 디버그용 바로진입위한 프로토타입
+
 	Load_Object_Texture(TheGateway_Texture);
 }
 

@@ -412,6 +412,12 @@
     <Filter Include="02. GameObject\17. NPC\04. Brute">
       <UniqueIdentifier>{84e93905-37af-4387-b6a4-d5044690241b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\07. UI\06. WorldUI\01. SelectionArrow">
+      <UniqueIdentifier>{67a6357b-a1f6-4b03-9a0c-a3351341b751}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. UI\06. WorldUI\02. Fade">
+      <UniqueIdentifier>{28fd72e2-eda9-47e1-9711-c408b8170637}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -846,6 +852,18 @@
     <ClInclude Include="..\Header\CBrute.h">
       <Filter>02. GameObject\17. NPC\04. Brute</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CSpeechBubbleOrtho.h">
+      <Filter>02. GameObject\07. UI\06. WorldUI\00.SpeechBubble</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CFontUIOrtho.h">
+      <Filter>02. GameObject\16. Font</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CSelectionArrow.h">
+      <Filter>02. GameObject\07. UI\06. WorldUI\01. SelectionArrow</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CFade.h">
+      <Filter>02. GameObject\07. UI\06. WorldUI\02. Fade</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1243,6 +1261,18 @@
     </ClCompile>
     <ClCompile Include="..\Code\CBrute.cpp">
       <Filter>02. GameObject\17. NPC\04. Brute</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CSpeechBubbleOrtho.cpp">
+      <Filter>02. GameObject\07. UI\06. WorldUI\00.SpeechBubble</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CFontUIOrtho.cpp">
+      <Filter>02. GameObject\16. Font</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CSelectionArrow.cpp">
+      <Filter>02. GameObject\07. UI\06. WorldUI\01. SelectionArrow</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CFade.cpp">
+      <Filter>02. GameObject\07. UI\06. WorldUI\02. Fade</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

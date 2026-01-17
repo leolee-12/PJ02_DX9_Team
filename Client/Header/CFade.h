@@ -8,12 +8,12 @@ namespace Engine
 	class CTexture;
 }
 
-class CBossHpBarFront :
+class CFade :
 	public CUi
 {
 private:
-	explicit CBossHpBarFront(LPDIRECT3DDEVICE9 pGraphicDev);
-	virtual ~CBossHpBarFront();
+	explicit CFade(LPDIRECT3DDEVICE9 pGraphicDev);
+	virtual ~CFade();
 
 public:
 	virtual			HRESULT		Ready_GameObject();
@@ -23,32 +23,40 @@ public:
 	virtual			void		OnCollision(CGameObject* pObject);
 
 public:
-	static CBossHpBarFront* Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 _vPos, float _fScale);
+	void						Active() { m_bActive = true; }
+	void						UnActive() { m_bActive = false; }
+	void						Set_FadeIn()
+								{
+									m_bFadeIn = true;
+									m_fAlpha = 1.f;
+								}
+	void						Set_FadeOut()
+								{
+									m_bFadeIn = false;
+									m_fAlpha = 0.f;
+								}
 
-	void Set_Radio(_float _fRatio) { m_fRatio = _fRatio; }
-	void Set_Hp(_float _fHp) { m_fCurHp = _fHp; }
-	void Set_LerpHp(_float fHp) { m_fLerpHp = fHp; }
-	void InitHp(_float _fMaxHp, _float _fCurHp) { m_fMaxHp = _fMaxHp; m_fCurHp = _fCurHp; }
+public:
+	static CFade* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMessageChannel);
+
 private:
 	virtual			void		Free();
 
 	HRESULT						Add_Component();
-
+	void						Update_Alpha();
 	HRESULT 					Ready_PixelShader();
+
+	void						Ready_Event();
 
 private:
 	CRcTex* m_pBufferCom;
 	CTransform* m_pTransformCom;
 	CTexture* m_pTextureCom;
 
-	// 비율 1.0f~ 0.0f;
-	_float m_fRatio;
-	_float m_fCurHp;
-	_float m_fLerpHp;
-	_float m_fMaxHp;
+	_bool m_bActive = false;
+	_float m_fAlpha = 0.f;
+	_bool m_bFadeIn = false;
 
-	_vec3 m_vPos;
-	float m_fScale;
 
 	LPDIRECT3DPIXELSHADER9 m_pPixelShader;
 };

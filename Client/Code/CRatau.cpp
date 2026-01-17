@@ -6,6 +6,8 @@
 #include "CPersistentMgr.h"
 #include "CCollisionMgr.h"
 #include "CN1_AI.h"
+#include "CSpeechBubble.h"
+#include "CFontUI.h"
 
 CRatau::CRatau(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev),
@@ -52,6 +54,11 @@ HRESULT CRatau::Ready_GameObject()
 	Ready_Variable();
 	Ready_Event();
 
+	_vec3 vDialPos = m_vPos;
+	vDialPos.y += 5.f;
+
+	Ready_Dialogue(vDialPos);
+
 	return S_OK;
 }
 
@@ -61,12 +68,17 @@ _int CRatau::Update_GameObject(const _float& fTimeDelta)
 
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
+	m_pFontUI->Update_GameObject(fTimeDelta);
+	m_pSpeechBubble->Update_GameObject(fTimeDelta);
+
 	if (iExit == DEAD)
 	{
 		return iExit;
 	}
 
-	CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHA, this);
+	if (!m_bWait) {
+		CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHA, this);
+	}
 
 	return iExit;
 }
@@ -148,6 +160,70 @@ void CRatau::Ready_Variable()
 
 void CRatau::Ready_Event()
 {
+	m_hmapSubHandles.insert({ L"Dialogue", m_pMessageChannel->Subscribe(L"CutScene.Dialogue", [this](const IMessageChannel::EVENT& Event)
+		{
+			auto TargetNameiter = Event.hmapData.find(L"TargetName");
+			if (TargetNameiter == Event.hmapData.end()) { return; }
+			if (any_cast<wstring>(TargetNameiter->second) != L"Ratau")
+			{
+				m_pSpeechBubble->UnActive();
+				m_pFontUI->UnActive();
+				m_eCurState = RATAU_IDLE;
+
+				auto CinemaTargetNameiter = Event.hmapData.find(L"CinemaTargetName");
+				if (CinemaTargetNameiter == Event.hmapData.end()) { return; }
+				auto Dothisiter = Event.hmapData.find(L"Dothis");
+				if (Dothisiter == Event.hmapData.end()) { return; }
+				if (any_cast<wstring>(CinemaTargetNameiter->second) == L"Ratau")
+				{
+					wstring strDothis = any_cast<wstring>(Dothisiter->second);
+					if (strDothis == L"Ratau_Intro") {
+						m_eCurState = RATAU_ENTER;
+						m_bWait = false;
+						return;
+					}
+					if (strDothis == L"Ratau_Outro") {
+						m_eCurState = RATAU_EXIT;
+						return;
+					}
+				}
+
+				return;
+			}
+
+			auto Textiter = Event.hmapData.find(L"Text");
+			if (Textiter == Event.hmapData.end()) { return; }
+
+			m_pFontUI->Set_Text(any_cast<wstring>(Textiter->second));
+			m_pFontUI->Set_OwnerName(any_cast<wstring>(TargetNameiter->second));
+			m_pSpeechBubble->Active();
+			m_pFontUI->Active();
+			m_eCurState = RATAU_TALK;
+			//_tchar strSoundName[128] = L"";
+			//swprintf_s(strSoundName, L"Deathcat%d.wav", Get_Rand_Int(6, 12));
+			//CSoundMgr::GetInstance()->Play(strSoundName, SOUND_DIALOUGE, 0.1f);
+		}
+	) });
+}
+
+HRESULT CRatau::Ready_Dialogue(const _vec3& vDialoguePos)
+{
+	m_pFontUI = CFontUI::Create(m_pGraphicDev, m_pMessageChannel);
+
+	if (m_pFontUI == nullptr) { return E_FAIL; }
+
+	m_pFontUI->Set_Font(L"Font_Lapture30");
+	m_pFontUI->Set_FontColor(D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
+	//DT_CENTER | DT_VCENTER
+	m_pFontUI->Set_Flags(DT_CENTER | DT_VCENTER);
+	m_pFontUI->Set_Scale(_vec2(600.f, 150.f));
+
+	m_pFontUI->Set_WorldPos(vDialoguePos);
+	m_pFontUI->Set_RenderOwnerName(L"라타우");
+
+	m_pSpeechBubble = CSpeechBubble::Create(m_pGraphicDev, vDialoguePos, _vec2(600.f, 150.f));
+
+	if (m_pSpeechBubble == nullptr) { return E_FAIL; }
 }
 
 void CRatau::Check_Frame()
@@ -189,28 +265,34 @@ void CRatau::Check_Frame()
 
 void CRatau::Move_Frame(const _float& fTimeDelta)
 {
+	if (m_bWait) { return; }
+
 	m_fFrame += m_fFrameSpeed * fTimeDelta;
 
 	if (m_fFrame >= m_fFrameEnd)
 	{
 		m_fFrame = 0.f;
 
+		IMessageChannel::EVENT RatauEvent;
+
 		switch (m_eCurState)
 		{
 		case RATAU_ENTER:
+			RatauEvent.strType = L"Ratau.Done";
+			m_pMessageChannel->Publish(RatauEvent);
 			m_eCurState = RATAU_IDLE;
 			break;
 
 		case RATAU_IDLE:
-			m_eCurState = RATAU_TALK;
 			break;
 
 		case RATAU_TALK:
-			m_eCurState = RATAU_EXIT;
 			break;
 
 		case RATAU_EXIT:
-			m_eCurState = RATAU_ENTER;
+			RatauEvent.strType = L"Ratau.Done";
+			m_pMessageChannel->Publish(RatauEvent);
+			m_bWait = true;
 			break;
 		}
 	}
@@ -264,6 +346,8 @@ CRatau* CRatau::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChan
 {
 	CRatau* pRatau = new CRatau(pGraphicDev, StageChannel);
 
+	pRatau->m_vPos = vPos;
+
 	if (FAILED(pRatau->Ready_GameObject()))
 	{
 		Safe_Release(pRatau);
@@ -278,5 +362,7 @@ CRatau* CRatau::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChan
 
 void CRatau::Free()
 {
+	Safe_Release(m_pFontUI);
+	Safe_Release(m_pSpeechBubble);
 	CGameObject::Free();
 }

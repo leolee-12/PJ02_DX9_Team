@@ -26,21 +26,21 @@ HRESULT CBossHpBar::Ready_GameObject()
 {
 	CGameObject* pGameObject = nullptr;
 
-	pGameObject = m_pBossHpBarFront = CBossHpBarFront::Create(m_pGraphicDev,{0.0f,-WINCY / 2.0f + 50,0.001f},3.0f);
+	pGameObject = m_pBossHpBarFront = CBossHpBarFront::Create(m_pGraphicDev, _vec3(0.0f, _float(- WINCY / 2) + 50, 0.001f), 3.0f);
 	if (nullptr == pGameObject)
 		return E_FAIL;
 
 	m_vecHpBarUI.push_back(pGameObject);
 
 
-	pGameObject = m_pBossHpBarMiddle = CBossHpBarMiddle::Create(m_pGraphicDev, { 0.0f,-WINCY / 2.0f + 50.0f,0.01f }, 3.0f);
+	/*pGameObject = m_pBossHpBarMiddle = CBossHpBarMiddle::Create(m_pGraphicDev, { 0.0f,-WINCY / 2.0f + 50.0f,0.01f }, 3.0f);
 
 	if (nullptr == pGameObject)
 		return E_FAIL;
 
-	m_vecHpBarUI.push_back(pGameObject);
+	m_vecHpBarUI.push_back(pGameObject);*/
 
-	pGameObject = CBossHpBarBackground::Create(m_pGraphicDev, { 0.0f,-WINCY / 2.0f + 50.0f,0.1f }, 3.0f);
+	pGameObject = CBossHpBarBackground::Create(m_pGraphicDev, _vec3(0.0f, _float(- WINCY / 2) + 50.0f, 0.1f), 3.0f);
 
 	if (nullptr == pGameObject)
 		return E_FAIL;
@@ -52,7 +52,7 @@ HRESULT CBossHpBar::Ready_GameObject()
 	m_fLefpPrevHp = m_fMaxHp;
 	m_fLerpTime = 0.0f;
 	m_pBossHpBarFront->InitHp(m_fMaxHp, m_fCurHp);
-	m_pBossHpBarMiddle->InitHp(m_fMaxHp, m_fCurHp);
+	//m_pBossHpBarMiddle->InitHp(m_fMaxHp, m_fCurHp);
 	return S_OK;
 }
 
@@ -76,16 +76,15 @@ _int CBossHpBar::Update_GameObject(const _float& fTimeDelta)
 	if (m_fLerpTime > 0.0f)
 	{
 		float LerpHp = Lerp(m_fCurHp, m_fLefpPrevHp , m_fLerpTime);
-		m_pBossHpBarMiddle->Set_Radio(LerpHp / m_fMaxHp);
-		m_pBossHpBarMiddle->Set_Hp(LerpHp / m_fMaxHp);
+		m_pBossHpBarFront->Set_LerpHp(LerpHp / m_fMaxHp);
 		m_fLerpTime -= fTimeDelta;
 	}
 	else if (m_fLerpTime <= 0.0f)
 	{
-
+		m_fLerpTime = 0.f;
+		float LerpHp = Lerp(m_fCurHp, m_fLefpPrevHp, m_fLerpTime);
 		m_fRadio = m_fCurHp / m_fMaxHp;
-		m_pBossHpBarMiddle->Set_Radio(m_fRadio);
-		m_pBossHpBarMiddle->Set_Hp(m_fCurHp);
+		m_pBossHpBarFront->Set_LerpHp(LerpHp / m_fMaxHp);
 	}
 
 	if (m_fCurHp != m_fPrevHp)

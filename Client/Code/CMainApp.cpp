@@ -69,7 +69,7 @@ void CMainApp::LateUpdate_MainApp(const float& fTimeDelta)
 
 void CMainApp::Render_MainApp()
 {
-	m_pDeviceClass->Render_Begin(D3DXCOLOR(0.f, 0.f, 1.f, 1.f));
+	m_pDeviceClass->Render_Begin(D3DXCOLOR(0.f, 0.f, 0.f, 1.f));
 
 	m_pManagementClass->Render_Scene(m_pGraphicDev);
 
@@ -127,35 +127,42 @@ HRESULT CMainApp::Ready_Scene(LPDIRECT3DDEVICE9 pGraphicDev)
 
 HRESULT CMainApp::Ready_Font()
 {
-	if (FAILED(CFontMgr::GetInstance()->Ready_Font(m_pGraphicDev, L"Font_Default", L"Malgun Gothic", 0, 20, FW_HEAVY)))
+	if (FAILED(CFontMgr::GetInstance()->Ready_Font(m_pGraphicDev, L"Font_Default", L"Malgun Gothic", 0, 20, FW_HEAVY, HANGEUL_CHARSET)))
 		return E_FAIL;
 
-	if (FAILED(CFontMgr::GetInstance()->Ready_Font(m_pGraphicDev, L"Font_Lapture20", L"LaptureDisplay", 0, 20, FW_THIN)))
+	if (FAILED(CFontMgr::GetInstance()->Ready_Font(m_pGraphicDev, L"Font_Default24", L"Malgun Gothic", 0, 24, FW_HEAVY, HANGEUL_CHARSET)))
 		return E_FAIL;
 
-	if (FAILED(CFontMgr::GetInstance()->Ready_Font(m_pGraphicDev, L"Font_Lapture30", L"LaptureDisplay", 0, 30, FW_THIN)))
-		return E_FAIL;
-
-	if (FAILED(CFontMgr::GetInstance()->Ready_Font(m_pGraphicDev, L"Font_Lapture40", L"LaptureDisplay", 0, 40, FW_THIN)))
-		return E_FAIL;
-
-	if (FAILED(CFontMgr::GetInstance()->Ready_Font(m_pGraphicDev, L"Font_Lapture60", L"LaptureDisplay", 0, 60, FW_THIN)))
+	if (FAILED(CFontMgr::GetInstance()->Ready_Font(m_pGraphicDev, L"Font_Default30_Heavy", L"Malgun Gothic", 0, 30, FW_HEAVY, HANGEUL_CHARSET)))
 		return E_FAIL;
 
 
-	if (FAILED(CFontMgr::GetInstance()->Ready_Font(m_pGraphicDev, L"Font_NotoSans30", L"Noto Sans KR Regular", 0, 30, FW_REGULAR)))
+	if (FAILED(CFontMgr::GetInstance()->Ready_Font(m_pGraphicDev, L"Font_Lapture20", L"LaptureDisplay", 0, 20, FW_THIN, DEFAULT_CHARSET)))
 		return E_FAIL;
 
-	if (FAILED(CFontMgr::GetInstance()->Ready_Font(m_pGraphicDev, L"Font_NotoSans40", L"Noto Sans KR Regular", 0, 40, FW_REGULAR)))
+	if (FAILED(CFontMgr::GetInstance()->Ready_Font(m_pGraphicDev, L"Font_Lapture30", L"LaptureDisplay", 0, 30, FW_THIN, DEFAULT_CHARSET)))
 		return E_FAIL;
 
-	if (FAILED(CFontMgr::GetInstance()->Ready_Font(m_pGraphicDev, L"Font_NotoSans60", L"Noto Sans KR Regular", 0, 60, FW_REGULAR)))
+	if (FAILED(CFontMgr::GetInstance()->Ready_Font(m_pGraphicDev, L"Font_Lapture40", L"LaptureDisplay", 0, 40, FW_THIN, DEFAULT_CHARSET)))
 		return E_FAIL;
 
-	if (FAILED(CFontMgr::GetInstance()->Ready_Font(m_pGraphicDev, L"Font_NotoSans80", L"Noto Sans KR Regular", 0, 80, FW_REGULAR)))
+	if (FAILED(CFontMgr::GetInstance()->Ready_Font(m_pGraphicDev, L"Font_Lapture60", L"LaptureDisplay", 0, 60, FW_THIN, DEFAULT_CHARSET)))
 		return E_FAIL;
 
-	if (FAILED(CFontMgr::GetInstance()->Ready_Font(m_pGraphicDev, L"Font_NotoSans100", L"Noto Sans KR Regular", 0, 100, FW_REGULAR)))
+
+	if (FAILED(CFontMgr::GetInstance()->Ready_Font(m_pGraphicDev, L"Font_NotoSans30", L"Noto Sans KR Regular", 0, 30, FW_REGULAR, DEFAULT_CHARSET)))
+		return E_FAIL;
+
+	if (FAILED(CFontMgr::GetInstance()->Ready_Font(m_pGraphicDev, L"Font_NotoSans40", L"Noto Sans KR Regular", 0, 40, FW_REGULAR, DEFAULT_CHARSET)))
+		return E_FAIL;
+
+	if (FAILED(CFontMgr::GetInstance()->Ready_Font(m_pGraphicDev, L"Font_NotoSans60", L"Noto Sans KR Regular", 0, 60, FW_REGULAR, DEFAULT_CHARSET)))
+		return E_FAIL;
+
+	if (FAILED(CFontMgr::GetInstance()->Ready_Font(m_pGraphicDev, L"Font_NotoSans80", L"Noto Sans KR Regular", 0, 80, FW_REGULAR, DEFAULT_CHARSET)))
+		return E_FAIL;
+
+	if (FAILED(CFontMgr::GetInstance()->Ready_Font(m_pGraphicDev, L"Font_NotoSans100", L"Noto Sans KR Regular", 0, 100, FW_REGULAR, DEFAULT_CHARSET)))
 		return E_FAIL;
 
 	return S_OK;

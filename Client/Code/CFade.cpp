@@ -1,89 +1,76 @@
 ﻿#include "pch.h"
-#include "CBossHpBarFront.h"
+#include "CFade.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
 
-#include "CFontMgr.h"
 
-CBossHpBarFront::CBossHpBarFront(LPDIRECT3DDEVICE9 pGraphicDev)
+CFade::CFade(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CUi(pGraphicDev), m_pBufferCom(nullptr), m_pTransformCom(nullptr)
 {
 	ZeroMemory(&m_vPos, sizeof(_vec3));
 }
 
-CBossHpBarFront::~CBossHpBarFront()
+CFade::~CFade()
 {
 }
 
-HRESULT CBossHpBarFront::Ready_GameObject()
+HRESULT CFade::Ready_GameObject()
 {
 	if (FAILED(Add_Component()))
 		return E_FAIL;
 
 	Ready_PixelShader();
 
-	m_pTransformCom->Set_Scale(59 * 2*m_fScale, 7 * m_fScale, 0.1f);
-	m_pTransformCom->Set_Pos(m_vPos.x, m_vPos.y, m_vPos.z);
+	Ready_Event();
 
-	m_fRatio = 1.0f;
+	m_pTransformCom->Set_Scale(_float(WINCX), _float(WINCY), 0.f);
+
+	m_pTransformCom->Set_Pos(0.f, 0.f, 0.01f);
 
 	return S_OK;
 }
 
-_int CBossHpBarFront::Update_GameObject(const _float& fTimeDelta)
+_int CFade::Update_GameObject(const _float& fTimeDelta)
 {
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
-	CRenderer::GetInstance()->Add_RenderGroup(RENDER_UI, this);
+
+	if (m_bActive) {
+		Update_Alpha();
+		CRenderer::GetInstance()->Add_RenderGroup(RENDER_UI, this);
+	}
+	
 
 	return iExit;
 }
 
-void CBossHpBarFront::LateUpdate_GameObject(const _float& fTimeDelta)
+void CFade::LateUpdate_GameObject(const _float& fTimeDelta)
 {
-
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
 	m_pTransformCom->Get_Info(INFO_POS, &m_vPos);
 	Compute_ViewDepth_Ortho(&m_vPos);
 }
 
-void CBossHpBarFront::Render_GameObject()
+void CFade::Render_GameObject()
 {
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
 
 	m_pGraphicDev->SetPixelShader(m_pPixelShader);
-	m_pGraphicDev->SetPixelShaderConstantF(0, &m_fLerpHp, 1);
-	m_pGraphicDev->SetPixelShaderConstantF(1, &m_fRatio, 1);
+	m_pGraphicDev->SetPixelShaderConstantF(0, &m_fAlpha, 1);
 
+	m_pTextureCom->Set_Texture(0);
 
-	m_pTextureCom->Set_Texture();
-	
 	m_pBufferCom->Render_Buffer();
 
 	m_pGraphicDev->SetPixelShader(NULL);
-
-	D3DXCOLOR FontColor = D3DXCOLOR(240.f / 256.f, 240.f / 256.f, 240.f / 256.f, 1.f);
-	wchar_t szGauge[128];
-
-	swprintf_s(szGauge, L" Front : %.3f", m_fRatio);
-	RECT rcPlayer = { 0, 0, 200, 300 };
-	CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans30", szGauge, rcPlayer, FontColor, DT_RIGHT | DT_BOTTOM);
-
-	D3DXCOLOR FontColor1 = D3DXCOLOR(240.f / 256.f, 240.f / 256.f, 240.f / 256.f, 1.f);
-	wchar_t szGauge1[128];
-
-
-	rcPlayer = { 0, 0, 200, 200 };
-	swprintf_s(szGauge1, L" Front : %.3f", m_fLerpHp);
-	CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans30", szGauge1, rcPlayer, FontColor1, DT_RIGHT | DT_BOTTOM);
 }
 
-void CBossHpBarFront::OnCollision(CGameObject* pObject)
+void CFade::OnCollision(CGameObject* pObject)
 {
 
 }
 
-HRESULT CBossHpBarFront::Add_Component()
+HRESULT CFade::Add_Component()
 {
 	Engine::CComponent* pComponent = nullptr;
 
@@ -106,7 +93,7 @@ HRESULT CBossHpBarFront::Add_Component()
 	m_mapComponent[ID_DYNAMIC].insert({ L"Com_Transform", pComponent });
 
 	pComponent = m_pTextureCom = dynamic_cast<Engine::CTexture*>
-		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_BossHpBar"));
+		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Fade"));
 
 	if (nullptr == pComponent)
 		return E_FAIL;
@@ -116,17 +103,36 @@ HRESULT CBossHpBarFront::Add_Component()
 	return S_OK;
 }
 
-HRESULT CBossHpBarFront::Ready_PixelShader()
+void CFade::Update_Alpha()
+{
+	if (m_bFadeIn)
+	{
+		if (m_fAlpha > 0.f)
+		{
+			m_fAlpha -= 0.01f;
+		}
+	}
+	else {
+		if (m_fAlpha < 1.f)
+		{
+			m_fAlpha += 0.01f;
+		}
+	}
+
+	m_fAlpha = clamp(m_fAlpha, 0.f, 1.f);
+}
+
+HRESULT CFade::Ready_PixelShader()
 {
 	LPD3DXBUFFER pCode = NULL;
 	LPD3DXBUFFER pError = NULL;
 
 	// HLSL 파일 컴파일 
 	HRESULT hr = D3DXCompileShaderFromFile(
-		L"../Shader/BossHp.hlsl", // 파일명 
+		L"../Shader/Fade.hlsl", // 파일명 
 		NULL, // 매크로 
 		NULL, // include 
-		"PS_BossHp", // 엔트리 포인트 
+		"PS_Fade", // 엔트리 포인트 
 		"ps_2_0", // 셰이더 모델 
 		0, // 플래그 
 		&pCode,
@@ -158,25 +164,44 @@ HRESULT CBossHpBarFront::Ready_PixelShader()
 	return S_OK;
 }
 
-
-CBossHpBarFront* CBossHpBarFront::Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 _vPos, float _fScale)
+void	CFade::Ready_Event()
 {
-	CBossHpBarFront* pBossHpBarFront = new CBossHpBarFront(pGraphicDev);
+	m_hmapSubHandles.insert({ L"FadeIn", m_pMessageChannel->Subscribe(L"CutScene.Dialogue", [this](const IMessageChannel::EVENT& Event) {
+		auto CinemaTargetNameiter = Event.hmapData.find(L"CinemaTargetName");
+		if (CinemaTargetNameiter == Event.hmapData.end()) { return; }
 
-	pBossHpBarFront->m_vPos = _vPos;
-	pBossHpBarFront->m_fScale = _fScale;
-
-
-	if (FAILED(pBossHpBarFront->Ready_GameObject()))
-	{
-		Safe_Release(pBossHpBarFront);
-		MSG_BOX("pBossHpBarFront Create Failed");
-		return nullptr;
-	}
-	return pBossHpBarFront;
+		wstring strName = any_cast<wstring>(CinemaTargetNameiter->second);
+		if (strName == L"FadeIn")
+		{
+			Set_FadeIn();
+			Active();
+		}
+		if (strName == L"FadeOut")
+		{
+			Set_FadeOut();
+			Active();
+		}
+	}) });
 }
 
-void CBossHpBarFront::Free()
+
+CFade* CFade::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMessageChannel)
+{
+	CFade* pFade = new CFade(pGraphicDev);
+
+	pFade->m_pMessageChannel = pMessageChannel;
+	pFade->m_pMessageChannel->AddRef();
+
+	if (FAILED(pFade->Ready_GameObject()))
+	{
+		Safe_Release(pFade);
+		MSG_BOX("pFade Create Failed");
+		return nullptr;
+	}
+	return pFade;
+}
+
+void CFade::Free()
 {
 	m_pPixelShader->Release();
 	CUi::Free();

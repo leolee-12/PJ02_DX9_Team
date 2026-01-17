@@ -70,9 +70,15 @@ _int CGrass::Update_GameObject(const _float& fTimeDelta)
 {
 	if (g_bDebug) { m_pColliderCom->Update_AABBforRender(); }
 
+	m_pColliderCom->UpdateFromTransform(m_pTransformCom);
+
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
-	m_pColliderCom->UpdateFromTransform(m_pTransformCom);
+	if (iExit == DEAD)
+	{
+		m_pColliderCom->UnregisterFromManager();
+	}
+
 
 	m_fAccTime += fTimeDelta;
 
