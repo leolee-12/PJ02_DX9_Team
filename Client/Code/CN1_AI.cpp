@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "CN1_AI.h"
 #include "CTransform.h"
 #include "CItem.h"
@@ -155,27 +155,27 @@ void CN1_AI::Update_Idle(const _float& fTimeDelta)
 	if (!m_pTargetTC) return;
 
 	if (m_bChase)
-	{	// Å¸°ÙÀ» ÀÌ¹Ì ¹ß°ßÇßÀ» ¶§
+	{	// íƒ€ê²Ÿì„ ì´ë¯¸ ë°œê²¬í–ˆì„ ë•Œ
 		if ((m_fDistance <= m_fInteractRange) && (m_fAcmlTime >= 5.f))
-		{	// Å¸°ÙÀÌ »óÈ£ÀÛ¿ë ¹üÀ§ ³»¿¡ ÀÖÀ» ½Ã °ø°İ »óÅÂ·Î ÀüÈ¯
+		{	// íƒ€ê²Ÿì´ ìƒí˜¸ì‘ìš© ë²”ìœ„ ë‚´ì— ìˆì„ ì‹œ ê³µê²© ìƒíƒœë¡œ ì „í™˜
 			Change_State(CMonsterN1::N1S_ATTACK);
 			return;
 		}
 		else
 		{	
-			if (_uint(m_fAcmlTime) % 3 != 0)	// Å¸°ÙÀÌ »óÈ£ÀÛ¿ë ¹üÀ§ ³»¿¡ ¾øÀ» ½Ã ÀÌµ¿ »óÅÂ·Î ÀüÈ¯ÇÏ¿© ÃßÀû
+			if (_uint(m_fAcmlTime) % 3 != 0)	// íƒ€ê²Ÿì´ ìƒí˜¸ì‘ìš© ë²”ìœ„ ë‚´ì— ì—†ì„ ì‹œ ì´ë™ ìƒíƒœë¡œ ì „í™˜í•˜ì—¬ ì¶”ì 
 				Change_State(CMonsterN1::N1S_RUN);
 		}
 	}
 	else
 	{	
 		if (m_fDistance <= m_fDetectRange)
-		{	// Å¸°ÙÀÌ °¨Áö ¹üÀ§ ³»·Î ÁøÀÔ ½Ã ¹ß°ß ÈÄ ÀÌµ¿ »óÅÂ·Î ÀüÈ¯ÇÏ¿© ÃßÀû
+		{	// íƒ€ê²Ÿì´ ê°ì§€ ë²”ìœ„ ë‚´ë¡œ ì§„ì… ì‹œ ë°œê²¬ í›„ ì´ë™ ìƒíƒœë¡œ ì „í™˜í•˜ì—¬ ì¶”ì 
 			m_bChase = true;
 			Change_State(CMonsterN1::N1S_RUN);
 		}
 		else if (_uint(m_fAcmlTime) % 3 != 0)
-		{	// Å¸°ÙÀÌ °¨Áö ¹üÀ§ ³»¿¡ ¾øÀ» ¶§´Â ´ë±âÇÏ´Ù ÀÌµ¿ »óÅÂ·Î ÀüÈ¯ÇÏ¿© ¼øÂû
+		{	// íƒ€ê²Ÿì´ ê°ì§€ ë²”ìœ„ ë‚´ì— ì—†ì„ ë•ŒëŠ” ëŒ€ê¸°í•˜ë‹¤ ì´ë™ ìƒíƒœë¡œ ì „í™˜í•˜ì—¬ ìˆœì°°
 			Change_State(CMonsterN1::N1S_RUN);
 		}
 	}
@@ -186,22 +186,22 @@ void CN1_AI::Update_Run(const _float& fTimeDelta)
 	if (!m_pTargetTC) Change_State(CMonsterN1::N1S_IDLE);
 
 	if (m_bChase)
-	{	// Å¸°ÙÀ» ÀÌ¹Ì ¹ß°ßÇßÀ» ¶§
+	{	// íƒ€ê²Ÿì„ ì´ë¯¸ ë°œê²¬í–ˆì„ ë•Œ
 		if ((m_fDistance <= m_fInteractRange) && (m_fAcmlTime >= 5.f))
 		{	
 			Change_State(CMonsterN1::N1S_ATTACK);
 		}
 	}
 	else
-	{	// Å¸°ÙÀ» ¹ß°ßÇÏÁö ¸øÇßÀ» ¶§
+	{	// íƒ€ê²Ÿì„ ë°œê²¬í•˜ì§€ ëª»í–ˆì„ ë•Œ
 		if (m_fDistance <= m_fDetectRange)
-		{	// Å¸°ÙÀÌ °¨Áö ¹üÀ§ ³»·Î ÁøÀÔ ½Ã ¹ß°ß
+		{	// íƒ€ê²Ÿì´ ê°ì§€ ë²”ìœ„ ë‚´ë¡œ ì§„ì… ì‹œ ë°œê²¬
 			m_bChase = true;
 		}
 	}
 
 	if (_uint(m_fAcmlTime) % 3 == 0)
-	{	// Å¸°ÙÀÌ °¨Áö ¹üÀ§ ³»¿¡ ¾øÀ» ¶§´Â ¼øÂûÇÏ´Ù ´ë±â »óÅÂ·Î ÀüÈ¯
+	{	// íƒ€ê²Ÿì´ ê°ì§€ ë²”ìœ„ ë‚´ì— ì—†ì„ ë•ŒëŠ” ìˆœì°°í•˜ë‹¤ ëŒ€ê¸° ìƒíƒœë¡œ ì „í™˜
 		Change_State(CMonsterN1::N1S_IDLE);
 		return;
 	}
@@ -228,15 +228,15 @@ void CN1_AI::Update_Hit(const _float& fTimeDelta)
 }
 
 void CN1_AI::Update_Spawn(const _float& fTimeDelta)
-{
+{	// Empty
 }
 
 void CN1_AI::Update_Jeer(const _float& fTimeDelta)
-{
+{	// Empty
 }
 
 void CN1_AI::Update_Pray(const _float& fTimeDelta)
-{
+{	// Empty
 }
 
 void CN1_AI::Anim_End(CMonsterN1::MONSTER_N1_STATE eState)

@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "CN2_AI.h"
 #include "CTransform.h"
 
@@ -7,7 +7,6 @@ CN2_AI::CN2_AI(LPDIRECT3DDEVICE9 pGraphicDev)
 		m_fSpeed(0.f),
 		m_fAcmlTime(0.f),
 		m_bChase(false),
-		m_fAngle(0.f),
 		m_fGravity(0.f)
 {
 }
@@ -17,7 +16,6 @@ CN2_AI::CN2_AI(const CN2_AI& rhs)
 		m_fSpeed(rhs.m_fSpeed),
 		m_fAcmlTime(rhs.m_fAcmlTime),
 		m_bChase(false),
-		m_fAngle(rhs.m_fAngle),
 		m_fGravity(rhs.m_fGravity)
 {
 }
@@ -32,7 +30,6 @@ HRESULT CN2_AI::Ready_AI(const _float& fDetectRange, const _float& fInteractRang
 		return E_FAIL;
 	
 	m_fSpeed = 1.f;
-	m_fAngle = 0.f;
 	m_vSpeed = { 0.f, 0.f, 0.f};
 	m_fGravity = -9.8f;
 	m_fAcmlTime = 0.f;
@@ -56,8 +53,8 @@ void CN2_AI::Enter_State(const _uint& iState)
 		m_pOwnerTC->Get_Info(INFO_POS, &vPrevPos);
 		m_vDir = Compute_LimitedDir(60.f, m_vDir, vDesiredDir);
 		m_vLerpPos = vPrevPos + m_vDir * 3.f;
-		m_vLerpPos.x += Get_Rand_Int(-5, 5) * 0.3f;	// -1.5f ~ 1.5f ³­¼ö
-		m_vLerpPos.z += Get_Rand_Int(-5, 5) * 0.3f;	// -1.5f ~ 1.5f ³­¼ö
+		m_vLerpPos.x += Get_Rand_Int(-5, 5) * 0.3f;	// -1.5f ~ 1.5f ë‚œìˆ˜
+		m_vLerpPos.z += Get_Rand_Int(-5, 5) * 0.3f;	// -1.5f ~ 1.5f ë‚œìˆ˜
 	}
 		break;
 	case CMonsterN2::N2S_JUMP:
@@ -149,7 +146,7 @@ _int CN2_AI::Update_Component(const _float& fTimeDelta)
 void CN2_AI::Update_Crawl(const _float& fTimeDelta)
 {
 	if (m_bChase)
-	{	// Å¸°ÙÀ» ÀÌ¹Ì ¹ß°ßÇßÀ» ¶§
+	{	// íƒ€ê²Ÿì„ ì´ë¯¸ ë°œê²¬í–ˆì„ ë•Œ
 		if (m_fDistance <= m_fInteractRange)
 		{
 			if (m_fAcmlTime >= 5.f)
@@ -157,9 +154,9 @@ void CN2_AI::Update_Crawl(const _float& fTimeDelta)
 		}
 	}
 	else
-	{	// Å¸°ÙÀ» ¹ß°ßÇÏÁö ¸øÇßÀ» ¶§
+	{	// íƒ€ê²Ÿì„ ë°œê²¬í•˜ì§€ ëª»í–ˆì„ ë•Œ
 		if (m_fDistance <= m_fDetectRange)
-		{	// Å¸°ÙÀÌ °¨Áö ¹üÀ§ ³»·Î ÁøÀÔ ½Ã ¹ß°ß
+		{	// íƒ€ê²Ÿì´ ê°ì§€ ë²”ìœ„ ë‚´ë¡œ ì§„ì… ì‹œ ë°œê²¬
 			m_bChase = true;
 		}
 	}
@@ -187,7 +184,7 @@ void CN2_AI::Update_Jump(const _float& fTimeDelta)
 
 void CN2_AI::Update_Land(const _float& fTimeDelta)
 {
-	if (m_fAcmlTime < 0.2f)  // 0.2ÃÊ µ¿¾È
+	if (m_fAcmlTime < 0.2f)  // 0.2ì´ˆ ë™ì•ˆ
 	{
 		_vec3 vPos;
 		m_pOwnerTC->Get_Info(INFO_POS, &vPos);
@@ -198,7 +195,7 @@ void CN2_AI::Update_Land(const _float& fTimeDelta)
 }
 
 void CN2_AI::Update_Spawn(const _float& fTimeDelta)
-{
+{	// Empty
 }
 
 void CN2_AI::Update_Stop(const _float& fTimeDelta)

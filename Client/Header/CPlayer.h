@@ -15,7 +15,7 @@ class CTriggerPoint;
 class CPlayer : public CGameObject
 {
 public:
-	enum PLAYERSTATE { PS_IDLE, PS_RUN, PS_ROLL, PS_ATTACK, PS_CHARGE, PS_HIT, PS_ACTION, PS_TALK, PS_INTROIDLE, PS_INTRORUN, PS_INTROKNEE, PS_END };
+	enum PLAYERSTATE { PS_IDLE, PS_RUN, PS_ROLL, PS_ATTACK, PS_CHARGE, PS_HIT, PS_ACTION, PS_REBIRTH, PS_END };
 
 	// ==========================
 	//	PLAYERSTATE : 플레이어 상태 관리용 enum
@@ -29,13 +29,14 @@ private:
 	virtual ~CPlayer();
 
 public:
+	void			Set_Pos(const _vec3& vPos);
+	void			Set_Intro(_bool bUseIntro) { m_bIntro = bUseIntro; }
+
 	virtual			HRESULT		Ready_GameObject();
 	virtual			_int		Update_GameObject(const _float& fTimeDelta);
 	virtual			void		LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual			void		Render_GameObject();
 	virtual			void		OnCollision(CGameObject* pObject);
-
-	void			Set_Pos(const _vec3& vPos);
 
 private:
 	void			Ready_Variable();
@@ -53,7 +54,8 @@ private:
 	void			Check_Frame();
 	void			Move_Frame(const _float& fTimeDelta);
 	void			Set_TextureSet();
-
+	void			Set_FrameKey();
+	void			Set_Size();
 	// ==========================
 	//	Check_Frame : 상태 변경 시 Frame 초기화 및 설정해줄 값을 대입해줌
 	// 	Move_Frame : 시간 경과에 따라 Frame 값 누적, 특정 상태는 스프라이트 종료 시 IDLE 상태로 돌아가도록 세팅됨
@@ -69,11 +71,11 @@ private:
 	// ==========================
 
 private:
-	Engine::CRcTex* m_pBufferCom;
-	Engine::CTransform* m_pTransformCom;
-	Engine::CTextureSet* m_pTextureCom;
-	Engine::CCalculator* m_pCalculatorCom;
-	Engine::CCollider*	m_pColliderCom;
+	Engine::CRcTex*			m_pBufferCom;
+	Engine::CTransform*		m_pTransformCom;
+	Engine::CTextureSet*	m_pTextureCom;
+	Engine::CCalculator*	m_pCalculatorCom;
+	Engine::CCollider*		m_pColliderCom;
 
 	// 스프라이트 관련
 	PLAYERSTATE		m_ePreState;
@@ -91,6 +93,7 @@ private:
 	_int			m_iAttack;
 	_bool			m_bRoll;	// 구르기 중인지?
 	_int			m_iCombo;	// 공격 중인지? + 몇번째 콤보상태인지?
+	_bool			m_bAction;	// Action 중인지?
 
 	// 알파 소팅 관련
 	_vec3			m_vPos;
@@ -109,6 +112,8 @@ private:
 	// 트리거 관련
 	_bool			m_bCanTrigger;
 	CTriggerPoint*	m_pTriggerPoint = nullptr;
+	_bool			m_bIntro;			// Ready에서 false 처리 (Intro 스프라이트 사용하려면 Ready 이후 Set 해주기)
+	_uint			m_iInteractType;	// 상호작용하는 대상 구분용
 
 	// 캐릭터 border 처리 관련
 	_vec3 m_vPrevPos;

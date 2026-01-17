@@ -7,8 +7,6 @@ CB2_AI::CB2_AI(LPDIRECT3DDEVICE9 pGraphicDev)
 	m_fSpeed(0.f),
 	m_fAcmlTime(0.f),
 	m_bChase(false),
-	m_fAngle(0.f),
-	m_fGravity(0.f),
 	m_iDequeMinSize(3),
 	m_pOwner(nullptr),
 	m_bOnce(false)
@@ -21,8 +19,6 @@ CB2_AI::CB2_AI(const CB2_AI& rhs)
 	m_fSpeed(rhs.m_fSpeed),
 	m_fAcmlTime(rhs.m_fAcmlTime),
 	m_bChase(false),
-	m_fAngle(rhs.m_fAngle),
-	m_fGravity(rhs.m_fGravity),
 	m_iDequeMinSize(rhs.m_iDequeMinSize),
 	m_pOwner(nullptr),
 	m_bOnce(false)
@@ -41,9 +37,7 @@ HRESULT CB2_AI::Ready_AI(const _float& fDetectRange, const _float& fInteractRang
 		return E_FAIL;
 
 	m_fSpeed = 1.f;
-	m_fAngle = 0.f;
 	m_vSpeed = { 0.f, 0.f, 0.f };
-	m_fGravity = -9.8f;
 	m_fAcmlTime = 0.f;
 	m_iRcmState = _uint(CMonsterB2::B2S_SPAWN);
 
@@ -436,15 +430,15 @@ void CB2_AI::Update_Summon(const _float& fTimeDelta)
 }
 
 void CB2_AI::Update_Spawn(const _float& fTimeDelta)
-{
+{	// Empty
 }
 
 void CB2_AI::Update_Die(const _float& fTimeDelta)
-{
+{	// Empty
 }
 
 void CB2_AI::Update_Dead(const _float& fTimeDelta)
-{
+{	// Empty
 }
 
 void CB2_AI::Update_Jump(const _float& fTimeDelta)
@@ -462,12 +456,12 @@ void CB2_AI::Update_Spike1(const _float& fTimeDelta)
 		if (m_pOwner)
 		{
 			_float fSpeed = 8.f;
+			_float fRadian = 2.f * D3DX_PI * 0.2f;
 
-			m_pOwner->Summon_Spike(6, _vec3{ fSpeed * cosf(D3DXToRadian(0.f)),		0.f, fSpeed * sinf(D3DXToRadian(0.f)) });
-			m_pOwner->Summon_Spike(6, _vec3{ fSpeed * cosf(D3DXToRadian(72.f)),		0.f, fSpeed * sinf(D3DXToRadian(72.f)) });
-			m_pOwner->Summon_Spike(6, _vec3{ fSpeed * cosf(D3DXToRadian(144.f)),	0.f, fSpeed * sinf(D3DXToRadian(144.f)) });
-			m_pOwner->Summon_Spike(6, _vec3{ fSpeed * cosf(D3DXToRadian(216.f)),	0.f, fSpeed * sinf(D3DXToRadian(216.f)) });
-			m_pOwner->Summon_Spike(6, _vec3{ fSpeed * cosf(D3DXToRadian(288.f)),	0.f, fSpeed * sinf(D3DXToRadian(288.f)) });
+			for (_float f = 0.f; f < 5.f; f += 1.f)
+			{
+				m_pOwner->Summon_Spike(10, _vec3{ fSpeed * cosf(f * fRadian),	0.f, fSpeed * sinf(f * fRadian) });
+			}
 		}
 		m_bOnce = false;
 	}

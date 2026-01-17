@@ -137,7 +137,7 @@ void CMonsterB2::OnCollision(CGameObject* pObject)
 
 		const Engine::AABB& borderAABB = pBorderCol->Get_AABB();
 
-		const _float fHalf = 1.f;
+		const _float fHalf = 0.5f;
 
 		_float fOverlapX = (borderAABB.hx + fHalf) - abs(vCurPos.x - borderAABB.x);
 		_float fOverlapZ = (borderAABB.hz + fHalf) - abs(vCurPos.z - borderAABB.z);
@@ -165,7 +165,6 @@ void CMonsterB2::OnCollision(CGameObject* pObject)
 			m_pTransformCom->Update_Component(0.f);
 			m_pTransformCom->Compute_Bilboard(BBD_X);
 			m_pAICom->Set_LerpPos(vCurPos);
-
 		}
 
 		return;
@@ -247,7 +246,7 @@ void CMonsterB2::Ready_Variable()
 
 	// Anim 관련 세팅
 	m_fFrameSpeed = 24.f;
-	D3DXMatrixIdentity(&m_matTex);
+	//D3DXMatrixIdentity(&m_matTex);
 }
 
 void CMonsterB2::Ready_Event()
@@ -434,7 +433,7 @@ void CMonsterB2::Move_Frame(const _float& fTimeDelta)
 
 		case B2S_SPIKE1:
 		{
-			if ((iCurAnimFrame >= 24) && (iCurAnimFrame % 3 == 0)) m_pAICom->Set_Signal();
+			if ((iCurAnimFrame >= 24) && (iCurAnimFrame % 2 == 0)) m_pAICom->Set_Signal();
 		}
 		break;
 

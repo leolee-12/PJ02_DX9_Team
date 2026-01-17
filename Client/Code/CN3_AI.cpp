@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "CN3_AI.h"
 #include "CTransform.h"
 
@@ -55,8 +55,8 @@ void CN3_AI::Enter_State(const _uint& iState)
 		}
 		m_pOwnerTC->Get_Info(INFO_POS, &vPrevPos);
 		m_vDir = Compute_LimitedDir(60.f, m_vDir, vDesiredDir);
-		m_vDir.x += Get_Rand_Int(-5, 5) * 0.05f;	// -0.25f ~ 0.25f ³­¼ö
-		m_vDir.z += Get_Rand_Int(-5, 5) * 0.05f;	// -0.25f ~ 0.25f ³­¼ö
+		m_vDir.x += Get_Rand_Int(-5, 5) * 0.05f;	// -0.25f ~ 0.25f ë‚œìˆ˜
+		m_vDir.z += Get_Rand_Int(-5, 5) * 0.05f;	// -0.25f ~ 0.25f ë‚œìˆ˜
 		m_vDir.y = 0.f;
 		D3DXVec3Normalize(&m_vDir, &m_vDir);
 	}
@@ -143,7 +143,7 @@ void CN3_AI::Update_Fly(const _float& fTimeDelta)
 	if (!m_pTargetTC) return;
 
 	if (m_bChase)
-	{	// Å¸°ÙÀ» ÀÌ¹Ì ¹ß°ßÇßÀ» ¶§
+	{	// íƒ€ê²Ÿì„ ì´ë¯¸ ë°œê²¬í–ˆì„ ë•Œ
 		if (m_fDistance <= m_fInteractRange)
 		{
 			if (m_fAcmlTime >= 5.f)
@@ -151,9 +151,9 @@ void CN3_AI::Update_Fly(const _float& fTimeDelta)
 		}
 	}
 	else
-	{	// Å¸°ÙÀ» ¹ß°ßÇÏÁö ¸øÇßÀ» ¶§
+	{	// íƒ€ê²Ÿì„ ë°œê²¬í•˜ì§€ ëª»í–ˆì„ ë•Œ
 		if (m_fDistance <= m_fDetectRange)
-		{	// Å¸°ÙÀÌ °¨Áö ¹üÀ§ ³»·Î ÁøÀÔ ½Ã ¹ß°ß
+		{	// íƒ€ê²Ÿì´ ê°ì§€ ë²”ìœ„ ë‚´ë¡œ ì§„ì… ì‹œ ë°œê²¬
 			m_bChase = true;
 		}
 	}
@@ -161,7 +161,7 @@ void CN3_AI::Update_Fly(const _float& fTimeDelta)
 	m_pOwnerTC->Move_Pos(&m_vDir, fTimeDelta, m_fSpeed);
 
 	if (_uint(m_fAcmlTime) % 3 == 0)
-	{	// Å¸°ÙÀÌ °¨Áö ¹üÀ§ ³»¿¡ ¾øÀ» ¶§´Â ¼øÂûÇÏ´Ù ´ë±â »óÅÂ·Î ÀüÈ¯
+	{	// íƒ€ê²Ÿì´ ê°ì§€ ë²”ìœ„ ë‚´ì— ì—†ì„ ë•ŒëŠ” ìˆœì°°í•˜ë‹¤ ëŒ€ê¸° ìƒíƒœë¡œ ì „í™˜
 		Change_State(CMonsterN3::N3S_STOP);
 		return;
 	}
@@ -187,7 +187,7 @@ void CN3_AI::Update_Rush(const _float& fTimeDelta)
 }
 
 void CN3_AI::Update_Spawn(const _float& fTimeDelta)
-{
+{	// Empty
 }
 
 void CN3_AI::Update_Stop(const _float& fTimeDelta)
@@ -203,7 +203,7 @@ void CN3_AI::Update_Stop(const _float& fTimeDelta)
 	}
 
 	if (_uint(m_fAcmlTime) % 3 != 0)
-	{	// Å¸°ÙÀÌ °¨Áö ¹üÀ§ ³»¿¡ ¾øÀ» ¶§´Â ¼øÂûÇÏ´Ù ´ë±â »óÅÂ·Î ÀüÈ¯
+	{	// íƒ€ê²Ÿì´ ê°ì§€ ë²”ìœ„ ë‚´ì— ì—†ì„ ë•ŒëŠ” ìˆœì°°í•˜ë‹¤ ëŒ€ê¸° ìƒíƒœë¡œ ì „í™˜
 		Change_State(CMonsterN3::N3S_FLY);
 	}
 }
