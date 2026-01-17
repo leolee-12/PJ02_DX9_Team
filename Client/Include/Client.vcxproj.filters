@@ -412,6 +412,9 @@
     <Filter Include="02. GameObject\07. UI\06. WorldUI\01. SelectionArrow">
       <UniqueIdentifier>{67a6357b-a1f6-4b03-9a0c-a3351341b751}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\07. UI\06. WorldUI\02. Fade">
+      <UniqueIdentifier>{28fd72e2-eda9-47e1-9711-c408b8170637}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -852,6 +855,9 @@
     <ClInclude Include="..\Header\CSelectionArrow.h">
       <Filter>02. GameObject\07. UI\06. WorldUI\01. SelectionArrow</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CFade.h">
+      <Filter>02. GameObject\07. UI\06. WorldUI\02. Fade</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1255,6 +1261,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CSelectionArrow.cpp">
       <Filter>02. GameObject\07. UI\06. WorldUI\01. SelectionArrow</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CFade.cpp">
+      <Filter>02. GameObject\07. UI\06. WorldUI\02. Fade</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

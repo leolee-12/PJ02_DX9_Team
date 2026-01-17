@@ -9,6 +9,9 @@ namespace Engine
 	class CCollider;
 }
 
+class CSpeechBubble;
+class CFontUI;
+
 class CRatau : public CGameObject
 {
 public:
@@ -27,6 +30,7 @@ public:
 	virtual void		Render_GameObject();
 	virtual void		OnCollision(CGameObject* pObject);
 
+
 private:
 	HRESULT				Add_Component();
 
@@ -38,6 +42,8 @@ private:
 	void				Set_Texture();
 
 	void				Update_State();
+
+	HRESULT				Ready_Dialogue(const _vec3& vDialoguePos);
 
 private:
 	Engine::CRcTex*		m_pBufferCom;
@@ -57,6 +63,11 @@ private:
 
 	// 스테이터스 관련
 	_float		m_fGroundY;
+
+	CSpeechBubble* m_pSpeechBubble;
+	CFontUI*	   m_pFontUI;
+
+	_bool		   m_bWait = true;
 
 
 public:

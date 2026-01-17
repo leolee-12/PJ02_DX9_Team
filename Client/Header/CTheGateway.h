@@ -44,4 +44,6 @@ private:
 
 	_bool		  m_bShowSelect = false;
 	_uint		  m_iSelectSlot = 0;
+
+	_bool		  m_bSceneChangeFlag = false;
 };

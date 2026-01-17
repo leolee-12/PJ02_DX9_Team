@@ -94,7 +94,7 @@ _int CPlayer::Update_GameObject(const _float& fTimeDelta)
 	else if (!m_bMsgRegistered) Ready_Event();
 
 	m_pTransformCom->Get_Info(INFO_POS, &m_vPrevPos);
-	m_hmapSubHandles;
+	
 
 	Key_Input(fTimeDelta);
 	Move_Roll(fTimeDelta);
@@ -104,12 +104,12 @@ _int CPlayer::Update_GameObject(const _float& fTimeDelta)
 
 	//m_pColliderCom->UpdateFromTransform(m_pTransformCom);
 	
-	//------스프라이트 높이와 충돌체 위치 맞춤---------
-	_float fY(m_vPos.y - m_pTransformCom->Get_Scale(ROT_Y) * 0.125f);
-	AABB tAABB = { m_vPos.x, fY, m_vPos.z, 1.f, 1.f, 1.f };
-	m_pColliderCom->Set_AABB(tAABB);
-	m_pColliderCom->UpdateFromCustom(tAABB);
-	//-------------------------------------------------
+	////------스프라이트 높이와 충돌체 위치 맞춤---------
+	//_float fY(m_vPos.y - m_pTransformCom->Get_Scale(ROT_Y) * 0.125f);
+	//AABB tAABB = { m_vPos.x, fY, m_vPos.z, 1.f, 1.f, 1.f };
+	//m_pColliderCom->Set_AABB(tAABB);
+	//m_pColliderCom->UpdateFromCustom(tAABB);
+	////-------------------------------------------------
 
 	// 충돌체 디버그용
 	if(g_bDebug) m_pColliderCom->Update_AABBforRender();
@@ -133,7 +133,12 @@ void CPlayer::LateUpdate_GameObject(const _float& fTimeDelta)
 
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
 
-	m_pColliderCom->UpdateFromTransform(m_pTransformCom);
+	//------스프라이트 높이와 충돌체 위치 맞춤---------
+	_float fY(m_vPos.y - m_pTransformCom->Get_Scale(ROT_Y) * 0.125f);
+	AABB tAABB = { m_vPos.x, fY, m_vPos.z, 1.f, 1.f, 1.f };
+	m_pColliderCom->Set_AABB(tAABB);
+	m_pColliderCom->UpdateFromCustom(tAABB);
+	//-------------------------------------------------
 
 	m_bCanTrigger = false;
 	m_pTriggerPoint = nullptr;
@@ -216,18 +221,36 @@ void CPlayer::Ready_Event()
 
 	m_hmapSubHandles.insert({ L"CutScene.Dialogue", m_pMessageChannel->Subscribe(L"CutScene.Dialogue", [this](const IMessageChannel::EVENT& Event) {
 	{
+
+			if (!m_bAction && (m_eCurState != PS_REBIRTH)) {
+				m_eCurState = PS_IDLE;
+				}
+
 			auto CinemaTargetNameiter = Event.hmapData.find(L"CinemaTargetName");
 			if (CinemaTargetNameiter == Event.hmapData.end()) { return; }
 			auto Dothisiter = Event.hmapData.find(L"Dothis");
 			if (Dothisiter == Event.hmapData.end()) { return; }
 			if (any_cast<wstring>(CinemaTargetNameiter->second) == L"Player")
 			{
-				if (any_cast<wstring>(Dothisiter->second) == L"Start_Crying") {
+				wstring strDothis = any_cast<wstring>(Dothisiter->second);
+				if (strDothis == L"Start_Crying") {
 					Set_Crying();
+					m_pTransformCom->Set_Pos(-4.f, 0.f, 88.f);
+					m_vPos = _vec3(-4.f, 2.f, 88.f);
 					return;
 				}
-				if (any_cast<wstring>(Dothisiter->second) == L"Stop_Crying") {
+				if (strDothis == L"Stop_Crying") {
 					Set_StopCrying();
+					return;
+				}
+				if (strDothis == L"Move_Gateway") {
+					m_pTransformCom->Set_Pos(0.f, 0.f, 35.f);
+					m_vPos = _vec3(0.f, 0.f, 35.f);
+					return;
+				}
+				if (strDothis == L"LookforCam") {
+					// 문제생기면 정규화 할것
+					m_vDir = _vec3(1.f, 0.f, -1.f);
 					return;
 				}
 			}
@@ -333,7 +356,8 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 		m_pTransformCom->Set_Pos(m_vPos.x, 2.f, m_vPos.z);
 	}
 
-	if (CCutSceneMgr::GetInstance()->Get_Playing()) { return; }
+	if (CCutSceneMgr::GetInstance()->Get_Playing())			{ return; }
+	if (m_eCurState == PS_HIT || m_eCurState == PS_REBIRTH) { return; }
 
 	if (!m_bRoll && !m_iCombo && !m_fCharge && !m_bAction)
 	{
@@ -743,50 +767,10 @@ void CPlayer::Charge(const _float& fTimeDelta)
 void CPlayer::Set_Pos(const _vec3& vPos)
 {
 	m_pTransformCom->Set_Pos(vPos.x, vPos.y, vPos.z);
+	m_vPos = vPos;
 	m_pTransformCom->Update_Component(0.f);
 }
 
-//if (CDInputMgr::GetInstance()->Key_Down(DIK_F1))
-//{	// 디버그용
-//	m_bIntro = !m_bIntro;
-//	if (m_bIntro)
-//	{
-//		m_fSpeed = 7.f;
-//		_float fScale = 11.f;
-//		m_pTransformCom->Set_Scale(fScale, fScale, fScale);
-//	}
-//	else
-//	{
-//		m_fSpeed = 10.f;
-//		_float fScale = 10.f;
-//		m_pTransformCom->Set_Scale(fScale, fScale, fScale);
-//	}
-//}
-//if (CDInputMgr::GetInstance()->Key_Down(DIK_F2))
-//{	// 디버그용
-//	if (!m_bIntro) return;
-//
-//	if (!m_bAction)
-//	{
-//		m_bAction = true;
-//		m_eCurState = PS_ACTION;
-//		m_strFrameKey = L"intro_kneel";
-//	}
-//	else
-//	{
-//		m_strFrameKey = L"intro_kneel-wake";
-//	}
-//}
-//if (CDInputMgr::GetInstance()->Key_Down(DIK_F3))
-//{	// 디버그용
-//	if (!m_bIntro) return;
-//
-//	m_eCurState = PS_REBIRTH;
-//	m_strFrameKey = L"intro_rebirth";
-//	_float fScale = 20.f;
-//	m_pTransformCom->Set_Scale(fScale, fScale, fScale);
-//	m_pTransformCom->Set_Pos(m_vPos.x, 2.f, m_vPos.z);
-//}
 
 void CPlayer::Set_Tied()
 {
@@ -821,6 +805,8 @@ void CPlayer::Set_Reborn()
 	_float fScale = 20.f;
 	m_pTransformCom->Set_Scale(fScale, fScale, fScale);
 	m_pTransformCom->Set_Pos(m_vPos.x, 2.f, m_vPos.z);
+	m_vDir = _vec3(0.f, 0.f, -1.f);
+	m_fSpeed = 10.f;
 }
 
 void CPlayer::Set_MessageChannel(IMessageChannel* pMessageChannel)

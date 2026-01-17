@@ -38,6 +38,7 @@ HRESULT CTileMgr::Initialize(LPDIRECT3DDEVICE9 pGraphicDev, const Engine::MAPDAT
 	}
 
 	m_bInitialized = true;
+	m_bSkipFirstFrame = true;
 
 	return S_OK;
 }
@@ -46,6 +47,12 @@ _int CTileMgr::Update(const _float& fTimeDelta)
 {
 	if (!m_bInitialized)
 		return 0;
+
+	if (m_bSkipFirstFrame)
+	{
+		m_bSkipFirstFrame = false;
+		return 0;
+	}
 
 	for (auto& pTile : m_vecTiles)
 	{

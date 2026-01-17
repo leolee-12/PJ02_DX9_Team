@@ -213,6 +213,9 @@ void CMultiLoadingThread::Loading_for_Tutorial()
     m_TexturLoadingqueue.push(TEXLR(L"Proto_SpeechBubble", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Etc/dds/SpeechBubble.dds", 1));
     m_iTotalProtoCount++;
 
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_Fade", TEX_NORMAL, L"../Bin/Resource/YSH/Etc/Fade.png", 1));
+	m_iTotalProtoCount++;
+
     // ===== TextureSet 큐 등록 (멀티스레드 로딩) =====
     vector<TEXSETLR> vecBishopLeshy;
     vecBishopLeshy.push_back(TEXSETLR(L"Bishop_Leshy_Idle", L"../Bin/Resource/Texture/Bishops/Leshy/Leshy-idle/dds/Leshy_idle-%d.dds", 250));
@@ -450,6 +453,11 @@ void CMultiLoadingThread::Loading_for_Dungeon()
 	m_TexSetLoadingqueue.push(make_pair(TEXSETINFO(L"Proto_Follower3Texture", TEX_NORMAL), vecFollower3));
 	m_iTotalProtoCount++;
 
+	//디버그용 바로진입 프로토타입
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_SpeechBubble", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Etc/dds/SpeechBubble.dds", 1));
+	m_iTotalProtoCount++;
+	//디버그용 바로진입 프로토타입
+
 }
 
 void CMultiLoadingThread::Loading_for_TheGateway()
@@ -470,6 +478,9 @@ void CMultiLoadingThread::Loading_for_TheGateway()
 
 	//디버그용 바로진입 프로토타입
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_SpeechBubble", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Etc/dds/SpeechBubble.dds", 1));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_Fade", TEX_NORMAL, L"../Bin/Resource/YSH/Etc/Fade.png", 1));
 	m_iTotalProtoCount++;
 	//디버그용 바로진입 프로토타입
 }
@@ -527,6 +538,7 @@ void CMultiLoadingThread::NonTex_for_Boss()
 
 void CMultiLoadingThread::NonTex_for_Test()
 {
+	CPersistentMgr::GetInstance()->Ready_GlobalObjects(m_pGraphicDev);
 }
 
 void CMultiLoadingThread::NonTex_for_KnuckleBone()

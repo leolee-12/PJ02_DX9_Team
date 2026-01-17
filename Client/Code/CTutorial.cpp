@@ -29,6 +29,7 @@
 #include "CMapBorder.h"
 #include "CLoading.h"
 #include "CManagement.h"
+#include "CFade.h"
 
 CTutorial::CTutorial(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -73,7 +74,7 @@ HRESULT CTutorial::Ready_Scene()
 	tTutoIntro.strName = L"Tutorial_00";
 	tTutoIntro.vecSteps =
 	{
-		{_vec3(-3.8f, 0.f, 3.6f), 1.f, 0.25f, L"Intro", L"",ADV_TIMED, 3.f}
+		{_vec3(-3.8f, 0.f, 3.6f), 1.f, 0.25f, L"FadeIn", L"",ADV_TIMED, 3.f}
 	};
 
 	CCutSceneMgr::GetInstance()->Register_CutScene(tTutoIntro);
@@ -96,6 +97,20 @@ _int CTutorial::Update_Scene(const _float& fTimeDelta)
 	}
 
 	_int iExit = Engine::CScene::Update_Scene(fTimeDelta);
+
+	if (m_bSceneChangeFlag)
+	{
+		Engine::CScene* pLoading = CLoading::Create(m_pGraphicDev, LOADING_THEGATEWAY);
+
+		if (nullptr == pLoading)
+			return NOEVENT;
+
+		if (FAILED(CManagement::GetInstance()->Set_Scene(pLoading)))
+		{
+			MSG_BOX("Stage Scene Failed");
+			return NOEVENT;
+		}
+	}
 
 	return iExit;
 }
@@ -343,6 +358,21 @@ HRESULT CTutorial::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 
 HRESULT CTutorial::Ready_UI_Layer(const _tchar* pLayerTag)
 {
+	CLayer* pLayer = CLayer::Create();
+	if (nullptr == pLayer)
+		return E_FAIL;
+
+	CGameObject* pGameObject = nullptr;
+
+	pGameObject = CFade::Create(m_pGraphicDev, m_pMessageChannel);
+
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+
+	if (FAILED(pLayer->Add_GameObject(L"Fade", pGameObject)))
+		return E_FAIL;
+
+	m_mapLayer.insert({ pLayerTag , pLayer });
+
 	return S_OK;
 }
 
@@ -351,16 +381,7 @@ void CTutorial::Ready_Event()
 	m_hmapSubHandles.insert({ L"CutScene.End", m_pMessageChannel->Subscribe(L"CutScene.End", [this](const IMessageChannel::EVENT& Event) {
 	if (any_cast<wstring>(Event.hmapData.find(L"SceneName")->second) == L"Tutorial_01")
 	{
-		Engine::CScene* pLoading = CLoading::Create(m_pGraphicDev, LOADING_THEGATEWAY);
-
-		if (nullptr == pLoading)
-			return;
-
-		if (FAILED(CManagement::GetInstance()->Set_Scene(pLoading)))
-		{
-			MSG_BOX("Stage Scene Failed");
-			return;
-		}
+		m_bSceneChangeFlag = true;
 	}
 	}) });
 }
