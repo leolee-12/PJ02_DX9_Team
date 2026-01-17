@@ -302,7 +302,9 @@ void CMonsterN1::Check_Frame()
 
 void CMonsterN1::Move_Frame(const _float& fTimeDelta)
 {
+	_uint m_iPreAnim = _uint(m_fFrame);
 	m_fFrame += m_fFrameSpeed * fTimeDelta;
+	_uint m_iCurAnim = _uint(m_fFrame);
 
 	if (m_fFrame >= m_fFrameEnd)
 	{
@@ -338,6 +340,15 @@ void CMonsterN1::Move_Frame(const _float& fTimeDelta)
 			m_pAICom->Anim_End(m_eCurState);
 			m_eCurState = N1S_IDLE;
 			break;
+		}
+	}
+	else if (m_iPreAnim != m_iCurAnim)
+	{
+		if (m_eAttackPhase == EXECUTE)
+		{
+			if ((m_iCurAnim == 1) ||
+				(m_iCurAnim == 7) ||
+				(m_iCurAnim == 13)) Attack_HitBox();
 		}
 	}
 }

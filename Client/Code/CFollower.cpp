@@ -13,7 +13,8 @@ CFollower::CFollower(LPDIRECT3DDEVICE9 pGraphicDev)
 	m_eCurState(FOLLOWER_IDLE),
 	m_fFrame(0.f),
 	m_fFrameEnd(0.f),
-	m_fFrameSpeed(0.f)
+	m_fFrameSpeed(0.f),
+	m_eInteractType(NONE)
 {
 }
 
@@ -23,7 +24,8 @@ CFollower::CFollower(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChanne
 	m_eCurState(FOLLOWER_IDLE),
 	m_fFrame(0.f),
 	m_fFrameEnd(0.f),
-	m_fFrameSpeed(0.f)
+	m_fFrameSpeed(0.f),
+	m_eInteractType(NONE)
 {
 }
 
@@ -34,7 +36,8 @@ CFollower::CFollower(const CFollower& rhs)
 	m_eCurState(FOLLOWER_IDLE),
 	m_fFrame(0.f),
 	m_fFrameEnd(0.f),
-	m_fFrameSpeed(0.f)
+	m_fFrameSpeed(0.f),
+	m_eInteractType(NONE)
 {
 }
 
@@ -114,30 +117,34 @@ void CFollower::OnCollision(CGameObject* pObject)
 
 		const Engine::AABB& borderAABB = pBorderCol->Get_AABB();
 
-		const _float fPlayerHalf = 0.5f;
+		const _float fHalf = 1.f;
 
-		_float fOverlapX = (borderAABB.hx + fPlayerHalf) - abs(vCurPos.x - borderAABB.x);
-		_float fOverlapZ = (borderAABB.hz + fPlayerHalf) - abs(vCurPos.z - borderAABB.z);
+		_float fOverlapX = (borderAABB.hx + fHalf) - abs(vCurPos.x - borderAABB.x);
+		_float fOverlapZ = (borderAABB.hz + fHalf) - abs(vCurPos.z - borderAABB.z);
 
 		if (fOverlapX > 0.f && fOverlapZ > 0.f)
 		{
 			if (fOverlapX < fOverlapZ)
 			{
+				// X축 보정
 				if (vCurPos.x < borderAABB.x)
-					vCurPos.x -= fOverlapX + 0.1f;
+					vCurPos.x = borderAABB.x - borderAABB.hx - fHalf - 0.01f;
 				else
-					vCurPos.x += fOverlapX + 0.1f;
+					vCurPos.x = borderAABB.x + borderAABB.hx + fHalf + 0.01f;
 			}
-			else
+			else if (fOverlapX > fOverlapZ)
 			{
+				// Z축 보정
 				if (vCurPos.z < borderAABB.z)
-					vCurPos.z -= fOverlapZ + 0.1f;
+					vCurPos.z = borderAABB.z - borderAABB.hz - fHalf - 0.01f;
 				else
-					vCurPos.z += fOverlapZ + 0.1f;
+					vCurPos.z = borderAABB.z + borderAABB.hz + fHalf + 0.01f;
 			}
 
 			m_pTransformCom->Set_Pos(vCurPos.x, vCurPos.y, vCurPos.z);
-
+			m_pTransformCom->Update_Component(0.f);
+			m_pTransformCom->Compute_Bilboard(BBD_X);
+			m_vLerpPos = vCurPos;
 		}
 
 		return;
@@ -166,7 +173,7 @@ HRESULT CFollower::Add_Component()
 
 	// Texture
 	pComponent = m_pTextureCom = dynamic_cast<Engine::CTexture*>
-		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_TarotSellerTexture"));
+		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(m_strProtoKey));
 
 	NULL_CHECK_RETURN(pComponent, E_FAIL)
 
@@ -186,8 +193,8 @@ HRESULT CFollower::Add_Component()
 void CFollower::Ready_Variable()
 {
 	// 게임로직 변수 세팅
-	_float fScale = 7.f;
-	m_fGroundY = -2.5f + fScale * 0.5f;
+	_float fScale = 9.f;
+	m_fGroundY = -2.5f + fScale * 0.5f - 1.8f;
 	m_iHp = 10;
 
 	// Transform 세팅
@@ -195,7 +202,7 @@ void CFollower::Ready_Variable()
 	m_pTransformCom->Set_Scale(fScale, fScale, fScale);
 
 	// Collider 세팅
-	m_pColliderCom->RegisterToManager(this, CL_MONSTER);
+	m_pColliderCom->RegisterToManager(this, CL_NPC);
 
 	// Anim 관련 세팅
 	m_fFrameSpeed = 24.f;
@@ -212,6 +219,71 @@ void CFollower::Check_Frame()
 		return;
 
 	m_fFrame = 0.f;
+
+	switch (m_eCurState)
+	{
+	case FOLLOWER_IDLE:
+		m_fFrameEnd = 24.f;
+		break;
+
+	case FOLLOWER_RUN:
+		m_fFrameEnd = 14.f;
+		break;
+
+	case FOLLOWER_DANCE:
+		m_fFrameEnd = 47.f;
+		break;
+
+	case FOLLOWER_TRANSFORM:
+		m_fFrameEnd = 88.f;
+		break;
+
+	case FOLLOWER_UNCONVERT:
+		m_fFrameEnd = 48.f;
+		break;
+
+	case FOLLOWER_CONVERT:
+		m_fFrameEnd = 85.f;
+		break;
+
+	case FOLLOWER_ACTION:
+	{
+		m_eInteractType = INTERACT_TYPE(Get_Rand_Int(0, 5));
+
+		switch (m_eInteractType)
+		{
+		case NONE:	// (IDLE로 전환)
+			m_fFrameEnd = 24.f;
+			break;
+
+		case WOOD:
+			m_fFrameEnd = 98.f;
+			break;
+
+		case ROCK:
+			m_fFrameEnd = 46.f;
+			break;
+
+		case BUILD:
+			m_fFrameEnd = 83.f;
+			break;
+
+		case FOOD:
+			m_fFrameEnd = 40.f;
+			break;
+
+		case PRAY:
+			m_fFrameEnd = 60.f;
+			break;
+		}
+	}
+		break;
+
+	case FOLLOWER_RECRUIT:
+		m_iRecruitState = 0;
+		m_fFrameEnd = 20.f;
+		break;
+	}
 
 	switch (m_eCurState)
 	{
@@ -238,96 +310,137 @@ void CFollower::Move_Frame(const _float& fTimeDelta)
 	if (m_fFrame >= m_fFrameEnd)
 	{
 		m_fFrame = 0.f;
-		m_eCurState = FOLLOWER_STATE(Get_Rand_Int(1, FOLLOWER_END) - 1);
+
+		if (m_eCurState != FOLLOWER_RECRUIT)
+			m_eCurState = FOLLOWER_STATE(Get_Rand_Int(1, FOLLOWER_END) - 1);
+		else
+		{
+			if (m_iRecruitState == 0)
+			{
+				m_iRecruitState = 1;
+				m_fFrameEnd = 96;
+			}
+			else if (m_iRecruitState == 1)
+			{
+				m_iRecruitState = 2;
+				m_fFrameEnd = 75;
+			}
+			else if (m_iRecruitState == 2)
+			{
+				m_eCurState = FOLLOWER_STATE(Get_Rand_Int(1, FOLLOWER_END) - 1);
+			}
+		}
 	}
 }
 
-void CFollower::Set_TextureSet()
+void CFollower::Set_Texture()
 {
-	wstring strPreKey = m_strFrameKey;
+	//_bool bFilpX = vDir.x > 0.f ? true : false;	// 반전 여부
+	_uint iFrame = _uint(m_fFrame);					// 현재 프레임
+	_uint iTexIdx = _uint(m_eCurState);
+	D3DXMatrixIdentity(&m_matTex);
+	_uint iU = iFrame % 16;
+	_uint iV = iFrame / 16;
 
-	_uint iFrame = _uint(m_fFrame);				// 현재 프레임
+	m_matTex._11 = 0.0625f;	// 가로는 16칸 고정
+	m_matTex._22 = 0.125f;	// 세로는 8칸 고정(Follower)
 
 	switch (m_eCurState)
 	{
-	case B2S_IDLE:
-		m_strFrameKey = L"BossLeshy_Idle";
+	case FOLLOWER_IDLE:
 		break;
 
-	case B2S_DIG:
-		m_strFrameKey = L"BossLeshy_Dig";
+	case FOLLOWER_RUN:
 		break;
 
-	case B2S_ESCAPE:
-		m_strFrameKey = L"BossLeshy_Escape";
+	case FOLLOWER_DANCE:
 		break;
 
-	case B2S_HIT:
-		m_strFrameKey = L"BossLeshy_Hit";
+	case FOLLOWER_TRANSFORM:
 		break;
 
-	case B2S_SMASH:
-		m_strFrameKey = L"BossLeshy_Smash";
+	case FOLLOWER_UNCONVERT:
 		break;
 
-	case B2S_SHOOT:
-		m_strFrameKey = L"BossLeshy_Summon";
+	case FOLLOWER_CONVERT:
 		break;
 
-	case B2S_SUMMON:
-		m_strFrameKey = L"BossLeshy_Summon";
+	case FOLLOWER_ACTION:
+	{
+		switch(m_eInteractType)
+		{
+		case NONE:
+			iTexIdx = 0;
+			break;
+		case WOOD:
+			iTexIdx = 6;
+			break;
+		case ROCK:
+			iTexIdx = 7;
+			break;
+		case BUILD:
+			iTexIdx = 8;
+			break;
+		case FOOD:
+			iTexIdx = 9;
+			break;
+		case PRAY:
+			iTexIdx = 10;
+			break;
+		}
+	}
 		break;
 
-	case B2S_SPAWN:
-		m_strFrameKey = L"BossLeshy_Spawn";
-		break;
-
-	case B2S_DIE:
-		m_strFrameKey = L"BossLeshy_Die";
-		break;
-
-	case B2S_DEAD:
-		m_strFrameKey = L"BossLeshy_Dead";
-		break;
-
-	case B2S_SPIKE1:
-	case B2S_SPIKE2:
-		m_strFrameKey = L"BossLeshy_Spike";
+	case FOLLOWER_RECRUIT:
+	{
+		switch (m_iRecruitState)
+		{
+		case 0:	// START
+			iTexIdx = 11;
+			break;
+		case 1:	// LOOP
+			iTexIdx = 12;
+			break;
+		case 2:	// END
+			iTexIdx = 13;
+			break;
+		}
+	}
 		break;
 	}
 
-	if (m_strFrameKey != strPreKey) m_fFrame = 0.f;
-
-	m_fFrameEnd = m_pTexSetCom->Get_TextureEnd(m_strFrameKey);
-
-	//_vec3 vDir = *(m_pAICom->Get_Dir());		// AI로부터 받아온 방향
-	//_bool bFlipX = vDir.x > 0.f ? true : false;	// 반전 여부
-	//
-	//if (bFlipX)
+	//if (bFilpX)
 	//{
 	//	m_matTex._11 *= -1.f;
-	//	m_matTex._31 = 1.f;	// 반전 O : 오른쪽에서 왼쪽으로 읽음
+	//	m_matTex._31 = _float(iU + 1) * 0.125f;	// 반전 O : 오른쪽에서 왼쪽으로 읽음
 	//}
-	//
-	//m_pGraphicDev->SetTransform(D3DTS_TEXTURE0, &m_matTex);
-	//
-	//D3DXMatrixIdentity(&m_matTex);
+	//else
+	//{
+	m_matTex._31 = _float(iU) * 0.0625f;	// 반전 X : 왼쪽에서 오른쪽으로 읽음
+	//}
 
-	m_pTexSetCom->Set_Texture(m_strFrameKey, _uint(m_fFrame));
+	m_matTex._32 = _float(iV) * 0.125f;
+
+	m_pGraphicDev->SetTransform(D3DTS_TEXTURE0, &m_matTex);
+
+	m_pTextureCom->Set_Texture(_uint(m_eCurState));
 }
 
-CFollower* CFollower::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel)
-{
-	CFollower* pTarotSeller = new CFollower(pGraphicDev, StageChannel);
 
-	if (FAILED(pTarotSeller->Ready_GameObject()))
+CFollower* CFollower::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, const _tchar* pProtoKey)
+{
+	CFollower* pFollower = new CFollower(pGraphicDev, StageChannel);
+
+	pFollower->m_strProtoKey = pProtoKey;
+
+	if (FAILED(pFollower->Ready_GameObject()))
 	{
-		Safe_Release(pTarotSeller);
-		MSG_BOX("pTarotSeller Create Failed");
+		Safe_Release(pFollower);
+		MSG_BOX("pFollower Create Failed");
 		return nullptr;
 	}
 
-	return pTarotSeller;
+	return pFollower;
 }
 
 void CFollower::Free()

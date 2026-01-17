@@ -38,6 +38,7 @@
 #include "CTarotSeller.h"
 #include "CBrute.h"
 #include "CBossHpBar.h"
+#include "CFollower.h"
 
 CDungeon::CDungeon(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -415,6 +416,26 @@ HRESULT CDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 
+	if (FAILED(pLayer->Add_GameObject(L"NPC", pGameObject)))
+		return E_FAIL;
+
+	pGameObject = CFollower::Create(m_pGraphicDev, m_pMessageChannel, L"Proto_Follower1Texture");
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	if (FAILED(pLayer->Add_GameObject(L"NPC", pGameObject)))
+		return E_FAIL;
+
+	pGameObject = CFollower::Create(m_pGraphicDev, m_pMessageChannel, L"Proto_Follower2Texture");
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	if (FAILED(pLayer->Add_GameObject(L"NPC", pGameObject)))
+		return E_FAIL;
+
+	pGameObject = CFollower::Create(m_pGraphicDev, m_pMessageChannel, L"Proto_Follower3Texture");
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	if (FAILED(pLayer->Add_GameObject(L"NPC", pGameObject)))
+		return E_FAIL;
+
+	pGameObject = CFollower::Create(m_pGraphicDev, m_pMessageChannel, L"Proto_Follower4Texture");
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	if (FAILED(pLayer->Add_GameObject(L"NPC", pGameObject)))
 		return E_FAIL;
 

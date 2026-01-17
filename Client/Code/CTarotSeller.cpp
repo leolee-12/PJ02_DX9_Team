@@ -59,14 +59,10 @@ _int CTarotSeller::Update_GameObject(const _float& fTimeDelta)
 {
 	Move_Frame(fTimeDelta);
 
-	m_pColliderCom->UpdateFromTransform(m_pTransformCom);
-	// 충돌체 디버그용
-	if (g_bDebug) m_pColliderCom->Update_AABBforRender();
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
 	if (iExit == DEAD)
 	{
-		m_pColliderCom->UnregisterFromManager();
 		return iExit;
 	}
 
@@ -131,14 +127,6 @@ HRESULT CTarotSeller::Add_Component()
 
 		m_mapComponent[ID_STATIC].insert({ L"Com_Texture", pComponent });
 
-	// Collider
-	pComponent = m_pColliderCom = dynamic_cast<Engine::CCollider*>
-		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Collider"));
-
-	NULL_CHECK_RETURN(pComponent, E_FAIL)
-
-		m_mapComponent[ID_STATIC].insert({ L"Com_Collider", pComponent });
-
 	return S_OK;
 }
 
@@ -153,8 +141,6 @@ void CTarotSeller::Ready_Variable()
 	m_pTransformCom->Set_Pos(_float(rand() % 20), m_fGroundY, _float(rand() % 20) + 80.f);
 	m_pTransformCom->Set_Scale(fScale, fScale, fScale);
 
-	// Collider 세팅
-	m_pColliderCom->RegisterToManager(this, CL_MONSTER);
 
 	// Anim 관련 세팅
 	m_fFrameSpeed = 24.f;
@@ -176,7 +162,7 @@ void CTarotSeller::Check_Frame()
 	{
 	case TAROT_IDLE:
 	{
-		m_fFrameEnd = 256.f;
+		m_fFrameEnd = 248.f;
 	}
 	break;
 

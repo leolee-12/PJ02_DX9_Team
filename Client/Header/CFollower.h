@@ -5,16 +5,17 @@ namespace Engine
 {
 	class CRcTex;
 	class CTransform;
-	class CTextureSet;
+	class CTexture;
 	class CCollider;
 }
 
 class CFollower : public CGameObject
 {
 public:
-	enum FOLLOWER_STATE {	FOLLOWER_IDLE,	FOLLOWER_RUN,		FOLLOWER_WOOD,
-							FOLLOWER_ROCK,	FOLLOWER_PRAY,		FOLLOWER_BUILD,
-							FOLLOWER_DANCE,	FOLLOWER_RECRUIT,	FOLLOWER_END };
+	enum FOLLOWER_STATE {	FOLLOWER_IDLE,		FOLLOWER_RUN,		FOLLOWER_DANCE,		FOLLOWER_TRANSFORM,	FOLLOWER_UNCONVERT,
+							FOLLOWER_CONVERT,	FOLLOWER_ACTION,	FOLLOWER_RECRUIT,	FOLLOWER_END };
+
+	enum INTERACT_TYPE { NONE, WOOD, ROCK, BUILD, FOOD, PRAY, INTERACT_END };
 
 private:
 	explicit	CFollower(LPDIRECT3DDEVICE9 pGraphicDev);
@@ -34,17 +35,15 @@ private:
 
 	void				Ready_Variable();
 	void				Ready_Event();
-
 	void				Check_Frame();
 	void				Move_Frame(const _float& fTimeDelta);
-	void				Set_TextureSet();
-
+	void				Set_Texture();
 	void				Update_State();
 
 private:
 	Engine::CRcTex*			m_pBufferCom;
 	Engine::CTransform*		m_pTransformCom;
-	Engine::CTextureSet*	m_pTexSetCom;
+	Engine::CTexture*		m_pTextureCom;
 	Engine::CCollider*		m_pColliderCom;
 
 	_vec3				m_vPos;
@@ -57,13 +56,16 @@ private:
 	_float			m_fFrameSpeed;
 	_matrix			m_matTex;
 	_uint			m_iTexIdx;
-	wstring			m_strFrameKey[FOLLOWER_END];
+	wstring			m_strProtoKey;
 
 	// 스테이터스 관련
 	_float			m_fGroundY;
+	INTERACT_TYPE	m_eInteractType;
+	_vec3			m_vLerpPos;
+	_uint			m_iRecruitState;
 
 public:
-	static CFollower* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel);
+	static CFollower*	Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, const _tchar* pProtoTexKey);
 
 private:
 	virtual void		Free();
