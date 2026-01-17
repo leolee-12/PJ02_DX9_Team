@@ -1,5 +1,5 @@
 ﻿#include "pch.h"
-#include "CRatau.h"
+#include "CBrute.h"
 #include "CProtoMgr.h"
 #include "CManagement.h"
 #include "CRenderer.h"
@@ -7,42 +7,44 @@
 #include "CCollisionMgr.h"
 #include "CN1_AI.h"
 
-CRatau::CRatau(LPDIRECT3DDEVICE9 pGraphicDev)
+CBrute::CBrute(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev),
-	m_ePreState(RATAU_END),
-	m_eCurState(RATAU_ENTER),
+	m_ePreState(BRUTE_END),
+	m_eCurState(BRUTE_IDLE),
 	m_fFrame(0.f),
 	m_fFrameEnd(0.f),
 	m_fFrameSpeed(0.f)
 {
 }
 
-CRatau::CRatau(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel)
+CBrute::CBrute(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel)
 	: CGameObject(pGraphicDev, StageChannel),
-	m_ePreState(RATAU_END),
-	m_eCurState(RATAU_ENTER),
+	m_ePreState(BRUTE_END),
+	m_eCurState(BRUTE_IDLE),
 	m_fFrame(0.f),
 	m_fFrameEnd(0.f),
-	m_fFrameSpeed(0.f)
+	m_fFrameSpeed(0.f),
+	m_fGroundY(0.f)
 {
 }
 
 
-CRatau::CRatau(const CRatau& rhs)
+CBrute::CBrute(const CBrute& rhs)
 	: CGameObject(rhs),
-	m_ePreState(RATAU_END),
-	m_eCurState(RATAU_ENTER),
+	m_ePreState(BRUTE_END),
+	m_eCurState(BRUTE_IDLE),
 	m_fFrame(0.f),
 	m_fFrameEnd(0.f),
-	m_fFrameSpeed(0.f)
+	m_fFrameSpeed(0.f),
+	m_fGroundY(rhs.m_fGroundY)
 {
 }
 
-CRatau::~CRatau()
+CBrute::~CBrute()
 {
 }
 
-HRESULT CRatau::Ready_GameObject()
+HRESULT CBrute::Ready_GameObject()
 {
 	m_eOBJID = OID_NPC;
 
@@ -55,14 +57,18 @@ HRESULT CRatau::Ready_GameObject()
 	return S_OK;
 }
 
-_int CRatau::Update_GameObject(const _float& fTimeDelta)
+_int CBrute::Update_GameObject(const _float& fTimeDelta)
 {
 	Move_Frame(fTimeDelta);
 
+	m_pColliderCom->UpdateFromTransform(m_pTransformCom);
+	// 충돌체 디버그용
+	if (g_bDebug) m_pColliderCom->Update_AABBforRender();
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
 	if (iExit == DEAD)
 	{
+		m_pColliderCom->UnregisterFromManager();
 		return iExit;
 	}
 
@@ -71,7 +77,7 @@ _int CRatau::Update_GameObject(const _float& fTimeDelta)
 	return iExit;
 }
 
-void CRatau::LateUpdate_GameObject(const _float& fTimeDelta)
+void CBrute::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	Check_Frame();
 
@@ -82,7 +88,7 @@ void CRatau::LateUpdate_GameObject(const _float& fTimeDelta)
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
 }
 
-void CRatau::Render_GameObject()
+void CBrute::Render_GameObject()
 {
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
 
@@ -95,11 +101,11 @@ void CRatau::Render_GameObject()
 	m_pGraphicDev->SetTextureStageState(0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE);
 }
 
-void CRatau::OnCollision(CGameObject* pObject)
+void CBrute::OnCollision(CGameObject* pObject)
 {
 }
 
-HRESULT CRatau::Add_Component()
+HRESULT CBrute::Add_Component()
 {
 	Engine::CComponent* pComponent = nullptr;
 
@@ -121,36 +127,48 @@ HRESULT CRatau::Add_Component()
 
 	// Texture
 	pComponent = m_pTextureCom = dynamic_cast<Engine::CTexture*>
-		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_RatauTexture"));
+		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_BruteTexture"));
 
 	NULL_CHECK_RETURN(pComponent, E_FAIL)
 
 		m_mapComponent[ID_STATIC].insert({ L"Com_Texture", pComponent });
 
+	// Collider
+	pComponent = m_pColliderCom = dynamic_cast<Engine::CCollider*>
+		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Collider"));
+
+	NULL_CHECK_RETURN(pComponent, E_FAIL)
+
+		m_mapComponent[ID_STATIC].insert({ L"Com_Collider", pComponent });
+
 	return S_OK;
 }
 
-void CRatau::Ready_Variable()
+void CBrute::Ready_Variable()
 {
 	// 게임로직 변수 세팅
-	_float fScale = 10.f;
-	m_fGroundY = -2.5f + fScale * 0.5f - 3.f;
+	_float fScale = 17.f;
+	m_fGroundY = -2.5f + fScale * 0.5f - 2.5f;
 	m_iHp = 10;
+	m_fAcmlTime = 0.f;
 
 	// Transform 세팅
-	m_pTransformCom->Set_Pos(125.f, m_fGroundY, 15.f);
+	m_pTransformCom->Set_Pos(10.f, m_fGroundY, 80.f);
 	m_pTransformCom->Set_Scale(fScale, fScale, fScale);
+
+	// Collider 세팅
+	m_pColliderCom->RegisterToManager(this, CL_MONSTER);
 
 	// Anim 관련 세팅
 	m_fFrameSpeed = 24.f;
 	D3DXMatrixIdentity(&m_matTex);
 }
 
-void CRatau::Ready_Event()
+void CBrute::Ready_Event()
 {
 }
 
-void CRatau::Check_Frame()
+void CBrute::Check_Frame()
 {
 	if (m_ePreState == m_eCurState)
 		return;
@@ -159,27 +177,33 @@ void CRatau::Check_Frame()
 
 	switch (m_eCurState)
 	{
-	case RATAU_IDLE:
+	case BRUTE_IDLE:
+	{
+		m_fFrameEnd = 32.f;
+	}
+	break;
+
+	case BRUTE_RUN:
+	{
+		m_fFrameEnd = 20.f;
+	}
+	break;
+
+	case BRUTE_JEER:
+	{
+		m_fFrameEnd = 25.f;
+	}
+	break;
+
+	case BRUTE_EXECUTE1:
 	{
 		m_fFrameEnd = 64.f;
 	}
 	break;
 
-	case RATAU_TALK:
-	{
-		m_fFrameEnd = 64.f;
-	}
-	break;
-
-	case RATAU_ENTER:
+	case BRUTE_EXECUTE2:
 	{
 		m_fFrameEnd = 33.f;
-	}
-	break;
-
-	case RATAU_EXIT:
-	{
-		m_fFrameEnd = 56.f;
 	}
 	break;
 	}
@@ -187,9 +211,10 @@ void CRatau::Check_Frame()
 	m_ePreState = m_eCurState;
 }
 
-void CRatau::Move_Frame(const _float& fTimeDelta)
+void CBrute::Move_Frame(const _float& fTimeDelta)
 {
 	m_fFrame += m_fFrameSpeed * fTimeDelta;
+	m_fAcmlTime += fTimeDelta;
 
 	if (m_fFrame >= m_fFrameEnd)
 	{
@@ -197,26 +222,22 @@ void CRatau::Move_Frame(const _float& fTimeDelta)
 
 		switch (m_eCurState)
 		{
-		case RATAU_ENTER:
-			m_eCurState = RATAU_IDLE;
+		case BRUTE_JEER:
+			m_eCurState = BRUTE_IDLE;
 			break;
 
-		case RATAU_IDLE:
-			m_eCurState = RATAU_TALK;
+		case BRUTE_EXECUTE1:
+			m_eCurState = BRUTE_EXECUTE2;
 			break;
 
-		case RATAU_TALK:
-			m_eCurState = RATAU_EXIT;
-			break;
-
-		case RATAU_EXIT:
-			m_eCurState = RATAU_ENTER;
+		case BRUTE_EXECUTE2:
+			m_eCurState = BRUTE_IDLE;
 			break;
 		}
 	}
 }
 
-void CRatau::Set_Texture()
+void CBrute::Set_Texture()
 {
 	//_bool bFilpX = vDir.x > 0.f ? true : false;	// 반전 여부
 	_uint iFrame = _uint(m_fFrame);					// 현재 프레임
@@ -230,16 +251,19 @@ void CRatau::Set_Texture()
 
 	switch (m_eCurState)
 	{
-	case RATAU_IDLE:
+	case BRUTE_IDLE:
 		break;
 
-	case RATAU_TALK:
+	case BRUTE_RUN:
 		break;
 
-	case RATAU_ENTER:
+	case BRUTE_JEER:
 		break;
 
-	case RATAU_EXIT:
+	case BRUTE_EXECUTE1:
+		break;
+
+	case BRUTE_EXECUTE2:
 		break;
 	}
 
@@ -250,7 +274,7 @@ void CRatau::Set_Texture()
 	//}
 	//else
 	//{
-		m_matTex._31 = _float(iU) * 0.125f;	// 반전 X : 왼쪽에서 오른쪽으로 읽음
+	m_matTex._31 = _float(iU) * 0.125f;	// 반전 X : 왼쪽에서 오른쪽으로 읽음
 	//}
 
 	m_matTex._32 = _float(iV) * 0.125f;
@@ -260,23 +284,23 @@ void CRatau::Set_Texture()
 	m_pTextureCom->Set_Texture(_uint(m_eCurState));
 }
 
-CRatau* CRatau::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, _vec3 vPos)
+CBrute* CBrute::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, _vec3 vPos)
 {
-	CRatau* pRatau = new CRatau(pGraphicDev, StageChannel);
+	CBrute* pBrute = new CBrute(pGraphicDev, StageChannel);
 
-	if (FAILED(pRatau->Ready_GameObject()))
+	if (FAILED(pBrute->Ready_GameObject()))
 	{
-		Safe_Release(pRatau);
-		MSG_BOX("pRatau Create Failed");
+		Safe_Release(pBrute);
+		MSG_BOX("pBrute Create Failed");
 		return nullptr;
 	}
 
-	pRatau->m_pTransformCom->Set_Pos(vPos.x, pRatau->m_fGroundY, vPos.z);
+	pBrute->m_pTransformCom->Set_Pos(vPos.x, pBrute->m_fGroundY, vPos.z);
 
-	return pRatau;
+	return pBrute;
 }
 
-void CRatau::Free()
+void CBrute::Free()
 {
 	CGameObject::Free();
 }

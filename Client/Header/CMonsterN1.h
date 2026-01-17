@@ -24,11 +24,14 @@ private:
 	virtual		~CMonsterN1();
 
 public:
+	void				Set_Dir(const _vec3& vDir);
+
 	virtual HRESULT		Ready_GameObject();
 	virtual _int		Update_GameObject(const _float& fTimeDelta);
 	virtual void		LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual void		Render_GameObject();
 	virtual void		OnCollision(CGameObject* pObject);
+
 
 private:
 	HRESULT				Add_Component();
@@ -59,6 +62,7 @@ private:
 
 public:
 	static CMonsterN1*	Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel);
+	static CMonsterN1* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, const _vec3& vPos, MONSTER_N1_STATE eState = N1S_SPAWN);
 
 private:
 	virtual void		Free();

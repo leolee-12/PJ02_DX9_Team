@@ -101,19 +101,7 @@ _int CPlayer::Update_GameObject(const _float& fTimeDelta)
 	Charge(fTimeDelta);
 
 	Move_Frame(fTimeDelta);
-
-	//m_pColliderCom->UpdateFromTransform(m_pTransformCom);
 	
-	//------스프라이트 높이와 충돌체 위치 맞춤---------
-	_float fY(m_vPos.y - m_pTransformCom->Get_Scale(ROT_Y) * 0.125f);
-	AABB tAABB = { m_vPos.x, fY, m_vPos.z, 1.f, 1.f, 1.f };
-	m_pColliderCom->Set_AABB(tAABB);
-	m_pColliderCom->UpdateFromCustom(tAABB);
-	//-------------------------------------------------
-
-	// 충돌체 디버그용
-	if(g_bDebug) m_pColliderCom->Update_AABBforRender();
-
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
 	Set_OnTerrain();
@@ -133,7 +121,15 @@ void CPlayer::LateUpdate_GameObject(const _float& fTimeDelta)
 
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
 
-	m_pColliderCom->UpdateFromTransform(m_pTransformCom);
+	//------스프라이트 높이와 충돌체 위치 맞춤---------
+	_float fY(m_vPos.y - m_pTransformCom->Get_Scale(ROT_Y) * 0.125f);
+	AABB tAABB = { m_vPos.x, fY, m_vPos.z, 1.f, 1.f, 1.f };
+	m_pColliderCom->Set_AABB(tAABB);
+	m_pColliderCom->UpdateFromCustom(tAABB);
+	//-------------------------------------------------
+
+	// 충돌체 디버그용
+	if (g_bDebug) m_pColliderCom->Update_AABBforRender();
 
 	m_bCanTrigger = false;
 	m_pTriggerPoint = nullptr;
@@ -163,6 +159,7 @@ void CPlayer::Ready_Variable()
 	m_fSpeed = 10.f;
 	m_iAttack = 1;
 	m_iHp = 10;
+	m_fAcmlTime = 0.f;
 
 	m_eOBJID = OID_PLAYER;
 	_float fScale = 10.f;
@@ -208,7 +205,7 @@ void CPlayer::Ready_Event()
 	{
 		if (Target == this)
 		{
-			m_iHp -= any_cast<_int>(Event.hmapData.find(L"Attack")->second);
+			Attacked(any_cast<_int>(Event.hmapData.find(L"Attack")->second));
 		}
 
 	}
@@ -337,7 +334,8 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 		m_pTransformCom->Set_Pos(m_vPos.x, 2.f, m_vPos.z);
 	}
 
-	if (CCutSceneMgr::GetInstance()->Get_Playing()) { return; }
+	if (CCutSceneMgr::GetInstance()->Get_Playing())				{ return; }
+	if ((m_eCurState == PS_HIT) || (m_eCurState == PS_REBIRTH))	{ return; }
 
 	if (!m_bRoll && !m_iCombo && !m_fCharge && !m_bAction)
 	{
@@ -398,7 +396,7 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 
 	if (GetAsyncKeyState('P'))
 	{
-		m_iHp = 0;
+		Attacked(1);
 	}
 
 	// 인트로 상태에서는 사용 불가
@@ -411,7 +409,7 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 		m_bRoll = true;
 		m_eCurState = PS_ROLL;
 		m_vRollPos = m_vPos + m_vDir * 5.f;
-		m_fLerp = 0.2f;
+		m_fLerp = 0.25f;
 	}
 
 	if (GetAsyncKeyState(VK_LBUTTON) & 0x0001)	// 눌렀을 때 한 번만 true
@@ -531,10 +529,15 @@ void CPlayer::Check_Frame()
 	}
 	break;
 
+	case PS_HIT:
+	{
+		m_fFrameEnd = m_pTextureCom->Get_TextureEnd(L"knockback");
+	}
+
 	case PS_ACTION:
 	{
-		if (m_bIntro)	m_fFrameEnd = _float(m_pTextureCom->Get_TextureEnd(L"intro_kneel"));
-		else			m_fFrameEnd = _float(m_pTextureCom->Get_TextureEnd(L"action"));
+		if (m_bIntro)	m_fFrameEnd = m_pTextureCom->Get_TextureEnd(L"intro_kneel");
+		else			m_fFrameEnd = m_pTextureCom->Get_TextureEnd(L"action");
 	}
 	break;
 
@@ -551,6 +554,7 @@ void CPlayer::Check_Frame()
 void CPlayer::Move_Frame(const _float& fTimeDelta)
 {
 	m_fFrame += m_fFrameSpeed * fTimeDelta;
+	m_fAcmlTime += fTimeDelta;
 
 	if (m_fFrame > m_fFrameEnd)
 	{
@@ -582,6 +586,12 @@ void CPlayer::Move_Frame(const _float& fTimeDelta)
 		}
 		break;
 
+		case PS_HIT:
+		{
+			m_eCurState = PS_IDLE;
+		}
+		break;
+
 		case PS_ACTION:
 		{
 			if		(m_strFrameKey == L"intro_kneel")		m_strFrameKey = L"intro_kneel-loop";
@@ -597,6 +607,7 @@ void CPlayer::Move_Frame(const _float& fTimeDelta)
 		{
 			m_bIntro = false;
 			m_eCurState = PS_IDLE;
+			m_fSpeed = 10.f;
 			_float fScale = 10.f;
 			m_pTransformCom->Set_Scale(fScale, fScale, fScale);
 			m_pTransformCom->Set_Pos(m_vPos.x, 0.f, m_vPos.z);
@@ -638,7 +649,6 @@ void CPlayer::Set_FrameKey()
 		{
 		case PS_IDLE:
 		{
-
 			if (m_vDir == m_vNormDir[DIR_UP] || m_vDir == m_vNormDir[DIR_LU] || m_vDir == m_vNormDir[DIR_RU]) m_strFrameKey = L"intro_idle-up";
 			else m_strFrameKey = L"intro_idle";
 		}
@@ -700,6 +710,10 @@ void CPlayer::Set_FrameKey()
 		}
 		break;
 
+		case PS_HIT:
+			m_strFrameKey = L"knockback";
+			break;
+
 		case PS_CHARGE:
 		case PS_ACTION:
 		{
@@ -707,24 +721,6 @@ void CPlayer::Set_FrameKey()
 		}
 		break;
 		}
-	}
-}
-
-void CPlayer::Set_Size()
-{
-	if (m_bIntro)
-	{
-		m_fSpeed = 8.f;
-		_float fScale = 4.f;
-		m_pTransformCom->Set_Scale(fScale, fScale, fScale);
-		m_pTransformCom->Set_Pos(m_vPos.x, -1.f, m_vPos.z);
-	}
-	else
-	{
-		m_fSpeed = 10.f;
-		_float fScale = 10.f;
-		m_pTransformCom->Set_Scale(fScale, fScale, fScale);
-		m_pTransformCom->Set_Pos(m_vPos.x, 0.f, m_vPos.z);
 	}
 }
 
@@ -774,6 +770,26 @@ void CPlayer::Attack_HitBox()
 		EAttack.hmapData.emplace(L"Target", tempVec);
 		m_pMessageChannel->Publish(EAttack);
 	}
+}
+
+void CPlayer::Attacked(_int iDamage)
+{
+	if ((m_eCurState == PS_ROLL) || (m_fAcmlTime < INVINCIBLE_TIME)) return;
+
+	if(m_iHp >= 2) m_iHp -= iDamage;	// 시연용
+
+	if (m_eCurState == PS_HIT) return;
+
+	if (m_eCurState == PS_CHARGE)
+	{
+		if (m_strFrameKey == L"charge-end") return;
+		else m_fCharge = 0.f;
+	}
+	else if (m_eCurState == PS_ACTION)
+	{ m_bAction = false; return; }
+
+	m_eCurState = PS_HIT;
+	m_fAcmlTime = 0.f;
 }
 
 void	CPlayer::OnCollision(CGameObject* pObject)
