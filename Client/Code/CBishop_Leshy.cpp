@@ -4,6 +4,7 @@
 #include "CRenderer.h"
 #include "CFontUI.h"
 #include "CSpeechBubble.h"
+#include "CSoundMgr.h"
 
 CBishop_Leshy::CBishop_Leshy(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev), m_pBufferCom(nullptr), m_pTransformCom(nullptr), m_pTextureCom(nullptr)
@@ -202,6 +203,7 @@ void CBishop_Leshy::Ready_Event()
 			m_pSpeechBubble->Active();
 			m_pFontUI->Active();
 			m_eCurState = Bishops::BS_TALK;
+			CSoundMgr::GetInstance()->Play(L"bc_Leshy.wav", SOUND_DIALOUGE, 0.1f);
 		}
 	) });
 

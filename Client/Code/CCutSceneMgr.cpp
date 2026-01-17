@@ -2,6 +2,7 @@
 #include "CCutSceneMgr.h"
 #include "CDInputMgr.h"
 #include "Trigger_Enum.h"
+#include "CSoundMgr.h"
 
 CCutSceneMgr* CCutSceneMgr::m_pInstance = nullptr;
 
@@ -82,7 +83,11 @@ void CCutSceneMgr::Key_Input_CutScene()
 {
 	if (CDInputMgr::GetInstance()->Key_Down(DIK_RETURN))
 	{
-		if (m_bDialogueEnd) { Next_Step(); }
+		if (m_bDialogueEnd)
+		{
+			CSoundMgr::GetInstance()->StopSound(SOUND_DIALOUGE);
+			Next_Step();
+		}
 		else
 		{
 			CUTSCENE_STEP& tStep = m_pCurrentCutScene->vecSteps[m_iCurrentStep];

@@ -382,6 +382,9 @@
     <Filter Include="02. GameObject\07. UI\05. CookingUI\01.CookingSelect\04.CookingInfoCard\02.CookingUpDownArrow">
       <UniqueIdentifier>{68e905df-c0a4-4262-afb2-b3bb80e5ea4a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\13. Bishops\04. Narinder">
+      <UniqueIdentifier>{ecbd203a-cadb-4569-8e75-5086beff5fe2}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02. GameObject\07. UI\07.BossHpBar">
       <UniqueIdentifier>{399d7d32-c442-474d-a3f1-c1faeaacd158}</UniqueIdentifier>
     </Filter>
@@ -813,6 +816,9 @@
     <ClInclude Include="..\Header\CBossHpBar.h">
       <Filter>02. GameObject\07. UI\07.BossHpBar</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CNarinder.h">
+      <Filter>02. GameObject\13. Bishops\04. Narinder</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1195,6 +1201,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CBossHpBar.cpp">
       <Filter>02. GameObject\07. UI\07.BossHpBar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CNarinder.cpp">
+      <Filter>02. GameObject\13. Bishops\04. Narinder</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

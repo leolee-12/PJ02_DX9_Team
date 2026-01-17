@@ -1,12 +1,12 @@
 ﻿#include "pch.h"
-#include "CBishop_Kallamar.h"
+#include "CNarinder.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
 #include "CFontUI.h"
 #include "CSpeechBubble.h"
 #include "CSoundMgr.h"
 
-CBishop_Kallamar::CBishop_Kallamar(LPDIRECT3DDEVICE9 pGraphicDev)
+CNarinder::CNarinder(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev), m_pBufferCom(nullptr), m_pTransformCom(nullptr), m_pTextureCom(nullptr)
 	, m_iFrame(0), m_iFrameEnd(0)
 	, m_eCurState(Bishops::BS_END), m_ePreState(Bishops::BS_END)
@@ -16,31 +16,31 @@ CBishop_Kallamar::CBishop_Kallamar(LPDIRECT3DDEVICE9 pGraphicDev)
 	ZeroMemory(&m_tSpawndata, sizeof(Engine::SPAWNDATA));
 }
 
-CBishop_Kallamar::~CBishop_Kallamar()
+CNarinder::~CNarinder()
 {
 }
 
-HRESULT CBishop_Kallamar::Ready_GameObject()
+HRESULT CNarinder::Ready_GameObject()
 {
 	if (FAILED(Add_Component()))
 		return E_FAIL;
 
 	Ready_Event();
 
-	m_pTransformCom->Set_Scale(232.f * 0.025f, 436.f * 0.025f, 0.f);
+	m_pTransformCom->Set_Scale(1000.f * 0.04f, 514.f * 0.04f, 0.f);
 
-	_vec3 vPos = { m_tSpawndata.x * 0.8f, 2.f, m_tSpawndata.z * 0.8f };
+	_vec3 vPos = { m_tSpawndata.x * 0.8f, 5.f, m_tSpawndata.z * 0.8f };
 	m_pTransformCom->Set_Pos(vPos.x, vPos.y, vPos.z);
 
 	m_eCurState = Bishops::BS_IDLE;
 
-	vPos.y += 10.f;
+	vPos.y += 12.5f;
 	Ready_Dialogue(vPos);
 
 	return S_OK;
 }
 
-HRESULT CBishop_Kallamar::Ready_Material()
+HRESULT CNarinder::Ready_Material()
 {
 	D3DMATERIAL9			tMtrl;
 	ZeroMemory(&tMtrl, sizeof(D3DMATERIAL9));
@@ -57,7 +57,7 @@ HRESULT CBishop_Kallamar::Ready_Material()
 	return S_OK;
 }
 
-_int CBishop_Kallamar::Update_GameObject(const _float& fTimeDelta)
+_int CNarinder::Update_GameObject(const _float& fTimeDelta)
 {
 	Update_State();
 	Update_Frame(fTimeDelta);
@@ -71,7 +71,7 @@ _int CBishop_Kallamar::Update_GameObject(const _float& fTimeDelta)
 	return iExit;
 }
 
-void CBishop_Kallamar::LateUpdate_GameObject(const _float& fTimeDelta)
+void CNarinder::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	m_pTransformCom->Compute_Bilboard(BBD_X);
 	m_pTransformCom->Get_Info(INFO_POS, &m_vPos);
@@ -80,7 +80,7 @@ void CBishop_Kallamar::LateUpdate_GameObject(const _float& fTimeDelta)
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
 }
 
-void CBishop_Kallamar::Render_GameObject()
+void CNarinder::Render_GameObject()
 {
 	//m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, FALSE);
 
@@ -96,12 +96,12 @@ void CBishop_Kallamar::Render_GameObject()
 	//m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, TRUE);
 }
 
-void CBishop_Kallamar::OnCollision(CGameObject* pObject)
+void CNarinder::OnCollision(CGameObject* pObject)
 {
 
 }
 
-HRESULT CBishop_Kallamar::Add_Component()
+HRESULT CNarinder::Add_Component()
 {
 	Engine::CComponent* pComponent = nullptr;
 
@@ -124,7 +124,7 @@ HRESULT CBishop_Kallamar::Add_Component()
 	m_mapComponent[ID_DYNAMIC].insert({ L"Com_Transform", pComponent });
 
 	pComponent = m_pTextureCom = dynamic_cast<Engine::CTextureSet*>
-		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_BishopKallamar"));
+		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Narinder"));
 
 	if (nullptr == pComponent)
 		return E_FAIL;
@@ -134,19 +134,19 @@ HRESULT CBishop_Kallamar::Add_Component()
 	return S_OK;
 }
 
-void		CBishop_Kallamar::Update_State()
+void		CNarinder::Update_State()
 {
 	if (m_eCurState != m_ePreState)
 	{
 		switch (m_eCurState)
 		{
 		case Bishops::BS_IDLE:
-			m_strStateKey = L"Bishop_Kallamar_Idle";
+			m_strStateKey = L"Narinder_Idle";
 			m_iFrame = 0;
 			m_iFrameEnd = m_pTextureCom->Get_TextureEnd(m_strStateKey);
 			break;
 		case Bishops::BS_TALK:
-			m_strStateKey = L"Bishop_Kallamar_Talk";
+			m_strStateKey = L"Narinder_Talk";
 			m_iFrame = 0;
 			m_iFrameEnd = m_pTextureCom->Get_TextureEnd(m_strStateKey);
 			break;
@@ -156,7 +156,7 @@ void		CBishop_Kallamar::Update_State()
 
 }
 
-void CBishop_Kallamar::Update_Frame(const _float& fTimeDelta)
+void CNarinder::Update_Frame(const _float& fTimeDelta)
 {
 	if (m_iFrame < m_iFrameEnd)
 	{
@@ -176,13 +176,13 @@ void CBishop_Kallamar::Update_Frame(const _float& fTimeDelta)
 	}
 }
 
-void CBishop_Kallamar::Ready_Event()
+void CNarinder::Ready_Event()
 {
 	m_hmapSubHandles.insert({ L"Dialogue", m_pMessageChannel->Subscribe(L"CutScene.Dialogue", [this](const IMessageChannel::EVENT& Event)
 		{
 			auto TargetNameiter = Event.hmapData.find(L"TargetName");
 			if (TargetNameiter == Event.hmapData.end()) { return; }
-			if (any_cast<wstring>(TargetNameiter->second) != L"Bishop_Kallamar")
+			if (any_cast<wstring>(TargetNameiter->second) != L"Narinder")
 			{
 				m_pSpeechBubble->UnActive();
 				m_pFontUI->UnActive();
@@ -198,7 +198,9 @@ void CBishop_Kallamar::Ready_Event()
 			m_pSpeechBubble->Active();
 			m_pFontUI->Active();
 			m_eCurState = Bishops::BS_TALK;
-			CSoundMgr::GetInstance()->Play(L"bc_kallamar.wav", SOUND_DIALOUGE, 0.1f);
+			_tchar strSoundName[128] = L"";
+			swprintf_s(strSoundName, L"Deathcat%d.wav", Get_Rand_Int(6, 12));
+			CSoundMgr::GetInstance()->Play(strSoundName, SOUND_DIALOUGE, 0.1f);
 		}
 	) });
 
@@ -206,7 +208,7 @@ void CBishop_Kallamar::Ready_Event()
 		{
 			auto SceneNameiter = Event.hmapData.find(L"SceneName");
 			if (SceneNameiter == Event.hmapData.end()) { return; }
-			if (any_cast<wstring>(SceneNameiter->second) != L"Tutorial_01")
+			if (any_cast<wstring>(SceneNameiter->second) == L"TheGateway_01")
 			{
 				m_pSpeechBubble->UnActive();
 				m_pFontUI->UnActive();
@@ -217,7 +219,7 @@ void CBishop_Kallamar::Ready_Event()
 	) });
 }
 
-HRESULT CBishop_Kallamar::Ready_Dialogue(const _vec3& vDialoguePos)
+HRESULT CNarinder::Ready_Dialogue(const _vec3& vDialoguePos)
 {
 	m_pFontUI = CFontUI::Create(m_pGraphicDev, m_pMessageChannel);
 
@@ -227,35 +229,36 @@ HRESULT CBishop_Kallamar::Ready_Dialogue(const _vec3& vDialoguePos)
 	m_pFontUI->Set_FontColor(D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
 	//DT_CENTER | DT_VCENTER
 	m_pFontUI->Set_Flags(DT_CENTER | DT_VCENTER);
-	m_pFontUI->Set_Scale(_vec2(500.f, 150.f));
+	m_pFontUI->Set_Scale(_vec2(600.f, 150.f));
 
 	m_pFontUI->Set_WorldPos(vDialoguePos);
+	m_pFontUI->Set_RenderOwnerName(L"기다리는 자");
 
-	m_pSpeechBubble = CSpeechBubble::Create(m_pGraphicDev, vDialoguePos, _vec2(500.f, 150.f));
+	m_pSpeechBubble = CSpeechBubble::Create(m_pGraphicDev, vDialoguePos, _vec2(600.f, 150.f));
 
 	if (m_pSpeechBubble == nullptr) { return E_FAIL; }
 }
 
 
-CBishop_Kallamar* CBishop_Kallamar::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMessageChannel, const Engine::SPAWNDATA& tSpawndata)
+CNarinder* CNarinder::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMessageChannel, const Engine::SPAWNDATA& tSpawndata)
 {
-	CBishop_Kallamar* pBishop_Kallamar = new CBishop_Kallamar(pGraphicDev);
+	CNarinder* pBishop_Shamura = new CNarinder(pGraphicDev);
 
-	pBishop_Kallamar->m_tSpawndata = tSpawndata;
-	pBishop_Kallamar->m_pMessageChannel = pMessageChannel;
-	pBishop_Kallamar->m_pMessageChannel->AddRef();
+	pBishop_Shamura->m_tSpawndata = tSpawndata;
+	pBishop_Shamura->m_pMessageChannel = pMessageChannel;
+	pBishop_Shamura->m_pMessageChannel->AddRef();
 
-	if (FAILED(pBishop_Kallamar->Ready_GameObject()))
+	if (FAILED(pBishop_Shamura->Ready_GameObject()))
 	{
-		Safe_Release(pBishop_Kallamar);
-		MSG_BOX("pBishop_Kallamar Create Failed");
+		Safe_Release(pBishop_Shamura);
+		MSG_BOX("CNarinder Create Failed");
 		return nullptr;
 	}
 
-	return pBishop_Kallamar;
+	return pBishop_Shamura;
 }
 
-void CBishop_Kallamar::Free()
+void CNarinder::Free()
 {
 	Safe_Release(m_pSpeechBubble);
 	Safe_Release(m_pFontUI);

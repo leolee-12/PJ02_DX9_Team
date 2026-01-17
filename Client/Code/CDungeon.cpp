@@ -62,7 +62,7 @@ HRESULT CDungeon::Ready_Scene()
 
 	Ready_Light();
 
-	CCollisionMgr::GetInstance()->Ready_CollisionMgr();
+	//CCollisionMgr::GetInstance()->Ready_CollisionMgr();
 
 	Ready_Event();
 
