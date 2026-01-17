@@ -20,27 +20,12 @@ HRESULT CBossHpBarFront::Ready_GameObject()
 	if (FAILED(Add_Component()))
 		return E_FAIL;
 
+	Ready_PixelShader();
+
 	m_pTransformCom->Set_Scale(59 * 2*m_fScale, 7 * m_fScale, 0.1f);
 	m_pTransformCom->Set_Pos(m_vPos.x, m_vPos.y, m_vPos.z);
 
 	m_fRatio = 1.0f;
-
-	return S_OK;
-}
-
-HRESULT CBossHpBarFront::Ready_Material()
-{
-	D3DMATERIAL9			tMtrl;
-	ZeroMemory(&tMtrl, sizeof(D3DMATERIAL9));
-
-	tMtrl.Diffuse = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-	tMtrl.Specular = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-	tMtrl.Ambient = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-
-	tMtrl.Emissive = D3DXCOLOR(1.f, 0.f, 0.f, 1.f);
-	tMtrl.Power = 0.f;
-
-	m_pGraphicDev->SetMaterial(&tMtrl);
 
 	return S_OK;
 }
@@ -66,15 +51,31 @@ void CBossHpBarFront::Render_GameObject()
 {
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
 
+	m_pGraphicDev->SetPixelShader(m_pPixelShader);
+	m_pGraphicDev->SetPixelShaderConstantF(0, &m_fLerpHp, 1);
+	m_pGraphicDev->SetPixelShaderConstantF(1, &m_fRatio, 1);
+
+
 	m_pTextureCom->Set_Texture();
 	
 	m_pBufferCom->Render_Buffer();
+
+	m_pGraphicDev->SetPixelShader(NULL);
+
 	D3DXCOLOR FontColor = D3DXCOLOR(240.f / 256.f, 240.f / 256.f, 240.f / 256.f, 1.f);
-	wchar_t szGauge[16];
+	wchar_t szGauge[128];
 
 	swprintf_s(szGauge, L" Front : %.3f", m_fRatio);
 	RECT rcPlayer = { 0, 0, 200, 300 };
 	CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans30", szGauge, rcPlayer, FontColor, DT_RIGHT | DT_BOTTOM);
+
+	D3DXCOLOR FontColor1 = D3DXCOLOR(240.f / 256.f, 240.f / 256.f, 240.f / 256.f, 1.f);
+	wchar_t szGauge1[128];
+
+
+	rcPlayer = { 0, 0, 200, 200 };
+	swprintf_s(szGauge1, L" Front : %.3f", m_fLerpHp);
+	CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans30", szGauge1, rcPlayer, FontColor1, DT_RIGHT | DT_BOTTOM);
 }
 
 void CBossHpBarFront::OnCollision(CGameObject* pObject)
@@ -105,12 +106,54 @@ HRESULT CBossHpBarFront::Add_Component()
 	m_mapComponent[ID_DYNAMIC].insert({ L"Com_Transform", pComponent });
 
 	pComponent = m_pTextureCom = dynamic_cast<Engine::CTexture*>
-		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_BossHpBarFront"));
+		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_BossHpBar"));
 
 	if (nullptr == pComponent)
 		return E_FAIL;
 
 	m_mapComponent[ID_STATIC].insert({ L"Com_Texture", pComponent });
+
+	return S_OK;
+}
+
+HRESULT CBossHpBarFront::Ready_PixelShader()
+{
+	LPD3DXBUFFER pCode = NULL;
+	LPD3DXBUFFER pError = NULL;
+
+	// HLSL 파일 컴파일 
+	HRESULT hr = D3DXCompileShaderFromFile(
+		L"../Shader/BossHp.hlsl", // 파일명 
+		NULL, // 매크로 
+		NULL, // include 
+		"PS_BossHp", // 엔트리 포인트 
+		"ps_2_0", // 셰이더 모델 
+		0, // 플래그 
+		&pCode,
+		&pError,
+		NULL);
+
+	if (FAILED(hr))
+	{
+		if (pError)
+		{
+			MessageBoxA(NULL,
+				(char*)pError->GetBufferPointer(),
+				"Shader Error",
+				MB_OK);
+			pError->Release();
+		}
+		return E_FAIL;
+	} // 픽셀 셰이더 생성 
+
+	if (pCode) {
+		m_pGraphicDev->CreatePixelShader((DWORD*)pCode->GetBufferPointer(), &m_pPixelShader);
+		pCode->Release();
+	}
+
+	if (pError) {
+		pError->Release();
+	}
 
 	return S_OK;
 }
@@ -135,5 +178,6 @@ CBossHpBarFront* CBossHpBarFront::Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 _v
 
 void CBossHpBarFront::Free()
 {
+	m_pPixelShader->Release();
 	CUi::Free();
 }

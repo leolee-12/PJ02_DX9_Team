@@ -29,7 +29,6 @@ private:
 	virtual			void		Free();
 
 	HRESULT						Add_Component();
-	HRESULT						Ready_Material();
 
 private:
 	CRcTex* m_pBufferCom;

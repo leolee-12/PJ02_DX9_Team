@@ -364,12 +364,17 @@ void CMultiLoadingThread::Loading_for_Dungeon()
 	m_iTotalProtoCount++;
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingSelectButton", TEX_NORMAL, L"../Bin/Resource/YSD/CookingSelect/Button_%d.png", 2));
 	m_iTotalProtoCount++;
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_BossHpBarFront", TEX_NORMAL, L"../Bin/Resource/YSD/BossHpBar/BossHpBarRed.png", 1));
+	/*m_TexturLoadingqueue.push(TEXLR(L"Proto_BossHpBarFront", TEX_NORMAL, L"../Bin/Resource/YSD/BossHpBar/BossHpBarRed.png", 1));
 	m_iTotalProtoCount++;
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_BossHpBarMiddle", TEX_NORMAL, L"../Bin/Resource/YSD/BossHpBar/BossHpBarWhite.png", 1));
 	m_iTotalProtoCount++;
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_BossHpBarBackground", TEX_NORMAL, L"../Bin/Resource/YSD/BossHpBar/BossHpBarBackgorund.png", 1));
+	m_iTotalProtoCount++;*/
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_BossHpBarCover", TEX_NORMAL, L"../Bin/Resource/YSH/UI/BossHpBarCover.png", 1));
 	m_iTotalProtoCount++;
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_BossHpBar", TEX_NORMAL, L"../Bin/Resource/YSH/UI/BossHpBarRed.png", 1));
+	m_iTotalProtoCount++;
+
 	// 덴저러스 수동 PNG존 지뢰밟지않게 조심할것
 
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingCardInfoFaithTexture", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/dds/FaithTexture.dds", 1));
