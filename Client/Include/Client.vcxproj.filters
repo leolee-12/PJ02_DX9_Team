@@ -385,6 +385,18 @@
     <Filter Include="02. GameObject\13. Bishops\04. Narinder">
       <UniqueIdentifier>{ecbd203a-cadb-4569-8e75-5086beff5fe2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\07. UI\07.BossHpBar">
+      <UniqueIdentifier>{399d7d32-c442-474d-a3f1-c1faeaacd158}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. UI\07.BossHpBar\00.BossHpBarFront">
+      <UniqueIdentifier>{39aa04ff-0d07-4ba2-b828-728be7b5c53c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. UI\07.BossHpBar\02.BossHpBarBackground">
+      <UniqueIdentifier>{5429114f-5307-4f92-bd5e-191770916fb2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. UI\07.BossHpBar\01.BossHpBarMiddle">
+      <UniqueIdentifier>{91f37026-5e3e-482e-914e-78b0757da388}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -792,6 +804,18 @@
     <ClInclude Include="..\Header\CCookingTarget.h">
       <Filter>02. GameObject\07. UI\05. CookingUI\00.CookingMiniGame\04.CookingTarget</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CBossHpBarFront.h">
+      <Filter>02. GameObject\07. UI\07.BossHpBar\00.BossHpBarFront</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CBossHpBarMiddle.h">
+      <Filter>02. GameObject\07. UI\07.BossHpBar\01.BossHpBarMiddle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CBossHpBarBackground.h">
+      <Filter>02. GameObject\07. UI\07.BossHpBar\02.BossHpBarBackground</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CBossHpBar.h">
+      <Filter>02. GameObject\07. UI\07.BossHpBar</Filter>
+    </ClInclude>
     <ClInclude Include="..\Header\CNarinder.h">
       <Filter>02. GameObject\13. Bishops\04. Narinder</Filter>
     </ClInclude>
@@ -1165,6 +1189,18 @@
     </ClCompile>
     <ClCompile Include="..\Code\CCookingInfoFaith.cpp">
       <Filter>02. GameObject\07. UI\05. CookingUI\01.CookingSelect\04.CookingInfoCard\01.CookingInfoCardFaith</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CBossHpBarFront.cpp">
+      <Filter>02. GameObject\07. UI\07.BossHpBar\00.BossHpBarFront</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CBossHpBarMiddle.cpp">
+      <Filter>02. GameObject\07. UI\07.BossHpBar\01.BossHpBarMiddle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CBossHpBarBackground.cpp">
+      <Filter>02. GameObject\07. UI\07.BossHpBar\02.BossHpBarBackground</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CBossHpBar.cpp">
+      <Filter>02. GameObject\07. UI\07.BossHpBar</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CNarinder.cpp">
       <Filter>02. GameObject\13. Bishops\04. Narinder</Filter>

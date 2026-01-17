@@ -68,7 +68,7 @@ _int CLogo::Update_Scene(const _float& fTimeDelta)
 			switch (m_eLogoState)
 			{
 			case LS_START:
-				LSTmp = LOADING_THEGATEWAY;
+				LSTmp = LOADING_DUNGEON;
 				break;
 			case LS_EDIT:
 				// 임시입니다.
