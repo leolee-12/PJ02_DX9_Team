@@ -176,9 +176,9 @@ HRESULT CDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 		"../Bin/Resource/Maps/MapData/Dungeon.txt", mapData)))
 	{
 
-//		pGameObject = CMySkyBox::Create(m_pGraphicDev, mapData.skyType);
-//		if (pGameObject)
-//			pLayer->Add_GameObject(L"SkyBox", pGameObject);
+		pGameObject = CMySkyBox::Create(m_pGraphicDev, mapData.skyType);
+		if (pGameObject)
+			pLayer->Add_GameObject(L"SkyBox", pGameObject);
 
 		// Tile
 		CTileMgr::GetInstance()->Initialize(m_pGraphicDev, mapData);

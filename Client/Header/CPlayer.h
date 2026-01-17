@@ -93,6 +93,7 @@ private:
 	_int			m_iAttack;
 	_bool			m_bRoll;	// 구르기 중인지?
 	_int			m_iCombo;	// 공격 중인지? + 몇번째 콤보상태인지?
+	_bool			m_bAction;	// Action 중인지?
 
 	// 알파 소팅 관련
 	_vec3			m_vPos;

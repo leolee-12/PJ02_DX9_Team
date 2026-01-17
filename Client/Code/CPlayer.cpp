@@ -27,7 +27,8 @@ CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
 	m_fCharge(0.f),
 	m_fChargeMax(3.f),
 	m_bMsgRegistered(false),
-	m_bIntro(false)
+	m_bIntro(false),
+	m_bAction(false)
 {
 }
 
@@ -46,7 +47,8 @@ CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel)
 		m_fCharge(0.f),
 		m_fChargeMax(3.f),
 		m_bMsgRegistered(false),
-		m_bIntro(false)
+		m_bIntro(false),
+		m_bAction(false)
 {
 }
 
@@ -66,7 +68,8 @@ CPlayer::CPlayer(const CPlayer& rhs)
 		m_fCharge(0.f),
 		m_fChargeMax(rhs.m_fChargeMax),
 		m_bMsgRegistered(rhs.m_bMsgRegistered),
-		m_bIntro(rhs.m_bIntro)
+		m_bIntro(rhs.m_bIntro),
+		m_bAction(false)
 {
 }
 
@@ -111,8 +114,6 @@ _int CPlayer::Update_GameObject(const _float& fTimeDelta)
 	if(g_bDebug) m_pColliderCom->Update_AABBforRender();
 
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
-
-	Set_Size();
 
 	Set_OnTerrain();
 
@@ -296,19 +297,35 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 	if (CDInputMgr::GetInstance()->Key_Down(DIK_F1))
 	{	// 디버그용
 		m_bIntro = !m_bIntro;
+		if (m_bIntro)	m_fSpeed = 7.f;
+		else			m_fSpeed = 10.f;
 	}
 	if (CDInputMgr::GetInstance()->Key_Down(DIK_F2))
 	{	// 디버그용
-		m_eCurState = PS_ACTION;
+
+		if (!m_bAction)
+		{
+			m_bAction = true;
+			m_eCurState = PS_ACTION;
+			m_strFrameKey = L"intro_kneel";
+		}
+		else
+		{
+			m_strFrameKey = L"intro_kneel-wake";
+		}
 	}
 	if (CDInputMgr::GetInstance()->Key_Down(DIK_F3))
 	{	// 디버그용
 		m_eCurState = PS_REBIRTH;
+		m_strFrameKey = L"intro_rebirth";
+		_float fScale = 20.f;
+		m_pTransformCom->Set_Scale(fScale, fScale, fScale);
+		m_pTransformCom->Set_Pos(m_vPos.x, 2.f, m_vPos.z);
 	}
 
 	if (CCutSceneMgr::GetInstance()->Get_Playing()) { return; }
 
-	if (!m_bRoll && !m_iCombo && !m_fCharge)
+	if (!m_bRoll && !m_iCombo && !m_fCharge && !m_bAction)
 	{
 		if (CDInputMgr::GetInstance()->Key_Pressing(DIK_W))
 		{
@@ -352,7 +369,8 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 
 		else
 		{
-				m_eCurState = PS_IDLE;
+			if (m_eCurState != PS_REBIRTH)
+			m_eCurState = PS_IDLE;
 		}
 	}
 
@@ -552,12 +570,22 @@ void CPlayer::Move_Frame(const _float& fTimeDelta)
 
 		case PS_ACTION:
 		{
-			if (m_strFrameKey == L"intro_kneel") m_strFrameKey = L"intro_kneel-loop";
+			if		(m_strFrameKey == L"intro_kneel")		m_strFrameKey = L"intro_kneel-loop";
+			else if (m_strFrameKey == L"intro_kneel-wake")
+			{
+				m_bAction = false;
+				m_eCurState = PS_IDLE;
+			}
 		}
+		break;
 
 		case PS_REBIRTH:
 		{
+			m_bIntro = false;
 			m_eCurState = PS_IDLE;
+			_float fScale = 10.f;
+			m_pTransformCom->Set_Scale(fScale, fScale, fScale);
+			m_pTransformCom->Set_Pos(m_vPos.x, 0.f, m_vPos.z);
 		}
 		break;
 		}
