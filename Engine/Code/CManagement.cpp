@@ -1,4 +1,4 @@
-#include "CManagement.h"
+ï»¿#include "CManagement.h"
 #include "CRenderer.h"
 
 IMPLEMENT_SINGLETON(CManagement)
@@ -22,6 +22,7 @@ CComponent* CManagement::Get_Component(COMPONENTID eID, const wstring& strLayerT
 
 HRESULT CManagement::Set_Scene(CScene* pScene)
 {
+
     if (nullptr == pScene)
         return  E_FAIL;
 
@@ -49,7 +50,7 @@ void CManagement::Render_Scene(LPDIRECT3DDEVICE9 pGraphicDev)
 {
     CRenderer::GetInstance()->Render_GameObject(pGraphicDev);
 
-    // debug¿ë ·»´õ
+    // debugìš© ë Œë”
     m_pScene->Render_Scene();
 }
 

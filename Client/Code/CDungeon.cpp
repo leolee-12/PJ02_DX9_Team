@@ -464,7 +464,7 @@ HRESULT CDungeon::Ready_UI_Layer(const _tchar* pLayerTag)
 	if (FAILED(pLayer->Add_GameObject(L"CookingUIController", pGameObject)))
 		return E_FAIL;
 
-	pGameObject = CBossHpBar::Create(m_pGraphicDev);
+	pGameObject = CBossHpBar::Create(m_pGraphicDev,100.0f);
 
 	if (nullptr == pGameObject)
 		return E_FAIL;
