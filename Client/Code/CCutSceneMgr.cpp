@@ -117,6 +117,8 @@ void CCutSceneMgr::Subscribe()
 
 void CCutSceneMgr::Key_Input_CutScene()
 {
+	if (!m_pCurrentCutScene) { return; }
+
 	if (CDInputMgr::GetInstance()->Key_Down(DIK_RETURN))
 	{
 		if (m_bChoiceShow) { return; }

@@ -255,6 +255,7 @@
     <ClInclude Include="..\Header\CRatau.h" />
     <ClInclude Include="..\Header\CRealDungeon.h" />
     <ClInclude Include="..\Header\CSceneWarp.h" />
+    <ClInclude Include="..\Header\CSelectionArrow.h" />
     <ClInclude Include="..\Header\CSkyBox.h" />
     <ClInclude Include="..\Header\CSpeechBubbleOrtho.h" />
     <ClInclude Include="..\Header\CSpike.h" />
@@ -400,6 +401,7 @@
     <ClCompile Include="..\Code\CRatau.cpp" />
     <ClCompile Include="..\Code\CRealDungeon.cpp" />
     <ClCompile Include="..\Code\CSceneWarp.cpp" />
+    <ClCompile Include="..\Code\CSelectionArrow.cpp" />
     <ClCompile Include="..\Code\CSkyBox.cpp" />
     <ClCompile Include="..\Code\CSpeechBubble.cpp" />
     <ClCompile Include="..\Code\CSpeechBubbleOrtho.cpp" />

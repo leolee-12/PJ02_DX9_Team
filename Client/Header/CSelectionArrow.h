@@ -8,12 +8,12 @@ namespace Engine
 	class CTexture;
 }
 
-class CSpeechBubbleOrtho :
+class CSelectionArrow :
 	public CUi
 {
 private:
-	explicit CSpeechBubbleOrtho(LPDIRECT3DDEVICE9 pGraphicDev);
-	virtual ~CSpeechBubbleOrtho();
+	explicit CSelectionArrow(LPDIRECT3DDEVICE9 pGraphicDev);
+	virtual ~CSelectionArrow();
 
 public:
 	virtual			HRESULT		Ready_GameObject();
@@ -23,27 +23,30 @@ public:
 	virtual			void		OnCollision(CGameObject* pObject);
 
 public:
-	void			Active() { m_bActive = true; }
-	void			UnActive() { m_bActive = false; }
+	void						Set_Dir(_uint iDir) { m_iDir = iDir; }
+	void						Active() { m_bActive = true; }
+	void						UnActive() { m_bActive = false; }
 
 public:
-	static CSpeechBubbleOrtho* Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec2 _vPos, _vec2 _vScale);
+	static CSelectionArrow* Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 _vPos);
 
 private:
 	virtual			void		Free();
 
 	HRESULT						Add_Component();
 	HRESULT						Ready_Material();
+	void						Turn();
+
 
 private:
 	CRcTex* m_pBufferCom;
 	CTransform* m_pTransformCom;
 	CTexture* m_pTextureCom;
 
-	_bool m_bActive;
+	_bool m_bActive = false;
 
-
-	_vec2 m_vCenterPos;
-	_vec2 m_vScale;
+	_vec3 m_vPos;
+	_uint m_iDir;
+	_float m_fCurAngle = 0.f;
 };
 

@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CSpeechBubble.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
@@ -68,6 +68,8 @@ _int CSpeechBubble::Update_GameObject(const _float& fTimeDelta)
 
 void CSpeechBubble::LateUpdate_GameObject(const _float& fTimeDelta)
 {
+	m_pTransformCom->Get_Info(INFO_POS, &m_vPos);
+	Compute_ViewDepth_Ortho(&m_vPos);
 }
 
 void CSpeechBubble::Render_GameObject()

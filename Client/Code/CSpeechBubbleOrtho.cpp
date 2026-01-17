@@ -19,7 +19,7 @@ HRESULT CSpeechBubbleOrtho::Ready_GameObject()
 	if (FAILED(Add_Component()))
 		return E_FAIL;
 	m_pTransformCom->Set_Scale(m_vScale.x, m_vScale.y, 0.f);
-	m_pTransformCom->Set_Pos(m_vPos.x, m_vPos.y, 0.05f);
+	m_pTransformCom->Set_Pos(m_vCenterPos.x, m_vCenterPos.y, 0.1f);
 	return S_OK;
 }
 
@@ -55,6 +55,8 @@ _int CSpeechBubbleOrtho::Update_GameObject(const _float& fTimeDelta)
 
 void CSpeechBubbleOrtho::LateUpdate_GameObject(const _float& fTimeDelta)
 {
+	m_pTransformCom->Get_Info(INFO_POS, &m_vPos);
+	Compute_ViewDepth_Ortho(&m_vPos);
 }
 
 void CSpeechBubbleOrtho::Render_GameObject()
@@ -110,7 +112,7 @@ CSpeechBubbleOrtho* CSpeechBubbleOrtho::Create(LPDIRECT3DDEVICE9 pGraphicDev, _v
 {
 	CSpeechBubbleOrtho* pSpeechBubble = new CSpeechBubbleOrtho(pGraphicDev);
 
-	pSpeechBubble->m_vPos = _vPos;
+	pSpeechBubble->m_vCenterPos = _vPos;
 	pSpeechBubble->m_vScale = _vScale;
 
 	if (FAILED(pSpeechBubble->Ready_GameObject()))

@@ -42,7 +42,6 @@ private:
 
 	_bool m_bActive;
 	_vec3 m_vTargetPos;
-	_vec3 m_vPos;
 
 	_vec2 m_vScale;
 };

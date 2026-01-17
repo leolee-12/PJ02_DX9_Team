@@ -30,6 +30,7 @@
 #include "CCutSceneMgr.h"
 #include "CFontUIOrtho.h"
 #include "CSpeechBubbleOrtho.h"
+#include "CSelectionArrow.h"
 
 CTheGateway::CTheGateway(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -359,6 +360,13 @@ HRESULT CTheGateway::Ready_UI_Layer(const _tchar* pLayerTag)
 	if (FAILED(pLayer->Add_GameObject(L"Font", pGameObject)))
 		return E_FAIL;
 
+	pGameObject = m_pSelectionArrow = CSelectionArrow::Create(m_pGraphicDev, _vec3(0.f, -250.f, 0.01f));
+
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+
+	if (FAILED(pLayer->Add_GameObject(L"Font", pGameObject)))
+		return E_FAIL;
+
 	m_mapLayer.insert({ pLayerTag , pLayer });
 
 	return S_OK;
@@ -410,15 +418,16 @@ void	CTheGateway::Ready_Event()
 			m_pLeftSelect->Active();
 			m_pRightSelect->Active();
 			m_pSpeechBubble->Active();
+			m_pSelectionArrow->Active();
 
-			m_bSelect = true;
+			m_bShowSelect = true;
 		}
 	}) });
 }
 
 void CTheGateway::Select_Key_Input()
 {
-	if (!m_bSelect) { return; }
+	if (!m_bShowSelect) { return; }
 
 	if (CDInputMgr::GetInstance()->Key_Down(DIK_LEFT))
 	{
@@ -427,6 +436,7 @@ void CTheGateway::Select_Key_Input()
 			m_iSelectSlot = 0;
 			m_pRightSelect->Set_FontColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 			m_pLeftSelect->Set_FontColor(D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
+			m_pSelectionArrow->Set_Dir(m_iSelectSlot);
 		}
 	}
 	if (CDInputMgr::GetInstance()->Key_Down(DIK_RIGHT))
@@ -436,6 +446,7 @@ void CTheGateway::Select_Key_Input()
 			m_iSelectSlot = 1;
 			m_pLeftSelect->Set_FontColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 			m_pRightSelect->Set_FontColor(D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
+			m_pSelectionArrow->Set_Dir(m_iSelectSlot);
 		}
 	}
 	if (CDInputMgr::GetInstance()->Key_Down(DIK_RETURN))
@@ -445,7 +456,9 @@ void CTheGateway::Select_Key_Input()
 		m_pLeftSelect->UnActive();
 		m_pRightSelect->UnActive();
 		m_pSpeechBubble->UnActive();
+		m_pSelectionArrow->UnActive();
 		m_pMessageChannel->Publish(tSelectEvent);
+		m_bShowSelect = false;
 	}
 
 }

@@ -4,6 +4,7 @@
 
 class CFontUIOrtho;
 class CSpeechBubbleOrtho;
+class CSelectionArrow;
 
 class CTheGateway : public CScene
 {
@@ -39,6 +40,8 @@ private:
 
 	CSpeechBubbleOrtho* m_pSpeechBubble;
 
-	_bool		  m_bSelect = false;
+	CSelectionArrow* m_pSelectionArrow;
+
+	_bool		  m_bShowSelect = false;
 	_uint		  m_iSelectSlot = 0;
 };

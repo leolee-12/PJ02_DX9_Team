@@ -464,6 +464,14 @@ void CMultiLoadingThread::Loading_for_TheGateway()
 	vecNarinder.push_back(TEXSETLR(L"Narinder_Talk", L"../Bin/Resource/YSH/Narinder/Narinder-talk/dds/Narinder-talk-%d.dds", 167));
 	m_TexSetLoadingqueue.push(make_pair(TEXSETINFO(L"Proto_Narinder", TEX_NORMAL), vecNarinder));
 	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_SelectionArrow", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Etc/dds/Selection_Arrow.dds", 1));
+	m_iTotalProtoCount++;
+
+	//디버그용 바로진입 프로토타입
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_SpeechBubble", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Etc/dds/SpeechBubble.dds", 1));
+	m_iTotalProtoCount++;
+	//디버그용 바로진입 프로토타입
 }
 
 void CMultiLoadingThread::Loading_for_Village()
@@ -550,6 +558,18 @@ void CMultiLoadingThread::NonTex_for_Dungeon()
 void CMultiLoadingThread::NonTex_for_TheGateway()
 {
 	CPersistentMgr::GetInstance()->Ready_GlobalObjects(m_pGraphicDev);
+
+	// 디버그용 바로진입위한 프로토타입
+	CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_CubeTex", Engine::CCubeTex::Create(m_pGraphicDev));
+	CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_TerrainTex", Engine::CTerrainTex::Create(m_pGraphicDev, VTXCNTX, VTXCNTZ, VTXITV, L"../Bin/Resource/Texture/Terrain/Height.bmp"));
+	CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_TerrainWallTex", Engine::CTerrainWallTex::Create(m_pGraphicDev, 51, 51, VTXITV));
+	CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_RcTexXZ", Engine::CRcTexXZ::Create(m_pGraphicDev));
+	CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_TileTexture", Engine::CTexture::CreateFromFolder(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Maps/Texture/Tile"));
+	CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_TileMaskTexture", Engine::CTexture::CreateFromFolder(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Maps/Texture/TileMasking"));
+	CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_GrassBuffer", Engine::CGrassBuffer::Create(m_pGraphicDev));
+	CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Collider", Engine::CCollider::Create(m_pGraphicDev));
+	// 디버그용 바로진입위한 프로토타입
+
 	Load_Object_Texture(TheGateway_Texture);
 }
 
