@@ -36,9 +36,11 @@
 #include "CMapBorder.h"
 #include "CRatau.h"
 #include "CTarotSeller.h"
+#include "CBrute.h"
 #include "CBossHpBar.h"
 #include "CTriggerPoint.h"
 #include "CCutSceneMgr.h"
+#include "CFollower.h"
 
 CDungeon::CDungeon(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -395,12 +397,50 @@ HRESULT CDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	//	if (FAILED(pLayer->Add_GameObject(L"Boss", pGameObject)))
 	//		return E_FAIL;
 
+	//----------------------------튜토리얼 몬스터 배치---------------------------
+	CMonsterN1* pTemp = nullptr;
+	pGameObject = pTemp = CMonsterN1::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ -8.f, 0.f, 92.5f }, CMonsterN1::N1S_PRAY);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	pTemp->Set_Dir(_vec3{ 1.f, 0.f, 0.f });
+	if (FAILED(pLayer->Add_GameObject(L"NPC", pGameObject)))
+		return E_FAIL;
+
+	pGameObject = pTemp = CMonsterN1::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ 0.f, 0.f, 92.5f }, CMonsterN1::N1S_PRAY);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	pTemp->Set_Dir(_vec3{ -1.f, 0.f, 0.f });
+	if (FAILED(pLayer->Add_GameObject(L"NPC", pGameObject)))
+		return E_FAIL;
+
+	pGameObject = pTemp = CMonsterN1::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ -8.5f, 0.f, 82.f }, CMonsterN1::N1S_PRAY);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	pTemp->Set_Dir(_vec3{ 1.f, 0.f, 0.f });
+	if (FAILED(pLayer->Add_GameObject(L"NPC", pGameObject)))
+		return E_FAIL;
+
+	pGameObject = pTemp = CMonsterN1::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ 0.5f, 0.f, 82.f }, CMonsterN1::N1S_PRAY);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	pTemp->Set_Dir(_vec3{ -1.f, 0.f, 0.f });
+	if (FAILED(pLayer->Add_GameObject(L"NPC", pGameObject)))
+		return E_FAIL;
+
+	pGameObject = pTemp = CMonsterN1::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ -13.f, 0.f, 87.5f }, CMonsterN1::N1S_PRAY);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	pTemp->Set_Dir(_vec3{ 1.f, 0.f, 0.f });
+	if (FAILED(pLayer->Add_GameObject(L"NPC", pGameObject)))
+		return E_FAIL;
+
+	pGameObject = CBrute::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ 8.f, 0.f, 90.f });
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	if (FAILED(pLayer->Add_GameObject(L"NPC", pGameObject)))
+		return E_FAIL;
+	//---------------------------------------------------------------------------
+
 	pGameObject = CRatau::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ 123.5f, 0.f, 12.f });
 
-	NULL_CHECK_RETURN(pGameObject, E_FAIL)
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 
-		if (FAILED(pLayer->Add_GameObject(L"NPC", pGameObject)))
-			return E_FAIL;
+	if (FAILED(pLayer->Add_GameObject(L"NPC", pGameObject)))
+		return E_FAIL;
 
 	pGameObject = CRatau::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ -231.f, 0.f, 4.f });
 
@@ -411,10 +451,30 @@ HRESULT CDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 
 	pGameObject = CTarotSeller::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ 330.f, 0.f, 11.5f });
 
-	NULL_CHECK_RETURN(pGameObject, E_FAIL)
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 
-		if (FAILED(pLayer->Add_GameObject(L"NPC", pGameObject)))
-			return E_FAIL;
+	if (FAILED(pLayer->Add_GameObject(L"NPC", pGameObject)))
+		return E_FAIL;
+
+	pGameObject = CFollower::Create(m_pGraphicDev, m_pMessageChannel, L"Proto_Follower1Texture");
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	if (FAILED(pLayer->Add_GameObject(L"NPC", pGameObject)))
+		return E_FAIL;
+
+	pGameObject = CFollower::Create(m_pGraphicDev, m_pMessageChannel, L"Proto_Follower2Texture");
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	if (FAILED(pLayer->Add_GameObject(L"NPC", pGameObject)))
+		return E_FAIL;
+
+	pGameObject = CFollower::Create(m_pGraphicDev, m_pMessageChannel, L"Proto_Follower3Texture");
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	if (FAILED(pLayer->Add_GameObject(L"NPC", pGameObject)))
+		return E_FAIL;
+
+	pGameObject = CFollower::Create(m_pGraphicDev, m_pMessageChannel, L"Proto_Follower4Texture");
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	if (FAILED(pLayer->Add_GameObject(L"NPC", pGameObject)))
+		return E_FAIL;
 
 	_vec3 vTriggerPos, vTriggerHalfSize;
 	vTriggerPos = { 121.f, 0.f, 12.f };
@@ -520,7 +580,7 @@ HRESULT CDungeon::Ready_UI_Layer(const _tchar* pLayerTag)
 	if (FAILED(pLayer->Add_GameObject(L"CookingUIController", pGameObject)))
 		return E_FAIL;
 
-	pGameObject = CBossHpBar::Create(m_pGraphicDev);
+	pGameObject = CBossHpBar::Create(m_pGraphicDev,100.0f);
 
 	if (nullptr == pGameObject)
 		return E_FAIL;

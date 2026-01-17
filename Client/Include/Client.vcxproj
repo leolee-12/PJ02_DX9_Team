@@ -160,6 +160,7 @@
     <ClInclude Include="..\Header\CBossHpBarBackground.h" />
     <ClInclude Include="..\Header\CBossHpBarFront.h" />
     <ClInclude Include="..\Header\CBossHpBarMiddle.h" />
+    <ClInclude Include="..\Header\CBrute.h" />
     <ClInclude Include="..\Header\CCookingButton.h" />
     <ClInclude Include="..\Header\CCookingCover.h" />
     <ClInclude Include="..\Header\CCookingGauge.h" />
@@ -192,7 +193,7 @@
     <ClInclude Include="..\Header\CEditScene.h" />
     <ClInclude Include="..\Header\CFade.h" />
     <ClInclude Include="..\Header\CFollower.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\Header\CFontUI.h" />
     <ClInclude Include="..\Header\CFontUIOrtho.h" />
@@ -307,6 +308,7 @@
     <ClCompile Include="..\Code\CBossHpBarBackground.cpp" />
     <ClCompile Include="..\Code\CBossHpBarFront.cpp" />
     <ClCompile Include="..\Code\CBossHpBarMiddle.cpp" />
+    <ClCompile Include="..\Code\CBrute.cpp" />
     <ClCompile Include="..\Code\CCookingButton.cpp" />
     <ClCompile Include="..\Code\CCookingInfoCard.cpp" />
     <ClCompile Include="..\Code\CCookingCover.cpp" />
@@ -340,7 +342,7 @@
     <ClCompile Include="..\Code\CEditScene.cpp" />
     <ClCompile Include="..\Code\CFade.cpp" />
     <ClCompile Include="..\Code\CFollower.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\Code\CFontUI.cpp" />
     <ClCompile Include="..\Code\CFontUIOrtho.cpp" />

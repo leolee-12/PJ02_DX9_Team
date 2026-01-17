@@ -1,5 +1,5 @@
 ﻿#include "pch.h"
-#include "CTarotSeller.h"
+#include "CBrute.h"
 #include "CProtoMgr.h"
 #include "CManagement.h"
 #include "CRenderer.h"
@@ -7,42 +7,44 @@
 #include "CCollisionMgr.h"
 #include "CN1_AI.h"
 
-CTarotSeller::CTarotSeller(LPDIRECT3DDEVICE9 pGraphicDev)
+CBrute::CBrute(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev),
-	m_ePreState(TAROT_END),
-	m_eCurState(TAROT_IDLE),
+	m_ePreState(BRUTE_END),
+	m_eCurState(BRUTE_IDLE),
 	m_fFrame(0.f),
 	m_fFrameEnd(0.f),
 	m_fFrameSpeed(0.f)
 {
 }
 
-CTarotSeller::CTarotSeller(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel)
+CBrute::CBrute(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel)
 	: CGameObject(pGraphicDev, StageChannel),
-	m_ePreState(TAROT_END),
-	m_eCurState(TAROT_IDLE),
+	m_ePreState(BRUTE_END),
+	m_eCurState(BRUTE_IDLE),
 	m_fFrame(0.f),
 	m_fFrameEnd(0.f),
-	m_fFrameSpeed(0.f)
+	m_fFrameSpeed(0.f),
+	m_fGroundY(0.f)
 {
 }
 
 
-CTarotSeller::CTarotSeller(const CTarotSeller& rhs)
+CBrute::CBrute(const CBrute& rhs)
 	: CGameObject(rhs),
-	m_ePreState(TAROT_END),
-	m_eCurState(TAROT_IDLE),
+	m_ePreState(BRUTE_END),
+	m_eCurState(BRUTE_IDLE),
 	m_fFrame(0.f),
 	m_fFrameEnd(0.f),
-	m_fFrameSpeed(0.f)
+	m_fFrameSpeed(0.f),
+	m_fGroundY(rhs.m_fGroundY)
 {
 }
 
-CTarotSeller::~CTarotSeller()
+CBrute::~CBrute()
 {
 }
 
-HRESULT CTarotSeller::Ready_GameObject()
+HRESULT CBrute::Ready_GameObject()
 {
 	m_eOBJID = OID_NPC;
 
@@ -55,14 +57,18 @@ HRESULT CTarotSeller::Ready_GameObject()
 	return S_OK;
 }
 
-_int CTarotSeller::Update_GameObject(const _float& fTimeDelta)
+_int CBrute::Update_GameObject(const _float& fTimeDelta)
 {
 	Move_Frame(fTimeDelta);
 
+	m_pColliderCom->UpdateFromTransform(m_pTransformCom);
+	// 충돌체 디버그용
+	if (g_bDebug) m_pColliderCom->Update_AABBforRender();
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
 	if (iExit == DEAD)
 	{
+		m_pColliderCom->UnregisterFromManager();
 		return iExit;
 	}
 
@@ -71,7 +77,7 @@ _int CTarotSeller::Update_GameObject(const _float& fTimeDelta)
 	return iExit;
 }
 
-void CTarotSeller::LateUpdate_GameObject(const _float& fTimeDelta)
+void CBrute::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	Check_Frame();
 
@@ -82,7 +88,7 @@ void CTarotSeller::LateUpdate_GameObject(const _float& fTimeDelta)
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
 }
 
-void CTarotSeller::Render_GameObject()
+void CBrute::Render_GameObject()
 {
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
 
@@ -95,11 +101,11 @@ void CTarotSeller::Render_GameObject()
 	m_pGraphicDev->SetTextureStageState(0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE);
 }
 
-void CTarotSeller::OnCollision(CGameObject* pObject)
+void CBrute::OnCollision(CGameObject* pObject)
 {
 }
 
-HRESULT CTarotSeller::Add_Component()
+HRESULT CBrute::Add_Component()
 {
 	Engine::CComponent* pComponent = nullptr;
 
@@ -121,37 +127,48 @@ HRESULT CTarotSeller::Add_Component()
 
 	// Texture
 	pComponent = m_pTextureCom = dynamic_cast<Engine::CTexture*>
-		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_TarotSellerTexture"));
+		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_BruteTexture"));
 
 	NULL_CHECK_RETURN(pComponent, E_FAIL)
 
 		m_mapComponent[ID_STATIC].insert({ L"Com_Texture", pComponent });
 
+	// Collider
+	pComponent = m_pColliderCom = dynamic_cast<Engine::CCollider*>
+		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Collider"));
+
+	NULL_CHECK_RETURN(pComponent, E_FAIL)
+
+		m_mapComponent[ID_STATIC].insert({ L"Com_Collider", pComponent });
+
 	return S_OK;
 }
 
-void CTarotSeller::Ready_Variable()
+void CBrute::Ready_Variable()
 {
 	// 게임로직 변수 세팅
-	_float fScale = 7.f;
-	m_fGroundY = -2.5f + fScale * 0.5f;
+	_float fScale = 17.f;
+	m_fGroundY = -2.5f + fScale * 0.5f - 2.5f;
 	m_iHp = 10;
+	m_fAcmlTime = 0.f;
 
 	// Transform 세팅
-	m_pTransformCom->Set_Pos(_float(rand() % 20), m_fGroundY, _float(rand() % 20) + 80.f);
+	m_pTransformCom->Set_Pos(10.f, m_fGroundY, 80.f);
 	m_pTransformCom->Set_Scale(fScale, fScale, fScale);
 
+	// Collider 세팅
+	m_pColliderCom->RegisterToManager(this, CL_MONSTER);
 
 	// Anim 관련 세팅
 	m_fFrameSpeed = 24.f;
 	D3DXMatrixIdentity(&m_matTex);
 }
 
-void CTarotSeller::Ready_Event()
+void CBrute::Ready_Event()
 {
 }
 
-void CTarotSeller::Check_Frame()
+void CBrute::Check_Frame()
 {
 	if (m_ePreState == m_eCurState)
 		return;
@@ -160,15 +177,33 @@ void CTarotSeller::Check_Frame()
 
 	switch (m_eCurState)
 	{
-	case TAROT_IDLE:
+	case BRUTE_IDLE:
 	{
-		m_fFrameEnd = 248.f;
+		m_fFrameEnd = 32.f;
 	}
 	break;
 
-	case TAROT_TALK:
+	case BRUTE_RUN:
 	{
-		m_fFrameEnd = 128.f;
+		m_fFrameEnd = 20.f;
+	}
+	break;
+
+	case BRUTE_JEER:
+	{
+		m_fFrameEnd = 25.f;
+	}
+	break;
+
+	case BRUTE_EXECUTE1:
+	{
+		m_fFrameEnd = 64.f;
+	}
+	break;
+
+	case BRUTE_EXECUTE2:
+	{
+		m_fFrameEnd = 33.f;
 	}
 	break;
 	}
@@ -176,9 +211,10 @@ void CTarotSeller::Check_Frame()
 	m_ePreState = m_eCurState;
 }
 
-void CTarotSeller::Move_Frame(const _float& fTimeDelta)
+void CBrute::Move_Frame(const _float& fTimeDelta)
 {
 	m_fFrame += m_fFrameSpeed * fTimeDelta;
+	m_fAcmlTime += fTimeDelta;
 
 	if (m_fFrame >= m_fFrameEnd)
 	{
@@ -186,35 +222,48 @@ void CTarotSeller::Move_Frame(const _float& fTimeDelta)
 
 		switch (m_eCurState)
 		{
-		case TAROT_IDLE:
-			m_eCurState = TAROT_TALK;
+		case BRUTE_JEER:
+			m_eCurState = BRUTE_IDLE;
 			break;
 
-		case TAROT_TALK:
-			m_eCurState = TAROT_IDLE;
+		case BRUTE_EXECUTE1:
+			m_eCurState = BRUTE_EXECUTE2;
+			break;
+
+		case BRUTE_EXECUTE2:
+			m_eCurState = BRUTE_IDLE;
 			break;
 		}
 	}
 }
 
-void CTarotSeller::Set_Texture()
+void CBrute::Set_Texture()
 {
 	//_bool bFilpX = vDir.x > 0.f ? true : false;	// 반전 여부
 	_uint iFrame = _uint(m_fFrame);					// 현재 프레임
 
 	D3DXMatrixIdentity(&m_matTex);
-	_uint iU = iFrame % 16;
-	_uint iV = iFrame / 16;
+	_uint iU = iFrame % 8;
+	_uint iV = iFrame / 8;
 
-	m_matTex._11 = 0.0625f;	// 가로는 16칸 고정
-	m_matTex._22 = 0.0625f;	// 세로는 16칸 고정(TarotSeller)
+	m_matTex._11 = 0.125f;	// 가로는 8칸 고정
+	m_matTex._22 = 0.125f;	// 세로는 8칸 고정(Ratau)
 
 	switch (m_eCurState)
 	{
-	case TAROT_IDLE:
+	case BRUTE_IDLE:
 		break;
 
-	case TAROT_TALK:
+	case BRUTE_RUN:
+		break;
+
+	case BRUTE_JEER:
+		break;
+
+	case BRUTE_EXECUTE1:
+		break;
+
+	case BRUTE_EXECUTE2:
 		break;
 	}
 
@@ -225,33 +274,33 @@ void CTarotSeller::Set_Texture()
 	//}
 	//else
 	//{
-	m_matTex._31 = _float(iU) * 0.0625f;	// 반전 X : 왼쪽에서 오른쪽으로 읽음
+	m_matTex._31 = _float(iU) * 0.125f;	// 반전 X : 왼쪽에서 오른쪽으로 읽음
 	//}
 
-	m_matTex._32 = _float(iV) * 0.0625f;
+	m_matTex._32 = _float(iV) * 0.125f;
 
 	m_pGraphicDev->SetTransform(D3DTS_TEXTURE0, &m_matTex);
 
 	m_pTextureCom->Set_Texture(_uint(m_eCurState));
 }
 
-CTarotSeller* CTarotSeller::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, _vec3 vPos)
+CBrute* CBrute::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, _vec3 vPos)
 {
-	CTarotSeller* pTarotSeller = new CTarotSeller(pGraphicDev, StageChannel);
+	CBrute* pBrute = new CBrute(pGraphicDev, StageChannel);
 
-	if (FAILED(pTarotSeller->Ready_GameObject()))
+	if (FAILED(pBrute->Ready_GameObject()))
 	{
-		Safe_Release(pTarotSeller);
-		MSG_BOX("pTarotSeller Create Failed");
+		Safe_Release(pBrute);
+		MSG_BOX("pBrute Create Failed");
 		return nullptr;
 	}
 
-	pTarotSeller->m_pTransformCom->Set_Pos(vPos.x, pTarotSeller->m_fGroundY, vPos.z);
+	pBrute->m_pTransformCom->Set_Pos(vPos.x, pBrute->m_fGroundY, vPos.z);
 
-	return pTarotSeller;
+	return pBrute;
 }
 
-void CTarotSeller::Free()
+void CBrute::Free()
 {
 	CGameObject::Free();
 }

@@ -409,6 +409,9 @@
     <Filter Include="02. GameObject\07. UI\07.BossHpBar\01.BossHpBarMiddle">
       <UniqueIdentifier>{91f37026-5e3e-482e-914e-78b0757da388}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\17. NPC\04. Brute">
+      <UniqueIdentifier>{84e93905-37af-4387-b6a4-d5044690241b}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02. GameObject\07. UI\06. WorldUI\01. SelectionArrow">
       <UniqueIdentifier>{67a6357b-a1f6-4b03-9a0c-a3351341b751}</UniqueIdentifier>
     </Filter>
@@ -846,6 +849,9 @@
     <ClInclude Include="..\Header\CNarinder.h">
       <Filter>02. GameObject\13. Bishops\04. Narinder</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CBrute.h">
+      <Filter>02. GameObject\17. NPC\04. Brute</Filter>
+    </ClInclude>
     <ClInclude Include="..\Header\CSpeechBubbleOrtho.h">
       <Filter>02. GameObject\07. UI\06. WorldUI\00.SpeechBubble</Filter>
     </ClInclude>
@@ -1252,6 +1258,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CNarinder.cpp">
       <Filter>02. GameObject\13. Bishops\04. Narinder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CBrute.cpp">
+      <Filter>02. GameObject\17. NPC\04. Brute</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CSpeechBubbleOrtho.cpp">
       <Filter>02. GameObject\07. UI\06. WorldUI\00.SpeechBubble</Filter>

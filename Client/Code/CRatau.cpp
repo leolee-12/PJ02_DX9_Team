@@ -66,11 +66,6 @@ _int CRatau::Update_GameObject(const _float& fTimeDelta)
 {
 	Move_Frame(fTimeDelta);
 
-	m_pColliderCom->UpdateFromTransform(m_pTransformCom);
-	// 충돌체 디버그용
-	if (g_bDebug) m_pColliderCom->Update_AABBforRender();
-
-
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
 	m_pFontUI->Update_GameObject(fTimeDelta);
@@ -78,7 +73,6 @@ _int CRatau::Update_GameObject(const _float& fTimeDelta)
 
 	if (iExit == DEAD)
 	{
-		m_pColliderCom->UnregisterFromManager();
 		return iExit;
 	}
 
@@ -115,47 +109,6 @@ void CRatau::Render_GameObject()
 
 void CRatau::OnCollision(CGameObject* pObject)
 {
-	if (pObject->Get_OBJID() == OID_BORDER)
-	{
-		_vec3 vCurPos;
-		m_pTransformCom->Get_Info(INFO_POS, &vCurPos);
-
-		Engine::CCollider* pBorderCol = dynamic_cast<Engine::CCollider*>(
-			pObject->Get_Component(ID_STATIC, L"Com_Collider"));
-
-		if (nullptr == pBorderCol)
-			return;
-
-		const Engine::AABB& borderAABB = pBorderCol->Get_AABB();
-
-		const _float fPlayerHalf = 0.5f;
-
-		_float fOverlapX = (borderAABB.hx + fPlayerHalf) - abs(vCurPos.x - borderAABB.x);
-		_float fOverlapZ = (borderAABB.hz + fPlayerHalf) - abs(vCurPos.z - borderAABB.z);
-
-		if (fOverlapX > 0.f && fOverlapZ > 0.f)
-		{
-			if (fOverlapX < fOverlapZ)
-			{
-				if (vCurPos.x < borderAABB.x)
-					vCurPos.x -= fOverlapX + 0.1f;
-				else
-					vCurPos.x += fOverlapX + 0.1f;
-			}
-			else
-			{
-				if (vCurPos.z < borderAABB.z)
-					vCurPos.z -= fOverlapZ + 0.1f;
-				else
-					vCurPos.z += fOverlapZ + 0.1f;
-			}
-
-			m_pTransformCom->Set_Pos(vCurPos.x, vCurPos.y, vCurPos.z);
-
-		}
-
-		return;
-	}
 }
 
 HRESULT CRatau::Add_Component()
@@ -186,14 +139,6 @@ HRESULT CRatau::Add_Component()
 
 		m_mapComponent[ID_STATIC].insert({ L"Com_Texture", pComponent });
 
-	// Collider
-	pComponent = m_pColliderCom = dynamic_cast<Engine::CCollider*>
-		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Collider"));
-
-	NULL_CHECK_RETURN(pComponent, E_FAIL)
-
-		m_mapComponent[ID_STATIC].insert({ L"Com_Collider", pComponent });
-
 	return S_OK;
 }
 
@@ -207,9 +152,6 @@ void CRatau::Ready_Variable()
 	// Transform 세팅
 	m_pTransformCom->Set_Pos(125.f, m_fGroundY, 15.f);
 	m_pTransformCom->Set_Scale(fScale, fScale, fScale);
-
-	// Collider 세팅
-	m_pColliderCom->RegisterToManager(this, CL_MONSTER);
 
 	// Anim 관련 세팅
 	m_fFrameSpeed = 24.f;

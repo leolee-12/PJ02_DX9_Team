@@ -9,19 +9,16 @@ namespace Engine
 	class CCollider;
 }
 
-class CSpeechBubble;
-class CFontUI;
-
-class CRatau : public CGameObject
+class CBrute : public CGameObject
 {
 public:
-	enum RATAU_STATE { RATAU_IDLE, RATAU_TALK, RATAU_ENTER, RATAU_EXIT, RATAU_END };
+	enum BRUTE_STATE { BRUTE_IDLE, BRUTE_RUN, BRUTE_JEER, BRUTE_EXECUTE1, BRUTE_EXECUTE2, BRUTE_END };
 
 private:
-	explicit	CRatau(LPDIRECT3DDEVICE9 pGraphicDev);
-	explicit	CRatau(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel);
-	explicit	CRatau(const CRatau& rhs);
-	virtual		~CRatau();
+	explicit	CBrute(LPDIRECT3DDEVICE9 pGraphicDev);
+	explicit	CBrute(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel);
+	explicit	CBrute(const CBrute& rhs);
+	virtual		~CBrute();
 
 public:
 	virtual HRESULT		Ready_GameObject();
@@ -29,7 +26,6 @@ public:
 	virtual void		LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual void		Render_GameObject();
 	virtual void		OnCollision(CGameObject* pObject);
-
 
 private:
 	HRESULT				Add_Component();
@@ -43,18 +39,17 @@ private:
 
 	void				Update_State();
 
-	HRESULT				Ready_Dialogue(const _vec3& vDialoguePos);
-
 private:
-	Engine::CRcTex*		m_pBufferCom;
-	Engine::CTransform*	m_pTransformCom;
-	Engine::CTexture*	m_pTextureCom;
+	Engine::CRcTex* m_pBufferCom;
+	Engine::CTransform* m_pTransformCom;
+	Engine::CTexture* m_pTextureCom;
+	Engine::CCollider* m_pColliderCom;
 
 	_vec3				m_vPos;
 
 	// 스프라이트 관련
-	RATAU_STATE	m_ePreState;
-	RATAU_STATE	m_eCurState;
+	BRUTE_STATE	m_ePreState;
+	BRUTE_STATE	m_eCurState;
 	_float		m_fFrame;
 	_float		m_fFrameEnd;
 	_float		m_fFrameSpeed;
@@ -62,15 +57,11 @@ private:
 
 	// 스테이터스 관련
 	_float		m_fGroundY;
-
-	CSpeechBubble* m_pSpeechBubble;
-	CFontUI*	   m_pFontUI;
-
-	_bool		   m_bWait = true;
+	_float		m_fAcmlTime;
 
 
 public:
-	static CRatau* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, _vec3 vPos);
+	static CBrute* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, _vec3 vPos);
 
 private:
 	virtual void		Free();

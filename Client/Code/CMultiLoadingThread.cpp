@@ -395,6 +395,21 @@ void CMultiLoadingThread::Loading_for_Dungeon()
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_ChestTexture", TEX_NORMAL, L"../Bin/Resource/Texture/NPC/Chest/dds/Chest_%d.dds", 2));
 	m_iTotalProtoCount++;
 
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_BruteTexture", TEX_NORMAL, L"../Bin/Resource/LWY//NPC/Brute/dds/Brute_%d.dds", 5));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_Follower1Texture", TEX_NORMAL, L"../Bin/Resource/LWY//NPC/Follower1(2)/dds/Follower1_%02d.dds", 14));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_Follower2Texture", TEX_NORMAL, L"../Bin/Resource/LWY//NPC/Follower2(2)/dds/Follower2_%02d.dds", 14));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_Follower3Texture", TEX_NORMAL, L"../Bin/Resource/LWY//NPC/Follower3(2)/dds/Follower3_%02d.dds", 14));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_Follower4Texture", TEX_NORMAL, L"../Bin/Resource/LWY//NPC/Follower4/dds/Follower4_%02d.dds", 14));
+	m_iTotalProtoCount++;
+
 	// 메인보스
 	vector<TEXSETLR> vecBossLeshy;
 	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Idle", L"../Bin/Resource/Texture/Monster/Boss2/idle/dds/idle_%04d.dds", 80));
@@ -409,55 +424,6 @@ void CMultiLoadingThread::Loading_for_Dungeon()
 	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Dead", L"../Bin/Resource/Texture/Monster/Boss2/dead-noheart/dds/dead-noheart_%04d.dds", 1));
 	m_TexSetLoadingqueue.push(make_pair(TEXSETINFO(L"Proto_MonsterB2Texture", TEX_NORMAL), vecBossLeshy));
 	m_iTotalProtoCount++;
-
-	// 팔로워
-	vector<TEXSETLR> vecFollower1;
-	vecFollower1.push_back(TEXSETLR(L"Follower1_idle", L"../Bin/Resource/Texture/NPC/follower1/idle/dds/idle_%04d.dds", 24));
-	vecFollower1.push_back(TEXSETLR(L"Follower1_run", L"../Bin/Resource/Texture/NPC/follower1/run/dds/run_%04d.dds", 14));
-	vecFollower1.push_back(TEXSETLR(L"Follower1_wood", L"../Bin/Resource/Texture/NPC/follower1/chop-wood/dds/chop-wood_%04d.dds", 98));
-	vecFollower1.push_back(TEXSETLR(L"Follower1_rock", L"../Bin/Resource/Texture/NPC/follower1/mining/dds/mining_%04d.dds", 46));
-	vecFollower1.push_back(TEXSETLR(L"Follower1_pray", L"../Bin/Resource/Texture/NPC/follower1/pray/dds/pray_%04d.dds", 60));
-	vecFollower1.push_back(TEXSETLR(L"Follower1_build", L"../Bin/Resource/Texture/NPC/follower1/build/dds/build_%04d.dds", 83));
-	vecFollower1.push_back(TEXSETLR(L"Follower1_dance", L"../Bin/Resource/Texture/NPC/follower1/dance/dds/dance_%04d.dds", 47));
-	vecFollower1.push_back(TEXSETLR(L"Follower1_recruit-start", L"../Bin/Resource/Texture/NPC/follower1/recruit-start/dds/recruit-start_%04d.dds", 20));
-	vecFollower1.push_back(TEXSETLR(L"Follower1_recruit-loop", L"../Bin/Resource/Texture/NPC/follower1/recruit-loop/dds/recruit-loop_%04d.dds", 96));
-	vecFollower1.push_back(TEXSETLR(L"Follower1_recruit-end", L"../Bin/Resource/Texture/NPC/follower1/recruit-end/dds/recruit-end_%04d.dds", 75));
-	m_TexSetLoadingqueue.push(make_pair(TEXSETINFO(L"Proto_Follower1Texture", TEX_NORMAL), vecFollower1));
-	m_iTotalProtoCount++;
-
-	vector<TEXSETLR> vecFollower2;
-	vecFollower2.push_back(TEXSETLR(L"Follower2_idle", L"../Bin/Resource/Texture/NPC/follower2/idle/dds/idle_%04d.dds", 24));
-	vecFollower2.push_back(TEXSETLR(L"Follower2_run", L"../Bin/Resource/Texture/NPC/follower2/run/dds/run_%04d.dds", 14));
-	vecFollower2.push_back(TEXSETLR(L"Follower2_wood", L"../Bin/Resource/Texture/NPC/follower2/chop-wood/dds/chop-wood_%04d.dds", 98));
-	vecFollower2.push_back(TEXSETLR(L"Follower2_rock", L"../Bin/Resource/Texture/NPC/follower2/mining/dds/mining_%04d.dds", 46));
-	vecFollower2.push_back(TEXSETLR(L"Follower2_pray", L"../Bin/Resource/Texture/NPC/follower2/pray/dds/pray_%04d.dds", 60));
-	vecFollower2.push_back(TEXSETLR(L"Follower2_build", L"../Bin/Resource/Texture/NPC/follower2/build/dds/build_%04d.dds", 83));
-	vecFollower2.push_back(TEXSETLR(L"Follower2_dance", L"../Bin/Resource/Texture/NPC/follower2/dance/dds/dance_%04d.dds", 47));
-	vecFollower2.push_back(TEXSETLR(L"Follower2_recruit-start", L"../Bin/Resource/Texture/NPC/follower2/recruit-start/dds/recruit-start_%04d.dds", 20));
-	vecFollower2.push_back(TEXSETLR(L"Follower2_recruit-loop", L"../Bin/Resource/Texture/NPC/follower2/recruit-loop/dds/recruit-loop_%04d.dds", 96));
-	vecFollower2.push_back(TEXSETLR(L"Follower2_recruit-end", L"../Bin/Resource/Texture/NPC/follower2/recruit-end/dds/recruit-end_%04d.dds", 75));
-	m_TexSetLoadingqueue.push(make_pair(TEXSETINFO(L"Proto_Follower2Texture", TEX_NORMAL), vecFollower2));
-	m_iTotalProtoCount++;
-
-	vector<TEXSETLR> vecFollower3;
-	vecFollower3.push_back(TEXSETLR(L"Follower3_idle", L"../Bin/Resource/Texture/NPC/follower3/idle/dds/idle_%04d.dds", 24));
-	vecFollower3.push_back(TEXSETLR(L"Follower3_run", L"../Bin/Resource/Texture/NPC/follower3/run/dds/run_%04d.dds", 14));
-	vecFollower3.push_back(TEXSETLR(L"Follower3_wood", L"../Bin/Resource/Texture/NPC/follower3/chop-wood/dds/chop-wood_%04d.dds", 98));
-	vecFollower3.push_back(TEXSETLR(L"Follower3_rock", L"../Bin/Resource/Texture/NPC/follower3/mining/dds/mining_%04d.dds", 46));
-	vecFollower3.push_back(TEXSETLR(L"Follower3_pray", L"../Bin/Resource/Texture/NPC/follower3/pray/dds/pray_%04d.dds", 60));
-	vecFollower3.push_back(TEXSETLR(L"Follower3_build", L"../Bin/Resource/Texture/NPC/follower3/build/dds/build_%04d.dds", 83));
-	vecFollower3.push_back(TEXSETLR(L"Follower3_dance", L"../Bin/Resource/Texture/NPC/follower3/dance/dds/dance_%04d.dds", 47));
-	vecFollower3.push_back(TEXSETLR(L"Follower3_recruit-start", L"../Bin/Resource/Texture/NPC/follower3/recruit-start/dds/recruit-start_%04d.dds", 20));
-	vecFollower3.push_back(TEXSETLR(L"Follower3_recruit-loop", L"../Bin/Resource/Texture/NPC/follower3/recruit-loop/dds/recruit-loop_%04d.dds", 96));
-	vecFollower3.push_back(TEXSETLR(L"Follower3_recruit-end", L"../Bin/Resource/Texture/NPC/follower3/recruit-end/dds/recruit-end_%04d.dds", 75));
-	m_TexSetLoadingqueue.push(make_pair(TEXSETINFO(L"Proto_Follower3Texture", TEX_NORMAL), vecFollower3));
-	m_iTotalProtoCount++;
-
-	//디버그용 바로진입 프로토타입
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_SpeechBubble", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Etc/dds/SpeechBubble.dds", 1));
-	m_iTotalProtoCount++;
-	//디버그용 바로진입 프로토타입
-
 }
 
 void CMultiLoadingThread::Loading_for_TheGateway()

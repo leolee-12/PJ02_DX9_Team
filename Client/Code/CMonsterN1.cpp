@@ -44,6 +44,11 @@ CMonsterN1::~CMonsterN1()
 {
 }
 
+void CMonsterN1::Set_Dir(const _vec3& vDir)
+{
+	m_pAICom->Set_Dir(vDir);
+}
+
 HRESULT CMonsterN1::Ready_GameObject()
 {
 	m_eOBJID = OID_MONSTER;
@@ -202,8 +207,8 @@ HRESULT CMonsterN1::Add_Component()
 void CMonsterN1::Ready_Variable()
 {
 	// 게임로직 변수 세팅
-	_float fScale = 3.f;
-	m_fGroundY = -2.5f + fScale * 0.5f;
+	_float fScale = 5.f;
+	m_fGroundY = -2.5f + fScale * 0.5f - 1.f;
 	m_iAttack = 1;
 	m_iHp = 10;
 
@@ -297,7 +302,9 @@ void CMonsterN1::Check_Frame()
 
 void CMonsterN1::Move_Frame(const _float& fTimeDelta)
 {
+	_uint m_iPreAnim = _uint(m_fFrame);
 	m_fFrame += m_fFrameSpeed * fTimeDelta;
+	_uint m_iCurAnim = _uint(m_fFrame);
 
 	if (m_fFrame >= m_fFrameEnd)
 	{
@@ -333,6 +340,15 @@ void CMonsterN1::Move_Frame(const _float& fTimeDelta)
 			m_pAICom->Anim_End(m_eCurState);
 			m_eCurState = N1S_IDLE;
 			break;
+		}
+	}
+	else if (m_iPreAnim != m_iCurAnim)
+	{
+		if (m_eAttackPhase == EXECUTE)
+		{
+			if ((m_iCurAnim == 1) ||
+				(m_iCurAnim == 7) ||
+				(m_iCurAnim == 13)) Attack_HitBox();
 		}
 	}
 }
@@ -479,6 +495,24 @@ CMonsterN1* CMonsterN1::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* S
 		MSG_BOX("pMonster Create Failed");
 		return nullptr;
 	}
+
+	return pMonster;
+}
+
+CMonsterN1* CMonsterN1::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, const _vec3& vPos, MONSTER_N1_STATE eState)
+{
+	CMonsterN1* pMonster = new CMonsterN1(pGraphicDev, StageChannel);
+
+	if (FAILED(pMonster->Ready_GameObject()))
+	{
+		Safe_Release(pMonster);
+		MSG_BOX("pMonster Create Failed");
+		return nullptr;
+	}
+
+	pMonster->m_pTransformCom->Set_Pos(vPos.x, pMonster->m_fGroundY, vPos.z);
+	pMonster->m_eCurState = eState;
+	pMonster->m_pAICom->Set_State(eState);
 
 	return pMonster;
 }

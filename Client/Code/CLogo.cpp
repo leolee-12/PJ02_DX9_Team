@@ -90,6 +90,7 @@ _int CLogo::Update_Scene(const _float& fTimeDelta)
 				MSG_BOX("Stage Scene Failed");
 				return -1;
 			}
+
 		}
 
 	return iExit;
