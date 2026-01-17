@@ -5,7 +5,6 @@
 #include "CRenderer.h"
 #include "CPersistentMgr.h"
 #include "CCollisionMgr.h"
-#include "CN2_AI.h"
 
 CSpike::CSpike(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev),

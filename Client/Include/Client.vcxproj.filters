@@ -379,11 +379,35 @@
     <Filter Include="02. GameObject\16. Font">
       <UniqueIdentifier>{a8d8fe86-d6e2-4ff9-b0d0-76f833c3f75a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\17. NPC">
+      <UniqueIdentifier>{02a83c6e-5555-44d8-bf13-46c921acb848}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\17. NPC\01. Ratau">
+      <UniqueIdentifier>{bd6b3898-6203-4641-b5e5-7960b264ed5b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\17. NPC\02. TarotSeller">
+      <UniqueIdentifier>{1f719df2-ba00-4951-a55d-64e71e6a52e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\17. NPC\03. Follower">
+      <UniqueIdentifier>{3d74a21e-77cb-40d2-a6d2-422d4a7c248f}</UniqueIdentifier>
+	</Filter>
     <Filter Include="02. GameObject\07. UI\05. CookingUI\01.CookingSelect\04.CookingInfoCard\02.CookingUpDownArrow">
       <UniqueIdentifier>{68e905df-c0a4-4262-afb2-b3bb80e5ea4a}</UniqueIdentifier>
     </Filter>
     <Filter Include="02. GameObject\13. Bishops\04. Narinder">
       <UniqueIdentifier>{ecbd203a-cadb-4569-8e75-5086beff5fe2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. UI\07.BossHpBar">
+      <UniqueIdentifier>{399d7d32-c442-474d-a3f1-c1faeaacd158}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. UI\07.BossHpBar\00.BossHpBarFront">
+      <UniqueIdentifier>{39aa04ff-0d07-4ba2-b828-728be7b5c53c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. UI\07.BossHpBar\02.BossHpBarBackground">
+      <UniqueIdentifier>{5429114f-5307-4f92-bd5e-191770916fb2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. UI\07.BossHpBar\01.BossHpBarMiddle">
+      <UniqueIdentifier>{91f37026-5e3e-482e-914e-78b0757da388}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -780,6 +804,15 @@
     <ClInclude Include="..\Header\CSpike.h">
       <Filter>02. GameObject\14. Projectile</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CRatau.h">
+      <Filter>02. GameObject\17. NPC\01. Ratau</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CTarotSeller.h">
+      <Filter>02. GameObject\17. NPC\02. TarotSeller</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CFollower.h">
+      <Filter>02. GameObject\17. NPC\03. Follower</Filter>
+	</ClInclude>
     <ClInclude Include="..\Header\CCookingSelectButton.h">
       <Filter>02. GameObject\07. UI\05. CookingUI\01.CookingSelect\02.CookingStartBtn</Filter>
     </ClInclude>
@@ -791,6 +824,18 @@
     </ClInclude>
     <ClInclude Include="..\Header\CCookingTarget.h">
       <Filter>02. GameObject\07. UI\05. CookingUI\00.CookingMiniGame\04.CookingTarget</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CBossHpBarFront.h">
+      <Filter>02. GameObject\07. UI\07.BossHpBar\00.BossHpBarFront</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CBossHpBarMiddle.h">
+      <Filter>02. GameObject\07. UI\07.BossHpBar\01.BossHpBarMiddle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CBossHpBarBackground.h">
+      <Filter>02. GameObject\07. UI\07.BossHpBar\02.BossHpBarBackground</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CBossHpBar.h">
+      <Filter>02. GameObject\07. UI\07.BossHpBar</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CNarinder.h">
       <Filter>02. GameObject\13. Bishops\04. Narinder</Filter>
@@ -1163,6 +1208,15 @@
     <ClCompile Include="..\Code\CSpike.cpp">
       <Filter>02. GameObject\14. Projectile</Filter>
     </ClCompile>
+    <ClCompile Include="..\Code\CRatau.cpp">
+      <Filter>02. GameObject\17. NPC\01. Ratau</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CTarotSeller.cpp">
+      <Filter>02. GameObject\17. NPC\02. TarotSeller</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CFollower.cpp">
+      <Filter>02. GameObject\17. NPC\03. Follower</Filter>
+	</ClCompile>
     <ClCompile Include="..\Code\CCookingUpDownArrow.cpp">
       <Filter>02. GameObject\07. UI\05. CookingUI\01.CookingSelect\04.CookingInfoCard\02.CookingUpDownArrow</Filter>
     </ClCompile>
@@ -1171,6 +1225,18 @@
     </ClCompile>
     <ClCompile Include="..\Code\CCookingInfoFaith.cpp">
       <Filter>02. GameObject\07. UI\05. CookingUI\01.CookingSelect\04.CookingInfoCard\01.CookingInfoCardFaith</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CBossHpBarFront.cpp">
+      <Filter>02. GameObject\07. UI\07.BossHpBar\00.BossHpBarFront</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CBossHpBarMiddle.cpp">
+      <Filter>02. GameObject\07. UI\07.BossHpBar\01.BossHpBarMiddle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CBossHpBarBackground.cpp">
+      <Filter>02. GameObject\07. UI\07.BossHpBar\02.BossHpBarBackground</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CBossHpBar.cpp">
+      <Filter>02. GameObject\07. UI\07.BossHpBar</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CNarinder.cpp">
       <Filter>02. GameObject\13. Bishops\04. Narinder</Filter>

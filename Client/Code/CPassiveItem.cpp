@@ -1,4 +1,4 @@
-#include "pch.h"
+Ôªø#include "pch.h"
 #include "CPassiveItem.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
@@ -75,48 +75,9 @@ void CPassiveItem::OnCollision(CGameObject* pObject)
 
 	if (pObject->Get_OBJID() == OID_PLAYER)
 	{
-		// ªÛ»£¿€øÎ ∞°¥…
+		// ÏÉÅÌò∏ÏûëÏö© Í∞ÄÎä•
 		m_bTriggered = true;
 	}
-}
-
-HRESULT CPassiveItem::Add_Component()
-{
-	Engine::CComponent* pComponent = nullptr;
-
-	// RcCol
-	pComponent = m_pBufferCom = dynamic_cast<Engine::CRcTex*>
-		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_RcTex"));
-
-	NULL_CHECK_RETURN(pComponent, E_FAIL)
-
-		m_mapComponent[ID_STATIC].insert({ L"Com_Buffer", pComponent });
-
-	// Transform
-	pComponent = m_pTransformCom = dynamic_cast<Engine::CTransform*>
-		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Transform"));
-
-	NULL_CHECK_RETURN(pComponent, E_FAIL)
-
-		m_mapComponent[ID_DYNAMIC].insert({ L"Com_Transform", pComponent });
-
-	// Texture
-	pComponent = m_pTextureCom = dynamic_cast<Engine::CTexture*>
-		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_ItemTexture"));
-
-	NULL_CHECK_RETURN(pComponent, E_FAIL)
-
-		m_mapComponent[ID_STATIC].insert({ L"Com_Texture", pComponent });
-
-	// Collider
-	pComponent = m_pColliderCom = dynamic_cast<Engine::CCollider*>
-		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Collider"));
-
-	NULL_CHECK_RETURN(pComponent, E_FAIL)
-
-		m_mapComponent[ID_STATIC].insert({ L"Com_Collider", pComponent });
-
-	return S_OK;
 }
 
 void CPassiveItem::Update_Idle(const _float& fTimeDelta)
@@ -140,14 +101,14 @@ void CPassiveItem::Interact()
 
 	if (FD_GFOOD <= m_eItemID || m_eItemID <= FD_BFOOD)
 	{
-		// «√∑π¿ÃæÓø°∞‘ πˆ«¡ ∫Œø©
+		// ÌîåÎ†àÏù¥Ïñ¥ÏóêÍ≤å Î≤ÑÌîÑ Î∂ÄÏó¨
 		m_iHp = 0;
 		return;
 	}
 	
 	if (WP_SWORD <= m_eItemID || m_eItemID <= WP_TENTACLE)
 	{
-		// «√∑π¿ÃæÓ¿« π´±‚ ΩΩ∑‘ø° ¿Â¬¯
+		// ÌîåÎ†àÏù¥Ïñ¥Ïùò Î¨¥Í∏∞ Ïä¨Î°ØÏóê Ïû•Ï∞©
 		return;
 	}
 

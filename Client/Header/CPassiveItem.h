@@ -15,8 +15,6 @@ public:
 	virtual void		OnCollision(CGameObject* pObject);
 
 protected:
-	HRESULT				Add_Component();
-
 	void				Update_Idle(const _float& fTimeDelta);
 	void				Update_Summon(const _float& fTimeDelta);
 	void				Interact();

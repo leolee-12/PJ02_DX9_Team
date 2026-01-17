@@ -5,7 +5,6 @@
 #include "CRenderer.h"
 #include "CPersistentMgr.h"
 #include "CCollisionMgr.h"
-#include "CN2_AI.h"
 
 CNode::CNode(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev),
@@ -223,7 +222,7 @@ void CNode::Set_Texture()
 	m_pTextureCom->Set_Texture(0);
 }
 
-CNode* CNode::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, CTransform* pOwnerTC, const _tchar* pProtoTexKey)
+CNode* CNode::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, const _tchar* pProtoTexKey)
 {
 	CNode* pNode = new CNode(pGraphicDev, StageChannel);
 
@@ -235,8 +234,6 @@ CNode* CNode::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChanne
 		MSG_BOX("pNode Create Failed");
 		return nullptr;
 	}
-
-	pNode->m_pOwnerTC = pOwnerTC;	// Ready 도중 조작될 위험 제거
 
 	return pNode;
 }

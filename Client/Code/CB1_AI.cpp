@@ -7,7 +7,6 @@ CB1_AI::CB1_AI(LPDIRECT3DDEVICE9 pGraphicDev)
 	m_fSpeed(0.f),
 	m_fAcmlTime(0.f),
 	m_bChase(false),
-	m_fAngle(0.f),
 	m_fGravity(0.f),
 	m_iDequeMinSize(3),
 	m_pOwner(nullptr),
@@ -21,7 +20,6 @@ CB1_AI::CB1_AI(const CB1_AI& rhs)
 	m_fSpeed(rhs.m_fSpeed),
 	m_fAcmlTime(rhs.m_fAcmlTime),
 	m_bChase(false),
-	m_fAngle(rhs.m_fAngle),
 	m_fGravity(rhs.m_fGravity),
 	m_iDequeMinSize(rhs.m_iDequeMinSize),
 	m_pOwner(nullptr),
@@ -41,7 +39,6 @@ HRESULT CB1_AI::Ready_AI(const _float& fDetectRange, const _float& fInteractRang
 		return E_FAIL;
 
 	m_fSpeed = 1.f;
-	m_fAngle = 0.f;
 	m_vSpeed = { 0.f, 0.f, 0.f };
 	m_fGravity = -9.8f;
 	m_fAcmlTime = 0.f;
@@ -384,15 +381,15 @@ void CB1_AI::Update_Summon(const _float& fTimeDelta)
 }
 
 void CB1_AI::Update_Roar(const _float& fTimeDelta)
-{
+{	// Empty
 }
 
 void CB1_AI::Update_Spawn(const _float& fTimeDelta)
-{
+{	// Empty
 }
 
 void CB1_AI::Update_Die(const _float& fTimeDelta)
-{
+{	// Empty
 }
 
 void CB1_AI::Update_Stop(const _float& fTimeDelta)

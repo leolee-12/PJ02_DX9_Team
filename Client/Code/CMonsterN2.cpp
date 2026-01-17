@@ -132,33 +132,34 @@ void CMonsterN2::OnCollision(CGameObject* pObject)
 
 		const Engine::AABB& borderAABB = pBorderCol->Get_AABB();
 
-		const _float fPlayerHalf = 0.5f;
+		const _float fHalf = 0.5f;
 
-		_float fOverlapX = (borderAABB.hx + fPlayerHalf) - abs(vCurPos.x - borderAABB.x);
-		_float fOverlapZ = (borderAABB.hz + fPlayerHalf) - abs(vCurPos.z - borderAABB.z);
+		_float fOverlapX = (borderAABB.hx + fHalf) - abs(vCurPos.x - borderAABB.x);
+		_float fOverlapZ = (borderAABB.hz + fHalf) - abs(vCurPos.z - borderAABB.z);
 
 		if (fOverlapX > 0.f && fOverlapZ > 0.f)
 		{
 			if (fOverlapX < fOverlapZ)
 			{
+				// X축 보정
 				if (vCurPos.x < borderAABB.x)
-					vCurPos.x -= fOverlapX + 0.1f;
+					vCurPos.x = borderAABB.x - borderAABB.hx - fHalf - 0.01f;
 				else
-					vCurPos.x += fOverlapX + 0.1f;
+					vCurPos.x = borderAABB.x + borderAABB.hx + fHalf + 0.01f;
 			}
-			else
+			else if (fOverlapX > fOverlapZ)
 			{
+				// Z축 보정
 				if (vCurPos.z < borderAABB.z)
-					vCurPos.z -= fOverlapZ + 0.1f;
+					vCurPos.z = borderAABB.z - borderAABB.hz - fHalf - 0.01f;
 				else
-					vCurPos.z += fOverlapZ + 0.1f;
+					vCurPos.z = borderAABB.z + borderAABB.hz + fHalf + 0.01f;
 			}
-
-			vCurPos -= *(m_pAICom->Get_Dir());
 
 			m_pTransformCom->Set_Pos(vCurPos.x, vCurPos.y, vCurPos.z);
-
-			m_pAICom->Set_Lerp(0.f, vCurPos);
+			m_pTransformCom->Update_Component(0.f);
+			m_pTransformCom->Compute_Bilboard(BBD_X);
+			m_pAICom->Set_LerpPos(vCurPos);
 		}
 
 		return;
@@ -244,15 +245,15 @@ void CMonsterN2::Ready_Variable()
 	_float fScaleReduction(0.8f);
 	m_pTransformCom->Get_Scale(&vScale);
 	vScale *= fScaleReduction;
-	m_pNode[0] = CNode::Create(m_pGraphicDev, m_pMessageChannel, m_pTransformCom, L"Proto_N2Node1Texture");
+	m_pNode[0] = CNode::Create(m_pGraphicDev, m_pMessageChannel, L"Proto_N2Node1Texture");
 	if(m_pNode[0]) m_pNode[0]->Set_NodeScale(vScale);
 
 	vScale *= fScaleReduction;
-	m_pNode[1] = CNode::Create(m_pGraphicDev, m_pMessageChannel, m_pTransformCom, L"Proto_N2Node2Texture");
+	m_pNode[1] = CNode::Create(m_pGraphicDev, m_pMessageChannel, L"Proto_N2Node2Texture");
 	if (m_pNode[1]) m_pNode[1]->Set_NodeScale(vScale);
 
 	vScale *= fScaleReduction;
-	m_pNode[2] = CNode::Create(m_pGraphicDev, m_pMessageChannel, m_pTransformCom, L"Proto_N2Node3Texture");
+	m_pNode[2] = CNode::Create(m_pGraphicDev, m_pMessageChannel, L"Proto_N2Node3Texture");
 	if (m_pNode[2]) m_pNode[2]->Set_NodeScale(vScale);
 }
 
