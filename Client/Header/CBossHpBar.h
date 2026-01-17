@@ -9,9 +9,13 @@ namespace Engine
 	class CTexture;
 }
 
-class CCookingMarker;
-class CCookingGauge;
+class CBossHpBarFront;
+class CBossHpBarMiddle;
 
+enum BossHpBarState
+{
+
+};
 
 class CBossHpBar :
 	public CUi
@@ -31,16 +35,26 @@ public:
 	static CBossHpBar* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 	_bool Check_CookingResult();
 
-	void Set_Render(_bool _bRender) { m_bRender = _bRender; };
-
-
+	void Set_Render(_bool _bRender) { m_bRender = _bRender; }
+	void Set_Hp(_float _fCurrtHp){ m_fCurrtHp = _fCurrtHp; }
+	_float Get_Hp() const { return m_fCurrtHp; }
+	void Set_MaxHp(_float _fMaxHp) { m_fMaxHp = _fMaxHp; }
+	void ApplyDamage(_float _fDamage);
 private:
-
 	virtual			void		Free();
 
 private:
 	vector<CGameObject*> m_vecHpBarUI;
 
+	CBossHpBarFront* m_pBossHpBarFront;
+	CBossHpBarMiddle* m_pBossHpBarMiddle;
+
 	_bool		m_bRender;
+
+
+	_float m_fMaxHp;
+	_float m_fPrevHp;
+	_float m_fCurrtHp;
+	_float m_fRadio;
 };
 

@@ -25,6 +25,7 @@ public:
 public:
 	static CBossHpBarFront* Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 _vPos, float _fScale);
 
+	void Set_Radio(_float _Radio) { m_fRadio = _Radio; }
 private:
 	virtual			void		Free();
 
@@ -35,6 +36,9 @@ private:
 	CRcTex* m_pBufferCom;
 	CTransform* m_pTransformCom;
 	CTexture* m_pTextureCom;
+
+	// 비율 1.0f~ 0.0f;
+	_float m_fRadio;
 
 	_vec3 m_vPos;
 	float m_fScale;

@@ -22,6 +22,8 @@ HRESULT CBossHpBarFront::Ready_GameObject()
 	m_pTransformCom->Set_Scale(59 * 2*m_fScale, 7 * m_fScale, 0.1f);
 	m_pTransformCom->Set_Pos(m_vPos.x, m_vPos.y, m_vPos.z);
 
+	m_fRadio = 1.0f;
+
 	return S_OK;
 }
 
@@ -53,6 +55,10 @@ _int CBossHpBarFront::Update_GameObject(const _float& fTimeDelta)
 
 void CBossHpBarFront::LateUpdate_GameObject(const _float& fTimeDelta)
 {
+	// 임시테스트용 셰이더 넣고 삭제 요망
+	m_pTransformCom->Set_Scale(59 * 2 * m_fScale*m_fRadio, 7 * m_fScale, 0.1f);
+
+
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
 	m_pTransformCom->Get_Info(INFO_POS, &m_vPos);
 	Compute_ViewDepth_Ortho(&m_vPos);
