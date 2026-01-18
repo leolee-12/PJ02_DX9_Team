@@ -95,17 +95,22 @@ set<wstring> Dungeon_Texture =
 // Village.txt
 set<wstring> Village_Texture =
 {
-	L"Circle",
-	L"Dirt",          
 	L"DungeonDoor",
-	L"Gateway",
-	L"Grass",
-	L"Rock",
-	L"Rubble",
-	L"Teleport",
+	L"Weed",
 	L"Tree",
+	L"Grass",
+	L"Twig",
+	L"Candle",
+	L"Mushroom",
+	L"Web",
+	L"Rock",
+	L"Bush",
+	L"Icon",
+	L"Circle",
+	L"Teleport",
 	L"VillageStructure",
-	L"WeaponPodium"  
+	L"BreakableTree",
+	L"BreakableStone"
 };
 
 // TheGateway.txt

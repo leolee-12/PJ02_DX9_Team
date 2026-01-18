@@ -25,6 +25,9 @@
 #include "CMapWarp.h"
 #include "CWarp.h"
 #include "CMapBorder.h"
+#include "CFollower.h"
+#include "CBreakableRock.h"
+#include "CBreakableTree.h"
 
 CVillage::CVillage(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -130,7 +133,9 @@ HRESULT CVillage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 			switch (spawn.type)
 			{
 			case 0:
-				CPersistentMgr::GetInstance()->Get_Player()->Set_Pos(_vec3(spawn.x, 0.f, spawn.z));
+				//CPersistentMgr::GetInstance()->Get_Player()->Set_Pos(_vec3(spawn.x, 0.f, spawn.z));
+				//CPersistentMgr::GetInstance()->Get_Player()->Set_Pos(_vec3(199.8f, 0.f, 101.f));	// 스폰지점
+				CPersistentMgr::GetInstance()->Get_Player()->Set_Pos(_vec3(199.8f, 0.f, 35.f));	// 디버그용
 				pGameObject = CPersistentMgr::GetInstance()->Get_Player();
 
 				if (nullptr == pGameObject)
@@ -228,6 +233,18 @@ HRESULT CVillage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 				if (pGameObject)
 					pLayer->Add_GameObject(L"Grass", pGameObject);
 			}
+			else if (obj.category == "BreakableRock")
+			{
+				pGameObject = CBreakableRock::Create(m_pGraphicDev, obj, m_pMessageChannel);
+				if (pGameObject)
+					pLayer->Add_GameObject(L"BreakableRock", pGameObject);
+			}
+			else if (obj.category == "BreakableTree")
+			{
+				pGameObject = CBreakableRock::Create(m_pGraphicDev, obj, m_pMessageChannel);
+				if (pGameObject)
+					pLayer->Add_GameObject(L"BreakableTree", pGameObject);
+			}
 			else
 			{
 				pGameObject = CMapObject::Create(m_pGraphicDev, obj);
@@ -279,7 +296,62 @@ HRESULT CVillage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 			pLayer->Add_GameObject(L"SkyBox", pGameObject);
 	}
 
-	// ����׿�
+	// 디버그용
+
+	for (int i = 0; i < 2; ++i)
+	{
+		pGameObject = CFollower::Create(m_pGraphicDev, m_pMessageChannel, L"Proto_Follower1Texture");
+		NULL_CHECK_RETURN(pGameObject, E_FAIL);
+		if (FAILED(pLayer->Add_GameObject(L"NPC", pGameObject)))
+			return E_FAIL;
+
+		pGameObject = CFollower::Create(m_pGraphicDev, m_pMessageChannel, L"Proto_Follower2Texture");
+		NULL_CHECK_RETURN(pGameObject, E_FAIL);
+		if (FAILED(pLayer->Add_GameObject(L"NPC", pGameObject)))
+			return E_FAIL;
+
+		pGameObject = CFollower::Create(m_pGraphicDev, m_pMessageChannel, L"Proto_Follower3Texture");
+		NULL_CHECK_RETURN(pGameObject, E_FAIL);
+		if (FAILED(pLayer->Add_GameObject(L"NPC", pGameObject)))
+			return E_FAIL;
+
+		pGameObject = CFollower::Create(m_pGraphicDev, m_pMessageChannel, L"Proto_Follower4Texture");
+		NULL_CHECK_RETURN(pGameObject, E_FAIL);
+		if (FAILED(pLayer->Add_GameObject(L"NPC", pGameObject)))
+			return E_FAIL;
+	}
+
+	for (int i = 0; i < 5; ++i)
+	{
+		OBJECTDATA tObjData1 = {"BreakableRock",						// 카테고리
+								0,										// 텍스처인덱스
+								199.8f + Get_Rand_Float(-30.f, 30.f),	// x
+								0.f,									// y
+								35.f + Get_Rand_Float(-30.f, 30.f),		// z
+								5.f,									// 스케일
+								0.f };									// Standing or Floor
+
+		pGameObject = CBreakableRock::Create(m_pGraphicDev, tObjData1, m_pMessageChannel);
+		NULL_CHECK_RETURN(pGameObject, E_FAIL);
+		if (FAILED(pLayer->Add_GameObject(L"NPC", pGameObject)))
+			return E_FAIL;
+
+		OBJECTDATA tObjData2 = {"BreakableTree",						// 카테고리
+								0,										// 텍스처인덱스
+								199.8f + Get_Rand_Float(-30.f, 30.f),	// x
+								0.f,									// y
+								35.f + Get_Rand_Float(-30.f, 30.f),		// z
+								5.f,									// 스케일
+								0.f };									// Standing or Floor
+
+		pGameObject = CBreakableTree::Create(m_pGraphicDev, tObjData2, m_pMessageChannel);
+		NULL_CHECK_RETURN(pGameObject, E_FAIL);
+		if (FAILED(pLayer->Add_GameObject(L"NPC", pGameObject)))
+			return E_FAIL;
+	}
+
+
+
 
 	m_mapLayer.insert({ pLayerTag , pLayer });
 

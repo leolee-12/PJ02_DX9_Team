@@ -256,6 +256,7 @@
     <ClInclude Include="..\Header\CProjectile.h" />
     <ClInclude Include="..\Header\CRatau.h" />
     <ClInclude Include="..\Header\CRealDungeon.h" />
+    <ClInclude Include="..\Header\CBreakableRock.h" />
     <ClInclude Include="..\Header\CSceneWarp.h" />
     <ClInclude Include="..\Header\CSelectionArrow.h" />
     <ClInclude Include="..\Header\CSkyBox.h" />
@@ -276,6 +277,7 @@
     <ClInclude Include="..\Header\CTitleCenter.h" />
     <ClInclude Include="..\Header\CTitleLogo.h" />
     <ClInclude Include="..\Header\CTitleTab.h" />
+    <ClInclude Include="..\Header\CBreakableTree.h" />
     <ClInclude Include="..\Header\CTriggerPoint.h" />
     <ClInclude Include="..\Header\CTutorial.h" />
     <ClInclude Include="..\Header\CVillage.h" />
@@ -404,6 +406,7 @@
     <ClCompile Include="..\Code\CProjectile.cpp" />
     <ClCompile Include="..\Code\CRatau.cpp" />
     <ClCompile Include="..\Code\CRealDungeon.cpp" />
+    <ClCompile Include="..\Code\CBreakableRock.cpp" />
     <ClCompile Include="..\Code\CSceneWarp.cpp" />
     <ClCompile Include="..\Code\CSelectionArrow.cpp" />
     <ClCompile Include="..\Code\CSkyBox.cpp" />
@@ -426,6 +429,7 @@
     <ClCompile Include="..\Code\CTitleCenter.cpp" />
     <ClCompile Include="..\Code\CTitleLogo.cpp" />
     <ClCompile Include="..\Code\CTitleTab.cpp" />
+    <ClCompile Include="..\Code\CBreakableTree.cpp" />
     <ClCompile Include="..\Code\CTriggerPoint.cpp" />
     <ClCompile Include="..\Code\CTutorial.cpp" />
     <ClCompile Include="..\Code\CVillage.cpp" />

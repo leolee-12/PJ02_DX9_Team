@@ -198,7 +198,7 @@ void CFollower::Ready_Variable()
 	m_iHp = 10;
 
 	// Transform 세팅
-	m_pTransformCom->Set_Pos(_float(rand() % 20), m_fGroundY, _float(rand() % 20) + 80.f);
+	m_pTransformCom->Set_Pos(Get_Rand_Float(210.f, 220.f), m_fGroundY, Get_Rand_Float(30.f, 40.f));
 	m_pTransformCom->Set_Scale(fScale, fScale, fScale);
 
 	// Collider 세팅
@@ -285,21 +285,6 @@ void CFollower::Check_Frame()
 		break;
 	}
 
-	switch (m_eCurState)
-	{
-	case FOLLOWER_IDLE:
-	{
-		m_fFrameEnd = 64.f;
-	}
-	break;
-
-	case FOLLOWER_RUN:
-	{
-		m_fFrameEnd = 32.f;
-	}
-	break;
-	}
-
 	m_ePreState = m_eCurState;
 }
 
@@ -310,26 +295,26 @@ void CFollower::Move_Frame(const _float& fTimeDelta)
 	if (m_fFrame >= m_fFrameEnd)
 	{
 		m_fFrame = 0.f;
-
-		if (m_eCurState != FOLLOWER_RECRUIT)
-			m_eCurState = FOLLOWER_STATE(Get_Rand_Int(1, FOLLOWER_END) - 1);
-		else
-		{
-			if (m_iRecruitState == 0)
-			{
-				m_iRecruitState = 1;
-				m_fFrameEnd = 96;
-			}
-			else if (m_iRecruitState == 1)
-			{
-				m_iRecruitState = 2;
-				m_fFrameEnd = 75;
-			}
-			else if (m_iRecruitState == 2)
-			{
-				m_eCurState = FOLLOWER_STATE(Get_Rand_Int(1, FOLLOWER_END) - 1);
-			}
-		}
+		m_eCurState = FOLLOWER_IDLE;
+		//if (m_eCurState != FOLLOWER_RECRUIT)
+		//	m_eCurState = FOLLOWER_STATE(Get_Rand_Int(1, FOLLOWER_END) - 1);
+		//else
+		//{
+		//	if (m_iRecruitState == 0)
+		//	{
+		//		m_iRecruitState = 1;
+		//		m_fFrameEnd = 96;
+		//	}
+		//	else if (m_iRecruitState == 1)
+		//	{
+		//		m_iRecruitState = 2;
+		//		m_fFrameEnd = 75;
+		//	}
+		//	else if (m_iRecruitState == 2)
+		//	{
+		//		m_eCurState = FOLLOWER_STATE(Get_Rand_Int(1, FOLLOWER_END) - 1);
+		//	}
+		//}
 	}
 }
 
