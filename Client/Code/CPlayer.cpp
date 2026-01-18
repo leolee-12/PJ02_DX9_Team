@@ -98,7 +98,7 @@ _int CPlayer::Update_GameObject(const _float& fTimeDelta)
 	
 
 	Key_Input(fTimeDelta);
-	Move_Roll(fTimeDelta);
+	Move_Lerp(fTimeDelta);
 	Charge(fTimeDelta);
 
 	Move_Frame(fTimeDelta);
@@ -159,13 +159,13 @@ void CPlayer::Render_GameObject()
 void CPlayer::Ready_Variable()
 {
 	m_bIntro = false;
-	m_fSpeed = 10.f;
+	m_fSpeed = DEFAULT_SPEED;
 	m_iAttack = 1;
 	m_iHp = 10;
 	m_fAcmlTime = 0.f;
 
 	m_eOBJID = OID_PLAYER;
-	_float fScale = 10.f;
+	_float fScale = DEFAULT_SCALE;
 	m_pTransformCom->Set_Scale(fScale, fScale, fScale);		// Player 폴더
 	m_pTransformCom->Set_Pos(0.f, 0.f, 0.f);
 	m_fFrameSpeed = 24.f;
@@ -314,14 +314,14 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 		m_bIntro = !m_bIntro;
 		if (m_bIntro)
 		{
-			m_fSpeed = 7.f;
-			_float fScale = 11.f;
+			m_fSpeed = INTRO_SPEED;
+			_float fScale = INTRO_SCALE;
 			m_pTransformCom->Set_Scale(fScale, fScale, fScale);
 		}
 		else
 		{
-			m_fSpeed = 10.f;
-			_float fScale = 10.f;
+			m_fSpeed = DEFAULT_SPEED;
+			_float fScale = DEFAULT_SCALE;
 			m_pTransformCom->Set_Scale(fScale, fScale, fScale);
 		}
 	}
@@ -346,7 +346,7 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 
 		m_eCurState = PS_REBIRTH;
 		m_strFrameKey = L"intro_rebirth";
-		_float fScale = 20.f;
+		_float fScale = REBIRTH_SCALE;
 		m_pTransformCom->Set_Scale(fScale, fScale, fScale);
 		m_pTransformCom->Set_Pos(m_vPos.x, 2.f, m_vPos.z);
 	}
@@ -425,8 +425,8 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 
 		m_bRoll = true;
 		m_eCurState = PS_ROLL;
-		m_vRollPos = m_vPos + m_vDir * 5.f;
-		m_fLerp = 0.25f;
+		m_vLerpPos = m_vPos + m_vDir * 6.f;
+		m_fLerp = 0.2f;
 	}
 
 	if (GetAsyncKeyState(VK_LBUTTON) & 0x0001)	// 눌렀을 때 한 번만 true
@@ -437,7 +437,9 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 		m_bRoll = false;
 		m_fFrame = 0.f;
 		m_eCurState = PS_ATTACK;
-		m_pTransformCom->Move_Pos(&m_vDir, fTimeDelta, m_fSpeed - 3.f);
+		//m_pTransformCom->Move_Pos(&m_vDir, fTimeDelta, m_fSpeed * 3.f);
+		m_vLerpPos = m_vPos + m_vDir * 1.f;
+		m_fLerp = 0.2f;
 		Attack_HitBox();
 	}
 
@@ -550,6 +552,7 @@ void CPlayer::Check_Frame()
 	{
 		m_fFrameEnd = m_pTextureCom->Get_TextureEnd(L"knockback");
 	}
+	break;
 
 	case PS_ACTION:
 	{
@@ -624,8 +627,8 @@ void CPlayer::Move_Frame(const _float& fTimeDelta)
 		{
 			m_bIntro = false;
 			m_eCurState = PS_IDLE;
-			m_fSpeed = 10.f;
-			_float fScale = 10.f;
+			m_fSpeed = DEFAULT_SPEED;
+			_float fScale = DEFAULT_SCALE;
 			m_pTransformCom->Set_Scale(fScale, fScale, fScale);
 			m_pTransformCom->Set_Pos(m_vPos.x, 0.f, m_vPos.z);
 		}
@@ -741,11 +744,11 @@ void CPlayer::Set_FrameKey()
 	}
 }
 
-void CPlayer::Move_Roll(const _float& fTimeDelta)
+void CPlayer::Move_Lerp(const _float& fTimeDelta)
 {
-	if (!m_bRoll) return;
+	if (!m_bRoll && !m_iCombo) return;
 	
-	D3DXVec3Lerp(&m_vPos, &m_vPos, &m_vRollPos, m_fLerp);
+	D3DXVec3Lerp(&m_vPos, &m_vPos, &m_vLerpPos, m_fLerp);
 
 	m_pTransformCom->Set_Pos(m_vPos.x, m_vPos.y, m_vPos.z);
 }
@@ -768,7 +771,7 @@ void CPlayer::Set_Pos(const _vec3& vPos)
 void CPlayer::Set_Tied()
 {
 	m_bIntro = true;
-	m_fSpeed = 7.f;
+	m_fSpeed = INTRO_SPEED;
 	_float fScale = 11.f;
 	m_pTransformCom->Set_Scale(fScale, fScale, fScale);
 }
@@ -799,7 +802,7 @@ void CPlayer::Set_Reborn()
 	m_pTransformCom->Set_Scale(fScale, fScale, fScale);
 	m_pTransformCom->Set_Pos(m_vPos.x, 2.f, m_vPos.z);
 	m_vDir = _vec3(0.f, 0.f, -1.f);
-	m_fSpeed = 10.f;
+	m_fSpeed = DEFAULT_SPEED;
 }
 
 void CPlayer::Set_MessageChannel(IMessageChannel* pMessageChannel)
@@ -931,7 +934,7 @@ void	CPlayer::OnCollision(CGameObject* pObject)
 			m_pTransformCom->Set_Pos(vCurPos.x, vCurPos.y, vCurPos.z);
 			m_pTransformCom->Update_Component(0.f);
 			m_pTransformCom->Compute_Bilboard(BBD_X);
-			m_vRollPos = vCurPos;
+			m_vLerpPos = vCurPos;
 		}
 
 		return;
