@@ -37,41 +37,11 @@
     <Filter Include="01. Scene\99. Loading\LoadingThread">
       <UniqueIdentifier>{bec13d5c-cc47-4d5b-a2eb-0fb3bafdcfdd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\02. Monster\Normal2">
-      <UniqueIdentifier>{7afa2db1-0b9b-45dd-add7-b4436ab26da5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\02. Monster\Normal3">
-      <UniqueIdentifier>{c750db87-30b0-461e-be3c-7188c009816e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\02. Monster\Boss1">
-      <UniqueIdentifier>{4835642c-34bd-4f07-9943-87d66889933e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\04. Camera">
-      <UniqueIdentifier>{238f4029-df65-4760-af60-aac3d4766c58}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\04. Camera\01. DynamicCamera">
-      <UniqueIdentifier>{90a409f8-1b96-4329-9023-b52d183d047c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\04. Camera\00. MainCamera">
-      <UniqueIdentifier>{034c96cf-6932-41a4-9e6e-cbbb742ea410}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\09. Item">
-      <UniqueIdentifier>{5daaea79-d1ec-46ae-a481-80a46217e916}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01. Scene\01. Maps">
       <UniqueIdentifier>{4e1e71d3-7af1-4978-b079-ff0455d22473}</UniqueIdentifier>
     </Filter>
     <Filter Include="01. Scene\02. KnuckleBone">
       <UniqueIdentifier>{fbdfd1c6-2a58-45e4-970b-5fac37bacfcb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Scene\01. Maps\00. Test">
-      <UniqueIdentifier>{7bf09d6b-5222-4361-bb6b-3e27ea739fa2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Scene\01. Maps\01. EditScene">
-      <UniqueIdentifier>{ff5bb01d-db75-499d-ae0b-be1f8fb58ee7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Scene\01. Maps\02. Stage">
-      <UniqueIdentifier>{f40be6c5-f78e-4629-9f22-c05f63c86d1a}</UniqueIdentifier>
     </Filter>
     <Filter Include="01. Scene\99. Loading\LoadingThread\New">
       <UniqueIdentifier>{4cb57919-a0a7-4051-bd12-d92354f2419c}</UniqueIdentifier>
@@ -99,9 +69,6 @@
     </Filter>
     <Filter Include="01. Scene\01. Maps\07. Village">
       <UniqueIdentifier>{71467a02-ac11-4d7a-84a6-64382f2466ef}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\02. Monster\Boss2">
-      <UniqueIdentifier>{a2bf76f1-004d-4e27-ad5f-a12e80a7f38a}</UniqueIdentifier>
     </Filter>
     <Filter Include="03. Manager">
       <UniqueIdentifier>{f4a5af23-1cb1-4c65-b73d-7132d05ea4c2}</UniqueIdentifier>
@@ -139,8 +106,110 @@
     <Filter Include="02. GameObject\03. Dependent">
       <UniqueIdentifier>{45b931e1-2ff5-4d2a-b1de-2176728aa00a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\01. GameActor\04. Brute">
+      <UniqueIdentifier>{84e93905-37af-4387-b6a4-d5044690241b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. GameActor\03. Follower">
+      <UniqueIdentifier>{3d74a21e-77cb-40d2-a6d2-422d4a7c248f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. GameActor\05. Ratau">
+      <UniqueIdentifier>{bd6b3898-6203-4641-b5e5-7960b264ed5b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. GameActor\06. TarotSeller">
+      <UniqueIdentifier>{1f719df2-ba00-4951-a55d-64e71e6a52e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. GameActor\00. Player">
+      <UniqueIdentifier>{ae4c5383-56a8-4b14-85a9-74fedfb3ccfe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. GameActor\01. Monster">
+      <UniqueIdentifier>{38405f32-dfc2-465f-b792-d975bcf71c8f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. GameActor\01. Monster\Normal2">
+      <UniqueIdentifier>{7afa2db1-0b9b-45dd-add7-b4436ab26da5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. GameActor\01. Monster\Normal3">
+      <UniqueIdentifier>{c750db87-30b0-461e-be3c-7188c009816e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. GameActor\01. Monster\Boss1">
+      <UniqueIdentifier>{4835642c-34bd-4f07-9943-87d66889933e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. GameActor\01. Monster\Normal1">
+      <UniqueIdentifier>{a8173e77-340e-468f-9aa7-00e8cd1ad765}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. GameActor\01. Monster\Boss2">
+      <UniqueIdentifier>{a2bf76f1-004d-4e27-ad5f-a12e80a7f38a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. GameActor\02. Bishops">
+      <UniqueIdentifier>{7f83aa31-fb8d-49c4-95fc-ebbf3af46beb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. GameActor\02. Bishops\00. Leshy">
+      <UniqueIdentifier>{52cf13fa-731d-4b11-bba6-7779b02f29fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. GameActor\02. Bishops\01. Heket">
+      <UniqueIdentifier>{06650769-1a7d-4ff5-9267-1f4043d14e47}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. GameActor\02. Bishops\02. Kallamar">
+      <UniqueIdentifier>{fd8fec59-64da-4bd1-8344-7f59f16db3fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. GameActor\02. Bishops\03. Shamura">
+      <UniqueIdentifier>{28a8afb7-5c8e-4ec1-bcdb-2908ee49bd64}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. GameActor\02. Bishops\04. Narinder">
+      <UniqueIdentifier>{ecbd203a-cadb-4569-8e75-5086beff5fe2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\00. System\02. Warp">
+      <UniqueIdentifier>{afb959a5-02a0-4191-9f75-2c789c60d030}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\00. System\03. TriggerPoint">
+      <UniqueIdentifier>{5284baad-cc65-443f-8583-8ea20262c3bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\02. Environment\00. MapObject">
+      <UniqueIdentifier>{c73a576f-744b-4160-90e9-ca0038f8a214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\02. Environment\02. Interactable">
+      <UniqueIdentifier>{2eb856ce-ff64-4444-a92e-e687d9b46140}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\02. Environment\01. Tile">
+      <UniqueIdentifier>{fd9114e4-ed18-4e95-93eb-47e4ebc69072}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\02. Environment\02. Interactable\02. BreakableRock">
+      <UniqueIdentifier>{3329f3da-37fb-41de-8fa1-0c729130dfb9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\02. Environment\02. Interactable\00. Grass">
+      <UniqueIdentifier>{20638477-cadd-4aa2-94a1-d3b5098d0639}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\02. Environment\02. Interactable\01. BreakableTree">
+      <UniqueIdentifier>{6045c0f4-0bbb-4825-9f07-1e4a96913560}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\02. Environment\97. BackGround">
+      <UniqueIdentifier>{07693c01-70a4-4d6a-9bd8-fe0002596e8d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\02. Environment\98. Terrain">
+      <UniqueIdentifier>{8d635b76-59e8-4b1b-94c9-608c92cd7cb1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\02. Environment\99. TerrainWall">
+      <UniqueIdentifier>{52de0396-bdc9-4e24-8949-59503af9d2c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\03. Dependent\00. Projectile">
+      <UniqueIdentifier>{3ddb0c3c-fab8-47e2-abe4-23dee1d57a77}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\03. Dependent\01. Effect">
+      <UniqueIdentifier>{37f31870-dba2-4668-ad76-b1d69d78c68f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\03. Dependent\02. Node">
+      <UniqueIdentifier>{fde0f6e7-5d96-449c-a951-022022683803}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\03. Dependent\03. Spike">
+      <UniqueIdentifier>{71626d7b-7211-47aa-adb4-63723478f690}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02. GameObject\04. Item">
       <UniqueIdentifier>{745713c8-6fcb-434d-8571-a01e33672ee8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\04. Item\00. Active">
+      <UniqueIdentifier>{356cea46-0266-433a-b7b2-af3e77f7a2fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\04. Item\01. Passive">
+      <UniqueIdentifier>{fcf494f2-363a-4ee3-b6c5-257d7d0134cb}</UniqueIdentifier>
     </Filter>
     <Filter Include="02. GameObject\05. UI">
       <UniqueIdentifier>{0320c609-d491-42cf-96f0-e94adb951d41}</UniqueIdentifier>
@@ -343,110 +412,17 @@
     <Filter Include="02. GameObject\05. UI\07.BossHpBar\01.BossHpBarMiddle">
       <UniqueIdentifier>{91f37026-5e3e-482e-914e-78b0757da388}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\05. UI\16. Font">
+    <Filter Include="02. GameObject\05. UI\99. Font">
       <UniqueIdentifier>{a8d8fe86-d6e2-4ff9-b0d0-76f833c3f75a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\01. GameActor\04. Brute">
-      <UniqueIdentifier>{84e93905-37af-4387-b6a4-d5044690241b}</UniqueIdentifier>
+    <Filter Include="01. Scene\01. Maps\99. Stage">
+      <UniqueIdentifier>{f40be6c5-f78e-4629-9f22-c05f63c86d1a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\01. GameActor\03. Follower">
-      <UniqueIdentifier>{3d74a21e-77cb-40d2-a6d2-422d4a7c248f}</UniqueIdentifier>
+    <Filter Include="01. Scene\01. Maps\98. Test">
+      <UniqueIdentifier>{7bf09d6b-5222-4361-bb6b-3e27ea739fa2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\01. GameActor\05. Ratau">
-      <UniqueIdentifier>{bd6b3898-6203-4641-b5e5-7960b264ed5b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\01. GameActor\06. TarotSeller">
-      <UniqueIdentifier>{1f719df2-ba00-4951-a55d-64e71e6a52e1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\01. GameActor\00. Player">
-      <UniqueIdentifier>{ae4c5383-56a8-4b14-85a9-74fedfb3ccfe}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\01. GameActor\01. Monster">
-      <UniqueIdentifier>{38405f32-dfc2-465f-b792-d975bcf71c8f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\01. GameActor\01. Monster\Normal2">
-      <UniqueIdentifier>{7afa2db1-0b9b-45dd-add7-b4436ab26da5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\01. GameActor\01. Monster\Normal3">
-      <UniqueIdentifier>{c750db87-30b0-461e-be3c-7188c009816e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\01. GameActor\01. Monster\Boss1">
-      <UniqueIdentifier>{4835642c-34bd-4f07-9943-87d66889933e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\01. GameActor\01. Monster\Normal1">
-      <UniqueIdentifier>{a8173e77-340e-468f-9aa7-00e8cd1ad765}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\01. GameActor\01. Monster\Boss2">
-      <UniqueIdentifier>{a2bf76f1-004d-4e27-ad5f-a12e80a7f38a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\01. GameActor\02. Bishops">
-      <UniqueIdentifier>{7f83aa31-fb8d-49c4-95fc-ebbf3af46beb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\01. GameActor\02. Bishops\00. Leshy">
-      <UniqueIdentifier>{52cf13fa-731d-4b11-bba6-7779b02f29fd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\01. GameActor\02. Bishops\01. Heket">
-      <UniqueIdentifier>{06650769-1a7d-4ff5-9267-1f4043d14e47}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\01. GameActor\02. Bishops\02. Kallamar">
-      <UniqueIdentifier>{fd8fec59-64da-4bd1-8344-7f59f16db3fd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\01. GameActor\02. Bishops\03. Shamura">
-      <UniqueIdentifier>{28a8afb7-5c8e-4ec1-bcdb-2908ee49bd64}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\01. GameActor\02. Bishops\04. Narinder">
-      <UniqueIdentifier>{ecbd203a-cadb-4569-8e75-5086beff5fe2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\00. System\02. Warp">
-      <UniqueIdentifier>{afb959a5-02a0-4191-9f75-2c789c60d030}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\00. System\03. TriggerPoint">
-      <UniqueIdentifier>{5284baad-cc65-443f-8583-8ea20262c3bf}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\02. Environment\00. MapObject">
-      <UniqueIdentifier>{c73a576f-744b-4160-90e9-ca0038f8a214}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\02. Environment\02. Interactable">
-      <UniqueIdentifier>{2eb856ce-ff64-4444-a92e-e687d9b46140}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\02. Environment\01. Tile">
-      <UniqueIdentifier>{fd9114e4-ed18-4e95-93eb-47e4ebc69072}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\02. Environment\02. Interactable\02. BreakableRock">
-      <UniqueIdentifier>{3329f3da-37fb-41de-8fa1-0c729130dfb9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\02. Environment\02. Interactable\00. Grass">
-      <UniqueIdentifier>{20638477-cadd-4aa2-94a1-d3b5098d0639}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\02. Environment\02. Interactable\01. BreakableTree">
-      <UniqueIdentifier>{6045c0f4-0bbb-4825-9f07-1e4a96913560}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\02. Environment\97. BackGround">
-      <UniqueIdentifier>{07693c01-70a4-4d6a-9bd8-fe0002596e8d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\02. Environment\98. Terrain">
-      <UniqueIdentifier>{8d635b76-59e8-4b1b-94c9-608c92cd7cb1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\02. Environment\99. TerrainWall">
-      <UniqueIdentifier>{52de0396-bdc9-4e24-8949-59503af9d2c0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\03. Dependent\00. Projectile">
-      <UniqueIdentifier>{3ddb0c3c-fab8-47e2-abe4-23dee1d57a77}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\03. Dependent\01. Effect">
-      <UniqueIdentifier>{37f31870-dba2-4668-ad76-b1d69d78c68f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\03. Dependent\02. Node">
-      <UniqueIdentifier>{fde0f6e7-5d96-449c-a951-022022683803}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\03. Dependent\03. Spike">
-      <UniqueIdentifier>{71626d7b-7211-47aa-adb4-63723478f690}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\04. Item\00. Active">
-      <UniqueIdentifier>{356cea46-0266-433a-b7b2-af3e77f7a2fa}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\04. Item\01. Passive">
-      <UniqueIdentifier>{fcf494f2-363a-4ee3-b6c5-257d7d0134cb}</UniqueIdentifier>
+    <Filter Include="01. Scene\01. Maps\97. EditScene">
+      <UniqueIdentifier>{ff5bb01d-db75-499d-ae0b-be1f8fb58ee7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -481,7 +457,7 @@
       <Filter>02. GameObject\01. GameActor\01. Monster</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CStage.h">
-      <Filter>01. Scene\01. Maps\02. Stage</Filter>
+      <Filter>01. Scene\01. Maps\99. Stage</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CTerrain.h">
       <Filter>02. GameObject\02. Environment\98. Terrain</Filter>
@@ -493,7 +469,7 @@
       <Filter>02. GameObject\00. System\01. SkyBox</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CTest.h">
-      <Filter>01. Scene\01. Maps\00. Test</Filter>
+      <Filter>01. Scene\01. Maps\98. Test</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CTerrainWall.h">
       <Filter>02. GameObject\02. Environment\99. TerrainWall</Filter>
@@ -502,7 +478,7 @@
       <Filter>02. GameObject\03. Dependent\01. Effect</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CEditScene.h">
-      <Filter>01. Scene\01. Maps\01. EditScene</Filter>
+      <Filter>01. Scene\01. Maps\97. EditScene</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CLoadingThread.h">
       <Filter>01. Scene\99. Loading\LoadingThread</Filter>
@@ -581,42 +557,6 @@
     </ClInclude>
     <ClInclude Include="..\Header\CKBMask.h">
       <Filter>02. GameObject\05. UI\03. KBUI\99. Test</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Header\CKBSix.h">
-      <Filter>02. GameObject\05. UI\03. KBUI\01. Title\00. KBSix</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Header\CKBDice.h">
-      <Filter>02. GameObject\05. UI\03. KBUI\02. Main\00. Dice</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Header\CKBBoardSlot.h">
-      <Filter>02. GameObject\05. UI\03. KBUI\02. Main\01. Board\BoardSlot</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Header\CKBBoardBack.h">
-      <Filter>02. GameObject\05. UI\03. KBUI\02. Main\01. Board\BoardBack</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Header\CKBDiceBox.h">
-      <Filter>02. GameObject\05. UI\03. KBUI\02. Main\01. Board\DiceBox</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Header\CKBBack2.h">
-      <Filter>02. GameObject\05. UI\03. KBUI\00. TTutorial</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Header\CKBSix.h">
-      <Filter>02. GameObject\07. UI\03. KBUI\01. Title\00. KBSix</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Header\CKBDice.h">
-      <Filter>02. GameObject\07. UI\03. KBUI\02. Main\00. Dice</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Header\CKBBoardSlot.h">
-      <Filter>02. GameObject\07. UI\03. KBUI\02. Main\01. Board\BoardSlot</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Header\CKBBoardBack.h">
-      <Filter>02. GameObject\07. UI\03. KBUI\02. Main\01. Board\BoardBack</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Header\CKBDiceBox.h">
-      <Filter>02. GameObject\07. UI\03. KBUI\02. Main\01. Board\DiceBox</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Header\CKBBack2.h">
-      <Filter>02. GameObject\07. UI\03. KBUI\00. TTutorial</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CKBSix.h">
       <Filter>02. GameObject\07. UI\03. KBUI\01. Title\00. KBSix</Filter>
@@ -817,10 +757,7 @@
       <Filter>03. Manager\00. CutSceneMgr</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CFontUI.h">
-      <Filter>02. GameObject\05. UI\16. Font</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Header\CCookingTarget.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>02. GameObject\05. UI\99. Font</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CCookingTarget.h">
       <Filter>헤더 파일</Filter>
@@ -871,7 +808,7 @@
       <Filter>02. GameObject\05. UI\06. WorldUI\00.SpeechBubble</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CFontUIOrtho.h">
-      <Filter>02. GameObject\05. UI\16. Font</Filter>
+      <Filter>02. GameObject\05. UI\99. Font</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CSelectionArrow.h">
       <Filter>02. GameObject\05. UI\06. WorldUI\01. SelectionArrow</Filter>
@@ -900,6 +837,45 @@
     <ClInclude Include="..\Header\CPassiveItem.h">
       <Filter>02. GameObject\04. Item\01. Passive</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CKBBack2.h">
+      <Filter>02. GameObject\05. UI\03. KBUI\00. TTutorial\00. KBBack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CKBBoardBack.h">
+      <Filter>02. GameObject\05. UI\03. KBUI\02. Main\01. Board\BoardBack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CKBBoardSlot.h">
+      <Filter>02. GameObject\05. UI\03. KBUI\02. Main\01. Board\BoardSlot</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CKBDice.h">
+      <Filter>02. GameObject\05. UI\03. KBUI\02. Main\00. Dice</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CKBDiceBox.h">
+      <Filter>02. GameObject\05. UI\03. KBUI\02. Main\01. Board\DiceBox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CKBSix.h">
+      <Filter>02. GameObject\05. UI\03. KBUI\01. Title\00. KBSix</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CCookingTarget.h">
+      <Filter>02. GameObject\05. UI\05. CookingUI\00.CookingMiniGame\04.CookingTarget</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CKBBack2.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CKBBoardBack.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CKBBoardSlot.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CKBDice.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CKBDiceBox.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CKBSix.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -924,7 +900,7 @@
       <Filter>02. GameObject\01. GameActor\01. Monster</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CStage.cpp">
-      <Filter>01. Scene\01. Maps\02. Stage</Filter>
+      <Filter>01. Scene\01. Maps\99. Stage</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CTerrain.cpp">
       <Filter>02. GameObject\02. Environment\98. Terrain</Filter>
@@ -936,7 +912,7 @@
       <Filter>02. GameObject\00. System\01. SkyBox</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CTest.cpp">
-      <Filter>01. Scene\01. Maps\00. Test</Filter>
+      <Filter>01. Scene\01. Maps\98. Test</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CTerrainWall.cpp">
       <Filter>02. GameObject\02. Environment\99. TerrainWall</Filter>
@@ -945,7 +921,7 @@
       <Filter>02. GameObject\03. Dependent\01. Effect</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CEditScene.cpp">
-      <Filter>01. Scene\01. Maps\01. EditScene</Filter>
+      <Filter>01. Scene\01. Maps\97. EditScene</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CLoadingThread.cpp">
       <Filter>01. Scene\99. Loading\LoadingThread</Filter>
@@ -1024,42 +1000,6 @@
     </ClCompile>
     <ClCompile Include="..\Code\CKBMask.cpp">
       <Filter>02. GameObject\05. UI\03. KBUI\99. Test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\CKBSix.cpp">
-      <Filter>02. GameObject\05. UI\03. KBUI\01. Title\00. KBSix</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\CKBDice.cpp">
-      <Filter>02. GameObject\05. UI\03. KBUI\02. Main\00. Dice</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\CKBBoardSlot.cpp">
-      <Filter>02. GameObject\05. UI\03. KBUI\02. Main\01. Board\BoardSlot</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\CKBBoardBack.cpp">
-      <Filter>02. GameObject\05. UI\03. KBUI\02. Main\01. Board\BoardBack</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\CKBDiceBox.cpp">
-      <Filter>02. GameObject\05. UI\03. KBUI\02. Main\01. Board\DiceBox</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\CKBBack2.cpp">
-      <Filter>02. GameObject\05. UI\03. KBUI\00. TTutorial</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\CKBSix.cpp">
-      <Filter>02. GameObject\07. UI\03. KBUI\01. Title\00. KBSix</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\CKBDice.cpp">
-      <Filter>02. GameObject\07. UI\03. KBUI\02. Main\00. Dice</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\CKBBoardSlot.cpp">
-      <Filter>02. GameObject\07. UI\03. KBUI\02. Main\01. Board\BoardSlot</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\CKBBoardBack.cpp">
-      <Filter>02. GameObject\07. UI\03. KBUI\02. Main\01. Board\BoardBack</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\CKBDiceBox.cpp">
-      <Filter>02. GameObject\07. UI\03. KBUI\02. Main\01. Board\DiceBox</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\CKBBack2.cpp">
-      <Filter>02. GameObject\07. UI\03. KBUI\00. TTutorial</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CKBSix.cpp">
       <Filter>02. GameObject\07. UI\03. KBUI\01. Title\00. KBSix</Filter>
@@ -1239,7 +1179,7 @@
       <Filter>03. Manager\00. CutSceneMgr</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CFontUI.cpp">
-      <Filter>02. GameObject\05. UI\16. Font</Filter>
+      <Filter>02. GameObject\05. UI\99. Font</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CCookingInfoRecipe.cpp">
       <Filter>02. GameObject\05. UI\05. CookingUI\01.CookingSelect\04.CookingInfoCard\04.CookingInfoRecipe</Filter>
@@ -1287,7 +1227,7 @@
       <Filter>02. GameObject\05. UI\06. WorldUI\00.SpeechBubble</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CFontUIOrtho.cpp">
-      <Filter>02. GameObject\05. UI\16. Font</Filter>
+      <Filter>02. GameObject\05. UI\99. Font</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CSelectionArrow.cpp">
       <Filter>02. GameObject\05. UI\06. WorldUI\01. SelectionArrow</Filter>
@@ -1315,6 +1255,42 @@
     </ClCompile>
     <ClCompile Include="..\Code\CPassiveItem.cpp">
       <Filter>02. GameObject\04. Item\01. Passive</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CKBBack2.cpp">
+      <Filter>02. GameObject\05. UI\03. KBUI\00. TTutorial\00. KBBack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CKBBoardBack.cpp">
+      <Filter>02. GameObject\05. UI\03. KBUI\02. Main\01. Board\BoardBack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CKBBoardSlot.cpp">
+      <Filter>02. GameObject\05. UI\03. KBUI\02. Main\01. Board\BoardSlot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CKBDice.cpp">
+      <Filter>02. GameObject\05. UI\03. KBUI\02. Main\00. Dice</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CKBDiceBox.cpp">
+      <Filter>02. GameObject\05. UI\03. KBUI\02. Main\01. Board\DiceBox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CKBSix.cpp">
+      <Filter>02. GameObject\05. UI\03. KBUI\01. Title\00. KBSix</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CKBBack2.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CKBBoardBack.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CKBBoardSlot.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CKBDice.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CKBDiceBox.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CKBSix.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
