@@ -137,7 +137,14 @@ void CRenderer::Render_Alpha(LPDIRECT3DDEVICE9& pGraphicDev)
 
 	m_RenderGroup[RENDER_ALPHA].sort([](CGameObject* pDst, CGameObject* pSrc)->bool
 		{
-			return pDst->Get_Depth() > pSrc->Get_Depth();
+			if (pDst->Get_DepthZ() == pSrc->Get_DepthZ())
+			{
+				return pDst->Get_DepthY() < pSrc->Get_DepthY();
+			}
+			else
+			{
+				return pDst->Get_DepthZ() > pSrc->Get_DepthZ();
+			}
 		});
 
 

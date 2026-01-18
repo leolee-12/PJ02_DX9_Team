@@ -25,7 +25,9 @@ public:
 	}*/
 	CComponent* Get_Component(COMPONENTID eID, const wstring& strComponentTag);
 	OBJID		Get_OBJID() { return m_eOBJID; }
-	_float		Get_Depth() { return m_fDepth; }
+	const _float		Get_Depth() { return m_fDepth; }
+	const _float		Get_DepthZ() { return m_vDepth.z; }
+	const _float		Get_DepthY() { return m_vDepth.y; }
 
 public:
 	virtual			HRESULT		Ready_GameObject();
@@ -41,6 +43,7 @@ protected:
 	LPDIRECT3DDEVICE9						m_pGraphicDev;
 	
 	_float									m_fDepth;
+	_vec3									m_vDepth;
 
 protected:
 	virtual		void		Free();

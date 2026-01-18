@@ -8,6 +8,7 @@
 #include "CN1_AI.h"
 #include "CSpeechBubble.h"
 #include "CFontUI.h"
+#include "CSoundMgr.h"
 
 CRatau::CRatau(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev),
@@ -199,11 +200,23 @@ void CRatau::Ready_Event()
 			m_pSpeechBubble->Active();
 			m_pFontUI->Active();
 			m_eCurState = RATAU_TALK;
-			//_tchar strSoundName[128] = L"";
-			//swprintf_s(strSoundName, L"Deathcat%d.wav", Get_Rand_Int(6, 12));
-			//CSoundMgr::GetInstance()->Play(strSoundName, SOUND_DIALOUGE, 0.1f);
+			_tchar strSoundName[128] = L"";
+			swprintf_s(strSoundName, L"Ratau_Dial%d.wav", Get_Rand_Int(1, 15));
+			CSoundMgr::GetInstance()->Play(strSoundName, SOUND_DIALOUGE, 0.1f);
 		}
 	) });
+
+	m_hmapSubHandles.insert({ L"CutScene.End", m_pMessageChannel->Subscribe(L"CutScene.End", [this](const IMessageChannel::EVENT& Event) {
+		wstring SceneName = any_cast<wstring>(Event.hmapData.find(L"SceneName")->second);
+	if (SceneName == L"Ratau_01")
+	{
+		m_iHp = 0;
+	}
+	if (SceneName == L"Ratau_00")
+	{
+		m_iHp = 0;
+	}
+	}) });
 }
 
 HRESULT CRatau::Ready_Dialogue(const _vec3& vDialoguePos)
