@@ -12,6 +12,7 @@
 #include "CMapLoader.h"
 #include "CLoading.h"
 #include "CCutSceneMgr.h"
+#include "CInteractMgr.h"
 
 bool g_bDebug = false;
 bool g_bChangeScene = false;
@@ -216,6 +217,7 @@ void CMainApp::Free()
 	Safe_Release(m_pGraphicDev);
 	Safe_Release(m_pDeviceClass);
 
+	CInteractMgr::DestroyInstance();
 	CCutSceneMgr::DestroyInstance();
 	CMapLoader::DestroyInstance();
 	CLightMgr::DestroyInstance();

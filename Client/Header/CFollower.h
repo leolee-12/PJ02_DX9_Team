@@ -10,6 +10,8 @@ namespace Engine
 	class CCollider;
 }
 
+class CFollower_AI;
+
 class CFollower : public CGameObject
 {
 public:
@@ -39,12 +41,14 @@ private:
 	void				Move_Frame(const _float& fTimeDelta);
 	void				Set_Texture();
 	void				Update_State();
+	void				Check_Work();
 
 private:
 	Engine::CRcTex*			m_pBufferCom;
 	Engine::CTransform*		m_pTransformCom;
 	Engine::CTexture*		m_pTextureCom;
 	Engine::CCollider*		m_pColliderCom;
+	CFollower_AI*			m_pAICom;
 
 	_vec3				m_vPos;
 
@@ -60,7 +64,8 @@ private:
 
 	// 스테이터스 관련
 	_float			m_fGroundY;
-	FOLLOWER_WORK	m_eWorkType;
+	FOLLOWER_WORK	m_ePreWork;
+	FOLLOWER_WORK	m_eCurWork;
 	_vec3			m_vLerpPos;
 	_uint			m_iRecruitState;
 

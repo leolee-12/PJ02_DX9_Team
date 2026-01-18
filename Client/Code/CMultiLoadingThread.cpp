@@ -8,6 +8,7 @@
 #include "CN3_AI.h"
 #include "CB1_AI.h"
 #include "CB2_AI.h"
+#include "CFollower_AI.h"
 
 CMultiLoadingThread::CMultiLoadingThread(LPDIRECT3DDEVICE9 pGraphicDev)
 	: m_eLoading(LOADING_END)
@@ -591,6 +592,7 @@ void CMultiLoadingThread::NonTex_for_Village()
 	CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_TileMaskTexture", Engine::CTexture::CreateFromFolder(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Maps/Texture/TileMasking"));
 	CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_GrassBuffer", Engine::CGrassBuffer::Create(m_pGraphicDev));
 	CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Collider", Engine::CCollider::Create(m_pGraphicDev));
+	CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Follower_AI", CFollower_AI::Create(m_pGraphicDev, 40.f, 1.f));
 
 	Load_Object_Texture(Village_Texture);
 }

@@ -5,7 +5,7 @@
 #include "CRenderer.h"
 #include "CPersistentMgr.h"
 #include "CCollisionMgr.h"
-#include "CN1_AI.h"
+#include "CFollower_AI.h"
 
 CFollower::CFollower(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev),
@@ -14,7 +14,8 @@ CFollower::CFollower(LPDIRECT3DDEVICE9 pGraphicDev)
 	m_fFrame(0.f),
 	m_fFrameEnd(0.f),
 	m_fFrameSpeed(0.f),
-	m_eWorkType(FW_NONE)
+	m_ePreWork(FW_NONE),
+	m_eCurWork(FW_NONE)
 {
 }
 
@@ -25,7 +26,8 @@ CFollower::CFollower(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChanne
 	m_fFrame(0.f),
 	m_fFrameEnd(0.f),
 	m_fFrameSpeed(0.f),
-	m_eWorkType(FW_NONE)
+	m_ePreWork(FW_NONE),
+	m_eCurWork(FW_NONE)
 {
 }
 
@@ -37,7 +39,8 @@ CFollower::CFollower(const CFollower& rhs)
 	m_fFrame(0.f),
 	m_fFrameEnd(0.f),
 	m_fFrameSpeed(0.f),
-	m_eWorkType(FW_NONE)
+	m_ePreWork(FW_NONE),
+	m_eCurWork(FW_NONE)
 {
 }
 
@@ -77,7 +80,9 @@ _int CFollower::Update_GameObject(const _float& fTimeDelta)
 
 void CFollower::LateUpdate_GameObject(const _float& fTimeDelta)
 {
+	Update_State();
 	Check_Frame();
+	Check_Work();
 
 	m_pTransformCom->Compute_Bilboard(BBD_X);
 	m_pTransformCom->Get_Info(INFO_POS, &m_vPos);
@@ -160,33 +165,41 @@ HRESULT CFollower::Add_Component()
 	pComponent = m_pBufferCom = dynamic_cast<Engine::CRcTex*>
 		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_RcTex"));
 
-	NULL_CHECK_RETURN(pComponent, E_FAIL)
+	NULL_CHECK_RETURN(pComponent, E_FAIL);
 
-		m_mapComponent[ID_STATIC].insert({ L"Com_Buffer", pComponent });
+	m_mapComponent[ID_STATIC].insert({ L"Com_Buffer", pComponent });
 
 	// Transform
 	pComponent = m_pTransformCom = dynamic_cast<Engine::CTransform*>
 		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Transform"));
 
-	NULL_CHECK_RETURN(pComponent, E_FAIL)
+	NULL_CHECK_RETURN(pComponent, E_FAIL);
 
-		m_mapComponent[ID_DYNAMIC].insert({ L"Com_Transform", pComponent });
+	m_mapComponent[ID_DYNAMIC].insert({ L"Com_Transform", pComponent });
 
 	// Texture
 	pComponent = m_pTextureCom = dynamic_cast<Engine::CTexture*>
 		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(m_strProtoKey));
 
-	NULL_CHECK_RETURN(pComponent, E_FAIL)
+	NULL_CHECK_RETURN(pComponent, E_FAIL);
 
-		m_mapComponent[ID_STATIC].insert({ L"Com_Texture", pComponent });
+	m_mapComponent[ID_STATIC].insert({ L"Com_Texture", pComponent });
 
 	// Collider
 	pComponent = m_pColliderCom = dynamic_cast<Engine::CCollider*>
 		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Collider"));
 
-	NULL_CHECK_RETURN(pComponent, E_FAIL)
+	NULL_CHECK_RETURN(pComponent, E_FAIL);
 
-		m_mapComponent[ID_STATIC].insert({ L"Com_Collider", pComponent });
+	m_mapComponent[ID_STATIC].insert({ L"Com_Collider", pComponent });
+
+	// AI
+	pComponent = m_pAICom = dynamic_cast<CFollower_AI*>
+		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Follower_AI"));
+
+	NULL_CHECK_RETURN(pComponent, E_FAIL);
+
+	m_mapComponent[ID_DYNAMIC].insert({ L"Com_AI", pComponent });
 
 	return S_OK;
 }
@@ -197,13 +210,21 @@ void CFollower::Ready_Variable()
 	_float fScale = 9.f;
 	m_fGroundY = -2.5f + fScale * 0.5f - 1.8f;
 	m_iHp = 10;
+	m_eCurState = FOLLOWER_RECRUIT;
+	m_eCurWork = FOLLOWER_WORK(Get_Rand_Int(1, FW_END) - 1);
 
 	// Transform 세팅
-	m_pTransformCom->Set_Pos(Get_Rand_Float(210.f, 220.f), m_fGroundY, Get_Rand_Float(30.f, 40.f));
+	m_pTransformCom->Set_Pos(Get_Rand_Float(190.f, 210.f), m_fGroundY, Get_Rand_Float(30.f, 45.f));
 	m_pTransformCom->Set_Scale(fScale, fScale, fScale);
+	m_pTransformCom->Get_Info(INFO_POS, &m_vPos);
 
 	// Collider 세팅
 	m_pColliderCom->RegisterToManager(this, CL_NPC);
+
+	// AI 세팅
+	m_pAICom->Set_OwnerTransform(m_pTransformCom);
+	m_pAICom->Set_State<FOLLOWER_STATE>(FOLLOWER_RECRUIT);
+	m_pAICom->Set_GroundY(m_fGroundY);
 
 	// Anim 관련 세팅
 	m_fFrameSpeed = 24.f;
@@ -249,9 +270,9 @@ void CFollower::Check_Frame()
 
 	case FOLLOWER_ACTION:
 	{
-		m_eWorkType = FOLLOWER_WORK(Get_Rand_Int(0, 5));
+		m_eCurWork = FOLLOWER_WORK(Get_Rand_Int(0, 5));
 
-		switch (m_eWorkType)
+		switch (m_eCurWork)
 		{
 		case FW_NONE:	// (IDLE로 전환)
 			m_eCurState = FOLLOWER_IDLE;
@@ -297,32 +318,32 @@ void CFollower::Move_Frame(const _float& fTimeDelta)
 	if (m_fFrame >= m_fFrameEnd)
 	{
 		m_fFrame = 0.f;
-		m_eCurState = FOLLOWER_IDLE;
-		//if (m_eCurState != FOLLOWER_RECRUIT)
-		//	m_eCurState = FOLLOWER_STATE(Get_Rand_Int(1, FOLLOWER_END) - 1);
-		//else
-		//{
-		//	if (m_iRecruitState == 0)
-		//	{
-		//		m_iRecruitState = 1;
-		//		m_fFrameEnd = 96;
-		//	}
-		//	else if (m_iRecruitState == 1)
-		//	{
-		//		m_iRecruitState = 2;
-		//		m_fFrameEnd = 75;
-		//	}
-		//	else if (m_iRecruitState == 2)
-		//	{
-		//		m_eCurState = FOLLOWER_STATE(Get_Rand_Int(1, FOLLOWER_END) - 1);
-		//	}
-		//}
+
+		if (m_eCurState == FOLLOWER_RECRUIT)
+		{
+			if (m_iRecruitState == 0)
+			{
+				m_iRecruitState = 1;
+				m_fFrameEnd = 96;
+			}
+			else if (m_iRecruitState == 1)
+			{
+				m_iRecruitState = 2;
+				m_fFrameEnd = 75;
+			}
+			else if (m_iRecruitState == 2)
+			{
+				m_pAICom->Anim_End(m_eCurState);
+				m_eCurState = FOLLOWER_IDLE;
+			}
+		}
 	}
 }
 
 void CFollower::Set_Texture()
 {
-	//_bool bFilpX = vDir.x > 0.f ? true : false;	// 반전 여부
+	_vec3 vDir = *(m_pAICom->Get_Dir());			// AI로부터 받아온 방향
+	_bool bFilpX = vDir.x > 0.f ? true : false;		// 반전 여부
 	_uint iFrame = _uint(m_fFrame);					// 현재 프레임
 	_uint iTexIdx = _uint(m_eCurState);
 	D3DXMatrixIdentity(&m_matTex);
@@ -354,7 +375,7 @@ void CFollower::Set_Texture()
 
 	case FOLLOWER_ACTION:
 	{
-		switch(m_eWorkType)
+		switch(m_eCurWork)
 		{
 		case FW_NONE:
 			iTexIdx = 0;
@@ -396,21 +417,64 @@ void CFollower::Set_Texture()
 		break;
 	}
 
-	//if (bFilpX)
-	//{
-	//	m_matTex._11 *= -1.f;
-	//	m_matTex._31 = _float(iU + 1) * 0.125f;	// 반전 O : 오른쪽에서 왼쪽으로 읽음
-	//}
-	//else
-	//{
-	m_matTex._31 = _float(iU) * 0.0625f;	// 반전 X : 왼쪽에서 오른쪽으로 읽음
-	//}
+	if (bFilpX)
+	{
+		m_matTex._11 *= -1.f;
+		m_matTex._31 = _float(iU + 1) * 0.0625f;	// 반전 O : 오른쪽에서 왼쪽으로 읽음
+	}
+	else
+	{
+		m_matTex._31 = _float(iU) * 0.0625f;	// 반전 X : 왼쪽에서 오른쪽으로 읽음
+	}
 
 	m_matTex._32 = _float(iV) * 0.125f;
 
 	m_pGraphicDev->SetTransform(D3DTS_TEXTURE0, &m_matTex);
 
-	m_pTextureCom->Set_Texture(_uint(m_eCurState));
+	m_pTextureCom->Set_Texture(iTexIdx);
+}
+
+void CFollower::Update_State()
+{
+	if (m_eCurState == FOLLOWER_RECRUIT)
+		return;
+
+	m_eCurState = m_pAICom->Get_RecommendState<FOLLOWER_STATE>();
+}
+
+void CFollower::Check_Work()
+{
+	if (m_ePreWork == m_eCurWork)
+		return;
+
+	CGameObject* pTarget = nullptr;
+
+	switch (m_eCurWork)
+	{
+	case FW_WOOD:
+		pTarget = CInteractMgr::GetInstance()->Find_Nearest(CInteractMgr::WOOD, m_vPos);
+		break;
+
+	case FW_ROCK:
+		pTarget = CInteractMgr::GetInstance()->Find_Nearest(CInteractMgr::ROCK, m_vPos);
+		break;
+
+	case FW_BUILD:
+		pTarget = CInteractMgr::GetInstance()->Find_Nearest(CInteractMgr::BUILD, m_vPos);
+		break;
+
+	case FW_EAT:
+		pTarget = CInteractMgr::GetInstance()->Find_Nearest(CInteractMgr::FOOD, m_vPos);
+		break;
+
+	case FW_PRAY:
+		pTarget = CInteractMgr::GetInstance()->Find_Nearest(CInteractMgr::PRAY, m_vPos);
+		break;
+	}
+
+	if (pTarget) m_pAICom->Set_TargetTransform(static_cast<CTransform*>(pTarget->Get_Component(ID_DYNAMIC, L"Com_Transform")));
+
+	m_ePreWork = m_eCurWork;
 }
 
 

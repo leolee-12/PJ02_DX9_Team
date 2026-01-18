@@ -5,6 +5,7 @@
 #include "CManagement.h"
 #include "CGrassBuffer.h"
 #include "CCollider.h"
+#include "CInteractMgr.h"
 
 CBreakableTree::CBreakableTree(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev)
@@ -52,6 +53,7 @@ HRESULT CBreakableTree::Ready_GameObject()
 		return E_FAIL;
 
 	m_pColliderCom->RegisterToManager(this, CL_GRASS);
+	CInteractMgr::GetInstance()->Register_IObj(CInteractMgr::WOOD, this);
 
 	m_hmapSubHandles.insert({ L"Monster_Damaged", m_pMessageChannel->Subscribe(L"Monster.Attacked", [this](const IMessageChannel::EVENT& Event) {
 		for (auto& Target : any_cast<vector<CGameObject*>>(Event.hmapData.find(L"Target")->second))
@@ -77,6 +79,7 @@ _int CBreakableTree::Update_GameObject(const _float& fTimeDelta)
 	if (iExit == DEAD)
 	{
 		m_pColliderCom->UnregisterFromManager();
+		CInteractMgr::GetInstance()->Unregister_IObj(CInteractMgr::WOOD, this);
 	}
 
 
@@ -254,5 +257,6 @@ void CBreakableTree::Free()
 {
 	// m_pBufferCom, m_pTransformCom, m_pTextureCom are in m_mapComponent
 	// They will be released by CGameObject::Free()
+
 	CGameObject::Free();
 }

@@ -412,9 +412,6 @@
     <Filter Include="02. GameObject\05. UI\99. Font">
       <UniqueIdentifier>{a8d8fe86-d6e2-4ff9-b0d0-76f833c3f75a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. Scene\01. Maps\99. Stage">
-      <UniqueIdentifier>{f40be6c5-f78e-4629-9f22-c05f63c86d1a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01. Scene\01. Maps\98. Test">
       <UniqueIdentifier>{7bf09d6b-5222-4361-bb6b-3e27ea739fa2}</UniqueIdentifier>
     </Filter>
@@ -426,6 +423,9 @@
     </Filter>
     <Filter Include="03. Manager\01. PersistentMgr">
       <UniqueIdentifier>{153d294d-a813-4bb7-9dee-2e2680526024}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\01. Maps\99. Stage">
+      <UniqueIdentifier>{f40be6c5-f78e-4629-9f22-c05f63c86d1a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -882,6 +882,9 @@
     <ClInclude Include="..\Header\CInteractMgr.h">
       <Filter>03. Manager\03. InteractMgr</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CFollower_AI.h">
+      <Filter>02. GameObject\01. GameActor\03. Follower</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1300,6 +1303,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CInteractMgr.cpp">
       <Filter>03. Manager\03. InteractMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CFollower_AI.cpp">
+      <Filter>02. GameObject\01. GameActor\03. Follower</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

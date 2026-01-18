@@ -3,6 +3,7 @@
 #include "CProtoMgr.h"
 #include "CRenderer.h"
 #include "CManagement.h"
+#include "CInteractMgr.h"
 
 CBreakableRock::CBreakableRock(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev)
@@ -50,6 +51,7 @@ HRESULT CBreakableRock::Ready_GameObject()
 		return E_FAIL;
 
 	m_pColliderCom->RegisterToManager(this, CL_GRASS);
+	CInteractMgr::GetInstance()->Register_IObj(CInteractMgr::ROCK, this);
 
 	m_hmapSubHandles.insert({ L"Monster_Damaged", m_pMessageChannel->Subscribe(L"Monster.Attacked", [this](const IMessageChannel::EVENT& Event) {
 		for (auto& Target : any_cast<vector<CGameObject*>>(Event.hmapData.find(L"Target")->second))
@@ -75,6 +77,7 @@ _int CBreakableRock::Update_GameObject(const _float& fTimeDelta)
 	if (iExit == DEAD)
 	{
 		m_pColliderCom->UnregisterFromManager();
+		CInteractMgr::GetInstance()->Unregister_IObj(CInteractMgr::ROCK, this);
 	}
 
 
