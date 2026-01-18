@@ -25,6 +25,9 @@
 #include "CMapWarp.h"
 #include "CWarp.h"
 #include "CMapBorder.h"
+#include "CRatau.h"
+#include "CCutSceneMgr.h"
+#include "CTriggerPoint.h"
 
 CVillage::CVillage(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -50,7 +53,21 @@ HRESULT CVillage::Ready_Scene()
 
 	Ready_Light();
 
-	//CCollisionMgr::GetInstance()->Ready_CollisionMgr();
+	CCutSceneMgr::GetInstance()->Ready_CutsceneMgr(m_pMessageChannel);
+
+	CUTSCENE tDungeonScene;
+	tDungeonScene.strName = L"Ratau_02";
+	tDungeonScene.vecSteps =
+	{
+		{_vec3(207.6f, 0.f, 84.f), 0.75f, 0.5f, L"Player", L"LookforCam", ADV_IMMEDIATE},
+		{_vec3(207.6f, 0.f, 84.f), 0.75f, 0.5f, L"Ratau", L"Ratau_Intro", ADV_EVENT, 0.f, L"Ratau.Done"},
+		{_vec3(207.6f, 0.f, 84.f), 1.5f, 0.5f, L"Ratau", L"이 텅 빈 땅은 이제 그대의 것이오. 이 부서진 유적은\n새로운 교단을 세우기 위한 지점이 될 것이오."},
+		{_vec3(207.6f, 0.f, 84.f), 1.5f, 0.5f, L"Ratau", L"해야할 것이 많소. 우선 가련한 영혼들을 교육시켜\n교단에 들여오게 합시다."},
+		{_vec3(207.6f, 0.f, 84.f), 1.5f, 0.5f, L"Ratau", L"추종자들은 그대를 위해 자원을 수집하오. 이들에게 명령해\n 목재나 돌을 수집하도록 하시오."},
+		{_vec3(207.6f, 0.f, 84.f), 0.75f, 0.5f, L"Ratau", L"Ratau_Outro", ADV_EVENT, 0.f, L"Ratau.Done"}
+	};
+
+	CCutSceneMgr::GetInstance()->Register_CutScene(tDungeonScene);
 
 	return S_OK;
 }
@@ -130,7 +147,7 @@ HRESULT CVillage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 			switch (spawn.type)
 			{
 			case 0:
-				CPersistentMgr::GetInstance()->Get_Player()->Set_Pos(_vec3(spawn.x, 0.f, spawn.z));
+				CPersistentMgr::GetInstance()->Get_Player()->Set_Pos(_vec3(spawn.x * 0.8f, 0.f, spawn.z * 0.8f));
 				pGameObject = CPersistentMgr::GetInstance()->Get_Player();
 
 				if (nullptr == pGameObject)
@@ -279,7 +296,22 @@ HRESULT CVillage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 			pLayer->Add_GameObject(L"SkyBox", pGameObject);
 	}
 
-	// ����׿�
+	pGameObject = CRatau::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ 207.6f, 0.f, 84.f });
+
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+
+	if (FAILED(pLayer->Add_GameObject(L"NPC", pGameObject)))
+		return E_FAIL;
+
+	_vec3 vTriggerPos, vTriggerHalfSize;
+	vTriggerPos = { 202.6f, 0.f, 84.f };
+	vTriggerHalfSize = { 8.f, 5.f, 2.f };
+	pGameObject = CTriggerPoint::Create(m_pGraphicDev, m_pMessageChannel, vTriggerPos, vTriggerHalfSize, Trigger::TI_STAGING, L"Ratau_02", true);
+
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+
+	if (FAILED(pLayer->Add_GameObject(L"TriggerPoint", pGameObject)))
+		return E_FAIL;
 
 	m_mapLayer.insert({ pLayerTag , pLayer });
 
@@ -299,9 +331,11 @@ HRESULT CVillage::Ready_Light()
 
 	tLightInfo.Type = D3DLIGHT_DIRECTIONAL;
 
-	tLightInfo.Diffuse = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-	tLightInfo.Specular = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-	tLightInfo.Ambient = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
+	// 따뜻한 노을빛 느낌의 마을 조명
+	tLightInfo.Diffuse = D3DXCOLOR(1.0f, 0.85f, 0.7f, 1.0f);   // 부드러운 주황빛 확산광
+	tLightInfo.Specular = D3DXCOLOR(1.0f, 0.9f, 0.75f, 1.0f);   // 살짝 더 밝은 반사광
+	tLightInfo.Ambient = D3DXCOLOR(0.6f, 0.45f, 0.35f, 1.0f);  // 어두운 갈색빛 주변광
+
 
 	tLightInfo.Direction = { 1.f, -1.f, 1.f };
 

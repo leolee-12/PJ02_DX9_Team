@@ -86,6 +86,7 @@ HRESULT CDungeon::Ready_Scene()
 	tDungeonScene.strName = L"Ratau_01";
 	tDungeonScene.vecSteps =
 	{
+		{_vec3(-236.f, 0.f, 4.f), 1.f, 1.f, L"Scene", L"Create_Ratau", ADV_IMMEDIATE},
 		{_vec3(-236.f, 0.f, 4.f), 1.f, 1.f, L"Player", L"LookforCam", ADV_TIMED, 2.f},
 		{_vec3(-231.f, 0.f, 4.f), 0.75f, 0.5f, L"Ratau", L"Ratau_Intro", ADV_EVENT, 0.f, L"Ratau.Done"},
 		{_vec3(-231.f, 0.f, 4.f), 1.5f, 0.5f, L"Ratau", L"보시오! 제물로 바쳐지는 또다른 가녀린 영혼이오."},
@@ -437,12 +438,12 @@ HRESULT CDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	if (FAILED(pLayer->Add_GameObject(L"NPC", pGameObject)))
 		return E_FAIL;
 
-	pGameObject = CRatau::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ -231.f, 0.f, 4.f });
+	/*pGameObject = CRatau::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ -231.f, 0.f, 4.f });
 
 	NULL_CHECK_RETURN(pGameObject, E_FAIL)
 
 		if (FAILED(pLayer->Add_GameObject(L"NPC", pGameObject)))
-			return E_FAIL;
+			return E_FAIL;*/
 
 	pGameObject = CTarotSeller::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ 330.f, 0.f, 11.5f });
 
@@ -629,6 +630,33 @@ void CDungeon::Ready_Event()
 		}
 	}
 	}) });
+
+	m_hmapSubHandles.insert({ L"Dialogue", m_pMessageChannel->Subscribe(L"CutScene.Dialogue", [this](const IMessageChannel::EVENT& Event)
+		{
+			auto CinemaTargetNameiter = Event.hmapData.find(L"CinemaTargetName");
+			if (CinemaTargetNameiter == Event.hmapData.end()) { return; }
+			auto Dothisiter = Event.hmapData.find(L"Dothis");
+			if (Dothisiter == Event.hmapData.end()) { return; }
+			if (any_cast<wstring>(CinemaTargetNameiter->second) == L"Scene")
+			{
+				wstring strDothis = any_cast<wstring>(Dothisiter->second);
+				if (strDothis == L"Create_Ratau") {
+
+					CGameObject* pGameObject = nullptr;
+
+					pGameObject = CRatau::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ -231.f, 0.f, 4.f });
+
+					NULL_CHECK_RETURN(pGameObject);
+
+					auto iter = m_mapLayer.find(L"GameLogic_Layer");
+					if (iter == m_mapLayer.end()) { return; }
+
+					iter->second->Add_GameObject(L"NPC", pGameObject);
+					return;
+				}
+			}
+		}
+	) });
 }
 
 CDungeon* CDungeon::Create(LPDIRECT3DDEVICE9 pGraphicDev)

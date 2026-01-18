@@ -89,7 +89,7 @@ void CBrute::LateUpdate_GameObject(const _float& fTimeDelta)
 
 	if (m_eCurState == BRUTE_EXECUTE1)
 	{
-		m_fDepth = 0.f;
+		m_vDepth.z = 0.1f;
 	}
 
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
