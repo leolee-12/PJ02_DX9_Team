@@ -41,6 +41,7 @@
 #include "CTriggerPoint.h"
 #include "CCutSceneMgr.h"
 #include "CFollower.h"
+#include "CFade.h"
 
 CDungeon::CDungeon(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -582,6 +583,13 @@ HRESULT CDungeon::Ready_UI_Layer(const _tchar* pLayerTag)
 		return E_FAIL;
 
 	if (FAILED(pLayer->Add_GameObject(L"BossHpBar", pGameObject)))
+		return E_FAIL;
+
+	pGameObject = CFade::Create(m_pGraphicDev, m_pMessageChannel);
+
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+
+	if (FAILED(pLayer->Add_GameObject(L"Fade", pGameObject)))
 		return E_FAIL;
 
 	m_mapLayer.insert({ pLayerTag , pLayer });

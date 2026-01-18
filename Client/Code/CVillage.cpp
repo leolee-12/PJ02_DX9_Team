@@ -28,6 +28,7 @@
 #include "CRatau.h"
 #include "CCutSceneMgr.h"
 #include "CTriggerPoint.h"
+#include "CFade.h"
 
 CVillage::CVillage(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -320,7 +321,20 @@ HRESULT CVillage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 
 HRESULT CVillage::Ready_UI_Layer(const _tchar* pLayerTag)
 {
-	return S_OK;
+	CLayer* pLayer = CLayer::Create();
+	if (nullptr == pLayer)
+		return E_FAIL;
+
+	CGameObject* pGameObject = nullptr;
+
+	pGameObject = CFade::Create(m_pGraphicDev, m_pMessageChannel);
+
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+
+	if (FAILED(pLayer->Add_GameObject(L"Fade", pGameObject)))
+		return E_FAIL;
+
+	m_mapLayer.insert({ pLayerTag , pLayer });
 }
 
 

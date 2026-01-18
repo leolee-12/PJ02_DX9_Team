@@ -102,6 +102,8 @@ _int CPlayer::Update_GameObject(const _float& fTimeDelta)
 	Charge(fTimeDelta);
 
 	Move_Frame(fTimeDelta);
+
+	Update_Warp(fTimeDelta);
 	
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
@@ -860,6 +862,29 @@ void CPlayer::Attacked(_int iDamage)
 	m_fAcmlTime = 0.f;
 }
 
+void CPlayer::Update_Warp(const _float fTimeDelta)
+{
+	if (!m_IsWarp) { return; }
+
+	if (m_fWarpDeleay >= 0.5f)
+	{
+		m_pTransformCom->Set_Pos(m_vWarpPos.x, 0.f, m_vWarpPos.z);
+		if (m_fWarpDeleay >= 1.0f)
+		{
+			m_IsWarp = false;
+			IMessageChannel::EVENT FadeEvent;
+			FadeEvent.strType = L"Fade.Warp";
+			FadeEvent.hmapData[L"Fade"] = wstring(L"FadeIn");
+			m_pMessageChannel->Publish(FadeEvent);
+			m_fWarpDeleay = 0.f;
+			return;
+		}
+	}
+	m_fWarpDeleay += fTimeDelta;
+
+	
+}
+
 void	CPlayer::OnCollision(CGameObject* pObject)
 {
 	if (pObject->Get_OBJID() == OID_MONSTER)
@@ -919,13 +944,19 @@ void	CPlayer::OnCollision(CGameObject* pObject)
 	if (pObject->Get_OBJID() == OID_WARP)
 	{
 		if (m_eCurState == PS_ROLL) { return; }
+		if (m_IsWarp)				{ return; }
 
 		CWarp* Warp = static_cast<CWarp*>(pObject);
 
 		if (Warp != nullptr)
 		{
 			_vec3 pos = Warp->Get_OtherWarp()->Get_WarpPos();
-			m_pTransformCom->Set_Pos(pos.x, 0, pos.z);
+			m_vWarpPos = pos;
+			m_IsWarp = true;
+			IMessageChannel::EVENT FadeEvent;
+			FadeEvent.strType = L"Fade.Warp";
+			FadeEvent.hmapData[L"Fade"] = wstring(L"FadeOut");
+			m_pMessageChannel->Publish(FadeEvent);
 		}
 	}
 }
