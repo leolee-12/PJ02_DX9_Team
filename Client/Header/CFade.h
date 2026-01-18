@@ -57,6 +57,8 @@ private:
 	_float m_fAlpha = 0.f;
 	_bool m_bFadeIn = false;
 
+	_float m_fFadeSpeed = 0.01f;
+
 
 	LPDIRECT3DPIXELSHADER9 m_pPixelShader;
 };

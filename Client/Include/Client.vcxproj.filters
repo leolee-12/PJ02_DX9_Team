@@ -558,24 +558,6 @@
     <ClInclude Include="..\Header\CKBMask.h">
       <Filter>02. GameObject\05. UI\03. KBUI\99. Test</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\CKBSix.h">
-      <Filter>02. GameObject\07. UI\03. KBUI\01. Title\00. KBSix</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Header\CKBDice.h">
-      <Filter>02. GameObject\07. UI\03. KBUI\02. Main\00. Dice</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Header\CKBBoardSlot.h">
-      <Filter>02. GameObject\07. UI\03. KBUI\02. Main\01. Board\BoardSlot</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Header\CKBBoardBack.h">
-      <Filter>02. GameObject\07. UI\03. KBUI\02. Main\01. Board\BoardBack</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Header\CKBDiceBox.h">
-      <Filter>02. GameObject\07. UI\03. KBUI\02. Main\01. Board\DiceBox</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Header\CKBBack2.h">
-      <Filter>02. GameObject\07. UI\03. KBUI\00. TTutorial</Filter>
-    </ClInclude>
     <ClInclude Include="..\Header\CB1_AI.h">
       <Filter>02. GameObject\01. GameActor\01. Monster\Boss1</Filter>
     </ClInclude>
@@ -876,6 +858,24 @@
     <ClInclude Include="..\Header\CKBSix.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CKBSix.h">
+      <Filter>02. GameObject\05. UI\03. KBUI\01. Title\00. KBSix</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CKBBack2.h">
+      <Filter>02. GameObject\05. UI\03. KBUI\00. TTutorial\00. KBBack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CKBDice.h">
+      <Filter>02. GameObject\05. UI\03. KBUI\02. Main\00. Dice</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CKBBoardBack.h">
+      <Filter>02. GameObject\05. UI\03. KBUI\02. Main\01. Board\BoardBack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CKBBoardSlot.h">
+      <Filter>02. GameObject\05. UI\03. KBUI\02. Main\01. Board\BoardSlot</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CKBDiceBox.h">
+      <Filter>02. GameObject\05. UI\03. KBUI\02. Main\01. Board\DiceBox</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1000,24 +1000,6 @@
     </ClCompile>
     <ClCompile Include="..\Code\CKBMask.cpp">
       <Filter>02. GameObject\05. UI\03. KBUI\99. Test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\CKBSix.cpp">
-      <Filter>02. GameObject\07. UI\03. KBUI\01. Title\00. KBSix</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\CKBDice.cpp">
-      <Filter>02. GameObject\07. UI\03. KBUI\02. Main\00. Dice</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\CKBBoardSlot.cpp">
-      <Filter>02. GameObject\07. UI\03. KBUI\02. Main\01. Board\BoardSlot</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\CKBBoardBack.cpp">
-      <Filter>02. GameObject\07. UI\03. KBUI\02. Main\01. Board\BoardBack</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\CKBDiceBox.cpp">
-      <Filter>02. GameObject\07. UI\03. KBUI\02. Main\01. Board\DiceBox</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\CKBBack2.cpp">
-      <Filter>02. GameObject\07. UI\03. KBUI\00. TTutorial</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CMonsterB1.cpp">
       <Filter>02. GameObject\01. GameActor\01. Monster\Boss1</Filter>
@@ -1291,6 +1273,24 @@
     </ClCompile>
     <ClCompile Include="..\Code\CKBSix.cpp">
       <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CKBSix.cpp">
+      <Filter>02. GameObject\05. UI\03. KBUI\01. Title\00. KBSix</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CKBBack2.cpp">
+      <Filter>02. GameObject\05. UI\03. KBUI\00. TTutorial\00. KBBack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CKBDice.cpp">
+      <Filter>02. GameObject\05. UI\03. KBUI\02. Main\00. Dice</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CKBBoardBack.cpp">
+      <Filter>02. GameObject\05. UI\03. KBUI\02. Main\01. Board\BoardBack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CKBBoardSlot.cpp">
+      <Filter>02. GameObject\05. UI\03. KBUI\02. Main\01. Board\BoardSlot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CKBDiceBox.cpp">
+      <Filter>02. GameObject\05. UI\03. KBUI\02. Main\01. Board\DiceBox</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
