@@ -28,9 +28,10 @@ HRESULT CFollower_AI::Ready_AI(const _float& fDetectRange, const _float& fIntera
 	if (FAILED(CAIController::Ready_AI(fDetectRange, fInteractRange, iInitState)))
 		return E_FAIL;
 
-	m_fSpeed = FOLLOWER_DEFAULT_SPEED;
+	m_fSpeed = FW_DEFAULT_SPEED;
 	m_fAcmlTime = 0.f;
 	m_iRcmState = _uint(CFollower::FOLLOWER_IDLE);
+	m_fWorkSpeed = FW_DEFAULT_WORK_SPEED;
 
 	return S_OK;
 }

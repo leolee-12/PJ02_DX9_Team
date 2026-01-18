@@ -36,9 +36,11 @@ private:
 	_float		m_fAcmlTime;
 	_bool		m_bChase;
 	_vec3		m_vLerpPos;		// Lerp용 위치
+	_float		m_fWorkSpeed;
 
 	static constexpr _float AUTO_ESCAPE_STATE_TIME = 3.f;
-	static constexpr _float FOLLOWER_DEFAULT_SPEED = 3.f;
+	static constexpr _float FW_DEFAULT_SPEED = 3.f;
+	static constexpr _float FW_DEFAULT_WORK_SPEED = 1.f;
 
 public:
 	static CFollower_AI* Create(LPDIRECT3DDEVICE9 pGraphicDev, const _float& fDetectRange, const _float& fInteractRange, const _uint& iInitState = 0);

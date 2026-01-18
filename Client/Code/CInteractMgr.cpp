@@ -11,6 +11,7 @@ CInteractMgr::CInteractMgr()
 
 CInteractMgr::~CInteractMgr()
 {
+	Free();
 }
 
 HRESULT CInteractMgr::Ready_InteractMgr()
@@ -35,8 +36,8 @@ void CInteractMgr::Register_IObj(INTERACT_TYPE eType, CGameObject* pIObj)
 		if (pRegisteredObj == pIObj) return;
 	}
 
-	iter->second.push_back(pIObj);
-	pIObj->AddRef();
+	iter->second.push_back(pIObj);	// 리스트에 추가
+	pIObj->AddRef();				// 참조카운트 Up
 }
 
 void CInteractMgr::Unregister_IObj(INTERACT_TYPE eType, CGameObject* pIObj)
@@ -45,13 +46,13 @@ void CInteractMgr::Unregister_IObj(INTERACT_TYPE eType, CGameObject* pIObj)
 
 	if (iter == m_mapInteractables.end()) return;
 
-	for (auto pRegisteredObj : iter->second)
+	auto& pIObjList = iter->second;
+	auto TargetIter = find(pIObjList.begin(), pIObjList.end(), pIObj);
+
+	if (TargetIter != pIObjList.end())
 	{
-		if (pRegisteredObj == pIObj)
-		{
-			Safe_Release(pIObj);
-			return;
-		}
+		pIObjList.erase(TargetIter);	// 리스트에서 제거
+		Safe_Release(pIObj);			// 참조카운트 Down
 	}
 }
 
@@ -83,16 +84,26 @@ CGameObject* CInteractMgr::Find_Nearest(INTERACT_TYPE eType, const _vec3& vPos)
 	return pNearest;
 }
 
+void CInteractMgr::Apply_Work(INTERACT_TYPE eType, const _vec3& vPos, const float& fWork)
+{
+	CGameObject* pTarget = Find_Nearest(eType, vPos);
+
+	if (!pTarget) return;
+
+	pTarget->Interact(fWork);
+}
+
 void CInteractMgr::Clear_IObj()
 {
 	for (auto& pair : m_mapInteractables)
 	{
 		for (auto& pIObj : pair.second)
 		{
-			Unregister_IObj(pair.first, pIObj);
+			Safe_Release(pIObj);	// Unregister는 리스트에서 제거해버리므로 iter 무효화 -> Safe_Release()만
 		}
+		pair.second.clear();
 	}
-
+	
 	m_mapInteractables.clear();
 }
 

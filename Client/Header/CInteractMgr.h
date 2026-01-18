@@ -1,7 +1,6 @@
 ﻿#pragma once
 #include "CBase.h"
 #include "Engine_Define.h"
-//#include "CGameObject.h"
 
 namespace Engine
 {
@@ -24,6 +23,7 @@ public:
 	void			Register_IObj(INTERACT_TYPE eType, CGameObject* pObj);
 	void			Unregister_IObj(INTERACT_TYPE eType, CGameObject* pObj);
 	CGameObject*	Find_Nearest(INTERACT_TYPE eType, const _vec3& vPos);
+	void			Apply_Work(INTERACT_TYPE eType, const _vec3& vPos, const float& fWork);
 	void			Clear_IObj();
 
 private:

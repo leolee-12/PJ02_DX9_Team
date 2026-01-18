@@ -885,6 +885,9 @@
     <ClInclude Include="..\Header\CFollower_AI.h">
       <Filter>02. GameObject\01. GameActor\03. Follower</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\IInteractable.h">
+      <Filter>03. Manager\03. InteractMgr</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
