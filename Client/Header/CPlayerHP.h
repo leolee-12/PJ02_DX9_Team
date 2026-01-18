@@ -24,7 +24,11 @@ public:
 	virtual			void		OnCollision(CGameObject* pObject);
 
 public:
-	static CPlayerHP* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pChannel);
+	void			Set_MaxHp(_int iMaxHp) { m_iPlayerMaxHp = iMaxHp; }
+	void			Set_Hp(_int iHp) { m_iPlayerHp = iHp; }
+
+public:
+	static CPlayerHP* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 
 private:
 	virtual			void		Free();

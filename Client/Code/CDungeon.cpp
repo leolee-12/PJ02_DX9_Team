@@ -485,6 +485,28 @@ HRESULT CDungeon::Ready_UI_Layer(const _tchar* pLayerTag)
 
 	CGameObject* pGameObject = nullptr;
 
+	//////////////////////////////////////////////////////
+	//플레이어 UI
+	pGameObject = CPersistentMgr::GetInstance()->Get_PlayerHPUI();
+
+	if (nullptr == pGameObject)
+		return E_FAIL;
+
+	if (FAILED(pLayer->Add_GameObject(L"PlayerHP", pGameObject)))
+		return E_FAIL;
+	pGameObject->AddRef();
+
+	pGameObject = CPersistentMgr::GetInstance()->Get_Gauge();
+
+	if (nullptr == pGameObject)
+		return E_FAIL;
+
+	if (FAILED(pLayer->Add_GameObject(L"Gauge", pGameObject)))
+		return E_FAIL;
+	pGameObject->AddRef();
+	//플레이어 UI
+	////////////////////////////////////////////////////////
+
 	pGameObject = CDungeonBack::Create(m_pGraphicDev, m_pMessageChannel);
 
 	if (nullptr == pGameObject)
@@ -531,22 +553,6 @@ HRESULT CDungeon::Ready_UI_Layer(const _tchar* pLayerTag)
 		return E_FAIL;
 
 	if (FAILED(pLayer->Add_GameObject(L"SelectLine", pGameObject)))
-		return E_FAIL;
-
-	pGameObject = CPlayerHP::Create(m_pGraphicDev, m_pMessageChannel);
-
-	if (nullptr == pGameObject)
-		return E_FAIL;
-
-	if (FAILED(pLayer->Add_GameObject(L"PlayerHP", pGameObject)))
-		return E_FAIL;
-
-	pGameObject = m_pGauge = CGauge::Create(m_pGraphicDev, Gauge::GS_PASSION);
-
-	if (nullptr == pGameObject)
-		return E_FAIL;
-
-	if (FAILED(pLayer->Add_GameObject(L"Gauge", pGameObject)))
 		return E_FAIL;
 
 	pGameObject = CCookingUIController::Create(m_pGraphicDev);

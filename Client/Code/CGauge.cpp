@@ -18,7 +18,7 @@ CGauge::CGauge(LPDIRECT3DDEVICE9 pGraphicDev)
 	, m_pPassionIcon(nullptr)
 	, m_eCurGaugeState(Gauge::GS_END)
 	, m_ePreGaugeState(Gauge::GS_END)
-	, m_bPontRender(true)
+	, m_bFontRender(true)
 	, m_fMaxPassionGaugeValue(4.f)
 	, m_fMaxFaithGaugeValue(1.f)
 {
@@ -96,7 +96,7 @@ void CGauge::LateUpdate_GameObject(const _float& fTimeDelta)
 
 void CGauge::Render_GameObject()
 {
-	if (!m_bPontRender) { return; }
+	if (!m_bFontRender) { return; }
 
 	D3DXCOLOR FontColor = D3DXCOLOR(240.f / 256.f, 240.f / 256.f, 240.f / 256.f, 1.f);
 	wchar_t szGauge[16];
@@ -120,12 +120,12 @@ void CGauge::Update_State()
 		switch (m_eCurGaugeState)
 		{
 		case Gauge::GS_PASSION:
-			m_bPontRender = true;
+			m_bFontRender = true;
 			m_pPassionGauge->Set_PassionMax(m_fMaxPassionGaugeValue);
 			m_pGaugeStar->Set_Render(true);
 			break;
 		case Gauge::GS_FAITH:
-			m_bPontRender = false;
+			m_bFontRender = false;
 			m_pPassionGauge->Set_FaithMax(m_fMaxFaithGaugeValue);
 			m_pGaugeStar->Set_Render(false);
 			break;
@@ -166,6 +166,19 @@ void CGauge::Accumulate_GaugeValue(const _float& fTimeDelta)
 }
 
 
+
+void CGauge::Set_FontRender(_bool bBool)
+{
+	switch (m_eCurGaugeState)
+	{
+	case Gauge::GS_PASSION:
+		m_bFontRender = bBool;
+		break;
+	case Gauge::GS_FAITH:
+		m_bFontRender = false;
+		break;
+	}
+}
 
 CGauge* CGauge::Create(LPDIRECT3DDEVICE9 pGraphicDev, Gauge::GAUGESTATE eState)
 {

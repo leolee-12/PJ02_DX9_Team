@@ -35,6 +35,9 @@ public:
 	void			Set_StopCrying();
 	void			Set_Reborn();
 
+	_int			Get_MaxHp() { return m_iMaxHp; }
+	_int			Get_Hp() { return m_iHp; }
+
 	void			Set_MessageChannel(IMessageChannel* pMessageChannel);
 
 	virtual			HRESULT		Ready_GameObject();
@@ -103,6 +106,8 @@ private:
 	_int			m_iCombo;	// 공격 중인지? + 몇번째 콤보상태인지?
 	_bool			m_bAction;	// Action 중인지?
 	_float			m_fAcmlTime;
+	// 윤석현추가
+	_int			m_iMaxHp = 8;
 
 	// 알파 소팅 관련
 	_vec3			m_vPos;

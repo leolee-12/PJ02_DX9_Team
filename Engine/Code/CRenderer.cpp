@@ -193,8 +193,10 @@ void CRenderer::Render_UI(LPDIRECT3DDEVICE9& pGraphicDev)
 
 void CRenderer::Render_Font(LPDIRECT3DDEVICE9& pGraphicDev)
 {
-	for (auto& pObj : m_RenderGroup[RENDER_FONT])
-		pObj->Render_GameObject();
+	if (m_bRenderFont) {
+		for (auto& pObj : m_RenderGroup[RENDER_FONT])
+			pObj->Render_GameObject();
+	}
 }
 
 void CRenderer::Render_Floor(LPDIRECT3DDEVICE9& pGraphicDev)

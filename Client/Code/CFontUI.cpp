@@ -52,7 +52,8 @@ _int CFontUI::Update_GameObject(const _float& fTimeDelta)
 
 		Update_CutText(fTimeDelta);
 
-        CRenderer::GetInstance()->Add_RenderGroup(RENDER_FONT, this);
+
+		CRenderer::GetInstance()->Add_RenderGroup(RENDER_FONT, this);
     }
 
     return NOEVENT;
