@@ -14,7 +14,7 @@ CFollower::CFollower(LPDIRECT3DDEVICE9 pGraphicDev)
 	m_fFrame(0.f),
 	m_fFrameEnd(0.f),
 	m_fFrameSpeed(0.f),
-	m_eInteractType(NONE)
+	m_eWorkType(FW_NONE)
 {
 }
 
@@ -25,7 +25,7 @@ CFollower::CFollower(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChanne
 	m_fFrame(0.f),
 	m_fFrameEnd(0.f),
 	m_fFrameSpeed(0.f),
-	m_eInteractType(NONE)
+	m_eWorkType(FW_NONE)
 {
 }
 
@@ -37,7 +37,7 @@ CFollower::CFollower(const CFollower& rhs)
 	m_fFrame(0.f),
 	m_fFrameEnd(0.f),
 	m_fFrameSpeed(0.f),
-	m_eInteractType(NONE)
+	m_eWorkType(FW_NONE)
 {
 }
 
@@ -62,9 +62,6 @@ _int CFollower::Update_GameObject(const _float& fTimeDelta)
 {
 	Move_Frame(fTimeDelta);
 
-	m_pColliderCom->UpdateFromTransform(m_pTransformCom);
-	// 충돌체 디버그용
-	if (g_bDebug) m_pColliderCom->Update_AABBforRender();
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
 	if (iExit == DEAD)
@@ -85,6 +82,10 @@ void CFollower::LateUpdate_GameObject(const _float& fTimeDelta)
 	m_pTransformCom->Compute_Bilboard(BBD_X);
 	m_pTransformCom->Get_Info(INFO_POS, &m_vPos);
 	Compute_ViewDepth(&m_vPos);
+
+	m_pColliderCom->UpdateFromTransform(m_pTransformCom);
+	// 충돌체 디버그용
+	if (g_bDebug) m_pColliderCom->Update_AABBforRender();
 
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
 }
@@ -248,31 +249,32 @@ void CFollower::Check_Frame()
 
 	case FOLLOWER_ACTION:
 	{
-		m_eInteractType = INTERACT_TYPE(Get_Rand_Int(0, 5));
+		m_eWorkType = FOLLOWER_WORK(Get_Rand_Int(0, 5));
 
-		switch (m_eInteractType)
+		switch (m_eWorkType)
 		{
-		case NONE:	// (IDLE로 전환)
+		case FW_NONE:	// (IDLE로 전환)
+			m_eCurState = FOLLOWER_IDLE;
 			m_fFrameEnd = 24.f;
 			break;
 
-		case WOOD:
+		case FW_WOOD:
 			m_fFrameEnd = 98.f;
 			break;
 
-		case ROCK:
+		case FW_ROCK:
 			m_fFrameEnd = 46.f;
 			break;
 
-		case BUILD:
+		case FW_BUILD:
 			m_fFrameEnd = 83.f;
 			break;
 
-		case FOOD:
+		case FW_EAT:
 			m_fFrameEnd = 40.f;
 			break;
 
-		case PRAY:
+		case FW_PRAY:
 			m_fFrameEnd = 60.f;
 			break;
 		}
@@ -352,24 +354,24 @@ void CFollower::Set_Texture()
 
 	case FOLLOWER_ACTION:
 	{
-		switch(m_eInteractType)
+		switch(m_eWorkType)
 		{
-		case NONE:
+		case FW_NONE:
 			iTexIdx = 0;
 			break;
-		case WOOD:
+		case FW_WOOD:
 			iTexIdx = 6;
 			break;
-		case ROCK:
+		case FW_ROCK:
 			iTexIdx = 7;
 			break;
-		case BUILD:
+		case FW_BUILD:
 			iTexIdx = 8;
 			break;
-		case FOOD:
+		case FW_EAT:
 			iTexIdx = 9;
 			break;
-		case PRAY:
+		case FW_PRAY:
 			iTexIdx = 10;
 			break;
 		}

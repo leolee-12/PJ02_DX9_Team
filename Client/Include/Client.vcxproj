@@ -200,6 +200,7 @@
     <ClInclude Include="..\Header\CGauge.h" />
     <ClInclude Include="..\Header\CGaugeCover.h" />
     <ClInclude Include="..\Header\CGaugeStar.h" />
+    <ClInclude Include="..\Header\CInteractMgr.h" />
     <ClInclude Include="..\Header\CItem.h" />
     <ClInclude Include="..\Header\CKBBack.h" />
     <ClInclude Include="..\Header\CKBBack2.h" />
@@ -351,6 +352,7 @@
     <ClCompile Include="..\Code\CGauge.cpp" />
     <ClCompile Include="..\Code\CGaugeCover.cpp" />
     <ClCompile Include="..\Code\CGaugeStar.cpp" />
+    <ClCompile Include="..\Code\CInteractMgr.cpp" />
     <ClCompile Include="..\Code\CItem.cpp" />
     <ClCompile Include="..\Code\CKBBack.cpp" />
     <ClCompile Include="..\Code\CKBBack2.cpp" />

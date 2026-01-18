@@ -73,9 +73,6 @@
     <Filter Include="03. Manager">
       <UniqueIdentifier>{f4a5af23-1cb1-4c65-b73d-7132d05ea4c2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="03. Manager\01. CPersistentMgr">
-      <UniqueIdentifier>{153d294d-a813-4bb7-9dee-2e2680526024}</UniqueIdentifier>
-    </Filter>
     <Filter Include="03. Manager\02. TileMgr">
       <UniqueIdentifier>{01b64606-77a6-499b-92aa-0bad3eff8f84}</UniqueIdentifier>
     </Filter>
@@ -424,6 +421,12 @@
     <Filter Include="01. Scene\01. Maps\97. EditScene">
       <UniqueIdentifier>{ff5bb01d-db75-499d-ae0b-be1f8fb58ee7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03. Manager\03. InteractMgr">
+      <UniqueIdentifier>{cc4ab9a0-c95b-4ff8-939b-ac400d44b4d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Manager\01. PersistentMgr">
+      <UniqueIdentifier>{153d294d-a813-4bb7-9dee-2e2680526024}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -487,7 +490,7 @@
       <Filter>01. Scene\99. Loading</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CPersistentMgr.h">
-      <Filter>03. Manager\01. CPersistentMgr</Filter>
+      <Filter>03. Manager\01. PersistentMgr</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CLoadingBack.h">
       <Filter>02. GameObject\05. UI\00. LoadingUI\00. LoadingBack</Filter>
@@ -557,24 +560,6 @@
     </ClInclude>
     <ClInclude Include="..\Header\CKBMask.h">
       <Filter>02. GameObject\05. UI\03. KBUI\99. Test</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Header\CKBSix.h">
-      <Filter>02. GameObject\07. UI\03. KBUI\01. Title\00. KBSix</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Header\CKBDice.h">
-      <Filter>02. GameObject\07. UI\03. KBUI\02. Main\00. Dice</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Header\CKBBoardSlot.h">
-      <Filter>02. GameObject\07. UI\03. KBUI\02. Main\01. Board\BoardSlot</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Header\CKBBoardBack.h">
-      <Filter>02. GameObject\07. UI\03. KBUI\02. Main\01. Board\BoardBack</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Header\CKBDiceBox.h">
-      <Filter>02. GameObject\07. UI\03. KBUI\02. Main\01. Board\DiceBox</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Header\CKBBack2.h">
-      <Filter>02. GameObject\07. UI\03. KBUI\00. TTutorial</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CB1_AI.h">
       <Filter>02. GameObject\01. GameActor\01. Monster\Boss1</Filter>
@@ -876,6 +861,27 @@
     <ClInclude Include="..\Header\CKBSix.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CKBBack2.h">
+      <Filter>02. GameObject\05. UI\03. KBUI\00. TTutorial\00. KBBack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CKBBoardBack.h">
+      <Filter>02. GameObject\05. UI\03. KBUI\02. Main\01. Board\BoardBack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CKBBoardSlot.h">
+      <Filter>02. GameObject\05. UI\03. KBUI\02. Main\01. Board\BoardSlot</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CKBDice.h">
+      <Filter>02. GameObject\05. UI\03. KBUI\02. Main\00. Dice</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CKBDiceBox.h">
+      <Filter>02. GameObject\05. UI\03. KBUI\02. Main\01. Board\DiceBox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CKBSix.h">
+      <Filter>02. GameObject\05. UI\03. KBUI\01. Title\00. KBSix</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CInteractMgr.h">
+      <Filter>03. Manager\03. InteractMgr</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -930,7 +936,7 @@
       <Filter>01. Scene\99. Loading</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CPersistentMgr.cpp">
-      <Filter>03. Manager\01. CPersistentMgr</Filter>
+      <Filter>03. Manager\01. PersistentMgr</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CLoadingBack.cpp">
       <Filter>02. GameObject\05. UI\00. LoadingUI\00. LoadingBack</Filter>
@@ -1000,24 +1006,6 @@
     </ClCompile>
     <ClCompile Include="..\Code\CKBMask.cpp">
       <Filter>02. GameObject\05. UI\03. KBUI\99. Test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\CKBSix.cpp">
-      <Filter>02. GameObject\07. UI\03. KBUI\01. Title\00. KBSix</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\CKBDice.cpp">
-      <Filter>02. GameObject\07. UI\03. KBUI\02. Main\00. Dice</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\CKBBoardSlot.cpp">
-      <Filter>02. GameObject\07. UI\03. KBUI\02. Main\01. Board\BoardSlot</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\CKBBoardBack.cpp">
-      <Filter>02. GameObject\07. UI\03. KBUI\02. Main\01. Board\BoardBack</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\CKBDiceBox.cpp">
-      <Filter>02. GameObject\07. UI\03. KBUI\02. Main\01. Board\DiceBox</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\CKBBack2.cpp">
-      <Filter>02. GameObject\07. UI\03. KBUI\00. TTutorial</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CMonsterB1.cpp">
       <Filter>02. GameObject\01. GameActor\01. Monster\Boss1</Filter>
@@ -1291,6 +1279,27 @@
     </ClCompile>
     <ClCompile Include="..\Code\CKBSix.cpp">
       <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CKBBack2.cpp">
+      <Filter>02. GameObject\05. UI\03. KBUI\00. TTutorial\00. KBBack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CKBBoardBack.cpp">
+      <Filter>02. GameObject\05. UI\03. KBUI\02. Main\01. Board\BoardBack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CKBBoardSlot.cpp">
+      <Filter>02. GameObject\05. UI\03. KBUI\02. Main\01. Board\BoardSlot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CKBDice.cpp">
+      <Filter>02. GameObject\05. UI\03. KBUI\02. Main\00. Dice</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CKBDiceBox.cpp">
+      <Filter>02. GameObject\05. UI\03. KBUI\02. Main\01. Board\DiceBox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CKBSix.cpp">
+      <Filter>02. GameObject\05. UI\03. KBUI\01. Title\00. KBSix</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CInteractMgr.cpp">
+      <Filter>03. Manager\03. InteractMgr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
