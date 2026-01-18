@@ -25,6 +25,8 @@
 #include "CMapWarp.h"
 #include "CWarp.h"
 #include "CMapBorder.h"
+#include "CMonsterB2.h"
+#include "CFade.h"
 
 CRealDungeon::CRealDungeon(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -49,6 +51,8 @@ HRESULT CRealDungeon::Ready_Scene()
 		return E_FAIL;
 
 	Ready_Light();
+
+	Ready_Event();
 
 	//CCollisionMgr::GetInstance()->Ready_CollisionMgr();
 
@@ -171,6 +175,12 @@ HRESULT CRealDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 					break;
 				case 4:
 					// Rash | 최종보스 |
+					pGameObject = CMonsterB2::Create(m_pGraphicDev, m_pMessageChannel, _vec3(spawn.x * 0.8f, 0.f, spawn.z * 0.8f));
+
+					NULL_CHECK_RETURN(pGameObject, E_FAIL)
+
+						if (FAILED(pLayer->Add_GameObject(L"Boss", pGameObject)))
+							return E_FAIL;
 					break;
 				case 5:
 					// WaitingOne | 연출용 |
@@ -290,7 +300,42 @@ HRESULT CRealDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 
 HRESULT CRealDungeon::Ready_UI_Layer(const _tchar* pLayerTag)
 {
-	return S_OK;
+	CLayer* pLayer = CLayer::Create();
+	if (nullptr == pLayer)
+		return E_FAIL;
+
+	CGameObject* pGameObject = nullptr;
+
+	//////////////////////////////////////////////////////
+	//플레이어 UI
+	pGameObject = CPersistentMgr::GetInstance()->Get_PlayerHPUI();
+
+	if (nullptr == pGameObject)
+		return E_FAIL;
+
+	if (FAILED(pLayer->Add_GameObject(L"PlayerHP", pGameObject)))
+		return E_FAIL;
+	pGameObject->AddRef();
+
+	pGameObject = CPersistentMgr::GetInstance()->Get_Gauge();
+
+	if (nullptr == pGameObject)
+		return E_FAIL;
+
+	if (FAILED(pLayer->Add_GameObject(L"Gauge", pGameObject)))
+		return E_FAIL;
+	pGameObject->AddRef();
+	//플레이어 UI
+	////////////////////////////////////////////////////////
+
+	pGameObject = CFade::Create(m_pGraphicDev, m_pMessageChannel);
+
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+
+	if (FAILED(pLayer->Add_GameObject(L"Fade", pGameObject)))
+		return E_FAIL;
+
+	m_mapLayer.insert({ pLayerTag , pLayer });
 }
 
 
@@ -301,9 +346,9 @@ HRESULT CRealDungeon::Ready_Light()
 
 	tLightInfo.Type = D3DLIGHT_DIRECTIONAL;
 
-	tLightInfo.Diffuse = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-	tLightInfo.Specular = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-	tLightInfo.Ambient = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
+	tLightInfo.Diffuse = D3DXCOLOR(0.4f, 0.3f, 0.85f, 1.f);
+	tLightInfo.Specular = D3DXCOLOR(0.4f, 0.2f, 0.6f, 1.f);
+	tLightInfo.Ambient = D3DXCOLOR(0.3f, 0.12f, 0.4f, 1.f);
 
 	tLightInfo.Direction = { 1.f, -1.f, 1.f };
 
@@ -311,6 +356,25 @@ HRESULT CRealDungeon::Ready_Light()
 		return E_FAIL;
 
 	return S_OK;
+}
+
+void CRealDungeon::Ready_Event()
+{
+	m_hmapSubHandles.insert({ L"Obj_Add", m_pMessageChannel->Subscribe(L"Obj.Add", [this](const IMessageChannel::EVENT& Event) {
+	{
+		CGameObject* pGObj = any_cast<CGameObject*>(Event.hmapData.find(L"Obj")->second);
+
+		if (pGObj != nullptr)
+		{
+			wstring strLayerTag = any_cast<const _tchar*>(Event.hmapData.find(L"LayerTag")->second);
+			wstring strObjTag = any_cast<wstring>(Event.hmapData.find(L"ObjTag")->second);
+			auto iter = m_mapLayer.find(strLayerTag);
+
+			if (iter != m_mapLayer.end())
+				iter->second->Add_GameObject(strObjTag, pGObj);
+		}
+	}
+	}) });
 }
 
 CRealDungeon* CRealDungeon::Create(LPDIRECT3DDEVICE9 pGraphicDev)

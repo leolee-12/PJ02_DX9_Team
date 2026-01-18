@@ -5,7 +5,7 @@
 CPersistentMgr* CPersistentMgr::m_pInstance = nullptr;
 
 CPersistentMgr::CPersistentMgr()
-	: m_pPlayer(nullptr)
+	: m_pPlayer(nullptr), m_pGauge(nullptr), m_pPlayerHPUI(nullptr)
 {
 }
 
@@ -101,8 +101,6 @@ void CPersistentMgr::Set_GaugeFontRender(_bool bBool)
 {
 	m_pGauge->Set_FontRender(bBool);
 }
-
-
 
 void CPersistentMgr::Update_PlayerHp()
 {

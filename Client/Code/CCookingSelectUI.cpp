@@ -50,32 +50,37 @@ HRESULT CCookingSelectUI::Ready_GameObject()
 
 	m_vecCookingSelectUI.push_back(pGameObject);
 
+	CCookingSelectSlot* pCSS;
 	for (int i = 0; i < 2; ++i)
 	{
 		for (int j = 0; j < 6; ++j)
 		{
-			pGameObject = CCookingSelectSlot::Create(m_pGraphicDev, { -500.f + (75.f * j), -150.f + (75.f * i), 0.001f }, 0.3f);
+			pCSS = CCookingSelectSlot::Create(m_pGraphicDev, { -500.f + (75.f * j), -150.f + (75.f * i), 0.001f }, 0.3f);
 
 			if (nullptr == pGameObject)
 				return E_FAIL;
 
-			m_vecCookingSelectUI.push_back(pGameObject);
-			m_vecFoodSlot.push_back(pGameObject);
+			//m_vecCookingSelectUI.push_back(pGameObject);
+			m_vecFoodSlot.push_back(pCSS);
 		}
 	}
 
+	CCookingTargetFood* pFood;
 	for (int i = 0; i < 2; ++i)
 	{
 		for (int j = 0; j < 6; ++j)
 		{
-			pGameObject = CCookingTargetFood::Create(m_pGraphicDev, { -500.f + (75.f * j), -150.f + (75.f * i), 0.0001f }, 0.3f, FOODTYPE::FT_QUALITY, 3.0f);
-			CCookingTargetFood* pFood =
-				dynamic_cast<CCookingTargetFood*>(pGameObject);
+			
+			pFood = CCookingTargetFood::Create(m_pGraphicDev, { -500.f + (75.f * j), -150.f + (75.f * i), 0.0001f }, 0.3f, FOODTYPE::FT_QUALITY, 3.0f);
+			/*CCookingTargetFood* pFood =
+				dynamic_cast<CCookingTargetFood*>(pGameObject);*/
+
 			pFood->Set_Render(false);
+
 			if (nullptr == pGameObject)
 				return E_FAIL;
 
-			m_vecCookingSelectUI.push_back(pGameObject);
+			//m_vecCookingSelectUI.push_back(pGameObject);
 			m_vecFood.push_back(pFood);
 		}
 	}
@@ -107,6 +112,14 @@ _int CCookingSelectUI::Update_GameObject(const _float& fTimeDelta)
 		for (CGameObject* CookingUI : m_vecCookingSelectUI)
 		{
 			CookingUI->Update_GameObject(fTimeDelta);
+		}
+		for (CGameObject* Obj : m_vecFoodSlot)
+		{
+			Obj->Update_GameObject(fTimeDelta);
+		}
+		for (CGameObject* Obj2 : m_vecFood)
+		{
+			Obj2->Update_GameObject(fTimeDelta);
 		}
 	}
 
@@ -190,11 +203,23 @@ void CCookingSelectUI::ReSetSelecting()
 
 void CCookingSelectUI::Free()
 {
-	for (CGameObject* CookingUI : m_vecCookingSelectUI)
+	for (CGameObject*& CookingUI : m_vecCookingSelectUI)
 	{
 		Safe_Release(CookingUI);
 	}
 	m_vecCookingSelectUI.clear();
+
+	for (auto& ptr : m_vecFoodSlot)
+	{
+		Safe_Release(ptr);
+	}
+	m_vecFoodSlot.clear();
+
+	for (auto& ptr : m_vecFood)
+	{
+		Safe_Release(ptr);
+	}
+	m_vecFood.clear();
 
 	CUi::Free();
 }

@@ -483,6 +483,31 @@ void CMultiLoadingThread::Loading_for_RealDungeon()
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_MonsterN1Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal1/dds/MonsterN1_%02d.dds", 7));
 	m_iTotalProtoCount++;
 
+	vector<TEXSETLR> vecBossLeshy;
+	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Idle", L"../Bin/Resource/Texture/Monster/Boss2/idle/dds/idle_%04d.dds", 80));
+	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Dig", L"../Bin/Resource/Texture/Monster/Boss2/move-out/dds/move-out_%04d.dds", 40));
+	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Escape", L"../Bin/Resource/Texture/Monster/Boss2/move-in/dds/move-in_%04d.dds", 40));
+	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Hit", L"../Bin/Resource/Texture/Monster/Boss2/hurt/dds/hurt_%04d.dds", 16));
+	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Smash", L"../Bin/Resource/Texture/Monster/Boss2/head-smash/dds/head-smash_%04d.dds", 62));
+	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Spike", L"../Bin/Resource/Texture/Monster/Boss2/trunk-strike/dds/trunk-strike_%04d.dds", 51));
+	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Summon", L"../Bin/Resource/Texture/Monster/Boss2/summon/dds/summon_%04d.dds", 71));
+	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Spawn", L"../Bin/Resource/Texture/Monster/Boss2/transform/dds/transform_%04d.dds", 128));
+	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Die", L"../Bin/Resource/Texture/Monster/Boss2/die-noheart/dds/die-noheart_%04d.dds", 132));
+	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Dead", L"../Bin/Resource/Texture/Monster/Boss2/dead-noheart/dds/dead-noheart_%04d.dds", 1));
+	m_TexSetLoadingqueue.push(make_pair(TEXSETINFO(L"Proto_MonsterB2Texture", TEX_NORMAL), vecBossLeshy));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_SpikeTexture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Spike/dds/Spike%d.dds", 4));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_ProjectileTexture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/dds/Projectile.dds", 1));
+	m_iTotalProtoCount++;
+
+	// 디버그용 그긴거
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_Fade", TEX_NORMAL, L"../Bin/Resource/YSH/Etc/Fade.png", 1));
+	m_iTotalProtoCount++;
+	// 디버그용 그긴거
+
 }
 
 void CMultiLoadingThread::Loading_for_AmdusiasRoom()

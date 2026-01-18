@@ -75,10 +75,9 @@ HRESULT CMonsterB2::Ready_GameObject()
 _int CMonsterB2::Update_GameObject(const _float& fTimeDelta)
 {
 	Check_Phase();
+	m_pTransformCom;
 
 	Move_Frame(fTimeDelta);
-
-	Check_Status();
 
 	for (auto& pComponent : m_mapComponent[ID_DYNAMIC])
 		pComponent.second->Update_Component(fTimeDelta);
@@ -105,6 +104,8 @@ void CMonsterB2::LateUpdate_GameObject(const _float& fTimeDelta)
 	Compute_ViewDepth(&m_vPos);
 
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
+
+	Check_Status();
 
 	_vec3 vDir = *m_pAICom->Get_Dir();
 }
@@ -772,7 +773,7 @@ CMonsterB2* CMonsterB2::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* S
 		return nullptr;
 	}
 
-	pMonster->m_pTransformCom->Set_Pos(vPos.x, vPos.y, vPos.z);
+	pMonster->m_pTransformCom->Set_Pos(vPos.x, pMonster->m_fGroundY, vPos.z);
 
 	return pMonster;
 }
