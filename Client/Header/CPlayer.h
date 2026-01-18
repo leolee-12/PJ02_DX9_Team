@@ -66,7 +66,7 @@ private:
 	//  Set_TextureSet : Set_Texture와 같은 목적, 상태값까지 TextureSet 컴포넌트에 전달하여 알맞는 텍스처가 세팅되도록 함
 	// ==========================
 
-	void			Move_Roll(const _float& fTimeDelta);
+	void			Move_Lerp(const _float& fTimeDelta);
 	void			Charge(const _float& fTimeDelta);
 	void			Attack_HitBox();
 	void			Attacked(_int iDamage);
@@ -105,7 +105,7 @@ private:
 	_vec3			m_vPos;
 
 	// 구르기 관련
-	_vec3			m_vRollPos;		// Lerp용 위치
+	_vec3			m_vLerpPos;		// Lerp용 위치
 	_float			m_fLerp;		// Lerp용 값
 
 	// 차지 공격 관련
@@ -126,6 +126,12 @@ private:
 
 	// 상수
 	static constexpr _float INVINCIBLE_TIME = 3.f;
+	static constexpr _float DEFAULT_SPEED = 12.f;
+	static constexpr _float INTRO_SPEED = 9.f;
+
+	static constexpr _float DEFAULT_SCALE = 10.f;
+	static constexpr _float INTRO_SCALE = 11.f;
+	static constexpr _float REBIRTH_SCALE = 20.f;
 
 public:
 	static CPlayer* Create(LPDIRECT3DDEVICE9 pGraphicDev);

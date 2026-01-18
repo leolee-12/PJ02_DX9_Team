@@ -452,26 +452,6 @@ HRESULT CDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	if (FAILED(pLayer->Add_GameObject(L"NPC", pGameObject)))
 		return E_FAIL;
 
-	pGameObject = CFollower::Create(m_pGraphicDev, m_pMessageChannel, L"Proto_Follower1Texture");
-	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	if (FAILED(pLayer->Add_GameObject(L"NPC", pGameObject)))
-		return E_FAIL;
-
-	pGameObject = CFollower::Create(m_pGraphicDev, m_pMessageChannel, L"Proto_Follower2Texture");
-	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	if (FAILED(pLayer->Add_GameObject(L"NPC", pGameObject)))
-		return E_FAIL;
-
-	pGameObject = CFollower::Create(m_pGraphicDev, m_pMessageChannel, L"Proto_Follower3Texture");
-	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	if (FAILED(pLayer->Add_GameObject(L"NPC", pGameObject)))
-		return E_FAIL;
-
-	pGameObject = CFollower::Create(m_pGraphicDev, m_pMessageChannel, L"Proto_Follower4Texture");
-	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	if (FAILED(pLayer->Add_GameObject(L"NPC", pGameObject)))
-		return E_FAIL;
-
 	_vec3 vTriggerPos, vTriggerHalfSize;
 	vTriggerPos = { 121.f, 0.f, 12.f };
 	vTriggerHalfSize = { 3.f, 3.f, 3.f };
