@@ -109,13 +109,13 @@ void CFade::Update_Alpha()
 	{
 		if (m_fAlpha > 0.f)
 		{
-			m_fAlpha -= 0.01f;
+			m_fAlpha -= m_fFadeSpeed;
 		}
 	}
 	else {
 		if (m_fAlpha < 1.f)
 		{
-			m_fAlpha += 0.01f;
+			m_fAlpha += m_fFadeSpeed;
 		}
 	}
 
@@ -166,7 +166,7 @@ HRESULT CFade::Ready_PixelShader()
 
 void	CFade::Ready_Event()
 {
-	m_hmapSubHandles.insert({ L"FadeIn", m_pMessageChannel->Subscribe(L"CutScene.Dialogue", [this](const IMessageChannel::EVENT& Event) {
+	m_hmapSubHandles.insert({ L"FadeCutScene", m_pMessageChannel->Subscribe(L"CutScene.Dialogue", [this](const IMessageChannel::EVENT& Event) {
 		auto CinemaTargetNameiter = Event.hmapData.find(L"CinemaTargetName");
 		if (CinemaTargetNameiter == Event.hmapData.end()) { return; }
 
@@ -174,14 +174,36 @@ void	CFade::Ready_Event()
 		if (strName == L"FadeIn")
 		{
 			Set_FadeIn();
+			m_fFadeSpeed = 0.01f;
 			Active();
 		}
 		if (strName == L"FadeOut")
 		{
 			Set_FadeOut();
+			m_fFadeSpeed = 0.01f;
 			Active();
 		}
 	}) });
+
+	m_hmapSubHandles.insert({ L"FadeObject", m_pMessageChannel->Subscribe(L"Fade.Warp", [this](const IMessageChannel::EVENT& Event) {
+		auto iter = Event.hmapData.find(L"Fade");
+		if (iter == Event.hmapData.end()) { return; }
+
+		wstring strName = any_cast<wstring>(iter->second);
+		if (strName == L"FadeIn")
+		{
+			Set_FadeIn();
+			m_fFadeSpeed = 0.025f;
+			Active();
+		}
+		if (strName == L"FadeOut")
+		{
+			Set_FadeOut();
+			m_fFadeSpeed = 0.1f;
+			Active();
+		}
+	}) });
+
 }
 
 

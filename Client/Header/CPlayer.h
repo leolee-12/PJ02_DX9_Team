@@ -75,6 +75,9 @@ private:
 	//	Move_Roll : 구르기 상태일 때 현재 위치를 Lerp를 적용하여 계산 및 이동
 	// ==========================
 
+	// 워프관련
+	void			Update_Warp(const _float fTimeDelta);
+
 private:
 	Engine::CRcTex*			m_pBufferCom;
 	Engine::CTransform*		m_pTransformCom;
@@ -123,6 +126,12 @@ private:
 
 	// 캐릭터 border 처리 관련
 	_vec3 m_vPrevPos;
+
+	// 워프관련
+	_float m_fWarpDeleay = 0.f;
+	_vec3  m_vWarpPos = {};
+	_bool  m_IsWarp = false;
+
 
 	// 상수
 	static constexpr _float INVINCIBLE_TIME = 3.f;

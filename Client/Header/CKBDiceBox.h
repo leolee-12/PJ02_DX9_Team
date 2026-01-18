@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "CUi.h"
 
 namespace Engine
@@ -35,7 +35,7 @@ private:
 	CTransform* m_pTransformCom;
 	CTexture* m_pTextureCom;
 
-	// 0 ÇÃ, 1 NPC
+	// 0 í”Œ, 1 NPC
 	_int   m_iOwner;
 	D3DXCOLOR m_tColor;
 };
