@@ -28,6 +28,8 @@ HRESULT CCollisionMgr::Ready_CollisionMgr()
 	m_vecCollisionPool.push_back({ CL_PLAYER, CL_TRIGGER });
 	m_vecCollisionPool.push_back({ CL_PLAYER, CL_BORDER });
 	m_vecCollisionPool.push_back({ CL_MONSTER, CL_BORDER });
+	// WY
+	m_vecCollisionPool.push_back({ CL_NPC, CL_BORDER });
 
 	return S_OK;
 }

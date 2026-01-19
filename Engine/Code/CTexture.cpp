@@ -223,7 +223,6 @@ CTexture* CTexture::CreateFromThread(LPDIRECT3DDEVICE9 pGraphicDev, TEXTUREID eI
 
 	if (FAILED(pTexture->Ready_Texture_FromThread(eID, strFilepath, iCnt)))
 	{
-
 		Safe_Release(pTexture);
 		MSG_BOX("Texture CreateFromThread Failed");
 		return nullptr;

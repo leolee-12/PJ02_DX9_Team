@@ -195,11 +195,14 @@
     <ClInclude Include="..\Header\CFollower.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClInclude>
+    <ClInclude Include="..\Header\CFollower_AI.h" />
     <ClInclude Include="..\Header\CFontUI.h" />
     <ClInclude Include="..\Header\CFontUIOrtho.h" />
     <ClInclude Include="..\Header\CGauge.h" />
     <ClInclude Include="..\Header\CGaugeCover.h" />
     <ClInclude Include="..\Header\CGaugeStar.h" />
+    <ClInclude Include="..\Header\IInteractable.h" />
+    <ClInclude Include="..\Header\CInteractMgr.h" />
     <ClInclude Include="..\Header\CItem.h" />
     <ClInclude Include="..\Header\CKBBack.h" />
     <ClInclude Include="..\Header\CKBBack2.h" />
@@ -346,11 +349,13 @@
     <ClCompile Include="..\Code\CFollower.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="..\Code\CFollower_AI.cpp" />
     <ClCompile Include="..\Code\CFontUI.cpp" />
     <ClCompile Include="..\Code\CFontUIOrtho.cpp" />
     <ClCompile Include="..\Code\CGauge.cpp" />
     <ClCompile Include="..\Code\CGaugeCover.cpp" />
     <ClCompile Include="..\Code\CGaugeStar.cpp" />
+    <ClCompile Include="..\Code\CInteractMgr.cpp" />
     <ClCompile Include="..\Code\CItem.cpp" />
     <ClCompile Include="..\Code\CKBBack.cpp" />
     <ClCompile Include="..\Code\CKBBack2.cpp" />

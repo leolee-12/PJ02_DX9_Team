@@ -46,6 +46,8 @@ HRESULT CVillage::Ready_Scene()
 {
 	m_pMessageChannel = CStageMessage::Create();
 
+	CInteractMgr::GetInstance()->Ready_InteractMgr();
+
 	if (FAILED(Ready_GameLogic_Layer(L"GameLogic_Layer")))
 		return E_FAIL;
 
@@ -151,8 +153,8 @@ HRESULT CVillage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 			switch (spawn.type)
 			{
 			case 0:
-				CPersistentMgr::GetInstance()->Get_Player()->Set_Pos(_vec3(spawn.x * 0.8f, 0.f, spawn.z * 0.8f)); // 실제 스폰 지점
-				//CPersistentMgr::GetInstance()->Get_Player()->Set_Pos(_vec3(199.8f, 0.f, 35.f));	// 디버그용
+				//CPersistentMgr::GetInstance()->Get_Player()->Set_Pos(_vec3(spawn.x * 0.8f, 0.f, spawn.z * 0.8f)); // 실제 스폰 지점
+				CPersistentMgr::GetInstance()->Get_Player()->Set_Pos(_vec3(199.8f, 0.f, 35.f));	// 디버그용
 				pGameObject = CPersistentMgr::GetInstance()->Get_Player();
 
 				if (nullptr == pGameObject)
@@ -258,7 +260,7 @@ HRESULT CVillage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 			}
 			else if (obj.category == "BreakableTree")
 			{
-				pGameObject = CBreakableRock::Create(m_pGraphicDev, obj, m_pMessageChannel);
+				pGameObject = CBreakableTree::Create(m_pGraphicDev, obj, m_pMessageChannel);
 				if (pGameObject)
 					pLayer->Add_GameObject(L"BreakableTree", pGameObject);
 			}
@@ -315,7 +317,7 @@ HRESULT CVillage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 
 	// 디버그용
 
-	for (int i = 0; i < 2; ++i)
+	for (int i = 0; i < 3; ++i)
 	{
 		pGameObject = CFollower::Create(m_pGraphicDev, m_pMessageChannel, L"Proto_Follower1Texture");
 		NULL_CHECK_RETURN(pGameObject, E_FAIL);
@@ -338,7 +340,7 @@ HRESULT CVillage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 			return E_FAIL;
 	}
 
-	for (int i = 0; i < 5; ++i)
+	for (int i = 0; i < 10; ++i)
 	{
 		OBJECTDATA tObjData1 = {"BreakableRock",						// 카테고리
 								0,										// 텍스처인덱스
@@ -346,7 +348,7 @@ HRESULT CVillage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 								0.f,									// y
 								35.f + Get_Rand_Float(-30.f, 30.f),		// z
 								5.f,									// 스케일
-								0.f };									// Standing or Floor
+								0 };									// Standing or Floor
 
 		pGameObject = CBreakableRock::Create(m_pGraphicDev, tObjData1, m_pMessageChannel);
 		NULL_CHECK_RETURN(pGameObject, E_FAIL);
@@ -359,7 +361,7 @@ HRESULT CVillage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 								0.f,									// y
 								35.f + Get_Rand_Float(-30.f, 30.f),		// z
 								5.f,									// 스케일
-								0.f };									// Standing or Floor
+								0 };									// Standing or Floor
 
 		pGameObject = CBreakableTree::Create(m_pGraphicDev, tObjData2, m_pMessageChannel);
 		NULL_CHECK_RETURN(pGameObject, E_FAIL);

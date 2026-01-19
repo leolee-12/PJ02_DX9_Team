@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "CGameObject.h"
+#include "CInteractMgr.h"
 
 namespace Engine
 {
@@ -9,13 +10,14 @@ namespace Engine
 	class CCollider;
 }
 
+class CFollower_AI;
+
 class CFollower : public CGameObject
 {
 public:
 	enum FOLLOWER_STATE {	FOLLOWER_IDLE,		FOLLOWER_RUN,		FOLLOWER_DANCE,		FOLLOWER_TRANSFORM,	FOLLOWER_UNCONVERT,
 							FOLLOWER_CONVERT,	FOLLOWER_ACTION,	FOLLOWER_RECRUIT,	FOLLOWER_END };
-
-	enum INTERACT_TYPE { NONE, WOOD, ROCK, BUILD, FOOD, PRAY, INTERACT_END };
+	enum FOLLOWER_WORK { FW_NONE, FW_WOOD, FW_ROCK, FW_BUILD, FW_EAT, FW_PRAY, FW_END };
 
 private:
 	explicit	CFollower(LPDIRECT3DDEVICE9 pGraphicDev);
@@ -39,12 +41,15 @@ private:
 	void				Move_Frame(const _float& fTimeDelta);
 	void				Set_Texture();
 	void				Update_State();
+	void				Check_Work();
+	void				Execute_Work(const _float& fTimeDelta);
 
 private:
 	Engine::CRcTex*			m_pBufferCom;
 	Engine::CTransform*		m_pTransformCom;
 	Engine::CTexture*		m_pTextureCom;
 	Engine::CCollider*		m_pColliderCom;
+	CFollower_AI*			m_pAICom;
 
 	_vec3				m_vPos;
 
@@ -60,9 +65,16 @@ private:
 
 	// 스테이터스 관련
 	_float			m_fGroundY;
-	INTERACT_TYPE	m_eInteractType;
+	FOLLOWER_WORK	m_ePreWork;
+	FOLLOWER_WORK	m_eCurWork;
 	_vec3			m_vLerpPos;
 	_uint			m_iRecruitState;
+
+	// 상호작용 관련
+	_float		m_fWorkSpeed;
+
+	static constexpr _float FW_DEFAULT_WORK_SPEED = 0.03f;
+	static constexpr _float FW_DEFAULT_WORK_GAP_TIME = 1.f;
 
 public:
 	static CFollower*	Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, const _tchar* pProtoTexKey);

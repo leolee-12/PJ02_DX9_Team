@@ -73,9 +73,6 @@
     <Filter Include="03. Manager">
       <UniqueIdentifier>{f4a5af23-1cb1-4c65-b73d-7132d05ea4c2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="03. Manager\01. CPersistentMgr">
-      <UniqueIdentifier>{153d294d-a813-4bb7-9dee-2e2680526024}</UniqueIdentifier>
-    </Filter>
     <Filter Include="03. Manager\02. TileMgr">
       <UniqueIdentifier>{01b64606-77a6-499b-92aa-0bad3eff8f84}</UniqueIdentifier>
     </Filter>
@@ -415,14 +412,20 @@
     <Filter Include="02. GameObject\05. UI\99. Font">
       <UniqueIdentifier>{a8d8fe86-d6e2-4ff9-b0d0-76f833c3f75a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. Scene\01. Maps\99. Stage">
-      <UniqueIdentifier>{f40be6c5-f78e-4629-9f22-c05f63c86d1a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01. Scene\01. Maps\98. Test">
       <UniqueIdentifier>{7bf09d6b-5222-4361-bb6b-3e27ea739fa2}</UniqueIdentifier>
     </Filter>
     <Filter Include="01. Scene\01. Maps\97. EditScene">
       <UniqueIdentifier>{ff5bb01d-db75-499d-ae0b-be1f8fb58ee7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Manager\03. InteractMgr">
+      <UniqueIdentifier>{cc4ab9a0-c95b-4ff8-939b-ac400d44b4d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Manager\01. PersistentMgr">
+      <UniqueIdentifier>{153d294d-a813-4bb7-9dee-2e2680526024}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\01. Maps\99. Stage">
+      <UniqueIdentifier>{f40be6c5-f78e-4629-9f22-c05f63c86d1a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -487,7 +490,7 @@
       <Filter>01. Scene\99. Loading</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CPersistentMgr.h">
-      <Filter>03. Manager\01. CPersistentMgr</Filter>
+      <Filter>03. Manager\01. PersistentMgr</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CLoadingBack.h">
       <Filter>02. GameObject\05. UI\00. LoadingUI\00. LoadingBack</Filter>
@@ -876,6 +879,15 @@
     <ClInclude Include="..\Header\CKBDiceBox.h">
       <Filter>02. GameObject\05. UI\03. KBUI\02. Main\01. Board\DiceBox</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CInteractMgr.h">
+      <Filter>03. Manager\03. InteractMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CFollower_AI.h">
+      <Filter>02. GameObject\01. GameActor\03. Follower</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\IInteractable.h">
+      <Filter>03. Manager\03. InteractMgr</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -930,7 +942,7 @@
       <Filter>01. Scene\99. Loading</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CPersistentMgr.cpp">
-      <Filter>03. Manager\01. CPersistentMgr</Filter>
+      <Filter>03. Manager\01. PersistentMgr</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CLoadingBack.cpp">
       <Filter>02. GameObject\05. UI\00. LoadingUI\00. LoadingBack</Filter>
@@ -1291,6 +1303,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\CKBDiceBox.cpp">
       <Filter>02. GameObject\05. UI\03. KBUI\02. Main\01. Board\DiceBox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CInteractMgr.cpp">
+      <Filter>03. Manager\03. InteractMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CFollower_AI.cpp">
+      <Filter>02. GameObject\01. GameActor\03. Follower</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
