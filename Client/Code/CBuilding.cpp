@@ -12,6 +12,8 @@ CBuilding::CBuilding(LPDIRECT3DDEVICE9 pGraphicDev)
 	, m_pTransformCom(nullptr)
 	, m_pTextureCom(nullptr)
 	, m_pColliderCom(nullptr)
+	, m_eBuildingType(BT_END)
+	, m_eBuildingState(BS_END)
 	, m_fWorkGauge(0.f)
 {
 }
@@ -22,6 +24,8 @@ CBuilding::CBuilding(const CBuilding& rhs)
 	, m_pTransformCom(nullptr)
 	, m_pTextureCom(nullptr)
 	, m_pColliderCom(nullptr)
+	, m_eBuildingType(rhs.m_eBuildingType)
+	, m_eBuildingState(rhs.m_eBuildingState)
 	, m_fWorkGauge(0.f)
 {
 }
@@ -35,18 +39,9 @@ HRESULT CBuilding::Ready_GameObject()
 	if (FAILED(Add_Component()))
 		return E_FAIL;
 
+	Change_State(BS_CONSTRUCTING);
+	m_fWorkGauge = 0.f;
 	m_pColliderCom->RegisterToManager(this, CL_GRASS);
-	CInteractMgr::GetInstance()->Register_IObj(CInteractMgr::ROCK, this);
-
-	m_hmapSubHandles.insert({ L"Monster_Damaged", m_pMessageChannel->Subscribe(L"Monster.Attacked", [this](const IMessageChannel::EVENT& Event) {
-		for (auto& Target : any_cast<vector<CGameObject*>>(Event.hmapData.find(L"Target")->second))
-		{
-			if (Target == this)
-			{
-				this->m_iHp = 0;
-			}
-		}
-	}) });
 
 	return S_OK;
 }
@@ -62,7 +57,7 @@ _int CBuilding::Update_GameObject(const _float& fTimeDelta)
 	if (iExit == DEAD)
 	{
 		m_pColliderCom->UnregisterFromManager();
-		CInteractMgr::GetInstance()->Unregister_IObj(CInteractMgr::ROCK, this);
+		if(m_eBuildingState == BS_CONSTRUCTING) CInteractMgr::GetInstance()->Unregister_IObj(CInteractMgr::BUILD, this);
 	}
 
 	CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHA, this);
@@ -133,6 +128,17 @@ void CBuilding::Add_WorkGauge(_float fWork)
 	}
 }
 
+wstring CBuilding::Get_CompleteTexKey()
+{
+	switch (m_eBuildingType)
+	{
+	case BT_WORKSHOP:		return L"Proto_Building_Workshop";
+	case BT_COOK:			return L"Proto_Building_Cook";
+	case BT_KNUCKLEBONE:	return L"Proto_Building_Knucklebone";
+	default:				return L"Proto_Building_Default";
+	}
+}
+
 HRESULT CBuilding::Add_Component()
 {
 	Engine::CComponent* pComponent = nullptr;
@@ -155,14 +161,22 @@ HRESULT CBuilding::Add_Component()
 
 	m_mapComponent[ID_DYNAMIC].insert({ L"Com_Transform", pComponent });
 
-	// Grass Texture
+	// Texture
 	pComponent = m_pTextureCom = dynamic_cast<Engine::CTexture*>
-		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_BreakableStoneTexture"));
+		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Building_Construct"));
 
 	if (nullptr == pComponent)
 		return E_FAIL;
 
-	m_mapComponent[ID_STATIC].insert({ L"Com_Texture", pComponent });
+	m_mapComponent[ID_STATIC].insert({ L"Com_Texture_Construct", pComponent });
+
+	// Texture
+	pComponent = Engine::CProtoMgr::GetInstance()->Clone_Prototype(Get_CompleteTexKey());
+
+	if (nullptr == pComponent)
+		return E_FAIL;
+
+	m_mapComponent[ID_STATIC].insert({ L"Com_Texture_Complete", pComponent });
 
 	// Collider
 	pComponent = m_pColliderCom = dynamic_cast<Engine::CCollider*>
@@ -209,23 +223,25 @@ void CBuilding::Set_Texture()
 
 }
 
-CBuilding* CBuilding::Create(LPDIRECT3DDEVICE9 pGraphicDev, const Engine::OBJECTDATA& objData, IMessageChannel* pMessageChannel)
+CBuilding* CBuilding::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMessageChannel, const _vec3& vPos, BUILDING_TYPE eType)
 {
-	CBuilding* pBreakableRock = new CBuilding(pGraphicDev);
+	CBuilding* pBuilding = new CBuilding(pGraphicDev);
 
-	pBreakableRock->m_pMessageChannel = pMessageChannel;
-	pBreakableRock->m_pMessageChannel->AddRef();
+	pBuilding->m_pMessageChannel = pMessageChannel;
+	pBuilding->m_pMessageChannel->AddRef();
+	pBuilding->m_eBuildingType = eType;
 
-	if (FAILED(pBreakableRock->Ready_GameObject()))
+	if (FAILED(pBuilding->Ready_GameObject()))
 	{
-		Safe_Release(pBreakableRock);
-		MSG_BOX("pBreakableRock Create Failed");
+		Safe_Release(pBuilding);
+		MSG_BOX("pBuilding Create Failed");
 		return nullptr;
 	}
 
-	pBreakableRock->m_pTransformCom->Update_Component(0.f);
+	pBuilding->m_pTransformCom->Set_Pos(vPos.x, vPos.y, vPos.z);
+	pBuilding->m_pTransformCom->Update_Component(0.f);
 
-	return pBreakableRock;
+	return pBuilding;
 }
 
 void CBuilding::Free()

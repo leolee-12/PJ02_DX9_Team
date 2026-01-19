@@ -451,6 +451,14 @@ void CMultiLoadingThread::Loading_for_Village()
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_Fade", TEX_NORMAL, L"../Bin/Resource/YSH/Etc/Fade.png", 1));
 	m_iTotalProtoCount++;
 	// 디버그용 바로진입 프로토타입
+
+	// Building
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_Building_Cook", TEX_NORMAL, L"../Bin/Resource/LWY/Maps/Building/dds/kitchen_1.dds", 1));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_Building_Knucklebone", TEX_NORMAL, L"../Bin/Resource/LWY/Maps/Building/dds/knucklebones.dds", 1));
+	m_iTotalProtoCount++;
+	// Building
 }
 
 void CMultiLoadingThread::Loading_for_RealDungeon()
