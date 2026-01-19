@@ -1,0 +1,234 @@
+﻿#include "pch.h"
+#include "CBuilding.h"
+#include "CProtoMgr.h"
+#include "CRenderer.h"
+#include "CManagement.h"
+#include "CInteractMgr.h"
+#include "CFontMgr.h"
+
+CBuilding::CBuilding(LPDIRECT3DDEVICE9 pGraphicDev)
+	: CGameObject(pGraphicDev)
+	, m_pBufferCom(nullptr)
+	, m_pTransformCom(nullptr)
+	, m_pTextureCom(nullptr)
+	, m_pColliderCom(nullptr)
+	, m_fWorkGauge(0.f)
+{
+}
+
+CBuilding::CBuilding(const CBuilding& rhs)
+	: CGameObject(rhs)
+	, m_pBufferCom(nullptr)
+	, m_pTransformCom(nullptr)
+	, m_pTextureCom(nullptr)
+	, m_pColliderCom(nullptr)
+	, m_fWorkGauge(0.f)
+{
+}
+
+CBuilding::~CBuilding()
+{
+}
+
+HRESULT CBuilding::Ready_GameObject()
+{
+	if (FAILED(Add_Component()))
+		return E_FAIL;
+
+	m_pColliderCom->RegisterToManager(this, CL_GRASS);
+	CInteractMgr::GetInstance()->Register_IObj(CInteractMgr::ROCK, this);
+
+	m_hmapSubHandles.insert({ L"Monster_Damaged", m_pMessageChannel->Subscribe(L"Monster.Attacked", [this](const IMessageChannel::EVENT& Event) {
+		for (auto& Target : any_cast<vector<CGameObject*>>(Event.hmapData.find(L"Target")->second))
+		{
+			if (Target == this)
+			{
+				this->m_iHp = 0;
+			}
+		}
+	}) });
+
+	return S_OK;
+}
+
+_int CBuilding::Update_GameObject(const _float& fTimeDelta)
+{
+	if (g_bDebug) { m_pColliderCom->Update_AABBforRender(); }
+
+	m_pColliderCom->UpdateFromTransform(m_pTransformCom);
+
+	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
+
+	if (iExit == DEAD)
+	{
+		m_pColliderCom->UnregisterFromManager();
+		CInteractMgr::GetInstance()->Unregister_IObj(CInteractMgr::ROCK, this);
+	}
+
+	CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHA, this);
+
+	return iExit;
+}
+
+void CBuilding::LateUpdate_GameObject(const _float& fTimeDelta)
+{
+	_vec3 vPos;
+	m_pTransformCom->Get_Info(Engine::INFO_POS, &vPos);
+	Compute_ViewDepth(&vPos);
+
+	CGameObject::LateUpdate_GameObject(fTimeDelta);
+}
+
+void CBuilding::Render_GameObject()
+{
+	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
+
+	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
+
+	// Alpha test (remove fully transparent pixels)
+	m_pGraphicDev->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
+	m_pGraphicDev->SetRenderState(D3DRS_ALPHAREF, 0x10);
+	m_pGraphicDev->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
+
+	m_pTextureCom->Set_Texture(0);
+	m_pBufferCom->Render_Buffer();
+
+	// Restore
+	m_pGraphicDev->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
+	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
+
+	_matrix matView, matProj;
+	m_pGraphicDev->GetTransform(D3DTS_VIEW, &matView);
+	m_pGraphicDev->GetTransform(D3DTS_PROJECTION, &matProj);
+
+	_vec3 vWorldPos, vViewPos, vndcPos, vScreenPos;
+	m_pTransformCom->Get_Info(INFO_POS, &vWorldPos);
+	D3DXVec3TransformCoord(&vViewPos, &vWorldPos, &matView);
+	D3DXVec3TransformCoord(&vndcPos, &vViewPos, &matProj);
+
+	vScreenPos.x = (vndcPos.x * 0.5f + 0.5f) * _float(WINCX);
+	vScreenPos.y = (-vndcPos.y * 0.5f + 0.5f) * _float(WINCY);
+
+	D3DXCOLOR FontColor = D3DXCOLOR(240.f / 256.f, 240.f / 256.f, 240.f / 256.f, 1.f);
+	wchar_t szGauge[16];
+
+	swprintf_s(szGauge, L" Gauge : %.3f", m_fWorkGauge);
+	RECT rcPlayer = { vScreenPos.x - 50, vScreenPos.y - 10, vScreenPos.x + 50, vScreenPos.y + 10 };
+	CFontMgr::GetInstance()->Render_Font(L"Font_Lapture20", szGauge, rcPlayer, FontColor, DT_RIGHT | DT_BOTTOM);
+}
+
+void CBuilding::OnCollision(CGameObject* pObject)
+{
+}
+
+void CBuilding::Add_WorkGauge(_float fWork)
+{
+	if (m_eBuildingState != BS_CONSTRUCTING) return;
+
+	m_fWorkGauge += fWork;
+
+	if (m_fWorkGauge >= MAX_WORK_GAUGE)
+	{
+		Change_State(BS_COMPLETE);
+	}
+}
+
+HRESULT CBuilding::Add_Component()
+{
+	Engine::CComponent* pComponent = nullptr;
+
+	// GrassBuffer (dynamic vertex buffer for sway effect)
+	pComponent = m_pBufferCom = dynamic_cast<Engine::CRcTex*>
+		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_RcTex"));
+
+	if (nullptr == pComponent)
+		return E_FAIL;
+
+	m_mapComponent[ID_DYNAMIC].insert({ L"Com_Buffer", pComponent });
+
+	// Transform
+	pComponent = m_pTransformCom = dynamic_cast<Engine::CTransform*>
+		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Transform"));
+
+	if (nullptr == pComponent)
+		return E_FAIL;
+
+	m_mapComponent[ID_DYNAMIC].insert({ L"Com_Transform", pComponent });
+
+	// Grass Texture
+	pComponent = m_pTextureCom = dynamic_cast<Engine::CTexture*>
+		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_BreakableStoneTexture"));
+
+	if (nullptr == pComponent)
+		return E_FAIL;
+
+	m_mapComponent[ID_STATIC].insert({ L"Com_Texture", pComponent });
+
+	// Collider
+	pComponent = m_pColliderCom = dynamic_cast<Engine::CCollider*>
+		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Collider"));
+	//static_cast<Engine::CCollider*>(pComponent)->Set_AABB();
+
+	if (nullptr == pComponent)
+		return E_FAIL;
+
+	m_mapComponent[ID_STATIC].insert({ L"Com_Collider", pComponent });
+
+	return S_OK;
+}
+
+void CBuilding::Change_State(BUILDING_STATE eState)
+{
+	if (m_eBuildingState == eState) return;
+
+	// Exit_State
+	switch (m_eBuildingState)
+	{
+	case BS_CONSTRUCTING:
+		CInteractMgr::GetInstance()->Unregister_IObj(CInteractMgr::BUILD, this);
+		break;
+	}
+
+	m_eBuildingState = eState;
+
+	// Enter_State
+	switch (eState)
+	{
+	case BS_CONSTRUCTING:
+		CInteractMgr::GetInstance()->Register_IObj(CInteractMgr::BUILD, this);
+		break;
+	}
+}
+
+void CBuilding::Player_Interact()
+{
+}
+
+void CBuilding::Set_Texture()
+{
+
+}
+
+CBuilding* CBuilding::Create(LPDIRECT3DDEVICE9 pGraphicDev, const Engine::OBJECTDATA& objData, IMessageChannel* pMessageChannel)
+{
+	CBuilding* pBreakableRock = new CBuilding(pGraphicDev);
+
+	pBreakableRock->m_pMessageChannel = pMessageChannel;
+	pBreakableRock->m_pMessageChannel->AddRef();
+
+	if (FAILED(pBreakableRock->Ready_GameObject()))
+	{
+		Safe_Release(pBreakableRock);
+		MSG_BOX("pBreakableRock Create Failed");
+		return nullptr;
+	}
+
+	pBreakableRock->m_pTransformCom->Update_Component(0.f);
+
+	return pBreakableRock;
+}
+
+void CBuilding::Free()
+{
+	CGameObject::Free();
+}

@@ -424,6 +424,9 @@
     <Filter Include="01. Scene\01. Maps\99. Stage">
       <UniqueIdentifier>{f40be6c5-f78e-4629-9f22-c05f63c86d1a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\02. Environment\02. Interactable\03. Building">
+      <UniqueIdentifier>{8148d31c-450c-4fc9-bae3-2e9fc2e68213}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -885,6 +888,9 @@
     <ClInclude Include="CFontAlpha.h">
       <Filter>02. GameObject\05. UI\99. Font</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CBuilding.h">
+      <Filter>02. GameObject\02. Environment\02. Interactable\03. Building</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1306,6 +1312,9 @@
     </ClCompile>
     <ClCompile Include="CFontAlpha.cpp">
       <Filter>02. GameObject\05. UI\99. Font</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CBuilding.cpp">
+      <Filter>02. GameObject\02. Environment\02. Interactable\03. Building</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -161,6 +161,7 @@
     <ClInclude Include="..\Header\CBossHpBarFront.h" />
     <ClInclude Include="..\Header\CBossHpBarMiddle.h" />
     <ClInclude Include="..\Header\CBrute.h" />
+    <ClInclude Include="..\Header\CBuilding.h" />
     <ClInclude Include="..\Header\CCookingButton.h" />
     <ClInclude Include="..\Header\CCookingCover.h" />
     <ClInclude Include="..\Header\CCookingGauge.h" />
@@ -312,6 +313,7 @@
     <ClCompile Include="..\Code\CBossHpBarFront.cpp" />
     <ClCompile Include="..\Code\CBossHpBarMiddle.cpp" />
     <ClCompile Include="..\Code\CBrute.cpp" />
+    <ClCompile Include="..\Code\CBuilding.cpp" />
     <ClCompile Include="..\Code\CCookingButton.cpp" />
     <ClCompile Include="..\Code\CCookingInfoCard.cpp" />
     <ClCompile Include="..\Code\CCookingCover.cpp" />
