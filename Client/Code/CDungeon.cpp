@@ -238,10 +238,20 @@ HRESULT CDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 				{
 				case 0:
 					// Bat | 일반몬스터 |
+					pGameObject = CMonsterN3::Create(m_pGraphicDev, m_pMessageChannel);
+					if (pGameObject)
+					{
+						Engine::CTransform* pTransform = dynamic_cast<Engine::CTransform*>(
+							pGameObject->Get_Component(ID_DYNAMIC, L"Com_Transform"));
+						if (pTransform)
+							pTransform->Set_Pos(spawn.x, 0.f, spawn.z);
+						pLayer->Add_GameObject(L"Monster", pGameObject);
+					}
+					break;
 					break;
 				case 1:
 					// Worm | 일반몬스터 |
-					pGameObject = CMonsterN1::Create(m_pGraphicDev, m_pMessageChannel);
+					pGameObject = CMonsterN2::Create(m_pGraphicDev, m_pMessageChannel);
 					if (pGameObject)
 					{
 						Engine::CTransform* pTransform = dynamic_cast<Engine::CTransform*>(
@@ -253,6 +263,16 @@ HRESULT CDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 					break;
 				case 2:
 					// Humanoid | 일반몬스터 |
+					pGameObject = CMonsterN1::Create(m_pGraphicDev, m_pMessageChannel);
+					if (pGameObject)
+					{
+						Engine::CTransform* pTransform = dynamic_cast<Engine::CTransform*>(
+							pGameObject->Get_Component(ID_DYNAMIC, L"Com_Transform"));
+						if (pTransform)
+							pTransform->Set_Pos(spawn.x, 0.f, spawn.z);
+						pLayer->Add_GameObject(L"Monster", pGameObject);
+					}
+					break;
 					break;
 				case 3:
 					// Amdusias | 중간보스 |

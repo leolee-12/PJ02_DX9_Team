@@ -35,6 +35,7 @@ namespace Engine
 		OID_TRIGGER,
 		OID_BORDER,
 		OID_WARP,
+		OID_EFFECT,
 		OID_END 
 	};
 
