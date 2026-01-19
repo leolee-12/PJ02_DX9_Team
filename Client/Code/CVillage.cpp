@@ -179,7 +179,7 @@ HRESULT CVillage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 			{
 			case 0:
 				//CPersistentMgr::GetInstance()->Get_Player()->Set_Pos(_vec3(spawn.x * 0.8f, 0.f, spawn.z * 0.8f)); // 실제 스폰 지점
-				CPersistentMgr::GetInstance()->Get_Player()->Set_Pos(_vec3(199.8f, 0.f, 35.f));	// 디버그용
+				CPersistentMgr::GetInstance()->Get_Player()->Set_Pos(_vec3(199.8f, -0.9f, 35.f));	// 디버그용
 				pGameObject = CPersistentMgr::GetInstance()->Get_Player();
 
 				if (nullptr == pGameObject)
@@ -365,12 +365,12 @@ HRESULT CVillage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 			return E_FAIL;
 	}
 
-	for (int i = 0; i < 10; ++i)
+	for (int i = 0; i < 5; ++i)
 	{
 		OBJECTDATA tObjData1 = {"BreakableRock",						// 카테고리
 								0,										// 텍스처인덱스
 								199.8f + Get_Rand_Float(-30.f, 30.f),	// x
-								0.f,									// y
+								-0.5f,									// y
 								35.f + Get_Rand_Float(-30.f, 30.f),		// z
 								5.f,									// 스케일
 								0 };									// Standing or Floor
@@ -383,7 +383,7 @@ HRESULT CVillage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 		OBJECTDATA tObjData2 = {"BreakableTree",						// 카테고리
 								0,										// 텍스처인덱스
 								199.8f + Get_Rand_Float(-30.f, 30.f),	// x
-								0.f,									// y
+								-0.1f,									// y
 								35.f + Get_Rand_Float(-30.f, 30.f),		// z
 								5.f,									// 스케일
 								0 };									// Standing or Floor

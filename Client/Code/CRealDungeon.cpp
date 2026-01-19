@@ -193,7 +193,10 @@ HRESULT CRealDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 						Engine::CTransform* pTransform = dynamic_cast<Engine::CTransform*>(
 							pGameObject->Get_Component(ID_DYNAMIC, L"Com_Transform"));
 						if (pTransform)
+						{
 							pTransform->Set_Pos(spawn.x * 0.8f, 0.f, spawn.z * 0.8f);
+							pTransform->Update_Component(0.f);
+						}
 						pLayer->Add_GameObject(L"Monster", pGameObject);
 					}
 					break;
@@ -205,7 +208,10 @@ HRESULT CRealDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 						Engine::CTransform* pTransform = dynamic_cast<Engine::CTransform*>(
 							pGameObject->Get_Component(ID_DYNAMIC, L"Com_Transform"));
 						if (pTransform)
+						{
 							pTransform->Set_Pos(spawn.x * 0.8f, 0.f, spawn.z * 0.8f);
+							pTransform->Update_Component(0.f);
+						}
 						pLayer->Add_GameObject(L"Monster", pGameObject);
 					}
 					break;
@@ -217,7 +223,10 @@ HRESULT CRealDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 						Engine::CTransform* pTransform = dynamic_cast<Engine::CTransform*>(
 							pGameObject->Get_Component(ID_DYNAMIC, L"Com_Transform"));
 						if (pTransform)
+						{
 							pTransform->Set_Pos(spawn.x * 0.8f, 0.f, spawn.z * 0.8f);
+							pTransform->Update_Component(0.f);
+						}
 						pLayer->Add_GameObject(L"Monster", pGameObject);
 					}
 					break;

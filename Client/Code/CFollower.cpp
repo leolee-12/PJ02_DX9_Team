@@ -485,13 +485,17 @@ void CFollower::Execute_Work(const _float& fTimeDelta)
 {
 	if (m_eCurState != FOLLOWER_ACTION) return;
 
+	CGameObject* pTarget = CInteractMgr::GetInstance()->Find_Nearest(CInteractMgr::INTERACT_TYPE(m_eCurWork), m_vPos);
+
+	if (pTarget)	m_pAICom->Set_TargetTransform(static_cast<CTransform*>(pTarget->Get_Component(ID_DYNAMIC, L"Com_Transform")));
+	else			m_pAICom->Set_TargetTransform(nullptr);
+
 	if (!CInteractMgr::GetInstance()->Apply_Work(	CInteractMgr::INTERACT_TYPE(m_eCurWork),
 													m_vPos,
 													m_fWorkSpeed * fTimeDelta))
 	{
 		m_pAICom->Anim_End(m_eCurState);
 		m_eCurState = FOLLOWER_IDLE;
-		m_eCurWork = FOLLOWER_WORK(Get_Rand_Int(1, 2));
 	}
 }
 
