@@ -11,6 +11,7 @@
 #include "CB2_AI.h"
 #include "CProjectile.h"
 #include "CSpike.h"
+#include "CBossHpBar.h"
 
 CMonsterB2::CMonsterB2(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CMonster(pGraphicDev),
@@ -76,7 +77,9 @@ _int CMonsterB2::Update_GameObject(const _float& fTimeDelta)
 {
 	Check_Phase();
 
-	Move_Frame(fTimeDelta);
+	if (!m_bWait) {
+		Move_Frame(fTimeDelta);
+	}
 
 	for (auto& pComponent : m_mapComponent[ID_DYNAMIC])
 		pComponent.second->Update_Component(fTimeDelta);
@@ -86,8 +89,11 @@ _int CMonsterB2::Update_GameObject(const _float& fTimeDelta)
 	//	m_pColliderCom->UnregisterFromManager();
 	//	return iExit;
 	//}
-
-	CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHA, this);
+	if (!m_bWait) {
+		CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHA, this);
+		m_pHpBar->Update_Hp(m_iHp);
+		m_pHpBar->Update_GameObject(fTimeDelta);
+	}
 
 	return NOEVENT;
 }
@@ -247,6 +253,8 @@ void CMonsterB2::Ready_Variable()
 	// Anim 관련 세팅
 	m_fFrameSpeed = 24.f;
 	//D3DXMatrixIdentity(&m_matTex);
+
+	m_pHpBar = CBossHpBar::Create(m_pGraphicDev, _float(m_iMaxHp), L"레쉬");
 }
 
 void CMonsterB2::Ready_Event()
@@ -261,6 +269,25 @@ void CMonsterB2::Ready_Event()
 		}
 	}
 	}) });
+
+	m_hmapSubHandles.insert({ L"Dialogue", m_pMessageChannel->Subscribe(L"CutScene.Dialogue", [this](const IMessageChannel::EVENT& Event)
+	{
+		auto CinemaTargetNameiter = Event.hmapData.find(L"CinemaTargetName");
+		if (CinemaTargetNameiter == Event.hmapData.end()) { return; }
+		auto Dothisiter = Event.hmapData.find(L"Dothis");
+		if (Dothisiter == Event.hmapData.end()) { return; }
+		if (any_cast<wstring>(CinemaTargetNameiter->second) == L"Leshy")
+		{
+			wstring strDothis = any_cast<wstring>(Dothisiter->second);
+			if (strDothis == L"Leshy_Intro") {
+				m_bWait = false;
+				return;
+			}
+		}
+
+		return;
+	}
+	) });
 }
 
 void CMonsterB2::Check_Frame()
@@ -345,7 +372,7 @@ void CMonsterB2::Move_Frame(const _float& fTimeDelta)
 	if (m_fFrame >= m_fFrameEnd)
 	{
 		m_fFrame = 0.f;
-
+		IMessageChannel::EVENT LeshyEvent;
 		switch (m_eCurState)
 		{
 		case B2S_IDLE:
@@ -361,6 +388,9 @@ void CMonsterB2::Move_Frame(const _float& fTimeDelta)
 		case B2S_SPAWN:
 		{
 			m_pAICom->Anim_End(m_eCurState);
+			LeshyEvent.strType = L"Leshy.Done";
+			m_pMessageChannel->Publish(LeshyEvent);
+			m_pHpBar->Active();
 			m_eCurState = B2S_IDLE;
 		}
 		break;

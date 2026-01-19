@@ -219,6 +219,12 @@ void CMultiLoadingThread::Loading_for_Tutorial()
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_BruteTexture", TEX_NORMAL, L"../Bin/Resource/LWY//NPC/Brute/dds/Brute_%d.dds", 5));
 	m_iTotalProtoCount++;
 
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_BishopLeshyEnter", TEX_NORMAL, L"../Bin/Resource/YSH/Leshy/Leshy-Enter/dds/Leshy-Enter-%d.dds", 134));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_BishopLeshyTransform", TEX_NORMAL, L"../Bin/Resource/YSH/Leshy/Leshy-Transform/dds/Leshy-Transform-%d.dds", 376));
+	m_iTotalProtoCount++;
+
     // ===== TextureSet 큐 등록 (멀티스레드 로딩) =====
     vector<TEXSETLR> vecBishopLeshy;
     vecBishopLeshy.push_back(TEXSETLR(L"Bishop_Leshy_Idle", L"../Bin/Resource/Texture/Bishops/Leshy/Leshy-idle/dds/Leshy_idle-%d.dds", 250));
@@ -515,8 +521,23 @@ void CMultiLoadingThread::Loading_for_RealDungeon()
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_BossHpBar", TEX_NORMAL, L"../Bin/Resource/YSH/UI/BossHpBarRed.png", 1));
 	m_iTotalProtoCount++;
 
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_BishopLeshyEnter", TEX_NORMAL, L"../Bin/Resource/YSH/Leshy/Leshy-Enter/dds/Leshy-Enter-%d.dds", 134));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_BishopLeshyTransform", TEX_NORMAL, L"../Bin/Resource/YSH/Leshy/Leshy-Transform/dds/Leshy-Transform-%d.dds", 376));
+	m_iTotalProtoCount++;
+
 	// 디버그용 그긴거
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_Fade", TEX_NORMAL, L"../Bin/Resource/YSH/Etc/Fade.png", 1));
+	m_iTotalProtoCount++;
+
+	vector<TEXSETLR> vecBishopLeshy;
+	vecBishopLeshy.push_back(TEXSETLR(L"Bishop_Leshy_Idle", L"../Bin/Resource/Texture/Bishops/Leshy/Leshy-idle/dds/Leshy_idle-%d.dds", 250));
+	vecBishopLeshy.push_back(TEXSETLR(L"Bishop_Leshy_Talk", L"../Bin/Resource/Texture/Bishops/Leshy/Leshy-talk/dds/Leshy-talk%d.dds", 83));
+	m_TexSetLoadingqueue.push(make_pair(TEXSETINFO(L"Proto_BishopLeshy", TEX_NORMAL), vecBishopLeshy));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_SpeechBubble", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Etc/dds/SpeechBubble.dds", 1));
 	m_iTotalProtoCount++;
 	// 디버그용 그긴거
 
