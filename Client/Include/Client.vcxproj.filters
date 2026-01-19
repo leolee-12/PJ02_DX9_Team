@@ -888,6 +888,9 @@
     <ClInclude Include="..\Header\IInteractable.h">
       <Filter>03. Manager\03. InteractMgr</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CEffect.h">
+      <Filter>02. GameObject\03. Dependent\01. Effect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1309,6 +1312,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CFollower_AI.cpp">
       <Filter>02. GameObject\01. GameActor\03. Follower</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CEffect.cpp">
+      <Filter>02. GameObject\03. Dependent\01. Effect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -20,6 +20,7 @@ private:
 	HRESULT			Ready_UI_Layer(const _tchar* pLayerTag);
 
 	HRESULT			Ready_Light();
+	void			Ready_Event();
 
 public:
 	static CVillage* Create(LPDIRECT3DDEVICE9 pGraphicDev);

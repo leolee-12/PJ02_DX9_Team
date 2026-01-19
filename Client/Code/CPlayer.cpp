@@ -11,6 +11,7 @@
 #include "Engine_Struct.h"
 #include "CCollider.h"
 #include "CCutSceneMgr.h"
+#include "CEffect.h"
 
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev),
@@ -96,7 +97,6 @@ _int CPlayer::Update_GameObject(const _float& fTimeDelta)
 
 	m_pTransformCom->Get_Info(INFO_POS, &m_vPrevPos);
 	
-
 	Key_Input(fTimeDelta);
 	Move_Lerp(fTimeDelta);
 	Charge(fTimeDelta);
@@ -304,6 +304,29 @@ HRESULT CPlayer::Add_Component()
 
 void CPlayer::Key_Input(const _float& fTimeDelta)
 {
+	for (int i = 0; i < 8; ++i)
+	{
+		if (GetAsyncKeyState(i + 48))
+		{	// 디버그용
+
+			_vec3 vPos{ m_vPos.x + 0.2f, m_vPos.y - 1.f, m_vPos.z };
+			CGameObject* pEffect = CEffect::Create(m_pGraphicDev, vPos, i);
+
+			if (pEffect)
+			{
+				wstring strObjTag = L"Effect";
+
+				IMessageChannel::EVENT ESummonMonster;
+				ESummonMonster.strType = L"Obj.Add";
+				ESummonMonster.eOBJID = Engine::OID_EFFECT;
+				ESummonMonster.hmapData.emplace(L"Obj", pEffect);
+				ESummonMonster.hmapData.emplace(L"LayerTag", L"GameLogic_Layer");
+				ESummonMonster.hmapData.emplace(L"ObjTag", strObjTag);
+				m_pMessageChannel->Publish(ESummonMonster);
+			}
+		}
+	}
+
 	if (CDInputMgr::GetInstance()->Key_Down(DIK_Z))
 	{
 		g_bDebug = !g_bDebug;

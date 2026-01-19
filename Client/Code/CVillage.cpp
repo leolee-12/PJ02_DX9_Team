@@ -59,6 +59,8 @@ HRESULT CVillage::Ready_Scene()
 
 	Ready_Light();
 
+	Ready_Event();
+
 	CCutSceneMgr::GetInstance()->Ready_CutsceneMgr(m_pMessageChannel);
 
 	CUTSCENE tDungeonScene;
@@ -429,6 +431,25 @@ HRESULT CVillage::Ready_Light()
 		return E_FAIL;
 
 	return S_OK;
+}
+
+void	CVillage::Ready_Event()
+{
+	m_hmapSubHandles.insert({ L"Obj_Add", m_pMessageChannel->Subscribe(L"Obj.Add", [this](const IMessageChannel::EVENT& Event) {
+{
+	CGameObject* pGObj = any_cast<CGameObject*>(Event.hmapData.find(L"Obj")->second);
+
+	if (pGObj != nullptr)
+	{
+		wstring strLayerTag = any_cast<const _tchar*>(Event.hmapData.find(L"LayerTag")->second);
+		wstring strObjTag = any_cast<wstring>(Event.hmapData.find(L"ObjTag")->second);
+		auto iter = m_mapLayer.find(strLayerTag);
+
+		if (iter != m_mapLayer.end())
+			iter->second->Add_GameObject(strObjTag, pGObj);
+	}
+}
+}) });
 }
 
 CVillage* CVillage::Create(LPDIRECT3DDEVICE9 pGraphicDev)
