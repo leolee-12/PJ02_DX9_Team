@@ -42,6 +42,7 @@ private:
 	void				Set_Texture();
 	void				Update_State();
 	void				Check_Work();
+	void				Execute_Work(const _float& fTimeDelta);
 
 private:
 	Engine::CRcTex*			m_pBufferCom;
@@ -68,6 +69,12 @@ private:
 	FOLLOWER_WORK	m_eCurWork;
 	_vec3			m_vLerpPos;
 	_uint			m_iRecruitState;
+
+	// 상호작용 관련
+	_float		m_fWorkSpeed;
+
+	static constexpr _float FW_DEFAULT_WORK_SPEED = 0.03f;
+	static constexpr _float FW_DEFAULT_WORK_GAP_TIME = 1.f;
 
 public:
 	static CFollower*	Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, const _tchar* pProtoTexKey);

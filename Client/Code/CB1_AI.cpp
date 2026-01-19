@@ -100,7 +100,7 @@ void CB1_AI::Enter_State(const _uint& iState)
 		m_fAcmlTime = 0.f;
 		m_fSpeed = 0.3f;
 		m_pOwnerTC->Get_Info(INFO_POS, &m_vLerpPos);
-		m_vLerpPos -= m_vDir * 1.f;
+		m_vLerpPos -= m_vDir * 0.f;
 	}
 	break;
 

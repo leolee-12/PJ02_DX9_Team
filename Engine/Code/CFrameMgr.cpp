@@ -3,6 +3,10 @@
 IMPLEMENT_SINGLETON(CFrameMgr)
 
 CFrameMgr::CFrameMgr()
+	: m_fAccTime(0.f)
+	, m_fFrameTime(0.f)
+	, m_iFrameCount(0.f)
+	, m_iFPS(0)
 {
 }
 
@@ -44,6 +48,22 @@ CFrame* CFrameMgr::Find_Frame(const _tchar* pFrameTag)
 		return nullptr;
 
 	return iter->second;
+}
+
+void CFrameMgr::Update_FPS(const _float& fTimeDelta)
+{
+	m_fAccTime += fTimeDelta;
+	m_iFrameCount++;
+
+	// 1초마다 FPS 갱신
+	if (m_fAccTime >= 1.f)
+	{
+		m_iFPS = m_iFrameCount;
+		m_fFrameTime = (m_fAccTime / m_iFrameCount) * 1000.f;  // ms 단위
+
+		m_fAccTime = 0.f;
+		m_iFrameCount = 0;
+	}
 }
 
 void CFrameMgr::Free()

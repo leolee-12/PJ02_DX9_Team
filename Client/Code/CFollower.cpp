@@ -64,6 +64,7 @@ HRESULT CFollower::Ready_GameObject()
 _int CFollower::Update_GameObject(const _float& fTimeDelta)
 {
 	Move_Frame(fTimeDelta);
+	Execute_Work(fTimeDelta);
 
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
@@ -211,12 +212,16 @@ void CFollower::Ready_Variable()
 	m_fGroundY = -2.5f + fScale * 0.5f - 1.8f;
 	m_iHp = 10;
 	m_eCurState = FOLLOWER_RECRUIT;
-	m_eCurWork = FOLLOWER_WORK(Get_Rand_Int(1, FW_END) - 1);
+	m_eCurWork = FOLLOWER_WORK(Get_Rand_Int(1, 2));
+	m_fWorkSpeed = FW_DEFAULT_WORK_SPEED + Get_Rand_Float(-0.002f, 0.002f);
 
 	// Transform 세팅
-	m_pTransformCom->Set_Pos(Get_Rand_Float(190.f, 210.f), m_fGroundY, Get_Rand_Float(30.f, 45.f));
+	m_pTransformCom->Set_Pos(Get_Rand_Float(170.f, 230.f), m_fGroundY, Get_Rand_Float(10.f, 65.f));
 	m_pTransformCom->Set_Scale(fScale, fScale, fScale);
+	m_pTransformCom->Update_Component(0.f);
 	m_pTransformCom->Get_Info(INFO_POS, &m_vPos);
+
+	//m_pTransformCom->Get_Info(INFO_POS, &m_vPos);
 
 	// Collider 세팅
 	m_pColliderCom->RegisterToManager(this, CL_NPC);
@@ -270,8 +275,6 @@ void CFollower::Check_Frame()
 
 	case FOLLOWER_ACTION:
 	{
-		m_eCurWork = FOLLOWER_WORK(Get_Rand_Int(0, 5));
-
 		switch (m_eCurWork)
 		{
 		case FW_NONE:	// (IDLE로 전환)
@@ -472,9 +475,24 @@ void CFollower::Check_Work()
 		break;
 	}
 
-	if (pTarget) m_pAICom->Set_TargetTransform(static_cast<CTransform*>(pTarget->Get_Component(ID_DYNAMIC, L"Com_Transform")));
+	if (pTarget)	m_pAICom->Set_TargetTransform(static_cast<CTransform*>(pTarget->Get_Component(ID_DYNAMIC, L"Com_Transform")));
+	else			m_pAICom->Set_TargetTransform(nullptr);
 
 	m_ePreWork = m_eCurWork;
+}
+
+void CFollower::Execute_Work(const _float& fTimeDelta)
+{
+	if (m_eCurState != FOLLOWER_ACTION) return;
+
+	if (!CInteractMgr::GetInstance()->Apply_Work(	CInteractMgr::INTERACT_TYPE(m_eCurWork),
+													m_vPos,
+													m_fWorkSpeed * fTimeDelta))
+	{
+		m_pAICom->Anim_End(m_eCurState);
+		m_eCurState = FOLLOWER_IDLE;
+		m_eCurWork = FOLLOWER_WORK(Get_Rand_Int(1, 2));
+	}
 }
 
 

@@ -30,10 +30,11 @@ public:
 
 	virtual void	Add_WorkGauge(_float fWork) { m_fWorkGauge += fWork; }
 	virtual _float	Get_WorkGauge() const { return m_fWorkGauge; }
-	virtual _bool	Is_WorkComplete() const { m_fWorkGauge >= MAX_WORK_GAUGE; }
+	virtual _bool	Is_WorkComplete() const { return m_fWorkGauge >= MAX_WORK_GAUGE; }
 
 public:
 	void	Set_ObjectData(const Engine::OBJECTDATA& objData);
+	void	Check_Status();
 
 private:
 	HRESULT	Add_Component();
@@ -61,7 +62,7 @@ private:
 	// 상호작용 관련
 	_float				m_fWorkGauge;
 
-	static constexpr _float MAX_WORK_GAUGE = 5.f;
+	static constexpr _float MAX_WORK_GAUGE = 1.f;
 
 public:
 	static CBreakableRock* Create(LPDIRECT3DDEVICE9 pGraphicDev, const Engine::OBJECTDATA& objData, IMessageChannel* pMessageChannel);

@@ -31,7 +31,6 @@ HRESULT CFollower_AI::Ready_AI(const _float& fDetectRange, const _float& fIntera
 	m_fSpeed = FW_DEFAULT_SPEED;
 	m_fAcmlTime = 0.f;
 	m_iRcmState = _uint(CFollower::FOLLOWER_IDLE);
-	m_fWorkSpeed = FW_DEFAULT_WORK_SPEED;
 
 	return S_OK;
 }
@@ -86,6 +85,7 @@ void CFollower_AI::Exit_State(const _uint& iState)
 	case CFollower::FOLLOWER_CONVERT:
 		break;
 	case CFollower::FOLLOWER_ACTION:
+		m_pTargetTC = nullptr;
 		break;
 	case CFollower::FOLLOWER_RECRUIT:
 		m_bActiveAI = true;
@@ -162,8 +162,7 @@ void CFollower_AI::Update_Run(const _float& fTimeDelta)
 			return;
 		}
 	}
-
-	if (m_fDistance <= m_fInteractRange)
+	else if (m_fDistance <= m_fInteractRange)
 	{
 		Change_State(CFollower::FOLLOWER_ACTION);
 		return;
@@ -215,6 +214,7 @@ void CFollower_AI::Anim_End(CFollower::FOLLOWER_STATE eState)
 	case CFollower::FOLLOWER_CONVERT:
 		break;
 	case CFollower::FOLLOWER_ACTION:
+		Change_State(CFollower::FOLLOWER_IDLE);
 		break;
 	case CFollower::FOLLOWER_RECRUIT:
 		Change_State(CFollower::FOLLOWER_IDLE);
