@@ -5,6 +5,8 @@
 #include "CManagement.h"
 #include "CGrassBuffer.h"
 #include "CCollider.h"
+#include "CInteractMgr.h"
+#include "CFontMgr.h"
 
 CBreakableTree::CBreakableTree(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev)
@@ -21,6 +23,7 @@ CBreakableTree::CBreakableTree(LPDIRECT3DDEVICE9 pGraphicDev)
 	, m_fAccTime(0.f)
 	, m_fReactStrength(0.f)
 	, m_vReactDir(0.f, 0.f, 0.f)
+	, m_fWorkGauge(0.f)
 {
 }
 
@@ -39,6 +42,7 @@ CBreakableTree::CBreakableTree(const CBreakableTree& rhs)
 	, m_fAccTime(0.f)
 	, m_fReactStrength(0.f)
 	, m_vReactDir(0.f, 0.f, 0.f)
+	, m_fWorkGauge(0.f)
 {
 }
 
@@ -52,6 +56,7 @@ HRESULT CBreakableTree::Ready_GameObject()
 		return E_FAIL;
 
 	m_pColliderCom->RegisterToManager(this, CL_GRASS);
+	CInteractMgr::GetInstance()->Register_IObj(CInteractMgr::WOOD, this);
 
 	m_hmapSubHandles.insert({ L"Monster_Damaged", m_pMessageChannel->Subscribe(L"Monster.Attacked", [this](const IMessageChannel::EVENT& Event) {
 		for (auto& Target : any_cast<vector<CGameObject*>>(Event.hmapData.find(L"Target")->second))
@@ -72,11 +77,14 @@ _int CBreakableTree::Update_GameObject(const _float& fTimeDelta)
 
 	m_pColliderCom->UpdateFromTransform(m_pTransformCom);
 
+	Check_Status();
+
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
 	if (iExit == DEAD)
 	{
 		m_pColliderCom->UnregisterFromManager();
+		CInteractMgr::GetInstance()->Unregister_IObj(CInteractMgr::WOOD, this);
 	}
 
 
@@ -119,6 +127,25 @@ void CBreakableTree::Render_GameObject()
 	// Restore
 	m_pGraphicDev->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
+
+
+	// -------------------------디버그용------------------------------
+	_matrix matView, matProj;
+	m_pGraphicDev->GetTransform(D3DTS_VIEW, &matView);
+	m_pGraphicDev->GetTransform(D3DTS_PROJECTION, &matProj);
+	_vec3 vWorldPos, vViewPos, vndcPos, vScreenPos;
+	m_pTransformCom->Get_Info(INFO_POS, &vWorldPos);
+	D3DXVec3TransformCoord(&vViewPos, &vWorldPos, &matView);
+	D3DXVec3TransformCoord(&vndcPos, &vViewPos, &matProj);
+	vScreenPos.x = (vndcPos.x * 0.5f + 0.5f) * _float(WINCX);
+	vScreenPos.y = (-vndcPos.y * 0.5f + 0.5f) * _float(WINCY);
+	D3DXCOLOR FontColor = D3DXCOLOR(240.f / 256.f, 240.f / 256.f, 240.f / 256.f, 1.f);
+	wchar_t szGauge[16];
+
+	swprintf_s(szGauge, L" Gauge : %.3f", m_fWorkGauge);
+	RECT rcPlayer = { vScreenPos.x - 50, vScreenPos.y - 10, vScreenPos.x + 50, vScreenPos.y + 10 };
+	CFontMgr::GetInstance()->Render_Font(L"Font_Lapture20", szGauge, rcPlayer, FontColor, DT_RIGHT | DT_BOTTOM);
+	// -------------------------디버그용------------------------------
 }
 
 void CBreakableTree::Set_ObjectData(const Engine::OBJECTDATA& objData)
@@ -127,11 +154,16 @@ void CBreakableTree::Set_ObjectData(const Engine::OBJECTDATA& objData)
 	m_fScale = objData.scale;
 	m_fBaseScale = objData.scale;
 
-	m_pTransformCom->Set_Pos(objData.x, objData.y - 1.0f, objData.z);
+	m_pTransformCom->Set_Pos(objData.x, objData.y, objData.z);
 	m_pTransformCom->Set_Scale(m_fScale, m_fScale, m_fScale);
 
 	// Position-based phase for individual sway timing
 	m_fPhase = fmodf(objData.x * 12.9898f + objData.z * 78.233f, D3DX_PI * 2.f);
+}
+
+void CBreakableTree::Check_Status()
+{
+	if (Is_WorkComplete()) m_iHp = 0;
 }
 
 void CBreakableTree::OnCollision(CGameObject* pObject)
@@ -233,26 +265,28 @@ HRESULT CBreakableTree::Add_Component()
 
 CBreakableTree* CBreakableTree::Create(LPDIRECT3DDEVICE9 pGraphicDev, const Engine::OBJECTDATA& objData, IMessageChannel* pMessageChannel)
 {
-	CBreakableTree* pGrass = new CBreakableTree(pGraphicDev);
+	CBreakableTree* pBreakableTree = new CBreakableTree(pGraphicDev);
 
-	pGrass->m_pMessageChannel = pMessageChannel;
-	pGrass->m_pMessageChannel->AddRef();
+	pBreakableTree->m_pMessageChannel = pMessageChannel;
+	pBreakableTree->m_pMessageChannel->AddRef();
 
-	if (FAILED(pGrass->Ready_GameObject()))
+	if (FAILED(pBreakableTree->Ready_GameObject()))
 	{
-		Safe_Release(pGrass);
-		MSG_BOX("CBreakableTree Create Failed");
+		Safe_Release(pBreakableTree);
+		MSG_BOX("pBreakableTree Create Failed");
 		return nullptr;
 	}
 
-	pGrass->Set_ObjectData(objData);
+	pBreakableTree->Set_ObjectData(objData);
+	pBreakableTree->m_pTransformCom->Update_Component(0.f);
 
-	return pGrass;
+	return pBreakableTree;
 }
 
 void CBreakableTree::Free()
 {
 	// m_pBufferCom, m_pTransformCom, m_pTextureCom are in m_mapComponent
 	// They will be released by CGameObject::Free()
+
 	CGameObject::Free();
 }

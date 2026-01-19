@@ -63,6 +63,7 @@ private:
 	void			Move_Frame(const _float& fTimeDelta);
 	void			Set_TextureSet();
 	void			Set_FrameKey();
+
 	// ==========================
 	//	Check_Frame : 상태 변경 시 Frame 초기화 및 설정해줄 값을 대입해줌
 	// 	Move_Frame : 시간 경과에 따라 Frame 값 누적, 특정 상태는 스프라이트 종료 시 IDLE 상태로 돌아가도록 세팅됨

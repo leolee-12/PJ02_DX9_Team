@@ -1,6 +1,6 @@
 ﻿#pragma once
 #include "CGameObject.h"
-#include "Engine_Struct.h"
+#include "IInteractable.h"
 
 namespace Engine
 {
@@ -14,7 +14,7 @@ namespace Engine
 //	CBreakableTree
 // =====================================================
 
-class CBreakableTree : public CGameObject
+class CBreakableTree : public CGameObject, public IInteractable
 {
 private:
 	explicit CBreakableTree(LPDIRECT3DDEVICE9 pGraphicDev);
@@ -28,8 +28,13 @@ public:
 	virtual void		Render_GameObject();
 	virtual void		OnCollision(CGameObject* pObject) override;
 
+	virtual void	Add_WorkGauge(_float fWork) { m_fWorkGauge += fWork; }
+	virtual _float	Get_WorkGauge() const { return m_fWorkGauge; }
+	virtual _bool	Is_WorkComplete() const { return m_fWorkGauge >= MAX_WORK_GAUGE; }
+
 public:
 	void	Set_ObjectData(const Engine::OBJECTDATA& objData);
+	void	Check_Status();
 
 private:
 	HRESULT	Add_Component();
@@ -55,6 +60,11 @@ private:
 	_float				m_fAccTime;
 	_float				m_fReactStrength;
 	_vec3				m_vReactDir;
+
+	// 상호작용 관련
+	_float				m_fWorkGauge;
+
+	static constexpr _float MAX_WORK_GAUGE = 1.f;
 
 public:
 	static CBreakableTree* Create(LPDIRECT3DDEVICE9 pGraphicDev, const Engine::OBJECTDATA& objData, IMessageChannel* pMessageChannel);

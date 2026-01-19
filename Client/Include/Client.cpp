@@ -92,12 +92,19 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                 CTimerMgr::GetInstance()->Set_TimeDelta(L"Timer_FPS60");
                 _float fTimer_FPS60 = CTimerMgr::GetInstance()->Get_TimeDelta(L"Timer_FPS60");
 
+				CFrameMgr::GetInstance()->Update_FPS(fTimer_FPS60);
+				_int iFPS = CFrameMgr::GetInstance()->Get_FPS();
+				_float fFrameTime = CFrameMgr::GetInstance()->Get_FrameTime();
+
+				TCHAR szFPS[128];
+				swprintf_s(szFPS, L"FPS: %d (%.2f ms)", iFPS, fFrameTime);
+				SetWindowText(g_hWnd, szFPS);
+
                 pMainApp->Update_MainApp(fTimer_FPS60);
                 pMainApp->LateUpdate_MainApp(fTimer_FPS60);
                 pMainApp->Render_MainApp();
             }
         }
-      
     }
 
     _ulong dwRefCnt(0);

@@ -3,6 +3,8 @@
 #include "CProtoMgr.h"
 #include "CRenderer.h"
 #include "CManagement.h"
+#include "CInteractMgr.h"
+#include "CFontMgr.h"
 
 CBreakableRock::CBreakableRock(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev)
@@ -19,6 +21,7 @@ CBreakableRock::CBreakableRock(LPDIRECT3DDEVICE9 pGraphicDev)
 	, m_fAccTime(0.f)
 	, m_fReactStrength(0.f)
 	, m_vReactDir(0.f, 0.f, 0.f)
+	, m_fWorkGauge(0.f)
 {
 }
 
@@ -37,6 +40,7 @@ CBreakableRock::CBreakableRock(const CBreakableRock& rhs)
 	, m_fAccTime(0.f)
 	, m_fReactStrength(0.f)
 	, m_vReactDir(0.f, 0.f, 0.f)
+	, m_fWorkGauge(0.f)
 {
 }
 
@@ -50,6 +54,7 @@ HRESULT CBreakableRock::Ready_GameObject()
 		return E_FAIL;
 
 	m_pColliderCom->RegisterToManager(this, CL_GRASS);
+	CInteractMgr::GetInstance()->Register_IObj(CInteractMgr::ROCK, this);
 
 	m_hmapSubHandles.insert({ L"Monster_Damaged", m_pMessageChannel->Subscribe(L"Monster.Attacked", [this](const IMessageChannel::EVENT& Event) {
 		for (auto& Target : any_cast<vector<CGameObject*>>(Event.hmapData.find(L"Target")->second))
@@ -70,11 +75,14 @@ _int CBreakableRock::Update_GameObject(const _float& fTimeDelta)
 
 	m_pColliderCom->UpdateFromTransform(m_pTransformCom);
 
+	Check_Status();
+
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
 	if (iExit == DEAD)
 	{
 		m_pColliderCom->UnregisterFromManager();
+		CInteractMgr::GetInstance()->Unregister_IObj(CInteractMgr::ROCK, this);
 	}
 
 
@@ -117,6 +125,25 @@ void CBreakableRock::Render_GameObject()
 	// Restore
 	m_pGraphicDev->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
+
+	_matrix matView, matProj;
+	m_pGraphicDev->GetTransform(D3DTS_VIEW, &matView);
+	m_pGraphicDev->GetTransform(D3DTS_PROJECTION, &matProj);
+
+	_vec3 vWorldPos, vViewPos, vndcPos, vScreenPos;
+	m_pTransformCom->Get_Info(INFO_POS, &vWorldPos);
+	D3DXVec3TransformCoord(&vViewPos, &vWorldPos, &matView);
+	D3DXVec3TransformCoord(&vndcPos, &vViewPos, &matProj);
+
+	vScreenPos.x = (vndcPos.x * 0.5f + 0.5f) * _float(WINCX);
+	vScreenPos.y = (-vndcPos.y * 0.5f + 0.5f) * _float(WINCY);
+
+	D3DXCOLOR FontColor = D3DXCOLOR(240.f / 256.f, 240.f / 256.f, 240.f / 256.f, 1.f);
+	wchar_t szGauge[16];
+
+	swprintf_s(szGauge, L" Gauge : %.3f", m_fWorkGauge);
+	RECT rcPlayer = { vScreenPos.x - 50, vScreenPos.y - 10, vScreenPos.x + 50, vScreenPos.y + 10 };
+	CFontMgr::GetInstance()->Render_Font(L"Font_Lapture20", szGauge, rcPlayer, FontColor, DT_RIGHT | DT_BOTTOM);
 }
 
 void CBreakableRock::Set_ObjectData(const Engine::OBJECTDATA& objData)
@@ -125,11 +152,16 @@ void CBreakableRock::Set_ObjectData(const Engine::OBJECTDATA& objData)
 	m_fScale = objData.scale;
 	m_fBaseScale = objData.scale;
 
-	m_pTransformCom->Set_Pos(objData.x, objData.y - 1.0f, objData.z);
+	m_pTransformCom->Set_Pos(objData.x, objData.y, objData.z);
 	m_pTransformCom->Set_Scale(m_fScale, m_fScale, m_fScale);
 
 	// Position-based phase for individual sway timing
 	m_fPhase = fmodf(objData.x * 12.9898f + objData.z * 78.233f, D3DX_PI * 2.f);
+}
+
+void CBreakableRock::Check_Status()
+{
+	if (Is_WorkComplete()) m_iHp = 0;
 }
 
 void CBreakableRock::OnCollision(CGameObject* pObject)
@@ -239,11 +271,12 @@ CBreakableRock* CBreakableRock::Create(LPDIRECT3DDEVICE9 pGraphicDev, const Engi
 	if (FAILED(pBreakableRock->Ready_GameObject()))
 	{
 		Safe_Release(pBreakableRock);
-		MSG_BOX("CBreakableRock Create Failed");
+		MSG_BOX("pBreakableRock Create Failed");
 		return nullptr;
 	}
 
 	pBreakableRock->Set_ObjectData(objData);
+	pBreakableRock->m_pTransformCom->Update_Component(0.f);
 
 	return pBreakableRock;
 }
