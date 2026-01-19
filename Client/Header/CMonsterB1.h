@@ -12,6 +12,7 @@ namespace Engine
 class CNode;
 class CB1_AI;
 class CProjectile;
+class CBossHpBar;
 
 class CMonsterB1 : public CMonster
 {
@@ -76,8 +77,15 @@ private:
 	_bool			m_bMtrl = false;
 	_float			m_fAcmlTime;
 
+	_bool			m_bWaiting = true;
+
+	//보스 체력바 관련
+	CBossHpBar* m_pHpBar;
+
+	_bool		m_bDead = false;
 public:
 	static CMonsterB1* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel);
+	static CMonsterB1* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, _vec3 vPos);
 
 private:
 	virtual void		Free();

@@ -27,6 +27,9 @@
 #include "CMapBorder.h"
 #include "CMonsterB2.h"
 #include "CFade.h"
+#include "CTriggerPoint.h"
+#include "CCutSceneMgr.h"
+#include "CFontAlpha.h"
 
 CRealDungeon::CRealDungeon(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -54,7 +57,19 @@ HRESULT CRealDungeon::Ready_Scene()
 
 	Ready_Event();
 
-	//CCollisionMgr::GetInstance()->Ready_CollisionMgr();
+	CCutSceneMgr::GetInstance()->Ready_CutsceneMgr(m_pMessageChannel);
+
+	CUTSCENE tRealDungeonScene;
+	tRealDungeonScene.strName = L"Meet_Amdu";
+	tRealDungeonScene.vecSteps =
+	{
+		{_vec3(-145.7f * 0.8f, 1.f, 13.5f * 0.8f), 0.75f, 0.5f, L"", L"", ADV_TIMED, 1.f},
+		{_vec3(-145.7f * 0.8f, 1.f, 13.5f * 0.8f), 0.75f, 0.5f, L"Font", L"암두시아스", ADV_IMMEDIATE},
+		{_vec3(-145.7f * 0.8f, 1.f, 13.5f * 0.8f), 0.75f, 0.5f, L"Amdu", L"Amdu_Intro", ADV_EVENT, 0.f, L"Amdu.Done"},
+		{_vec3(-145.7f * 0.8f, 1.f, 13.5f * 0.8f), 1.5f, 0.5f, L"Amdu", L"Amdu_Intro2", ADV_EVENT, 0.f, L"Amdu.Done"}
+	};
+
+	CCutSceneMgr::GetInstance()->Register_CutScene(tRealDungeonScene);
 
 	return S_OK;
 }
@@ -163,7 +178,7 @@ HRESULT CRealDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 						Engine::CTransform* pTransform = dynamic_cast<Engine::CTransform*>(
 							pGameObject->Get_Component(ID_DYNAMIC, L"Com_Transform"));
 						if (pTransform)
-							pTransform->Set_Pos(spawn.x, 0.f, spawn.z);
+							pTransform->Set_Pos(spawn.x * 0.8f, 0.f, spawn.z * 0.8f);
 						pLayer->Add_GameObject(L"Monster", pGameObject);
 					}
 					break;
@@ -172,6 +187,12 @@ HRESULT CRealDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 					break;
 				case 3:
 					// Amdusias | 중간보스 |
+					pGameObject = CMonsterB1::Create(m_pGraphicDev, m_pMessageChannel, _vec3(spawn.x * 0.8f, 0.f, spawn.z * 0.8f));
+
+					NULL_CHECK_RETURN(pGameObject, E_FAIL)
+
+						if (FAILED(pLayer->Add_GameObject(L"Boss", pGameObject)))
+							return E_FAIL;
 					break;
 				case 4:
 					// Rash | 최종보스 |
@@ -291,7 +312,16 @@ HRESULT CRealDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 			pLayer->Add_GameObject(L"SkyBox", pGameObject);
 	}
 
-	// ����׿�
+
+	_vec3 vTriggerPos, vTriggerHalfSize;
+	vTriggerPos = { -99.F, 0.f, 11.7f };
+	vTriggerHalfSize = { 5.f, 5.f, 5.f };
+	pGameObject = CTriggerPoint::Create(m_pGraphicDev, m_pMessageChannel, vTriggerPos, vTriggerHalfSize, Trigger::TI_STAGING, L"Meet_Amdu", true);
+
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+
+	if (FAILED(pLayer->Add_GameObject(L"TriggerPoint", pGameObject)))
+		return E_FAIL;
 
 	m_mapLayer.insert({ pLayerTag , pLayer });
 
@@ -335,7 +365,16 @@ HRESULT CRealDungeon::Ready_UI_Layer(const _tchar* pLayerTag)
 	if (FAILED(pLayer->Add_GameObject(L"Fade", pGameObject)))
 		return E_FAIL;
 
+	pGameObject = CFontAlpha::Create(m_pGraphicDev, m_pMessageChannel);
+
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+
+	if (FAILED(pLayer->Add_GameObject(L"Font", pGameObject)))
+		return E_FAIL;
+
 	m_mapLayer.insert({ pLayerTag , pLayer });
+
+	return S_OK;
 }
 
 
@@ -384,7 +423,7 @@ CRealDungeon* CRealDungeon::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 	if (FAILED(pTest->Ready_Scene()))
 	{
 		Safe_Release(pTest);
-		MSG_BOX("pVillage Create Failed");
+		MSG_BOX("pRealDungeon Create Failed");
 		return nullptr;
 	}
 

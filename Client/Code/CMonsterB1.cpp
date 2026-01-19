@@ -10,6 +10,7 @@
 #include "CProjectile.h"
 #include "CMonsterN2.h"
 #include "CMonsterB2.h"
+#include "CBossHpBar.h"
 
 CMonsterB1::CMonsterB1(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CMonster(pGraphicDev),
@@ -70,11 +71,13 @@ HRESULT CMonsterB1::Ready_GameObject()
 
 _int CMonsterB1::Update_GameObject(const _float& fTimeDelta)
 {
+	if (m_bDead) { return DEAD; }
+
 	Check_Phase();
 
-	Move_Frame(fTimeDelta);
-
-	Check_Status();
+	if (!m_bWaiting) {
+		Move_Frame(fTimeDelta);
+	}
 
 	for (auto& pComponent : m_mapComponent[ID_DYNAMIC])
 	pComponent.second->Update_Component(fTimeDelta);
@@ -85,9 +88,17 @@ _int CMonsterB1::Update_GameObject(const _float& fTimeDelta)
 	//	return iExit;
 	//}
 
-	CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHA, this);
+	if (!m_bWaiting) {
+		CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHA, this);
 
-	Compute_NodePos(fTimeDelta);
+		if (m_eCurState != B1S_ROAR && m_eCurState != B1S_SPAWN)
+		{
+			Compute_NodePos(fTimeDelta);
+		}
+		m_pHpBar->Update_Hp(m_iHp);
+		m_pHpBar->Update_GameObject(fTimeDelta);
+	}
+
 
 	return NOEVENT;
 }
@@ -110,15 +121,17 @@ void CMonsterB1::LateUpdate_GameObject(const _float& fTimeDelta)
 	{
 		m_pNode[i]->LateUpdate_GameObject(fTimeDelta);
 
-		if ((vDir.z > 0.f) && (	(m_eCurState != B1S_SHOOT)	&&
+		/*if ((vDir.z > 0.f) && (	(m_eCurState != B1S_SHOOT)	&&
 								(m_eCurState != B1S_SUMMON)	&&
 								(m_eCurState != B1S_SPAWN)	&&
 								(m_eCurState != B1S_ROAR)	))
 			m_pNode[i]->Set_Depth(m_fDepth - (i + 1) * 0.001f);
 		
 		else
-			m_pNode[i]->Set_Depth(m_fDepth + (i + 1) * 0.001f);
+			m_pNode[i]->Set_Depth(m_fDepth + (i + 1) * 0.001f);*/
 	}
+
+	Check_Status();
 }
 
 void CMonsterB1::Render_GameObject()
@@ -285,6 +298,8 @@ void CMonsterB1::Ready_Variable()
 	m_pNode[3] = CNode::Create(m_pGraphicDev, m_pMessageChannel, L"Proto_B1Node4Texture");
 	m_pNode[3]->Set_NodeScale(vScale);
 	m_pNode[3]->Set_UserID(CNode::MONSTER_B1);
+
+	m_pHpBar = CBossHpBar::Create(m_pGraphicDev, _float(m_iMaxHp), L"암두시아스");
 }
 
 void CMonsterB1::Ready_Event()
@@ -299,6 +314,26 @@ void CMonsterB1::Ready_Event()
 		}
 	}
 	}) });
+
+	m_hmapSubHandles.insert({ L"Dialogue", m_pMessageChannel->Subscribe(L"CutScene.Dialogue", [this](const IMessageChannel::EVENT& Event)
+	{
+		auto CinemaTargetNameiter = Event.hmapData.find(L"CinemaTargetName");
+		if (CinemaTargetNameiter == Event.hmapData.end()) { return; }
+		auto Dothisiter = Event.hmapData.find(L"Dothis");
+		if (Dothisiter == Event.hmapData.end()) { return; }
+		if (any_cast<wstring>(CinemaTargetNameiter->second) == L"Amdu")
+		{
+			wstring strDothis = any_cast<wstring>(Dothisiter->second);
+			if (strDothis == L"Amdu_Intro") {
+				m_bWaiting = false;
+				return;
+			}
+		}
+
+		return;
+	}
+	)});
+
 }
 
 void CMonsterB1::Check_Frame()
@@ -383,6 +418,7 @@ void CMonsterB1::Move_Frame(const _float& fTimeDelta)
 	if (m_fFrame >= m_fFrameEnd)
 	{
 		m_fFrame = 0.f;
+		IMessageChannel::EVENT AmduEvent;
 
 		switch (m_eCurState)
 		{
@@ -417,16 +453,23 @@ void CMonsterB1::Move_Frame(const _float& fTimeDelta)
 
 		case B1S_ROAR:
 			m_pAICom->Anim_End(m_eCurState);
+			AmduEvent.strType = L"Amdu.Done";
+			m_pMessageChannel->Publish(AmduEvent);
+			m_pHpBar->Active();
 			m_eCurState = B1S_CRAWL;
 			break;
 
 		case B1S_SPAWN:
 			m_pAICom->Anim_End(m_eCurState);
+			AmduEvent.strType = L"Amdu.Done";
+			m_pMessageChannel->Publish(AmduEvent);
 			m_eCurState = B1S_ROAR;
 			break;
 
 		case B1S_DIE:
 			m_fFrame = m_fFrameEnd - 0.001f;
+			m_pHpBar->UnActive();
+			m_bDead = true;
 			break;
 		}
 	}
@@ -759,12 +802,31 @@ CMonsterB1* CMonsterB1::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* S
 	return pMonster;
 }
 
+CMonsterB1* CMonsterB1::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, _vec3 vPos)
+{
+	CMonsterB1* pMonster = new CMonsterB1(pGraphicDev, StageChannel);
+
+	if (FAILED(pMonster->Ready_GameObject()))
+	{
+		Safe_Release(pMonster);
+		MSG_BOX("pMonster Create Failed");
+		return nullptr;
+	}
+
+	pMonster->m_pTransformCom->Set_Pos(vPos.x, pMonster->m_fGroundY, vPos.z);
+	pMonster->m_pTransformCom->Update_Component(0.f);
+
+	return pMonster;
+}
+
 void CMonsterB1::Free()
 {
 	for (_uint i = 0; i < 4; ++i)
 	{
 		Safe_Release(m_pNode[i]);
 	}
+
+	Safe_Release(m_pHpBar);
 
 	CGameObject::Free();
 }

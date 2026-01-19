@@ -23,7 +23,7 @@ public:
 	virtual			void		OnCollision(CGameObject* pObject);
 
 public:
-	static CBossHpBarFront* Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 _vPos, float _fScale);
+	static CBossHpBarFront* Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 _vPos);
 
 	void Set_Radio(_float _fRatio) { m_fRatio = _fRatio; }
 	void Set_Hp(_float _fHp) { m_fCurHp = _fHp; }
@@ -48,7 +48,6 @@ private:
 	_float m_fMaxHp;
 
 	_vec3 m_vPos;
-	float m_fScale;
 
 	LPDIRECT3DPIXELSHADER9 m_pPixelShader;
 };

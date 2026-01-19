@@ -870,6 +870,9 @@
     <ClInclude Include="..\Header\CMultiLoadingThread.h">
       <Filter>01. Scene\99. Loading\LoadingThread</Filter>
     </ClInclude>
+    <ClInclude Include="CFontAlpha.h">
+      <Filter>02. GameObject\05. UI\99. Font</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1282,6 +1285,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CMultiLoadingThread.cpp">
       <Filter>01. Scene\99. Loading\LoadingThread</Filter>
+    </ClCompile>
+    <ClCompile Include="CFontAlpha.cpp">
+      <Filter>02. GameObject\05. UI\99. Font</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

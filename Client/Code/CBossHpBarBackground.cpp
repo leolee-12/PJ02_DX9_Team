@@ -19,7 +19,7 @@ HRESULT CBossHpBarBackground::Ready_GameObject()
 	if (FAILED(Add_Component()))
 		return E_FAIL;
 
-	m_pTransformCom->Set_Scale((61.f * 2.f *m_fScale) - 4.f, 9.f * m_fScale, 0.1f);
+	m_pTransformCom->Set_Scale((61.f * 8.f) - 10.f, 9.f * 3.f, 0.1f);
 	m_pTransformCom->Set_Pos(m_vPos.x, m_vPos.y, m_vPos.z);
 
 	return S_OK;
@@ -91,12 +91,12 @@ HRESULT CBossHpBarBackground::Add_Component()
 }
 
 
-CBossHpBarBackground* CBossHpBarBackground::Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 _vPos, float _fScale)
+CBossHpBarBackground* CBossHpBarBackground::Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 _vPos)
 {
 	CBossHpBarBackground* pBossHpBarBackground = new CBossHpBarBackground(pGraphicDev);
 
 	pBossHpBarBackground->m_vPos = _vPos;
-	pBossHpBarBackground->m_fScale = _fScale;
+	//pBossHpBarBackground->m_fScale = _fScale;
 
 
 	if (FAILED(pBossHpBarBackground->Ready_GameObject()))

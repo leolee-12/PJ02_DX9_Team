@@ -22,7 +22,7 @@ HRESULT CBossHpBarFront::Ready_GameObject()
 
 	Ready_PixelShader();
 
-	m_pTransformCom->Set_Scale(59 * 2*m_fScale, 7 * m_fScale, 0.1f);
+	m_pTransformCom->Set_Scale(59.f * 8.f, 7.f * 3.f, 0.1f);
 	m_pTransformCom->Set_Pos(m_vPos.x, m_vPos.y, m_vPos.z);
 
 	m_fRatio = 1.0f;
@@ -159,12 +159,12 @@ HRESULT CBossHpBarFront::Ready_PixelShader()
 }
 
 
-CBossHpBarFront* CBossHpBarFront::Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 _vPos, float _fScale)
+CBossHpBarFront* CBossHpBarFront::Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 _vPos)
 {
 	CBossHpBarFront* pBossHpBarFront = new CBossHpBarFront(pGraphicDev);
 
 	pBossHpBarFront->m_vPos = _vPos;
-	pBossHpBarFront->m_fScale = _fScale;
+	//pBossHpBarFront->m_fScale = _fScale;
 
 
 	if (FAILED(pBossHpBarFront->Ready_GameObject()))

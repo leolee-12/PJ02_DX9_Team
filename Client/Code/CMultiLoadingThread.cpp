@@ -283,30 +283,6 @@ void CMultiLoadingThread::Loading_for_Dungeon()
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_MonsterN3Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal3/dds/MonsterN3_%02d.dds", 3));
 	m_iTotalProtoCount++;
 
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_MonsterB1Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Boss1/dds/MonsterB1_%02d.dds", 10));
-	m_iTotalProtoCount++;
-
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_N2Node1Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal2/dds/N2Node_00.dds", 1));
-	m_iTotalProtoCount++;
-
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_N2Node2Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal2/dds/N2Node_01.dds", 1));
-	m_iTotalProtoCount++;
-
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_N2Node3Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal2/dds/N2Node_02.dds", 1));
-	m_iTotalProtoCount++;
-
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_B1Node1Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Boss1/dds/B1Node_00.dds", 1));
-	m_iTotalProtoCount++;
-
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_B1Node2Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Boss1/dds/B1Node_01.dds", 1));
-	m_iTotalProtoCount++;
-
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_B1Node3Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Boss1/dds/B1Node_02.dds", 1));
-	m_iTotalProtoCount++;
-
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_B1Node4Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Boss1/dds/B1Node_03.dds", 1));
-	m_iTotalProtoCount++;
-
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_ProjectileTexture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/dds/Projectile.dds", 1));
 	m_iTotalProtoCount++;
 
@@ -355,10 +331,7 @@ void CMultiLoadingThread::Loading_for_Dungeon()
 	m_iTotalProtoCount++;
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_BossHpBarBackground", TEX_NORMAL, L"../Bin/Resource/YSD/BossHpBar/BossHpBarBackgorund.png", 1));
 	m_iTotalProtoCount++;*/
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_BossHpBarCover", TEX_NORMAL, L"../Bin/Resource/YSH/UI/BossHpBarCover.png", 1));
-	m_iTotalProtoCount++;
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_BossHpBar", TEX_NORMAL, L"../Bin/Resource/YSH/UI/BossHpBarRed.png", 1));
-	m_iTotalProtoCount++;
+	
 
 	// 덴저러스 수동 PNG존 지뢰밟지않게 조심할것
 
@@ -501,6 +474,45 @@ void CMultiLoadingThread::Loading_for_RealDungeon()
 	m_iTotalProtoCount++;
 
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_ProjectileTexture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/dds/Projectile.dds", 1));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_B1Node1Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Boss1/dds/B1Node_00.dds", 1));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_B1Node2Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Boss1/dds/B1Node_01.dds", 1));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_B1Node3Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Boss1/dds/B1Node_02.dds", 1));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_B1Node4Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Boss1/dds/B1Node_03.dds", 1));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_MonsterB1Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Boss1/dds/MonsterB1_%02d.dds", 10));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_MonsterN1Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal1/dds/MonsterN1_%02d.dds", 7));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_MonsterN2Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal2/dds/MonsterN2_%02d.dds", 3));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_MonsterN3Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal3/dds/MonsterN3_%02d.dds", 3));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_N2Node1Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal2/dds/N2Node_00.dds", 1));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_N2Node2Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal2/dds/N2Node_01.dds", 1));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_N2Node3Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal2/dds/N2Node_02.dds", 1));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_BossHpBarCover", TEX_NORMAL, L"../Bin/Resource/YSH/UI/BossHpBarCover.png", 1));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_BossHpBar", TEX_NORMAL, L"../Bin/Resource/YSH/UI/BossHpBarRed.png", 1));
 	m_iTotalProtoCount++;
 
 	// 디버그용 그긴거

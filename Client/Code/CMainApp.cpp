@@ -138,6 +138,12 @@ HRESULT CMainApp::Ready_Font()
 	if (FAILED(CFontMgr::GetInstance()->Ready_Font(m_pGraphicDev, L"Font_Default30_Heavy", L"Malgun Gothic", 0, 30, FW_HEAVY, HANGEUL_CHARSET)))
 		return E_FAIL;
 
+	if (FAILED(CFontMgr::GetInstance()->Ready_Font(m_pGraphicDev, L"Font_Default40", L"Malgun Gothic", 0, 40, FW_HEAVY, HANGEUL_CHARSET)))
+		return E_FAIL;
+
+	if (FAILED(CFontMgr::GetInstance()->Ready_Font(m_pGraphicDev, L"Font_Default80", L"Malgun Gothic", 0, 80, FW_HEAVY, HANGEUL_CHARSET)))
+		return E_FAIL;
+
 
 	if (FAILED(CFontMgr::GetInstance()->Ready_Font(m_pGraphicDev, L"Font_Lapture20", L"LaptureDisplay", 0, 20, FW_THIN, DEFAULT_CHARSET)))
 		return E_FAIL;

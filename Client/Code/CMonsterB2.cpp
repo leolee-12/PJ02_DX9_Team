@@ -75,7 +75,6 @@ HRESULT CMonsterB2::Ready_GameObject()
 _int CMonsterB2::Update_GameObject(const _float& fTimeDelta)
 {
 	Check_Phase();
-	m_pTransformCom;
 
 	Move_Frame(fTimeDelta);
 
@@ -774,6 +773,7 @@ CMonsterB2* CMonsterB2::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* S
 	}
 
 	pMonster->m_pTransformCom->Set_Pos(vPos.x, pMonster->m_fGroundY, vPos.z);
+	pMonster->m_pTransformCom->Update_Component(0.f);
 
 	return pMonster;
 }
