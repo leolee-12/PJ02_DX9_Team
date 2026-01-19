@@ -9,7 +9,6 @@
 #include "CNode.h"
 #include "CProjectile.h"
 #include "CMonsterN2.h"
-#include "CMonsterB2.h"
 #include "CBossHpBar.h"
 
 CMonsterB1::CMonsterB1(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -701,7 +700,7 @@ void CMonsterB1::Check_Status()
 			m_pNode[i]->Set_NodeScale(_vec3{ 0.f, 0.f, 0.f });
 		}
 
-		Summon_Boss();
+		//Summon_Boss();
 	}
 }
 
@@ -772,7 +771,7 @@ void CMonsterB1::Summon_Minion(const _uint& iCount)
 // 디버그용
 void CMonsterB1::Summon_Boss()
 {
-	CGameObject* pMonster = CMonsterB2::Create(m_pGraphicDev, m_pMessageChannel);
+	/*CGameObject* pMonster = CMonsterB2::Create(m_pGraphicDev, m_pMessageChannel);
 
 	if (pMonster)
 	{
@@ -785,7 +784,7 @@ void CMonsterB1::Summon_Boss()
 		ESummonMonster.hmapData.emplace(L"LayerTag", L"GameLogic_Layer");
 		ESummonMonster.hmapData.emplace(L"ObjTag", strObjTag);
 		m_pMessageChannel->Publish(ESummonMonster);
-	}
+	}*/
 }
 
 CMonsterB1* CMonsterB1::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel)

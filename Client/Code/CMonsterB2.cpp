@@ -810,5 +810,6 @@ CMonsterB2* CMonsterB2::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* S
 
 void CMonsterB2::Free()
 {
+	Safe_Release(m_pHpBar);
 	CGameObject::Free();
 }
