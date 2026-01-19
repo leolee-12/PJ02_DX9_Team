@@ -225,9 +225,6 @@
     <ClInclude Include="..\Header\CLoadingCircle.h" />
     <ClInclude Include="..\Header\CLoadingFG.h" />
     <ClInclude Include="..\Header\CLoadingLogo.h" />
-    <ClInclude Include="..\Header\CLoadingThread.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClInclude>
     <ClInclude Include="..\Header\CLoadingBack.h" />
     <ClInclude Include="..\Header\CLogo.h" />
     <ClInclude Include="..\Header\CMainApp.h" />
@@ -296,6 +293,7 @@
     <ClInclude Include="..\Header\CGrass.h" />
     <ClInclude Include="..\Header\SaveLoad.h" />
     <ClInclude Include="..\Header\Trigger_Enum.h" />
+    <ClInclude Include="CFontAlpha.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="pch.h" />
@@ -379,9 +377,6 @@
     <ClCompile Include="..\Code\CLoadingCircle.cpp" />
     <ClCompile Include="..\Code\CLoadingFG.cpp" />
     <ClCompile Include="..\Code\CLoadingLogo.cpp" />
-    <ClCompile Include="..\Code\CLoadingThread.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="..\Code\CLoadingBack.cpp" />
     <ClCompile Include="..\Code\CLogo.cpp" />
     <ClCompile Include="..\Code\CMainApp.cpp" />
@@ -444,6 +439,7 @@
     <ClCompile Include="..\Code\CTileMgr.cpp" />
     <ClCompile Include="..\Code\CMapObject.cpp" />
     <ClCompile Include="..\Code\CGrass.cpp" />
+    <ClCompile Include="CFontAlpha.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

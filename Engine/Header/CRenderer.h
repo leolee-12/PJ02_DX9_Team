@@ -23,6 +23,9 @@ public:
 	void		Clear_RenderGroup();
 	void        Add_TestCollider(const AABB& tAABB, _int iFrame);
 
+	void		Set_RenderFont() { m_bRenderFont = true; }
+	void		Set_UnRenderFont() { m_bRenderFont = false; }
+
 private:
 	void			Render_Priority(LPDIRECT3DDEVICE9& pGraphicDev);
 	void			Render_NonAlpha(LPDIRECT3DDEVICE9& pGraphicDev);
@@ -44,6 +47,8 @@ private:
 	list<CGameObject*>			m_RenderGroup[RENDER_END];
 	vector<CCollider*>			m_vecColDebugGroup;
 	vector<TESTCOL>				m_vecTestColliders;
+
+	_bool						m_bRenderFont = true;
 
 private:
 	virtual void		Free();

@@ -40,6 +40,28 @@ HRESULT CBishop_Leshy::Ready_GameObject()
 	return S_OK;
 }
 
+HRESULT CBishop_Leshy::Ready_GameObject_Custom()
+{
+	if (FAILED(Add_Component()))
+		return E_FAIL;
+
+	Ready_Event();
+
+	m_pTransformCom->Set_Scale(332.f * 0.025f, 422.f * 0.025f, 0.f);
+
+	m_pTransformCom->Set_Pos(m_vPos.x, m_vPos.y, m_vPos.z);
+	m_pTransformCom->Update_Component(0.f);
+
+	m_eCurState = Bishops::BS_IDLE;
+
+	m_vPos.y += 12.5f;
+	Ready_Dialogue(m_vPos);
+
+	m_pFontUI->Set_RenderOwnerName(L"레쉬");
+
+	return S_OK;
+}
+
 HRESULT CBishop_Leshy::Ready_Material()
 {
 	D3DMATERIAL9			tMtrl;
@@ -59,6 +81,8 @@ HRESULT CBishop_Leshy::Ready_Material()
 
 _int CBishop_Leshy::Update_GameObject(const _float& fTimeDelta)
 {
+	if (m_bWait) { return NOEVENT; }
+
 	Update_State();
 	Update_Frame(fTimeDelta);
 
@@ -88,8 +112,22 @@ void CBishop_Leshy::Render_GameObject()
 
 	if (FAILED(Ready_Material()))
 		return;
-
-	m_pTextureCom->Set_Texture(m_strStateKey, m_iFrame);
+	if (m_bNew)
+	{
+		switch (m_eCurNewState)
+		{
+		case LS_ENTER:
+			m_pLeshyEnter->Set_Texture(m_iFrame);
+			break;
+		case LS_TRANS:
+			m_pLeshyTransform->Set_Texture(m_iFrame);
+			break;
+		}
+	}
+	else
+	{
+		m_pTextureCom->Set_Texture(m_strStateKey, m_iFrame);
+	}
 
 	m_pBufferCom->Render_Buffer();
 
@@ -99,6 +137,13 @@ void CBishop_Leshy::Render_GameObject()
 void CBishop_Leshy::OnCollision(CGameObject* pObject)
 {
 
+}
+
+void CBishop_Leshy::Set_Wait()
+{
+	m_bNew = true;
+	m_bWait = true;
+	m_eCurNewState = LS_ENTER;
 }
 
 HRESULT CBishop_Leshy::Add_Component()
@@ -131,11 +176,51 @@ HRESULT CBishop_Leshy::Add_Component()
 
 	m_mapComponent[ID_STATIC].insert({ L"Com_Texture", pComponent });
 
+	pComponent = m_pLeshyEnter = dynamic_cast<Engine::CTexture*>
+		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_BishopLeshyEnter"));
+
+	if (nullptr == pComponent)
+		return E_FAIL;
+
+	m_mapComponent[ID_STATIC].insert({ L"Com_LeshyEnter", pComponent });
+
+	pComponent = m_pLeshyTransform = dynamic_cast<Engine::CTexture*>
+		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_BishopLeshyTransform"));
+
+	if (nullptr == pComponent)
+		return E_FAIL;
+
+	m_mapComponent[ID_STATIC].insert({ L"Com_LeshyTransform", pComponent });
+
 	return S_OK;
 }
 
 void		CBishop_Leshy::Update_State()
 {
+	if (m_bNew)
+	{
+		if (m_eCurNewState != m_ePreNewState)
+		{
+			switch (m_eCurNewState)
+			{
+			case LS_ENTER:
+				m_iFrame = 0;
+				m_iFrameEnd = 133;
+				m_pTransformCom->Set_Scale(320.f * 0.025f, 442.f * 0.025f, 0.f);
+				m_pTransformCom->Set_Pos(m_vPos.x, 3.f, m_vPos.z);
+				break;
+			case LS_TRANS:
+				m_iFrame = 0;
+				m_iFrameEnd = 375;
+				m_pTransformCom->Set_Scale(480.f * 0.025f, 618.f * 0.025f, 0.f);
+				m_pTransformCom->Set_Pos(m_vPos.x, 5.f, m_vPos.z);
+				break;
+			}
+			m_ePreNewState = m_eCurNewState;
+		}
+		return;
+	}
+
 	if (m_eCurState != m_ePreState)
 	{
 		switch (m_eCurState)
@@ -161,7 +246,19 @@ void CBishop_Leshy::Update_Frame(const _float& fTimeDelta)
 	m_fFrameTime += fTimeDelta;
 	if (m_iFrame < m_iFrameEnd)
 	{
-		if (m_fFrameTime > 0.040f) {
+		if (m_bNew)
+		{
+			switch (m_eCurNewState)
+			{
+			case LS_ENTER:
+				m_iFrame += 1;
+				break;
+			case LS_TRANS:
+				m_iFrame += 1;
+				break;
+			}
+		}
+		else if (m_fFrameTime > 0.040f) {
 			switch (m_eCurState)
 			{
 			case Bishops::BS_IDLE:
@@ -177,7 +274,37 @@ void CBishop_Leshy::Update_Frame(const _float& fTimeDelta)
 	}
 	else
 	{
-		m_iFrame = 0;
+		if (m_bNew)
+		{
+			IMessageChannel::EVENT LeshyEvent;
+			switch (m_eCurNewState)
+			{
+			case LS_ENTER:
+				// 엔터 끝났다는 이벤트
+				m_iFrame = m_iFrameEnd;
+				LeshyEvent.strType = L"Leshy.Done";
+				m_pMessageChannel->Publish(LeshyEvent);
+				break;
+			case LS_TRANS:
+				// 트랜스 끝났다는 이벤트
+				m_iFrame = m_iFrameEnd;
+				LeshyEvent.strType = L"Leshy.Done";
+				m_pMessageChannel->Publish(LeshyEvent);
+				m_iHp = 0;
+				break;
+			}
+		}
+		else if (m_fFrameTime > 0.040f) {
+			switch (m_eCurState)
+			{
+			case Bishops::BS_IDLE:
+				m_iFrame = 0;
+				break;
+			case Bishops::BS_TALK:
+				m_iFrame = 0;
+				break;
+			}
+		}
 	}
 }
 
@@ -192,6 +319,25 @@ void CBishop_Leshy::Ready_Event()
 				m_pSpeechBubble->UnActive();
 				m_pFontUI->UnActive();
 				m_eCurState = Bishops::BS_IDLE;
+
+				auto CinemaTargetNameiter = Event.hmapData.find(L"CinemaTargetName");
+				if (CinemaTargetNameiter == Event.hmapData.end()) { return; }
+				auto Dothisiter = Event.hmapData.find(L"Dothis");
+				if (Dothisiter == Event.hmapData.end()) { return; }
+				if (any_cast<wstring>(CinemaTargetNameiter->second) == L"Bishop_Leshy")
+				{
+					wstring strDothis = any_cast<wstring>(Dothisiter->second);
+					if (strDothis == L"Leshy_Enter") {
+						m_bWait = false;
+						return;
+					}
+					if (strDothis == L"Leshy_Transform") {
+						m_eCurNewState = LS_TRANS;
+						m_bNew = true;
+						return;
+					}
+				}
+
 				return;
 			}
 
@@ -203,6 +349,7 @@ void CBishop_Leshy::Ready_Event()
 			m_pSpeechBubble->Active();
 			m_pFontUI->Active();
 			m_eCurState = Bishops::BS_TALK;
+			m_bNew = false;
 			CSoundMgr::GetInstance()->Play(L"bc_Leshy.wav", SOUND_DIALOUGE, 0.1f);
 		}
 	) });
@@ -253,6 +400,24 @@ CBishop_Leshy* CBishop_Leshy::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChan
 	pBishop_Leshy->m_pMessageChannel->AddRef();
 
 	if (FAILED(pBishop_Leshy->Ready_GameObject()))
+	{
+		Safe_Release(pBishop_Leshy);
+		MSG_BOX("pBishop_Leshy Create Failed");
+		return nullptr;
+	}
+
+	return pBishop_Leshy;
+}
+
+CBishop_Leshy* CBishop_Leshy::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMessageChannel, const _vec3& vPos)
+{
+	CBishop_Leshy* pBishop_Leshy = new CBishop_Leshy(pGraphicDev);
+
+	pBishop_Leshy->m_vPos = vPos;
+	pBishop_Leshy->m_pMessageChannel = pMessageChannel;
+	pBishop_Leshy->m_pMessageChannel->AddRef();
+
+	if (FAILED(pBishop_Leshy->Ready_GameObject_Custom()))
 	{
 		Safe_Release(pBishop_Leshy);
 		MSG_BOX("pBishop_Leshy Create Failed");

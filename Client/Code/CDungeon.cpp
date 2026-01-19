@@ -42,6 +42,8 @@
 #include "CCutSceneMgr.h"
 #include "CFollower.h"
 #include "CFade.h"
+#include "CLoading.h"
+#include "CManagement.h"
 
 CDungeon::CDungeon(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -137,27 +139,21 @@ _int CDungeon::Update_Scene(const _float& fTimeDelta)
 		m_pMessageChannel->Publish(event);
 	}
 
-	if (CDInputMgr::GetInstance()->Key_Down(DIK_RIGHT))
-	{
-		m_pGauge->Set_GaugeState(Gauge::GS_FAITH);
-		m_pGauge->Set_GaugeValue(0.f);
-	}
-	if (CDInputMgr::GetInstance()->Key_Down(DIK_LEFT))
-	{
-		m_pGauge->Set_GaugeState(Gauge::GS_PASSION);
-		m_pGauge->Set_GaugeValue(0.f);
-	}
-	if (CDInputMgr::GetInstance()->Key_Down(DIK_DOWN))
-	{
-		m_pGauge->Add_GaugeValue(-0.5f);
-	}
-	if (CDInputMgr::GetInstance()->Key_Down(DIK_UP))
-	{
-		m_pGauge->Add_GaugeValue(0.5f);
-	}
-
-
 	_int iExit = Engine::CScene::Update_Scene(fTimeDelta);
+
+	if (m_bSceneChangeFlag)
+	{
+		Engine::CScene* pLoading = CLoading::Create(m_pGraphicDev, LOADING_VILLAGE);
+
+		if (nullptr == pLoading)
+			return NOEVENT;
+
+		if (FAILED(CManagement::GetInstance()->Set_Scene(pLoading)))
+		{
+			MSG_BOX("Stage Scene Failed");
+			return NOEVENT;
+		}
+	}
 
 	return iExit;
 }
@@ -472,6 +468,15 @@ HRESULT CDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	if (FAILED(pLayer->Add_GameObject(L"TriggerPoint", pGameObject)))
 		return E_FAIL;
 
+	vTriggerPos = { -236.f, 0.f, 27.f };
+	vTriggerHalfSize = { 3.f, 3.f, 3.f };
+	pGameObject = CTriggerPoint::Create(m_pGraphicDev, m_pMessageChannel, vTriggerPos, vTriggerHalfSize, Trigger::TI_SCENE, L"Village", true);
+
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+
+	if (FAILED(pLayer->Add_GameObject(L"TriggerPoint", pGameObject)))
+		return E_FAIL;
+
 	m_mapLayer.insert({ pLayerTag , pLayer });
 
 	return S_OK;
@@ -484,6 +489,28 @@ HRESULT CDungeon::Ready_UI_Layer(const _tchar* pLayerTag)
 		return E_FAIL;
 
 	CGameObject* pGameObject = nullptr;
+
+	//////////////////////////////////////////////////////
+	//플레이어 UI
+	pGameObject = CPersistentMgr::GetInstance()->Get_PlayerHPUI();
+
+	if (nullptr == pGameObject)
+		return E_FAIL;
+
+	if (FAILED(pLayer->Add_GameObject(L"PlayerHP", pGameObject)))
+		return E_FAIL;
+	pGameObject->AddRef();
+
+	pGameObject = CPersistentMgr::GetInstance()->Get_Gauge();
+
+	if (nullptr == pGameObject)
+		return E_FAIL;
+
+	if (FAILED(pLayer->Add_GameObject(L"Gauge", pGameObject)))
+		return E_FAIL;
+	pGameObject->AddRef();
+	//플레이어 UI
+	////////////////////////////////////////////////////////
 
 	pGameObject = CDungeonBack::Create(m_pGraphicDev, m_pMessageChannel);
 
@@ -533,36 +560,12 @@ HRESULT CDungeon::Ready_UI_Layer(const _tchar* pLayerTag)
 	if (FAILED(pLayer->Add_GameObject(L"SelectLine", pGameObject)))
 		return E_FAIL;
 
-	pGameObject = CPlayerHP::Create(m_pGraphicDev, m_pMessageChannel);
-
-	if (nullptr == pGameObject)
-		return E_FAIL;
-
-	if (FAILED(pLayer->Add_GameObject(L"PlayerHP", pGameObject)))
-		return E_FAIL;
-
-	pGameObject = m_pGauge = CGauge::Create(m_pGraphicDev, Gauge::GS_PASSION);
-
-	if (nullptr == pGameObject)
-		return E_FAIL;
-
-	if (FAILED(pLayer->Add_GameObject(L"Gauge", pGameObject)))
-		return E_FAIL;
-
 	pGameObject = CCookingUIController::Create(m_pGraphicDev);
 
 	if (nullptr == pGameObject)
 		return E_FAIL;
 
 	if (FAILED(pLayer->Add_GameObject(L"CookingUIController", pGameObject)))
-		return E_FAIL;
-
-	pGameObject = CBossHpBar::Create(m_pGraphicDev,100.0f);
-
-	if (nullptr == pGameObject)
-		return E_FAIL;
-
-	if (FAILED(pLayer->Add_GameObject(L"BossHpBar", pGameObject)))
 		return E_FAIL;
 
 	pGameObject = CFade::Create(m_pGraphicDev, m_pMessageChannel);
@@ -634,13 +637,29 @@ void CDungeon::Ready_Event()
 
 					pGameObject = CRatau::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ -231.f, 0.f, 4.f });
 
-					NULL_CHECK_RETURN(pGameObject);
+					if (pGameObject == nullptr) { return; }
 
 					auto iter = m_mapLayer.find(L"GameLogic_Layer");
 					if (iter == m_mapLayer.end()) { return; }
 
 					iter->second->Add_GameObject(L"NPC", pGameObject);
 					return;
+				}
+			}
+		}
+	) });
+
+	m_hmapSubHandles.insert({ L"Trigger.Activate", m_pMessageChannel->Subscribe(L"Trigger.Activate", [this](const IMessageChannel::EVENT& Event)
+		{
+			auto TIDiter = Event.hmapData.find(L"Trigger_TID");
+			if (TIDiter == Event.hmapData.end()) { return; }
+			auto TriggetNameiter = Event.hmapData.find(L"Trigger_Name");
+			if (TriggetNameiter == Event.hmapData.end()) { return; }
+			if (any_cast<Trigger::TRIGGERID>(TIDiter->second) == Trigger::TI_SCENE)
+			{
+				if (any_cast<wstring>(TriggetNameiter->second) == L"Village")
+				{
+					m_bSceneChangeFlag = true;
 				}
 			}
 		}
@@ -663,7 +682,9 @@ CDungeon* CDungeon::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 
 void CDungeon::Free()
 {
-	CScene::Free();
 	CCollisionMgr::GetInstance()->Reset_For_SceneChange();
+	CTileMgr::GetInstance()->Reset_For_SceneChange();
+	CSoundMgr::GetInstance()->StopAll();
 	CLightMgr::GetInstance()->DestroyInstance();
+	CScene::Free();
 }

@@ -22,8 +22,13 @@ private:
 	HRESULT			Ready_Light();
 	void			Ready_Event();
 
+	void			Ready_Event_Village();
+
 public:
 	static CVillage* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 private:
 	virtual void Free();
+
+private:
+	_bool	m_bLeshyDungeonFlag = false;
 };

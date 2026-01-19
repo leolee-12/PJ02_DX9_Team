@@ -1,12 +1,12 @@
 ﻿#pragma once
 #include "CGameObject.h"
 
-class CFontUIOrtho : public CGameObject
+class CFontAlpha : public CGameObject
 {
 private:
-	explicit CFontUIOrtho(LPDIRECT3DDEVICE9 pGraphicDev);
-	explicit CFontUIOrtho(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMessageChannel);
-	virtual ~CFontUIOrtho();
+	explicit CFontAlpha(LPDIRECT3DDEVICE9 pGraphicDev);
+	explicit CFontAlpha(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMessageChannel);
+	virtual ~CFontAlpha();
 
 public:
 	virtual			HRESULT		Ready_GameObject();
@@ -19,10 +19,6 @@ public:
 	void			Set_Font(const wstring& strFont) { m_strFont = strFont; }
 	void			Set_Text(const wstring& strText) { m_strText = strText; }
 	void			Set_FontColor(const D3DXCOLOR& tColor) { m_tFontColor = tColor; }
-	void			Set_Flags(DWORD dwFlags) { m_dwFlags = dwFlags; }
-
-	void			Set_Pos(const _vec2& vPos) { m_vPos = vPos; }
-	void			Set_Scale(const _vec2& vScale) { m_vScale = vScale; }
 
 	void			Active()
 	{
@@ -31,32 +27,29 @@ public:
 	void			UnActive()
 	{
 		m_bActive = false;
+		m_bRevers = false;
 	}
 
 
 public:
 
-	static		CFontUIOrtho* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMessageChannel);
-	static		CFontUIOrtho* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	static		CFontAlpha* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMessageChannel);
 
 
 private:
 	void					Ready_Event();
+	void					Update_Alpha();
 	virtual		void		Free();
 
 private:
 	_bool	m_bActive;
 
-	RECT	m_tRenderRect;
-
-	wstring m_strFont = L"Font_Default24";
+	wstring m_strFont;
 	wstring m_strText;
 
-	D3DXCOLOR m_tFontColor;
-	DWORD	m_dwFlags;
+	D3DXCOLOR m_tFontColor = { 1.f, 1.f, 1.f, 0.f };
 
-	_vec2  m_vPos;
-	_vec2  m_vScale;
+	_bool  m_bRevers = false;
 };
 
 

@@ -70,7 +70,7 @@ void CNode::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	m_pTransformCom->Compute_Bilboard(BBD_X);
 	m_pTransformCom->Get_Info(INFO_POS, &m_vPos);
-	//Compute_ViewDepth(&m_vPos);
+	Compute_ViewDepth(&m_vPos);
 
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
 }

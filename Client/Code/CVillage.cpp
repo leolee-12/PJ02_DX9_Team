@@ -32,6 +32,8 @@
 #include "CCutSceneMgr.h"
 #include "CTriggerPoint.h"
 #include "CFade.h"
+#include "CLoading.h"
+#include "CManagement.h"
 
 CVillage::CVillage(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -58,6 +60,8 @@ HRESULT CVillage::Ready_Scene()
 		return E_FAIL;
 
 	Ready_Light();
+
+	Ready_Event_Village();
 
 	Ready_Event();
 
@@ -91,6 +95,25 @@ _int CVillage::Update_Scene(const _float& fTimeDelta)
 	}
 
 	_int iExit = Engine::CScene::Update_Scene(fTimeDelta);
+
+	if (m_bLeshyDungeonFlag)
+	{
+		Engine::CScene* pLoading = CLoading::Create(m_pGraphicDev, LOADING_REALDUNGEON);
+
+		if (nullptr == pLoading)
+			return NOEVENT;
+
+		CCollisionMgr::GetInstance()->Reset_For_SceneChange();
+		CTileMgr::GetInstance()->Reset_For_SceneChange();
+		CSoundMgr::GetInstance()->StopAll();
+		CLightMgr::GetInstance()->DestroyInstance();
+
+		if (FAILED(CManagement::GetInstance()->Set_Scene(pLoading)))
+		{
+			MSG_BOX("Stage Scene Failed");
+			return NOEVENT;
+		}
+	}
 
 	return iExit;
 }
@@ -388,6 +411,15 @@ HRESULT CVillage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	if (FAILED(pLayer->Add_GameObject(L"TriggerPoint", pGameObject)))
 		return E_FAIL;
 
+	vTriggerPos = { -18.8F, 0.f, 41.8f };
+	vTriggerHalfSize = { 5.f, 5.f, 5.f };
+	pGameObject = CTriggerPoint::Create(m_pGraphicDev, m_pMessageChannel, vTriggerPos, vTriggerHalfSize, Trigger::TI_SCENE, L"Real_Dungeon", true);
+
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+
+	if (FAILED(pLayer->Add_GameObject(L"TriggerPoint", pGameObject)))
+		return E_FAIL;
+
 	m_mapLayer.insert({ pLayerTag , pLayer });
 
 	return S_OK;
@@ -452,6 +484,25 @@ void	CVillage::Ready_Event()
 }) });
 }
 
+void CVillage::Ready_Event_Village()
+{
+	m_hmapSubHandles.insert({ L"Trigger.Activate", m_pMessageChannel->Subscribe(L"Trigger.Activate", [this](const IMessageChannel::EVENT& Event)
+		{
+			auto TIDiter = Event.hmapData.find(L"Trigger_TID");
+			if (TIDiter == Event.hmapData.end()) { return; }
+			auto TriggetNameiter = Event.hmapData.find(L"Trigger_Name");
+			if (TriggetNameiter == Event.hmapData.end()) { return; }
+			if (any_cast<Trigger::TRIGGERID>(TIDiter->second) == Trigger::TI_SCENE)
+			{
+				if (any_cast<wstring>(TriggetNameiter->second) == L"Real_Dungeon")
+				{
+					m_bLeshyDungeonFlag = true;
+				}
+			}
+		}
+	) });
+}
+
 CVillage* CVillage::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 {
 	CVillage* pTest = new CVillage(pGraphicDev);
@@ -468,7 +519,9 @@ CVillage* CVillage::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 
 void CVillage::Free()
 {
-	CScene::Free();
 	CCollisionMgr::GetInstance()->Reset_For_SceneChange();
+	CTileMgr::GetInstance()->Reset_For_SceneChange();
+	CSoundMgr::GetInstance()->StopAll();
 	CLightMgr::GetInstance()->DestroyInstance();
+	CScene::Free();
 }

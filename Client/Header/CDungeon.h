@@ -7,10 +7,6 @@
 #include "CTerrain.h"
 #include "CTerrainWall.h"
 
-class CGauge;
-class CCookingMiniGameUI;
-class CCookingSelectUI;
-
 class CDungeon : public CScene
 {
 private:
@@ -38,7 +34,7 @@ private:
 	virtual void Free();
 
 private:
-	CGauge*		 m_pGauge;
+	_bool	m_bSceneChangeFlag = false;
 
 };
 

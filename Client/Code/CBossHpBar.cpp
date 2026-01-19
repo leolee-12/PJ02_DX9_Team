@@ -9,11 +9,11 @@
 
 #include "CDInputMgr.h"
 #include "CFontMgr.h"
+#include "CFontUIOrtho.h"
 
 
 CBossHpBar::CBossHpBar(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CUi(pGraphicDev)
-	, m_bRender(true)
 {
 	ZeroMemory(&m_vPos, sizeof(_vec3));
 }
@@ -26,52 +26,46 @@ HRESULT CBossHpBar::Ready_GameObject()
 {
 	CGameObject* pGameObject = nullptr;
 
-	pGameObject = m_pBossHpBarFront = CBossHpBarFront::Create(m_pGraphicDev, _vec3(0.0f, _float(- WINCY / 2) + 50, 0.001f), 3.0f);
+	pGameObject = m_pBossHpBarFront = CBossHpBarFront::Create(m_pGraphicDev, _vec3(0.0f, _float(- WINCY / 2) + 50, 0.01f));
 	if (nullptr == pGameObject)
 		return E_FAIL;
 
 	m_vecHpBarUI.push_back(pGameObject);
 
-
-	/*pGameObject = m_pBossHpBarMiddle = CBossHpBarMiddle::Create(m_pGraphicDev, { 0.0f,-WINCY / 2.0f + 50.0f,0.01f }, 3.0f);
-
-	if (nullptr == pGameObject)
-		return E_FAIL;
-
-	m_vecHpBarUI.push_back(pGameObject);*/
-
-	pGameObject = CBossHpBarBackground::Create(m_pGraphicDev, _vec3(0.0f, _float(- WINCY / 2) + 50.0f, 0.1f), 3.0f);
+	pGameObject = CBossHpBarBackground::Create(m_pGraphicDev, _vec3(0.0f, _float(- WINCY / 2) + 50.0f, 0.1f));
 
 	if (nullptr == pGameObject)
 		return E_FAIL;
 
 	m_vecHpBarUI.push_back(pGameObject);
+
+	pGameObject = m_pFont = CFontUIOrtho::Create(m_pGraphicDev);
+
+	if (nullptr == pGameObject)
+		return E_FAIL;
+
+	m_pFont->Set_Text(m_strOwnerName);
+	m_pFont->Set_Flags(DT_CENTER | DT_VCENTER);
+	m_pFont->Set_FontColor(D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
+	//m_pFont->Set_Font();
+	m_pFont->Set_Pos(_vec2(0.0f, _float(-WINCY / 2) + 50.0f));
+	m_pFont->Set_Scale(_vec2(59.f * 8.f, 7.f * 3.f));
+
 
 	m_fCurHp = m_fMaxHp;
 	m_fPrevHp = m_fMaxHp;
 	m_fLefpPrevHp = m_fMaxHp;
 	m_fLerpTime = 0.0f;
 	m_pBossHpBarFront->InitHp(m_fMaxHp, m_fCurHp);
-	//m_pBossHpBarMiddle->InitHp(m_fMaxHp, m_fCurHp);
+
+
+	//Active();
 	return S_OK;
 }
 
 _int CBossHpBar::Update_GameObject(const _float& fTimeDelta)
 {
-	if (!m_bRender) { return NOEVENT; }
-	if (CDInputMgr::GetInstance()->Key_Down(DIK_X))
-	{
-		ApplyDamage(-5);
-	}
-	if (CDInputMgr::GetInstance()->Key_Down(DIK_C))
-	{
-		ApplyDamage(5);
-	}
-
-	if (m_fCurHp <= 0)
-	{
-		Set_Render(false);
-	}
+	if (!m_bActive) { return NOEVENT; }
 
 	if (m_fLerpTime > 0.0f)
 	{
@@ -97,32 +91,29 @@ _int CBossHpBar::Update_GameObject(const _float& fTimeDelta)
 		m_fPrevHp = m_fCurHp;
 	}
 
-	for (CGameObject* CookingUI : m_vecHpBarUI)
+	for (CGameObject*& HpBarUI : m_vecHpBarUI)
 	{
-		CookingUI->Update_GameObject(fTimeDelta);
+		HpBarUI->Update_GameObject(fTimeDelta);
 	}
 
-	CRenderer::GetInstance()->Add_RenderGroup(RENDER_UI, this);
-
-
+	m_pFont->Update_GameObject(fTimeDelta);
 
 	return NOEVENT;
 }
 
 void CBossHpBar::LateUpdate_GameObject(const _float& fTimeDelta)
 {
-	if (!m_bRender) { return; }
-	for (CGameObject* CookingUI : m_vecHpBarUI)
+	if (!m_bActive) { return; }
+	for (CGameObject*& HpBarUI : m_vecHpBarUI)
 	{
-		CookingUI->LateUpdate_GameObject(fTimeDelta);
+		HpBarUI->LateUpdate_GameObject(fTimeDelta);
 	}
+
+	m_pFont->LateUpdate_GameObject(fTimeDelta);
 }
 
 void CBossHpBar::Render_GameObject()
 {
-
-	if (!m_bRender) { return; }
-
 }
 
 void CBossHpBar::OnCollision(CGameObject* pObject)
@@ -130,10 +121,23 @@ void CBossHpBar::OnCollision(CGameObject* pObject)
 
 }
 
-CBossHpBar* CBossHpBar::Create(LPDIRECT3DDEVICE9 pGraphicDev, _float _MaxHp)
+void		CBossHpBar::Active()
+{
+	m_bActive = true;
+	m_pFont->Active();
+}
+
+void		CBossHpBar::UnActive()
+{
+	m_bActive = false;
+	m_pFont->UnActive();
+}
+
+CBossHpBar* CBossHpBar::Create(LPDIRECT3DDEVICE9 pGraphicDev, _float _MaxHp, const wstring& strOwnerName)
 {
 	CBossHpBar* pCBossHpBar = new CBossHpBar(pGraphicDev);
 	pCBossHpBar->m_fMaxHp = _MaxHp;
+	pCBossHpBar->m_strOwnerName = strOwnerName;
 
 	if (FAILED(pCBossHpBar->Ready_GameObject()))
 	{
@@ -157,11 +161,13 @@ void CBossHpBar::ApplyDamage(_float _fDamage)
 
 void CBossHpBar::Free()
 {
-	for (CGameObject* CookingUI : m_vecHpBarUI)
+	for (CGameObject*& HpBarUI : m_vecHpBarUI)
 	{
-		Safe_Release(CookingUI);
+		Safe_Release(HpBarUI);
 	}
 	m_vecHpBarUI.clear();
+
+	Safe_Release(m_pFont);
 
 	CUi::Free();
 }

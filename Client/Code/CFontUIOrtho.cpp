@@ -57,7 +57,7 @@ void CFontUIOrtho::LateUpdate_GameObject(const _float& fTimeDelta)
 
 void CFontUIOrtho::Render_GameObject()
 {
-	CFontMgr::GetInstance()->Render_Font(L"Font_Default24", m_strText.c_str(), m_tRenderRect, m_tFontColor, m_dwFlags);
+	CFontMgr::GetInstance()->Render_Font(m_strFont.c_str() , m_strText.c_str(), m_tRenderRect, m_tFontColor, m_dwFlags);
 }
 
 void CFontUIOrtho::OnCollision(CGameObject* pObject)
@@ -67,6 +67,20 @@ void CFontUIOrtho::OnCollision(CGameObject* pObject)
 CFontUIOrtho* CFontUIOrtho::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMessageChannel)
 {
 	CFontUIOrtho* pFontUI = new CFontUIOrtho(pGraphicDev, pMessageChannel);
+
+	if (FAILED(pFontUI->Ready_GameObject()))
+	{
+		Safe_Release(pFontUI);
+		MSG_BOX("pFontUI Create Failed");
+		return nullptr;
+	}
+
+	return pFontUI;
+}
+
+CFontUIOrtho* CFontUIOrtho::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+{
+	CFontUIOrtho* pFontUI = new CFontUIOrtho(pGraphicDev);
 
 	if (FAILED(pFontUI->Ready_GameObject()))
 	{

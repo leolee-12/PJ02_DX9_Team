@@ -36,6 +36,8 @@ public:
 	void                        Set_PassionMax(_float fPassionMax) { m_fMaxPassionGaugeValue = fPassionMax; }
 	void                        Set_FaithMax(_float fFaithMax) { m_fMaxFaithGaugeValue = fFaithMax; }
 
+	void						Set_FontRender(_bool bBool);
+
 public:
 	static CGauge* Create(LPDIRECT3DDEVICE9 pGraphicDev, Gauge::GAUGESTATE eState);
 
@@ -56,7 +58,7 @@ private:
 	CGaugeStar*			 m_pGaugeStar;
 
 	_float               m_fGaugeValue;
-	_bool                m_bPontRender;
+	_bool                m_bFontRender;
 
 	_float				 m_fMaxPassionGaugeValue;
 	_float				 m_fMaxFaithGaugeValue;

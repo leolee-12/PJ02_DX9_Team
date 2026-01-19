@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 namespace Trigger
 {
@@ -8,6 +8,7 @@ namespace Trigger
 		TI_COOKING,
 		TI_CRAFTING,
 		TI_BUILDING,
+		TI_SCENE,
 		TI_END
 	};
 }

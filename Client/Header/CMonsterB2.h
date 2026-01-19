@@ -12,6 +12,7 @@ namespace Engine
 class CNode;
 class CB2_AI;
 class CProjectile;
+class CBossHpBar;
 
 class CMonsterB2 : public CMonster
 {
@@ -87,6 +88,11 @@ private:
 	_uint			m_iMaxHp;
 	_bool			m_bMtrl = false;
 	_float			m_fAcmlTime;
+
+	// 연출관련
+	_bool			m_bWait = true;
+	// UI
+	CBossHpBar* m_pHpBar = nullptr;
 
 public:
 	static CMonsterB2* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel);
