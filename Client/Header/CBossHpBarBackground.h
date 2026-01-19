@@ -23,7 +23,7 @@ public:
 	virtual			void		OnCollision(CGameObject* pObject);
 
 public:
-	static CBossHpBarBackground* Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 _vPos, float _fScale);
+	static CBossHpBarBackground* Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 _vPos);
 
 private:
 	virtual			void		Free();
@@ -36,6 +36,5 @@ private:
 	CTexture* m_pTextureCom;
 
 	_vec3 m_vPos;
-	float m_fScale;
 };
 

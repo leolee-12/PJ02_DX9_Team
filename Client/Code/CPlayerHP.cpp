@@ -29,9 +29,6 @@ HRESULT CPlayerHP::Ready_GameObject()
 	m_pTransformCom->Set_Scale((98.f * 0.25f) , (94.f * 0.25f), 1.f);
 	m_pTransformCom->Set_Pos(-450.f, 280.f, 0.8f);
 
-	m_iPlayerHp = 7;
-	m_iPlayerMaxHp = 8;
-
 	return S_OK;
 }
 
@@ -133,9 +130,9 @@ HRESULT CPlayerHP::Add_Component()
 
 
 
-CPlayerHP* CPlayerHP::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pChannel)
+CPlayerHP* CPlayerHP::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 {
-	CPlayerHP* pLodingBack = new CPlayerHP(pGraphicDev, pChannel);
+	CPlayerHP* pLodingBack = new CPlayerHP(pGraphicDev);
 
 	if (FAILED(pLodingBack->Ready_GameObject()))
 	{

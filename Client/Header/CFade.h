@@ -23,8 +23,8 @@ public:
 	virtual			void		OnCollision(CGameObject* pObject);
 
 public:
-	void						Active() { m_bActive = true; }
-	void						UnActive() { m_bActive = false; }
+	void						Active();
+	void						UnActive();
 	void						Set_FadeIn()
 								{
 									m_bFadeIn = true;

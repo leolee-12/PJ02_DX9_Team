@@ -161,7 +161,7 @@ void CPlayer::Ready_Variable()
 	m_bIntro = false;
 	m_fSpeed = DEFAULT_SPEED;
 	m_iAttack = 1;
-	m_iHp = 10;
+	m_iHp = 8;
 	m_fAcmlTime = 0.f;
 
 	m_eOBJID = OID_PLAYER;
@@ -411,9 +411,10 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 		m_pTriggerPoint->Activate();
 	}
 
-	if (GetAsyncKeyState('P'))
+	if (CDInputMgr::GetInstance()->Key_Down(DIK_P))
 	{
 		Attacked(1);
+		//m_iHp -= 1;
 	}
 
 	// 인트로 상태에서는 사용 불가

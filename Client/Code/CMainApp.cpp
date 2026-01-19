@@ -40,15 +40,17 @@ HRESULT CMainApp::Ready_MainApp()
 
 	CCollisionMgr::GetInstance()->Ready_CollisionMgr();
 	CSoundMgr::GetInstance()->Ready_SoundMgr();
+	CPersistentMgr::GetInstance()->Ready_GlobalObjects(m_pGraphicDev);
 
 	return S_OK;
 }
 
 int CMainApp::Update_MainApp(const float& fTimeDelta)
 {
-	m_pManagementClass->Update_Scene(fTimeDelta);
-	CCutSceneMgr::GetInstance()->Update_CutScene(fTimeDelta);
 	CDInputMgr::GetInstance()->Update_InputDev();
+	CCutSceneMgr::GetInstance()->Update_CutScene(fTimeDelta);
+	CPersistentMgr::GetInstance()->Update_PersistnetMgr(fTimeDelta);
+	m_pManagementClass->Update_Scene(fTimeDelta);
 
 	// 타일 매니저 업데이트
 	CTileMgr::GetInstance()->Update(fTimeDelta);
@@ -58,8 +60,8 @@ int CMainApp::Update_MainApp(const float& fTimeDelta)
 
 void CMainApp::LateUpdate_MainApp(const float& fTimeDelta)
 {
-	m_pManagementClass->LateUpdate_Scene(fTimeDelta);
 	CCutSceneMgr::GetInstance()->LateUpdate_CutScene(fTimeDelta);
+	m_pManagementClass->LateUpdate_Scene(fTimeDelta);
 
 	// 타일 매니저 레이트 업데이트
 	CTileMgr::GetInstance()->LateUpdate(fTimeDelta);
@@ -135,6 +137,12 @@ HRESULT CMainApp::Ready_Font()
 		return E_FAIL;
 
 	if (FAILED(CFontMgr::GetInstance()->Ready_Font(m_pGraphicDev, L"Font_Default30_Heavy", L"Malgun Gothic", 0, 30, FW_HEAVY, HANGEUL_CHARSET)))
+		return E_FAIL;
+
+	if (FAILED(CFontMgr::GetInstance()->Ready_Font(m_pGraphicDev, L"Font_Default40", L"Malgun Gothic", 0, 40, FW_HEAVY, HANGEUL_CHARSET)))
+		return E_FAIL;
+
+	if (FAILED(CFontMgr::GetInstance()->Ready_Font(m_pGraphicDev, L"Font_Default80", L"Malgun Gothic", 0, 80, FW_HEAVY, HANGEUL_CHARSET)))
 		return E_FAIL;
 
 

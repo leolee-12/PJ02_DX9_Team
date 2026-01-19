@@ -11,6 +11,7 @@ namespace Engine
 
 class CCookingTargetFood;
 class CCookingSelectButton;
+class CCookingSelectSlot;
 
 class CCookingSelectUI :
 	public CUi
@@ -40,12 +41,14 @@ private:
 	virtual void Free();
 
 private:
-	vector<CGameObject*> m_vecCookingSelectUI;
-	vector<CGameObject*> m_vecFoodSlot;
-	vector<CCookingTargetFood*> m_vecFood;
+	vector<CGameObject*>		m_vecCookingSelectUI;
 
-	CCookingTargetFood* m_pCookingtargetFood;
-	CCookingSelectButton* m_pCookingBtn;
+
+	vector<CCookingSelectSlot*>		m_vecFoodSlot;
+	vector<CCookingTargetFood*>		m_vecFood;
+
+	CCookingTargetFood*		m_pCookingtargetFood;
+	CCookingSelectButton*	m_pCookingBtn;
 	_bool  m_bRender;
 
 	_int   m_iCurCookingCount;

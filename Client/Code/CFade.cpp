@@ -2,6 +2,7 @@
 #include "CFade.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
+#include "CPersistentMgr.h"
 
 
 CFade::CFade(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -105,17 +106,23 @@ HRESULT CFade::Add_Component()
 
 void CFade::Update_Alpha()
 {
-	if (m_bFadeIn)
-	{
-		if (m_fAlpha > 0.f)
+	if (m_bActive) {
+		if (m_bFadeIn)
 		{
-			m_fAlpha -= m_fFadeSpeed;
+			if (m_fAlpha > 0.f)
+			{
+				m_fAlpha -= m_fFadeSpeed;
+			}
+			else
+			{
+				UnActive();
+			}
 		}
-	}
-	else {
-		if (m_fAlpha < 1.f)
-		{
-			m_fAlpha += m_fFadeSpeed;
+		else {
+			if (m_fAlpha < 1.f)
+			{
+				m_fAlpha += m_fFadeSpeed;
+			}
 		}
 	}
 
@@ -204,6 +211,20 @@ void	CFade::Ready_Event()
 		}
 	}) });
 
+}
+
+void	CFade::Active()
+{
+	m_bActive = true;
+	CRenderer::GetInstance()->Set_UnRenderFont();
+	CPersistentMgr::GetInstance()->Set_GaugeFontRender(false);
+}
+
+void	CFade::UnActive()
+{
+	m_bActive = false;
+	CRenderer::GetInstance()->Set_RenderFont();
+	CPersistentMgr::GetInstance()->Set_GaugeFontRender(true);
 }
 
 

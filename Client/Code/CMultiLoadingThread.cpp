@@ -220,6 +220,12 @@ void CMultiLoadingThread::Loading_for_Tutorial()
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_BruteTexture", TEX_NORMAL, L"../Bin/Resource/LWY//NPC/Brute/dds/Brute_%d.dds", 5));
 	m_iTotalProtoCount++;
 
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_BishopLeshyEnter", TEX_NORMAL, L"../Bin/Resource/YSH/Leshy/Leshy-Enter/dds/Leshy-Enter-%d.dds", 134));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_BishopLeshyTransform", TEX_NORMAL, L"../Bin/Resource/YSH/Leshy/Leshy-Transform/dds/Leshy-Transform-%d.dds", 376));
+	m_iTotalProtoCount++;
+
     // ===== TextureSet 큐 등록 (멀티스레드 로딩) =====
     vector<TEXSETLR> vecBishopLeshy;
     vecBishopLeshy.push_back(TEXSETLR(L"Bishop_Leshy_Idle", L"../Bin/Resource/Texture/Bishops/Leshy/Leshy-idle/dds/Leshy_idle-%d.dds", 250));
@@ -275,9 +281,6 @@ void CMultiLoadingThread::Loading_for_Dungeon()
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_SkyTexture", TEX_CUBE, L"../Bin/Resource/Texture/SkyBox/burger%d.dds", 4));
 	m_iTotalProtoCount++;
 
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_PlayerHP", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Player/dds/Health_%d.dds", 3));
-	m_iTotalProtoCount++;
-
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_MonsterN1Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal1/dds/MonsterN1_%02d.dds", 7));
 	m_iTotalProtoCount++;
 
@@ -287,43 +290,7 @@ void CMultiLoadingThread::Loading_for_Dungeon()
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_MonsterN3Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal3/dds/MonsterN3_%02d.dds", 3));
 	m_iTotalProtoCount++;
 
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_MonsterB1Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Boss1/dds/MonsterB1_%02d.dds", 10));
-	m_iTotalProtoCount++;
-
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_N2Node1Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal2/dds/N2Node_00.dds", 1));
-	m_iTotalProtoCount++;
-
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_N2Node2Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal2/dds/N2Node_01.dds", 1));
-	m_iTotalProtoCount++;
-
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_N2Node3Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal2/dds/N2Node_02.dds", 1));
-	m_iTotalProtoCount++;
-
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_B1Node1Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Boss1/dds/B1Node_00.dds", 1));
-	m_iTotalProtoCount++;
-
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_B1Node2Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Boss1/dds/B1Node_01.dds", 1));
-	m_iTotalProtoCount++;
-
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_B1Node3Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Boss1/dds/B1Node_02.dds", 1));
-	m_iTotalProtoCount++;
-
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_B1Node4Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Boss1/dds/B1Node_03.dds", 1));
-	m_iTotalProtoCount++;
-
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_ProjectileTexture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/dds/Projectile.dds", 1));
-	m_iTotalProtoCount++;
-
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_GaugeCover", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Player/PassionGauge/dds/GaugeCover.dds", 1));
-	m_iTotalProtoCount++;
-
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_GaugeStar", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Player/PassionGauge/dds/GaugeStar.dds", 1));
-	m_iTotalProtoCount++;
-
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_PassionGauge", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Player/PassionGauge/dds/PassionGauge.dds", 1));
-	m_iTotalProtoCount++;
-
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_PassionIcon", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Player/PassionGauge/dds/PassionIcon_%d.dds", 2));
 	m_iTotalProtoCount++;
 
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingBarkCover", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingMiniGame/dds/CookingBar_Border.dds", 1));
@@ -371,10 +338,7 @@ void CMultiLoadingThread::Loading_for_Dungeon()
 	m_iTotalProtoCount++;
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_BossHpBarBackground", TEX_NORMAL, L"../Bin/Resource/YSD/BossHpBar/BossHpBarBackgorund.png", 1));
 	m_iTotalProtoCount++;*/
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_BossHpBarCover", TEX_NORMAL, L"../Bin/Resource/YSH/UI/BossHpBarCover.png", 1));
-	m_iTotalProtoCount++;
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_BossHpBar", TEX_NORMAL, L"../Bin/Resource/YSH/UI/BossHpBarRed.png", 1));
-	m_iTotalProtoCount++;
+	
 
 	// 덴저러스 수동 PNG존 지뢰밟지않게 조심할것
 
@@ -498,6 +462,85 @@ void CMultiLoadingThread::Loading_for_RealDungeon()
 
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_MonsterN1Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal1/dds/MonsterN1_%02d.dds", 7));
 	m_iTotalProtoCount++;
+
+	vector<TEXSETLR> vecBossLeshy;
+	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Idle", L"../Bin/Resource/Texture/Monster/Boss2/idle/dds/idle_%04d.dds", 80));
+	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Dig", L"../Bin/Resource/Texture/Monster/Boss2/move-out/dds/move-out_%04d.dds", 40));
+	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Escape", L"../Bin/Resource/Texture/Monster/Boss2/move-in/dds/move-in_%04d.dds", 40));
+	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Hit", L"../Bin/Resource/Texture/Monster/Boss2/hurt/dds/hurt_%04d.dds", 16));
+	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Smash", L"../Bin/Resource/Texture/Monster/Boss2/head-smash/dds/head-smash_%04d.dds", 62));
+	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Spike", L"../Bin/Resource/Texture/Monster/Boss2/trunk-strike/dds/trunk-strike_%04d.dds", 51));
+	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Summon", L"../Bin/Resource/Texture/Monster/Boss2/summon/dds/summon_%04d.dds", 71));
+	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Spawn", L"../Bin/Resource/Texture/Monster/Boss2/transform/dds/transform_%04d.dds", 128));
+	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Die", L"../Bin/Resource/Texture/Monster/Boss2/die-noheart/dds/die-noheart_%04d.dds", 132));
+	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Dead", L"../Bin/Resource/Texture/Monster/Boss2/dead-noheart/dds/dead-noheart_%04d.dds", 1));
+	m_TexSetLoadingqueue.push(make_pair(TEXSETINFO(L"Proto_MonsterB2Texture", TEX_NORMAL), vecBossLeshy));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_SpikeTexture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Spike/dds/Spike%d.dds", 4));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_ProjectileTexture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/dds/Projectile.dds", 1));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_B1Node1Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Boss1/dds/B1Node_00.dds", 1));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_B1Node2Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Boss1/dds/B1Node_01.dds", 1));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_B1Node3Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Boss1/dds/B1Node_02.dds", 1));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_B1Node4Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Boss1/dds/B1Node_03.dds", 1));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_MonsterB1Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Boss1/dds/MonsterB1_%02d.dds", 10));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_MonsterN1Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal1/dds/MonsterN1_%02d.dds", 7));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_MonsterN2Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal2/dds/MonsterN2_%02d.dds", 3));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_MonsterN3Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal3/dds/MonsterN3_%02d.dds", 3));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_N2Node1Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal2/dds/N2Node_00.dds", 1));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_N2Node2Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal2/dds/N2Node_01.dds", 1));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_N2Node3Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal2/dds/N2Node_02.dds", 1));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_BossHpBarCover", TEX_NORMAL, L"../Bin/Resource/YSH/UI/BossHpBarCover.png", 1));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_BossHpBar", TEX_NORMAL, L"../Bin/Resource/YSH/UI/BossHpBarRed.png", 1));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_BishopLeshyEnter", TEX_NORMAL, L"../Bin/Resource/YSH/Leshy/Leshy-Enter/dds/Leshy-Enter-%d.dds", 134));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_BishopLeshyTransform", TEX_NORMAL, L"../Bin/Resource/YSH/Leshy/Leshy-Transform/dds/Leshy-Transform-%d.dds", 376));
+	m_iTotalProtoCount++;
+
+	// 디버그용 그긴거
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_Fade", TEX_NORMAL, L"../Bin/Resource/YSH/Etc/Fade.png", 1));
+	m_iTotalProtoCount++;
+
+	vector<TEXSETLR> vecBishopLeshy;
+	vecBishopLeshy.push_back(TEXSETLR(L"Bishop_Leshy_Idle", L"../Bin/Resource/Texture/Bishops/Leshy/Leshy-idle/dds/Leshy_idle-%d.dds", 250));
+	vecBishopLeshy.push_back(TEXSETLR(L"Bishop_Leshy_Talk", L"../Bin/Resource/Texture/Bishops/Leshy/Leshy-talk/dds/Leshy-talk%d.dds", 83));
+	m_TexSetLoadingqueue.push(make_pair(TEXSETINFO(L"Proto_BishopLeshy", TEX_NORMAL), vecBishopLeshy));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_SpeechBubble", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Etc/dds/SpeechBubble.dds", 1));
+	m_iTotalProtoCount++;
+	// 디버그용 그긴거
 
 }
 

@@ -281,7 +281,7 @@ HRESULT CStage::Ready_UI_Layer(const _tchar* pLayerTag)
 	if (FAILED(pLayer->Add_GameObject(L"SelectLine", pGameObject)))
 		return E_FAIL;
 
-	pGameObject = CPlayerHP::Create(m_pGraphicDev, m_pMessageChannel);
+	pGameObject = CPlayerHP::Create(m_pGraphicDev);
 
 	if (nullptr == pGameObject)
 		return E_FAIL;

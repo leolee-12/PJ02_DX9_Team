@@ -43,9 +43,6 @@
     <Filter Include="01. Scene\02. KnuckleBone">
       <UniqueIdentifier>{fbdfd1c6-2a58-45e4-970b-5fac37bacfcb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. Scene\99. Loading\LoadingThread\New">
-      <UniqueIdentifier>{4cb57919-a0a7-4051-bd12-d92354f2419c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01. Scene\01. Maps\10. LeshyRoom">
       <UniqueIdentifier>{e54dbddb-b0a1-4fba-982a-2b27c388eb32}</UniqueIdentifier>
     </Filter>
@@ -483,9 +480,6 @@
     <ClInclude Include="..\Header\CEditScene.h">
       <Filter>01. Scene\01. Maps\97. EditScene</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\CLoadingThread.h">
-      <Filter>01. Scene\99. Loading\LoadingThread</Filter>
-    </ClInclude>
     <ClInclude Include="..\Header\CLoading.h">
       <Filter>01. Scene\99. Loading</Filter>
     </ClInclude>
@@ -644,9 +638,6 @@
     </ClInclude>
     <ClInclude Include="..\Header\Bishops_Enum.h">
       <Filter>02. GameObject\01. GameActor\02. Bishops</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Header\CMultiLoadingThread.h">
-      <Filter>01. Scene\99. Loading\LoadingThread\New</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CVillage.h">
       <Filter>01. Scene\01. Maps\07. Village</Filter>
@@ -888,6 +879,12 @@
     <ClInclude Include="..\Header\IInteractable.h">
       <Filter>03. Manager\03. InteractMgr</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CMultiLoadingThread.h">
+      <Filter>01. Scene\99. Loading\LoadingThread</Filter>
+    </ClInclude>
+    <ClInclude Include="CFontAlpha.h">
+      <Filter>02. GameObject\05. UI\99. Font</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -934,9 +931,6 @@
     </ClCompile>
     <ClCompile Include="..\Code\CEditScene.cpp">
       <Filter>01. Scene\01. Maps\97. EditScene</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\CLoadingThread.cpp">
-      <Filter>01. Scene\99. Loading\LoadingThread</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CLoading.cpp">
       <Filter>01. Scene\99. Loading</Filter>
@@ -1078,9 +1072,6 @@
     </ClCompile>
     <ClCompile Include="..\Code\CBishop_Shamura.cpp">
       <Filter>02. GameObject\01. GameActor\02. Bishops\03. Shamura</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\CMultiLoadingThread.cpp">
-      <Filter>01. Scene\99. Loading\LoadingThread\New</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CVillage.cpp">
       <Filter>01. Scene\01. Maps\07. Village</Filter>
@@ -1309,6 +1300,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\CFollower_AI.cpp">
       <Filter>02. GameObject\01. GameActor\03. Follower</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CMultiLoadingThread.cpp">
+      <Filter>01. Scene\99. Loading\LoadingThread</Filter>
+    </ClCompile>
+    <ClCompile Include="CFontAlpha.cpp">
+      <Filter>02. GameObject\05. UI\99. Font</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

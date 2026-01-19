@@ -3,6 +3,9 @@
 #include "CGameObject.h"
 #include "Engine_Define.h"
 #include "CPlayer.h"
+#include "CGauge.h"
+#include "CPlayerHP.h"
+
 
 namespace Engine
 {
@@ -19,8 +22,17 @@ private:
 
 public:
 	HRESULT		 Ready_GlobalObjects(LPDIRECT3DDEVICE9 pGraphicDev);
+	void		 Update_PersistnetMgr(const _float fTimeDelta);
+
+public:
 	Engine::CTransform* Get_PlayerTransform();
 	CPlayer* Get_Player() { return m_pPlayer; }
+	CGauge* Get_Gauge() { return m_pGauge; }
+	CPlayerHP* Get_PlayerHPUI() { return m_pPlayerHPUI; }
+
+	void	   Set_GaugeFontRender(_bool bBool);
+
+
 
 
 public:
@@ -42,7 +54,13 @@ public:
 	}
 
 private:
-	CPlayer* m_pPlayer;
+	void	Update_PlayerHp();
+	void	Update_PlayerGage();
+
+private:
+	CPlayer*	m_pPlayer;
+	CGauge*		m_pGauge;
+	CPlayerHP*	m_pPlayerHPUI;
 
 
 private:

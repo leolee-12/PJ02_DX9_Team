@@ -94,6 +94,7 @@ _int CMainCamera::Update_GameObject(const _float& fTimeDelta)
 		break;
 	case MCAM_STAGING:
 		Staging_CameraSetting(fTimeDelta);
+		Shaking_CameraSetting(fTimeDelta);
 	}
 
 
@@ -183,8 +184,28 @@ void CMainCamera::Ready_Event_MainCam()
 	m_hmapSubHandles.insert({ L"End_CutScene", m_pMessageChannel->Subscribe(L"CutScene.End", [this](const IMessageChannel::EVENT& Event) {
 		Reset_Zoom();
 		Reset_Lerp();
+		m_bShaking = false;
 		m_eCamState = MCAM_DEFAULT;
 	}) });
+
+	m_hmapSubHandles.insert({ L"Dialogue", m_pMessageChannel->Subscribe(L"CutScene.Dialogue", [this](const IMessageChannel::EVENT& Event)
+	{
+		auto CinemaTargetNameiter = Event.hmapData.find(L"CinemaTargetName");
+		if (CinemaTargetNameiter == Event.hmapData.end()) { return; }
+		auto Dothisiter = Event.hmapData.find(L"Dothis");
+		if (Dothisiter == Event.hmapData.end()) { return; }
+		if (any_cast<wstring>(CinemaTargetNameiter->second) == L"Cam")
+		{
+			wstring strDothis = any_cast<wstring>(Dothisiter->second);
+			if (strDothis == L"Shake") {
+				Set_Shake(1.f, 2.5f, 10.f);
+				return;
+			}
+		}
+
+		return;
+	}
+	) });
 }
 
 void CMainCamera::Set_Shake(_float fStrength, _float fTime, _float fTempo)

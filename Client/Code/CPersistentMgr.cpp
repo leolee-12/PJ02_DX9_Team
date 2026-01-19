@@ -5,7 +5,7 @@
 CPersistentMgr* CPersistentMgr::m_pInstance = nullptr;
 
 CPersistentMgr::CPersistentMgr()
-	: m_pPlayer(nullptr)
+	: m_pPlayer(nullptr), m_pGauge(nullptr), m_pPlayerHPUI(nullptr)
 {
 }
 
@@ -60,10 +60,36 @@ HRESULT CPersistentMgr::Ready_GlobalObjects(LPDIRECT3DDEVICE9 pGraphicDev)
 
 		m_pPlayer = CPlayer::Create(pGraphicDev);
 
+		if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_GaugeCover", Engine::CTexture::Create(pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Player/PassionGauge/dds/GaugeCover.dds", 1))))
+			return E_FAIL;
+
+		if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_GaugeStar", Engine::CTexture::Create(pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Player/PassionGauge/dds/GaugeStar.dds", 1))))
+			return E_FAIL;
+
+		if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_PassionGauge", Engine::CTexture::Create(pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Player/PassionGauge/dds/PassionGauge.dds", 1))))
+			return E_FAIL;
+
+		if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_PassionIcon", Engine::CTexture::Create(pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Player/PassionGauge/dds/PassionIcon_%d.dds", 2))))
+			return E_FAIL;
+
+		m_pGauge = CGauge::Create(pGraphicDev, Gauge::GS_PASSION);
+
+		if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_PlayerHP", Engine::CTexture::Create(pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Player/dds/Health_%d.dds", 3))))
+			return E_FAIL;
+
+		m_pPlayerHPUI = CPlayerHP::Create(pGraphicDev);
+
+
 		if (nullptr == m_pPlayer)
 			return E_FAIL;
 	}
 	return S_OK;
+}
+
+void CPersistentMgr::Update_PersistnetMgr(const _float fTimeDelta)
+{
+	Update_PlayerHp();
+	Update_PlayerGage();
 }
 
 Engine::CTransform* CPersistentMgr::Get_PlayerTransform()
@@ -71,9 +97,24 @@ Engine::CTransform* CPersistentMgr::Get_PlayerTransform()
 	return static_cast<CTransform*>(m_pPlayer->Get_Component(ID_DYNAMIC, L"Com_Transform"));
 }
 
+void CPersistentMgr::Set_GaugeFontRender(_bool bBool)
+{
+	m_pGauge->Set_FontRender(bBool);
+}
 
+void CPersistentMgr::Update_PlayerHp()
+{
+	m_pPlayerHPUI->Set_MaxHp(m_pPlayer->Get_MaxHp());
+	m_pPlayerHPUI->Set_Hp(m_pPlayer->Get_Hp());
+}
+
+void CPersistentMgr::Update_PlayerGage()
+{
+}
 
 void CPersistentMgr::Free()
 {
 	Safe_Release(m_pPlayer);
+	Safe_Release(m_pGauge);
+	Safe_Release(m_pPlayerHPUI);
 }

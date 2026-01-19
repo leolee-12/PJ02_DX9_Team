@@ -25,6 +25,12 @@
 #include "CMapWarp.h"
 #include "CWarp.h"
 #include "CMapBorder.h"
+#include "CMonsterB2.h"
+#include "CFade.h"
+#include "CTriggerPoint.h"
+#include "CCutSceneMgr.h"
+#include "CFontAlpha.h"
+#include "CBishop_Leshy.h"
 
 CRealDungeon::CRealDungeon(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -50,7 +56,38 @@ HRESULT CRealDungeon::Ready_Scene()
 
 	Ready_Light();
 
-	//CCollisionMgr::GetInstance()->Ready_CollisionMgr();
+	Ready_Event();
+
+	CCutSceneMgr::GetInstance()->Ready_CutsceneMgr(m_pMessageChannel);
+
+	CUTSCENE tRealDungeonScene;
+	tRealDungeonScene.strName = L"Meet_Amdu";
+	tRealDungeonScene.vecSteps =
+	{
+		{_vec3(-145.7f * 0.8f, 1.f, 13.5f * 0.8f), 0.75f, 0.5f, L"", L"", ADV_TIMED, 1.f},
+		{_vec3(-145.7f * 0.8f, 1.f, 13.5f * 0.8f), 0.75f, 0.5f, L"Font", L"암두시아스", ADV_IMMEDIATE},
+		{_vec3(-145.7f * 0.8f, 1.f, 13.5f * 0.8f), 0.75f, 0.5f, L"Amdu", L"Amdu_Intro", ADV_EVENT, 0.f, L"Amdu.Done"},
+		{_vec3(-145.7f * 0.8f, 1.f, 13.5f * 0.8f), 1.5f, 0.5f, L"Amdu", L"Amdu_Intro2", ADV_EVENT, 0.f, L"Amdu.Done"}
+	};
+
+	CCutSceneMgr::GetInstance()->Register_CutScene(tRealDungeonScene);
+
+	tRealDungeonScene.strName = L"Meet_Leshy";
+	tRealDungeonScene.vecSteps =
+	{
+		{_vec3(-325.23975f * 0.8f, 4.f, 29.831284f * 0.8f), 0.75f, 0.5f, L"", L"", ADV_TIMED, 1.f},
+		{_vec3(-325.23975f * 0.8f, 4.f, 29.831284f * 0.8f), 0.75f, 0.5f, L"Bishop_Leshy", L"Leshy_Enter", ADV_EVENT, 0.f, L"Leshy.Done"},
+		{_vec3(-325.23975f * 0.8f, 4.f, 29.831284f * 0.8f), 1.f, 0.5f, L"Bishop_Leshy", L"네가 귀찮아지기 시작했다, 어린 양이여..."},
+		{_vec3(-325.23975f * 0.8f, 4.f, 29.831284f * 0.8f), 1.f, 0.5f, L"Bishop_Leshy", L"이 바보같은 가면무도회를 끝낼시간이다!"},
+		{_vec3(-325.23975f * 0.8f, 2.f, 29.831284f * 0.8f), 1.2f, 0.25f, L"", L"", ADV_TIMED, 1.f},
+		{_vec3(-325.23975f * 0.8f, 2.f, 29.831284f * 0.8f), 0.75f, 0.5f, L"Bishop_Leshy", L"Leshy_Transform", ADV_EVENT, 0.f, L"Leshy.Done"},
+		{_vec3(-325.23975f * 0.8f, 2.f, 29.831284f * 0.8f), 0.5f, 0.75f, L"Leshy", L"Leshy_Intro", ADV_IMMEDIATE},
+		{_vec3(-325.23975f * 0.8f, 2.f, 29.831284f * 0.8f), 0.5f, 0.75f, L"Font", L"레쉬", ADV_TIMED, 1.f},
+		{_vec3(-325.23975f * 0.8f, 2.f, 29.831284f * 0.8f), 0.75f, 0.75f, L"", L"", ADV_TIMED, 1.5f},
+		{_vec3(-325.23975f * 0.8f, 2.f, 29.831284f * 0.8f), 0.75f, 1.f, L"Cam", L"Shake", ADV_EVENT, 0.f, L"Leshy.Done"},
+	};
+
+	CCutSceneMgr::GetInstance()->Register_CutScene(tRealDungeonScene);
 
 	return S_OK;
 }
@@ -159,7 +196,7 @@ HRESULT CRealDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 						Engine::CTransform* pTransform = dynamic_cast<Engine::CTransform*>(
 							pGameObject->Get_Component(ID_DYNAMIC, L"Com_Transform"));
 						if (pTransform)
-							pTransform->Set_Pos(spawn.x, 0.f, spawn.z);
+							pTransform->Set_Pos(spawn.x * 0.8f, 0.f, spawn.z * 0.8f);
 						pLayer->Add_GameObject(L"Monster", pGameObject);
 					}
 					break;
@@ -168,10 +205,21 @@ HRESULT CRealDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 					break;
 				case 3:
 					// Amdusias | 중간보스 |
+					pGameObject = CMonsterB1::Create(m_pGraphicDev, m_pMessageChannel, _vec3(spawn.x * 0.8f, 0.f, spawn.z * 0.8f));
+
+					NULL_CHECK_RETURN(pGameObject, E_FAIL)
+
+						if (FAILED(pLayer->Add_GameObject(L"Boss", pGameObject)))
+							return E_FAIL;
 					break;
 				case 4:
 					// Rash | 최종보스 |
-					break;
+					pGameObject = CMonsterB2::Create(m_pGraphicDev, m_pMessageChannel, _vec3(spawn.x * 0.8f, 0.f, spawn.z * 0.8f));
+
+					NULL_CHECK_RETURN(pGameObject, E_FAIL)
+
+						if (FAILED(pLayer->Add_GameObject(L"Boss", pGameObject)))
+							return E_FAIL;
 				case 5:
 					// WaitingOne | 연출용 |
 					break;
@@ -281,7 +329,45 @@ HRESULT CRealDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 			pLayer->Add_GameObject(L"SkyBox", pGameObject);
 	}
 
-	// ����׿�
+	CBishop_Leshy* pTest;
+
+	pGameObject = pTest = CBishop_Leshy::Create(m_pGraphicDev, m_pMessageChannel, _vec3(-325.23975f * 0.8f, 0.f, 29.831284f * 0.8f));
+
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+
+	pTest->Set_Wait();
+
+	if (FAILED(pLayer->Add_GameObject(L"Test", pGameObject)))
+		return E_FAIL;
+
+
+	_vec3 vTriggerPos, vTriggerHalfSize;
+	vTriggerPos = { -99.F, 0.f, 11.7f };
+	vTriggerHalfSize = { 5.f, 5.f, 5.f };
+	pGameObject = CTriggerPoint::Create(m_pGraphicDev, m_pMessageChannel, vTriggerPos, vTriggerHalfSize, Trigger::TI_STAGING, L"Meet_Amdu", true);
+
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+
+	if (FAILED(pLayer->Add_GameObject(L"TriggerPoint", pGameObject)))
+		return E_FAIL;
+
+	vTriggerPos = { 12.f, 0.f, 16.6f };
+	vTriggerHalfSize = { 2.f, 2.f, 2.f };
+	pGameObject = CTriggerPoint::Create(m_pGraphicDev, m_pMessageChannel, vTriggerPos, vTriggerHalfSize, Trigger::TI_STAGING, L"Meet_Leshy", true);
+
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+
+	if (FAILED(pLayer->Add_GameObject(L"TriggerPoint", pGameObject)))
+		return E_FAIL;
+
+	vTriggerPos = { -260.f, 0.f, 2.2f };
+	vTriggerHalfSize = { 5.f, 5.f, 2.f };
+	pGameObject = CTriggerPoint::Create(m_pGraphicDev, m_pMessageChannel, vTriggerPos, vTriggerHalfSize, Trigger::TI_STAGING, L"Meet_Leshy", true);
+
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+
+	if (FAILED(pLayer->Add_GameObject(L"TriggerPoint", pGameObject)))
+		return E_FAIL;
 
 	m_mapLayer.insert({ pLayerTag , pLayer });
 
@@ -290,6 +376,50 @@ HRESULT CRealDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 
 HRESULT CRealDungeon::Ready_UI_Layer(const _tchar* pLayerTag)
 {
+	CLayer* pLayer = CLayer::Create();
+	if (nullptr == pLayer)
+		return E_FAIL;
+
+	CGameObject* pGameObject = nullptr;
+
+	//////////////////////////////////////////////////////
+	//플레이어 UI
+	pGameObject = CPersistentMgr::GetInstance()->Get_PlayerHPUI();
+
+	if (nullptr == pGameObject)
+		return E_FAIL;
+
+	if (FAILED(pLayer->Add_GameObject(L"PlayerHP", pGameObject)))
+		return E_FAIL;
+	pGameObject->AddRef();
+
+	pGameObject = CPersistentMgr::GetInstance()->Get_Gauge();
+
+	if (nullptr == pGameObject)
+		return E_FAIL;
+
+	if (FAILED(pLayer->Add_GameObject(L"Gauge", pGameObject)))
+		return E_FAIL;
+	pGameObject->AddRef();
+	//플레이어 UI
+	////////////////////////////////////////////////////////
+
+	pGameObject = CFade::Create(m_pGraphicDev, m_pMessageChannel);
+
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+
+	if (FAILED(pLayer->Add_GameObject(L"Fade", pGameObject)))
+		return E_FAIL;
+
+	pGameObject = CFontAlpha::Create(m_pGraphicDev, m_pMessageChannel);
+
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+
+	if (FAILED(pLayer->Add_GameObject(L"Font", pGameObject)))
+		return E_FAIL;
+
+	m_mapLayer.insert({ pLayerTag , pLayer });
+
 	return S_OK;
 }
 
@@ -301,9 +431,9 @@ HRESULT CRealDungeon::Ready_Light()
 
 	tLightInfo.Type = D3DLIGHT_DIRECTIONAL;
 
-	tLightInfo.Diffuse = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-	tLightInfo.Specular = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-	tLightInfo.Ambient = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
+	tLightInfo.Diffuse = D3DXCOLOR(0.4f, 0.3f, 0.85f, 1.f);
+	tLightInfo.Specular = D3DXCOLOR(0.4f, 0.2f, 0.6f, 1.f);
+	tLightInfo.Ambient = D3DXCOLOR(0.3f, 0.12f, 0.4f, 1.f);
 
 	tLightInfo.Direction = { 1.f, -1.f, 1.f };
 
@@ -313,6 +443,25 @@ HRESULT CRealDungeon::Ready_Light()
 	return S_OK;
 }
 
+void CRealDungeon::Ready_Event()
+{
+	m_hmapSubHandles.insert({ L"Obj_Add", m_pMessageChannel->Subscribe(L"Obj.Add", [this](const IMessageChannel::EVENT& Event) {
+	{
+		CGameObject* pGObj = any_cast<CGameObject*>(Event.hmapData.find(L"Obj")->second);
+
+		if (pGObj != nullptr)
+		{
+			wstring strLayerTag = any_cast<const _tchar*>(Event.hmapData.find(L"LayerTag")->second);
+			wstring strObjTag = any_cast<wstring>(Event.hmapData.find(L"ObjTag")->second);
+			auto iter = m_mapLayer.find(strLayerTag);
+
+			if (iter != m_mapLayer.end())
+				iter->second->Add_GameObject(strObjTag, pGObj);
+		}
+	}
+	}) });
+}
+
 CRealDungeon* CRealDungeon::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 {
 	CRealDungeon* pTest = new CRealDungeon(pGraphicDev);
@@ -320,7 +469,7 @@ CRealDungeon* CRealDungeon::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 	if (FAILED(pTest->Ready_Scene()))
 	{
 		Safe_Release(pTest);
-		MSG_BOX("pVillage Create Failed");
+		MSG_BOX("pRealDungeon Create Failed");
 		return nullptr;
 	}
 
