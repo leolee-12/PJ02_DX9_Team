@@ -235,8 +235,8 @@ void CMainApp::Free()
 	CFrameMgr::DestroyInstance();
 	CTimerMgr::DestroyInstance();
 	CManagement::DestroyInstance();
-	CTileMgr::DestroyInstance();
 	CPersistentMgr::DestroyInstance();
+	CTileMgr::DestroyInstance();
 	CProtoMgr::DestroyInstance();
 	CCollisionMgr::DestroyInstance();
 	CSoundMgr::DestroyInstance();

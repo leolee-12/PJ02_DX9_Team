@@ -2,6 +2,7 @@
 
 #include "CBase.h"
 #include "Engine_Define.h"
+#include <stack>
 
 //-----------------------------------
 //	충돌 처리 담당 매니저 클래스입니다.
@@ -28,6 +29,10 @@ public:
 	void RegisterCollider(CGameObject* pOwner, const AABB& aabb, COLGROUP Group);	// 콜라이더 등록/갱신 함수
 
 	void Reset_For_SceneChange();		// 씬전환용 등록된 충돌체 비우기 함수
+
+	// 씬 보관/복원용
+	void Push_State();
+	void Pop_State();
 
 	vector<CGameObject*> Test_AABB(const AABB& aabb, COLGROUP Groupflag = CL_ALL);	// 임시 충돌체크함수 (반환값 충돌한 모든 충돌체의 오너포인터 집단)
 
@@ -65,6 +70,9 @@ private:
 	_bool		m_bRoof;												// 컨테이너 순회중에 삽입삭제 방지용 변수인데 지금은 안씀
 	vector<CGameObject*>	m_vecReleaseQueue;							// 삭제대상 포인터들을 모아두는 컨테이너
 	vector<REQINFO>			m_vecUnregisterRequestQueue;				// 삭제요청을 모아두는 컨테이너
+
+	// 씬 보관용 스택
+	stack<unordered_map<COLGROUP, vector<COLINFO>>> m_stackState;
 
 private:
 	virtual void Free() override;

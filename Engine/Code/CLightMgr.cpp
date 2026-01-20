@@ -78,6 +78,49 @@ void CLightMgr::Update_PointLights(const _vec3& vPlayerPos)
     }
 }
 
+void CLightMgr::Push_State()
+{
+    // 현재 상태를 스택에 보관 (삭제 안 함!)
+    LIGHT_STATE tState;
+    tState.LightList = m_LightList;
+    tState.vecPointLights = m_vecPointLights;
+
+    m_stackState.push(tState);
+
+    // 새 씬용으로 비움
+    m_LightList.clear();
+    m_vecPointLights.clear();
+}
+
+void CLightMgr::Pop_State()
+{
+    if (m_stackState.empty())
+        return;
+
+    // 현재 상태 정리 (미니게임 라이트 등)
+    for_each(m_vecPointLights.begin(), m_vecPointLights.end(), CDeleteObj());
+    m_vecPointLights.clear();
+
+    for_each(m_LightList.begin(), m_LightList.end(), CDeleteObj());
+    m_LightList.clear();
+
+    // 보관된 상태 복원
+    LIGHT_STATE tState = m_stackState.top();
+    m_stackState.pop();
+
+    m_LightList = tState.LightList;
+    m_vecPointLights = tState.vecPointLights;
+
+    // 복원된 디렉셔널 라이트들 다시 활성화
+    for (auto& pLight : m_LightList)
+    {
+        if (pLight)
+            pLight->Enable();
+    }
+
+    // 포인트 라이트는 Update_PointLights()에서 자동 처리됨
+}
+
 void CLightMgr::Free()
 {
     for_each(m_vecPointLights.begin(), m_vecPointLights.end(), CDeleteObj());

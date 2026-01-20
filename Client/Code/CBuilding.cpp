@@ -5,13 +5,14 @@
 #include "CManagement.h"
 #include "CInteractMgr.h"
 #include "CFontMgr.h"
+#include "CTriggerPoint.h"
 
 CBuilding::CBuilding(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev)
 	, m_pBufferCom(nullptr)
 	, m_pTransformCom(nullptr)
 	, m_pTextureCom(nullptr)
-	, m_pColliderCom(nullptr)
+	//, m_pColliderCom(nullptr)
 	, m_eBuildingType(BT_END)
 	, m_eBuildingState(BS_END)
 	, m_fWorkGauge(0.f)
@@ -23,7 +24,7 @@ CBuilding::CBuilding(const CBuilding& rhs)
 	, m_pBufferCom(nullptr)
 	, m_pTransformCom(nullptr)
 	, m_pTextureCom(nullptr)
-	, m_pColliderCom(nullptr)
+	//, m_pColliderCom(nullptr)
 	, m_eBuildingType(rhs.m_eBuildingType)
 	, m_eBuildingState(rhs.m_eBuildingState)
 	, m_fWorkGauge(0.f)
@@ -46,15 +47,16 @@ HRESULT CBuilding::Ready_GameObject()
 
 _int CBuilding::Update_GameObject(const _float& fTimeDelta)
 {
-	if (g_bDebug) { m_pColliderCom->Update_AABBforRender(); }
+	//if (g_bDebug) { m_pColliderCom->Update_AABBforRender(); }
 
-	m_pColliderCom->UpdateFromTransform(m_pTransformCom);
+	//m_pColliderCom->UpdateFromTransform(m_pTransformCom);
+	m_pTrigger->Update_GameObject(fTimeDelta);
 
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
 	if (iExit == DEAD)
 	{
-		m_pColliderCom->UnregisterFromManager();
+		//m_pColliderCom->UnregisterFromManager();
 
 		if(m_eBuildingState == BS_CONSTRUCTING) CInteractMgr::GetInstance()->Unregister_IObj(CInteractMgr::BUILD, this);
 	}
@@ -67,6 +69,8 @@ _int CBuilding::Update_GameObject(const _float& fTimeDelta)
 
 void CBuilding::LateUpdate_GameObject(const _float& fTimeDelta)
 {
+	m_pTrigger->LateUpdate_GameObject(fTimeDelta);
+
 	_vec3 vPos;
 	m_pTransformCom->Get_Info(Engine::INFO_POS, &vPos);
 
@@ -182,14 +186,14 @@ HRESULT CBuilding::Add_Component()
 	m_mapComponent[ID_STATIC].insert({ L"Com_Texture_Complete", pComponent });
 
 	// Collider
-	pComponent = m_pColliderCom = dynamic_cast<Engine::CCollider*>
-		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Collider"));
-	//static_cast<Engine::CCollider*>(pComponent)->Set_AABB();
+	//pComponent = m_pColliderCom = dynamic_cast<Engine::CCollider*>
+	//	(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Collider"));
+	////static_cast<Engine::CCollider*>(pComponent)->Set_AABB();
 
-	if (nullptr == pComponent)
-		return E_FAIL;
+	//if (nullptr == pComponent)
+	//	return E_FAIL;
 
-	m_mapComponent[ID_STATIC].insert({ L"Com_Collider", pComponent });
+	//m_mapComponent[ID_STATIC].insert({ L"Com_Collider", pComponent });
 
 	return S_OK;
 }
@@ -248,12 +252,31 @@ void CBuilding::Ready_Variable()
 	//Change_State(BS_CONSTRUCTING);
 	//m_fWorkGauge = 0.f;
 
+	_vec3 vTriggerPos = m_vPos;
+	vTriggerPos.y -= 1.f;
+	_vec3 vTriggetHalfSize = { 2.f,2.f,2.f };
+
+	switch (m_eBuildingType)
+	{
+	case BT_DUMMY:
+		break;
+	case BT_WORKSHOP:
+		m_pTrigger = CTriggerPoint::Create(m_pGraphicDev, m_pMessageChannel, vTriggerPos, vTriggetHalfSize, Trigger::TI_CRAFTING, L"Crafting");
+		break;
+	case BT_COOK:
+		m_pTrigger = CTriggerPoint::Create(m_pGraphicDev, m_pMessageChannel, vTriggerPos, vTriggetHalfSize, Trigger::TI_COOKING, L"Cooking");
+		break;
+	case BT_KNUCKLEBONE:
+		m_pTrigger = CTriggerPoint::Create(m_pGraphicDev, m_pMessageChannel, vTriggerPos, vTriggetHalfSize, Trigger::TI_KNUCKLE, L"KnuckleBone");
+		break;
+	}
+
 	// 테스트용
 	m_fWorkGauge = 1.f;
 	Change_State(BS_COMPLETE);
 	// 테스트용
 
-	m_pColliderCom->RegisterToManager(this, CL_GRASS);
+	//m_pColliderCom->RegisterToManager(this, CL_GRASS);
 }
 
 CBuilding* CBuilding::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMessageChannel, const _vec3& vPos, BUILDING_TYPE eType)
@@ -263,6 +286,7 @@ CBuilding* CBuilding::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMe
 	pBuilding->m_pMessageChannel = pMessageChannel;
 	pBuilding->m_pMessageChannel->AddRef();
 	pBuilding->m_eBuildingType = eType;
+	pBuilding->m_vPos = vPos;
 
 	if (FAILED(pBuilding->Ready_GameObject()))
 	{
@@ -279,5 +303,6 @@ CBuilding* CBuilding::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMe
 
 void CBuilding::Free()
 {
+	Safe_Release(m_pTrigger);
 	CGameObject::Free();
 }

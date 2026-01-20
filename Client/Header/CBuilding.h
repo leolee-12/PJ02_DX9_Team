@@ -10,6 +10,8 @@ namespace Engine
 	class CCollider;
 }
 
+class CTriggerPoint;
+
 
 class CBuilding : public CGameObject, public IInteractable
 {
@@ -46,11 +48,15 @@ private:
 	Engine::CRcTex*		m_pBufferCom;
 	Engine::CTransform* m_pTransformCom;
 	Engine::CTexture*	m_pTextureCom;
-	Engine::CCollider*	m_pColliderCom;
+	//Engine::CCollider*	m_pColliderCom;
+	CTriggerPoint*		m_pTrigger;
+
 
 	BUILDING_TYPE	m_eBuildingType;
 	BUILDING_STATE	m_eBuildingState;
 	_float			m_fGroundY;
+
+	_vec3			m_vPos = {};
 
 
 	// 상호작용 관련(추종자)

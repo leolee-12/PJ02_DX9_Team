@@ -117,4 +117,5 @@ void CPersistentMgr::Free()
 	Safe_Release(m_pPlayer);
 	Safe_Release(m_pGauge);
 	Safe_Release(m_pPlayerHPUI);
+	Safe_Release(m_pVillage);
 }
