@@ -98,7 +98,6 @@ void CN3_AI::Exit_State(const _uint& iState)
 		m_fAcmlTime = 0.f;
 		break;
 	case CMonsterN3::N3S_SPAWN:
-		m_bActiveAI = true;
 		break;
 	case CMonsterN3::N3S_STOP:
 		if (!m_pTargetTC) m_bChase = false;
@@ -112,9 +111,13 @@ _int CN3_AI::Update_Component(const _float& fTimeDelta)
 
 	m_fAcmlTime += fTimeDelta;
 
-	if (!m_bActiveAI) return iExit;
-
 	Compute_Distance();
+
+	if (!m_bActiveAI)
+	{
+		if (m_fDistance <= m_fDetectRange)	m_bActiveAI = true;
+		else								return iExit;
+	}
 
 	switch (m_iCurState)
 	{

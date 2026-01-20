@@ -11,6 +11,7 @@
 #include "Engine_Struct.h"
 #include "CCollider.h"
 #include "CCutSceneMgr.h"
+#include "CEffect.h"
 
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev),
@@ -96,13 +97,10 @@ _int CPlayer::Update_GameObject(const _float& fTimeDelta)
 
 	m_pTransformCom->Get_Info(INFO_POS, &m_vPrevPos);
 	
-
 	Key_Input(fTimeDelta);
 	Move_Lerp(fTimeDelta);
 	Charge(fTimeDelta);
-
 	Move_Frame(fTimeDelta);
-
 	Update_Warp(fTimeDelta);
 	
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
@@ -159,13 +157,13 @@ void CPlayer::Render_GameObject()
 void CPlayer::Ready_Variable()
 {
 	m_bIntro = false;
-	m_fSpeed = DEFAULT_SPEED;
-	m_iAttack = 1;
+	m_fSpeed = PLAYER_DEFAULT_SPEED;
+	m_iAttack = PLAYER_DEFAULT_ATTACK;
 	m_iHp = 8;
 	m_fAcmlTime = 0.f;
 
 	m_eOBJID = OID_PLAYER;
-	_float fScale = DEFAULT_SCALE;
+	_float fScale = PLAYER_DEFAULT_SCALE;
 	m_pTransformCom->Set_Scale(fScale, fScale, fScale);		// Player 폴더
 	m_pTransformCom->Set_Pos(0.f, 0.f, 0.f);
 	m_fFrameSpeed = 24.f;
@@ -304,6 +302,29 @@ HRESULT CPlayer::Add_Component()
 
 void CPlayer::Key_Input(const _float& fTimeDelta)
 {
+	for (int i = 0; i < 8; ++i)
+	{
+		if (GetAsyncKeyState(i + 48))
+		{	// 디버그용
+
+			_vec3 vPos{ m_vPos.x + 0.2f, m_vPos.y - 1.f, m_vPos.z };
+			CGameObject* pEffect = CEffect::Create(m_pGraphicDev, vPos, i);
+
+			if (pEffect)
+			{
+				wstring strObjTag = L"Effect";
+
+				IMessageChannel::EVENT ESummonMonster;
+				ESummonMonster.strType = L"Obj.Add";
+				ESummonMonster.eOBJID = Engine::OID_EFFECT;
+				ESummonMonster.hmapData.emplace(L"Obj", pEffect);
+				ESummonMonster.hmapData.emplace(L"LayerTag", L"GameLogic_Layer");
+				ESummonMonster.hmapData.emplace(L"ObjTag", strObjTag);
+				m_pMessageChannel->Publish(ESummonMonster);
+			}
+		}
+	}
+
 	if (CDInputMgr::GetInstance()->Key_Down(DIK_Z))
 	{
 		g_bDebug = !g_bDebug;
@@ -314,14 +335,14 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 		m_bIntro = !m_bIntro;
 		if (m_bIntro)
 		{
-			m_fSpeed = INTRO_SPEED;
-			_float fScale = INTRO_SCALE;
+			m_fSpeed = PLAYER_INTRO_SPEED;
+			_float fScale = PLAYER_INTRO_SCALE;
 			m_pTransformCom->Set_Scale(fScale, fScale, fScale);
 		}
 		else
 		{
-			m_fSpeed = DEFAULT_SPEED;
-			_float fScale = DEFAULT_SCALE;
+			m_fSpeed = PLAYER_DEFAULT_SPEED;
+			_float fScale = PLAYER_DEFAULT_SCALE;
 			m_pTransformCom->Set_Scale(fScale, fScale, fScale);
 		}
 	}
@@ -346,7 +367,7 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 
 		m_eCurState = PS_REBIRTH;
 		m_strFrameKey = L"intro_rebirth";
-		_float fScale = REBIRTH_SCALE;
+		_float fScale = PLAYER_REBIRTH_SCALE;
 		m_pTransformCom->Set_Scale(fScale, fScale, fScale);
 		m_pTransformCom->Set_Pos(m_vPos.x, 2.f, m_vPos.z);
 	}
@@ -628,8 +649,8 @@ void CPlayer::Move_Frame(const _float& fTimeDelta)
 		{
 			m_bIntro = false;
 			m_eCurState = PS_IDLE;
-			m_fSpeed = DEFAULT_SPEED;
-			_float fScale = DEFAULT_SCALE;
+			m_fSpeed = PLAYER_DEFAULT_SPEED;
+			_float fScale = PLAYER_DEFAULT_SCALE;
 			m_pTransformCom->Set_Scale(fScale, fScale, fScale);
 			m_pTransformCom->Set_Pos(m_vPos.x, 0.f, m_vPos.z);
 		}
@@ -772,7 +793,7 @@ void CPlayer::Set_Pos(const _vec3& vPos)
 void CPlayer::Set_Tied()
 {
 	m_bIntro = true;
-	m_fSpeed = INTRO_SPEED;
+	m_fSpeed = PLAYER_INTRO_SPEED;
 	_float fScale = 11.f;
 	m_pTransformCom->Set_Scale(fScale, fScale, fScale);
 }
@@ -803,7 +824,7 @@ void CPlayer::Set_Reborn()
 	m_pTransformCom->Set_Scale(fScale, fScale, fScale);
 	m_pTransformCom->Set_Pos(m_vPos.x, 2.f, m_vPos.z);
 	m_vDir = _vec3(0.f, 0.f, -1.f);
-	m_fSpeed = DEFAULT_SPEED;
+	m_fSpeed = PLAYER_DEFAULT_SPEED;
 }
 
 void CPlayer::Set_MessageChannel(IMessageChannel* pMessageChannel)
@@ -848,7 +869,7 @@ void CPlayer::Attack_HitBox()
 
 void CPlayer::Attacked(_int iDamage)
 {
-	if ((m_eCurState == PS_ROLL) || (m_fAcmlTime < INVINCIBLE_TIME)) return;
+	if ((m_eCurState == PS_ROLL) || (m_fAcmlTime < PLAYER_INVINCIBLE_TIME)) return;
 
 	if(m_iHp >= 2) m_iHp -= iDamage;	// 시연용
 

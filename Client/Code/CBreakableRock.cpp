@@ -103,6 +103,7 @@ void CBreakableRock::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	_vec3 vPos;
 	m_pTransformCom->Get_Info(Engine::INFO_POS, &vPos);
+	m_pTransformCom->Compute_Bilboard(BBD_X);
 	Compute_ViewDepth(&vPos);
 
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
@@ -115,15 +116,15 @@ void CBreakableRock::Render_GameObject()
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 
 	// Alpha test (remove fully transparent pixels)
-	m_pGraphicDev->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
-	m_pGraphicDev->SetRenderState(D3DRS_ALPHAREF, 0x10);
-	m_pGraphicDev->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
+	//m_pGraphicDev->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
+	//m_pGraphicDev->SetRenderState(D3DRS_ALPHAREF, 0x10);
+	//m_pGraphicDev->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
 
 	m_pTextureCom->Set_Texture(m_iTextureIndex);
 	m_pBufferCom->Render_Buffer();
 
 	// Restore
-	m_pGraphicDev->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
+	//m_pGraphicDev->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 
 	_matrix matView, matProj;

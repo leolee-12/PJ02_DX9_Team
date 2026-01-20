@@ -40,9 +40,9 @@ private:
 	void				Update_State();
 
 private:
-	Engine::CRcTex* m_pBufferCom;
-	Engine::CTransform* m_pTransformCom;
-	Engine::CTexture* m_pTextureCom;
+	Engine::CRcTex*		m_pBufferCom;
+	Engine::CTransform*	m_pTransformCom;
+	Engine::CTexture*	m_pTextureCom;
 
 	_vec3				m_vPos;
 

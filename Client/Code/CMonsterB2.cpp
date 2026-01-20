@@ -622,7 +622,7 @@ void CMonsterB2::Summon_Spike(const _uint& iRecurCount, const _vec3& vSpeed)
 
 void CMonsterB2::Attacked(const _int& iAttack)
 {
-	m_iHp -= iAttack;
+	if (m_iHp > 0) m_iHp -= iAttack;
 
 	if (m_eCurState == B2S_IDLE)
 	{

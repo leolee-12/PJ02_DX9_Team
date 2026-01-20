@@ -58,6 +58,9 @@ private:
 	// AI 관련
 	CN3_AI*				m_pAICom;
 
+	static constexpr _uint	N3_DEFAULT_HP = 3;
+	static constexpr _float	N3_DEFAULT_SCALE = 5.f;
+	static constexpr _float N3_DEFAULT_HEIGHT = 2.f;
 public:
 	static CMonsterN3*	Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel);
 

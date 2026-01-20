@@ -100,7 +100,6 @@ void CN1_AI::Exit_State(const _uint& iState)
 		if (!m_pTargetTC) m_bChase = false;
 		break;
 	case CMonsterN1::N1S_SPAWN:
-		m_bActiveAI = true;
 		break;
 
 	case CMonsterN1::N1S_JEER:
@@ -117,9 +116,13 @@ _int CN1_AI::Update_Component(const _float& fTimeDelta)
 
 	m_fAcmlTime += fTimeDelta;
 
-	if (!m_bActiveAI) return iExit;
-
 	Compute_Distance();
+
+	if (!m_bActiveAI)
+	{
+		if (m_fDistance <= m_fDetectRange)	m_bActiveAI = true;
+		else								return iExit;
+	}
 
 	switch (m_iCurState)
 	{
