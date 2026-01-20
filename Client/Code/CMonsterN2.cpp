@@ -7,6 +7,7 @@
 #include "CCollisionMgr.h"
 #include "CNode.h"
 #include "CN2_AI.h"
+#include "CMonsterHpBar.h"
 
 CMonsterN2::CMonsterN2(LPDIRECT3DDEVICE9 pGraphicDev)
 	:	CMonster(pGraphicDev),
@@ -68,6 +69,13 @@ _int CMonsterN2::Update_GameObject(const _float& fTimeDelta)
 	if (g_bDebug) m_pColliderCom->Update_AABBforRender();
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
+	m_pTransformCom->Get_Info(INFO_POS, &m_vPos);
+	_vec3 vHpPos = m_vPos;
+	vHpPos.y += 3.f;
+	m_pHpBar->Set_TargetPos(vHpPos);
+	m_pHpBar->Set_Hp(m_iHp);
+	m_pHpBar->Update_GameObject(fTimeDelta);
+
 	if (iExit == DEAD)
 	{
 		m_pColliderCom->UnregisterFromManager();
@@ -91,6 +99,7 @@ void CMonsterN2::LateUpdate_GameObject(const _float& fTimeDelta)
 	m_pTransformCom->Get_Info(INFO_POS, &m_vPos);
 	Compute_ViewDepth(&m_vPos);
 
+	m_pHpBar->LateUpdate_GameObject(fTimeDelta);
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
 
 	_vec3 vDir = *m_pAICom->Get_Dir();
@@ -255,6 +264,9 @@ void CMonsterN2::Ready_Variable()
 	vScale *= fScaleReduction;
 	m_pNode[2] = CNode::Create(m_pGraphicDev, m_pMessageChannel, L"Proto_N2Node3Texture");
 	if (m_pNode[2]) m_pNode[2]->Set_NodeScale(vScale);
+
+	m_pHpBar = CMonsterHpBar::Create(m_pGraphicDev, _float(m_iHp), m_vPos);
+	m_pHpBar->UnActive();
 }
 
 void CMonsterN2::Ready_Event()
@@ -427,6 +439,7 @@ void CMonsterN2::Attack_HitBox()
 void CMonsterN2::Attacked(const _int& iAttack)
 {
 	m_iHp -= iAttack;
+	m_pHpBar->Active();
 }
 
 void CMonsterN2::Update_State()

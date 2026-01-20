@@ -10,6 +10,7 @@ namespace Engine
 }
 
 class CN3_AI;
+class CMonsterHpBar;
 
 class CMonsterN3 : public CMonster 
 {
@@ -57,6 +58,9 @@ private:
 
 	// AI 관련
 	CN3_AI*				m_pAICom;
+
+	//체력바관련
+	CMonsterHpBar* m_pHpBar;
 
 public:
 	static CMonsterN3*	Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel);

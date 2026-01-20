@@ -226,6 +226,12 @@ void CMultiLoadingThread::Loading_for_Tutorial()
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_BishopLeshyTransform", TEX_NORMAL, L"../Bin/Resource/YSH/Leshy/Leshy-Transform/dds/Leshy-Transform-%d.dds", 376));
 	m_iTotalProtoCount++;
 
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_MonsterHpCover", TEX_NORMAL, L"../Bin/Resource/YSH/UI/HpBarCover.png", 1));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_MonsterHpFront", TEX_NORMAL, L"../Bin/Resource/YSH/UI/HpBarRed.png", 1));
+	m_iTotalProtoCount++;
+
     // ===== TextureSet 큐 등록 (멀티스레드 로딩) =====
     vector<TEXSETLR> vecBishopLeshy;
     vecBishopLeshy.push_back(TEXSETLR(L"Bishop_Leshy_Idle", L"../Bin/Resource/Texture/Bishops/Leshy/Leshy-idle/dds/Leshy_idle-%d.dds", 250));
@@ -332,12 +338,7 @@ void CMultiLoadingThread::Loading_for_Dungeon()
 	m_iTotalProtoCount++;
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingSelectButton", TEX_NORMAL, L"../Bin/Resource/YSD/CookingSelect/Button_%d.png", 2));
 	m_iTotalProtoCount++;
-	/*m_TexturLoadingqueue.push(TEXLR(L"Proto_BossHpBarFront", TEX_NORMAL, L"../Bin/Resource/YSD/BossHpBar/BossHpBarRed.png", 1));
-	m_iTotalProtoCount++;
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_BossHpBarMiddle", TEX_NORMAL, L"../Bin/Resource/YSD/BossHpBar/BossHpBarWhite.png", 1));
-	m_iTotalProtoCount++;
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_BossHpBarBackground", TEX_NORMAL, L"../Bin/Resource/YSD/BossHpBar/BossHpBarBackgorund.png", 1));
-	m_iTotalProtoCount++;*/
+	
 	
 
 	// 덴저러스 수동 PNG존 지뢰밟지않게 조심할것
@@ -393,6 +394,12 @@ void CMultiLoadingThread::Loading_for_Dungeon()
 	m_iTotalProtoCount++;
 
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_Fade", TEX_NORMAL, L"../Bin/Resource/YSH/Etc/Fade.png", 1));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_MonsterHpCover", TEX_NORMAL, L"../Bin/Resource/YSH/UI/HpBarCover.png", 1));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_MonsterHpFront", TEX_NORMAL, L"../Bin/Resource/YSH/UI/HpBarRed.png", 1));
 	m_iTotalProtoCount++;
 	//디버그용 바로진입 프로토타입
 }
@@ -539,6 +546,12 @@ void CMultiLoadingThread::Loading_for_RealDungeon()
 	m_iTotalProtoCount++;
 
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_SpeechBubble", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Etc/dds/SpeechBubble.dds", 1));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_MonsterHpCover", TEX_NORMAL, L"../Bin/Resource/YSH/UI/HpBarCover.png", 1));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_MonsterHpFront", TEX_NORMAL, L"../Bin/Resource/YSH/UI/HpBarRed.png", 1));
 	m_iTotalProtoCount++;
 	// 디버그용 그긴거
 

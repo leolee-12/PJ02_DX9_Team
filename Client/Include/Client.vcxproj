@@ -201,6 +201,9 @@
     <ClInclude Include="..\Header\CGauge.h" />
     <ClInclude Include="..\Header\CGaugeCover.h" />
     <ClInclude Include="..\Header\CGaugeStar.h" />
+    <ClInclude Include="..\Header\CMonsterHpBar.h" />
+    <ClInclude Include="..\Header\CMonsterHpBarCover.h" />
+    <ClInclude Include="..\Header\CMonsterHpFront.h" />
     <ClInclude Include="..\Header\IInteractable.h" />
     <ClInclude Include="..\Header\CInteractMgr.h" />
     <ClInclude Include="..\Header\CItem.h" />
@@ -386,6 +389,9 @@
     <ClCompile Include="..\Code\CMonsterB2.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="..\Code\CMonsterHpBar.cpp" />
+    <ClCompile Include="..\Code\CMonsterHpBarCover.cpp" />
+    <ClCompile Include="..\Code\CMonsterHpFront.cpp" />
     <ClCompile Include="..\Code\CMonsterN1.cpp" />
     <ClCompile Include="..\Code\CMonsterN2.cpp" />
     <ClCompile Include="..\Code\CMonsterN3.cpp" />

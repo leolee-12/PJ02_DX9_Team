@@ -11,6 +11,7 @@ namespace Engine
 
 class CNode;
 class CN2_AI;
+class CMonsterHpBar;
 
 class CMonsterN2 : public CMonster 
 {
@@ -60,6 +61,9 @@ private:
 
 	// 마디 관련
 	CNode*		m_pNode[3];
+
+	//체력바관련
+	CMonsterHpBar* m_pHpBar;
 
 public:
 	static CMonsterN2*	Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel);

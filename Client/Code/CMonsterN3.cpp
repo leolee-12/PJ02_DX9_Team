@@ -6,6 +6,7 @@
 #include "CPersistentMgr.h"
 #include "CCollisionMgr.h"
 #include "CN3_AI.h"
+#include "CMonsterHpBar.h"
 
 CMonsterN3::CMonsterN3(LPDIRECT3DDEVICE9 pGraphicDev)
 	:	CMonster(pGraphicDev),
@@ -65,6 +66,13 @@ _int CMonsterN3::Update_GameObject(const _float& fTimeDelta)
 	if (g_bDebug) m_pColliderCom->Update_AABBforRender();
 
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
+
+	m_pTransformCom->Get_Info(INFO_POS, &m_vPos);
+	_vec3 vHpPos = m_vPos;
+	vHpPos.y += 3.f;
+	m_pHpBar->Set_TargetPos(vHpPos);
+	m_pHpBar->Set_Hp(m_iHp);
+	m_pHpBar->Update_GameObject(fTimeDelta);
 
 	if (iExit == DEAD)
 	{
@@ -224,6 +232,9 @@ void CMonsterN3::Ready_Variable()
 	// Anim 관련 세팅
 	m_fFrameSpeed = 24.f;
 	D3DXMatrixIdentity(&m_matTex);
+
+	m_pHpBar = CMonsterHpBar::Create(m_pGraphicDev, _float(m_iHp), m_vPos);
+	m_pHpBar->UnActive();
 }
 
 void CMonsterN3::Ready_Event()
@@ -401,6 +412,7 @@ void CMonsterN3::Attack_HitBox()
 void CMonsterN3::Attacked(const _int& iAttack)
 {
 	m_iHp -= iAttack;
+	m_pHpBar->Active();
 }
 
 void CMonsterN3::Update_State()

@@ -394,18 +394,6 @@
     <Filter Include="02. GameObject\05. UI\05. CookingUI\01.CookingSelect\04.CookingInfoCard\02.CookingUpDownArrow">
       <UniqueIdentifier>{68e905df-c0a4-4262-afb2-b3bb80e5ea4a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\05. UI\07.BossHpBar">
-      <UniqueIdentifier>{399d7d32-c442-474d-a3f1-c1faeaacd158}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\05. UI\07.BossHpBar\00.BossHpBarFront">
-      <UniqueIdentifier>{39aa04ff-0d07-4ba2-b828-728be7b5c53c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\05. UI\07.BossHpBar\02.BossHpBarBackground">
-      <UniqueIdentifier>{5429114f-5307-4f92-bd5e-191770916fb2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\05. UI\07.BossHpBar\01.BossHpBarMiddle">
-      <UniqueIdentifier>{91f37026-5e3e-482e-914e-78b0757da388}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObject\05. UI\99. Font">
       <UniqueIdentifier>{a8d8fe86-d6e2-4ff9-b0d0-76f833c3f75a}</UniqueIdentifier>
     </Filter>
@@ -423,6 +411,27 @@
     </Filter>
     <Filter Include="01. Scene\01. Maps\99. Stage">
       <UniqueIdentifier>{f40be6c5-f78e-4629-9f22-c05f63c86d1a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. UI\07. BossHpBar">
+      <UniqueIdentifier>{399d7d32-c442-474d-a3f1-c1faeaacd158}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. UI\07. BossHpBar\00.BossHpBarFront">
+      <UniqueIdentifier>{39aa04ff-0d07-4ba2-b828-728be7b5c53c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. UI\07. BossHpBar\02.BossHpBarBackground">
+      <UniqueIdentifier>{5429114f-5307-4f92-bd5e-191770916fb2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. UI\07. BossHpBar\01.BossHpBarMiddle">
+      <UniqueIdentifier>{91f37026-5e3e-482e-914e-78b0757da388}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. UI\08. MonsterHpBar">
+      <UniqueIdentifier>{ea9ea39d-39bb-4b6f-980d-f0bcf0f6ffde}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. UI\08. MonsterHpBar\00. Front">
+      <UniqueIdentifier>{f83c9a45-86f7-4830-9fce-1b85a86c781e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. UI\08. MonsterHpBar\00. Cover">
+      <UniqueIdentifier>{7610c791-bdf3-4b8b-89cf-96f29d3e9145}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -763,16 +772,16 @@
       <Filter>02. GameObject\07. UI\05. CookingUI\00.CookingMiniGame\04.CookingTarget</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CBossHpBarFront.h">
-      <Filter>02. GameObject\05. UI\07.BossHpBar\00.BossHpBarFront</Filter>
+      <Filter>02. GameObject\05. UI\07. BossHpBar\00.BossHpBarFront</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CBossHpBarMiddle.h">
-      <Filter>02. GameObject\05. UI\07.BossHpBar\01.BossHpBarMiddle</Filter>
+      <Filter>02. GameObject\05. UI\07. BossHpBar\01.BossHpBarMiddle</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CBossHpBarBackground.h">
-      <Filter>02. GameObject\05. UI\07.BossHpBar\02.BossHpBarBackground</Filter>
+      <Filter>02. GameObject\05. UI\07. BossHpBar\02.BossHpBarBackground</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CBossHpBar.h">
-      <Filter>02. GameObject\05. UI\07.BossHpBar</Filter>
+      <Filter>02. GameObject\05. UI\07. BossHpBar</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CNarinder.h">
       <Filter>02. GameObject\01. GameActor\02. Bishops\04. Narinder</Filter>
@@ -884,6 +893,15 @@
     </ClInclude>
     <ClInclude Include="CFontAlpha.h">
       <Filter>02. GameObject\05. UI\99. Font</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CMonsterHpBar.h">
+      <Filter>02. GameObject\05. UI\08. MonsterHpBar</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CMonsterHpFront.h">
+      <Filter>02. GameObject\05. UI\08. MonsterHpBar\00. Front</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CMonsterHpBarCover.h">
+      <Filter>02. GameObject\05. UI\08. MonsterHpBar\00. Cover</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1191,16 +1209,16 @@
       <Filter>02. GameObject\05. UI\05. CookingUI\01.CookingSelect\04.CookingInfoCard\01.CookingInfoCardFaith</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CBossHpBarFront.cpp">
-      <Filter>02. GameObject\05. UI\07.BossHpBar\00.BossHpBarFront</Filter>
+      <Filter>02. GameObject\05. UI\07. BossHpBar\00.BossHpBarFront</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CBossHpBarMiddle.cpp">
-      <Filter>02. GameObject\05. UI\07.BossHpBar\01.BossHpBarMiddle</Filter>
+      <Filter>02. GameObject\05. UI\07. BossHpBar\01.BossHpBarMiddle</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CBossHpBarBackground.cpp">
-      <Filter>02. GameObject\05. UI\07.BossHpBar\02.BossHpBarBackground</Filter>
+      <Filter>02. GameObject\05. UI\07. BossHpBar\02.BossHpBarBackground</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CBossHpBar.cpp">
-      <Filter>02. GameObject\05. UI\07.BossHpBar</Filter>
+      <Filter>02. GameObject\05. UI\07. BossHpBar</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CNarinder.cpp">
       <Filter>02. GameObject\01. GameActor\02. Bishops\04. Narinder</Filter>
@@ -1306,6 +1324,15 @@
     </ClCompile>
     <ClCompile Include="CFontAlpha.cpp">
       <Filter>02. GameObject\05. UI\99. Font</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CMonsterHpBar.cpp">
+      <Filter>02. GameObject\05. UI\08. MonsterHpBar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CMonsterHpFront.cpp">
+      <Filter>02. GameObject\05. UI\08. MonsterHpBar\00. Front</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CMonsterHpBarCover.cpp">
+      <Filter>02. GameObject\05. UI\08. MonsterHpBar\00. Cover</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

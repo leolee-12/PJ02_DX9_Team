@@ -6,6 +6,7 @@
 #include "CPersistentMgr.h"
 #include "CCollisionMgr.h"
 #include "CN1_AI.h"
+#include "CMonsterHpBar.h"
 
 CMonsterN1::CMonsterN1(LPDIRECT3DDEVICE9 pGraphicDev)
 	:	CMonster(pGraphicDev),
@@ -71,6 +72,14 @@ _int CMonsterN1::Update_GameObject(const _float& fTimeDelta)
 	if (g_bDebug) m_pColliderCom->Update_AABBforRender();
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
+	m_pTransformCom->Get_Info(INFO_POS, &m_vPos);
+	_vec3 vHpPos = m_vPos;
+	vHpPos.y += 3.f;
+	m_pHpBar->Set_TargetPos(vHpPos);
+	m_pHpBar->Set_Hp(m_iHp);
+	m_pHpBar->Update_GameObject(fTimeDelta);
+
+
 	if (iExit == DEAD)
 	{
 		m_pColliderCom->UnregisterFromManager();
@@ -92,6 +101,7 @@ void CMonsterN1::LateUpdate_GameObject(const _float& fTimeDelta)
 	m_pTransformCom->Get_Info(INFO_POS, &m_vPos);
 	Compute_ViewDepth(&m_vPos);
 
+	m_pHpBar->LateUpdate_GameObject(fTimeDelta);
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
 }
 
@@ -228,6 +238,9 @@ void CMonsterN1::Ready_Variable()
 	// Anim 관련 세팅
 	m_fFrameSpeed = 24.f;
 	D3DXMatrixIdentity(&m_matTex);
+
+	m_pHpBar = CMonsterHpBar::Create(m_pGraphicDev, _float(m_iHp), m_vPos);
+	m_pHpBar->UnActive();
 }
 
 void CMonsterN1::Ready_Event()
@@ -459,6 +472,7 @@ void CMonsterN1::Attack_HitBox()
 void CMonsterN1::Attacked(const _int& iAttack)
 {
 	m_iHp -= iAttack;
+	m_pHpBar->Active();
 
 	if (m_eAttackPhase != EXECUTE)
 	{
@@ -503,6 +517,8 @@ CMonsterN1* CMonsterN1::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* S
 {
 	CMonsterN1* pMonster = new CMonsterN1(pGraphicDev, StageChannel);
 
+	pMonster->m_vPos = vPos;
+
 	if (FAILED(pMonster->Ready_GameObject()))
 	{
 		Safe_Release(pMonster);
@@ -519,5 +535,6 @@ CMonsterN1* CMonsterN1::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* S
 
 void CMonsterN1::Free()
 {
+	Safe_Release(m_pHpBar);
 	CGameObject::Free();
 }
