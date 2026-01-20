@@ -5,6 +5,7 @@
 #include "CPlayer.h"
 #include "CGauge.h"
 #include "CPlayerHP.h"
+#include "CVillage.h"
 
 
 namespace Engine
@@ -29,8 +30,31 @@ public:
 	CPlayer* Get_Player() { return m_pPlayer; }
 	CGauge* Get_Gauge() { return m_pGauge; }
 	CPlayerHP* Get_PlayerHPUI() { return m_pPlayerHPUI; }
+	CVillage* Get_Village() { return m_pVillage; }
+
+	void	Set_Village(CVillage* pVillage)
+	{
+		if (m_pVillage == nullptr)
+		{
+			m_pVillage = pVillage;
+			// AddRef 제거 - Create()의 소유권을 그대로 인수
+		}
+	}
 
 	void	   Set_GaugeFontRender(_bool bBool);
+
+	_bool	   isArchived_Village()
+	{
+		if (m_pVillage)
+		{
+			return true;
+		}
+		return false;
+	}
+
+	// 마을 재진입 플래그
+	void	Set_VillageReentry(_bool b) { m_bVillageReentry = b; }
+	_bool	Is_VillageReentry() { return m_bVillageReentry; }
 
 
 
@@ -58,9 +82,11 @@ private:
 	void	Update_PlayerGage();
 
 private:
-	CPlayer*	m_pPlayer;
-	CGauge*		m_pGauge;
-	CPlayerHP*	m_pPlayerHPUI;
+	CPlayer*	m_pPlayer		= nullptr;
+	CGauge*		m_pGauge		= nullptr;
+	CPlayerHP*	m_pPlayerHPUI	= nullptr;
+	CVillage*	m_pVillage		= nullptr;
+	_bool		m_bVillageReentry = false;
 
 
 private:

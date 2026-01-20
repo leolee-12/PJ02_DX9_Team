@@ -20,6 +20,7 @@
 #include "CLoading.h"
 #include "CKBBoardBack.h"
 #include "CKBDiceBox.h"
+#include "CPersistentMgr.h"
 #include "CKBBack2.h"
 
 
@@ -98,7 +99,9 @@ _int CKnuckleBone::Update_Scene(const _float& fTimeDelta)
 	// 씬 전환 (Update 최하단에서 수행)
 	if (bSceneChange)
 	{
-		CManagement::GetInstance()->Set_Scene(CLoading::Create(m_pGraphicDev, LOADING_TEST));
+		// 마을 재진입 플래그 설정
+		CPersistentMgr::GetInstance()->Set_VillageReentry(true);
+		CManagement::GetInstance()->Set_Scene(CLoading::Create(m_pGraphicDev, LOADING_VILLAGE));
 		return NOEVENT;
 	}
 

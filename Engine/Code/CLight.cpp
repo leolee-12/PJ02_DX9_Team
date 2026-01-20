@@ -24,6 +24,17 @@ HRESULT CLight::Ready_Light(const D3DLIGHT9* pLightInfo, const _uint& iIndex)
 	return S_OK;
 }
 
+void CLight::Enable()
+{
+	m_pGraphicDev->SetLight(m_iIndex, &m_tLight);
+	m_pGraphicDev->LightEnable(m_iIndex, TRUE);
+}
+
+void CLight::Disable()
+{
+	m_pGraphicDev->LightEnable(m_iIndex, FALSE);
+}
+
 CLight* CLight::Create(LPDIRECT3DDEVICE9 pGraphicDev, const D3DLIGHT9* pLightInfo, const _uint& iIndex)
 {
 	CLight* pLight = new CLight(pGraphicDev);

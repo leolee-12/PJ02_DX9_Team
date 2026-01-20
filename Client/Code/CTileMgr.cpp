@@ -102,6 +102,46 @@ void CTileMgr::Reset_For_SceneChange()
 	m_vecTiles.clear();
 }
 
+void CTileMgr::Push_State()
+{
+	// 현재 상태를 스택에 보관
+	TILE_STATE tState;
+	tState.vecTiles = m_vecTiles;
+	tState.iMapWidth = m_iMapWidth;
+	tState.iMapHeight = m_iMapHeight;
+	tState.bInitialized = m_bInitialized;
+
+	m_stackState.push(tState);
+
+	// 새 씬용으로 비움 (Release 안 함!)
+	m_vecTiles.clear();
+	m_iMapWidth = 0;
+	m_iMapHeight = 0;
+	m_bInitialized = false;
+}
+
+void CTileMgr::Pop_State()
+{
+	if (m_stackState.empty())
+		return;
+
+	// 현재 상태 정리 (미니게임 타일 등)
+	for (auto& pTile : m_vecTiles)
+	{
+		Safe_Release(pTile);
+	}
+	m_vecTiles.clear();
+
+	// 보관된 상태 복원
+	TILE_STATE tState = m_stackState.top();
+	m_stackState.pop();
+
+	m_vecTiles = tState.vecTiles;
+	m_iMapWidth = tState.iMapWidth;
+	m_iMapHeight = tState.iMapHeight;
+	m_bInitialized = tState.bInitialized;
+}
+
 void CTileMgr::Free()
 {
 	for (auto& pTile : m_vecTiles)

@@ -127,6 +127,29 @@ _int CVillage::Update_Scene(const _float& fTimeDelta)
 			return NOEVENT;
 		}
 	}
+	if (m_bKnuckleBoneFlag)
+	{
+		Engine::CScene* pLoading = CLoading::Create(m_pGraphicDev, LOADING_KNUCKLEBONE);
+
+		if (nullptr == pLoading)
+			return NOEVENT;
+
+		// 매니저 상태 보관
+		CTileMgr::GetInstance()->Push_State();
+		CCollisionMgr::GetInstance()->Push_State();
+		CLightMgr::GetInstance()->Push_State();
+		CSoundMgr::GetInstance()->StopAll();
+
+		// 마을 씬 보관
+		CPersistentMgr::GetInstance()->Set_Village(this);
+
+		if (FAILED(CManagement::GetInstance()->Set_Scene(pLoading)))
+		{
+			MSG_BOX("Stage Scene Failed");
+			return NOEVENT;
+		}
+		m_bKnuckleBoneFlag = false;
+	}
 
 	return iExit;
 }
@@ -531,6 +554,13 @@ void CVillage::Ready_Event_Village()
 				if (any_cast<wstring>(TriggetNameiter->second) == L"Real_Dungeon")
 				{
 					m_bLeshyDungeonFlag = true;
+				}
+			}
+			if (any_cast<Trigger::TRIGGERID>(TIDiter->second) == Trigger::TI_KNUCKLE)
+			{
+				if (any_cast<wstring>(TriggetNameiter->second) == L"KnuckleBone")
+				{
+					m_bKnuckleBoneFlag = true;
 				}
 			}
 		}

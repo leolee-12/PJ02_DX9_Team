@@ -76,7 +76,7 @@ namespace Engine
 		CL_BORDER   = 1 << 8,
 		CL_NPC		= 1 << 9,
 		CL_CHEST	= 1 << 10,
-		CL_12		= 1 << 11,
+		CL_BUILD	= 1 << 11,
 		CL_13		= 1 << 12,
 		CL_14		= 1 << 13,
 		CL_15		= 1 << 14,

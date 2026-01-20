@@ -26,6 +26,9 @@
 #include "CRealDungeon.h"
 #include "CAmdusiasRoom.h"
 #include "CLeshyRoom.h"
+#include "CTileMgr.h"
+#include "CCollisionMgr.h"
+#include "CLightMgr.h"
 //#include "LoadObjectList.h"
 
 
@@ -145,10 +148,34 @@ _int CLoading::Update_Scene(const _float& fTimeDelta)
 							return -1;
 						break;
 					case LOADING_VILLAGE:
-						pScene = CVillage::Create(m_pGraphicDev);
+						// 재진입인 경우 보관된 씬 복원
+						if (CPersistentMgr::GetInstance()->Is_VillageReentry())
+						{
+							// 매니저 상태 복원
+							CTileMgr::GetInstance()->Pop_State();
+							CCollisionMgr::GetInstance()->Pop_State();
+							CLightMgr::GetInstance()->Pop_State();
+
+							// 보관된 마을 씬 사용
+							pScene = CPersistentMgr::GetInstance()->Get_Village();
+							pScene->AddRef();  // CManagement가 소유할 참조 추가
+							CPersistentMgr::GetInstance()->Set_VillageReentry(false);
+						}
+						else if (!CPersistentMgr::GetInstance()->isArchived_Village())
+						{
+							CPersistentMgr::GetInstance()->Set_Village(CVillage::Create(m_pGraphicDev));
+							pScene = CPersistentMgr::GetInstance()->Get_Village();
+							pScene->AddRef();  // CManagement가 소유할 참조 추가
+						}
+						else
+						{
+							pScene = CPersistentMgr::GetInstance()->Get_Village();
+							pScene->AddRef();  // CManagement가 소유할 참조 추가
+						}
 
 						if (nullptr == pScene)
 							return -1;
+
 						break;
 					case LOADING_REALDUNGEON:
 						pScene = CRealDungeon::Create(m_pGraphicDev);
