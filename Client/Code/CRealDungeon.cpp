@@ -136,12 +136,12 @@ HRESULT CRealDungeon::Ready_Environment_Layer(const _tchar* pLayerTag)
 	if (FAILED(pLayer->Add_GameObject(L"MainCamera", pGameObject)))
 		return E_FAIL;
 
-	/*pGameObject = CChest::Create(m_pGraphicDev, m_pMessageChannel, _vec3(292.f, 0.f, 22.f), 0);
+	pGameObject = CChest::Create(m_pGraphicDev, m_pMessageChannel, _vec3(292.f, 0.f, 22.f), 10);
 
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 
 	if (FAILED(pLayer->Add_GameObject(L"Chest", pGameObject)))
-		return E_FAIL;*/
+		return E_FAIL;
 
 	m_mapLayer.insert({ pLayerTag , pLayer });
 
@@ -178,8 +178,8 @@ HRESULT CRealDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 			switch (spawn.type)
 			{
 			case 0:
-				//CPersistentMgr::GetInstance()->Get_Player()->Set_Pos(_vec3(spawn.x, 0.f, spawn.z));
-				CPersistentMgr::GetInstance()->Get_Player()->Set_Pos(_vec3(-260.f, 0.f, -5.2f)); // 레쉬방 앞
+				CPersistentMgr::GetInstance()->Get_Player()->Set_Pos(_vec3(spawn.x, 0.f, spawn.z));
+				//CPersistentMgr::GetInstance()->Get_Player()->Set_Pos(_vec3(-260.f, 0.f, -5.2f)); // 레쉬방 앞
 				pGameObject = CPersistentMgr::GetInstance()->Get_Player();
 
 				if (nullptr == pGameObject)

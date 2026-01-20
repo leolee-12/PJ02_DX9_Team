@@ -46,6 +46,8 @@ private:
 
 	void				Update_State();
 
+	void				Create_Item();
+
 private:
 	Engine::CRcTex* m_pBufferCom;
 	Engine::CTransform* m_pTransformCom;

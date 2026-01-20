@@ -159,7 +159,8 @@ void CPlayer::Ready_Variable()
 {
 	m_bIntro = false;
 	m_fSpeed = PLAYER_DEFAULT_SPEED;
-	m_iAttack = PLAYER_DEFAULT_ATTACK;
+	//m_iAttack = PLAYER_DEFAULT_ATTACK;
+	m_iAttack = 10;
 	m_iHp = 8;
 	m_fAcmlTime = 0.f;
 
@@ -218,6 +219,9 @@ void CPlayer::Ready_Event()
 
 			if (!m_bAction && (m_eCurState != PS_REBIRTH)) {
 				m_eCurState = PS_IDLE;
+				m_iCombo = 0;
+				m_bRoll = false;
+				m_fCharge = 0.f;
 				}
 
 			auto CinemaTargetNameiter = Event.hmapData.find(L"CinemaTargetName");
@@ -633,6 +637,7 @@ void CPlayer::Move_Frame(const _float& fTimeDelta)
 		case PS_HIT:
 		{
 			m_eCurState = PS_IDLE;
+			m_iCombo = 0;
 		}
 		break;
 
@@ -891,6 +896,8 @@ void CPlayer::Attacked(_int iDamage)
 	m_eCurState = PS_HIT;
 	m_fAcmlTime = 0.f;
 	CSoundMgr::GetInstance()->Play(L"Player_Hit.wav", SOUND_EFFECT, 0.4f);
+
+	m_iCombo = 0;
 }
 
 void CPlayer::Update_Warp(const _float fTimeDelta)

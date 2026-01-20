@@ -9,6 +9,7 @@
 #include "CSpeechBubble.h"
 #include "CFontUI.h"
 #include "CSoundMgr.h"
+#include "CItem.h"
 
 CChest::CChest(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev),
@@ -120,6 +121,10 @@ void CChest::OnCollision(CGameObject* pObject)
 		if (m_eCurState != CHEST_IDLE) { return; }
 
 		m_eCurState = CHEST_OPEN;
+		_tchar strSoundName[128] = L"";
+		swprintf_s(strSoundName, L"ItemSpawn%d.wav", Get_Rand_Int(1, 4));
+		CSoundMgr::GetInstance()->Play(strSoundName, SOUND_EFFECT, 1.f);
+		Create_Item();
 		break;
 	}
 }
@@ -308,6 +313,30 @@ void CChest::Set_Texture()
 	m_pGraphicDev->SetTransform(D3DTS_TEXTURE0, &m_matTex);
 
 	m_pTextureCom->Set_Texture(iIndex);
+}
+
+void CChest::Create_Item()
+{
+	for (_uint i = 0; i <= m_iItemCount; ++i)
+	{
+		CGameObject* pItem;
+		_float fY(m_vPos.y - m_pTransformCom->Get_Scale(ROT_Y) * 0.25f);
+		pItem = CItem::Create(m_pGraphicDev, m_pMessageChannel, _vec3(m_vPos.x, fY, m_vPos.z - 2.f), CItem::ITEMID(Get_Rand_Int(0, 3)), true);
+
+		if (pItem)
+		{
+			wstring strObjTag = L"Item";
+
+			IMessageChannel::EVENT ESummonMonster;
+			ESummonMonster.strType = L"Obj.Add";
+			ESummonMonster.eOBJID = Engine::OID_ITEM;
+			ESummonMonster.hmapData.emplace(L"Obj", pItem);
+			ESummonMonster.hmapData.emplace(L"LayerTag", L"GameLogic_Layer");
+			ESummonMonster.hmapData.emplace(L"ObjTag", strObjTag);
+			m_pMessageChannel->Publish(ESummonMonster);
+		}
+
+	}
 }
 
 CChest* CChest::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, _vec3 vPos, _uint iItemCount)
