@@ -69,7 +69,7 @@ _int CLogo::Update_Scene(const _float& fTimeDelta)
 			{
 			case LS_START:
 				//LSTmp = LOADING_TUTORIAL;
-				LSTmp = LOADING_REALDUNGEON;
+				LSTmp = LOADING_VILLAGE;
 				break;
 			case LS_EDIT:
 				// 임시입니다.

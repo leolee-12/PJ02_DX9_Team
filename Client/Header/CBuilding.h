@@ -1,0 +1,68 @@
+﻿#pragma once
+#include "CGameObject.h"
+#include "IInteractable.h"
+
+namespace Engine
+{
+	class CRcTex;
+	class CTransform;
+	class CTexture;
+	class CCollider;
+}
+
+
+class CBuilding : public CGameObject, public IInteractable
+{
+public:
+	enum BUILDING_TYPE { BT_DUMMY, BT_WORKSHOP, BT_COOK, BT_KNUCKLEBONE, BT_END };
+	enum BUILDING_STATE { BS_CONSTRUCTING, BS_COMPLETE, BS_END };
+
+private:
+	explicit CBuilding(LPDIRECT3DDEVICE9 pGraphicDev);
+	explicit CBuilding(const CBuilding& rhs);
+	virtual ~CBuilding();
+
+public:
+	virtual HRESULT		Ready_GameObject();
+	virtual _int		Update_GameObject(const _float& fTimeDelta);
+	virtual void		LateUpdate_GameObject(const _float& fTimeDelta);
+	virtual void		Render_GameObject();
+	virtual void		OnCollision(CGameObject* pObject) override;
+
+	virtual void		Add_WorkGauge(_float fWork);
+	virtual _float		Get_WorkGauge() const { return m_fWorkGauge; }
+	virtual _bool		Is_WorkComplete() const { return m_fWorkGauge >= MAX_WORK_GAUGE; }
+
+	wstring				Get_CompleteTexKey();
+
+private:
+	HRESULT	Add_Component();
+	void	Change_State(BUILDING_STATE eState);
+	void	Player_Interact();
+	void	Set_Texture();
+	void	Ready_Variable();
+
+private:
+	Engine::CRcTex*		m_pBufferCom;
+	Engine::CTransform* m_pTransformCom;
+	Engine::CTexture*	m_pTextureCom;
+	Engine::CCollider*	m_pColliderCom;
+
+	BUILDING_TYPE	m_eBuildingType;
+	BUILDING_STATE	m_eBuildingState;
+	_float			m_fGroundY;
+
+
+	// 상호작용 관련(추종자)
+	_float				m_fWorkGauge;
+	_uint				m_iTexIdx;
+
+	static constexpr _float MAX_WORK_GAUGE = 1.f;
+	static constexpr _float DEFAULT_CONSTRUCT_GROUNDY = -2.49f;
+	static constexpr _float DEFAULT_COMPLETE_GROUNDY = -0.5f;
+public:
+	static CBuilding* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMessageChannel, const _vec3& vPos, BUILDING_TYPE eType);
+
+private:
+	virtual void Free();
+};

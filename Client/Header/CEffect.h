@@ -12,44 +12,54 @@ namespace Engine
 class CEffect : public CGameObject
 {
 public:
-	enum EFFECT_TYPE{ EF_HIT, EF_PICKUP, EF_PARTICLE, EF_FOG, EF_END };
-private:
+	enum EFFECT_TYPE { EF_SPRITE, EF_PARTICLE, EF_TRAIL, EF_DISTORTION, EF_SCREEN, EF_END };
+	enum EFFECT_STATE { ES_READY, ES_PLAY, ES_LOOP, ES_FINISH };
+
+protected:
 	explicit	CEffect(LPDIRECT3DDEVICE9 pGraphicDev);
 	explicit	CEffect(const CEffect& rhs);
 	virtual		~CEffect();
 
 public:
-	virtual HRESULT		Ready_GameObject();
-	virtual _int		Update_GameObject(const _float& fTimeDelta);
-	virtual void		LateUpdate_GameObject(const _float& fTimeDelta);
-	virtual void		Render_GameObject();
+	virtual HRESULT		Ready_GameObject() PURE;
+	virtual _int		Update_GameObject(const _float& fTimeDelta) PURE;
+	virtual void		LateUpdate_GameObject(const _float& fTimeDelta) PURE;
+	virtual void		Render_GameObject() PURE;
 
+	// 필수
+	virtual void    Play()	PURE;
+	virtual void    Stop()	PURE;
+	virtual void    Reset()	PURE;
 
-private:
+	// 선택
+	virtual void    OnPlay() {}         // 재생 시작 시
+	virtual void    OnStop() {}         // 정지 시
+	virtual void    OnFinish() {}       // 완료 시
+	virtual void    OnLoop() {}         // 루프 시
+
+	// 유틸리티
+	void            AttachTo(CGameObject* pOwner, const _vec3& vOffset = { 0,0,0 });
+	void            Detach();
+	bool            IsPlaying() const { return m_eState == ES_PLAY || m_eState == ES_LOOP; }
+
+protected:
 	HRESULT			Add_Component();
-	void			Ready_Variable();
-	void			Set_Texture();
 
-private:
 	Engine::CRcTex*		m_pBufferCom;
 	Engine::CTransform* m_pTransformCom;
 	Engine::CTexture*	m_pTextureCom;
+	wstring				m_strProtoTexKey;
 
-	// 스프라이트 관련
-	_float		m_fFrame;
-	_float		m_fFrameEnd;
-	_float		m_fFrameSpeed;
-	EFFECT_TYPE m_eEffectType;
-	_uint		m_iTexIdx;
-	_matrix		m_matTex;
+	EFFECT_TYPE     m_eType;
+	EFFECT_STATE    m_eState;
 
-	_float		m_fVar = 0.2f;
+	_float          m_fLifeTime;        // 총 지속 시간
+	_float          m_fAccTime;			// 경과 시간
+	_bool           m_bLoop;            // 루프 여부
+
+	_vec3           m_vOffset;          // 부모로부터의 오프셋
+	CGameObject*	m_pOwner;           // 부착 대상 (nullptr = 월드)
 
 public:
 	static CEffect* Create(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vPos, _uint iTexIdx);
-
-private:
-	virtual void Free();
-
 };
-

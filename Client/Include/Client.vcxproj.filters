@@ -166,9 +166,6 @@
     <Filter Include="02. GameObject\02. Environment\01. Tile">
       <UniqueIdentifier>{fd9114e4-ed18-4e95-93eb-47e4ebc69072}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\02. Environment\02. Interactable\02. BreakableRock">
-      <UniqueIdentifier>{3329f3da-37fb-41de-8fa1-0c729130dfb9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObject\02. Environment\02. Interactable\00. Grass">
       <UniqueIdentifier>{20638477-cadd-4aa2-94a1-d3b5098d0639}</UniqueIdentifier>
     </Filter>
@@ -435,6 +432,21 @@
     </Filter>
     <Filter Include="02. GameObject\02. Environment\03. Chest">
       <UniqueIdentifier>{b97e8f89-f997-4210-92a3-b845e316f88a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\02. Environment\02. Interactable\03. Building">
+      <UniqueIdentifier>{8148d31c-450c-4fc9-bae3-2e9fc2e68213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Manager\04. EffectMgr">
+      <UniqueIdentifier>{613f16cb-d640-48b5-84eb-5098839b2c76}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\03. Dependent\01. Effect\0. SpriteEffect">
+      <UniqueIdentifier>{3f4f1d7c-f64c-48fb-b131-1abee5b964e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\03. Dependent\01. Effect\1. ParticleEffect">
+      <UniqueIdentifier>{e0254c7a-8146-4aab-be06-e125b4853c7c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\02. Environment\02. Interactable\02. BreakableRock">
+      <UniqueIdentifier>{3329f3da-37fb-41de-8fa1-0c729130dfb9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -897,6 +909,15 @@
     <ClInclude Include="CFontAlpha.h">
       <Filter>02. GameObject\05. UI\99. Font</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CHitEffect.h">
+      <Filter>02. GameObject\03. Dependent\01. Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CBuilding.h">
+      <Filter>02. GameObject\02. Environment\02. Interactable\03. Building</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CEffectMgr.h">
+      <Filter>03. Manager\04. EffectMgr</Filter>
+    </ClInclude>
     <ClInclude Include="..\Header\CEffect.h">
       <Filter>02. GameObject\03. Dependent\01. Effect</Filter>
     </ClInclude>
@@ -911,6 +932,12 @@
     </ClInclude>
     <ClInclude Include="..\Header\CChest.h">
       <Filter>02. GameObject\02. Environment\03. Chest</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CSpriteEffect.h">
+      <Filter>02. GameObject\03. Dependent\01. Effect\0. SpriteEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CParticleEffect.h">
+      <Filter>02. GameObject\03. Dependent\01. Effect\1. ParticleEffect</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1334,6 +1361,15 @@
     <ClCompile Include="CFontAlpha.cpp">
       <Filter>02. GameObject\05. UI\99. Font</Filter>
     </ClCompile>
+    <ClCompile Include="..\Code\CHitEffect.cpp">
+      <Filter>02. GameObject\03. Dependent\01. Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CBuilding.cpp">
+      <Filter>02. GameObject\02. Environment\02. Interactable\03. Building</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CEffectMgr.cpp">
+      <Filter>03. Manager\04. EffectMgr</Filter>
+    </ClCompile>
     <ClCompile Include="..\Code\CEffect.cpp">
       <Filter>02. GameObject\03. Dependent\01. Effect</Filter>
     </ClCompile>
@@ -1348,6 +1384,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\CChest.cpp">
       <Filter>02. GameObject\02. Environment\03. Chest</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CSpriteEffect.cpp">
+      <Filter>02. GameObject\03. Dependent\01. Effect\0. SpriteEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CParticleEffect.cpp">
+      <Filter>02. GameObject\03. Dependent\01. Effect\1. ParticleEffect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -479,6 +479,17 @@ void CMultiLoadingThread::Loading_for_Village()
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_HitEffectTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/Hit-Effect/dds/Hit-Effect_%02d.dds", 8));
 	m_iTotalProtoCount++;
 	// Effect
+
+	// Building
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_Building_Constructing", TEX_NORMAL, L"../Bin/Resource/LWY/Maps/Building/dds/Constructing.dds", 1));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_Building_Cook", TEX_NORMAL, L"../Bin/Resource/LWY/Maps/Building/dds/kitchen_1.dds", 1));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_Building_Knucklebone", TEX_NORMAL, L"../Bin/Resource/LWY/Maps/Building/dds/knucklebones.dds", 1));
+	m_iTotalProtoCount++;
+	// Building
 }
 
 void CMultiLoadingThread::Loading_for_RealDungeon()
