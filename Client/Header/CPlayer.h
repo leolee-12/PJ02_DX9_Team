@@ -140,13 +140,13 @@ private:
 
 
 	// 상수
-	static constexpr _float INVINCIBLE_TIME = 3.f;
-	static constexpr _float DEFAULT_SPEED = 12.f;
-	static constexpr _float INTRO_SPEED = 9.f;
-
-	static constexpr _float DEFAULT_SCALE = 10.f;
-	static constexpr _float INTRO_SCALE = 11.f;
-	static constexpr _float REBIRTH_SCALE = 20.f;
+	static constexpr _float PLAYER_DEFAULT_ATTACK = 1.f;
+	static constexpr _float PLAYER_INVINCIBLE_TIME = 3.f;
+	static constexpr _float PLAYER_DEFAULT_SPEED = 12.f;
+	static constexpr _float PLAYER_INTRO_SPEED = 9.f;
+	static constexpr _float PLAYER_DEFAULT_SCALE = 10.f;
+	static constexpr _float PLAYER_INTRO_SCALE = 11.f;
+	static constexpr _float PLAYER_REBIRTH_SCALE = 20.f;
 
 public:
 	static CPlayer* Create(LPDIRECT3DDEVICE9 pGraphicDev);

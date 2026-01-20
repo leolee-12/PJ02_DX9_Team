@@ -168,7 +168,7 @@ void CTarotSeller::Check_Frame()
 
 	case TAROT_TALK:
 	{
-		m_fFrameEnd = 128.f;
+		m_fFrameEnd = 80.f;
 	}
 	break;
 	}

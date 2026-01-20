@@ -100,7 +100,6 @@ void CN2_AI::Exit_State(const _uint& iState)
 	break;
 
 	case CMonsterN2::N2S_SPAWN:
-		m_bActiveAI = true;
 		break;
 
 	case CMonsterN2::N2S_STOP:
@@ -117,9 +116,13 @@ _int CN2_AI::Update_Component(const _float& fTimeDelta)
 
 	m_fAcmlTime += fTimeDelta;
 
-	if (!m_bActiveAI) return iExit;
-
 	Compute_Distance();
+
+	if (!m_bActiveAI)
+	{
+		if (m_fDistance <= m_fDetectRange)	m_bActiveAI = true;
+		else								return iExit;
+	}
 
 	switch (m_iCurState)
 	{

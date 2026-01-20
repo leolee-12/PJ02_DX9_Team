@@ -885,6 +885,9 @@
     <ClInclude Include="CFontAlpha.h">
       <Filter>02. GameObject\05. UI\99. Font</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CEffect.h">
+      <Filter>02. GameObject\03. Dependent\01. Effect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1306,6 +1309,9 @@
     </ClCompile>
     <ClCompile Include="CFontAlpha.cpp">
       <Filter>02. GameObject\05. UI\99. Font</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CEffect.cpp">
+      <Filter>02. GameObject\03. Dependent\01. Effect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

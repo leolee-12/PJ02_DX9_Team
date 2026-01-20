@@ -61,6 +61,9 @@ private:
 	// 마디 관련
 	CNode*		m_pNode[3];
 
+	static constexpr _uint	N2_DEFAULT_HP = 5;
+	static constexpr _float	N2_DEFAULT_SCALE = 5.f;
+
 public:
 	static CMonsterN2*	Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel);
 	static CMonsterN2* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, _vec3 vPos);

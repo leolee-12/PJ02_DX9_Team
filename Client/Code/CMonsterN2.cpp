@@ -216,10 +216,10 @@ HRESULT CMonsterN2::Add_Component()
 void CMonsterN2::Ready_Variable()
 {
 	// 게임로직 변수 세팅
-	_float fScale = 3.f;
+	_float fScale = N2_DEFAULT_SCALE;
 	m_fGroundY = -2.5f + fScale * 0.5f;
 	m_iAttack = 1;
-	m_iHp = 10;
+	m_iHp = N2_DEFAULT_HP;
 
 	// Transform 세팅
 	m_pTransformCom->Set_Pos(_float(rand() % 20), m_fGroundY, _float(rand() % 20));
@@ -426,7 +426,7 @@ void CMonsterN2::Attack_HitBox()
 
 void CMonsterN2::Attacked(const _int& iAttack)
 {
-	m_iHp -= iAttack;
+	if (m_iHp > 0) m_iHp -= iAttack;
 }
 
 void CMonsterN2::Update_State()

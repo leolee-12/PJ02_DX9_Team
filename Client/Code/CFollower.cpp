@@ -485,13 +485,17 @@ void CFollower::Execute_Work(const _float& fTimeDelta)
 {
 	if (m_eCurState != FOLLOWER_ACTION) return;
 
+	CGameObject* pTarget = CInteractMgr::GetInstance()->Find_Nearest(CInteractMgr::INTERACT_TYPE(m_eCurWork), m_vPos);
+
+	if (pTarget)	m_pAICom->Set_TargetTransform(static_cast<CTransform*>(pTarget->Get_Component(ID_DYNAMIC, L"Com_Transform")));
+	else			m_pAICom->Set_TargetTransform(nullptr);
+
 	if (!CInteractMgr::GetInstance()->Apply_Work(	CInteractMgr::INTERACT_TYPE(m_eCurWork),
 													m_vPos,
 													m_fWorkSpeed * fTimeDelta))
 	{
 		m_pAICom->Anim_End(m_eCurState);
 		m_eCurState = FOLLOWER_IDLE;
-		m_eCurWork = FOLLOWER_WORK(Get_Rand_Int(1, 2));
 	}
 }
 
@@ -508,6 +512,26 @@ CFollower* CFollower::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* Sta
 		MSG_BOX("pFollower Create Failed");
 		return nullptr;
 	}
+
+	return pFollower;
+}
+
+CFollower* CFollower::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, const _tchar* pProtoKey, const _vec3& vPos, FOLLOWER_STATE eState)
+{
+	CFollower* pFollower = new CFollower(pGraphicDev, StageChannel);
+
+	pFollower->m_strProtoKey = pProtoKey;
+
+	if (FAILED(pFollower->Ready_GameObject()))
+	{
+		Safe_Release(pFollower);
+		MSG_BOX("pFollower Create Failed");
+		return nullptr;
+	}
+
+	pFollower->m_pTransformCom->Set_Pos(vPos.x, pFollower->m_fGroundY, vPos.z);
+	pFollower->m_eCurState = eState;
+	pFollower->m_pAICom->Set_State(eState);
 
 	return pFollower;
 }
