@@ -78,6 +78,7 @@ private:
 
 public:
 	static CFollower*	Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, const _tchar* pProtoTexKey);
+	static CFollower* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, const _tchar* pProtoTexKey, const _vec3& vPos, FOLLOWER_STATE eState);
 
 private:
 	virtual void		Free();

@@ -64,6 +64,10 @@ private:
 	//체력바관련
 	CMonsterHpBar*		m_pHpBar;
 
+	static constexpr _uint	N1_DEFAULT_HP = 4;
+	static constexpr _float	N1_DEFAULT_SCALE = 5.f;
+
+
 public:
 	static CMonsterN1*	Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel);
 	static CMonsterN1* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, const _vec3& vPos, MONSTER_N1_STATE eState = N1S_SPAWN);

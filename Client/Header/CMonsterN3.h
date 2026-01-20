@@ -59,6 +59,9 @@ private:
 	// AI 관련
 	CN3_AI*				m_pAICom;
 
+	static constexpr _uint	N3_DEFAULT_HP = 3;
+	static constexpr _float	N3_DEFAULT_SCALE = 5.f;
+	static constexpr _float N3_DEFAULT_HEIGHT = 2.f;
 	//체력바관련
 	CMonsterHpBar* m_pHpBar;
 

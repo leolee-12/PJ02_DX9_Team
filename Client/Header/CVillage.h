@@ -20,6 +20,7 @@ private:
 	HRESULT			Ready_UI_Layer(const _tchar* pLayerTag);
 
 	HRESULT			Ready_Light();
+	void			Ready_Event();
 
 	void			Ready_Event_Village();
 

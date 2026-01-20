@@ -38,7 +38,7 @@ public:
 
 	float Lerp(float _fStart, float _fEnd, float t){ return _fStart + (_fEnd - _fStart) * t; }
 
-	void Update_Hp(_uint Hp) { m_fCurHp = _float(Hp); }
+	void Update_Hp(_int Hp) { m_fCurHp = _float(Hp); }
 
 	void		Active();
 	void		UnActive();

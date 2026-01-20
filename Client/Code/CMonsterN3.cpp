@@ -210,11 +210,11 @@ HRESULT CMonsterN3::Add_Component()
 void CMonsterN3::Ready_Variable()
 {
 	// 게임로직 변수 세팅
-	_float fScale = 4.f;
+	_float fScale = N3_DEFAULT_SCALE;
 	m_fGroundY = -2.5f + fScale * 0.5f;
 	m_iAttack = 1;
-	m_iHp = 10;
-	m_fHeight = 2.f;	// 공중에 떠있는 몬스터
+	m_iHp = N3_DEFAULT_HP;
+	m_fHeight = N3_DEFAULT_HEIGHT;	// 공중에 떠있는 몬스터
 
 	// Transform 세팅
 	m_pTransformCom->Set_Pos(_float(rand() % 20), m_fGroundY + m_fHeight, _float(rand() % 20));
@@ -411,8 +411,11 @@ void CMonsterN3::Attack_HitBox()
 
 void CMonsterN3::Attacked(const _int& iAttack)
 {
-	m_iHp -= iAttack;
-	m_pHpBar->Active();
+	if (m_iHp > 0) 
+	{
+		m_iHp -= iAttack;
+		m_pHpBar->Active();
+	}
 }
 
 void CMonsterN3::Update_State()

@@ -585,7 +585,7 @@ void CMonsterB1::Attack_HitBox()
 
 void CMonsterB1::Attacked(const _int& iAttack)
 {
-	m_iHp -= iAttack;
+	if(m_iHp > 0) m_iHp -= iAttack;
 }
 
 void CMonsterB1::Update_State()
