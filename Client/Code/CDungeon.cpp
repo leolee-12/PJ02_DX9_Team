@@ -429,33 +429,58 @@ HRESULT CDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	pGameObject = pTemp = CMonsterN1::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ -8.f, 0.f, 92.5f }, CMonsterN1::N1S_PRAY);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	pTemp->Set_Dir(_vec3{ 1.f, 0.f, 0.f });
-	if (FAILED(pLayer->Add_GameObject(L"NPC", pGameObject)))
+	if (FAILED(pLayer->Add_GameObject(L"Monster", pGameObject)))
 		return E_FAIL;
 
 	pGameObject = pTemp = CMonsterN1::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ 0.f, 0.f, 92.5f }, CMonsterN1::N1S_PRAY);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	pTemp->Set_Dir(_vec3{ -1.f, 0.f, 0.f });
-	if (FAILED(pLayer->Add_GameObject(L"NPC", pGameObject)))
+	if (FAILED(pLayer->Add_GameObject(L"Monster", pGameObject)))
 		return E_FAIL;
 
 	pGameObject = pTemp = CMonsterN1::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ -8.5f, 0.f, 82.f }, CMonsterN1::N1S_PRAY);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	pTemp->Set_Dir(_vec3{ 1.f, 0.f, 0.f });
-	if (FAILED(pLayer->Add_GameObject(L"NPC", pGameObject)))
+	if (FAILED(pLayer->Add_GameObject(L"Monster", pGameObject)))
 		return E_FAIL;
 
 	pGameObject = pTemp = CMonsterN1::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ 0.5f, 0.f, 82.f }, CMonsterN1::N1S_PRAY);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	pTemp->Set_Dir(_vec3{ -1.f, 0.f, 0.f });
-	if (FAILED(pLayer->Add_GameObject(L"NPC", pGameObject)))
+	if (FAILED(pLayer->Add_GameObject(L"Monster", pGameObject)))
 		return E_FAIL;
 
 	pGameObject = pTemp = CMonsterN1::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ -13.f, 0.f, 87.5f }, CMonsterN1::N1S_PRAY);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	pTemp->Set_Dir(_vec3{ 1.f, 0.f, 0.f });
-	if (FAILED(pLayer->Add_GameObject(L"NPC", pGameObject)))
+	if (FAILED(pLayer->Add_GameObject(L"Monster", pGameObject)))
 		return E_FAIL;
 	//---------------------------------------------------------------------------
+
+	//----------------------------라타우 컷씬2 방 배치---------------------------
+	pGameObject = pTemp = CMonsterN1::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ -240.f, 0.f, 8.f }, CMonsterN1::N1S_PRAY);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	pTemp->Set_Dir(_vec3{ 1.f, 0.f, 0.f });
+	if (FAILED(pLayer->Add_GameObject(L"Monster", pGameObject)))
+		return E_FAIL;
+
+	pGameObject = pTemp = CMonsterN1::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ -236.f, 0.f, 16.f }, CMonsterN1::N1S_PRAY);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	pTemp->Set_Dir(_vec3{ -1.f, 0.f, 0.f });
+	if (FAILED(pLayer->Add_GameObject(L"Monster", pGameObject)))
+		return E_FAIL;
+
+	pGameObject = pTemp = CMonsterN1::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ -232.f, 0.f, 8.f }, CMonsterN1::N1S_PRAY);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	pTemp->Set_Dir(_vec3{ -1.f, 0.f, 0.f });
+	if (FAILED(pLayer->Add_GameObject(L"Monster", pGameObject)))
+		return E_FAIL;
+
+	pGameObject = CFollower::Create(m_pGraphicDev, m_pMessageChannel, L"Proto_Follower3Texture", _vec3(-236.f, 0.f, 11.5f ), CFollower::FOLLOWER_UNCONVERT);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	if (FAILED(pLayer->Add_GameObject(L"NPC", pGameObject)))
+		return E_FAIL;
+	//----------------------------라타우 컷씬2 방 몬스터 배치---------------------------
 
 	pGameObject = CRatau::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ 123.5f, 0.f, 12.f });
 

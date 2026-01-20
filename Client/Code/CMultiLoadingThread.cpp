@@ -299,6 +299,9 @@ void CMultiLoadingThread::Loading_for_Dungeon()
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_N2Node3Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal2/dds/N2Node_02.dds", 1));
 	m_iTotalProtoCount++;
 
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_Follower3Texture", TEX_NORMAL, L"../Bin/Resource/LWY//NPC/Follower3(2)/dds/Follower3_%02d.dds", 14));
+	m_iTotalProtoCount++;
+
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_ProjectileTexture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/dds/Projectile.dds", 1));
 	m_iTotalProtoCount++;
 
@@ -616,6 +619,7 @@ void CMultiLoadingThread::NonTex_for_Dungeon()
 	CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_N3_AI", CN3_AI::Create(m_pGraphicDev, 20.f, 3.f));
 	CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_B1_AI", CB1_AI::Create(m_pGraphicDev, 40.f, 10.f));
 	CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_B2_AI", CB2_AI::Create(m_pGraphicDev, 40.f, 40.f));
+	CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Follower_AI", CFollower_AI::Create(m_pGraphicDev, 40.f, 1.f));
 
 	Load_Object_Texture(Dungeon_Texture);
 }

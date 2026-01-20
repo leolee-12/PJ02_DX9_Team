@@ -516,6 +516,26 @@ CFollower* CFollower::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* Sta
 	return pFollower;
 }
 
+CFollower* CFollower::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, const _tchar* pProtoKey, const _vec3& vPos, FOLLOWER_STATE eState)
+{
+	CFollower* pFollower = new CFollower(pGraphicDev, StageChannel);
+
+	pFollower->m_strProtoKey = pProtoKey;
+
+	if (FAILED(pFollower->Ready_GameObject()))
+	{
+		Safe_Release(pFollower);
+		MSG_BOX("pFollower Create Failed");
+		return nullptr;
+	}
+
+	pFollower->m_pTransformCom->Set_Pos(vPos.x, pFollower->m_fGroundY, vPos.z);
+	pFollower->m_eCurState = eState;
+	pFollower->m_pAICom->Set_State(eState);
+
+	return pFollower;
+}
+
 void CFollower::Free()
 {
 	CGameObject::Free();
