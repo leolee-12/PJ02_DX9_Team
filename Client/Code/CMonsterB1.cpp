@@ -10,6 +10,7 @@
 #include "CProjectile.h"
 #include "CMonsterN2.h"
 #include "CBossHpBar.h"
+#include "CSoundMgr.h"
 
 CMonsterB1::CMonsterB1(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CMonster(pGraphicDev),
@@ -462,6 +463,7 @@ void CMonsterB1::Move_Frame(const _float& fTimeDelta)
 			m_pAICom->Anim_End(m_eCurState);
 			AmduEvent.strType = L"Amdu.Done";
 			m_pMessageChannel->Publish(AmduEvent);
+			CSoundMgr::GetInstance()->Play(L"AmduRoar.wav", SOUND_BOSS, 0.35f);
 			m_eCurState = B1S_ROAR;
 			break;
 
@@ -469,6 +471,9 @@ void CMonsterB1::Move_Frame(const _float& fTimeDelta)
 			m_fFrame = m_fFrameEnd - 0.001f;
 			m_pHpBar->UnActive();
 			m_bDead = true;
+			AmduEvent.strType = L"Boss.Dead";
+			AmduEvent.hmapData[L"BossName"] = wstring(L"Amdu");
+			m_pMessageChannel->Publish(AmduEvent);
 			break;
 		}
 	}
@@ -586,6 +591,10 @@ void CMonsterB1::Attack_HitBox()
 void CMonsterB1::Attacked(const _int& iAttack)
 {
 	if(m_iHp > 0) m_iHp -= iAttack;
+
+	_tchar strSoundName[128] = L"";
+	swprintf_s(strSoundName, L"N2Hit%d.wav", Get_Rand_Int(1, 3));
+	CSoundMgr::GetInstance()->Play(strSoundName, SOUND_BOSS, 0.35f);
 }
 
 void CMonsterB1::Update_State()

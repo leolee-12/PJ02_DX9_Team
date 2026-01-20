@@ -24,6 +24,7 @@ HRESULT CBossHpBarFront::Ready_GameObject()
 
 	m_pTransformCom->Set_Scale(59.f * 8.f, 7.f * 3.f, 0.1f);
 	m_pTransformCom->Set_Pos(m_vPos.x, m_vPos.y, m_vPos.z);
+	m_pTransformCom->Update_Component(0.f);
 
 	m_fRatio = 1.0f;
 

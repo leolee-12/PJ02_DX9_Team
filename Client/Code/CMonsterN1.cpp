@@ -7,6 +7,7 @@
 #include "CCollisionMgr.h"
 #include "CN1_AI.h"
 #include "CMonsterHpBar.h"
+#include "CSoundMgr.h"
 
 CMonsterN1::CMonsterN1(LPDIRECT3DDEVICE9 pGraphicDev)
 	:	CMonster(pGraphicDev),
@@ -489,6 +490,10 @@ void CMonsterN1::Attacked(const _int& iAttack)
 			m_pAICom->Set_State<MONSTER_N1_STATE>(N1S_HIT);
 		}
 	}
+
+	_tchar strSoundName[128] = L"";
+	swprintf_s(strSoundName, L"N1Hit%d.wav", Get_Rand_Int(1, 8));
+	CSoundMgr::GetInstance()->Play(strSoundName, SOUND_HIT, 0.35f);
 }
 
 void CMonsterN1::Update_State()

@@ -228,12 +228,12 @@ void		CBishop_Leshy::Update_State()
 		case Bishops::BS_IDLE:
 			m_strStateKey = L"Bishop_Leshy_Idle";
 			m_iFrame = 0;
-			m_iFrameEnd = m_pTextureCom->Get_TextureEnd(m_strStateKey);
+			m_iFrameEnd = 249;
 			break;
 		case Bishops::BS_TALK:
 			m_strStateKey = L"Bishop_Leshy_Talk";
 			m_iFrame = 0;
-			m_iFrameEnd = m_pTextureCom->Get_TextureEnd(m_strStateKey);
+			m_iFrameEnd = 83;
 			break;
 		}
 		m_ePreState = m_eCurState;
@@ -299,9 +299,11 @@ void CBishop_Leshy::Update_Frame(const _float& fTimeDelta)
 			{
 			case Bishops::BS_IDLE:
 				m_iFrame = 0;
+				m_fFrameTime = 0.f;
 				break;
 			case Bishops::BS_TALK:
 				m_iFrame = 0;
+				m_fFrameTime = 0.f;
 				break;
 			}
 		}

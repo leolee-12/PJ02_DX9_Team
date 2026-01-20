@@ -32,7 +32,7 @@ _int CCutSceneMgr::Update_CutScene(const _float fTimeDelta)
 	switch (tStep.eAdvanceType)
 	{
 	case ADV_DIALOGUE:
-		Key_Input_CutScene();
+		//Key_Input_CutScene();
 		break;
 
 	case ADV_TIMED:
@@ -65,6 +65,21 @@ _int CCutSceneMgr::Update_CutScene(const _float fTimeDelta)
 void CCutSceneMgr::LateUpdate_CutScene(const _float fTimeDelta)
 {
 	if (!m_bPlaying) { return; }
+
+	CUTSCENE_STEP& tStep = m_pCurrentCutScene->vecSteps[m_iCurrentStep];
+
+	switch (tStep.eAdvanceType)
+	{
+	case ADV_DIALOGUE:
+		Key_Input_CutScene();
+		break;
+	case ADV_TIMED:
+		break;
+	case ADV_EVENT:
+		break;
+	case ADV_IMMEDIATE:
+		break;
+	}
 }
 
 void CCutSceneMgr::Play_CutScene(const wstring& strName)

@@ -8,6 +8,7 @@
 #include "CNode.h"
 #include "CN2_AI.h"
 #include "CMonsterHpBar.h"
+#include "CSoundMgr.h"
 
 CMonsterN2::CMonsterN2(LPDIRECT3DDEVICE9 pGraphicDev)
 	:	CMonster(pGraphicDev),
@@ -443,6 +444,10 @@ void CMonsterN2::Attacked(const _int& iAttack)
 		m_iHp -= iAttack;
 		m_pHpBar->Active();
 	}
+
+	_tchar strSoundName[128] = L"";
+	swprintf_s(strSoundName, L"N2Hit%d.wav", Get_Rand_Int(1, 3));
+	CSoundMgr::GetInstance()->Play(strSoundName, SOUND_HIT, 0.35f);
 }
 
 void CMonsterN2::Update_State()
@@ -550,6 +555,7 @@ void CMonsterN2::Free()
 	{
 		Safe_Release(m_pNode[i]);
 	}
+	Safe_Release(m_pHpBar);
 
 	CGameObject::Free();
 }

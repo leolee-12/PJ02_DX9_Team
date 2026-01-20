@@ -12,6 +12,7 @@
 #include "CCollider.h"
 #include "CCutSceneMgr.h"
 #include "CEffect.h"
+#include "CSoundMgr.h"
 
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev),
@@ -462,6 +463,7 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 		//m_pTransformCom->Move_Pos(&m_vDir, fTimeDelta, m_fSpeed * 3.f);
 		m_vLerpPos = m_vPos + m_vDir * 1.f;
 		m_fLerp = 0.2f;
+		CSoundMgr::GetInstance()->Play(L"Player_Attack.wav", SOUND_EFFECT, 0.4f);
 		Attack_HitBox();
 	}
 
@@ -864,6 +866,9 @@ void CPlayer::Attack_HitBox()
 		EAttack.hmapData.emplace(L"Attack", m_iAttack);
 		EAttack.hmapData.emplace(L"Target", tempVec);
 		m_pMessageChannel->Publish(EAttack);
+		_tchar strSoundName[128] = L"";
+		swprintf_s(strSoundName, L"Attacked%d.wav", Get_Rand_Int(1, 4));
+		CSoundMgr::GetInstance()->Play(strSoundName, SOUND_EFFECT, 0.35f);
 	}
 }
 
@@ -885,6 +890,7 @@ void CPlayer::Attacked(_int iDamage)
 
 	m_eCurState = PS_HIT;
 	m_fAcmlTime = 0.f;
+	CSoundMgr::GetInstance()->Play(L"Player_Hit.wav", SOUND_EFFECT, 0.4f);
 }
 
 void CPlayer::Update_Warp(const _float fTimeDelta)

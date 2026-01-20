@@ -433,6 +433,9 @@
     <Filter Include="02. GameObject\05. UI\08. MonsterHpBar\00. Cover">
       <UniqueIdentifier>{7610c791-bdf3-4b8b-89cf-96f29d3e9145}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\02. Environment\03. Chest">
+      <UniqueIdentifier>{b97e8f89-f997-4210-92a3-b845e316f88a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -906,6 +909,9 @@
     <ClInclude Include="..\Header\CMonsterHpBarCover.h">
       <Filter>02. GameObject\05. UI\08. MonsterHpBar\00. Cover</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CChest.h">
+      <Filter>02. GameObject\02. Environment\03. Chest</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1339,6 +1345,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CMonsterHpBarCover.cpp">
       <Filter>02. GameObject\05. UI\08. MonsterHpBar\00. Cover</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CChest.cpp">
+      <Filter>02. GameObject\02. Environment\03. Chest</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

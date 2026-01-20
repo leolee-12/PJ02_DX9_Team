@@ -69,11 +69,11 @@ _int CLogo::Update_Scene(const _float& fTimeDelta)
 			{
 			case LS_START:
 				//LSTmp = LOADING_TUTORIAL;
-				LSTmp = LOADING_VILLAGE;
+				LSTmp = LOADING_REALDUNGEON;
 				break;
 			case LS_EDIT:
 				// 임시입니다.
-				LSTmp = LOADING_DUNGEON;
+				LSTmp = LOADING_VILLAGE;
 				break;	
 			case LS_EXIT:
 				DestroyWindow(g_hWnd);

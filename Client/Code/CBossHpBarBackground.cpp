@@ -21,6 +21,7 @@ HRESULT CBossHpBarBackground::Ready_GameObject()
 
 	m_pTransformCom->Set_Scale((61.f * 8.f) - 10.f, 9.f * 3.f, 0.1f);
 	m_pTransformCom->Set_Pos(m_vPos.x, m_vPos.y, m_vPos.z);
+	m_pTransformCom->Update_Component(0.f);
 
 	return S_OK;
 }

@@ -12,6 +12,7 @@
 #include "CProjectile.h"
 #include "CSpike.h"
 #include "CBossHpBar.h"
+#include "CSoundMgr.h"
 
 CMonsterB2::CMonsterB2(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CMonster(pGraphicDev),
@@ -366,6 +367,10 @@ void CMonsterB2::Move_Frame(const _float& fTimeDelta)
 	_uint iCurAnimFrame = _uint(m_fFrame);
 
 	if(m_eCurState == B2S_IDLE) m_fFrame += m_fFrameSpeed * fTimeDelta;
+	if (m_eCurState == B2S_SPAWN && m_fFrame > 42.f && m_fFrame < 43.f)
+	{
+		CSoundMgr::GetInstance()->Play(L"LeshyRoar.wav", SOUND_BOSS, 0.4f);
+	}
 
 	m_fAcmlTime += fTimeDelta;
 
@@ -630,6 +635,10 @@ void CMonsterB2::Attacked(const _int& iAttack)
 		m_eCurState = B2S_HIT;
 		m_fFrame = 0.f;
 	}
+
+	_tchar strSoundName[128] = L"";
+	swprintf_s(strSoundName, L"LeshyHit%d.wav", Get_Rand_Int(1, 3));
+	CSoundMgr::GetInstance()->Play(strSoundName, SOUND_BOSS, 0.35f);
 }
 
 void CMonsterB2::Update_State()

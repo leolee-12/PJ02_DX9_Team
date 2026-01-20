@@ -30,7 +30,7 @@
 #include "CTriggerPoint.h"
 #include "CCutSceneMgr.h"
 #include "CFontAlpha.h"
-#include "CBishop_Leshy.h"
+#include "CChest.h"
 
 CRealDungeon::CRealDungeon(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -67,7 +67,8 @@ HRESULT CRealDungeon::Ready_Scene()
 		{_vec3(-145.7f * 0.8f, 1.f, 13.5f * 0.8f), 0.75f, 0.5f, L"", L"", ADV_TIMED, 1.f},
 		{_vec3(-145.7f * 0.8f, 1.f, 13.5f * 0.8f), 0.75f, 0.5f, L"Font", L"암두시아스", ADV_IMMEDIATE},
 		{_vec3(-145.7f * 0.8f, 1.f, 13.5f * 0.8f), 0.75f, 0.5f, L"Amdu", L"Amdu_Intro", ADV_EVENT, 0.f, L"Amdu.Done"},
-		{_vec3(-145.7f * 0.8f, 1.f, 13.5f * 0.8f), 1.5f, 0.5f, L"Amdu", L"Amdu_Intro2", ADV_EVENT, 0.f, L"Amdu.Done"}
+		{_vec3(-145.7f * 0.8f, 1.f, 13.5f * 0.8f), 1.5f, 0.5f, L"Amdu", L"Amdu_Intro2", ADV_EVENT, 0.f, L"Amdu.Done"},
+		{_vec3(-145.7f * 0.8f, 1.f, 13.5f * 0.8f), 1.5f, 0.5f, L"Sound", L"PlayAmdu", ADV_IMMEDIATE},
 	};
 
 	CCutSceneMgr::GetInstance()->Register_CutScene(tRealDungeonScene);
@@ -85,9 +86,12 @@ HRESULT CRealDungeon::Ready_Scene()
 		{_vec3(-325.23975f * 0.8f, 2.f, 29.831284f * 0.8f), 0.5f, 0.75f, L"Font", L"레쉬", ADV_TIMED, 1.f},
 		{_vec3(-325.23975f * 0.8f, 2.f, 29.831284f * 0.8f), 0.75f, 0.75f, L"", L"", ADV_TIMED, 1.5f},
 		{_vec3(-325.23975f * 0.8f, 2.f, 29.831284f * 0.8f), 0.75f, 1.f, L"Cam", L"Shake", ADV_EVENT, 0.f, L"Leshy.Done"},
+		{_vec3(-325.23975f * 0.8f, 2.f, 29.831284f * 0.8f), 0.75f, 1.f, L"Sound", L"PlayLeshy", ADV_IMMEDIATE},
 	};
 
 	CCutSceneMgr::GetInstance()->Register_CutScene(tRealDungeonScene);
+
+	CSoundMgr::GetInstance()->PlayBGM(L"05.RealDungeon.mp3", 0.1f);
 
 	return S_OK;
 }
@@ -170,6 +174,7 @@ HRESULT CRealDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 			{
 			case 0:
 				CPersistentMgr::GetInstance()->Get_Player()->Set_Pos(_vec3(spawn.x, 0.f, spawn.z));
+				//CPersistentMgr::GetInstance()->Get_Player()->Set_Pos(_vec3(-260.f, 0.f, -5.2f)); // 레쉬방 앞
 				pGameObject = CPersistentMgr::GetInstance()->Get_Player();
 
 				if (nullptr == pGameObject)
@@ -247,6 +252,7 @@ HRESULT CRealDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 
 						if (FAILED(pLayer->Add_GameObject(L"Boss", pGameObject)))
 							return E_FAIL;
+					break;
 				case 5:
 					// WaitingOne | 연출용 |
 					break;
@@ -365,6 +371,13 @@ HRESULT CRealDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	pTest->Set_Wait();
 
 	if (FAILED(pLayer->Add_GameObject(L"Test", pGameObject)))
+		return E_FAIL;
+
+	pGameObject = CChest::Create(m_pGraphicDev, m_pMessageChannel, _vec3(0.f, 0.f, 0.f));
+
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+
+	if (FAILED(pLayer->Add_GameObject(L"Chest", pGameObject)))
 		return E_FAIL;
 
 
@@ -487,6 +500,53 @@ void CRealDungeon::Ready_Event()
 		}
 	}
 	}) });
+
+	m_hmapSubHandles.insert({ L"Dialogue", m_pMessageChannel->Subscribe(L"CutScene.Dialogue", [this](const IMessageChannel::EVENT& Event)
+	{
+		auto CinemaTargetNameiter = Event.hmapData.find(L"CinemaTargetName");
+		if (CinemaTargetNameiter == Event.hmapData.end()) { return; }
+		auto Dothisiter = Event.hmapData.find(L"Dothis");
+		if (Dothisiter == Event.hmapData.end()) { return; }
+		if (any_cast<wstring>(CinemaTargetNameiter->second) == L"Sound")
+		{
+			wstring strDothis = any_cast<wstring>(Dothisiter->second);
+			if (strDothis == L"BGMStop") {
+				CSoundMgr::GetInstance()->StopSound(SOUND_BGM);
+				return;
+			}
+			if (strDothis == L"PlayAmdu") {
+				CSoundMgr::GetInstance()->StopSound(SOUND_BGM);
+				CSoundMgr::GetInstance()->PlayBGM(L"06.Amdu.mp3", 0.2f);
+				return;
+			}
+			if (strDothis == L"PlayLeshy") {
+				CSoundMgr::GetInstance()->StopSound(SOUND_BGM);
+				CSoundMgr::GetInstance()->PlayBGM(L"07.Leshy.mp3", 0.2f);
+				return;
+			}
+		}
+		return;
+	}
+	) });
+
+	m_hmapSubHandles.insert({ L"Boss.Dead", m_pMessageChannel->Subscribe(L"Boss.Dead", [this](const IMessageChannel::EVENT& Event)
+	{
+		auto BossNameiter = Event.hmapData.find(L"BossName");
+		if (BossNameiter == Event.hmapData.end()) { return; }
+		wstring strDothis = any_cast<wstring>(BossNameiter->second);
+		if (strDothis == L"Amdu") {
+			CSoundMgr::GetInstance()->StopSound(SOUND_BGM);
+			CSoundMgr::GetInstance()->PlayBGM(L"05.RealDungeon.mp3", 0.1f);
+			return;
+		}
+		if (strDothis == L"Leshy") {
+			CSoundMgr::GetInstance()->StopSound(SOUND_BGM);
+			return;
+		}
+
+		return;
+	}
+	) });
 }
 
 CRealDungeon* CRealDungeon::Create(LPDIRECT3DDEVICE9 pGraphicDev)

@@ -570,6 +570,9 @@ void CMultiLoadingThread::Loading_for_RealDungeon()
 
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_MonsterHpFront", TEX_NORMAL, L"../Bin/Resource/YSH/UI/HpBarRed.png", 1));
 	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_ChestTexture", TEX_NORMAL, L"../Bin/Resource/Texture/NPC/Chest/dds/Chest_%d.dds", 2));
+	m_iTotalProtoCount++;
 	// 디버그용 그긴거
 
 }
