@@ -36,6 +36,7 @@ namespace Engine
 		OID_BORDER,
 		OID_WARP,
 		OID_EFFECT,
+		OID_CHEST,
 		OID_END 
 	};
 
@@ -54,7 +55,7 @@ namespace Engine
 		LOADING_LESHYROOM, 
 		LOADING_END };
 
-	enum CHANNELID { SOUND_BGM, SOUND_EFFECT, SOUND_DIALOUGE, MAXCHANNEL };
+	enum CHANNELID { SOUND_BGM, SOUND_HIT, SOUND_EFFECT, SOUND_DIALOUGE, SOUND_BOSS, MAXCHANNEL };
 
 	typedef enum GLOBALOBJECTID
 	{
@@ -74,7 +75,7 @@ namespace Engine
 		CL_TRIGGER	= 1 << 7,
 		CL_BORDER   = 1 << 8,
 		CL_NPC		= 1 << 9,
-		CL_11		= 1 << 10,
+		CL_CHEST	= 1 << 10,
 		CL_12		= 1 << 11,
 		CL_13		= 1 << 12,
 		CL_14		= 1 << 13,

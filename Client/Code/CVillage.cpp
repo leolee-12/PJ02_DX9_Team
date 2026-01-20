@@ -82,6 +82,18 @@ HRESULT CVillage::Ready_Scene()
 
 	CCutSceneMgr::GetInstance()->Register_CutScene(tDungeonScene);
 
+	tDungeonScene.strName = L"Gate_00";
+	tDungeonScene.vecSteps =
+	{
+		{_vec3(0.f, 0.f, 18.f), 0.75f, 0.5f, L"", L"", ADV_TIMED, 1.f},
+		{_vec3(0.f, 0.f, 18.f), 0.75f, 0.5f, L"Cam", L"Shake_Village", ADV_TIMED, 2.f},
+		{_vec3(-18.8f, 0.f, 41.8f), 1.f, 0.5f, L"", L"", ADV_TIMED, 3.f},
+	};
+
+	CCutSceneMgr::GetInstance()->Register_CutScene(tDungeonScene);
+
+	
+
 	return S_OK;
 }
 
@@ -427,6 +439,15 @@ HRESULT CVillage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	vTriggerPos = { -18.8F, 0.f, 41.8f };
 	vTriggerHalfSize = { 5.f, 5.f, 5.f };
 	pGameObject = CTriggerPoint::Create(m_pGraphicDev, m_pMessageChannel, vTriggerPos, vTriggerHalfSize, Trigger::TI_SCENE, L"Real_Dungeon", true);
+
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+
+	if (FAILED(pLayer->Add_GameObject(L"TriggerPoint", pGameObject)))
+		return E_FAIL;
+
+	vTriggerPos = { 0.f, 0.f, 18.f };
+	vTriggerHalfSize = { 3.f, 3.f, 3.f };
+	pGameObject = CTriggerPoint::Create(m_pGraphicDev, m_pMessageChannel, vTriggerPos, vTriggerHalfSize, Trigger::TI_STAGING, L"Gate_00", true);
 
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 

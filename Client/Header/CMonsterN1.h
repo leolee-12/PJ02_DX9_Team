@@ -10,6 +10,7 @@ namespace Engine
 }
 
 class CN1_AI;
+class CMonsterHpBar;
 
 class CMonsterN1 : public CMonster 
 {
@@ -59,6 +60,9 @@ private:
 
 	// AI 관련
 	CN1_AI*				m_pAICom;
+
+	//체력바관련
+	CMonsterHpBar*		m_pHpBar;
 
 	static constexpr _uint	N1_DEFAULT_HP = 4;
 	static constexpr _float	N1_DEFAULT_SCALE = 5.f;

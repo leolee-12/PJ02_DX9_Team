@@ -201,6 +201,10 @@ void CMainCamera::Ready_Event_MainCam()
 				Set_Shake(1.f, 2.5f, 10.f);
 				return;
 			}
+			if (strDothis == L"Shake_Village") {
+				Set_Shake(1.f, 2.f, 10.f);
+				return;
+			}
 		}
 
 		return;

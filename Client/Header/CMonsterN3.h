@@ -10,6 +10,7 @@ namespace Engine
 }
 
 class CN3_AI;
+class CMonsterHpBar;
 
 class CMonsterN3 : public CMonster 
 {
@@ -61,6 +62,9 @@ private:
 	static constexpr _uint	N3_DEFAULT_HP = 3;
 	static constexpr _float	N3_DEFAULT_SCALE = 5.f;
 	static constexpr _float N3_DEFAULT_HEIGHT = 2.f;
+	//체력바관련
+	CMonsterHpBar* m_pHpBar;
+
 public:
 	static CMonsterN3*	Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel);
 

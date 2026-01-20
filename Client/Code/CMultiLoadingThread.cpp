@@ -226,10 +226,16 @@ void CMultiLoadingThread::Loading_for_Tutorial()
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_BishopLeshyTransform", TEX_NORMAL, L"../Bin/Resource/YSH/Leshy/Leshy-Transform/dds/Leshy-Transform-%d.dds", 376));
 	m_iTotalProtoCount++;
 
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_MonsterHpCover", TEX_NORMAL, L"../Bin/Resource/YSH/UI/HpBarCover.png", 1));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_MonsterHpFront", TEX_NORMAL, L"../Bin/Resource/YSH/UI/HpBarRed.png", 1));
+	m_iTotalProtoCount++;
+
     // ===== TextureSet 큐 등록 (멀티스레드 로딩) =====
     vector<TEXSETLR> vecBishopLeshy;
     vecBishopLeshy.push_back(TEXSETLR(L"Bishop_Leshy_Idle", L"../Bin/Resource/Texture/Bishops/Leshy/Leshy-idle/dds/Leshy_idle-%d.dds", 250));
-    vecBishopLeshy.push_back(TEXSETLR(L"Bishop_Leshy_Talk", L"../Bin/Resource/Texture/Bishops/Leshy/Leshy-talk/dds/Leshy-talk%d.dds", 83));
+    vecBishopLeshy.push_back(TEXSETLR(L"Bishop_Leshy_Talk", L"../Bin/Resource/Texture/Bishops/Leshy/Leshy-talk/dds/Leshy-talk%d.dds", 84));
     m_TexSetLoadingqueue.push(make_pair(TEXSETINFO(L"Proto_BishopLeshy", TEX_NORMAL), vecBishopLeshy));
     m_iTotalProtoCount++;
 
@@ -263,9 +269,6 @@ void CMultiLoadingThread::Loading_for_Dungeon()
 
 
 	// ===== 텍스처 큐 등록 (멀티스레드 로딩) =====
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_ItemTexture", TEX_NORMAL, L"../Bin/Resource/Texture/Item/dds/Item_%02d.dds", 8));
-	m_iTotalProtoCount++;
-
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_DungeonLine", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Dungeon/dds/Line%d.dds", 2));
 	m_iTotalProtoCount++;
 
@@ -344,12 +347,7 @@ void CMultiLoadingThread::Loading_for_Dungeon()
 	m_iTotalProtoCount++;
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingSelectButton", TEX_NORMAL, L"../Bin/Resource/YSD/CookingSelect/Button_%d.png", 2));
 	m_iTotalProtoCount++;
-	/*m_TexturLoadingqueue.push(TEXLR(L"Proto_BossHpBarFront", TEX_NORMAL, L"../Bin/Resource/YSD/BossHpBar/BossHpBarRed.png", 1));
-	m_iTotalProtoCount++;
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_BossHpBarMiddle", TEX_NORMAL, L"../Bin/Resource/YSD/BossHpBar/BossHpBarWhite.png", 1));
-	m_iTotalProtoCount++;
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_BossHpBarBackground", TEX_NORMAL, L"../Bin/Resource/YSD/BossHpBar/BossHpBarBackgorund.png", 1));
-	m_iTotalProtoCount++;*/
+	
 	
 
 	// 덴저러스 수동 PNG존 지뢰밟지않게 조심할것
@@ -385,6 +383,13 @@ void CMultiLoadingThread::Loading_for_Dungeon()
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_BruteTexture", TEX_NORMAL, L"../Bin/Resource/LWY//NPC/Brute/dds/Brute_%d.dds", 5));
 	m_iTotalProtoCount++;
 
+	//상자, 아이템
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_ChestTexture", TEX_NORMAL, L"../Bin/Resource/Texture/NPC/Chest/dds/Chest_%d.dds", 2));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_ItemTexture", TEX_NORMAL, L"../Bin/Resource/Texture/Item/dds/Item_%02d.dds", 8));
+	m_iTotalProtoCount++;
+
 	// 메인보스
 	vector<TEXSETLR> vecBossLeshy;
 	vecBossLeshy.push_back(TEXSETLR(L"BossLeshy_Idle", L"../Bin/Resource/Texture/Monster/Boss2/idle/dds/idle_%04d.dds", 80));
@@ -405,6 +410,12 @@ void CMultiLoadingThread::Loading_for_Dungeon()
 	m_iTotalProtoCount++;
 
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_Fade", TEX_NORMAL, L"../Bin/Resource/YSH/Etc/Fade.png", 1));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_MonsterHpCover", TEX_NORMAL, L"../Bin/Resource/YSH/UI/HpBarCover.png", 1));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_MonsterHpFront", TEX_NORMAL, L"../Bin/Resource/YSH/UI/HpBarRed.png", 1));
 	m_iTotalProtoCount++;
 	//디버그용 바로진입 프로토타입
 }
@@ -562,11 +573,23 @@ void CMultiLoadingThread::Loading_for_RealDungeon()
 
 	vector<TEXSETLR> vecBishopLeshy;
 	vecBishopLeshy.push_back(TEXSETLR(L"Bishop_Leshy_Idle", L"../Bin/Resource/Texture/Bishops/Leshy/Leshy-idle/dds/Leshy_idle-%d.dds", 250));
-	vecBishopLeshy.push_back(TEXSETLR(L"Bishop_Leshy_Talk", L"../Bin/Resource/Texture/Bishops/Leshy/Leshy-talk/dds/Leshy-talk%d.dds", 83));
+	vecBishopLeshy.push_back(TEXSETLR(L"Bishop_Leshy_Talk", L"../Bin/Resource/Texture/Bishops/Leshy/Leshy-talk/dds/Leshy-talk%d.dds", 84));
 	m_TexSetLoadingqueue.push(make_pair(TEXSETINFO(L"Proto_BishopLeshy", TEX_NORMAL), vecBishopLeshy));
 	m_iTotalProtoCount++;
 
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_SpeechBubble", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Etc/dds/SpeechBubble.dds", 1));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_MonsterHpCover", TEX_NORMAL, L"../Bin/Resource/YSH/UI/HpBarCover.png", 1));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_MonsterHpFront", TEX_NORMAL, L"../Bin/Resource/YSH/UI/HpBarRed.png", 1));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_ChestTexture", TEX_NORMAL, L"../Bin/Resource/Texture/NPC/Chest/dds/Chest_%d.dds", 2));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_ItemTexture", TEX_NORMAL, L"../Bin/Resource/Texture/Item/dds/Item_%02d.dds", 8));
 	m_iTotalProtoCount++;
 	// 디버그용 그긴거
 
@@ -611,8 +634,6 @@ void CMultiLoadingThread::NonTex_for_Test()
 void CMultiLoadingThread::NonTex_for_KnuckleBone()
 {
 }
-
-
 
 void CMultiLoadingThread::NonTex_for_Dungeon()
 {

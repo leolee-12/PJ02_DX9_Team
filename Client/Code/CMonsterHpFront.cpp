@@ -1,37 +1,36 @@
 ﻿#include "pch.h"
-#include "CBossHpBarFront.h"
+#include "CMonsterHpFront.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
 
 #include "CFontMgr.h"
 
-CBossHpBarFront::CBossHpBarFront(LPDIRECT3DDEVICE9 pGraphicDev)
+CMonsterHpFront::CMonsterHpFront(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CUi(pGraphicDev), m_pBufferCom(nullptr), m_pTransformCom(nullptr)
 {
 	ZeroMemory(&m_vPos, sizeof(_vec3));
 }
 
-CBossHpBarFront::~CBossHpBarFront()
+CMonsterHpFront::~CMonsterHpFront()
 {
 }
 
-HRESULT CBossHpBarFront::Ready_GameObject()
+HRESULT CMonsterHpFront::Ready_GameObject()
 {
 	if (FAILED(Add_Component()))
 		return E_FAIL;
 
 	Ready_PixelShader();
 
-	m_pTransformCom->Set_Scale(59.f * 8.f, 7.f * 3.f, 0.1f);
+	m_pTransformCom->Set_Scale(59.f, 7.f, 0.1f);
 	m_pTransformCom->Set_Pos(m_vPos.x, m_vPos.y, m_vPos.z);
-	m_pTransformCom->Update_Component(0.f);
 
 	m_fRatio = 1.0f;
 
 	return S_OK;
 }
 
-_int CBossHpBarFront::Update_GameObject(const _float& fTimeDelta)
+_int CMonsterHpFront::Update_GameObject(const _float& fTimeDelta)
 {
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
@@ -40,7 +39,7 @@ _int CBossHpBarFront::Update_GameObject(const _float& fTimeDelta)
 	return iExit;
 }
 
-void CBossHpBarFront::LateUpdate_GameObject(const _float& fTimeDelta)
+void CMonsterHpFront::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
@@ -48,7 +47,7 @@ void CBossHpBarFront::LateUpdate_GameObject(const _float& fTimeDelta)
 	Compute_ViewDepth_Ortho(&m_vPos);
 }
 
-void CBossHpBarFront::Render_GameObject()
+void CMonsterHpFront::Render_GameObject()
 {
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
 
@@ -58,7 +57,7 @@ void CBossHpBarFront::Render_GameObject()
 
 
 	m_pTextureCom->Set_Texture();
-	
+
 	m_pBufferCom->Render_Buffer();
 
 	m_pGraphicDev->SetPixelShader(NULL);
@@ -79,12 +78,12 @@ void CBossHpBarFront::Render_GameObject()
 	CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans30", szGauge1, rcPlayer, FontColor1, DT_RIGHT | DT_BOTTOM);
 }
 
-void CBossHpBarFront::OnCollision(CGameObject* pObject)
+void CMonsterHpFront::OnCollision(CGameObject* pObject)
 {
 
 }
 
-HRESULT CBossHpBarFront::Add_Component()
+HRESULT CMonsterHpFront::Add_Component()
 {
 	Engine::CComponent* pComponent = nullptr;
 
@@ -107,7 +106,7 @@ HRESULT CBossHpBarFront::Add_Component()
 	m_mapComponent[ID_DYNAMIC].insert({ L"Com_Transform", pComponent });
 
 	pComponent = m_pTextureCom = dynamic_cast<Engine::CTexture*>
-		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_BossHpBar"));
+		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_MonsterHpFront"));
 
 	if (nullptr == pComponent)
 		return E_FAIL;
@@ -117,7 +116,12 @@ HRESULT CBossHpBarFront::Add_Component()
 	return S_OK;
 }
 
-HRESULT CBossHpBarFront::Ready_PixelShader()
+void CMonsterHpFront::Set_Pos(const _vec3& vPos)
+{
+	m_pTransformCom->Set_Pos(vPos.x, vPos.y, vPos.z);
+}
+
+HRESULT CMonsterHpFront::Ready_PixelShader()
 {
 	LPD3DXBUFFER pCode = NULL;
 	LPD3DXBUFFER pError = NULL;
@@ -160,9 +164,9 @@ HRESULT CBossHpBarFront::Ready_PixelShader()
 }
 
 
-CBossHpBarFront* CBossHpBarFront::Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 _vPos)
+CMonsterHpFront* CMonsterHpFront::Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 _vPos)
 {
-	CBossHpBarFront* pBossHpBarFront = new CBossHpBarFront(pGraphicDev);
+	CMonsterHpFront* pBossHpBarFront = new CMonsterHpFront(pGraphicDev);
 
 	pBossHpBarFront->m_vPos = _vPos;
 	//pBossHpBarFront->m_fScale = _fScale;
@@ -171,13 +175,13 @@ CBossHpBarFront* CBossHpBarFront::Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 _v
 	if (FAILED(pBossHpBarFront->Ready_GameObject()))
 	{
 		Safe_Release(pBossHpBarFront);
-		MSG_BOX("pBossHpBarFront Create Failed");
+		MSG_BOX("pMonsterHpBarFront Create Failed");
 		return nullptr;
 	}
 	return pBossHpBarFront;
 }
 
-void CBossHpBarFront::Free()
+void CMonsterHpFront::Free()
 {
 	m_pPixelShader->Release();
 	CUi::Free();
