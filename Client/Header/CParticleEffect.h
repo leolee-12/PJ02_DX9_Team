@@ -37,8 +37,17 @@ public:
 	virtual void    OnFinish() {}       // 완료 시
 	virtual void    OnLoop() {}         // 루프 시
 
+	void			Emit_Particle();
+
+	void			Set_TextureKey(wstring strKey) { m_strProtoTexKey = strKey; }
+	void			Set_EmitRange(const _vec3& v1, const _vec3& v2) {}
+	void			Set_SpeedRange(const _vec3& v1, const _vec3& v2) {}
+	void			Set_LifeTime(const _float& fTime) { m_fLifeTime = fTime; }
+	void			Set_EmitRate(const _float& fRate) { m_fEmitRate = fRate; }
+
 public:
-	static CParticleEffect* Create(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vPos, _uint iTexIdx);
+	static CParticleEffect* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	virtual CParticleEffect* Clone();
 
 private:
 	vector<Particle>	m_vecParticles;

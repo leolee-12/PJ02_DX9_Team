@@ -24,7 +24,7 @@ HRESULT	CTrailEffect::Ready_GameObject()
 
 _int CTrailEffect::Update_GameObject(const _float& fTimeDelta)
 {
-	if (m_eState != ES_PLAY || m_eState != ES_LOOP) return NOEVENT;
+	if (m_eState != ES_PLAY && m_eState != ES_LOOP) return NOEVENT;
 
 
 	CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHA, this);
@@ -110,23 +110,16 @@ void CTrailEffect::Add_Point(const _vec3& vPoint)
 
 }
 
-CTrailEffect* CTrailEffect::Create(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vPos, _uint iTexIdx)
+CTrailEffect* CTrailEffect::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 {
-	CTrailEffect* pEffect = nullptr;// = new CTrailEffect(pGraphicDev);
-
-	//pEffect->m_iTexIdx = iTexIdx;
-
-	//if (FAILED(pEffect->Ready_GameObject()))
-	//{
-	//	Safe_Release(pEffect);
-	//	MSG_BOX("pEffect Create Failed");
-	//	return nullptr;
-	//}
-
-	//pEffect->m_pTransformCom->Set_Pos(vPos.x, vPos.y, vPos.z - 0.01f);
-	//pEffect->m_pTransformCom->Update_Component(0.f);
+	CTrailEffect* pEffect = nullptr;
 
 	return pEffect;
+}
+
+CTrailEffect* CTrailEffect::Clone()
+{
+	return new CTrailEffect(*this);
 }
 
 void CTrailEffect::Free()

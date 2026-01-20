@@ -439,9 +439,6 @@
     <Filter Include="02. GameObject\03. Dependent\01. Effect\0. SpriteEffect">
       <UniqueIdentifier>{3f4f1d7c-f64c-48fb-b131-1abee5b964e4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\03. Dependent\01. Effect\1. ParticleEffect">
-      <UniqueIdentifier>{e0254c7a-8146-4aab-be06-e125b4853c7c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObject\02. Environment\02. Interactable\02. BreakableRock">
       <UniqueIdentifier>{3329f3da-37fb-41de-8fa1-0c729130dfb9}</UniqueIdentifier>
     </Filter>
@@ -453,6 +450,9 @@
     </Filter>
     <Filter Include="02. GameObject\03. Dependent\01. Effect\3. ScreenEffect">
       <UniqueIdentifier>{9be5aa81-2e63-47f4-9967-6883c67cbfee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\03. Dependent\01. Effect\1. ParticleEffect">
+      <UniqueIdentifier>{e0254c7a-8146-4aab-be06-e125b4853c7c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

@@ -17,6 +17,7 @@ public:
 	enum EFFECT_KEY
 	{
 		EK_HIT,
+		EK_PICKUP,
 		EK_SLASH,
 		EK_DUST_LAND,
 		EK_DUST_RUN,
@@ -34,14 +35,14 @@ public:
 	_int			Update_Effect(const _float& fTimeDelta);
 	void			LateUpdate_Effect(const _float& fTimeDelta);
 
-
-	void			Create_Effect(LPDIRECT3DDEVICE9 pGraphicDev, EFFECT_KEY eEffectKey, const _vec3& vPos, const _vec3& vOffset = _vec3(0.f, 0.f, 0.f));
-	void			Create_Attached_Effect(LPDIRECT3DDEVICE9 pGraphicDev, EFFECT_KEY eEffectKey, CGameObject* pOwner, const _vec3& vOffset = _vec3(0.f, 0.f, 0.f));
+	void			Create_Effect(LPDIRECT3DDEVICE9 pGraphicDev, EFFECT_KEY eEffectKey, const _vec3& vPos, CGameObject* pOwner = nullptr, const _vec3& vOffset = _vec3(0.f, 0.f, 0.f));
 	void			Clear_Effect();
 	
 
 private:
-	list<CEffect*> m_EffectList;
+	LPDIRECT3DDEVICE9					m_pGraphicDev;
+	list<CEffect*>						m_EffectList;
+	unordered_map<EFFECT_KEY, CEffect*>	m_mapProtoEffect;
 
 private:
 	virtual void Free();

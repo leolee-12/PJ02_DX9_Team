@@ -28,15 +28,15 @@ public:
 	virtual void    OnFinish() {}       // 완료 시
 	virtual void    OnLoop() {}         // 루프 시
 
-	void			Set_Type(SCREENEFFECT_TYPE eType) { m_eType = eType; }
+	void			Set_SEFType(SCREENEFFECT_TYPE eType) { m_eSEFType = eType; }
+	void			Set_TextureKey(wstring strKey) { m_strProtoTexKey = strKey; }
+	void			Set_FadeTime(const _float& fFadeIn, const _float& fFadeOut) { m_fFadeInTime = fFadeIn; m_fFadeOutTime = fFadeOut; }
 	void			Pulse(const _float& fTimeDelta);
 	void			Rotation(const _float& fTimeDelta);
 	void			Zoom(const _float& fTimeDelta);
 
-public:
-	static CScreenEffect* Create(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vPos, _uint iTexIdx);
-
-	SCREENEFFECT_TYPE m_eType;
+private:
+	SCREENEFFECT_TYPE m_eSEFType;
 	_float	m_fAlpha;           // 전체 투명도 (0~1)
 	_float	m_fScale;           // 크기 (줌 효과용)
 	_float	m_fRotation;        // 회전 (동적 효과용)
@@ -49,6 +49,10 @@ public:
 	_float m_fPulseSpeed;
 	_float m_fBaseAlpha;
 	_float m_fBaseScale;
+
+public:
+	static CScreenEffect* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	virtual CScreenEffect* Clone();
 
 private:
 	virtual void	Free();

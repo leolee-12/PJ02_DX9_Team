@@ -27,9 +27,7 @@ public:
 
 	void			Add_Point(const _vec3& vPoint);
 
-public:
-	static CTrailEffect* Create(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vPos, _uint iTexIdx);
-
+private:
 	deque<_vec3>    m_dequePoints;      // 궤적 점들
 	_uint           m_iMaxPoints;
 	_float          m_fPointInterval;   // 점 추가 간격 (거리)
@@ -39,6 +37,10 @@ public:
 	_float          m_fAlphaStart;
 	_float          m_fAlphaEnd;
 	DWORD           m_dwColor;
+
+public:
+	static CTrailEffect* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	virtual CTrailEffect* Clone();
 
 private:
 	virtual void	Free();

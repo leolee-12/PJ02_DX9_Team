@@ -21,6 +21,8 @@ protected:
 	virtual		~CEffect();
 
 public:
+	void				Set_Owner(CGameObject* pOwner) { m_pOwner = pOwner; }
+
 	virtual HRESULT		Ready_GameObject() PURE;
 	virtual _int		Update_GameObject(const _float& fTimeDelta) PURE;
 	virtual void		LateUpdate_GameObject(const _float& fTimeDelta) PURE;
@@ -62,4 +64,5 @@ protected:
 
 public:
 	static CEffect* Create(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vPos, _uint iTexIdx);
+	virtual CEffect* Clone() PURE;
 };

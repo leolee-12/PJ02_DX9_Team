@@ -19,12 +19,20 @@ CScreenEffect::~CScreenEffect()
 
 HRESULT	CScreenEffect::Ready_GameObject()
 {
+	FAILED_CHECK_RETURN(CEffect::Add_Component(), E_FAIL);
+
+	m_eType = EF_SCREEN;
+	m_eState = ES_READY;
+	m_fAlpha = 0.f;
+	m_fScale = 1.f;
+	m_fRotation = 0.f;
+
 	return S_OK;
 }
 
 _int CScreenEffect::Update_GameObject(const _float& fTimeDelta)
 {
-	if (m_eState != ES_PLAY || m_eState != ES_LOOP) return NOEVENT;
+	if (m_eState != ES_PLAY && m_eState != ES_LOOP) return NOEVENT;
 
 	m_fAccTime += fTimeDelta;
 
@@ -43,21 +51,32 @@ _int CScreenEffect::Update_GameObject(const _float& fTimeDelta)
 	// 종료
 	if (m_fAccTime >= m_fLifeTime)
 	{
-		if (m_bLoop) m_fAccTime = 0.f;
+		if (m_bLoop)
+		{
+			m_fAccTime = 0.f;
+			m_eState = ES_LOOP;
+			OnLoop();
+		}
 		else
 		{
-			m_iHp = 0;
-			return NOEVENT;
+			m_eState = ES_FINISH;
+			OnFinish();
+			return DEAD;
 		}
 	}
 
+	//Rotation(fTimeDelta);
+
+	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
+
 	CRenderer::GetInstance()->Add_RenderGroup(RENDER_UI, this);
 
-	return NOEVENT;
+	return iExit;
 }
 
 void CScreenEffect::LateUpdate_GameObject(const _float& fTimeDelta)
 {
+	CGameObject::LateUpdate_GameObject(fTimeDelta);
 }
 
 void CScreenEffect::Render_GameObject()
@@ -132,23 +151,16 @@ void CScreenEffect::Zoom(const _float& fTimeDelta)
 	}
 }
 
-CScreenEffect* CScreenEffect::Create(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vPos, _uint iTexIdx)
+CScreenEffect* CScreenEffect::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 {
-	CScreenEffect* pEffect = nullptr;// = new CScreenEffect(pGraphicDev);
-
-	//pEffect->m_iTexIdx = iTexIdx;
-
-	//if (FAILED(pEffect->Ready_GameObject()))
-	//{
-	//	Safe_Release(pEffect);
-	//	MSG_BOX("pEffect Create Failed");
-	//	return nullptr;
-	//}
-
-	//pEffect->m_pTransformCom->Set_Pos(vPos.x, vPos.y, vPos.z - 0.01f);
-	//pEffect->m_pTransformCom->Update_Component(0.f);
+	CScreenEffect* pEffect = nullptr;
 
 	return pEffect;
+}
+
+CScreenEffect* CScreenEffect::Clone()
+{
+	return new CScreenEffect(*this);
 }
 
 void CScreenEffect::Free()

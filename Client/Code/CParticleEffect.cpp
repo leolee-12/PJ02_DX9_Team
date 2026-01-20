@@ -19,13 +19,32 @@ CParticleEffect::~CParticleEffect()
 
 HRESULT	CParticleEffect::Ready_GameObject()
 {
+	FAILED_CHECK_RETURN(CEffect::Add_Component(), E_FAIL);
+
+	m_eType = EF_PARTICLE;
+	m_eState = ES_READY;
+
+	// 기본 설정
+	m_iMaxParticles = 50;
+	m_fEmitRate = 10.f;
+	m_fEmitAcc = 0.f;
+	m_vGravity = _vec3(0.f, -9.8f, 0.f);
+	m_fDrag = 0.98f;
+
+	m_fSizeStart = 0.5f;
+	m_fSizeEnd = 0.1f;
+	m_fAlphaStart = 1.f;
+	m_fAlphaEnd = 0.f;
+
+	m_vecParticles.reserve(m_iMaxParticles);
+
 	return S_OK;
 }
 
 _int CParticleEffect::Update_GameObject(const _float& fTimeDelta)
 {
-	// 1. 파티클 생성
-	if (m_eState == ES_PLAY)
+	if (m_eState != ES_PLAY && m_eState != ES_LOOP) return NOEVENT;
+	else	// 1. 파티클 생성
 	{
 		m_fEmitAcc += m_fEmitRate * fTimeDelta;
 		size_t iMaxCount = m_vecParticles.size();
@@ -65,7 +84,7 @@ _int CParticleEffect::Update_GameObject(const _float& fTimeDelta)
 	if (m_eState == ES_PLAY && m_fAccTime >= m_fLifeTime)
 	{
 		m_eState = ES_FINISH;
-
+		return DEAD;
 	}
 
 	CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHA, this);
@@ -79,6 +98,31 @@ void CParticleEffect::LateUpdate_GameObject(const _float& fTimeDelta)
 
 void CParticleEffect::Render_GameObject()
 {
+	for (auto& p : m_vecParticles)
+	{
+		// 각 파티클마다 월드 행렬 설정 (빌보드)
+		_matrix matWorld;
+		D3DXMatrixScaling(&matWorld, p.fSize, p.fSize, p.fSize);
+
+		// 빌보드 회전 적용
+		_matrix matView;
+		m_pGraphicDev->GetTransform(D3DTS_VIEW, &matView);
+		matWorld._11 = matView._11; matWorld._13 = matView._13;
+		matWorld._31 = matView._31; matWorld._33 = matView._33;
+
+		matWorld._41 = p.vPos.x;
+		matWorld._42 = p.vPos.y;
+		matWorld._43 = p.vPos.z;
+
+		m_pGraphicDev->SetTransform(D3DTS_WORLD, &matWorld);
+
+		// 알파 적용
+		DWORD dwAlpha = DWORD(p.fAlpha * 255.f);
+		m_pGraphicDev->SetRenderState(D3DRS_TEXTUREFACTOR, D3DCOLOR_ARGB(dwAlpha, 255, 255, 255));
+
+		m_pTextureCom->Set_Texture(0);
+		m_pBufferCom->Render_Buffer();
+	}
 }
 
 void CParticleEffect::Play()
@@ -95,23 +139,40 @@ void CParticleEffect::Reset()
 {
 }
 
-CParticleEffect* CParticleEffect::Create(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vPos, _uint iTexIdx)
+void CParticleEffect::Emit_Particle()
 {
-	CParticleEffect* pEffect = nullptr;// = new CParticleEffect(pGraphicDev);
+	Particle p;
+	_vec3 vBasePos;
+	m_pTransformCom->Get_Info(INFO_POS, &vBasePos);
 
-	//pEffect->m_iTexIdx = iTexIdx;
+	p.vPos = vBasePos + _vec3(
+		Get_Rand_Float(m_vEmitMinPos.x, m_vEmitMaxPos.x),
+		Get_Rand_Float(m_vEmitMinPos.y, m_vEmitMaxPos.y),
+		Get_Rand_Float(m_vEmitMinPos.z, m_vEmitMaxPos.z)
+	);
+	p.vSpeed = _vec3(
+		Get_Rand_Float(m_vMinSpeed.x, m_vMaxSpeed.x),
+		Get_Rand_Float(m_vMinSpeed.y, m_vMaxSpeed.y),
+		Get_Rand_Float(m_vMinSpeed.z, m_vMaxSpeed.z)
+	);
+	p.fMaxLife = p.fLife = Get_Rand_Float(0.5f, 1.5f);
+	p.fSize = m_fSizeStart;
+	p.fAlpha = m_fAlphaStart;
+	p.dwColor = D3DCOLOR_ARGB(255, 255, 255, 255);
 
-	//if (FAILED(pEffect->Ready_GameObject()))
-	//{
-	//	Safe_Release(pEffect);
-	//	MSG_BOX("pEffect Create Failed");
-	//	return nullptr;
-	//}
+	m_vecParticles.push_back(p);
+}
 
-	//pEffect->m_pTransformCom->Set_Pos(vPos.x, vPos.y, vPos.z - 0.01f);
-	//pEffect->m_pTransformCom->Update_Component(0.f);
+CParticleEffect* CParticleEffect::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+{
+	CParticleEffect* pEffect = nullptr;
 
 	return pEffect;
+}
+
+CParticleEffect* CParticleEffect::Clone()
+{
+	return new CParticleEffect(*this);
 }
 
 void CParticleEffect::Free()
