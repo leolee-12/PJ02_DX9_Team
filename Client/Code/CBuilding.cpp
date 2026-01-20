@@ -39,9 +39,7 @@ HRESULT CBuilding::Ready_GameObject()
 	if (FAILED(Add_Component()))
 		return E_FAIL;
 
-	Change_State(BS_CONSTRUCTING);
-	m_fWorkGauge = 0.f;
-	m_pColliderCom->RegisterToManager(this, CL_GRASS);
+	Ready_Variable();
 
 	return S_OK;
 }
@@ -57,10 +55,12 @@ _int CBuilding::Update_GameObject(const _float& fTimeDelta)
 	if (iExit == DEAD)
 	{
 		m_pColliderCom->UnregisterFromManager();
+
 		if(m_eBuildingState == BS_CONSTRUCTING) CInteractMgr::GetInstance()->Unregister_IObj(CInteractMgr::BUILD, this);
 	}
 
-	CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHA, this);
+	if(m_eBuildingState == BS_CONSTRUCTING) CRenderer::GetInstance()->Add_RenderGroup(RENDER_TILE, this);
+	else									CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHA, this);
 
 	return iExit;
 }
@@ -69,6 +69,9 @@ void CBuilding::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	_vec3 vPos;
 	m_pTransformCom->Get_Info(Engine::INFO_POS, &vPos);
+
+	if (m_eBuildingState == BS_COMPLETE) m_pTransformCom->Compute_Bilboard(BBD_X);
+
 	Compute_ViewDepth(&vPos);
 
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
@@ -163,7 +166,7 @@ HRESULT CBuilding::Add_Component()
 
 	// Texture
 	pComponent = m_pTextureCom = dynamic_cast<Engine::CTexture*>
-		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Building_Construct"));
+		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Building_Constructing"));
 
 	if (nullptr == pComponent)
 		return E_FAIL;
@@ -210,6 +213,20 @@ void CBuilding::Change_State(BUILDING_STATE eState)
 	{
 	case BS_CONSTRUCTING:
 		CInteractMgr::GetInstance()->Register_IObj(CInteractMgr::BUILD, this);
+		m_pTransformCom->Rotation(ROT_X, 90.f);
+		m_fGroundY = DEFAULT_CONSTRUCT_GROUNDY;
+		break;
+
+	case BS_COMPLETE:
+	{
+		m_pTextureCom = static_cast<CTexture*>(Get_Component(ID_STATIC, L"Com_Texture_Complete"));
+		m_fGroundY = DEFAULT_COMPLETE_GROUNDY;
+
+		_vec3 vPos;
+		m_pTransformCom->Get_Info(INFO_POS, &vPos);
+		m_pTransformCom->Set_Pos(vPos.x, m_fGroundY, vPos.z);
+		m_pTransformCom->Rotation(ROT_X, 0.f);
+	}
 		break;
 	}
 }
@@ -221,6 +238,16 @@ void CBuilding::Player_Interact()
 void CBuilding::Set_Texture()
 {
 
+}
+
+void CBuilding::Ready_Variable()
+{
+	_float fScale = 5.f;
+	m_pTransformCom->Set_Scale(fScale, fScale, fScale);
+
+	Change_State(BS_CONSTRUCTING);
+	m_fWorkGauge = 0.f;
+	m_pColliderCom->RegisterToManager(this, CL_GRASS);
 }
 
 CBuilding* CBuilding::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMessageChannel, const _vec3& vPos, BUILDING_TYPE eType)
@@ -238,7 +265,7 @@ CBuilding* CBuilding::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMe
 		return nullptr;
 	}
 
-	pBuilding->m_pTransformCom->Set_Pos(vPos.x, vPos.y, vPos.z);
+	pBuilding->m_pTransformCom->Set_Pos(vPos.x, pBuilding->m_fGroundY, vPos.z);
 	pBuilding->m_pTransformCom->Update_Component(0.f);
 
 	return pBuilding;

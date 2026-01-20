@@ -470,6 +470,9 @@ void CMultiLoadingThread::Loading_for_Village()
 	// Effect
 
 	// Building
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_Building_Constructing", TEX_NORMAL, L"../Bin/Resource/LWY/Maps/Building/dds/Constructing.dds", 1));
+	m_iTotalProtoCount++;
+
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_Building_Cook", TEX_NORMAL, L"../Bin/Resource/LWY/Maps/Building/dds/kitchen_1.dds", 1));
 	m_iTotalProtoCount++;
 

@@ -212,7 +212,7 @@ void CFollower::Ready_Variable()
 	m_fGroundY = -2.5f + fScale * 0.5f - 1.8f;
 	m_iHp = 10;
 	m_eCurState = FOLLOWER_RECRUIT;
-	m_eCurWork = FOLLOWER_WORK(Get_Rand_Int(1, 2));
+	m_eCurWork = FOLLOWER_WORK(3/*Get_Rand_Int(1, 2)*/);
 	m_fWorkSpeed = FW_DEFAULT_WORK_SPEED + Get_Rand_Float(-0.002f, 0.002f);
 
 	// Transform 세팅

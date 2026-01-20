@@ -34,6 +34,7 @@
 #include "CFade.h"
 #include "CLoading.h"
 #include "CManagement.h"
+#include "CBuilding.h"
 
 CVillage::CVillage(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -178,8 +179,8 @@ HRESULT CVillage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 			switch (spawn.type)
 			{
 			case 0:
-				CPersistentMgr::GetInstance()->Get_Player()->Set_Pos(_vec3(spawn.x * 0.8f, 0.f, spawn.z * 0.8f)); // 실제 스폰 지점
-				//CPersistentMgr::GetInstance()->Get_Player()->Set_Pos(_vec3(199.8f, -0.9f, 35.f));	// 디버그용
+				//CPersistentMgr::GetInstance()->Get_Player()->Set_Pos(_vec3(spawn.x * 0.8f, -0.95f, spawn.z * 0.8f)); // 실제 스폰 지점
+				CPersistentMgr::GetInstance()->Get_Player()->Set_Pos(_vec3(199.8f, -0.95f, 35.f));	// 디버그용
 				pGameObject = CPersistentMgr::GetInstance()->Get_Player();
 
 				if (nullptr == pGameObject)
@@ -365,6 +366,7 @@ HRESULT CVillage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 			return E_FAIL;
 	}
 
+	// Village 지형물
 	for (int i = 0; i < 5; ++i)
 	{
 		OBJECTDATA tObjData1 = {"BreakableRock",						// 카테고리
@@ -377,7 +379,7 @@ HRESULT CVillage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 
 		pGameObject = CBreakableRock::Create(m_pGraphicDev, tObjData1, m_pMessageChannel);
 		NULL_CHECK_RETURN(pGameObject, E_FAIL);
-		if (FAILED(pLayer->Add_GameObject(L"NPC", pGameObject)))
+		if (FAILED(pLayer->Add_GameObject(L"Breakable", pGameObject)))
 			return E_FAIL;
 
 		OBJECTDATA tObjData2 = {"BreakableTree",						// 카테고리
@@ -390,9 +392,20 @@ HRESULT CVillage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 
 		pGameObject = CBreakableTree::Create(m_pGraphicDev, tObjData2, m_pMessageChannel);
 		NULL_CHECK_RETURN(pGameObject, E_FAIL);
-		if (FAILED(pLayer->Add_GameObject(L"NPC", pGameObject)))
+		if (FAILED(pLayer->Add_GameObject(L"Breakable", pGameObject)))
 			return E_FAIL;
 	}
+
+	pGameObject = CBuilding::Create(m_pGraphicDev, m_pMessageChannel, _vec3(199.8f + 10.f, -0.95f, 35.f - 10.f), CBuilding::BT_KNUCKLEBONE);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	if (FAILED(pLayer->Add_GameObject(L"Building", pGameObject)))
+		return E_FAIL;
+
+	pGameObject = CBuilding::Create(m_pGraphicDev, m_pMessageChannel, _vec3(199.8f - 10.f, -0.95f, 35.f - 10.f), CBuilding::BT_COOK);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	if (FAILED(pLayer->Add_GameObject(L"Building", pGameObject)))
+		return E_FAIL;
+	// Village 지형물
 
 	pGameObject = CRatau::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ 207.6f, 0.f, 84.f });
 

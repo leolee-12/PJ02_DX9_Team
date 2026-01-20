@@ -40,6 +40,7 @@ private:
 	void	Change_State(BUILDING_STATE eState);
 	void	Player_Interact();
 	void	Set_Texture();
+	void	Ready_Variable();
 
 private:
 	Engine::CRcTex*		m_pBufferCom;
@@ -49,6 +50,7 @@ private:
 
 	BUILDING_TYPE	m_eBuildingType;
 	BUILDING_STATE	m_eBuildingState;
+	_float			m_fGroundY;
 
 
 	// 상호작용 관련(추종자)
@@ -56,7 +58,8 @@ private:
 	_uint				m_iTexIdx;
 
 	static constexpr _float MAX_WORK_GAUGE = 1.f;
-
+	static constexpr _float DEFAULT_CONSTRUCT_GROUNDY = -2.49f;
+	static constexpr _float DEFAULT_COMPLETE_GROUNDY = -0.5f;
 public:
 	static CBuilding* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMessageChannel, const _vec3& vPos, BUILDING_TYPE eType);
 
