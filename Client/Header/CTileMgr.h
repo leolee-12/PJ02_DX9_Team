@@ -2,6 +2,7 @@
 #include "CBase.h"
 #include "Engine_Define.h"
 #include <vector>
+#include <stack>
 
 class CTile;
 
@@ -26,12 +27,26 @@ public:
 
 	void	Reset_For_SceneChange();
 
+	// 씬 보관/복원용
+	void	Push_State();
+	void	Pop_State();
+
 private:
 	std::vector<CTile*>	m_vecTiles;
 	_int				m_iMapWidth;
 	_int				m_iMapHeight;
 	LPDIRECT3DDEVICE9	m_pGraphicDev;
 	_bool				m_bInitialized;
+
+	// 씬 보관용 스택
+	struct TILE_STATE
+	{
+		std::vector<CTile*>	vecTiles;
+		_int				iMapWidth;
+		_int				iMapHeight;
+		_bool				bInitialized;
+	};
+	std::stack<TILE_STATE>	m_stackState;
 
 private:
 	virtual void Free();

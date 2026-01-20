@@ -89,6 +89,30 @@ inline void CCollisionMgr::Reset_For_SceneChange()
 	Free();
 }
 
+void CCollisionMgr::Push_State()
+{
+	// 현재 상태를 스택에 보관 (Release 안 함!)
+	m_stackState.push(m_hmapCollisionGroup);
+
+	// 새 씬용으로 비움
+	m_hmapCollisionGroup.clear();
+	m_vecReleaseQueue.clear();
+	m_vecUnregisterRequestQueue.clear();
+}
+
+void CCollisionMgr::Pop_State()
+{
+	if (m_stackState.empty())
+		return;
+
+	// 현재 상태 정리 (미니게임 콜라이더 등)
+	Free();
+
+	// 보관된 상태 복원
+	m_hmapCollisionGroup = m_stackState.top();
+	m_stackState.pop();
+}
+
 void CCollisionMgr::RequestUnregister(CGameObject* pOwner, COLGROUP Group)
 {
 	if (pOwner == nullptr) { return; }

@@ -31,4 +31,5 @@ private:
 
 private:
 	_bool	m_bLeshyDungeonFlag = false;
+	_bool	m_bKnuckleBoneFlag = false;
 };
