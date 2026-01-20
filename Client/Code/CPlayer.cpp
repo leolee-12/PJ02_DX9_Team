@@ -11,7 +11,7 @@
 #include "Engine_Struct.h"
 #include "CCollider.h"
 #include "CCutSceneMgr.h"
-#include "CEffect.h"
+#include "CHitEffect.h"
 
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev),
@@ -308,7 +308,7 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 		{	// 디버그용
 
 			_vec3 vPos{ m_vPos.x + 0.2f, m_vPos.y - 1.f, m_vPos.z };
-			CGameObject* pEffect = CEffect::Create(m_pGraphicDev, vPos, i);
+			CGameObject* pEffect = CHitEffect::Create(m_pGraphicDev, vPos, i);
 
 			if (pEffect)
 			{
@@ -916,7 +916,7 @@ void	CPlayer::OnCollision(CGameObject* pObject)
 	{
 		//m_pTransformCom->Set_Pos(10.f, 10.f, 10.f);
 	}
-	if (pObject->Get_OBJID() == OID_BORDER)
+  	if (pObject->Get_OBJID() == OID_BORDER)
 	{
 		_vec3 vCurPos;
 		m_pTransformCom->Get_Info(INFO_POS, &vCurPos);
