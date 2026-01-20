@@ -3,6 +3,7 @@
 #include "CProtoMgr.h"
 #include "CRenderer.h"
 #include "CPersistentMgr.h"
+#include "CSoundMgr.h"
 
 CActiveItem::CActiveItem(LPDIRECT3DDEVICE9 pGraphicDev)
 	:	CItem(pGraphicDev)
@@ -70,6 +71,9 @@ void CActiveItem::OnCollision(CGameObject* pObject)
 	{
 		// 아이템 획득 처리
 		m_iHp = 0;
+		_tchar strSoundName[128] = L"";
+		swprintf_s(strSoundName, L"ItemPickup%d.wav", Get_Rand_Int(1, 7));
+		CSoundMgr::GetInstance()->Play(strSoundName, SOUND_EFFECT, 0.5f);
 	}
 }
 
@@ -95,7 +99,7 @@ void CActiveItem::Update_Chase(const _float& fTimeDelta)
 
 	m_vSpeed = vTargetPos - m_vPos;
 
-	m_pTransformCom->Chase_Target(&vTargetPos, fTimeDelta, 5.f * D3DXVec3Length(&m_vSpeed));
+	m_pTransformCom->Chase_Target(&vTargetPos, fTimeDelta, 7.f * D3DXVec3Length(&m_vSpeed));
 }
 
 CActiveItem* CActiveItem::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel)

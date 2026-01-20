@@ -118,15 +118,16 @@ void CItem::Ready_Variable()
 {
 	// Collider 세팅
 	m_pColliderCom->RegisterToManager(this, CL_ITEM);
+	m_pTransformCom->Set_Scale(2.f, 2.f, 1.f);
 
 	// 게임로직 변수 세팅
 
 	_float fX = (rand() % 20 - 10.f) * 0.3f;
 	_float fZ = (rand() % 20 - 10.f) * 0.3f;
-	m_vSpeed = { fX, 10.f, fZ };
+	m_vSpeed = { fX, 10.f + Get_Rand_Float(-2.5f, 2.5f), fZ};
 	m_fGravity = -9.8f;
-	m_fBounceDamp = 0.6f;
-	m_fGroundY = 1.f;
+	m_fBounceDamp = 0.4f + Get_Rand_Float(-0.1f, 0.1f);
+	m_fGroundY = -1.5f;
 }
 
 void CItem::Ready_Event()

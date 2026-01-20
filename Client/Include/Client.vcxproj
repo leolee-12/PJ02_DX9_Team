@@ -161,6 +161,7 @@
     <ClInclude Include="..\Header\CBossHpBarFront.h" />
     <ClInclude Include="..\Header\CBossHpBarMiddle.h" />
     <ClInclude Include="..\Header\CBrute.h" />
+    <ClInclude Include="..\Header\CChest.h" />
     <ClInclude Include="..\Header\CCookingButton.h" />
     <ClInclude Include="..\Header\CCookingCover.h" />
     <ClInclude Include="..\Header\CCookingGauge.h" />
@@ -202,6 +203,9 @@
     <ClInclude Include="..\Header\CGauge.h" />
     <ClInclude Include="..\Header\CGaugeCover.h" />
     <ClInclude Include="..\Header\CGaugeStar.h" />
+    <ClInclude Include="..\Header\CMonsterHpBar.h" />
+    <ClInclude Include="..\Header\CMonsterHpBarCover.h" />
+    <ClInclude Include="..\Header\CMonsterHpFront.h" />
     <ClInclude Include="..\Header\IInteractable.h" />
     <ClInclude Include="..\Header\CInteractMgr.h" />
     <ClInclude Include="..\Header\CItem.h" />
@@ -313,6 +317,7 @@
     <ClCompile Include="..\Code\CBossHpBarFront.cpp" />
     <ClCompile Include="..\Code\CBossHpBarMiddle.cpp" />
     <ClCompile Include="..\Code\CBrute.cpp" />
+    <ClCompile Include="..\Code\CChest.cpp" />
     <ClCompile Include="..\Code\CCookingButton.cpp" />
     <ClCompile Include="..\Code\CCookingInfoCard.cpp" />
     <ClCompile Include="..\Code\CCookingCover.cpp" />
@@ -388,6 +393,9 @@
     <ClCompile Include="..\Code\CMonsterB2.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="..\Code\CMonsterHpBar.cpp" />
+    <ClCompile Include="..\Code\CMonsterHpBarCover.cpp" />
+    <ClCompile Include="..\Code\CMonsterHpFront.cpp" />
     <ClCompile Include="..\Code\CMonsterN1.cpp" />
     <ClCompile Include="..\Code\CMonsterN2.cpp" />
     <ClCompile Include="..\Code\CMonsterN3.cpp" />
