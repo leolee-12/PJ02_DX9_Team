@@ -120,6 +120,15 @@ void CCutSceneMgr::Subscribe()
 		
 	}) });
 
+	m_hmapSubHandles.insert({ L"Staging.Start", m_pMessageChannel->Subscribe(L"Staging.Start", [this](const IMessageChannel::EVENT& Event) {
+		
+		auto stagingiter = Event.hmapData.find(L"StagingName");
+		if (stagingiter == Event.hmapData.end()) { return; }
+
+		Play_CutScene(any_cast<wstring>(stagingiter->second));
+
+	}) });
+
 	m_hmapSubHandles.insert({ L"Dialogue.End", m_pMessageChannel->Subscribe(L"Dialogue.End", [this](const IMessageChannel::EVENT& Event) {
 		m_bDialogueEnd = true;
 	}) });

@@ -136,7 +136,12 @@ HRESULT CRealDungeon::Ready_Environment_Layer(const _tchar* pLayerTag)
 	if (FAILED(pLayer->Add_GameObject(L"MainCamera", pGameObject)))
 		return E_FAIL;
 
+	/*pGameObject = CChest::Create(m_pGraphicDev, m_pMessageChannel, _vec3(292.f, 0.f, 22.f), 0);
 
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+
+	if (FAILED(pLayer->Add_GameObject(L"Chest", pGameObject)))
+		return E_FAIL;*/
 
 	m_mapLayer.insert({ pLayerTag , pLayer });
 
@@ -173,8 +178,8 @@ HRESULT CRealDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 			switch (spawn.type)
 			{
 			case 0:
-				CPersistentMgr::GetInstance()->Get_Player()->Set_Pos(_vec3(spawn.x, 0.f, spawn.z));
-				//CPersistentMgr::GetInstance()->Get_Player()->Set_Pos(_vec3(-260.f, 0.f, -5.2f)); // 레쉬방 앞
+				//CPersistentMgr::GetInstance()->Get_Player()->Set_Pos(_vec3(spawn.x, 0.f, spawn.z));
+				CPersistentMgr::GetInstance()->Get_Player()->Set_Pos(_vec3(-260.f, 0.f, -5.2f)); // 레쉬방 앞
 				pGameObject = CPersistentMgr::GetInstance()->Get_Player();
 
 				if (nullptr == pGameObject)
@@ -373,14 +378,6 @@ HRESULT CRealDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	if (FAILED(pLayer->Add_GameObject(L"Test", pGameObject)))
 		return E_FAIL;
 
-	pGameObject = CChest::Create(m_pGraphicDev, m_pMessageChannel, _vec3(0.f, 0.f, 0.f));
-
-	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-
-	if (FAILED(pLayer->Add_GameObject(L"Chest", pGameObject)))
-		return E_FAIL;
-
-
 	_vec3 vTriggerPos, vTriggerHalfSize;
 	vTriggerPos = { -99.F, 0.f, 11.7f };
 	vTriggerHalfSize = { 5.f, 5.f, 5.f };
@@ -522,6 +519,38 @@ void CRealDungeon::Ready_Event()
 			if (strDothis == L"PlayLeshy") {
 				CSoundMgr::GetInstance()->StopSound(SOUND_BGM);
 				CSoundMgr::GetInstance()->PlayBGM(L"07.Leshy.mp3", 0.2f);
+				return;
+			}
+		}
+		if (any_cast<wstring>(CinemaTargetNameiter->second) == L"Scene")
+		{
+			wstring strDothis = any_cast<wstring>(Dothisiter->second);
+			if (strDothis == L"Create_ChestMB") {
+
+				CGameObject* pGameObject = nullptr;
+
+				pGameObject = CChest::Create(m_pGraphicDev, m_pMessageChannel, _vec3(-115.9f, 0.f, 13.5f), 50);
+
+				if (pGameObject == nullptr) { return; }
+
+				auto iter = m_mapLayer.find(L"Environment_Layer");
+				if (iter == m_mapLayer.end()) { return; }
+
+				iter->second->Add_GameObject(L"Chest", pGameObject);
+				return;
+			}
+			if (strDothis == L"Create_ChestLB") {
+
+				CGameObject* pGameObject = nullptr;
+
+				pGameObject = CChest::Create(m_pGraphicDev, m_pMessageChannel, _vec3(-260.2f, 0.f, 26.2f), 100);
+
+				if (pGameObject == nullptr) { return; }
+
+				auto iter = m_mapLayer.find(L"Environment_Layer");
+				if (iter == m_mapLayer.end()) { return; }
+
+				iter->second->Add_GameObject(L"Chest", pGameObject);
 				return;
 			}
 		}

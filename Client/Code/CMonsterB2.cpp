@@ -13,6 +13,7 @@
 #include "CSpike.h"
 #include "CBossHpBar.h"
 #include "CSoundMgr.h"
+#include "CCutSceneMgr.h"
 
 CMonsterB2::CMonsterB2(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CMonster(pGraphicDev),
@@ -414,7 +415,12 @@ void CMonsterB2::Move_Frame(const _float& fTimeDelta)
 		case B2S_DIE:
 		{
 			m_pAICom->Anim_End(m_eCurState);
+			m_pHpBar->UnActive();
 			m_eCurState = B2S_DEAD;
+			LeshyEvent.strType = L"Boss.Dead";
+			LeshyEvent.hmapData[L"BossName"] = wstring(L"Leshy");
+			m_pMessageChannel->Publish(LeshyEvent);
+
 		}
 		break;
 
@@ -716,6 +722,23 @@ void CMonsterB2::Check_Status()
 		m_pColliderCom->UnregisterFromManager();
 		m_pAICom->Set_State(B2S_DIE);
 		m_iPhase = 0;
+
+		CUTSCENE tRealDungeonScene;
+		tRealDungeonScene.strName = L"Leshy_Dead";
+		tRealDungeonScene.vecSteps =
+		{
+			{_vec3(m_vPos.x, m_vPos.y + 10.f, m_vPos.z), 1.5f, 0.5f, L"", L"", ADV_TIMED, 1.5f},
+			{_vec3(m_vPos.x, m_vPos.y + 7.f, m_vPos.z), 1.25f, 0.5f, L"", L"", ADV_EVENT, 0.f, L"Boss.Dead"},
+			{_vec3(-260.f, 0.f, 24.2f), 1.5f, 0.5f, L"", L"", ADV_TIMED, 1.f},
+			{_vec3(-260.f, 0.f, 24.2f), 1.f, 0.5f, L"Scene", L"Create_ChestLB", ADV_EVENT, 0.f, L"Chest.Done"},
+		};
+
+		CCutSceneMgr::GetInstance()->Register_CutScene(tRealDungeonScene);
+
+		IMessageChannel::EVENT AmduEvent;
+		AmduEvent.strType = L"Staging.Start";
+		AmduEvent.hmapData[L"StagingName"] = wstring(L"Leshy_Dead");
+		m_pMessageChannel->Publish(AmduEvent);
 	}
 }
 

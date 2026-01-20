@@ -47,13 +47,14 @@ CChest::~CChest()
 
 HRESULT CChest::Ready_GameObject()
 {
-	m_eOBJID = OID_NPC;
+	m_eOBJID = OID_CHEST;
 
 	if (FAILED(Add_Component()))
 		return E_FAIL;
 
 	Ready_Variable();
 	Ready_Event();
+
 
 	return S_OK;
 }
@@ -85,6 +86,16 @@ void CChest::LateUpdate_GameObject(const _float& fTimeDelta)
 	Compute_ViewDepth(&m_vPos);
 
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
+
+	//------스프라이트 높이와 충돌체 위치 맞춤---------
+	_float fY(m_vPos.y - m_pTransformCom->Get_Scale(ROT_Y) * 0.25f);
+	AABB tAABB = { m_vPos.x, fY, m_vPos.z - 1.f, 1.f, 1.f, 1.f };
+	m_pColliderCom->Set_AABB(tAABB);
+	m_pColliderCom->UpdateFromCustom(tAABB);
+	//-------------------------------------------------
+
+	// 충돌체 디버그용
+	if (g_bDebug) m_pColliderCom->Update_AABBforRender();
 }
 
 void CChest::Render_GameObject()
@@ -102,6 +113,15 @@ void CChest::Render_GameObject()
 
 void CChest::OnCollision(CGameObject* pObject)
 {
+	if (m_bWait) { return; }
+	switch (pObject->Get_OBJID())
+	{
+	case OID_PLAYER:
+		if (m_eCurState != CHEST_IDLE) { return; }
+
+		m_eCurState = CHEST_OPEN;
+		break;
+	}
 }
 
 HRESULT CChest::Add_Component()
@@ -132,6 +152,15 @@ HRESULT CChest::Add_Component()
 
 		m_mapComponent[ID_STATIC].insert({ L"Com_Texture", pComponent });
 
+	pComponent = m_pColliderCom = dynamic_cast<Engine::CCollider*>
+		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Collider"));
+
+	NULL_CHECK_RETURN(pComponent, E_FAIL)
+
+		m_mapComponent[ID_STATIC].insert({ L"Com_Collider", pComponent });
+
+
+
 	return S_OK;
 }
 
@@ -139,12 +168,16 @@ void CChest::Ready_Variable()
 {
 	// 게임로직 변수 세팅
 	_float fScale = 10.f;
-	m_fGroundY = -2.5f + fScale * 0.5f - 3.f;
+	m_fGroundY = -2.5f + fScale * 0.5f - 1.2f;
 	m_iHp = 10;
 
 	// Transform 세팅
 	m_pTransformCom->Set_Pos(125.f, m_fGroundY, 15.f);
 	m_pTransformCom->Set_Scale(fScale, fScale, fScale);
+
+	m_pColliderCom->RegisterToManager(this, CL_CHEST);
+
+	Check_Frame();
 
 	// Anim 관련 세팅
 	m_fFrameSpeed = 24.f;
@@ -205,16 +238,17 @@ void CChest::Move_Frame(const _float& fTimeDelta)
 	{
 		m_fFrame = 0.f;
 
-		IMessageChannel::EVENT RatauEvent;
+		IMessageChannel::EVENT ChestEvent;
 
 		switch (m_eCurState)
 		{
 		case CHEST_INTRO:
 			m_eCurState = CHEST_IDLE;
+			ChestEvent.strType = L"Chest.Done";
+			m_pMessageChannel->Publish(ChestEvent);
 			break;
 
 		case CHEST_IDLE:
-			m_eCurState = CHEST_OPEN;
 			break;
 
 		case CHEST_OPEN:
@@ -276,11 +310,12 @@ void CChest::Set_Texture()
 	m_pTextureCom->Set_Texture(iIndex);
 }
 
-CChest* CChest::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, _vec3 vPos)
+CChest* CChest::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, _vec3 vPos, _uint iItemCount)
 {
 	CChest* pChest = new CChest(pGraphicDev, StageChannel);
 
 	pChest->m_vPos = vPos;
+	pChest->m_iItemCount = iItemCount;
 
 	if (FAILED(pChest->Ready_GameObject()))
 	{

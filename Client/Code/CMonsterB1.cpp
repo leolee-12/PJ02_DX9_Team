@@ -11,6 +11,7 @@
 #include "CMonsterN2.h"
 #include "CBossHpBar.h"
 #include "CSoundMgr.h"
+#include "CCutSceneMgr.h"
 
 CMonsterB1::CMonsterB1(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CMonster(pGraphicDev),
@@ -708,6 +709,23 @@ void CMonsterB1::Check_Status()
 		{
 			m_pNode[i]->Set_NodeScale(_vec3{ 0.f, 0.f, 0.f });
 		}
+
+		CUTSCENE tRealDungeonScene;
+		tRealDungeonScene.strName = L"Amdu_Dead";
+		tRealDungeonScene.vecSteps =
+		{
+			{m_vPos, 1.5f, 0.5f, L"", L"", ADV_EVENT, 0.f, L"Boss.Dead"},
+			{_vec3(-115.9f, 0.f, 11.5f), 1.5f, 0.5f, L"", L"", ADV_TIMED, 1.f},
+			{_vec3(-115.9f, 0.f, 11.5f), 1.f, 0.5f, L"Scene", L"Create_ChestMB", ADV_EVENT, 0.f, L"Chest.Done"},
+		};
+
+		CCutSceneMgr::GetInstance()->Register_CutScene(tRealDungeonScene);
+
+		IMessageChannel::EVENT AmduEvent;
+		AmduEvent.strType = L"Staging.Start";
+		AmduEvent.hmapData[L"StagingName"] = wstring(L"Amdu_Dead");
+		m_pMessageChannel->Publish(AmduEvent);
+
 
 		//Summon_Boss();
 	}

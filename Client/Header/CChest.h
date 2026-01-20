@@ -30,6 +30,9 @@ public:
 	virtual void		Render_GameObject();
 	virtual void		OnCollision(CGameObject* pObject);
 
+public:
+	void				Wait() { m_bWait = true; }
+
 
 private:
 	HRESULT				Add_Component();
@@ -47,6 +50,7 @@ private:
 	Engine::CRcTex* m_pBufferCom;
 	Engine::CTransform* m_pTransformCom;
 	Engine::CTexture* m_pTextureCom;
+	Engine::CCollider* m_pColliderCom;
 
 	_vec3				m_vPos;
 
@@ -63,9 +67,11 @@ private:
 
 	_bool		   m_bWait = false;
 
+	_uint		m_iItemCount;
+
 
 public:
-	static CChest* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, _vec3 vPos);
+	static CChest* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, _vec3 vPos, _uint iItemCount);
 
 private:
 	virtual void		Free();
