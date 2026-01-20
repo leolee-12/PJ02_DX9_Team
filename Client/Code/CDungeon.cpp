@@ -44,6 +44,7 @@
 #include "CFade.h"
 #include "CLoading.h"
 #include "CManagement.h"
+#include "CChest.h"
 
 CDungeon::CDungeon(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -183,6 +184,14 @@ HRESULT CDungeon::Ready_Environment_Layer(const _tchar* pLayerTag)
 		return E_FAIL;
 
 	if (FAILED(pLayer->Add_GameObject(L"MainCamera", pGameObject)))
+		return E_FAIL;
+
+
+	pGameObject = CChest::Create(m_pGraphicDev, m_pMessageChannel, _vec3(-148.f, 0.f, 14.1f), 10);
+
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+
+	if (FAILED(pLayer->Add_GameObject(L"Chest", pGameObject)))
 		return E_FAIL;
 
 

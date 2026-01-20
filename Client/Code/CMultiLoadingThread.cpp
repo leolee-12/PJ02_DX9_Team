@@ -235,7 +235,7 @@ void CMultiLoadingThread::Loading_for_Tutorial()
     // ===== TextureSet 큐 등록 (멀티스레드 로딩) =====
     vector<TEXSETLR> vecBishopLeshy;
     vecBishopLeshy.push_back(TEXSETLR(L"Bishop_Leshy_Idle", L"../Bin/Resource/Texture/Bishops/Leshy/Leshy-idle/dds/Leshy_idle-%d.dds", 250));
-    vecBishopLeshy.push_back(TEXSETLR(L"Bishop_Leshy_Talk", L"../Bin/Resource/Texture/Bishops/Leshy/Leshy-talk/dds/Leshy-talk%d.dds", 83));
+    vecBishopLeshy.push_back(TEXSETLR(L"Bishop_Leshy_Talk", L"../Bin/Resource/Texture/Bishops/Leshy/Leshy-talk/dds/Leshy-talk%d.dds", 84));
     m_TexSetLoadingqueue.push(make_pair(TEXSETINFO(L"Proto_BishopLeshy", TEX_NORMAL), vecBishopLeshy));
     m_iTotalProtoCount++;
 
@@ -269,9 +269,6 @@ void CMultiLoadingThread::Loading_for_Dungeon()
 
 
 	// ===== 텍스처 큐 등록 (멀티스레드 로딩) =====
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_ItemTexture", TEX_NORMAL, L"../Bin/Resource/Texture/Item/dds/Item_%02d.dds", 8));
-	m_iTotalProtoCount++;
-
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_DungeonLine", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Dungeon/dds/Line%d.dds", 2));
 	m_iTotalProtoCount++;
 
@@ -384,6 +381,13 @@ void CMultiLoadingThread::Loading_for_Dungeon()
 	m_iTotalProtoCount++;
 
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_BruteTexture", TEX_NORMAL, L"../Bin/Resource/LWY//NPC/Brute/dds/Brute_%d.dds", 5));
+	m_iTotalProtoCount++;
+
+	//상자, 아이템
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_ChestTexture", TEX_NORMAL, L"../Bin/Resource/Texture/NPC/Chest/dds/Chest_%d.dds", 2));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_ItemTexture", TEX_NORMAL, L"../Bin/Resource/Texture/Item/dds/Item_%02d.dds", 8));
 	m_iTotalProtoCount++;
 
 	// 메인보스
@@ -558,7 +562,7 @@ void CMultiLoadingThread::Loading_for_RealDungeon()
 
 	vector<TEXSETLR> vecBishopLeshy;
 	vecBishopLeshy.push_back(TEXSETLR(L"Bishop_Leshy_Idle", L"../Bin/Resource/Texture/Bishops/Leshy/Leshy-idle/dds/Leshy_idle-%d.dds", 250));
-	vecBishopLeshy.push_back(TEXSETLR(L"Bishop_Leshy_Talk", L"../Bin/Resource/Texture/Bishops/Leshy/Leshy-talk/dds/Leshy-talk%d.dds", 83));
+	vecBishopLeshy.push_back(TEXSETLR(L"Bishop_Leshy_Talk", L"../Bin/Resource/Texture/Bishops/Leshy/Leshy-talk/dds/Leshy-talk%d.dds", 84));
 	m_TexSetLoadingqueue.push(make_pair(TEXSETINFO(L"Proto_BishopLeshy", TEX_NORMAL), vecBishopLeshy));
 	m_iTotalProtoCount++;
 
@@ -619,8 +623,6 @@ void CMultiLoadingThread::NonTex_for_Test()
 void CMultiLoadingThread::NonTex_for_KnuckleBone()
 {
 }
-
-
 
 void CMultiLoadingThread::NonTex_for_Dungeon()
 {
