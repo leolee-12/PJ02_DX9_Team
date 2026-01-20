@@ -212,7 +212,9 @@
     <ClInclude Include="..\Header\CMonsterHpBarCover.h" />
     <ClInclude Include="..\Header\CMonsterHpFront.h" />
     <ClInclude Include="..\Header\CParticleEffect.h" />
+    <ClInclude Include="..\Header\CScreenEffect.h" />
     <ClInclude Include="..\Header\CSpriteEffect.h" />
+    <ClInclude Include="..\Header\CTrailEffect.h" />
     <ClInclude Include="..\Header\IInteractable.h" />
     <ClInclude Include="..\Header\CInteractMgr.h" />
     <ClInclude Include="..\Header\CItem.h" />
@@ -431,6 +433,7 @@
     <ClCompile Include="..\Code\CRealDungeon.cpp" />
     <ClCompile Include="..\Code\CBreakableRock.cpp" />
     <ClCompile Include="..\Code\CSceneWarp.cpp" />
+    <ClCompile Include="..\Code\CScreenEffect.cpp" />
     <ClCompile Include="..\Code\CSelectionArrow.cpp" />
     <ClCompile Include="..\Code\CSkyBox.cpp" />
     <ClCompile Include="..\Code\CSpeechBubble.cpp" />
@@ -454,6 +457,7 @@
     <ClCompile Include="..\Code\CTitleLogo.cpp" />
     <ClCompile Include="..\Code\CTitleTab.cpp" />
     <ClCompile Include="..\Code\CBreakableTree.cpp" />
+    <ClCompile Include="..\Code\CTrailEffect.cpp" />
     <ClCompile Include="..\Code\CTriggerPoint.cpp" />
     <ClCompile Include="..\Code\CTutorial.cpp" />
     <ClCompile Include="..\Code\CVillage.cpp" />

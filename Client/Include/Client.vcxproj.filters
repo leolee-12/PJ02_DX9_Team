@@ -190,9 +190,6 @@
     <Filter Include="02. GameObject\03. Dependent\02. Node">
       <UniqueIdentifier>{fde0f6e7-5d96-449c-a951-022022683803}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\03. Dependent\03. Spike">
-      <UniqueIdentifier>{71626d7b-7211-47aa-adb4-63723478f690}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObject\04. Item">
       <UniqueIdentifier>{745713c8-6fcb-434d-8571-a01e33672ee8}</UniqueIdentifier>
     </Filter>
@@ -447,6 +444,15 @@
     </Filter>
     <Filter Include="02. GameObject\02. Environment\02. Interactable\02. BreakableRock">
       <UniqueIdentifier>{3329f3da-37fb-41de-8fa1-0c729130dfb9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\03. Dependent\03. Spike">
+      <UniqueIdentifier>{71626d7b-7211-47aa-adb4-63723478f690}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\03. Dependent\01. Effect\2. TrailEffect">
+      <UniqueIdentifier>{9d15df12-d4e7-4ce5-89ef-f636016da868}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\03. Dependent\01. Effect\3. ScreenEffect">
+      <UniqueIdentifier>{9be5aa81-2e63-47f4-9967-6883c67cbfee}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -939,6 +945,12 @@
     <ClInclude Include="..\Header\CParticleEffect.h">
       <Filter>02. GameObject\03. Dependent\01. Effect\1. ParticleEffect</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CTrailEffect.h">
+      <Filter>02. GameObject\03. Dependent\01. Effect\2. TrailEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CScreenEffect.h">
+      <Filter>02. GameObject\03. Dependent\01. Effect\3. ScreenEffect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1390,6 +1402,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\CParticleEffect.cpp">
       <Filter>02. GameObject\03. Dependent\01. Effect\1. ParticleEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CTrailEffect.cpp">
+      <Filter>02. GameObject\03. Dependent\01. Effect\2. TrailEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CScreenEffect.cpp">
+      <Filter>02. GameObject\03. Dependent\01. Effect\3. ScreenEffect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

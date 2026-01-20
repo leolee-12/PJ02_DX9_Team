@@ -24,30 +24,49 @@ HRESULT	CParticleEffect::Ready_GameObject()
 
 _int CParticleEffect::Update_GameObject(const _float& fTimeDelta)
 {
-	if (m_eState != ES_PLAY || m_eState != ES_LOOP) return NOEVENT;
-
-	m_fAccTime += fTimeDelta;
-	m_fFrame += m_fFrameSpeed * fTimeDelta;
-	m_fAlpha -= m_fAlphaDecay * fTimeDelta;
-	m_fAlpha = max(0.f, m_fAlpha);
-
-	if (m_fFrame >= m_fFrameEnd)
+	// 1. 파티클 생성
+	if (m_eState == ES_PLAY)
 	{
-		if (m_bLoop)
+		m_fEmitAcc += m_fEmitRate * fTimeDelta;
+		size_t iMaxCount = m_vecParticles.size();
+
+		while (m_fEmitAcc >= 1.f && iMaxCount < m_iMaxParticles)
 		{
-			m_fFrame = 0.f;
-			m_eState = ES_LOOP;
-			OnLoop();
-		}
-		else
-		{
-			m_eState = ES_FINISH;
-			OnFinish();
-			m_iHp = 0;
+			Play();
+			m_fEmitAcc -= 1.f;
 		}
 	}
 
-	if (m_pOwner) AttachTo(m_pOwner);
+	// 2. 파티클 업데이트
+	for (auto iter = m_vecParticles.begin(); iter != m_vecParticles.end();)
+	{
+		iter->fLife -= fTimeDelta;
+
+		if (iter->fLife <= 0.f)
+		{
+			iter = m_vecParticles.erase(iter);
+			continue;
+		}
+
+		// 물리
+		iter->vSpeed += m_vGravity * fTimeDelta;		// 중력
+		iter->vSpeed *= (1.f - m_fDrag * fTimeDelta);	// 공기저항
+		iter->vPos += iter->vSpeed * fTimeDelta;		// 움직임
+
+		// 보간
+		_float fRatio = 1.f - (iter->fLife / iter->fMaxLife);
+		iter->fSize = MyLerp(m_fSizeStart, m_fSizeEnd, fRatio);
+		iter->fAlpha = MyLerp(m_fAlphaStart, m_fAlphaEnd, fRatio);
+
+		iter++;
+	}
+
+	// 3. 완료 체크
+	if (m_eState == ES_PLAY && m_fAccTime >= m_fLifeTime)
+	{
+		m_eState = ES_FINISH;
+
+	}
 
 	CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHA, this);
 
@@ -65,9 +84,6 @@ void CParticleEffect::Render_GameObject()
 void CParticleEffect::Play()
 {
 	m_eState = ES_PLAY;
-	m_fFrame = 0.f;
-	m_fAccTime = 0.f;
-	m_fAlpha = 1.f;
 	OnPlay();
 }
 
