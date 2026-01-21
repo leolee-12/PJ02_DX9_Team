@@ -21,6 +21,8 @@ HRESULT CCookingStar::Ready_GameObject()
 	m_pTransformCom->Set_Scale(128 * m_fScale, 124 * m_fScale, 0.f);
 	m_pTransformCom->Set_Pos(m_vPos.x, m_vPos.y, m_vPos.z);
 
+	Ready_PixelShader();
+
 	return S_OK;
 }
 
@@ -61,9 +63,15 @@ void CCookingStar::Render_GameObject()
 {
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
 
+	D3DXCOLOR tColor = { 1.f,1.f,0.f,1.f };
+	m_pGraphicDev->SetPixelShader(m_pPixelShader);
+	m_pGraphicDev->SetPixelShaderConstantF(0, (float*)tColor, 1);
+
 	m_pTextureCom->Set_Texture(m_iPage);
 
 	m_pBufferCom->Render_Buffer();
+
+	m_pGraphicDev->SetPixelShader(NULL);
 }
 
 void CCookingStar::OnCollision(CGameObject* pObject)
@@ -104,6 +112,47 @@ HRESULT CCookingStar::Add_Component()
 	return S_OK;
 }
 
+HRESULT CCookingStar::Ready_PixelShader()
+{
+	LPD3DXBUFFER pCode = NULL;
+	LPD3DXBUFFER pError = NULL;
+
+	// HLSL 파일 컴파일 
+	HRESULT hr = D3DXCompileShaderFromFile(
+		L"../Shader/TextureColorBlend.hlsl", // 파일명 
+		NULL, // 매크로 
+		NULL, // include 
+		"PS_TintPixel", // 엔트리 포인트 
+		"ps_2_0", // 셰이더 모델 
+		0, // 플래그 
+		&pCode,
+		&pError,
+		NULL);
+
+	if (FAILED(hr))
+	{
+		if (pError)
+		{
+			MessageBoxA(NULL,
+				(char*)pError->GetBufferPointer(),
+				"Shader Error",
+				MB_OK);
+			pError->Release();
+		}
+		return E_FAIL;
+	} // 픽셀 셰이더 생성 
+
+	if (pCode) {
+		m_pGraphicDev->CreatePixelShader((DWORD*)pCode->GetBufferPointer(), &m_pPixelShader);
+		pCode->Release();
+	}
+
+	if (pError) {
+		pError->Release();
+	}
+
+	return S_OK;
+}
 
 
 CCookingStar* CCookingStar::Create(LPDIRECT3DDEVICE9 pGraphicDev, _int iPage, _vec3 vPos, _float fScale)

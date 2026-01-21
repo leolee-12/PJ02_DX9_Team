@@ -122,8 +122,8 @@ void CItem::Ready_Variable()
 
 	// 게임로직 변수 세팅
 
-	_float fX = (rand() % 20 - 10.f) * 0.3f;
-	_float fZ = (rand() % 20 - 10.f) * 0.3f;
+	_float fX = (rand() % 20 - 10.f) * 0.3f * m_fThrowRange;
+	_float fZ = (rand() % 20 - 10.f) * 0.3f * m_fThrowRange;
 	m_vSpeed = { fX, 10.f + Get_Rand_Float(-2.5f, 2.5f), fZ};
 	m_fGravity = -9.8f;
 	m_fBounceDamp = 0.4f + Get_Rand_Float(-0.1f, 0.1f);
@@ -176,7 +176,7 @@ void CItem::Update_Spawn(const _float& fTimeDelta)
 	}
 }
 
-CItem* CItem::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, const _vec3& vPos, ITEMID eID, _bool isActive)
+CItem* CItem::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, const _vec3& vPos, ITEMID eID, _bool isActive, _float fThrowRange)
 {
 	if (eID < IG_GOLD || ID_END <= eID)
 	{
@@ -186,8 +186,8 @@ CItem* CItem::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChanne
 
 	CItem* pItem = nullptr;
 
-	if (isActive)	pItem = CActiveItem::Create(pGraphicDev, StageChannel);
-	else			pItem = CPassiveItem::Create(pGraphicDev, StageChannel);
+	if (isActive)	pItem = CActiveItem::Create(pGraphicDev, StageChannel, fThrowRange);
+	else			pItem = CPassiveItem::Create(pGraphicDev, StageChannel, fThrowRange);
 
 	NULL_CHECK_RETURN(pItem, nullptr);
 

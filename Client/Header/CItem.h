@@ -59,9 +59,10 @@ protected:
 	_float				m_fGravity;
 	_float				m_fBounceDamp;
 	_float				m_fGroundY;
+	_float				m_fThrowRange;
 
 public:
-	static CItem* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, const _vec3& vPos, ITEMID eID, _bool isActive);
+	static CItem* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, const _vec3& vPos, ITEMID eID, _bool isActive, _float fThrowRange = 1.f);
 
 protected:
 	virtual void Free();

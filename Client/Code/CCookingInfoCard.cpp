@@ -82,7 +82,7 @@ HRESULT CCookingInfoCard::Ready_GameObject()
 
 	for (int i = 0; i < 3; ++i)
 	{
-		pGameObject = CCookingStar::Create(m_pGraphicDev, 0, { 290.0f + (i * 30.0f),50.0f,0.1f }, 0.2f);
+		pGameObject = CCookingStar::Create(m_pGraphicDev, 1, { 290.0f + (i * 30.0f),50.0f,0.1f }, 0.2f);
 
 		if (nullptr == pGameObject)
 			return E_FAIL;

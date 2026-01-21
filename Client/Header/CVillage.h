@@ -2,6 +2,8 @@
 
 #include "CScene.h"
 
+class CCookingUIController;
+
 class CVillage : public CScene
 {
 private:
@@ -24,6 +26,8 @@ private:
 
 	void			Ready_Event_Village();
 
+	void			Key_Input_Village();
+
 public:
 	static CVillage* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 private:
@@ -32,4 +36,6 @@ private:
 private:
 	_bool	m_bLeshyDungeonFlag = false;
 	_bool	m_bKnuckleBoneFlag = false;
+	_bool	m_bCookingFlag = false;
+	CCookingUIController* m_pCookingUI;
 };

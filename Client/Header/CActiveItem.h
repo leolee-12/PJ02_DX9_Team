@@ -19,7 +19,7 @@ protected:
 	void				Update_Chase(const _float& fTimeDelta);
 
 public:
-	static CActiveItem* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel);
+	static CActiveItem* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, _float fThrowRange);
 
 protected:
 	virtual void Free();

@@ -256,4 +256,5 @@ void CTexture::Free()
 	m_vecTexture.clear();
 
 	CComponent::Free();
+
 }

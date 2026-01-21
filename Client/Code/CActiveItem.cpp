@@ -102,9 +102,11 @@ void CActiveItem::Update_Chase(const _float& fTimeDelta)
 	m_pTransformCom->Chase_Target(&vTargetPos, fTimeDelta, 7.f * D3DXVec3Length(&m_vSpeed));
 }
 
-CActiveItem* CActiveItem::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel)
+CActiveItem* CActiveItem::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, _float fThrowRange)
 {
 	CActiveItem* pItem = new CActiveItem(pGraphicDev, StageChannel);
+
+	pItem->m_fThrowRange = fThrowRange;
 
 	if (FAILED(pItem->Ready_GameObject()))
 	{

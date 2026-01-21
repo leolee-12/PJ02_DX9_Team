@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "CUi.h"
 
 
@@ -28,7 +28,7 @@ public:
 	virtual			void		OnCollision(CGameObject* pObject);
 
 public:
-	static CCookingMiniGameUI* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	static CCookingMiniGameUI* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMessageChannel);
 	_bool Check_CookingResult();
 	
 	void Set_Render(_bool _bRender) { m_bRender = _bRender; };
@@ -37,7 +37,7 @@ public:
 	void CookingEnd();
 
 
-	//ÄÝ¹é Ãß°¡ºÎºÐ
+	//ì½œë°± ì¶”ê°€ë¶€ë¶„
 	using CookingEndCallback = std::function<void()>;
 
 	void Set_CookingEndCallback(CookingEndCallback cb)
@@ -64,6 +64,8 @@ private:
 
 	_float m_fMarkerStopTime;
 	_float m_fMarkerCurStopTime;
+
+	_bool  m_bInputLock;
 
 };
 

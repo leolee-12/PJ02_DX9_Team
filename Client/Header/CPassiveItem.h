@@ -23,7 +23,7 @@ protected:
 	_bool	m_bTriggered;
 
 public:
-	static CPassiveItem* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel);
+	static CPassiveItem* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, _float fThrowRange);
 
 protected:
 	virtual void Free();
