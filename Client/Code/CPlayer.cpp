@@ -446,7 +446,7 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 	}
 
 	// 인트로 상태에서는 사용 불가
-	if (m_bIntro) return;
+	if (m_bIntro || m_bAction) return;
 
 	if (CDInputMgr::GetInstance()->Key_Down(DIK_SPACE))
 	{

@@ -326,64 +326,64 @@ void CMultiLoadingThread::Loading_for_Dungeon()
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_ProjectileTexture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/dds/Projectile.dds", 1));
 	m_iTotalProtoCount++;
 
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingBarkCover", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingMiniGame/dds/CookingBar_Border.dds", 1));
-	m_iTotalProtoCount++;
+	//m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingBarkCover", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingMiniGame/dds/CookingBar_Border.dds", 1));
+	//m_iTotalProtoCount++;
 
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingBarRed", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingMiniGame/dds/CookingBar_Red.dds", 1));
-	m_iTotalProtoCount++;
+	//m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingBarRed", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingMiniGame/dds/CookingBar_Red.dds", 1));
+	//m_iTotalProtoCount++;
 
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingBarGreen", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingMiniGame/dds/CookingBar_Green.dds", 1));
-	m_iTotalProtoCount++;
+	//m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingBarGreen", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingMiniGame/dds/CookingBar_Green.dds", 1));
+	//m_iTotalProtoCount++;
 
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingMarker", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingMiniGame/dds/Cooking_Marker.dds", 1));
-	m_iTotalProtoCount++;
+	//m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingMarker", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingMiniGame/dds/Cooking_Marker.dds", 1));
+	//m_iTotalProtoCount++;
 
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingButton", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingMiniGame/dds/CookingButton.dds", 1));
-	m_iTotalProtoCount++;
+	//m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingButton", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingMiniGame/dds/CookingButton.dds", 1));
+	//m_iTotalProtoCount++;
 
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingTarget", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingMiniGame/dds/FoodTexture_%d.dds", 1));
-	m_iTotalProtoCount++;
+	//m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingTarget", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingMiniGame/dds/FoodTexture_%d.dds", 1));
+	//m_iTotalProtoCount++;
 
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingTargetBack", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingMiniGame/dds/CookingTargetBack.dds", 1));
-	m_iTotalProtoCount++;
+	//m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingTargetBack", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingMiniGame/dds/CookingTargetBack.dds", 1));
+	//m_iTotalProtoCount++;
 
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingSelectBack", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/dds/CookingSelectBack.dds", 1));
-	m_iTotalProtoCount++;
+	//m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingSelectBack", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/dds/CookingSelectBack.dds", 1));
+	//m_iTotalProtoCount++;
 
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingSelectSlot", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/dds/SelectSlot.dds", 1));
-	m_iTotalProtoCount++;
+	//m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingSelectSlot", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/dds/SelectSlot.dds", 1));
+	//m_iTotalProtoCount++;
 
 
-	// 덴저러스 수동 PNG존 지뢰밟지않게 조심할것
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingSelectStartBtn", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/SelectFoodTexture.png", 1));
-	m_iTotalProtoCount++;
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingStar", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/Star_%d.png", 2));
-	m_iTotalProtoCount++;
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingCardInfoRecipe", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/Recipe.png", 1));
-	m_iTotalProtoCount++;
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingArrowUpDown", TEX_NORMAL, L"../Bin/Resource/YSD/CookingSelect/FaithArrowUpDown_%d.png", 2));
-	m_iTotalProtoCount++;
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingSelectButton", TEX_NORMAL, L"../Bin/Resource/YSD/CookingSelect/Button_%d.png", 2));
-	m_iTotalProtoCount++;
-	
-	
+	//// 덴저러스 수동 PNG존 지뢰밟지않게 조심할것
+	//m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingSelectStartBtn", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/SelectFoodTexture.png", 1));
+	//m_iTotalProtoCount++;
+	//m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingStar", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/Star_%d.png", 2));
+	//m_iTotalProtoCount++;
+	//m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingCardInfoRecipe", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/Recipe.png", 1));
+	//m_iTotalProtoCount++;
+	//m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingArrowUpDown", TEX_NORMAL, L"../Bin/Resource/YSD/CookingSelect/FaithArrowUpDown_%d.png", 2));
+	//m_iTotalProtoCount++;
+	//m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingSelectButton", TEX_NORMAL, L"../Bin/Resource/YSD/CookingSelect/Button_%d.png", 2));
+	//m_iTotalProtoCount++;
+	//
+	//
 
-	// 덴저러스 수동 PNG존 지뢰밟지않게 조심할것
+	//// 덴저러스 수동 PNG존 지뢰밟지않게 조심할것
 
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingCardInfoFaithTexture", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/dds/FaithTexture.dds", 1));
-	m_iTotalProtoCount++;
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingCardInfoCardBack", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/dds/InfoCardBackground.dds", 1));
-	m_iTotalProtoCount++;
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_Divider", TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/dds/TileDivider_%d.dds", 2));
-	m_iTotalProtoCount++;
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingCardInfoFaithTexture", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/dds/FaithTexture.dds", 1));
-	m_iTotalProtoCount++;
+	//m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingCardInfoFaithTexture", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/dds/FaithTexture.dds", 1));
+	//m_iTotalProtoCount++;
+	//m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingCardInfoCardBack", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/dds/InfoCardBackground.dds", 1));
+	//m_iTotalProtoCount++;
+	//m_TexturLoadingqueue.push(TEXLR(L"Proto_Divider", TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/dds/TileDivider_%d.dds", 2));
+	//m_iTotalProtoCount++;
+	//m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingCardInfoFaithTexture", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/dds/FaithTexture.dds", 1));
+	//m_iTotalProtoCount++;
 
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingCardInfoRightPattern", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/dds/Rightpattern.dds", 1));
-	m_iTotalProtoCount++;
+	//m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingCardInfoRightPattern", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/dds/Rightpattern.dds", 1));
+	//m_iTotalProtoCount++;
 
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingCardInfoLeftPattern", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/dds/Leftpattern.dds", 1));
-	m_iTotalProtoCount++;
+	//m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingCardInfoLeftPattern", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/dds/Leftpattern.dds", 1));
+	//m_iTotalProtoCount++;
 
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_SpikeTexture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Spike/dds/Spike%d.dds", 4));
 	m_iTotalProtoCount++;
@@ -511,6 +511,9 @@ void CMultiLoadingThread::Loading_for_Village()
 
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_Fade", TEX_NORMAL, L"../Bin/Resource/YSH/Etc/Fade.png", 1));
 	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_ItemTexture", TEX_NORMAL, L"../Bin/Resource/Texture/Item/dds/Item_%02d.dds", 8));
+	m_iTotalProtoCount++;
 	// 디버그용 바로진입 프로토타입
 
 	// Effect
@@ -549,6 +552,67 @@ void CMultiLoadingThread::Loading_for_Village()
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_FireTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Maps/Fire/dds/Fire_%d.dds", 3));
 	m_iTotalProtoCount++;
 	// Building
+
+	// cookingUI
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingBarkCover", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingMiniGame/dds/CookingBar_Border.dds", 1));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingBarRed", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingMiniGame/dds/CookingBar_Red.dds", 1));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingBarGreen", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingMiniGame/dds/CookingBar_Green.dds", 1));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingMarker", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingMiniGame/dds/Cooking_Marker.dds", 1));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingButton", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingMiniGame/dds/CookingButton.dds", 1));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingTarget", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingMiniGame/dds/FoodTexture_%d.dds", 1));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingTargetBack", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingMiniGame/dds/CookingTargetBack.dds", 1));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingSelectBack", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/dds/CookingSelectBack.dds", 1));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingSelectSlot", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/dds/SelectSlot.dds", 1));
+	m_iTotalProtoCount++;
+
+
+	// 덴저러스 수동 PNG존 지뢰밟지않게 조심할것
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingSelectStartBtn", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/SelectFoodTexture.png", 1));
+	m_iTotalProtoCount++;
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingStar", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/Star_%d.png", 2));
+	m_iTotalProtoCount++;
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingCardInfoRecipe", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/Recipe.png", 1));
+	m_iTotalProtoCount++;
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingArrowUpDown", TEX_NORMAL, L"../Bin/Resource/YSD/CookingSelect/FaithArrowUpDown_%d.png", 2));
+	m_iTotalProtoCount++;
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingSelectButton", TEX_NORMAL, L"../Bin/Resource/YSD/CookingSelect/Button_%d.png", 2));
+	m_iTotalProtoCount++;
+
+
+
+	// 덴저러스 수동 PNG존 지뢰밟지않게 조심할것
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingCardInfoFaithTexture", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/dds/FaithTexture.dds", 1));
+	m_iTotalProtoCount++;
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingCardInfoCardBack", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/dds/InfoCardBackground.dds", 1));
+	m_iTotalProtoCount++;
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_Divider", TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/dds/TileDivider_%d.dds", 2));
+	m_iTotalProtoCount++;
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingCardInfoFaithTexture", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/dds/FaithTexture.dds", 1));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingCardInfoRightPattern", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/dds/Rightpattern.dds", 1));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingCardInfoLeftPattern", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/dds/Leftpattern.dds", 1));
+	m_iTotalProtoCount++;
+	// CookingUI
 }
 
 void CMultiLoadingThread::Loading_for_RealDungeon()

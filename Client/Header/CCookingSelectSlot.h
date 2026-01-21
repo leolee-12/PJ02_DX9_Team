@@ -32,6 +32,8 @@ private:
 	HRESULT						Add_Component();
 	HRESULT						Ready_Material();
 
+	HRESULT 					Ready_PixelShader();
+
 private:
 	CRcTex* m_pBufferCom;
 	CTransform* m_pTransformCom;
@@ -40,5 +42,6 @@ private:
 	_vec3 m_vPos;
 	_float m_fScale;
 
+	LPDIRECT3DPIXELSHADER9 m_pPixelShader;
 };
 

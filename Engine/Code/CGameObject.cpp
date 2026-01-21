@@ -19,6 +19,7 @@ CGameObject::CGameObject(const CGameObject& rhs)
     : m_pGraphicDev(rhs.m_pGraphicDev), m_pMessageChannel(nullptr), m_eOBJID(rhs.m_eOBJID)
     , m_fDepth(rhs.m_fDepth)
 {
+	m_pGraphicDev->AddRef();
 }
 
 CGameObject::~CGameObject()

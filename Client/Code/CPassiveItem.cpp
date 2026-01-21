@@ -114,9 +114,11 @@ void CPassiveItem::Interact()
 
 }
 
-CPassiveItem* CPassiveItem::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel)
+CPassiveItem* CPassiveItem::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, _float fThrowRange)
 {
 	CPassiveItem* pItem = new CPassiveItem(pGraphicDev, StageChannel);
+
+	pItem->m_fThrowRange = fThrowRange;
 
 	if (FAILED(pItem->Ready_GameObject()))
 	{

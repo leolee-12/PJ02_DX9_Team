@@ -217,7 +217,6 @@ CComponent* CTextureSet::Clone()
 
 void CTextureSet::Free()
 {
-	CComponent::Free();
 
 	for (auto iter = m_mapTexture.begin(); iter != m_mapTexture.end(); iter++)
 	{
@@ -225,4 +224,6 @@ void CTextureSet::Free()
 		iter->second.clear();
 	}
 	m_mapTexture.clear();
+
+	CComponent::Free();
 }

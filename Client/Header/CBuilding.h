@@ -43,6 +43,7 @@ private:
 	void	Player_Interact();
 	void	Set_Texture();
 	void	Ready_Variable();
+	void	Ready_Event();
 
 private:
 	Engine::CRcTex*		m_pBufferCom;

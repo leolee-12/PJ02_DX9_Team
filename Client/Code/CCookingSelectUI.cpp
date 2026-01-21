@@ -57,7 +57,7 @@ HRESULT CCookingSelectUI::Ready_GameObject()
 		{
 			pCSS = CCookingSelectSlot::Create(m_pGraphicDev, { -500.f + (75.f * j), -150.f + (75.f * i), 0.001f }, 0.3f);
 
-			if (nullptr == pGameObject)
+			if (nullptr == pCSS)
 				return E_FAIL;
 
 			//m_vecCookingSelectUI.push_back(pGameObject);
@@ -123,7 +123,7 @@ _int CCookingSelectUI::Update_GameObject(const _float& fTimeDelta)
 		}
 	}
 
-	CRenderer::GetInstance()->Add_RenderGroup(RENDER_UI, this);
+	//CRenderer::GetInstance()->Add_RenderGroup(RENDER_UI, this);
 	return NOEVENT;
 }
 
@@ -142,6 +142,14 @@ void CCookingSelectUI::LateUpdate_GameObject(const _float& fTimeDelta)
 	for (CGameObject* CookingUI : m_vecCookingSelectUI)
 	{
 		CookingUI->LateUpdate_GameObject(fTimeDelta);
+	}
+	for (CGameObject* Obj : m_vecFoodSlot)
+	{
+		Obj->LateUpdate_GameObject(fTimeDelta);
+	}
+	for (CGameObject* Obj2 : m_vecFood)
+	{
+		Obj2->LateUpdate_GameObject(fTimeDelta);
 	}
 }
 
@@ -198,6 +206,7 @@ void CCookingSelectUI::ReSetSelecting()
 	{
 		pFood->Set_Render(false);
 	}
+	m_iCurCookingCount = 0;
 }
 
 

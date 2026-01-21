@@ -234,6 +234,8 @@ HRESULT CBishop_Kallamar::Ready_Dialogue(const _vec3& vDialoguePos)
 	m_pSpeechBubble = CSpeechBubble::Create(m_pGraphicDev, vDialoguePos, _vec2(500.f, 150.f));
 
 	if (m_pSpeechBubble == nullptr) { return E_FAIL; }
+
+	return S_OK;
 }
 
 
