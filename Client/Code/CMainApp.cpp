@@ -13,6 +13,7 @@
 #include "CLoading.h"
 #include "CCutSceneMgr.h"
 #include "CInteractMgr.h"
+#include "CEffectMgr.h"
 
 bool g_bDebug = false;
 bool g_bChangeScene = false;
@@ -54,6 +55,7 @@ int CMainApp::Update_MainApp(const float& fTimeDelta)
 
 	// 타일 매니저 업데이트
 	CTileMgr::GetInstance()->Update(fTimeDelta);
+	CEffectMgr::GetInstance()->Update_Effect(fTimeDelta);
 
 	return 0;
 }
@@ -65,6 +67,7 @@ void CMainApp::LateUpdate_MainApp(const float& fTimeDelta)
 
 	// 타일 매니저 레이트 업데이트
 	CTileMgr::GetInstance()->LateUpdate(fTimeDelta);
+	CEffectMgr::GetInstance()->LateUpdate_Effect(fTimeDelta);
 
 	CCollisionMgr::GetInstance()->Check_Collisions(fTimeDelta);
 	CSoundMgr::GetInstance()->Update();
@@ -225,6 +228,7 @@ void CMainApp::Free()
 	Safe_Release(m_pGraphicDev);
 	Safe_Release(m_pDeviceClass);
 
+	CEffectMgr::DestroyInstance();
 	CInteractMgr::DestroyInstance();
 	CCutSceneMgr::DestroyInstance();
 	CMapLoader::DestroyInstance();

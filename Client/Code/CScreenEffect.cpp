@@ -153,14 +153,30 @@ void CScreenEffect::Zoom(const _float& fTimeDelta)
 
 CScreenEffect* CScreenEffect::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 {
-	CScreenEffect* pEffect = nullptr;
+	CScreenEffect* pScreenEffect = new CScreenEffect(pGraphicDev);
 
-	return pEffect;
+	if (FAILED(pScreenEffect->Ready_GameObject()))
+	{
+		Safe_Release(pScreenEffect);
+		MSG_BOX("pScreenEffect Create Failed");
+		return nullptr;
+	}
+
+	return pScreenEffect;
 }
 
 CScreenEffect* CScreenEffect::Clone()
 {
-	return new CScreenEffect(*this);
+	CScreenEffect* pScreenEffect = new CScreenEffect(*this);
+	
+	if (FAILED(pScreenEffect->Ready_GameObject()))
+	{
+		Safe_Release(pScreenEffect);
+		MSG_BOX("pScreenEffect Clone Failed");
+		return nullptr;
+	}
+
+	return pScreenEffect;
 }
 
 void CScreenEffect::Free()

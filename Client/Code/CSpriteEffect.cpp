@@ -5,12 +5,18 @@
 
 CSpriteEffect::CSpriteEffect(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CEffect(pGraphicDev)
+	, m_bBillboard(false)
+	, m_fAlphaDecay(0.f)
 {
+	ZeroMemory(&m_tSpriteData, sizeof(m_tSpriteData));
 }
 
 CSpriteEffect::CSpriteEffect(const CSpriteEffect& rhs)
 	: CEffect(rhs)
+	, m_bBillboard(rhs.m_bBillboard)
+	, m_fAlphaDecay(rhs.m_fAlphaDecay)
 {
+	memcpy(&m_tSpriteData, &rhs.m_tSpriteData, sizeof(SPRITE_DATA));
 }
 
 CSpriteEffect::~CSpriteEffect()
@@ -25,7 +31,6 @@ HRESULT	CSpriteEffect::Ready_GameObject()
 	m_eState = ES_READY;
 	m_fCurFrame = 0.f;
 	m_bBillboard = true;
-	m_fScale = 1.f;
 
 	return S_OK;
 }
@@ -74,6 +79,7 @@ void CSpriteEffect::LateUpdate_GameObject(const _float& fTimeDelta)
 
 	_vec3 vPos;
 	m_pTransformCom->Get_Info(INFO_POS, &vPos);
+	vPos.z -= 1.f;
 	Compute_ViewDepth(&vPos);
 
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
@@ -112,10 +118,6 @@ void CSpriteEffect::Reset()
 {
 }
 
-void CSpriteEffect::Set_Scale(const _float& fScale)
-{
-}
-
 void CSpriteEffect::Set_Texture()
 {
 	_uint iFrame = _uint(m_fFrame);
@@ -130,21 +132,46 @@ void CSpriteEffect::Set_Texture()
 
 	m_pGraphicDev->SetTransform(D3DTS_TEXTURE0, &m_matTex);
 
-	m_pTextureCom->Set_Texture(0);
+	m_pTextureCom->Set_Texture(m_iTexIdx);
 }
 
-CSpriteEffect* CSpriteEffect::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+CSpriteEffect* CSpriteEffect::Create(LPDIRECT3DDEVICE9 pGraphicDev, const wstring& strProtoTexKey)
 {
-	CSpriteEffect* pEffect = nullptr;
+	CSpriteEffect* pSpriteEffect = new CSpriteEffect(pGraphicDev);
 
-	return pEffect;
+	pSpriteEffect->m_strProtoTexKey = strProtoTexKey;
+
+	if (FAILED(pSpriteEffect->Ready_GameObject()))
+	{
+		Safe_Release(pSpriteEffect);
+		MSG_BOX("pSpriteEffect Create Failed");
+		return nullptr;
+	}
+
+	return pSpriteEffect;
 }
 
 CSpriteEffect* CSpriteEffect::Clone()
 {
-	return new CSpriteEffect(*this);
+	CSpriteEffect* pSpriteEffect = new CSpriteEffect(*this);
+
+	if (FAILED(pSpriteEffect->Add_Component()))
+	{
+		Safe_Release(pSpriteEffect);
+		MSG_BOX("pSpriteEffect Clone Failed");
+		return nullptr;
+	}
+
+	m_fFrame = 0.f;
+	m_fAlpha = 1.f;
+	m_eState = ES_READY;
+
+	pSpriteEffect->m_pTransformCom->Set_Scale(m_fScale, m_fScale, m_fScale);
+
+	return pSpriteEffect;
 }
 
 void CSpriteEffect::Free()
 {
+	CEffect::Free();
 }

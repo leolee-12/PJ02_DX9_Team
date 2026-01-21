@@ -11,8 +11,9 @@
 #include "Engine_Struct.h"
 #include "CCollider.h"
 #include "CCutSceneMgr.h"
-#include "CHitEffect.h"
 #include "CSoundMgr.h"
+#include "CEffectMgr.h"
+#include "CItem.h"
 
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev),
@@ -159,8 +160,8 @@ void CPlayer::Ready_Variable()
 {
 	m_bIntro = false;
 	m_fSpeed = PLAYER_DEFAULT_SPEED;
-	//m_iAttack = PLAYER_DEFAULT_ATTACK;
-	m_iAttack = 10;
+	m_iAttack = PLAYER_DEFAULT_ATTACK;
+	//m_iAttack = 10;
 	m_iHp = 8;
 	m_fAcmlTime = 0.f;
 
@@ -312,21 +313,22 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 		if (GetAsyncKeyState(i + 48))
 		{	// 디버그용
 
-			_vec3 vPos{ m_vPos.x + 0.2f, m_vPos.y - 1.f, m_vPos.z };
-			CGameObject* pEffect = CHitEffect::Create(m_pGraphicDev, vPos, i);
-
-			if (pEffect)
-			{
-				wstring strObjTag = L"Effect";
-
-				IMessageChannel::EVENT ESummonMonster;
-				ESummonMonster.strType = L"Obj.Add";
-				ESummonMonster.eOBJID = Engine::OID_EFFECT;
-				ESummonMonster.hmapData.emplace(L"Obj", pEffect);
-				ESummonMonster.hmapData.emplace(L"LayerTag", L"GameLogic_Layer");
-				ESummonMonster.hmapData.emplace(L"ObjTag", strObjTag);
-				m_pMessageChannel->Publish(ESummonMonster);
-			}
+			CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_HIT, i, m_vPos);
+			//_vec3 vPos{ m_vPos.x + 0.2f, m_vPos.y - 1.f, m_vPos.z };
+			//CGameObject* pEffect = CHitEffect::Create(m_pGraphicDev, vPos, i);
+			//
+			//if (pEffect)
+			//{
+			//	wstring strObjTag = L"Effect";
+			//
+			//	IMessageChannel::EVENT ESummonMonster;
+			//	ESummonMonster.strType = L"Obj.Add";
+			//	ESummonMonster.eOBJID = Engine::OID_EFFECT;
+			//	ESummonMonster.hmapData.emplace(L"Obj", pEffect);
+			//	ESummonMonster.hmapData.emplace(L"LayerTag", L"GameLogic_Layer");
+			//	ESummonMonster.hmapData.emplace(L"ObjTag", strObjTag);
+			//	m_pMessageChannel->Publish(ESummonMonster);
+			//}
 		}
 	}
 
@@ -874,6 +876,13 @@ void CPlayer::Attack_HitBox()
 		_tchar strSoundName[128] = L"";
 		swprintf_s(strSoundName, L"Attacked%d.wav", Get_Rand_Int(1, 4));
 		CSoundMgr::GetInstance()->Play(strSoundName, SOUND_EFFECT, 0.35f);
+
+		_vec3 vPos;
+		for (auto& pObj : tempVec)
+		{
+			static_cast<CTransform*>(pObj->Get_Component(ID_DYNAMIC, L"Com_Transform"))->Get_Info(INFO_POS, &vPos);
+			CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_HIT, m_iCombo, vPos, _vec3(0.2f, 0.2f, 0.f));
+		}
 	}
 }
 
@@ -896,6 +905,7 @@ void CPlayer::Attacked(_int iDamage)
 	m_eCurState = PS_HIT;
 	m_fAcmlTime = 0.f;
 	CSoundMgr::GetInstance()->Play(L"Player_Hit.wav", SOUND_EFFECT, 0.4f);
+	CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_PLAYERHIT, 6, _vec3(m_vPos.x, m_vPos.y - 1.f, m_vPos.z), _vec3(0.2f, 0.2f, 0.f));
 
 	m_iCombo = 0;
 }
@@ -929,6 +939,13 @@ void	CPlayer::OnCollision(CGameObject* pObject)
 	{
 		//m_pTransformCom->Set_Pos(10.f, 10.f, 10.f);
 	}
+
+	else if (pObject->Get_OBJID() == OID_ITEM)
+	{
+		if(static_cast<CItem*>(pObject)->Get_State() != CItem::IS_SPAWN)
+			CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_PICKUP, 1, _vec3(m_vPos.x, m_vPos.y - 1.f, m_vPos.z), _vec3(0.3f, 0.3f, 0.f));
+	}
+
   	if (pObject->Get_OBJID() == OID_BORDER)
 	{
 		_vec3 vCurPos;

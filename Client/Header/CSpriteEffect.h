@@ -35,9 +35,7 @@ public:
 	virtual void    OnLoop() {}         // 루프 시
 
 	void			Set_SpriteData(const SPRITE_DATA& tData) { m_tSpriteData = tData; }
-	void			Set_TextureKey(const wstring& strKey) { m_strProtoTexKey = strKey; }
 	void			Set_Billboard(_bool bEnable) { m_bBillboard = bEnable; }
-	void			Set_Scale(const _float& fScale);
 	void			Set_Texture();
 
 	_float		m_fFrame;
@@ -50,11 +48,10 @@ public:
 	SPRITE_DATA m_tSpriteData;
 	_float      m_fCurFrame;
 	_bool       m_bBillboard;
-	_float      m_fScale;
 
 public:
-	static CSpriteEffect* Create(LPDIRECT3DDEVICE9 pGraphicDev);
-	virtual CSpriteEffect* Clone();
+	static CSpriteEffect*	Create(LPDIRECT3DDEVICE9 pGraphicDev, const wstring& strProtoTexKey);
+	virtual CSpriteEffect*	Clone();
 
 private:
 	virtual void	Free();

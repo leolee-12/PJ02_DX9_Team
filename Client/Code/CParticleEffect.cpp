@@ -165,14 +165,30 @@ void CParticleEffect::Emit_Particle()
 
 CParticleEffect* CParticleEffect::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 {
-	CParticleEffect* pEffect = nullptr;
+	CParticleEffect* pParticleEffect = new CParticleEffect(pGraphicDev);
 
-	return pEffect;
+	if (FAILED(pParticleEffect->Ready_GameObject()))
+	{
+		Safe_Release(pParticleEffect);
+		MSG_BOX("pParticleEffect Create Failed");
+		return nullptr;
+	}
+
+	return pParticleEffect;
 }
 
 CParticleEffect* CParticleEffect::Clone()
 {
-	return new CParticleEffect(*this);
+	CParticleEffect* pParticleEffect = new CParticleEffect(*this);
+
+	if (FAILED(pParticleEffect->Ready_GameObject()))
+	{
+		Safe_Release(pParticleEffect);
+		MSG_BOX("pParticleEffect Clone Failed");
+		return nullptr;
+	}
+
+	return pParticleEffect;
 }
 
 void CParticleEffect::Free()

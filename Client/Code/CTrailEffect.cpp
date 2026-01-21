@@ -75,7 +75,7 @@ void CTrailEffect::Render_GameObject()
 	}
 
 	m_pGraphicDev->SetFVF(FVF_COL);
-	m_pGraphicDev->DrawPrimitiveUP(D3DPT_TRIANGLESTRIP, vecVtxCol.size() - 2, vecVtxCol.data(), sizeof(VTXCOL));
+	m_pGraphicDev->DrawPrimitiveUP(D3DPT_TRIANGLESTRIP, _uint(vecVtxCol.size() - 2), vecVtxCol.data(), sizeof(VTXCOL));
 }
 
 void CTrailEffect::Play()
@@ -112,14 +112,30 @@ void CTrailEffect::Add_Point(const _vec3& vPoint)
 
 CTrailEffect* CTrailEffect::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 {
-	CTrailEffect* pEffect = nullptr;
+	CTrailEffect* pTrailEffect = new CTrailEffect(pGraphicDev);
 
-	return pEffect;
+	if (FAILED(pTrailEffect->Ready_GameObject()))
+	{
+		Safe_Release(pTrailEffect);
+		MSG_BOX("pTrailEffect Create Failed");
+		return nullptr;
+	}
+
+	return pTrailEffect;
 }
 
 CTrailEffect* CTrailEffect::Clone()
 {
-	return new CTrailEffect(*this);
+	CTrailEffect* pTrailEffect = new CTrailEffect(*this);
+
+	if (FAILED(pTrailEffect->Ready_GameObject()))
+	{
+		Safe_Release(pTrailEffect);
+		MSG_BOX("pTrailEffect Clone Failed");
+		return nullptr;
+	}
+
+	return pTrailEffect;
 }
 
 void CTrailEffect::Free()

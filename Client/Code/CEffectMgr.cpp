@@ -23,32 +23,36 @@ HRESULT CEffectMgr::Ready_EffectMgr(LPDIRECT3DDEVICE9 pGraphicDev)
 	m_pGraphicDev = pGraphicDev;
 
 	CSpriteEffect* pSpriteEffect = nullptr;
-	pSpriteEffect = CSpriteEffect::Create(pGraphicDev);
-	pSpriteEffect->Set_TextureKey(L"Proto_HitEffectTexture");
+	pSpriteEffect = CSpriteEffect::Create(pGraphicDev, L"Proto_HitEffectTexture");
 	pSpriteEffect->Set_SpriteData({ 8, 4, 8, 24.f });  // 8x4 그리드, 8프레임, 24fps
-	pSpriteEffect->Set_Scale(10.f);
+	pSpriteEffect->Set_Scale(25.f);
 	m_mapProtoEffect.emplace(EK_HIT, pSpriteEffect);
 
-	pSpriteEffect = CSpriteEffect::Create(pGraphicDev);
-	pSpriteEffect->Set_TextureKey(L"Proto_PickUpEffectTexture");
+	pSpriteEffect = nullptr;
+	pSpriteEffect = CSpriteEffect::Create(pGraphicDev, L"Proto_HitEffectTexture");
 	pSpriteEffect->Set_SpriteData({ 8, 4, 8, 24.f });  // 8x4 그리드, 8프레임, 24fps
 	pSpriteEffect->Set_Scale(10.f);
+	m_mapProtoEffect.emplace(EK_PLAYERHIT, pSpriteEffect);
+
+	pSpriteEffect = CSpriteEffect::Create(pGraphicDev, L"Proto_PickUpEffectTexture");
+	pSpriteEffect->Set_SpriteData({ 8, 1, 6, 24.f });  // 8x1 그리드, 8프레임, 24fps
+	pSpriteEffect->Set_Scale(3.f);
 	m_mapProtoEffect.emplace(EK_PICKUP, pSpriteEffect);
 
-	CParticleEffect* pDustLand = CParticleEffect::Create(pGraphicDev);
-	pDustLand->Set_TextureKey(L"Proto_DustTexture");
-	pDustLand->Set_EmitRange(_vec3(-0.5f, 0.f, -0.5f), _vec3(0.5f, 0.f, 0.5f));
-	pDustLand->Set_SpeedRange(_vec3(-2.f, 1.f, -2.f), _vec3(2.f, 3.f, 2.f));
-	pDustLand->Set_LifeTime(0.5f);
-	pDustLand->Set_EmitRate(30.f);
-	m_mapProtoEffect.emplace(EK_DUST_LAND, pDustLand);
-
-
-	CScreenEffect* pConc = CScreenEffect::Create(pGraphicDev);
-	pConc->Set_TextureKey(L"Proto_ConcentrationTexture");
-	pConc->Set_SEFType(CScreenEffect::SEF_DARK);
-	pConc->Set_FadeTime(0.1f, 0.2f);  // fadeIn, fadeOut
-	m_mapProtoEffect.emplace(EK_MONO_BLACK, pConc);
+	//CParticleEffect* pDustLand = CParticleEffect::Create(pGraphicDev);
+	//pDustLand->Set_TextureKey(L"Proto_DustTexture");
+	//pDustLand->Set_EmitRange(_vec3(-0.5f, 0.f, -0.5f), _vec3(0.5f, 0.f, 0.5f));
+	//pDustLand->Set_SpeedRange(_vec3(-2.f, 1.f, -2.f), _vec3(2.f, 3.f, 2.f));
+	//pDustLand->Set_LifeTime(0.5f);
+	//pDustLand->Set_EmitRate(30.f);
+	//m_mapProtoEffect.emplace(EK_DUST_LAND, pDustLand);
+	//
+	//
+	//CScreenEffect* pConc = CScreenEffect::Create(pGraphicDev);
+	//pConc->Set_TextureKey(L"Proto_ConcentrationTexture");
+	//pConc->Set_SEFType(CScreenEffect::SEF_DARK);
+	//pConc->Set_FadeTime(0.1f, 0.2f);  // fadeIn, fadeOut
+	//m_mapProtoEffect.emplace(EK_MONO_BLACK, pConc);
 
 	return S_OK;
 }
@@ -78,7 +82,8 @@ void CEffectMgr::LateUpdate_Effect(const _float& fTimeDelta)
 	}
 }
 
-void CEffectMgr::Create_Effect(LPDIRECT3DDEVICE9 pGraphicDev, EFFECT_KEY eEffectKey, const _vec3& vPos, CGameObject* pOwner, const _vec3& vOffset)
+void CEffectMgr::Create_Effect(	EFFECT_KEY eEffectKey, const _uint& iTexIdx, const _vec3& vPos,
+								const _vec3& vOffset, CGameObject* pOwner)
 {
 	auto iter = m_mapProtoEffect.find(eEffectKey);
 
@@ -96,9 +101,16 @@ void CEffectMgr::Create_Effect(LPDIRECT3DDEVICE9 pGraphicDev, EFFECT_KEY eEffect
 		return;
 	}
 
+	pEffect->Set_TextureIndex(iTexIdx);
+
 	CTransform* pTransformCom = static_cast<CTransform*>(pEffect->Get_Component(ID_DYNAMIC, L"Com_Transform"));
-	_vec3 vCurPos = vPos + vOffset;
-	pTransformCom->Set_Pos(vCurPos.x, vCurPos.y, vCurPos.z);
+
+	_vec3 vFinalPos = vPos;
+	vFinalPos.x += Get_Rand_Float(-vOffset.x, vOffset.x);
+	vFinalPos.y += Get_Rand_Float(-vOffset.y, vOffset.y);
+	vFinalPos.z += Get_Rand_Float(-vOffset.z, vOffset.z);
+
+	pTransformCom->Set_Pos(vFinalPos.x, vFinalPos.y, vFinalPos.z);
 
 	if (pOwner) pEffect->Set_Owner(pOwner);
 
@@ -120,4 +132,11 @@ void CEffectMgr::Clear_Effect()
 void CEffectMgr::Free()
 {
 	Clear_Effect();
+
+	for (auto& pair : m_mapProtoEffect)
+	{
+		Safe_Release(pair.second);
+	}
+
+	m_mapProtoEffect.clear();
 }

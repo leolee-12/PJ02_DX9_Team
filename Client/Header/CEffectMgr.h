@@ -16,14 +16,20 @@ class CEffectMgr : public CBase
 public:
 	enum EFFECT_KEY
 	{
-		EK_HIT,
-		EK_PICKUP,
-		EK_SLASH,
-		EK_DUST_LAND,
-		EK_DUST_RUN,
-		EK_ENEMYSPAWN,
-		EK_MONO_BLACK,
-		EK_MONO_WHITE,
+		// Sprite
+		EK_HIT
+		,EK_PLAYERHIT
+		,EK_PICKUP
+		//,EK_SLASH
+		//,EK_ENEMYSPAWN
+
+		// Particle
+		//,EK_DUST_LAND
+		//,EK_DUST_RUN
+
+		// Screen
+		//,EK_MONO_BLACK
+		//,EK_MONO_WHITE
 	};
 
 private:
@@ -35,7 +41,8 @@ public:
 	_int			Update_Effect(const _float& fTimeDelta);
 	void			LateUpdate_Effect(const _float& fTimeDelta);
 
-	void			Create_Effect(LPDIRECT3DDEVICE9 pGraphicDev, EFFECT_KEY eEffectKey, const _vec3& vPos, CGameObject* pOwner = nullptr, const _vec3& vOffset = _vec3(0.f, 0.f, 0.f));
+	void			Create_Effect(	EFFECT_KEY eEffectKey, const _uint& iTexIdx, const _vec3& vPos,
+									const _vec3& vOffset = _vec3(0.f, 0.f, 0.f), CGameObject * pOwner = nullptr);
 	void			Clear_Effect();
 	
 

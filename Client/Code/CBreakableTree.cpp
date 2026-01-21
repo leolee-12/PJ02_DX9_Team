@@ -10,38 +10,26 @@
 
 CBreakableTree::CBreakableTree(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev)
-	, m_pGrassBuffer(nullptr)
+	, m_pBufferCom(nullptr)
 	, m_pTransformCom(nullptr)
 	, m_pTextureCom(nullptr)
 	, m_pColliderCom(nullptr)
 	, m_iTextureIndex(0)
 	, m_fScale(1.f)
 	, m_fBaseScale(1.f)
-	, m_fPhase(0.f)
-	, m_fWindSpeed(3.f)
-	, m_fWindStrength(0.1f)
-	, m_fAccTime(0.f)
-	, m_fReactStrength(0.f)
-	, m_vReactDir(0.f, 0.f, 0.f)
 	, m_fWorkGauge(0.f)
 {
 }
 
 CBreakableTree::CBreakableTree(const CBreakableTree& rhs)
 	: CGameObject(rhs)
-	, m_pGrassBuffer(nullptr)
+	, m_pBufferCom(nullptr)
 	, m_pTransformCom(nullptr)
 	, m_pTextureCom(nullptr)
 	, m_pColliderCom(nullptr)
 	, m_iTextureIndex(rhs.m_iTextureIndex)
 	, m_fScale(rhs.m_fScale)
 	, m_fBaseScale(rhs.m_fBaseScale)
-	, m_fPhase(0.f)
-	, m_fWindSpeed(3.f)
-	, m_fWindStrength(0.1f)
-	, m_fAccTime(0.f)
-	, m_fReactStrength(0.f)
-	, m_vReactDir(0.f, 0.f, 0.f)
 	, m_fWorkGauge(0.f)
 {
 }
@@ -54,6 +42,10 @@ HRESULT CBreakableTree::Ready_GameObject()
 {
 	if (FAILED(Add_Component()))
 		return E_FAIL;
+
+	m_fFrame = 0.f;
+	m_fFrameSpeed = 24.f;
+	m_fFrameEnd = 32.f;
 
 	m_pColliderCom->RegisterToManager(this, CL_GRASS);
 	CInteractMgr::GetInstance()->Register_IObj(CInteractMgr::WOOD, this);
@@ -87,15 +79,6 @@ _int CBreakableTree::Update_GameObject(const _float& fTimeDelta)
 		CInteractMgr::GetInstance()->Unregister_IObj(CInteractMgr::WOOD, this);
 	}
 
-
-	m_fAccTime += fTimeDelta;
-
-	// React is now called via OnCollision callback
-	Update_VertexSway(fTimeDelta);
-
-	// Decay react strength over time
-	m_fReactStrength *= 0.9f;
-
 	CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHA, this);
 
 	return iExit;
@@ -103,6 +86,9 @@ _int CBreakableTree::Update_GameObject(const _float& fTimeDelta)
 
 void CBreakableTree::LateUpdate_GameObject(const _float& fTimeDelta)
 {
+	if (m_fWorkGauge - m_fPreWorkGauge < 0.001f)	m_iTextureIndex = 0;	// IDLE
+	else 											m_iTextureIndex = 1;	// HIT
+
 	_vec3 vPos;
 	m_pTransformCom->Get_Info(Engine::INFO_POS, &vPos);
 	m_pTransformCom->Compute_Bilboard(BBD_X);
@@ -117,16 +103,14 @@ void CBreakableTree::Render_GameObject()
 
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 
-	// Alpha test (remove fully transparent pixels)
-	//m_pGraphicDev->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
-	//m_pGraphicDev->SetRenderState(D3DRS_ALPHAREF, 0x10);
-	//m_pGraphicDev->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
+	m_pGraphicDev->SetTextureStageState(0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_COUNT2);
 
-	m_pTextureCom->Set_Texture(m_iTextureIndex);
-	m_pGrassBuffer->Render_Buffer();
+	Set_Texture();
 
-	// Restore
-	//m_pGraphicDev->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
+	m_pBufferCom->Render_Buffer();
+
+	m_pGraphicDev->SetTextureStageState(0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE);
+
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 
 
@@ -157,14 +141,13 @@ void CBreakableTree::Set_ObjectData(const Engine::OBJECTDATA& objData)
 
 	m_pTransformCom->Set_Pos(objData.x, objData.y, objData.z);
 	m_pTransformCom->Set_Scale(m_fScale, m_fScale, m_fScale);
-
-	// Position-based phase for individual sway timing
-	m_fPhase = fmodf(objData.x * 12.9898f + objData.z * 78.233f, D3DX_PI * 2.f);
 }
 
 void CBreakableTree::Check_Status()
 {
 	if (Is_WorkComplete()) m_iHp = 0;
+
+	m_fPreWorkGauge = m_fWorkGauge;
 }
 
 void CBreakableTree::OnCollision(CGameObject* pObject)
@@ -177,47 +160,6 @@ void CBreakableTree::OnCollision(CGameObject* pObject)
 
 	_vec3 vObjPos;
 	pTransform->Get_Info(INFO_POS, &vObjPos);
-
-	React(vObjPos);
-}
-
-void CBreakableTree::React(const _vec3& vObjPos)
-{
-	_vec3 vPos;
-	m_pTransformCom->Get_Info(INFO_POS, &vPos);
-
-	_vec3 vDist = vObjPos - vPos;
-	vDist.y = 0.f;
-	_float fDist = D3DXVec3Length(&vDist);
-
-	const _float fReactDistance = 2.f;
-
-	if (fDist < fReactDistance)
-	{
-		// Push grass away from object
-		D3DXVec3Normalize(&m_vReactDir, &vDist);
-		m_vReactDir = -m_vReactDir;
-
-		// Distance-based strength (closer = stronger)
-		m_fReactStrength = (1.f - fDist / fReactDistance);
-	}
-}
-
-void CBreakableTree::Update_VertexSway(const _float& fTimeDelta)
-{
-	if (nullptr == m_pGrassBuffer)
-		return;
-
-	// 1. Base wind sway (always applied)
-	_float fWindOffset = sinf(m_fAccTime * m_fWindSpeed + m_fPhase) * m_fWindStrength;
-
-	// 2. Player reaction sway
-	_float fReactOffset = m_vReactDir.x * m_fReactStrength * 0.3f;
-
-	// 3. Apply total offset to buffer
-	_float fTotalOffset = fWindOffset + fReactOffset;
-
-	m_pGrassBuffer->Set_TopVertexOffset(fTotalOffset);
 }
 
 HRESULT CBreakableTree::Add_Component()
@@ -225,8 +167,8 @@ HRESULT CBreakableTree::Add_Component()
 	Engine::CComponent* pComponent = nullptr;
 
 	// GrassBuffer (dynamic vertex buffer for sway effect)
-	pComponent = m_pGrassBuffer = dynamic_cast<Engine::CGrassBuffer*>
-		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_GrassBuffer"));
+	pComponent = m_pBufferCom = dynamic_cast<Engine::CRcTex*>
+		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_RcTex"));
 
 	if (nullptr == pComponent)
 		return E_FAIL;
@@ -244,7 +186,7 @@ HRESULT CBreakableTree::Add_Component()
 
 	// Grass Texture
 	pComponent = m_pTextureCom = dynamic_cast<Engine::CTexture*>
-		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_TreeTexture"));
+		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_BTreeTexture"));
 
 	if (nullptr == pComponent)
 		return E_FAIL;
@@ -262,6 +204,25 @@ HRESULT CBreakableTree::Add_Component()
 	m_mapComponent[ID_STATIC].insert({ L"Com_Collider", pComponent });
 
 	return S_OK;
+}
+
+void CBreakableTree::Set_Texture()
+{
+	//_bool bFilpX = vDir.x > 0.f ? true : false;	// 반전 여부
+	_uint iFrame = _uint(m_fFrame);					// 현재 프레임
+
+	D3DXMatrixIdentity(&m_matTex);
+	_uint iU = iFrame % 16;
+	_uint iV = iFrame / 2;
+
+	m_matTex._11 = 0.0625f;	// 가로는 16칸 고정
+	m_matTex._22 = 0.5f;	// 세로는 2칸 고정(BreakableTree)
+	m_matTex._31 = _float(iU) * 0.0625f;	// 반전 X : 왼쪽에서 오른쪽으로 읽음
+	m_matTex._32 = _float(iV) * 0.5f;
+
+	m_pGraphicDev->SetTransform(D3DTS_TEXTURE0, &m_matTex);
+
+	m_pTextureCom->Set_Texture(m_iTextureIndex);
 }
 
 CBreakableTree* CBreakableTree::Create(LPDIRECT3DDEVICE9 pGraphicDev, const Engine::OBJECTDATA& objData, IMessageChannel* pMessageChannel)
