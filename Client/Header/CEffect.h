@@ -23,7 +23,7 @@ protected:
 public:
 	void				Set_TextureIndex(const _uint& iTexIdx)	{ m_iTexIdx = iTexIdx; }
 	void				Set_Owner(CGameObject* pOwner)			{ m_pOwner = pOwner; }
-	void				Set_Scale(const _float& fScale)			{ m_fScale = fScale; }
+	void				Set_Scale(const _vec3& vScale)			{ m_vScale = vScale; }
 
 	virtual HRESULT		Ready_GameObject() PURE;
 	virtual _int		Update_GameObject(const _float& fTimeDelta) PURE;
@@ -58,7 +58,7 @@ protected:
 	EFFECT_TYPE     m_eType;
 	EFFECT_STATE    m_eState;
 
-	_float			m_fScale;
+	_vec3			m_vScale;
 	_float          m_fLifeTime;        // 총 지속 시간
 	_float          m_fAccTime;			// 경과 시간
 	_bool           m_bLoop;            // 루프 여부

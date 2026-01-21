@@ -6,13 +6,14 @@ class CParticleEffect : public CEffect
 public:
 	struct Particle
 	{
-		_vec3   vPos;
-		_vec3   vSpeed;
-		_float  fLife;
-		_float  fMaxLife;
-		_float  fSize;
-		_float  fAlpha;
-		DWORD   dwColor;
+		_vec3		vPos;
+		_vec3		vSpeed;
+		_float		fLife;
+		_float		fMaxLife;
+		_float		fSize;
+		_float		fAlpha;
+		_uint		iTexIdx;
+		D3DXCOLOR	tColor;
 	};
 
 private:
@@ -40,18 +41,24 @@ public:
 	void			Emit_Particle();
 
 	void			Set_TextureKey(wstring strKey) { m_strProtoTexKey = strKey; }
-	void			Set_EmitRange(const _vec3& v1, const _vec3& v2) {}
-	void			Set_SpeedRange(const _vec3& v1, const _vec3& v2) {}
+	void			Set_EmitRange(const _vec3& v1, const _vec3& v2) { m_vEmitMinPos = v1; m_vEmitMaxPos = v2; }
+	void			Set_SpeedRange(const _vec3& v1, const _vec3& v2) { m_vMinSpeed = v1; m_vMaxSpeed = v2; }
 	void			Set_LifeTime(const _float& fTime) { m_fLifeTime = fTime; }
 	void			Set_EmitRate(const _float& fRate) { m_fEmitRate = fRate; }
+	void			Set_BaseColor(const D3DXCOLOR& tColor) { m_tBaseColor = tColor; }
+	//void			Set_ColorVariance(_float fVar) { m_fColorVariance = fVar; }
+	void			Set_Texture(const _uint& iTexIdx);
+	void			Set_TextureRange(_uint iMin, _uint iMax) { m_iMinTexIdx = iMin; m_iMaxTexIdx = iMax; }
+	void			Compute_ParticleBBD(_matrix* pOut, const _vec3& vPos, const _float& fSize);
 
 public:
-	static CParticleEffect* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	static CParticleEffect* Create(LPDIRECT3DDEVICE9 pGraphicDev, const wstring& strProtoTexKey);
 	virtual CParticleEffect* Clone();
 
 private:
 	vector<Particle>	m_vecParticles;
 	_uint				m_iMaxParticles;
+	_matrix				m_matTex;
 
 	// 발생 설정
 	_float      m_fEmitRate;		// 초당 발생 수
@@ -60,6 +67,7 @@ private:
 	_vec3       m_vEmitMaxPos;
 	_vec3       m_vMinSpeed;		// 초기 속도 범위
 	_vec3       m_vMaxSpeed;
+	_bool		m_bFull = false;
 
 	// 물리
 	_vec3       m_vGravity;
@@ -70,6 +78,14 @@ private:
 	_float      m_fSizeEnd;
 	_float      m_fAlphaStart;
 	_float      m_fAlphaEnd;
+	D3DXCOLOR   m_tBaseColor;			// 기본 색상
+	//_float      m_fColorVariance;   // 색상 변동폭 (0.0 ~ 1.0)
+
+	_uint m_iMinTexIdx;  // 사용할 인덱스 시작 (포함)
+	_uint m_iMaxTexIdx;  // 사용할 인덱스 끝 (포함)
+
+	static constexpr _uint GRID_X = 8;
+	static constexpr _uint GRID_Y = 4;
 
 private:
 	virtual void	Free();

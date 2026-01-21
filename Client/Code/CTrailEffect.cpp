@@ -26,7 +26,6 @@ _int CTrailEffect::Update_GameObject(const _float& fTimeDelta)
 {
 	if (m_eState != ES_PLAY && m_eState != ES_LOOP) return NOEVENT;
 
-
 	CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHA, this);
 
 	return NOEVENT;
@@ -34,48 +33,62 @@ _int CTrailEffect::Update_GameObject(const _float& fTimeDelta)
 
 void CTrailEffect::LateUpdate_GameObject(const _float& fTimeDelta)
 {
+	Compute_TrailWorldMatrix();
 }
 
 void CTrailEffect::Render_GameObject()
 {
-	if (m_dequePoints.size() < 2) return;
+	m_pGraphicDev->SetTransform(D3DTS_WORLD, &m_matTrailWorld);
 
-	vector<VTXCOL> vecVtxCol;
-	size_t iSize = m_dequePoints.size();
+	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 
-	for(_uint i = 0; i < iSize; ++i)
+	DWORD dwOldLighting;
+	DWORD dwOldSrcBlend, dwOldDestBlend, dwOldTFactor;
+	DWORD dwOldColorArg1, dwOldColorArg2, dwOldColorOp;
+
+	m_pGraphicDev->GetRenderState(D3DRS_LIGHTING, &dwOldLighting);
+	m_pGraphicDev->GetRenderState(D3DRS_SRCBLEND, &dwOldSrcBlend);
+	m_pGraphicDev->GetRenderState(D3DRS_DESTBLEND, &dwOldDestBlend);
+	m_pGraphicDev->GetRenderState(D3DRS_TEXTUREFACTOR, &dwOldTFactor);
+	m_pGraphicDev->GetTextureStageState(0, D3DTSS_COLORARG1, &dwOldColorArg1);
+	m_pGraphicDev->GetTextureStageState(0, D3DTSS_COLORARG2, &dwOldColorArg2);
+	m_pGraphicDev->GetTextureStageState(0, D3DTSS_COLOROP, &dwOldColorOp);
+
+	m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, FALSE);
+
+	if (m_bEmissive)
 	{
-		_float fRatio = (_float)i / (m_dequePoints.size() - 1);
-		_float fAlpha = MyLerp(m_fAlphaStart, m_fAlphaEnd, fRatio);
-		_float fWidth = m_fWidth * fRatio;
-
-		_vec3 vDir;
-
-		if (i < iSize - 1)
-			vDir = m_dequePoints[i + 1] - m_dequePoints[i];
-		else
-			vDir = m_dequePoints[i] - m_dequePoints[i - 1];
-
-		D3DXVec3Normalize(&vDir, &vDir);
-
-		_vec3 vUp{ 0.f, 1.f, 0.f };
-		_vec3 vRight{};
-		D3DXVec3Cross(&vRight, &vDir, &vUp);
-		D3DXVec3Normalize(&vRight, &vRight);
-
-		DWORD dwColor = D3DCOLOR_ARGB(_uint(fAlpha * 255), GetRValue(m_dwColor), GetGValue(m_dwColor), GetBValue(m_dwColor));
-
-		VTXCOL vtx1, vtx2;
-		vtx1.vPosition = m_dequePoints[i] + vRight * fWidth;
-		vtx2.vPosition = m_dequePoints[i] - vRight * fWidth;
-		vtx1.dwColor = vtx2.dwColor = dwColor;
-
-		vecVtxCol.push_back(vtx1);
-		vecVtxCol.push_back(vtx2);
+		m_pGraphicDev->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+		m_pGraphicDev->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE);
+	}
+	else
+	{
+		m_pGraphicDev->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+		m_pGraphicDev->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 	}
 
-	m_pGraphicDev->SetFVF(FVF_COL);
-	m_pGraphicDev->DrawPrimitiveUP(D3DPT_TRIANGLESTRIP, _uint(vecVtxCol.size() - 2), vecVtxCol.data(), sizeof(VTXCOL));
+	DWORD dwColor = D3DCOLOR_ARGB(	DWORD(m_tColor.a * 255.f),
+									DWORD(m_tColor.r * 255.f),
+									DWORD(m_tColor.g * 255.f),
+									DWORD(m_tColor.b * 255.f));
+	m_pGraphicDev->SetRenderState(D3DRS_TEXTUREFACTOR, dwColor);
+	m_pGraphicDev->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
+	m_pGraphicDev->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_TFACTOR);
+	m_pGraphicDev->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
+
+	m_pTextureCom->Set_Texture(0);
+	m_pBufferCom->Render_Buffer();
+
+	// 상태 복원
+	m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, dwOldLighting);
+	m_pGraphicDev->SetRenderState(D3DRS_SRCBLEND, dwOldSrcBlend);
+	m_pGraphicDev->SetRenderState(D3DRS_DESTBLEND, dwOldDestBlend);
+	m_pGraphicDev->SetRenderState(D3DRS_TEXTUREFACTOR, dwOldTFactor);
+	m_pGraphicDev->SetTextureStageState(0, D3DTSS_COLORARG1, dwOldColorArg1);
+	m_pGraphicDev->SetTextureStageState(0, D3DTSS_COLORARG2, dwOldColorArg2);
+	m_pGraphicDev->SetTextureStageState(0, D3DTSS_COLOROP, dwOldColorOp);
+
+	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 }
 
 void CTrailEffect::Play()
@@ -108,6 +121,43 @@ void CTrailEffect::Add_Point(const _vec3& vPoint)
 		}
 	}
 
+}
+
+void CTrailEffect::Compute_TrailWorldMatrix()
+{
+	// 1. 속도 및 방향 추출
+	_float fSpeed = D3DXVec3Length(&m_vSpeed);
+	_vec3 vDir;
+
+	if (fSpeed > 0.001f)	D3DXVec3Normalize(&vDir, &m_vSpeed);
+	else					vDir = _vec3(0.f, 0.f, -1.f);
+
+	// 2. 꼬리 길이 계산
+	_float fLength(0);
+
+	if (m_bScaleBySpeed)	fLength = m_fTailLength * fSpeed;
+	else					fLength = m_fTailLength;
+
+	// 3. 빌보드
+	_vec3 vRight, vUp(0.f, 1.f, 0.f);
+	D3DXVec3Cross(&vRight, &vDir, &vUp);
+	D3DXVec3Normalize(&vRight, &vRight);
+
+	// 4. 크기
+	_matrix matScale, matRot, matTrans;
+	D3DXMatrixScaling(&matScale, fLength, m_fHeadSize, 1.f);
+
+	// 5. 회전
+	D3DXMatrixIdentity(&matRot);
+	memcpy(matRot.m[0], &vDir, sizeof(_vec3));
+	memcpy(matRot.m[1], &vUp, sizeof(_vec3));
+	memcpy(matRot.m[2], &vRight, sizeof(_vec3));
+
+	// 6. 이동
+	_vec3 vCenter = m_vPos - vDir * (fLength * 0.5f);
+	D3DXMatrixTranslation(&matTrans, vCenter.x, vCenter.y, vCenter.z);
+
+	m_matTrailWorld = matScale * matRot * matTrans;
 }
 
 CTrailEffect* CTrailEffect::Create(LPDIRECT3DDEVICE9 pGraphicDev)

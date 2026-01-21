@@ -264,6 +264,12 @@ void CMultiLoadingThread::Loading_for_Tutorial()
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_PickUpEffectTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/PickUp-Effect/dds/PickUp-Effect_%d.dds", 5));
 	m_iTotalProtoCount++;
 
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_SpawnEffectTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/Enemy-Spawn/dds/EnemySpawn_%d.dds", 3));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_MonsterParticleTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/Etc/dds/MonsterParticle.dds", 1));
+	m_iTotalProtoCount++;
+
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_SmokeSpriteTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/Smoke/dds/SmokeSprite.dds", 1));
 	m_iTotalProtoCount++;
 
@@ -444,6 +450,12 @@ void CMultiLoadingThread::Loading_for_Dungeon()
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_PickUpEffectTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/PickUp-Effect/dds/PickUp-Effect_%d.dds", 5));
 	m_iTotalProtoCount++;
 
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_SpawnEffectTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/Enemy-Spawn/dds/EnemySpawn_%d.dds", 3));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_MonsterParticleTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/Etc/dds/MonsterParticle.dds", 1));
+	m_iTotalProtoCount++;
+
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_SmokeSpriteTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/Smoke/dds/SmokeSprite.dds", 1));
 	m_iTotalProtoCount++;
 
@@ -521,6 +533,12 @@ void CMultiLoadingThread::Loading_for_Village()
 	m_iTotalProtoCount++;
 
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_PickUpEffectTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/PickUp-Effect/dds/PickUp-Effect_%d.dds", 5));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_SpawnEffectTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/Enemy-Spawn/dds/EnemySpawn_%d.dds", 3));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_MonsterParticleTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/Etc/dds/MonsterParticle.dds", 1));
 	m_iTotalProtoCount++;
 
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_SmokeSpriteTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/Smoke/dds/SmokeSprite.dds", 1));
@@ -721,6 +739,12 @@ void CMultiLoadingThread::Loading_for_RealDungeon()
 	m_iTotalProtoCount++;
 
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_PickUpEffectTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/PickUp-Effect/dds/PickUp-Effect_%d.dds", 5));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_SpawnEffectTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/Enemy-Spawn/dds/EnemySpawn_%d.dds", 3));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_MonsterParticleTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/Etc/dds/MonsterParticle.dds", 1));
 	m_iTotalProtoCount++;
 
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_SmokeSpriteTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/Smoke/dds/SmokeSprite.dds", 1));

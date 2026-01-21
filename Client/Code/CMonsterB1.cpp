@@ -12,6 +12,7 @@
 #include "CBossHpBar.h"
 #include "CSoundMgr.h"
 #include "CCutSceneMgr.h"
+#include "CEffectMgr.h"
 
 CMonsterB1::CMonsterB1(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CMonster(pGraphicDev),
@@ -72,7 +73,11 @@ HRESULT CMonsterB1::Ready_GameObject()
 
 _int CMonsterB1::Update_GameObject(const _float& fTimeDelta)
 {
-	if (m_bDead) { return DEAD; }
+	if (m_bDead)
+	{
+		m_pColliderCom->UnregisterFromManager();
+		return DEAD;
+	}
 
 	Check_Phase();
 
@@ -694,6 +699,7 @@ void CMonsterB1::Check_Status()
 	AABB tAABB = { m_vPos.x, fY, m_vPos.z, 2.5f, 2.5f, 2.5f };
 	m_pColliderCom->Set_AABB(tAABB);
 	m_pColliderCom->UpdateFromCustom(tAABB);
+	m_vEffectPos = { m_vPos.x + 1.25f, fY - 0.25f, m_vPos.z };
 	//-------------------------------------------------
 
 	// 충돌체 디버그용
@@ -726,8 +732,10 @@ void CMonsterB1::Check_Status()
 		AmduEvent.hmapData[L"StagingName"] = wstring(L"Amdu_Dead");
 		m_pMessageChannel->Publish(AmduEvent);
 
-
-		//Summon_Boss();
+		IMessageChannel::EVENT ESummonDead;
+		ESummonDead.strType = L"Summon.Dead";
+		ESummonDead.hmapData.emplace(L"LayerTag", L"Summon_Layer");
+		m_pMessageChannel->Publish(ESummonDead);
 	}
 }
 
@@ -775,43 +783,27 @@ void CMonsterB1::Summon_Minion(const _uint& iCount)
 	for (_uint i = 0; i < iCount; ++i)
 	{
 		_vec3 vPos{ m_vPos.x + fRadius * cosf(fRadian), -1.f, m_vPos.z + fRadius * sinf(fRadian)};
-
+		_vec3 vEffectPos{ m_vPos.x + fRadius * cosf(fRadian), 7.f, m_vPos.z + fRadius * sinf(fRadian) - 1.f };
 		CGameObject* pMonster = CMonsterN2::Create(m_pGraphicDev, m_pMessageChannel, vPos);
 
 		if (pMonster)
 		{
-			wstring strObjTag = L"Monster";
+			wstring strObjTag = L"SummonMonster";
 
 			IMessageChannel::EVENT ESummonMonster;
 			ESummonMonster.strType = L"Obj.Add";
 			ESummonMonster.eOBJID = Engine::OID_MONSTER;
 			ESummonMonster.hmapData.emplace(L"Obj", pMonster);
-			ESummonMonster.hmapData.emplace(L"LayerTag", L"GameLogic_Layer");
+			ESummonMonster.hmapData.emplace(L"LayerTag", L"Summon_Layer");
 			ESummonMonster.hmapData.emplace(L"ObjTag", strObjTag);
 			m_pMessageChannel->Publish(ESummonMonster);
+			CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_ENEMYSPAWN, 0, vEffectPos);
+			CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_ENEMYSPAWN, 1, vEffectPos);
+			CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_ENEMYSPAWN, 2, vEffectPos);
 		}
 
 		fRadian += fGap;
 	}
-}
-
-// 디버그용
-void CMonsterB1::Summon_Boss()
-{
-	/*CGameObject* pMonster = CMonsterB2::Create(m_pGraphicDev, m_pMessageChannel);
-
-	if (pMonster)
-	{
-		wstring strObjTag = L"Boss2";
-
-		IMessageChannel::EVENT ESummonMonster;
-		ESummonMonster.strType = L"Obj.Add";
-		ESummonMonster.eOBJID = Engine::OID_MONSTER;
-		ESummonMonster.hmapData.emplace(L"Obj", pMonster);
-		ESummonMonster.hmapData.emplace(L"LayerTag", L"GameLogic_Layer");
-		ESummonMonster.hmapData.emplace(L"ObjTag", strObjTag);
-		m_pMessageChannel->Publish(ESummonMonster);
-	}*/
 }
 
 CMonsterB1* CMonsterB1::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel)

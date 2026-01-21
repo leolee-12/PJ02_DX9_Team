@@ -218,6 +218,10 @@ CComponent* CTextureSet::Clone()
 void CTextureSet::Free()
 {
 
+
+
+
+
 	for (auto iter = m_mapTexture.begin(); iter != m_mapTexture.end(); iter++)
 	{
 		for_each(iter->second.begin(), iter->second.end(), Safe_Release<IDirect3DBaseTexture9*>);

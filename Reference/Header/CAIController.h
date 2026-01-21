@@ -20,6 +20,7 @@ public:
 	void		Set_InteractRange(_float fRange)				{ m_fInteractRange = fRange; }
 	void		Set_GroundY(_float fGroundY)					{ m_fGroundY = fGroundY; }
 	void		Set_Dir(const _vec3& vDir)						{ m_vDir = vDir; }
+	void		Set_Wait(const _float& fTime)					{ m_fWaitTime = fTime; }
 
 	_float			Get_DetectRange() const { return m_fDetectRange; }
 	const _vec3*	Get_Dir() { return &m_vDir; }
@@ -50,6 +51,8 @@ protected:
 	_uint			m_iPreState;	// 이전 상태
 	_uint			m_iCurState;	// 현재 AI 상태
 	_uint			m_iRcmState;	// Owner에게 추천할 상태
+	_float			m_fAccTime;
+	_float			m_fWaitTime;
 
 	// 탐색 관련
 	CTransform*		m_pOwnerTC;

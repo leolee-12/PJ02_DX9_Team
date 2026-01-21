@@ -181,8 +181,9 @@ HRESULT CRealDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 			switch (spawn.type)
 			{
 			case 0:
-				CPersistentMgr::GetInstance()->Get_Player()->Set_Pos(_vec3(spawn.x, 0.f, spawn.z));
-				//CPersistentMgr::GetInstance()->Get_Player()->Set_Pos(_vec3(-260.f, 0.f, -5.2f)); // 레쉬방 앞
+				CPersistentMgr::GetInstance()->Get_Player()->Set_Pos(_vec3(spawn.x, -0.95f, spawn.z));
+				//CPersistentMgr::GetInstance()->Get_Player()->Set_Pos(_vec3(-88.f, -0.95f, 11.7f)); // 암두방 앞
+				//CPersistentMgr::GetInstance()->Get_Player()->Set_Pos(_vec3(-260.f, -0.95f, -5.2f)); // 레쉬방 앞
 				pGameObject = CPersistentMgr::GetInstance()->Get_Player();
 
 				if (nullptr == pGameObject)
@@ -487,19 +488,42 @@ void CRealDungeon::Ready_Event()
 {
 	m_hmapSubHandles.insert({ L"Obj_Add", m_pMessageChannel->Subscribe(L"Obj.Add", [this](const IMessageChannel::EVENT& Event) {
 	{
-		CGameObject* pGObj = any_cast<CGameObject*>(Event.hmapData.find(L"Obj")->second);
+		CGameObject* pObj = any_cast<CGameObject*>(Event.hmapData.find(L"Obj")->second);
 
-		if (pGObj != nullptr)
+		if (pObj != nullptr)
 		{
 			wstring strLayerTag = any_cast<const _tchar*>(Event.hmapData.find(L"LayerTag")->second);
 			wstring strObjTag = any_cast<wstring>(Event.hmapData.find(L"ObjTag")->second);
 			auto iter = m_mapLayer.find(strLayerTag);
 
 			if (iter != m_mapLayer.end())
-				iter->second->Add_GameObject(strObjTag, pGObj);
+				iter->second->Add_GameObject(strObjTag, pObj);
+			else
+			{
+				CLayer* pLayer = CLayer::Create();
+
+				if (nullptr == pLayer)
+					return E_FAIL;
+
+				if (FAILED(pLayer->Add_GameObject(strObjTag, pObj)))
+					return E_FAIL;
+
+				m_mapLayer.insert({ strLayerTag , pLayer });
+			}
 		}
 	}
 	}) });
+
+	m_hmapSubHandles.insert({ L"Summon_Dead", m_pMessageChannel->Subscribe(L"Summon.Dead", [this](const IMessageChannel::EVENT& Event) {
+{
+	wstring strLayerTag = any_cast<const _tchar*>(Event.hmapData.find(L"LayerTag")->second);
+
+	auto iter = m_mapLayer.find(strLayerTag);
+
+	if (iter != m_mapLayer.end())
+		iter->second->Reset_Layer();
+}
+}) });
 
 	m_hmapSubHandles.insert({ L"Dialogue", m_pMessageChannel->Subscribe(L"CutScene.Dialogue", [this](const IMessageChannel::EVENT& Event)
 	{

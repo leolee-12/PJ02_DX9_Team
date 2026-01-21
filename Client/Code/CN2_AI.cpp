@@ -112,6 +112,12 @@ void CN2_AI::Exit_State(const _uint& iState)
 
 _int CN2_AI::Update_Component(const _float& fTimeDelta)
 {
+	if (m_fAccTime < m_fWaitTime)
+	{
+		m_fAccTime += fTimeDelta;
+		return NOEVENT;
+	}
+
 	_int iExit(0);
 
 	m_fAcmlTime += fTimeDelta;

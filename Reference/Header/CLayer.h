@@ -20,6 +20,8 @@ public:
 	_int			Update_Layer(const _float& fTimeDelta);
 	void			LateUpdate_Layer(const _float& fTimeDelta);
 
+	void			Reset_Layer();
+
 private:
 	map<wstring, vector<CGameObject*>>			m_mapObject;
 

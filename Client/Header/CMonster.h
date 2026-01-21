@@ -18,6 +18,8 @@ protected:
 	virtual ~CMonster();
 
 public:
+	_vec3* Get_EffectPos(_vec3* pPos) { *pPos = m_vEffectPos; return pPos; }
+
 	virtual HRESULT		Ready_GameObject();
 	virtual _int		Update_GameObject(const _float& fTimeDelta);
 	virtual void		LateUpdate_GameObject(const _float& fTimeDelta);
@@ -34,6 +36,7 @@ protected:
 	Engine::CCollider*	m_pColliderCom;
 
 	_vec3				m_vPos;
+	_vec3				m_vEffectPos;
 
 	// 스테이터스 관련
 	_int				m_iAttack;
