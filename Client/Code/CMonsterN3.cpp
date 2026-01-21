@@ -8,6 +8,7 @@
 #include "CN3_AI.h"
 #include "CMonsterHpBar.h"
 #include "CSoundMgr.h"
+#include "CEffectMgr.h"
 
 CMonsterN3::CMonsterN3(LPDIRECT3DDEVICE9 pGraphicDev)
 	:	CMonster(pGraphicDev),
@@ -74,6 +75,7 @@ _int CMonsterN3::Update_GameObject(const _float& fTimeDelta)
 	if (iExit == DEAD)
 	{
 		m_pColliderCom->UnregisterFromManager();
+		CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_PARTICLE_RED, 0, m_vEffectPos, _vec3(0.2f, 0.2f, 0.2f));
 		return iExit;
 	}
 

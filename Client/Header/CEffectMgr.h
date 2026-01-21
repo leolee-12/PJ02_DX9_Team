@@ -18,11 +18,14 @@ public:
 	{
 		// Sprite
 		EK_HIT
-		,EK_PLAYERHIT
-		,EK_PICKUP
-		,EK_ENEMYSPAWN
+		, EK_PLAYERHIT
+		, EK_PICKUP
+		, EK_ENEMYSPAWN
 
 		// Particle
+		, EK_PARTICLE_GREEN
+		, EK_PARTICLE_RED
+		, EK_PARTICLE_PURPLE
 		//,EK_DUST_LAND
 		//,EK_DUST_RUN
 

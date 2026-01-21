@@ -26,46 +26,85 @@ HRESULT CEffectMgr::Ready_EffectMgr(LPDIRECT3DDEVICE9 pGraphicDev)
 
 	CSpriteEffect* pSpriteEffect = nullptr;
 
-	auto pair = m_mapProtoEffect.try_emplace(EK_HIT, nullptr);	// pair<iter, bool>
+	auto spritePair = m_mapProtoEffect.try_emplace(EK_HIT, nullptr);	// pair<iter, bool>
 
-	if (pair.second)	// 삽입 실패 시 삭제 (X) : 불필요한 생성 -> 삽입 성공 시에 생성 (O)
+	if (spritePair.second)	// 삽입 실패 시 삭제 (X) : 불필요한 생성 -> 삽입 성공 시에 생성 (O)
 	{
 		CSpriteEffect* pSpriteEffect = CSpriteEffect::Create(pGraphicDev, L"Proto_HitEffectTexture");
 		pSpriteEffect->Set_SpriteData(CSpriteEffect::SPRITE_DATA(8, 4, 8, 24.f));  // 8x4 그리드, 8프레임, 24fps
 		pSpriteEffect->Set_Scale(_vec3(25.f, 25.f, 25.f));
 		pSpriteEffect->Set_Billboard(false);
-		pair.first->second = pSpriteEffect;
+		spritePair.first->second = pSpriteEffect;
 	}
 
-	pair = m_mapProtoEffect.try_emplace(EK_PLAYERHIT, nullptr);	// pair<iter, bool>
+	spritePair = m_mapProtoEffect.try_emplace(EK_PLAYERHIT, nullptr);	// pair<iter, bool>
 
-	if (pair.second)
+	if (spritePair.second)
 	{
 		CSpriteEffect* pSpriteEffect = CSpriteEffect::Create(pGraphicDev, L"Proto_HitEffectTexture");
 		pSpriteEffect->Set_SpriteData(CSpriteEffect::SPRITE_DATA(8, 4, 8, 24.f));  // 8x4 그리드, 8프레임, 24fps
 		pSpriteEffect->Set_Scale(_vec3(10.f, 10.f, 10.f));
-		pair.first->second = pSpriteEffect;
+		spritePair.first->second = pSpriteEffect;
 	}
 
-	pair = m_mapProtoEffect.try_emplace(EK_PICKUP, nullptr);	// pair<iter, bool>
+	spritePair = m_mapProtoEffect.try_emplace(EK_PICKUP, nullptr);	// pair<iter, bool>
 
-	if (pair.second)
+	if (spritePair.second)
 	{
 		CSpriteEffect* pSpriteEffect = CSpriteEffect::Create(pGraphicDev, L"Proto_PickUpEffectTexture");
 		pSpriteEffect->Set_SpriteData(CSpriteEffect::SPRITE_DATA(8, 1, 6, 24.f));  // 8x1 그리드, 6프레임, 24fps
 		pSpriteEffect->Set_Scale(_vec3(3.f, 3.f, 3.f));
-		pair.first->second = pSpriteEffect;
+		spritePair.first->second = pSpriteEffect;
 	}
 
-	pair = m_mapProtoEffect.try_emplace(EK_ENEMYSPAWN, nullptr);	// pair<iter, bool>
+	spritePair = m_mapProtoEffect.try_emplace(EK_ENEMYSPAWN, nullptr);	// pair<iter, bool>
 
-	if (pair.second)
+	if (spritePair.second)
 	{
 		CSpriteEffect* pSpriteEffect = CSpriteEffect::Create(pGraphicDev, L"Proto_SpawnEffectTexture");
 		pSpriteEffect->Set_SpriteData(CSpriteEffect::SPRITE_DATA(16, 4, 36, 24.f));  // 16x4 그리드, 36프레임, 12fps
 		pSpriteEffect->Set_Scale(_vec3(7.f, 28.f, 7.f));
 		pSpriteEffect->Set_Billboard(false);
-		pair.first->second = pSpriteEffect;
+		spritePair.first->second = pSpriteEffect;
+	}
+
+	auto particlePair = m_mapProtoEffect.try_emplace(EK_PARTICLE_GREEN, nullptr);	// pair<iter, bool>
+
+	if (particlePair.second)
+	{
+		CParticleEffect* pParticleEffect = CParticleEffect::Create(pGraphicDev, L"Proto_MonsterParticleTexture");
+		pParticleEffect->Set_TextureRange(0, 9);
+		pParticleEffect->Set_EmitRange(_vec3(-1.f, 0.f, -1.f), _vec3(1.f, 1.f, 1.f));
+		pParticleEffect->Set_SpeedRange(_vec3(-3.f, 5.f, -3.f), _vec3(3.f, 10.f, 3.f));
+		pParticleEffect->Set_LifeTime(3.f);
+		pParticleEffect->Set_EmitRate(30.f);
+		particlePair.first->second = pParticleEffect;
+	}
+
+	particlePair = m_mapProtoEffect.try_emplace(EK_PARTICLE_RED, nullptr);	// pair<iter, bool>
+
+	if (particlePair.second)
+	{
+		CParticleEffect* pParticleEffect = CParticleEffect::Create(pGraphicDev, L"Proto_MonsterParticleTexture");
+		pParticleEffect->Set_TextureRange(10, 23);
+		pParticleEffect->Set_EmitRange(_vec3(-1.f, 0.f, -1.f), _vec3(1.f, 1.f, 1.f));
+		pParticleEffect->Set_SpeedRange(_vec3(-3.f, 5.f, -3.f), _vec3(3.f, 10.f, 3.f));
+		pParticleEffect->Set_LifeTime(1.5f);
+		pParticleEffect->Set_EmitRate(30.f);
+		particlePair.first->second = pParticleEffect;
+	}
+
+	particlePair = m_mapProtoEffect.try_emplace(EK_PARTICLE_PURPLE, nullptr);	// pair<iter, bool>
+
+	if (particlePair.second)
+	{
+		CParticleEffect* pParticleEffect = CParticleEffect::Create(pGraphicDev, L"Proto_MonsterParticleTexture");
+		pParticleEffect->Set_TextureRange(24, 31);
+		pParticleEffect->Set_EmitRange(_vec3(-1.f, 0.f, -1.f), _vec3(1.f, 1.f, 1.f));
+		pParticleEffect->Set_SpeedRange(_vec3(-3.f, 5.f, -3.f), _vec3(3.f, 10.f, 3.f));
+		pParticleEffect->Set_LifeTime(1.5f);
+		pParticleEffect->Set_EmitRate(30.f);
+		particlePair.first->second = pParticleEffect;
 	}
 
 	//CParticleEffect* pDustLand = CParticleEffect::Create(pGraphicDev);
