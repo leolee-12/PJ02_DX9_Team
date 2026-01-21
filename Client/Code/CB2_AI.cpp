@@ -71,7 +71,7 @@ void CB2_AI::Enter_State(const _uint& iState)
 	{
 		m_fAcmlTime = 0.f;
 
-		m_fSpeed = 0.04f;
+		m_fSpeed = 0.02f;
 		_vec3 vPrevPos, vDesiredDir;
 		m_pOwnerTC->Get_Info(INFO_POS, &vPrevPos);
 		vDesiredDir = Compute_TargetDir();

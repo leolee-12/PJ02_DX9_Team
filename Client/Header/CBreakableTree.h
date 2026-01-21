@@ -6,7 +6,7 @@ namespace Engine
 {
 	class CTransform;
 	class CTexture;
-	class CGrassBuffer;
+	class CRcTex;
 	class CCollider;
 }
 
@@ -38,30 +38,24 @@ public:
 
 private:
 	HRESULT	Add_Component();
-	void	React(const _vec3& vObjPos);
-	void	Update_VertexSway(const _float& fTimeDelta);
+	void	Set_Texture();
 
 private:
-	// CRcTex -> CTreeBuffer (vertex sway)
-	// Engine::CRcTex*		m_pBufferCom;
-	Engine::CGrassBuffer*	m_pGrassBuffer;
+	Engine::CRcTex*			m_pBufferCom;
 	Engine::CTransform*		m_pTransformCom;
 	Engine::CTexture*		m_pTextureCom;
 	Engine::CCollider*		m_pColliderCom;
 
 	_int				m_iTextureIndex;
+	_float				m_fFrame;
+	_float				m_fFrameSpeed;
+	_float				m_fFrameEnd;
+	_matrix				m_matTex;
 	_float				m_fScale;
 	_float				m_fBaseScale;
 
-	// Vertex sway variables (replaced old Interaction vars)
-	_float				m_fPhase;
-	_float				m_fWindSpeed;
-	_float				m_fWindStrength;
-	_float				m_fAccTime;
-	_float				m_fReactStrength;
-	_vec3				m_vReactDir;
-
 	// 상호작용 관련
+	_float				m_fPreWorkGauge;
 	_float				m_fWorkGauge;
 
 	static constexpr _float MAX_WORK_GAUGE = 1.f;

@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "CGameObject.h"
 
 namespace Engine
@@ -25,10 +25,12 @@ protected:
 	virtual		~CItem();
 
 public:
+	ITEMSTATE			Get_State() { return m_eCurState; }
+
 	virtual HRESULT		Ready_GameObject();
-	virtual void		LateUpdate_GameObject(const _float& fTimeDelta);	// ¾ÆÁ÷Àº µ¿ÀÏÇÏ¹Ç·Î Ãß»óÅ¬·¡½º¿¡ ³Ö¾úÀ¸³ª, ´Ş¶óÁö¸é °¢ÀÚ overrideÇÏ¿© »ç¿ë
-	virtual void		Render_GameObject();								// ¾ÆÁ÷Àº µ¿ÀÏÇÏ¹Ç·Î Ãß»óÅ¬·¡½º¿¡ ³Ö¾úÀ¸³ª, ´Ş¶óÁö¸é °¢ÀÚ overrideÇÏ¿© »ç¿ë
-	virtual void		OnCollision(CGameObject* pObject) PURE;				// ÇÏÀ§Å¬·¡½º¿¡ ±¸Çö °­Á¦
+	virtual void		LateUpdate_GameObject(const _float& fTimeDelta);	// ì•„ì§ì€ ë™ì¼í•˜ë¯€ë¡œ ì¶”ìƒí´ë˜ìŠ¤ì— ë„£ì—ˆìœ¼ë‚˜, ë‹¬ë¼ì§€ë©´ ê°ì overrideí•˜ì—¬ ì‚¬ìš©
+	virtual void		Render_GameObject();								// ì•„ì§ì€ ë™ì¼í•˜ë¯€ë¡œ ì¶”ìƒí´ë˜ìŠ¤ì— ë„£ì—ˆìœ¼ë‚˜, ë‹¬ë¼ì§€ë©´ ê°ì overrideí•˜ì—¬ ì‚¬ìš©
+	virtual void		OnCollision(CGameObject* pObject) PURE;				// í•˜ìœ„í´ë˜ìŠ¤ì— êµ¬í˜„ ê°•ì œ
 
 	void				Ready_Variable();
 	void				Ready_Event();
@@ -46,13 +48,13 @@ protected:
 
 	_vec3				m_vPos;
 
-	// »óÅÂ °ü·Ã
+	// ìƒíƒœ ê´€ë ¨
 	ITEMSTATE			m_ePreState;
 	ITEMSTATE			m_eCurState;
 	ITEMID				m_eItemID;
 	_float				m_fAcmlTime;
 
-	// ¹°¸® °ü·Ã
+	// ë¬¼ë¦¬ ê´€ë ¨
 	_vec3				m_vSpeed;
 	_float				m_fGravity;
 	_float				m_fBounceDamp;

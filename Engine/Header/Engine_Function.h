@@ -1,4 +1,4 @@
-#ifndef Engine_Function_h__
+ï»¿#ifndef Engine_Function_h__
 #define Engine_Function_h__
 
 #include "Engine_Typedef.h"
@@ -7,8 +7,8 @@
 
 namespace Engine
 {
-	// ÅÛÇÃ¸´Àº ±â´ÉÀÇ Á¤ÇØÁ®ÀÖÀ¸³ª ÀÚ·áÇüÀº Á¤ÇØÁ®ÀÖÁö ¾ÊÀº °Í
-	// ±â´ÉÀ» ÀÎ½ºÅÏ½ºÈ­ ÇÏ±â À§ÇÏ¿© ¸¸µé¾îµÎ´Â Æ²
+	// í…œí”Œë¦¿ì€ ê¸°ëŠ¥ì˜ ì •í•´ì ¸ìˆìœ¼ë‚˜ ìë£Œí˜•ì€ ì •í•´ì ¸ìˆì§€ ì•Šì€ ê²ƒ
+	// ê¸°ëŠ¥ì„ ì¸ìŠ¤í„´ìŠ¤í™” í•˜ê¸° ìœ„í•˜ì—¬ ë§Œë“¤ì–´ë‘ëŠ” í‹€
 
 	template<typename T>
 	void	Safe_Delete(T& Pointer)
@@ -86,7 +86,7 @@ namespace Engine
 		}
 	};
 
-	// ¿¬°üÄÁÅ×ÀÌ³Ê »èÁ¦¿ë
+	// ì—°ê´€ì»¨í…Œì´ë„ˆ ì‚­ì œìš©
 	class CDeleteMap
 	{
 	public:
@@ -114,6 +114,7 @@ namespace Engine
 
 	ENGINE_DLL Vec2 Get_Offset(float fTime);
 
+	ENGINE_DLL float MyLerp(float fStart, float fEnd, float fRatio);
 }
 
 #endif // Engine_Function_h__

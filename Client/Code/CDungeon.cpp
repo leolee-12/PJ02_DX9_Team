@@ -45,6 +45,7 @@
 #include "CLoading.h"
 #include "CManagement.h"
 #include "CChest.h"
+#include "CEffectMgr.h"
 
 CDungeon::CDungeon(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -73,6 +74,8 @@ HRESULT CDungeon::Ready_Scene()
 	Ready_Event();
 
 	CCutSceneMgr::GetInstance()->Ready_CutsceneMgr(m_pMessageChannel);
+
+	CEffectMgr::GetInstance()->Ready_EffectMgr(m_pGraphicDev);
 
 	CUTSCENE tDungeonScene;
 	tDungeonScene.strName = L"Ratau_00";

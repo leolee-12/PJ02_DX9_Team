@@ -257,7 +257,25 @@ void CMultiLoadingThread::Loading_for_Tutorial()
 	m_TexSetLoadingqueue.push(make_pair(TEXSETINFO(L"Proto_BishopShamura", TEX_NORMAL), vecBishopShamura));
 	m_iTotalProtoCount++;
 
-	
+	// Effect
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_HitEffectTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/Hit-Effect/dds/Hit-Effect_%02d.dds", 8));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_PickUpEffectTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/PickUp-Effect/dds/PickUp-Effect_%d.dds", 5));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_SmokeSpriteTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/Smoke/dds/SmokeSprite.dds", 1));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_SmokeParticleTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/Smoke/dds/SmokeParticle_%d.dds", 3));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_ImpactTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/Impact/dds/Impact_%d.dds", 2));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_IndicatorTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/Etc/dds/ProjectileIndicator.dds", 1));
+	m_iTotalProtoCount++;
+	// Effect
 }
 
 void CMultiLoadingThread::Loading_for_Dungeon()
@@ -418,6 +436,26 @@ void CMultiLoadingThread::Loading_for_Dungeon()
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_MonsterHpFront", TEX_NORMAL, L"../Bin/Resource/YSH/UI/HpBarRed.png", 1));
 	m_iTotalProtoCount++;
 	//디버그용 바로진입 프로토타입
+
+	// Effect
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_HitEffectTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/Hit-Effect/dds/Hit-Effect_%02d.dds", 8));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_PickUpEffectTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/PickUp-Effect/dds/PickUp-Effect_%d.dds", 5));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_SmokeSpriteTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/Smoke/dds/SmokeSprite.dds", 1));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_SmokeParticleTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/Smoke/dds/SmokeParticle_%d.dds", 3));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_ImpactTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/Impact/dds/Impact_%d.dds", 2));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_IndicatorTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/Etc/dds/ProjectileIndicator.dds", 1));
+	m_iTotalProtoCount++;
+	// Effect
 }
 
 void CMultiLoadingThread::Loading_for_TheGateway()
@@ -478,6 +516,21 @@ void CMultiLoadingThread::Loading_for_Village()
 	// Effect
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_HitEffectTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/Hit-Effect/dds/Hit-Effect_%02d.dds", 8));
 	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_PickUpEffectTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/PickUp-Effect/dds/PickUp-Effect_%d.dds", 5));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_SmokeSpriteTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/Smoke/dds/SmokeSprite.dds", 1));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_SmokeParticleTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/Smoke/dds/SmokeParticle_%d.dds", 3));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_ImpactTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/Impact/dds/Impact_%d.dds", 2));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_IndicatorTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/Etc/dds/ProjectileIndicator.dds", 1));
+	m_iTotalProtoCount++;
 	// Effect
 
 	// Building
@@ -488,6 +541,12 @@ void CMultiLoadingThread::Loading_for_Village()
 	m_iTotalProtoCount++;
 
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_Building_Knucklebone", TEX_NORMAL, L"../Bin/Resource/LWY/Maps/Building/dds/knucklebones.dds", 1));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_BTreeTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Maps/BreakableTree/dds/BreakableTree_%d.dds", 2));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_FireTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Maps/Fire/dds/Fire_%d.dds", 3));
 	m_iTotalProtoCount++;
 	// Building
 }
@@ -593,6 +652,25 @@ void CMultiLoadingThread::Loading_for_RealDungeon()
 	m_iTotalProtoCount++;
 	// 디버그용 그긴거
 
+	// Effect
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_HitEffectTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/Hit-Effect/dds/Hit-Effect_%02d.dds", 8));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_PickUpEffectTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/PickUp-Effect/dds/PickUp-Effect_%d.dds", 5));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_SmokeSpriteTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/Smoke/dds/SmokeSprite.dds", 1));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_SmokeParticleTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/Smoke/dds/SmokeParticle_%d.dds", 3));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_ImpactTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/Impact/dds/Impact_%d.dds", 2));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_IndicatorTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/Etc/dds/ProjectileIndicator.dds", 1));
+	m_iTotalProtoCount++;
+	// Effect
 }
 
 void CMultiLoadingThread::Loading_for_AmdusiasRoom()

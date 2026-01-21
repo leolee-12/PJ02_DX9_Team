@@ -31,6 +31,7 @@
 #include "CManagement.h"
 #include "CFade.h"
 #include "CBrute.h"
+#include "CEffectMgr.h"
 
 CTutorial::CTutorial(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -57,6 +58,8 @@ HRESULT CTutorial::Ready_Scene()
 	Ready_Event();
 
 	CCutSceneMgr::GetInstance()->Ready_CutsceneMgr(m_pMessageChannel);
+
+	CEffectMgr::GetInstance()->Ready_EffectMgr(m_pGraphicDev);
 
 	CUTSCENE tTutoCutScene;
 	tTutoCutScene.strName = L"Tutorial_01";
