@@ -10,6 +10,10 @@ public:
 		_uint	iGridY;
 		_uint	iFrameEnd;
 		_float	fFrameSpeed;
+
+		tagSpriteData() : iGridX(1), iGridY(1), iFrameEnd(1), fFrameSpeed(0.f) {}
+		tagSpriteData(_uint _iGridX, _uint _iGridY, _uint _iFrameEnd, _float _fFrameSpeed)
+			: iGridX(_iGridX), iGridY(_iGridY), iFrameEnd(_iFrameEnd), fFrameSpeed(_fFrameSpeed) {}
 	}SPRITE_DATA;
 
 private:
@@ -41,7 +45,6 @@ public:
 	_float		m_fFrame;
 	_matrix     m_matTex;
 
-	_vec3		m_vScale;
 	_float		m_fAlpha;
 	_float		m_fAlphaDecay;		// 알파 감소 속도
 

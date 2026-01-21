@@ -6,13 +6,14 @@ class CParticleEffect : public CEffect
 public:
 	struct Particle
 	{
-		_vec3   vPos;
-		_vec3   vSpeed;
-		_float  fLife;
-		_float  fMaxLife;
-		_float  fSize;
-		_float  fAlpha;
-		DWORD   dwColor;
+		_vec3		vPos;
+		_vec3		vSpeed;
+		_float		fLife;
+		_float		fMaxLife;
+		_float		fSize;
+		_float		fAlpha;
+		_uint		iTexIdx;
+		D3DXCOLOR	tColor;
 	};
 
 private:
@@ -44,6 +45,10 @@ public:
 	void			Set_SpeedRange(const _vec3& v1, const _vec3& v2) {}
 	void			Set_LifeTime(const _float& fTime) { m_fLifeTime = fTime; }
 	void			Set_EmitRate(const _float& fRate) { m_fEmitRate = fRate; }
+	void			Set_BaseColor(const D3DXCOLOR& tColor) { m_tBaseColor = tColor; }
+	void			Set_ColorVariance(_float fVar) { m_fColorVariance = fVar; }
+	void			Set_TextureCount(_uint iCount) { m_iTexCount = iCount; }
+	void			Set_Texture();
 
 public:
 	static CParticleEffect* Create(LPDIRECT3DDEVICE9 pGraphicDev);
@@ -52,6 +57,7 @@ public:
 private:
 	vector<Particle>	m_vecParticles;
 	_uint				m_iMaxParticles;
+	_uint				m_iTexCount;
 
 	// 발생 설정
 	_float      m_fEmitRate;		// 초당 발생 수
@@ -70,6 +76,8 @@ private:
 	_float      m_fSizeEnd;
 	_float      m_fAlphaStart;
 	_float      m_fAlphaEnd;
+	D3DXCOLOR   m_tBaseColor;			// 기본 색상
+	_float      m_fColorVariance;   // 색상 변동폭 (0.0 ~ 1.0)
 
 private:
 	virtual void	Free();

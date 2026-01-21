@@ -14,6 +14,7 @@
 #include "CBossHpBar.h"
 #include "CSoundMgr.h"
 #include "CCutSceneMgr.h"
+#include "CEffectMgr.h"
 
 CMonsterB2::CMonsterB2(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CMonster(pGraphicDev),
@@ -379,6 +380,7 @@ void CMonsterB2::Move_Frame(const _float& fTimeDelta)
 	{
 		m_fFrame = 0.f;
 		IMessageChannel::EVENT LeshyEvent;
+
 		switch (m_eCurState)
 		{
 		case B2S_IDLE:
@@ -386,7 +388,7 @@ void CMonsterB2::Move_Frame(const _float& fTimeDelta)
 			break;
 
 		case B2S_DIG:
-			m_fFrame = 30.f;
+			m_fFrame = 24.f;
 			break;
 
 		case B2S_ESCAPE:
@@ -420,7 +422,6 @@ void CMonsterB2::Move_Frame(const _float& fTimeDelta)
 			LeshyEvent.strType = L"Boss.Dead";
 			LeshyEvent.hmapData[L"BossName"] = wstring(L"Leshy");
 			m_pMessageChannel->Publish(LeshyEvent);
-
 		}
 		break;
 
@@ -712,10 +713,11 @@ void CMonsterB2::Check_Status()
 	AABB tAABB = { m_vPos.x, fY, m_vPos.z + 2.5f, 2.5f, 2.5f, 2.5f };
 	m_pColliderCom->Set_AABB(tAABB);
 	m_pColliderCom->UpdateFromCustom(tAABB);
+	if (g_bDebug) m_pColliderCom->Update_AABBforRender();
+	m_vEffectPos = { m_vPos.x + 1.f, fY, m_vPos.z };
 	//-------------------------------------------------
 
 	// 충돌체 디버그용
-	if (g_bDebug) m_pColliderCom->Update_AABBforRender();
 
 	if ((m_iPhase != 0) && (m_iHp <= 0))
 	{
@@ -789,7 +791,7 @@ void CMonsterB2::Summon_Minion(const _uint& iCount)
 	for (_uint i = 0; i < iCount; ++i)
 	{
 		_vec3 vPos{ m_vPos.x + fRadius * cosf(fRadian), -1.f, m_vPos.z + fRadius * sinf(fRadian) };
-
+		_vec3 vEffectPos{ m_vPos.x + fRadius * cosf(fRadian), 7.f, m_vPos.z + fRadius * sinf(fRadian) - 1.f };
 		CGameObject* pMonster = CMonsterN2::Create(m_pGraphicDev, m_pMessageChannel, vPos);
 
 		if (pMonster)
@@ -803,6 +805,9 @@ void CMonsterB2::Summon_Minion(const _uint& iCount)
 			ESummonMonster.hmapData.emplace(L"LayerTag", L"GameLogic_Layer");
 			ESummonMonster.hmapData.emplace(L"ObjTag", strObjTag);
 			m_pMessageChannel->Publish(ESummonMonster);
+			CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_ENEMYSPAWN, 0, vEffectPos);
+			CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_ENEMYSPAWN, 1, vEffectPos);
+			CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_ENEMYSPAWN, 2, vEffectPos);
 		}
 
 		fRadian += fGap;

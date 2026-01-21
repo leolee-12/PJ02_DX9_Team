@@ -79,7 +79,7 @@ void CSpriteEffect::LateUpdate_GameObject(const _float& fTimeDelta)
 
 	_vec3 vPos;
 	m_pTransformCom->Get_Info(INFO_POS, &vPos);
-	vPos.z -= 1.f;
+	vPos.z -= 0.2f + 0.001f * m_iTexIdx;
 	Compute_ViewDepth(&vPos);
 
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
@@ -162,11 +162,10 @@ CSpriteEffect* CSpriteEffect::Clone()
 		return nullptr;
 	}
 
-	m_fFrame = 0.f;
-	m_fAlpha = 1.f;
-	m_eState = ES_READY;
-
-	pSpriteEffect->m_pTransformCom->Set_Scale(m_fScale, m_fScale, m_fScale);
+	pSpriteEffect->m_eState = ES_READY;
+	pSpriteEffect->m_fFrame = 0.f;
+	pSpriteEffect->m_fAlpha = 1.f;
+	pSpriteEffect->m_pTransformCom->Set_Scale(m_vScale.x, m_vScale.y, m_vScale.z);
 
 	return pSpriteEffect;
 }

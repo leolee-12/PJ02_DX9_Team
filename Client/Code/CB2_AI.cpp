@@ -71,13 +71,13 @@ void CB2_AI::Enter_State(const _uint& iState)
 	{
 		m_fAcmlTime = 0.f;
 
-		m_fSpeed = 0.02f;
+		m_fSpeed = 0.03f;
 		_vec3 vPrevPos, vDesiredDir;
 		m_pOwnerTC->Get_Info(INFO_POS, &vPrevPos);
 		vDesiredDir = Compute_TargetDir();
 
 		m_vDir = Compute_LimitedDir(120.f, m_vDir, vDesiredDir);
-		m_vLerpPos = vPrevPos + m_vDir * 10.f;
+		m_vLerpPos = vPrevPos + m_vDir * 13.f;
 	}
 	break;
 	case CMonsterB2::B2S_ESCAPE:

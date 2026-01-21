@@ -252,9 +252,8 @@ CComponent* CTexture::Clone()
 
 void CTexture::Free()
 {
-	CComponent::Free();
-
 	for_each(m_vecTexture.begin(), m_vecTexture.end(), Safe_Release<IDirect3DBaseTexture9*>);
 	m_vecTexture.clear();
 
+	CComponent::Free();
 }

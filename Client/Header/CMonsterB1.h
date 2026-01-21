@@ -34,7 +34,6 @@ public:
 
 	void				Launch_Projectile(const _uint& iCount);
 	void				Summon_Minion(const _uint& iCount);
-	void				Summon_Boss();	// 디버그용
 
 private:
 	HRESULT				Add_Component();

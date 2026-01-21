@@ -65,9 +65,6 @@ _int CMonsterN2::Update_GameObject(const _float& fTimeDelta)
 {
 	Move_Frame(fTimeDelta);
 
-	m_pColliderCom->UpdateFromTransform(m_pTransformCom);
-	// 충돌체 디버그용
-	if (g_bDebug) m_pColliderCom->Update_AABBforRender();
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
 	m_pTransformCom->Get_Info(INFO_POS, &m_vPos);
@@ -99,6 +96,14 @@ void CMonsterN2::LateUpdate_GameObject(const _float& fTimeDelta)
 	m_pTransformCom->Compute_Bilboard(BBD_X);
 	m_pTransformCom->Get_Info(INFO_POS, &m_vPos);
 	Compute_ViewDepth(&m_vPos);
+
+	//------스프라이트 높이와 충돌체 위치 맞춤---------
+	AABB tAABB = { m_vPos.x, m_vPos.y, m_vPos.z, 0.75f, 0.75f, 0.75f };
+	m_pColliderCom->Set_AABB(tAABB);
+	m_pColliderCom->UpdateFromCustom(tAABB);
+	if (g_bDebug) m_pColliderCom->Update_AABBforRender();
+	m_vEffectPos = { m_vPos.x, m_vPos.y + 0.5f, m_vPos.z };
+	//-------------------------------------------------
 
 	m_pHpBar->LateUpdate_GameObject(fTimeDelta);
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
@@ -545,6 +550,7 @@ CMonsterN2* CMonsterN2::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* S
 
 	pMonster->m_pTransformCom->Set_Pos(vPos.x, vPos.y, vPos.z);
 	pMonster->m_pTransformCom->Update_Component(0.f);
+	pMonster->m_pAICom->Set_Wait(2.f);
 
 	return pMonster;
 }

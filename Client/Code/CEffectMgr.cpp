@@ -20,24 +20,53 @@ CEffectMgr::~CEffectMgr()
 
 HRESULT CEffectMgr::Ready_EffectMgr(LPDIRECT3DDEVICE9 pGraphicDev)
 {
+	if (m_bReady) return S_OK;
+
 	m_pGraphicDev = pGraphicDev;
 
 	CSpriteEffect* pSpriteEffect = nullptr;
-	pSpriteEffect = CSpriteEffect::Create(pGraphicDev, L"Proto_HitEffectTexture");
-	pSpriteEffect->Set_SpriteData({ 8, 4, 8, 24.f });  // 8x4 그리드, 8프레임, 24fps
-	pSpriteEffect->Set_Scale(25.f);
-	m_mapProtoEffect.emplace(EK_HIT, pSpriteEffect);
 
-	pSpriteEffect = nullptr;
-	pSpriteEffect = CSpriteEffect::Create(pGraphicDev, L"Proto_HitEffectTexture");
-	pSpriteEffect->Set_SpriteData({ 8, 4, 8, 24.f });  // 8x4 그리드, 8프레임, 24fps
-	pSpriteEffect->Set_Scale(10.f);
-	m_mapProtoEffect.emplace(EK_PLAYERHIT, pSpriteEffect);
+	auto pair = m_mapProtoEffect.try_emplace(EK_HIT, nullptr);	// pair<iter, bool>
 
-	pSpriteEffect = CSpriteEffect::Create(pGraphicDev, L"Proto_PickUpEffectTexture");
-	pSpriteEffect->Set_SpriteData({ 8, 1, 6, 24.f });  // 8x1 그리드, 8프레임, 24fps
-	pSpriteEffect->Set_Scale(3.f);
-	m_mapProtoEffect.emplace(EK_PICKUP, pSpriteEffect);
+	if (pair.second)	// 삽입 실패 시 삭제 (X) : 불필요한 생성 -> 삽입 성공 시에 생성 (O)
+	{
+		CSpriteEffect* pSpriteEffect = CSpriteEffect::Create(pGraphicDev, L"Proto_HitEffectTexture");
+		pSpriteEffect->Set_SpriteData(CSpriteEffect::SPRITE_DATA(8, 4, 8, 24.f));  // 8x4 그리드, 8프레임, 24fps
+		pSpriteEffect->Set_Scale(_vec3(25.f, 25.f, 25.f));
+		pSpriteEffect->Set_Billboard(false);
+		pair.first->second = pSpriteEffect;
+	}
+
+	pair = m_mapProtoEffect.try_emplace(EK_PLAYERHIT, nullptr);	// pair<iter, bool>
+
+	if (pair.second)
+	{
+		CSpriteEffect* pSpriteEffect = CSpriteEffect::Create(pGraphicDev, L"Proto_HitEffectTexture");
+		pSpriteEffect->Set_SpriteData(CSpriteEffect::SPRITE_DATA(8, 4, 8, 24.f));  // 8x4 그리드, 8프레임, 24fps
+		pSpriteEffect->Set_Scale(_vec3(10.f, 10.f, 10.f));
+		pair.first->second = pSpriteEffect;
+	}
+
+	pair = m_mapProtoEffect.try_emplace(EK_PICKUP, nullptr);	// pair<iter, bool>
+
+	if (pair.second)
+	{
+		CSpriteEffect* pSpriteEffect = CSpriteEffect::Create(pGraphicDev, L"Proto_PickUpEffectTexture");
+		pSpriteEffect->Set_SpriteData(CSpriteEffect::SPRITE_DATA(8, 1, 6, 24.f));  // 8x1 그리드, 6프레임, 24fps
+		pSpriteEffect->Set_Scale(_vec3(3.f, 3.f, 3.f));
+		pair.first->second = pSpriteEffect;
+	}
+
+	pair = m_mapProtoEffect.try_emplace(EK_ENEMYSPAWN, nullptr);	// pair<iter, bool>
+
+	if (pair.second)
+	{
+		CSpriteEffect* pSpriteEffect = CSpriteEffect::Create(pGraphicDev, L"Proto_SpawnEffectTexture");
+		pSpriteEffect->Set_SpriteData(CSpriteEffect::SPRITE_DATA(16, 4, 36, 24.f));  // 16x4 그리드, 36프레임, 12fps
+		pSpriteEffect->Set_Scale(_vec3(7.f, 28.f, 7.f));
+		pSpriteEffect->Set_Billboard(false);
+		pair.first->second = pSpriteEffect;
+	}
 
 	//CParticleEffect* pDustLand = CParticleEffect::Create(pGraphicDev);
 	//pDustLand->Set_TextureKey(L"Proto_DustTexture");
@@ -53,6 +82,8 @@ HRESULT CEffectMgr::Ready_EffectMgr(LPDIRECT3DDEVICE9 pGraphicDev)
 	//pConc->Set_SEFType(CScreenEffect::SEF_DARK);
 	//pConc->Set_FadeTime(0.1f, 0.2f);  // fadeIn, fadeOut
 	//m_mapProtoEffect.emplace(EK_MONO_BLACK, pConc);
+
+	m_bReady = true;
 
 	return S_OK;
 }

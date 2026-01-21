@@ -20,8 +20,7 @@ public:
 		EK_HIT
 		,EK_PLAYERHIT
 		,EK_PICKUP
-		//,EK_SLASH
-		//,EK_ENEMYSPAWN
+		,EK_ENEMYSPAWN
 
 		// Particle
 		//,EK_DUST_LAND
@@ -50,6 +49,7 @@ private:
 	LPDIRECT3DDEVICE9					m_pGraphicDev;
 	list<CEffect*>						m_EffectList;
 	unordered_map<EFFECT_KEY, CEffect*>	m_mapProtoEffect;
+	_bool								m_bReady = false;
 
 private:
 	virtual void Free();

@@ -68,9 +68,6 @@ _int CMonsterN1::Update_GameObject(const _float& fTimeDelta)
 {
 	Move_Frame(fTimeDelta);
 
-	m_pColliderCom->UpdateFromTransform(m_pTransformCom);
-	// 충돌체 디버그용
-	if (g_bDebug) m_pColliderCom->Update_AABBforRender();
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
 	m_pTransformCom->Get_Info(INFO_POS, &m_vPos);
@@ -101,6 +98,11 @@ void CMonsterN1::LateUpdate_GameObject(const _float& fTimeDelta)
 	m_pTransformCom->Compute_Bilboard(BBD_X);
 	m_pTransformCom->Get_Info(INFO_POS, &m_vPos);
 	Compute_ViewDepth(&m_vPos);
+
+	m_pColliderCom->UpdateFromTransform(m_pTransformCom);
+	// 충돌체 디버그용
+	if (g_bDebug) m_pColliderCom->Update_AABBforRender();
+	m_vEffectPos = { m_vPos.x, m_vPos.y + 0.5f, m_vPos.z };
 
 	m_pHpBar->LateUpdate_GameObject(fTimeDelta);
 	CGameObject::LateUpdate_GameObject(fTimeDelta);

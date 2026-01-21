@@ -14,6 +14,7 @@
 #include "CSoundMgr.h"
 #include "CEffectMgr.h"
 #include "CItem.h"
+#include "CMonster.h"
 
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev),
@@ -308,27 +309,17 @@ HRESULT CPlayer::Add_Component()
 
 void CPlayer::Key_Input(const _float& fTimeDelta)
 {
-	for (int i = 0; i < 8; ++i)
+	for (int i = 0; i < 9; ++i)
 	{
 		if (GetAsyncKeyState(i + 48))
 		{	// 디버그용
 
-			CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_HIT, i, m_vPos);
-			//_vec3 vPos{ m_vPos.x + 0.2f, m_vPos.y - 1.f, m_vPos.z };
-			//CGameObject* pEffect = CHitEffect::Create(m_pGraphicDev, vPos, i);
-			//
-			//if (pEffect)
-			//{
-			//	wstring strObjTag = L"Effect";
-			//
-			//	IMessageChannel::EVENT ESummonMonster;
-			//	ESummonMonster.strType = L"Obj.Add";
-			//	ESummonMonster.eOBJID = Engine::OID_EFFECT;
-			//	ESummonMonster.hmapData.emplace(L"Obj", pEffect);
-			//	ESummonMonster.hmapData.emplace(L"LayerTag", L"GameLogic_Layer");
-			//	ESummonMonster.hmapData.emplace(L"ObjTag", strObjTag);
-			//	m_pMessageChannel->Publish(ESummonMonster);
-			//}
+			if (i == 8)
+			{
+				_vec3 vEffectPos{ m_vPos.x, + 3.f, m_vPos.z };
+				CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_ENEMYSPAWN, 0, vEffectPos);
+			}
+			else		CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_HIT, i, m_vPos);
 		}
 	}
 
@@ -877,11 +868,11 @@ void CPlayer::Attack_HitBox()
 		swprintf_s(strSoundName, L"Attacked%d.wav", Get_Rand_Int(1, 4));
 		CSoundMgr::GetInstance()->Play(strSoundName, SOUND_EFFECT, 0.35f);
 
-		_vec3 vPos;
+		_vec3 vEffectPos;
 		for (auto& pObj : tempVec)
 		{
-			static_cast<CTransform*>(pObj->Get_Component(ID_DYNAMIC, L"Com_Transform"))->Get_Info(INFO_POS, &vPos);
-			CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_HIT, m_iCombo, vPos, _vec3(0.2f, 0.2f, 0.f));
+			static_cast<CMonster*>(pObj)->Get_EffectPos(&vEffectPos);
+			CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_HIT, m_iCombo, vEffectPos, _vec3(0.2f, 0.2f, 0.f));
 		}
 	}
 }
