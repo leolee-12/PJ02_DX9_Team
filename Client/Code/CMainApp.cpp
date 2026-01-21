@@ -203,6 +203,7 @@ HRESULT CMainApp::Ready_Proto()
 	if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_RcCol", Engine::CRcCol::Create(m_pGraphicDev))))
 		return E_FAIL;
 
+	return S_OK;
 }
 
 CMainApp* CMainApp::Create()

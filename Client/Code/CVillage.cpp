@@ -35,6 +35,7 @@
 #include "CLoading.h"
 #include "CManagement.h"
 #include "CBuilding.h"
+#include "CCookingUIController.h"
 
 CVillage::CVillage(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -498,6 +499,8 @@ HRESULT CVillage::Ready_UI_Layer(const _tchar* pLayerTag)
 		return E_FAIL;
 
 	m_mapLayer.insert({ pLayerTag , pLayer });
+
+	return S_OK;
 }
 
 
