@@ -35,6 +35,8 @@ public:
 	void			Set_StopCrying();
 	void			Set_Reborn();
 
+	void			Set_Action(_bool b) { m_bAction = b; }
+
 	_int			Get_MaxHp() { return m_iMaxHp; }
 	_int			Get_Hp() { return m_iHp; }
 

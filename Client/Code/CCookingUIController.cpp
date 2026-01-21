@@ -23,82 +23,29 @@ HRESULT CCookingUIController::Ready_GameObject()
 	if (nullptr == m_pSelectUI)
 		return E_FAIL;
 
-	m_pMiniGameUI = CCookingMiniGameUI::Create(m_pGraphicDev);
+	m_pMiniGameUI = CCookingMiniGameUI::Create(m_pGraphicDev, m_pMessageChannel);
 	if (nullptr == m_pMiniGameUI)
 		return E_FAIL;
 
 	m_eState = CS_IDLE;
+
+	m_pMiniGameUI->Set_CookingEndCallback([this]()
+		{
+			Set_CookingState(COOKINGUISTATE::CS_SELECT);
+		});
 
 	return S_OK;
 }
 
 _int CCookingUIController::Update_GameObject(const _float& fTimeDelta)
 {
-	// 임시테스트용 삭제예정
-	if (CDInputMgr::GetInstance()->Key_Down(DIK_G))
-	{
-		Set_CookingState(COOKINGUISTATE::CS_SELECT);
-	}
-	if (CDInputMgr::GetInstance()->Key_Down(DIK_H))
-	{
-		m_pSelectUI->AddFood();
-	}
-	if (CDInputMgr::GetInstance()->Key_Down(DIK_N))
-	{
-		m_pSelectUI->DeleteFood();
-	}
-	if (CDInputMgr::GetInstance()->Key_Down(DIK_J))
-	{
-		Start_Cooking(m_pSelectUI->Get_CookingCount());
-	}
-
-
-	// 콜백 공부더해야함 일단넣어둠
-	// 등록된 함수가 호출되면 아래 코드가 실행되는느낌
-	m_pMiniGameUI->Set_CookingEndCallback([this]()
-		{
-			Set_CookingState(COOKINGUISTATE::CS_COOKINGEND);
-		});
-
-
-	if (m_ePrevState != m_eState)
-	{
-		m_ePrevState = m_eState;
-		switch (m_eState)
-		{
-		case CS_IDLE:
-			m_pSelectUI->SetRender(false);
-			m_pMiniGameUI->Set_Render(false);
-			break;
-		case CS_SELECT:
-			m_pSelectUI->SetRender(true);
-			m_pMiniGameUI->Set_Render(false);
-			break;
-
-		case CS_MINIGAME:
-			m_pSelectUI->ReSetSelecting();
-			m_pSelectUI->SetRender(false);
-			m_pMiniGameUI->Set_Render(true);
-			break;
-		case CS_COOKINGEND:
-			m_pSelectUI->SetRender(false);
-			m_pMiniGameUI->Set_Render(false);
-			m_pSelectUI->Set_CookingCount(0);
-			break;
-		}
-	}
-	if (m_eState == CS_MINIGAME)
-	{
-		if (CDInputMgr::GetInstance()->Key_Down(DIK_K))
-		{
-			m_pMiniGameUI->CookingInput();
-		}
-	}
+	Key_Input_Cooking();
+	State_Machine();
 
 	m_pSelectUI->Update_GameObject(fTimeDelta);
 	m_pMiniGameUI->Update_GameObject(fTimeDelta);
 
-	CRenderer::GetInstance()->Add_RenderGroup(RENDER_UI, this);
+	//CRenderer::GetInstance()->Add_RenderGroup(RENDER_UI, this);
 
 	return NOEVENT;
 }
@@ -124,9 +71,69 @@ void CCookingUIController::Start_Cooking(_int iCookingCount)
 	Set_CookingState(COOKINGUISTATE::CS_MINIGAME);
 }
 
-CCookingUIController* CCookingUIController::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+void CCookingUIController::Key_Input_Cooking()
+{
+	if (m_eState == CS_MINIGAME)
+	{
+		if (CDInputMgr::GetInstance()->Key_Down(DIK_K))
+		{
+			m_pMiniGameUI->CookingInput();
+		}
+		return;
+	}
+
+	if (m_eState == CS_SELECT) {
+		if (CDInputMgr::GetInstance()->Key_Down(DIK_H))
+		{
+			m_pSelectUI->AddFood();
+		}
+		if (CDInputMgr::GetInstance()->Key_Down(DIK_N))
+		{
+			m_pSelectUI->DeleteFood();
+		}
+		if (CDInputMgr::GetInstance()->Key_Down(DIK_J))
+		{
+			Start_Cooking(m_pSelectUI->Get_CookingCount());
+		}
+	}
+}
+
+void CCookingUIController::State_Machine()
+{
+	if (m_ePrevState != m_eState)
+	{
+		switch (m_eState)
+		{
+		case CS_IDLE:
+			m_pSelectUI->SetRender(false);
+			m_pMiniGameUI->Set_Render(false);
+			break;
+		case CS_SELECT:
+			m_pSelectUI->SetRender(true);
+			m_pMiniGameUI->Set_Render(false);
+			break;
+
+		case CS_MINIGAME:
+			m_pSelectUI->ReSetSelecting();
+			m_pSelectUI->SetRender(false);
+			m_pMiniGameUI->Set_Render(true);
+			break;
+		case CS_COOKINGEND:
+			m_pSelectUI->SetRender(false);
+			m_pMiniGameUI->Set_Render(false);
+			m_pSelectUI->Set_CookingCount(0);
+			break;
+		}
+		m_ePrevState = m_eState;
+	}
+}
+
+CCookingUIController* CCookingUIController::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMessageChannel)
 {
 	CCookingUIController* pInstance = new CCookingUIController(pGraphicDev);
+
+	pInstance->m_pMessageChannel = pMessageChannel;
+	pInstance->m_pMessageChannel->AddRef();
 
 	if (FAILED(pInstance->Ready_GameObject()))
 	{
@@ -145,3 +152,4 @@ void CCookingUIController::Free()
 
 	CUi::Free();
 }
+

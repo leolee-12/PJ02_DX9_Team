@@ -6,6 +6,7 @@
 #include "CInteractMgr.h"
 #include "CFontMgr.h"
 #include "CTriggerPoint.h"
+#include "CItem.h"
 
 CBuilding::CBuilding(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev)
@@ -41,6 +42,8 @@ HRESULT CBuilding::Ready_GameObject()
 		return E_FAIL;
 
 	Ready_Variable();
+
+	Ready_Event();
 
 	return S_OK;
 }
@@ -277,6 +280,51 @@ void CBuilding::Ready_Variable()
 	// 테스트용
 
 	//m_pColliderCom->RegisterToManager(this, CL_GRASS);
+}
+
+void CBuilding::Ready_Event()
+{
+	switch (m_eBuildingType)
+	{
+	case BT_DUMMY:
+		break;
+	case BT_WORKSHOP:
+		break;
+	case BT_COOK:
+		m_hmapSubHandles.insert({ L"Cooking.End", m_pMessageChannel->Subscribe(L"Cooking.End", [this](const IMessageChannel::EVENT& Event) {
+		{
+				auto iter = Event.hmapData.find(L"isSuccess");
+				if (iter == Event.hmapData.end()) { return; }
+
+				_bool isSuccess = any_cast<_bool>(iter->second);
+
+			_vec3 vPos;
+			m_pTransformCom->Get_Info(INFO_POS, &vPos);
+			vPos.y -= 1.f;
+
+			CGameObject* pItem = nullptr;
+
+			if (isSuccess)
+			{
+				pItem = CItem::Create(m_pGraphicDev, m_pMessageChannel, vPos, CItem::FD_GFOOD, false, 3.f);
+			}
+			else
+			{
+				pItem = CItem::Create(m_pGraphicDev, m_pMessageChannel, vPos, CItem::FD_BFOOD, false, 3.f);
+			}
+
+			IMessageChannel::EVENT CookingEvent;
+			CookingEvent.strType = L"Obj.Add";
+			CookingEvent.hmapData[L"Obj"] = pItem;
+			CookingEvent.hmapData[L"LayerTag"] = L"GameLogic_Layer";
+			CookingEvent.hmapData[L"ObjTag"] = wstring(L"Item");
+			m_pMessageChannel->Publish(CookingEvent);
+		}
+		}) });
+		break;
+	case BT_KNUCKLEBONE:
+		break;
+	}
 }
 
 CBuilding* CBuilding::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMessageChannel, const _vec3& vPos, BUILDING_TYPE eType)

@@ -29,7 +29,7 @@ public:
 	virtual void    OnCollision(CGameObject* pObject);
 
 public:
-	static CCookingUIController* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	static CCookingUIController* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMessageChannel);
 
 	void Set_State(COOKINGUISTATE eState) { m_eState = eState; }
 	COOKINGUISTATE Get_State() const { return m_eState; }
@@ -39,10 +39,13 @@ public:
 private:
 	virtual void Free();
 
+	void	Key_Input_Cooking();
+	void	State_Machine();
+
 private:
 	CCookingSelectUI* m_pSelectUI;
 	CCookingMiniGameUI* m_pMiniGameUI;
 
 	COOKINGUISTATE m_eState;
-	COOKINGUISTATE m_ePrevState;
+	COOKINGUISTATE m_ePrevState = CS_END;
 };

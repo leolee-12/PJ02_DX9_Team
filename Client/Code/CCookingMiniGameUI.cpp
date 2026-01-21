@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CCookingMiniGameUI.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
@@ -92,6 +92,7 @@ HRESULT CCookingMiniGameUI::Ready_GameObject()
 	m_bRender = false;
 	m_iCurCookingCount = 0;
 	m_iCookingCount = 0;
+	m_bInputLock = false;
 	return S_OK;
 }
 
@@ -119,7 +120,7 @@ _int CCookingMiniGameUI::Update_GameObject(const _float& fTimeDelta)
 		{
 			m_pMarker->Resume_Marker();
 			m_pGauge->Set_RandomPosX();
-
+			m_bInputLock = false;
 		}
 	}
 
@@ -171,19 +172,31 @@ _bool CCookingMiniGameUI::Check_CookingResult()
 
 _bool CCookingMiniGameUI::CookingInput()
 {
+	if (m_bInputLock) { return false; }
+
 	if (m_pMarker->Get_MarkerState() == CookingMarkerState::MS_STOP) { return false; }
+
+	m_bInputLock = true;
 	m_pMarker->Stop_Marker();
 	m_fMarkerCurStopTime = 0.0f;
 	_bool bResult = Check_CookingResult();
 	m_iCurCookingCount--;
 
+	IMessageChannel::EVENT CookingEvent;
+	CookingEvent.strType = L"Cooking.End";
+	CookingEvent.hmapData[L"isSuccess"] = bResult;
+	m_pMessageChannel->Publish(CookingEvent);
+
 	return bResult;
 }
 
 
-CCookingMiniGameUI* CCookingMiniGameUI::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+CCookingMiniGameUI* CCookingMiniGameUI::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMessageChannel)
 {
 	CCookingMiniGameUI* pCookingMiniGame = new CCookingMiniGameUI(pGraphicDev);
+
+	pCookingMiniGame->m_pMessageChannel = pMessageChannel;
+	pCookingMiniGame->m_pMessageChannel->AddRef();
 
 	if (FAILED(pCookingMiniGame->Ready_GameObject()))
 	{
@@ -200,6 +213,7 @@ void CCookingMiniGameUI::CookingStart(_int CookingCount)
 	Set_Render(true);
 	m_iCurCookingCount = CookingCount;
 	m_iCookingCount = CookingCount;
+	m_bInputLock = false;
 }
 
 void CCookingMiniGameUI::CookingEnd()

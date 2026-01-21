@@ -68,6 +68,7 @@ HRESULT CVillage::Ready_Scene()
 
 	Ready_Event();
 
+
 	CCutSceneMgr::GetInstance()->Ready_CutsceneMgr(m_pMessageChannel);
 
 	CUTSCENE tDungeonScene;
@@ -108,6 +109,8 @@ _int CVillage::Update_Scene(const _float& fTimeDelta)
 		pPlayerTransform->Get_Info(INFO_POS, &vPlayerPos);
 		Engine::CLightMgr::GetInstance()->Update_PointLights(vPlayerPos);
 	}
+
+	Key_Input_Village();
 
 	_int iExit = Engine::CScene::Update_Scene(fTimeDelta);
 
@@ -499,6 +502,14 @@ HRESULT CVillage::Ready_UI_Layer(const _tchar* pLayerTag)
 	if (FAILED(pLayer->Add_GameObject(L"Fade", pGameObject)))
 		return E_FAIL;
 
+	pGameObject = m_pCookingUI = CCookingUIController::Create(m_pGraphicDev, m_pMessageChannel);
+
+	if (nullptr == pGameObject)
+		return E_FAIL;
+
+	if (FAILED(pLayer->Add_GameObject(L"CookingUIController", pGameObject)))
+		return E_FAIL;
+
 	m_mapLayer.insert({ pLayerTag , pLayer });
 
 	return S_OK;
@@ -562,13 +573,31 @@ void CVillage::Ready_Event_Village()
 			}
 			if (any_cast<Trigger::TRIGGERID>(TIDiter->second) == Trigger::TI_KNUCKLE)
 			{
-				if (any_cast<wstring>(TriggetNameiter->second) == L"KnuckleBone")
-				{
-					m_bKnuckleBoneFlag = true;
-				}
+				m_bKnuckleBoneFlag = true;
+			}
+			if (any_cast<Trigger::TRIGGERID>(TIDiter->second) == Trigger::TI_COOKING)
+			{
+				m_pCookingUI->Set_CookingState(CCookingUIController::CS_SELECT);
+				CPersistentMgr::GetInstance()->Get_Player()->Set_Action(true);
+				m_bCookingFlag = true;
 			}
 		}
 	) });
+}
+
+void CVillage::Key_Input_Village()
+{
+	if (m_bCookingFlag)
+	{
+		if (CDInputMgr::GetInstance()->Key_Down(DIK_BACKSPACE))
+		{
+			if (m_pCookingUI->Get_State() == CCookingUIController::CS_MINIGAME) { return; }
+
+			m_pCookingUI->Set_State(CCookingUIController::CS_COOKINGEND);
+			CPersistentMgr::GetInstance()->Get_Player()->Set_Action(false);
+			m_bCookingFlag = false;
+		}
+	}
 }
 
 CVillage* CVillage::Create(LPDIRECT3DDEVICE9 pGraphicDev)

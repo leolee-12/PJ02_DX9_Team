@@ -16,15 +16,6 @@
     <Filter Include="00. MainApp">
       <UniqueIdentifier>{21f60bca-e0f3-45e8-a17c-6be69ba5f684}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. Scene">
-      <UniqueIdentifier>{60ad0de0-adf1-440e-987a-796e2ff8332f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Scene\99. Loading">
-      <UniqueIdentifier>{162da509-93eb-497c-bb4b-016c0b3d5fae}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Scene\99. Loading\LoadingThread">
-      <UniqueIdentifier>{bec13d5c-cc47-4d5b-a2eb-0fb3bafdcfdd}</UniqueIdentifier>
-    </Filter>
     <Filter Include="03. Manager">
       <UniqueIdentifier>{f4a5af23-1cb1-4c65-b73d-7132d05ea4c2}</UniqueIdentifier>
     </Filter>
