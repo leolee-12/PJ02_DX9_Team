@@ -36,6 +36,7 @@
 #include "CManagement.h"
 #include "CBuilding.h"
 #include "CCookingUIController.h"
+#include "CEffectMgr.h"
 
 CVillage::CVillage(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -93,7 +94,7 @@ HRESULT CVillage::Ready_Scene()
 
 	CCutSceneMgr::GetInstance()->Register_CutScene(tDungeonScene);
 
-	
+	CEffectMgr::GetInstance()->Ready_EffectMgr(m_pGraphicDev);
 
 	return S_OK;
 }
@@ -316,15 +317,15 @@ HRESULT CVillage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 			}
 			else if (obj.category == "BreakableRock")
 			{
-				pGameObject = CBreakableRock::Create(m_pGraphicDev, obj, m_pMessageChannel);
-				if (pGameObject)
-					pLayer->Add_GameObject(L"BreakableRock", pGameObject);
+				//pGameObject = CBreakableRock::Create(m_pGraphicDev, obj, m_pMessageChannel);
+				//if (pGameObject)
+				//	pLayer->Add_GameObject(L"BreakableRock", pGameObject);
 			}
 			else if (obj.category == "BreakableTree")
 			{
-				pGameObject = CBreakableTree::Create(m_pGraphicDev, obj, m_pMessageChannel);
-				if (pGameObject)
-					pLayer->Add_GameObject(L"BreakableTree", pGameObject);
+				//pGameObject = CBreakableTree::Create(m_pGraphicDev, obj, m_pMessageChannel);
+				//if (pGameObject)
+				//	pLayer->Add_GameObject(L"BreakableTree", pGameObject);
 			}
 			else
 			{
@@ -403,13 +404,13 @@ HRESULT CVillage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	}
 
 	// Village 지형물
-	for (int i = 0; i < 5; ++i)
+	for (int i = 0; i < 12; ++i)
 	{
 		OBJECTDATA tObjData1 = {"BreakableRock",						// 카테고리
 								0,										// 텍스처인덱스
-								199.8f + Get_Rand_Float(-30.f, 30.f),	// x
+								199.8f + Get_Rand_Float(-40.f, 40.f),	// x
 								-0.5f,									// y
-								35.f + Get_Rand_Float(-30.f, 30.f),		// z
+								35.f + Get_Rand_Float(-40.f, 40.f),		// z
 								5.f,									// 스케일
 								0 };									// Standing or Floor
 
@@ -420,10 +421,10 @@ HRESULT CVillage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 
 		OBJECTDATA tObjData2 = {"BreakableTree",						// 카테고리
 								0,										// 텍스처인덱스
-								199.8f + Get_Rand_Float(-30.f, 30.f),	// x
-								-0.1f,									// y
-								35.f + Get_Rand_Float(-30.f, 30.f),		// z
-								5.f,									// 스케일
+								199.8f + Get_Rand_Float(-40.f, 40.f),	// x
+								0.8f,									// y
+								35.f + Get_Rand_Float(-40.f, 40.f),		// z
+								10.f,									// 스케일
 								0 };									// Standing or Floor
 
 		pGameObject = CBreakableTree::Create(m_pGraphicDev, tObjData2, m_pMessageChannel);

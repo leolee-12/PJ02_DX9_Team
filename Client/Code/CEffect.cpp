@@ -9,10 +9,12 @@ CEffect::CEffect(LPDIRECT3DDEVICE9 pGraphicDev)
 		, m_pTextureCom(nullptr)
 		, m_eType(EF_END)
 		, m_eState(ES_READY)
+		, m_fScale(1.f)
 		, m_fLifeTime(0.f)
 		, m_fAccTime(0.f)
 		, m_bLoop(false)
 		, m_pOwner(nullptr)
+		, m_iTexIdx(0)
 {
 }
 
@@ -23,11 +25,14 @@ CEffect::CEffect(const CEffect& rhs)
 	, m_pTextureCom(nullptr)
 	, m_eType(EF_END)
 	, m_eState(ES_READY)
+	, m_fScale(rhs.m_fScale)
 	, m_fLifeTime(rhs.m_fLifeTime)
 	, m_fAccTime(0.f)
 	, m_bLoop(rhs.m_bLoop)
 	, m_pOwner(nullptr)
+	, m_iTexIdx(rhs.m_iTexIdx)
 {
+	m_strProtoTexKey = rhs.m_strProtoTexKey;
 }
 
 CEffect::~CEffect()
@@ -77,26 +82,19 @@ HRESULT CEffect::Add_Component()
 
 	m_mapComponent[ID_DYNAMIC].insert({ L"Com_Transform", pComponent });
 
+	// Texture
+	pComponent = m_pTextureCom = dynamic_cast<Engine::CTexture*>
+		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(m_strProtoTexKey));
+
+	if (nullptr == pComponent)
+		return E_FAIL;
+
 	m_mapComponent[ID_STATIC].insert({ L"Com_Texture", pComponent });
 
 	return S_OK;
 }
 
-CEffect* CEffect::Create(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vPos, _uint iTexIdx)
+void CEffect::Free()
 {
-	CEffect* pEffect = nullptr;// = new CEffect(pGraphicDev);
-
-	//pEffect->m_iTexIdx = iTexIdx;
-
-	//if (FAILED(pEffect->Ready_GameObject()))
-	//{
-	//	Safe_Release(pEffect);
-	//	MSG_BOX("pEffect Create Failed");
-	//	return nullptr;
-	//}
-
-	//pEffect->m_pTransformCom->Set_Pos(vPos.x, vPos.y, vPos.z - 0.01f);
-	//pEffect->m_pTransformCom->Update_Component(0.f);
-
-	return pEffect;
+	CGameObject::Free();
 }

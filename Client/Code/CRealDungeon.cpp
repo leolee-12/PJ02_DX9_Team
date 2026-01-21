@@ -31,6 +31,7 @@
 #include "CCutSceneMgr.h"
 #include "CFontAlpha.h"
 #include "CChest.h"
+#include "CEffectMgr.h"
 
 CRealDungeon::CRealDungeon(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -59,6 +60,8 @@ HRESULT CRealDungeon::Ready_Scene()
 	Ready_Event();
 
 	CCutSceneMgr::GetInstance()->Ready_CutsceneMgr(m_pMessageChannel);
+
+	CEffectMgr::GetInstance()->Ready_EffectMgr(m_pGraphicDev);
 
 	CUTSCENE tRealDungeonScene;
 	tRealDungeonScene.strName = L"Meet_Amdu";

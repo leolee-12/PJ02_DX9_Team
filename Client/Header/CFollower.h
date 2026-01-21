@@ -73,7 +73,7 @@ private:
 	// 상호작용 관련
 	_float		m_fWorkSpeed;
 
-	static constexpr _float FW_DEFAULT_WORK_SPEED = 0.03f + 0.1f;
+	static constexpr _float FW_DEFAULT_WORK_SPEED = 0.03f;
 	static constexpr _float FW_DEFAULT_WORK_GAP_TIME = 1.f;
 
 public:

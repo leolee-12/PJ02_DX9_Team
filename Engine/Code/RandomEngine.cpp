@@ -21,4 +21,9 @@ namespace Engine {
 	{
 		return g_Jitter.get_offset(fTime);
 	}
+
+	float MyLerp(float fStart, float fEnd, float fRatio)
+	{
+		return fStart + fRatio * (fEnd - fStart);
+	}
 }

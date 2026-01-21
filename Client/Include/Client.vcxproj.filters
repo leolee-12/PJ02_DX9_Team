@@ -25,48 +25,6 @@
     <Filter Include="01. Scene\99. Loading\LoadingThread">
       <UniqueIdentifier>{bec13d5c-cc47-4d5b-a2eb-0fb3bafdcfdd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject">
-      <UniqueIdentifier>{51b52b49-f21d-4d34-bf24-26f7774a4f3b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Scene">
-      <UniqueIdentifier>{60ad0de0-adf1-440e-987a-796e2ff8332f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Scene\99. Loading">
-      <UniqueIdentifier>{162da509-93eb-497c-bb4b-016c0b3d5fae}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Scene\99. Loading\LoadingThread">
-      <UniqueIdentifier>{bec13d5c-cc47-4d5b-a2eb-0fb3bafdcfdd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Scene\01. Maps">
-      <UniqueIdentifier>{4e1e71d3-7af1-4978-b079-ff0455d22473}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Scene\02. KnuckleBone">
-      <UniqueIdentifier>{fbdfd1c6-2a58-45e4-970b-5fac37bacfcb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Scene\01. Maps\10. LeshyRoom">
-      <UniqueIdentifier>{e54dbddb-b0a1-4fba-982a-2b27c388eb32}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Scene\01. Maps\08. RealDungeon">
-      <UniqueIdentifier>{85febe2e-07d2-42fc-850d-8663b92acb9a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Scene\01. Maps\04. Tutorial">
-      <UniqueIdentifier>{08f675a5-4005-4bed-9f8c-e9c1ef960dbb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Scene\01. Maps\06. Dungeon">
-      <UniqueIdentifier>{9560bf2c-af50-4eb8-bef4-9c6ceb52c988}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Scene\01. Maps\00. Logo">
-      <UniqueIdentifier>{0d271025-e384-4299-bf6d-972bbc338575}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Scene\01. Maps\09. AmdusiasRoom">
-      <UniqueIdentifier>{f5f4d96c-11a7-4d90-929c-1028403dcaef}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Scene\01. Maps\05. TheGateway">
-      <UniqueIdentifier>{5bf50683-65bf-40b4-9c87-9150bd6c818e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Scene\01. Maps\07. Village">
-      <UniqueIdentifier>{71467a02-ac11-4d7a-84a6-64382f2466ef}</UniqueIdentifier>
-    </Filter>
     <Filter Include="03. Manager">
       <UniqueIdentifier>{f4a5af23-1cb1-4c65-b73d-7132d05ea4c2}</UniqueIdentifier>
     </Filter>
@@ -75,6 +33,18 @@
     </Filter>
     <Filter Include="03. Manager\00. CutSceneMgr">
       <UniqueIdentifier>{37f20989-8197-4784-9469-9d8b5aef87c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Manager\03. InteractMgr">
+      <UniqueIdentifier>{cc4ab9a0-c95b-4ff8-939b-ac400d44b4d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Manager\01. PersistentMgr">
+      <UniqueIdentifier>{153d294d-a813-4bb7-9dee-2e2680526024}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Manager\04. EffectMgr">
+      <UniqueIdentifier>{613f16cb-d640-48b5-84eb-5098839b2c76}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject">
+      <UniqueIdentifier>{51b52b49-f21d-4d34-bf24-26f7774a4f3b}</UniqueIdentifier>
     </Filter>
     <Filter Include="02. GameObject\00. System">
       <UniqueIdentifier>{2d5b5352-dcee-4d15-a1e8-025808a348f1}</UniqueIdentifier>
@@ -91,71 +61,14 @@
     <Filter Include="02. GameObject\00. System\01. SkyBox">
       <UniqueIdentifier>{71bfc506-8050-40b0-98aa-429602465e7d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\01. GameActor">
-      <UniqueIdentifier>{a16d0840-5498-4b63-858b-ae2d36c7ef63}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\02. Environment">
-      <UniqueIdentifier>{0de463cf-3ddf-48a1-99ef-646d0b9d0b7e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\03. Dependent">
-      <UniqueIdentifier>{45b931e1-2ff5-4d2a-b1de-2176728aa00a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\01. GameActor\04. Brute">
-      <UniqueIdentifier>{84e93905-37af-4387-b6a4-d5044690241b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\01. GameActor\03. Follower">
-      <UniqueIdentifier>{3d74a21e-77cb-40d2-a6d2-422d4a7c248f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\01. GameActor\05. Ratau">
-      <UniqueIdentifier>{bd6b3898-6203-4641-b5e5-7960b264ed5b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\01. GameActor\06. TarotSeller">
-      <UniqueIdentifier>{1f719df2-ba00-4951-a55d-64e71e6a52e1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\01. GameActor\00. Player">
-      <UniqueIdentifier>{ae4c5383-56a8-4b14-85a9-74fedfb3ccfe}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\01. GameActor\01. Monster">
-      <UniqueIdentifier>{38405f32-dfc2-465f-b792-d975bcf71c8f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\01. GameActor\01. Monster\Normal2">
-      <UniqueIdentifier>{7afa2db1-0b9b-45dd-add7-b4436ab26da5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\01. GameActor\01. Monster\Normal3">
-      <UniqueIdentifier>{c750db87-30b0-461e-be3c-7188c009816e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\01. GameActor\01. Monster\Boss1">
-      <UniqueIdentifier>{4835642c-34bd-4f07-9943-87d66889933e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\01. GameActor\01. Monster\Normal1">
-      <UniqueIdentifier>{a8173e77-340e-468f-9aa7-00e8cd1ad765}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\01. GameActor\01. Monster\Boss2">
-      <UniqueIdentifier>{a2bf76f1-004d-4e27-ad5f-a12e80a7f38a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\01. GameActor\02. Bishops">
-      <UniqueIdentifier>{7f83aa31-fb8d-49c4-95fc-ebbf3af46beb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\01. GameActor\02. Bishops\00. Leshy">
-      <UniqueIdentifier>{52cf13fa-731d-4b11-bba6-7779b02f29fd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\01. GameActor\02. Bishops\01. Heket">
-      <UniqueIdentifier>{06650769-1a7d-4ff5-9267-1f4043d14e47}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\01. GameActor\02. Bishops\02. Kallamar">
-      <UniqueIdentifier>{fd8fec59-64da-4bd1-8344-7f59f16db3fd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\01. GameActor\02. Bishops\03. Shamura">
-      <UniqueIdentifier>{28a8afb7-5c8e-4ec1-bcdb-2908ee49bd64}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\01. GameActor\02. Bishops\04. Narinder">
-      <UniqueIdentifier>{ecbd203a-cadb-4569-8e75-5086beff5fe2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObject\00. System\02. Warp">
       <UniqueIdentifier>{afb959a5-02a0-4191-9f75-2c789c60d030}</UniqueIdentifier>
     </Filter>
     <Filter Include="02. GameObject\00. System\03. TriggerPoint">
       <UniqueIdentifier>{5284baad-cc65-443f-8583-8ea20262c3bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\02. Environment">
+      <UniqueIdentifier>{0de463cf-3ddf-48a1-99ef-646d0b9d0b7e}</UniqueIdentifier>
     </Filter>
     <Filter Include="02. GameObject\02. Environment\00. MapObject">
       <UniqueIdentifier>{c73a576f-744b-4160-90e9-ca0038f8a214}</UniqueIdentifier>
@@ -163,14 +76,20 @@
     <Filter Include="02. GameObject\02. Environment\02. Interactable">
       <UniqueIdentifier>{2eb856ce-ff64-4444-a92e-e687d9b46140}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\02. Environment\01. Tile">
-      <UniqueIdentifier>{fd9114e4-ed18-4e95-93eb-47e4ebc69072}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObject\02. Environment\02. Interactable\00. Grass">
       <UniqueIdentifier>{20638477-cadd-4aa2-94a1-d3b5098d0639}</UniqueIdentifier>
     </Filter>
     <Filter Include="02. GameObject\02. Environment\02. Interactable\01. BreakableTree">
       <UniqueIdentifier>{6045c0f4-0bbb-4825-9f07-1e4a96913560}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\02. Environment\02. Interactable\03. Building">
+      <UniqueIdentifier>{8148d31c-450c-4fc9-bae3-2e9fc2e68213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\02. Environment\02. Interactable\02. BreakableRock">
+      <UniqueIdentifier>{3329f3da-37fb-41de-8fa1-0c729130dfb9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\02. Environment\01. Tile">
+      <UniqueIdentifier>{fd9114e4-ed18-4e95-93eb-47e4ebc69072}</UniqueIdentifier>
     </Filter>
     <Filter Include="02. GameObject\02. Environment\97. BackGround">
       <UniqueIdentifier>{07693c01-70a4-4d6a-9bd8-fe0002596e8d}</UniqueIdentifier>
@@ -181,11 +100,29 @@
     <Filter Include="02. GameObject\02. Environment\99. TerrainWall">
       <UniqueIdentifier>{52de0396-bdc9-4e24-8949-59503af9d2c0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\02. Environment\03. Chest">
+      <UniqueIdentifier>{b97e8f89-f997-4210-92a3-b845e316f88a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\03. Dependent">
+      <UniqueIdentifier>{45b931e1-2ff5-4d2a-b1de-2176728aa00a}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02. GameObject\03. Dependent\00. Projectile">
       <UniqueIdentifier>{3ddb0c3c-fab8-47e2-abe4-23dee1d57a77}</UniqueIdentifier>
     </Filter>
     <Filter Include="02. GameObject\03. Dependent\01. Effect">
       <UniqueIdentifier>{37f31870-dba2-4668-ad76-b1d69d78c68f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\03. Dependent\01. Effect\0. SpriteEffect">
+      <UniqueIdentifier>{3f4f1d7c-f64c-48fb-b131-1abee5b964e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\03. Dependent\01. Effect\2. TrailEffect">
+      <UniqueIdentifier>{9d15df12-d4e7-4ce5-89ef-f636016da868}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\03. Dependent\01. Effect\3. ScreenEffect">
+      <UniqueIdentifier>{9be5aa81-2e63-47f4-9967-6883c67cbfee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\03. Dependent\01. Effect\1. ParticleEffect">
+      <UniqueIdentifier>{e0254c7a-8146-4aab-be06-e125b4853c7c}</UniqueIdentifier>
     </Filter>
     <Filter Include="02. GameObject\03. Dependent\02. Node">
       <UniqueIdentifier>{fde0f6e7-5d96-449c-a951-022022683803}</UniqueIdentifier>
@@ -394,21 +331,6 @@
     <Filter Include="02. GameObject\05. UI\99. Font">
       <UniqueIdentifier>{a8d8fe86-d6e2-4ff9-b0d0-76f833c3f75a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. Scene\01. Maps\98. Test">
-      <UniqueIdentifier>{7bf09d6b-5222-4361-bb6b-3e27ea739fa2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Scene\01. Maps\97. EditScene">
-      <UniqueIdentifier>{ff5bb01d-db75-499d-ae0b-be1f8fb58ee7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="03. Manager\03. InteractMgr">
-      <UniqueIdentifier>{cc4ab9a0-c95b-4ff8-939b-ac400d44b4d1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="03. Manager\01. PersistentMgr">
-      <UniqueIdentifier>{153d294d-a813-4bb7-9dee-2e2680526024}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Scene\01. Maps\99. Stage">
-      <UniqueIdentifier>{f40be6c5-f78e-4629-9f22-c05f63c86d1a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObject\05. UI\07. BossHpBar">
       <UniqueIdentifier>{399d7d32-c442-474d-a3f1-c1faeaacd158}</UniqueIdentifier>
     </Filter>
@@ -430,23 +352,107 @@
     <Filter Include="02. GameObject\05. UI\08. MonsterHpBar\00. Cover">
       <UniqueIdentifier>{7610c791-bdf3-4b8b-89cf-96f29d3e9145}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\02. Environment\03. Chest">
-      <UniqueIdentifier>{b97e8f89-f997-4210-92a3-b845e316f88a}</UniqueIdentifier>
+    <Filter Include="02. GameObject\01. GameActor">
+      <UniqueIdentifier>{a16d0840-5498-4b63-858b-ae2d36c7ef63}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\02. Environment\02. Interactable\03. Building">
-      <UniqueIdentifier>{8148d31c-450c-4fc9-bae3-2e9fc2e68213}</UniqueIdentifier>
+    <Filter Include="02. GameObject\01. GameActor\04. Brute">
+      <UniqueIdentifier>{84e93905-37af-4387-b6a4-d5044690241b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="03. Manager\04. EffectMgr">
-      <UniqueIdentifier>{613f16cb-d640-48b5-84eb-5098839b2c76}</UniqueIdentifier>
+    <Filter Include="02. GameObject\01. GameActor\03. Follower">
+      <UniqueIdentifier>{3d74a21e-77cb-40d2-a6d2-422d4a7c248f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\03. Dependent\01. Effect\0. SpriteEffect">
-      <UniqueIdentifier>{3f4f1d7c-f64c-48fb-b131-1abee5b964e4}</UniqueIdentifier>
+    <Filter Include="02. GameObject\01. GameActor\05. Ratau">
+      <UniqueIdentifier>{bd6b3898-6203-4641-b5e5-7960b264ed5b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\03. Dependent\01. Effect\1. ParticleEffect">
-      <UniqueIdentifier>{e0254c7a-8146-4aab-be06-e125b4853c7c}</UniqueIdentifier>
+    <Filter Include="02. GameObject\01. GameActor\06. TarotSeller">
+      <UniqueIdentifier>{1f719df2-ba00-4951-a55d-64e71e6a52e1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\02. Environment\02. Interactable\02. BreakableRock">
-      <UniqueIdentifier>{3329f3da-37fb-41de-8fa1-0c729130dfb9}</UniqueIdentifier>
+    <Filter Include="02. GameObject\01. GameActor\00. Player">
+      <UniqueIdentifier>{ae4c5383-56a8-4b14-85a9-74fedfb3ccfe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. GameActor\01. Monster">
+      <UniqueIdentifier>{38405f32-dfc2-465f-b792-d975bcf71c8f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. GameActor\01. Monster\Normal2">
+      <UniqueIdentifier>{7afa2db1-0b9b-45dd-add7-b4436ab26da5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. GameActor\01. Monster\Normal3">
+      <UniqueIdentifier>{c750db87-30b0-461e-be3c-7188c009816e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. GameActor\01. Monster\Boss1">
+      <UniqueIdentifier>{4835642c-34bd-4f07-9943-87d66889933e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. GameActor\01. Monster\Normal1">
+      <UniqueIdentifier>{a8173e77-340e-468f-9aa7-00e8cd1ad765}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. GameActor\01. Monster\Boss2">
+      <UniqueIdentifier>{a2bf76f1-004d-4e27-ad5f-a12e80a7f38a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. GameActor\02. Bishops">
+      <UniqueIdentifier>{7f83aa31-fb8d-49c4-95fc-ebbf3af46beb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. GameActor\02. Bishops\00. Leshy">
+      <UniqueIdentifier>{52cf13fa-731d-4b11-bba6-7779b02f29fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. GameActor\02. Bishops\01. Heket">
+      <UniqueIdentifier>{06650769-1a7d-4ff5-9267-1f4043d14e47}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. GameActor\02. Bishops\02. Kallamar">
+      <UniqueIdentifier>{fd8fec59-64da-4bd1-8344-7f59f16db3fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. GameActor\02. Bishops\03. Shamura">
+      <UniqueIdentifier>{28a8afb7-5c8e-4ec1-bcdb-2908ee49bd64}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. GameActor\02. Bishops\04. Narinder">
+      <UniqueIdentifier>{ecbd203a-cadb-4569-8e75-5086beff5fe2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. Scene">
+      <UniqueIdentifier>{60ad0de0-adf1-440e-987a-796e2ff8332f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. Scene\99. Loading">
+      <UniqueIdentifier>{162da509-93eb-497c-bb4b-016c0b3d5fae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. Scene\99. Loading\LoadingThread">
+      <UniqueIdentifier>{bec13d5c-cc47-4d5b-a2eb-0fb3bafdcfdd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. Scene\01. Maps">
+      <UniqueIdentifier>{4e1e71d3-7af1-4978-b079-ff0455d22473}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. Scene\01. Maps\10. LeshyRoom">
+      <UniqueIdentifier>{e54dbddb-b0a1-4fba-982a-2b27c388eb32}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. Scene\01. Maps\08. RealDungeon">
+      <UniqueIdentifier>{85febe2e-07d2-42fc-850d-8663b92acb9a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. Scene\01. Maps\04. Tutorial">
+      <UniqueIdentifier>{08f675a5-4005-4bed-9f8c-e9c1ef960dbb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. Scene\01. Maps\06. Dungeon">
+      <UniqueIdentifier>{9560bf2c-af50-4eb8-bef4-9c6ceb52c988}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. Scene\01. Maps\00. Logo">
+      <UniqueIdentifier>{0d271025-e384-4299-bf6d-972bbc338575}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. Scene\01. Maps\09. AmdusiasRoom">
+      <UniqueIdentifier>{f5f4d96c-11a7-4d90-929c-1028403dcaef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. Scene\01. Maps\05. TheGateway">
+      <UniqueIdentifier>{5bf50683-65bf-40b4-9c87-9150bd6c818e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. Scene\01. Maps\07. Village">
+      <UniqueIdentifier>{71467a02-ac11-4d7a-84a6-64382f2466ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. Scene\01. Maps\98. Test">
+      <UniqueIdentifier>{7bf09d6b-5222-4361-bb6b-3e27ea739fa2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. Scene\01. Maps\97. EditScene">
+      <UniqueIdentifier>{ff5bb01d-db75-499d-ae0b-be1f8fb58ee7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. Scene\01. Maps\99. Stage">
+      <UniqueIdentifier>{f40be6c5-f78e-4629-9f22-c05f63c86d1a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. Scene\02. KnuckleBone">
+      <UniqueIdentifier>{fbdfd1c6-2a58-45e4-970b-5fac37bacfcb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -469,7 +475,7 @@
       <Filter>00. MainApp</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CLogo.h">
-      <Filter>01. Scene\01. Maps\00. Logo</Filter>
+      <Filter>02. GameObject\01. Scene\01. Maps\00. Logo</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CBackGround.h">
       <Filter>02. GameObject\02. Environment\97. BackGround</Filter>
@@ -481,7 +487,7 @@
       <Filter>02. GameObject\01. GameActor\01. Monster</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CStage.h">
-      <Filter>01. Scene\01. Maps\99. Stage</Filter>
+      <Filter>02. GameObject\01. Scene\01. Maps\99. Stage</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CTerrain.h">
       <Filter>02. GameObject\02. Environment\98. Terrain</Filter>
@@ -493,7 +499,7 @@
       <Filter>02. GameObject\00. System\01. SkyBox</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CTest.h">
-      <Filter>01. Scene\01. Maps\98. Test</Filter>
+      <Filter>02. GameObject\01. Scene\01. Maps\98. Test</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CTerrainWall.h">
       <Filter>02. GameObject\02. Environment\99. TerrainWall</Filter>
@@ -502,10 +508,10 @@
       <Filter>02. GameObject\03. Dependent\01. Effect</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CEditScene.h">
-      <Filter>01. Scene\01. Maps\97. EditScene</Filter>
+      <Filter>02. GameObject\01. Scene\01. Maps\97. EditScene</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CLoading.h">
-      <Filter>01. Scene\99. Loading</Filter>
+      <Filter>02. GameObject\01. Scene\99. Loading</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CPersistentMgr.h">
       <Filter>03. Manager\01. PersistentMgr</Filter>
@@ -559,7 +565,7 @@
       <Filter>02. GameObject\00. System\00. Camera\00. MainCamera</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CKnuckleBone.h">
-      <Filter>01. Scene\02. KnuckleBone</Filter>
+      <Filter>02. GameObject\01. Scene\02. KnuckleBone</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CKBBack.h">
       <Filter>02. GameObject\05. UI\03. KBUI\00. TTutorial\00. KBBack</Filter>
@@ -643,10 +649,10 @@
       <Filter>02. GameObject\05. UI\04. PlayerUI\01. Gauge</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\LoadObjectList.h">
-      <Filter>01. Scene\99. Loading\LoadingThread</Filter>
+      <Filter>02. GameObject\01. Scene\99. Loading\LoadingThread</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CDungeon.h">
-      <Filter>01. Scene\01. Maps\06. Dungeon</Filter>
+      <Filter>02. GameObject\01. Scene\01. Maps\06. Dungeon</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CBishop_Leshy.h">
       <Filter>02. GameObject\01. GameActor\02. Bishops\00. Leshy</Filter>
@@ -664,22 +670,22 @@
       <Filter>02. GameObject\01. GameActor\02. Bishops</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CVillage.h">
-      <Filter>01. Scene\01. Maps\07. Village</Filter>
+      <Filter>02. GameObject\01. Scene\01. Maps\07. Village</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CTutorial.h">
-      <Filter>01. Scene\01. Maps\04. Tutorial</Filter>
+      <Filter>02. GameObject\01. Scene\01. Maps\04. Tutorial</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CTheGateway.h">
-      <Filter>01. Scene\01. Maps\05. TheGateway</Filter>
+      <Filter>02. GameObject\01. Scene\01. Maps\05. TheGateway</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CRealDungeon.h">
-      <Filter>01. Scene\01. Maps\08. RealDungeon</Filter>
+      <Filter>02. GameObject\01. Scene\01. Maps\08. RealDungeon</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CAmdusiasRoom.h">
-      <Filter>01. Scene\01. Maps\09. AmdusiasRoom</Filter>
+      <Filter>02. GameObject\01. Scene\01. Maps\09. AmdusiasRoom</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CLeshyRoom.h">
-      <Filter>01. Scene\01. Maps\10. LeshyRoom</Filter>
+      <Filter>02. GameObject\01. Scene\01. Maps\10. LeshyRoom</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CProjectile.h">
       <Filter>02. GameObject\03. Dependent\00. Projectile</Filter>
@@ -904,13 +910,10 @@
       <Filter>03. Manager\03. InteractMgr</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CMultiLoadingThread.h">
-      <Filter>01. Scene\99. Loading\LoadingThread</Filter>
+      <Filter>02. GameObject\01. Scene\99. Loading\LoadingThread</Filter>
     </ClInclude>
     <ClInclude Include="CFontAlpha.h">
       <Filter>02. GameObject\05. UI\99. Font</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Header\CHitEffect.h">
-      <Filter>02. GameObject\03. Dependent\01. Effect</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CBuilding.h">
       <Filter>02. GameObject\02. Environment\02. Interactable\03. Building</Filter>
@@ -939,6 +942,12 @@
     <ClInclude Include="..\Header\CParticleEffect.h">
       <Filter>02. GameObject\03. Dependent\01. Effect\1. ParticleEffect</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CTrailEffect.h">
+      <Filter>02. GameObject\03. Dependent\01. Effect\2. TrailEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CScreenEffect.h">
+      <Filter>02. GameObject\03. Dependent\01. Effect\3. ScreenEffect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -951,7 +960,7 @@
       <Filter>00. MainApp</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CLogo.cpp">
-      <Filter>01. Scene\01. Maps\00. Logo</Filter>
+      <Filter>02. GameObject\01. Scene\01. Maps\00. Logo</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CBackGround.cpp">
       <Filter>02. GameObject\02. Environment\97. BackGround</Filter>
@@ -963,7 +972,7 @@
       <Filter>02. GameObject\01. GameActor\01. Monster</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CStage.cpp">
-      <Filter>01. Scene\01. Maps\99. Stage</Filter>
+      <Filter>02. GameObject\01. Scene\01. Maps\99. Stage</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CTerrain.cpp">
       <Filter>02. GameObject\02. Environment\98. Terrain</Filter>
@@ -975,7 +984,7 @@
       <Filter>02. GameObject\00. System\01. SkyBox</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CTest.cpp">
-      <Filter>01. Scene\01. Maps\98. Test</Filter>
+      <Filter>02. GameObject\01. Scene\01. Maps\98. Test</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CTerrainWall.cpp">
       <Filter>02. GameObject\02. Environment\99. TerrainWall</Filter>
@@ -984,10 +993,10 @@
       <Filter>02. GameObject\03. Dependent\01. Effect</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CEditScene.cpp">
-      <Filter>01. Scene\01. Maps\97. EditScene</Filter>
+      <Filter>02. GameObject\01. Scene\01. Maps\97. EditScene</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CLoading.cpp">
-      <Filter>01. Scene\99. Loading</Filter>
+      <Filter>02. GameObject\01. Scene\99. Loading</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CPersistentMgr.cpp">
       <Filter>03. Manager\01. PersistentMgr</Filter>
@@ -1041,7 +1050,7 @@
       <Filter>02. GameObject\00. System\00. Camera\00. MainCamera</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CKnuckleBone.cpp">
-      <Filter>01. Scene\02. KnuckleBone</Filter>
+      <Filter>02. GameObject\01. Scene\02. KnuckleBone</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CKBBack.cpp">
       <Filter>02. GameObject\05. UI\03. KBUI\00. TTutorial\00. KBBack</Filter>
@@ -1113,7 +1122,7 @@
       <Filter>02. GameObject\05. UI\04. PlayerUI\01. Gauge</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CDungeon.cpp">
-      <Filter>01. Scene\01. Maps\06. Dungeon</Filter>
+      <Filter>02. GameObject\01. Scene\01. Maps\06. Dungeon</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CBishop_Leshy.cpp">
       <Filter>02. GameObject\01. GameActor\02. Bishops\00. Leshy</Filter>
@@ -1128,22 +1137,22 @@
       <Filter>02. GameObject\01. GameActor\02. Bishops\03. Shamura</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CVillage.cpp">
-      <Filter>01. Scene\01. Maps\07. Village</Filter>
+      <Filter>02. GameObject\01. Scene\01. Maps\07. Village</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CTutorial.cpp">
-      <Filter>01. Scene\01. Maps\04. Tutorial</Filter>
+      <Filter>02. GameObject\01. Scene\01. Maps\04. Tutorial</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CTheGateway.cpp">
-      <Filter>01. Scene\01. Maps\05. TheGateway</Filter>
+      <Filter>02. GameObject\01. Scene\01. Maps\05. TheGateway</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CRealDungeon.cpp">
-      <Filter>01. Scene\01. Maps\08. RealDungeon</Filter>
+      <Filter>02. GameObject\01. Scene\01. Maps\08. RealDungeon</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CAmdusiasRoom.cpp">
-      <Filter>01. Scene\01. Maps\09. AmdusiasRoom</Filter>
+      <Filter>02. GameObject\01. Scene\01. Maps\09. AmdusiasRoom</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CLeshyRoom.cpp">
-      <Filter>01. Scene\01. Maps\10. LeshyRoom</Filter>
+      <Filter>02. GameObject\01. Scene\01. Maps\10. LeshyRoom</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CProjectile.cpp">
       <Filter>02. GameObject\03. Dependent\00. Projectile</Filter>
@@ -1356,13 +1365,10 @@
       <Filter>02. GameObject\01. GameActor\03. Follower</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CMultiLoadingThread.cpp">
-      <Filter>01. Scene\99. Loading\LoadingThread</Filter>
+      <Filter>02. GameObject\01. Scene\99. Loading\LoadingThread</Filter>
     </ClCompile>
     <ClCompile Include="CFontAlpha.cpp">
       <Filter>02. GameObject\05. UI\99. Font</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\CHitEffect.cpp">
-      <Filter>02. GameObject\03. Dependent\01. Effect</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CBuilding.cpp">
       <Filter>02. GameObject\02. Environment\02. Interactable\03. Building</Filter>
@@ -1390,6 +1396,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\CParticleEffect.cpp">
       <Filter>02. GameObject\03. Dependent\01. Effect\1. ParticleEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CTrailEffect.cpp">
+      <Filter>02. GameObject\03. Dependent\01. Effect\2. TrailEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CScreenEffect.cpp">
+      <Filter>02. GameObject\03. Dependent\01. Effect\3. ScreenEffect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
