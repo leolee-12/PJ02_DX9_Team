@@ -25,6 +25,7 @@ CParticleEffect::CParticleEffect(const CParticleEffect& rhs)
 	, m_iMinTexIdx(rhs.m_iMinTexIdx)
 	, m_iMaxTexIdx(rhs.m_iMaxTexIdx)
 	, m_bFull(false)
+	, m_tBaseColor(rhs.m_tBaseColor)
 {
 	m_vecParticles.reserve(m_iMaxParticles);
 }
@@ -47,7 +48,7 @@ HRESULT	CParticleEffect::Ready_GameObject()
 	m_vGravity = _vec3(0.f, -9.8f * 2.5f, 0.f);
 	m_fDrag = 0.98f;
 
-	m_fSizeStart = 1.f;
+	m_fSizeStart = 1.5f;
 	m_fSizeEnd = 0.1f;
 	m_fAlphaStart = 1.f;
 	m_fAlphaEnd = 0.f;
@@ -89,7 +90,7 @@ _int CParticleEffect::Update_GameObject(const _float& fTimeDelta)
 
 		// 물리
 		p.vSpeed += m_vGravity * fTimeDelta;		// 중력
-		p.vSpeed *= (1.f - m_fDrag * fTimeDelta);	// 공기저항
+		//p.vSpeed *= (1.f - m_fDrag * fTimeDelta);	// 공기저항
 		p.vPos += iter->vSpeed * fTimeDelta;		// 움직임
 
 		// 바닥 충돌 (y = -2.5f)
@@ -97,8 +98,8 @@ _int CParticleEffect::Update_GameObject(const _float& fTimeDelta)
 		{
 			p.vPos.y = 0.f;
 			p.vSpeed.y *= -0.3f;  // 바운스
-			p.vSpeed.x *= 0.5f;   // 마찰
-			p.vSpeed.z *= 0.5f;
+			p.vSpeed.x *= 0.4f;   // 마찰
+			p.vSpeed.z *= 0.4f;
 		}
 
 		// 보간
@@ -133,20 +134,23 @@ void CParticleEffect::Render_GameObject()
 {
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 
-	m_pGraphicDev->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-	m_pGraphicDev->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
-
 	m_pGraphicDev->SetTextureStageState(0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_COUNT2);
 
-	DWORD dwOldFactor, dwOldArg1, dwOldArg2, dwOldOp;
+	DWORD dwOldFactor, dwOldAArg1, dwOldAArg2, dwOldAOp, dwOldCArg1, dwOldCArg2, dwOldCOp;
 	m_pGraphicDev->GetRenderState(D3DRS_TEXTUREFACTOR, &dwOldFactor);
-	m_pGraphicDev->GetTextureStageState(0, D3DTSS_ALPHAARG1, &dwOldArg1);
-	m_pGraphicDev->GetTextureStageState(0, D3DTSS_ALPHAARG2, &dwOldArg2);
-	m_pGraphicDev->GetTextureStageState(0, D3DTSS_ALPHAOP, &dwOldOp);
+	m_pGraphicDev->GetTextureStageState(0, D3DTSS_ALPHAARG1, &dwOldAArg1);
+	m_pGraphicDev->GetTextureStageState(0, D3DTSS_ALPHAARG2, &dwOldAArg2);
+	m_pGraphicDev->GetTextureStageState(0, D3DTSS_ALPHAOP, &dwOldAOp);
+	m_pGraphicDev->GetTextureStageState(0, D3DTSS_COLORARG1, &dwOldCArg1);
+	m_pGraphicDev->GetTextureStageState(0, D3DTSS_COLORARG2, &dwOldCArg2);
+	m_pGraphicDev->GetTextureStageState(0, D3DTSS_COLOROP, &dwOldCOp);
 
 	m_pGraphicDev->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
 	m_pGraphicDev->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_TFACTOR);
 	m_pGraphicDev->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
+	m_pGraphicDev->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
+	m_pGraphicDev->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_TFACTOR);
+	m_pGraphicDev->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
 
 	for (auto& p : m_vecParticles)
 	{
@@ -160,14 +164,14 @@ void CParticleEffect::Render_GameObject()
 
 		// 3. 알파 설정 (TextureFactor 방식)
 
-		DWORD dwAlpha = DWORD(p.fAlpha * 255.f);
-		//DWORD dwColor = D3DCOLOR_ARGB(	dwAlpha,
-		//								DWORD(p.tColor.r * 255.f),
-		//								DWORD(p.tColor.g * 255.f),
-		//								DWORD(p.tColor.b * 255.f));
+		//DWORD dwAlpha = DWORD(p.fAlpha * 255.f);
+		DWORD dwColor = D3DCOLOR_ARGB(	DWORD(p.fAlpha * 255.f),
+										DWORD(p.tColor.r * 255.f),
+										DWORD(p.tColor.g * 255.f),
+										DWORD(p.tColor.b * 255.f));
 
-		//m_pGraphicDev->SetRenderState(D3DRS_TEXTUREFACTOR, dwColor);
-		m_pGraphicDev->SetRenderState(D3DRS_TEXTUREFACTOR, D3DCOLOR_ARGB(dwAlpha, 255, 255, 255));
+		m_pGraphicDev->SetRenderState(D3DRS_TEXTUREFACTOR, dwColor);
+		//m_pGraphicDev->SetRenderState(D3DRS_TEXTUREFACTOR, D3DCOLOR_ARGB(dwAlpha, 255, 255, 255));
 
 		// 4. 쿼드 렌더링
 		m_pBufferCom->Render_Buffer();
@@ -175,9 +179,12 @@ void CParticleEffect::Render_GameObject()
 
 	// 상태 복원
 	m_pGraphicDev->SetRenderState(D3DRS_TEXTUREFACTOR, dwOldFactor);
-	m_pGraphicDev->SetTextureStageState(0, D3DTSS_ALPHAARG1, dwOldArg1);
-	m_pGraphicDev->SetTextureStageState(0, D3DTSS_ALPHAARG2, dwOldArg2);
-	m_pGraphicDev->SetTextureStageState(0, D3DTSS_ALPHAOP, dwOldOp);
+	m_pGraphicDev->SetTextureStageState(0, D3DTSS_ALPHAARG1, dwOldAArg1);
+	m_pGraphicDev->SetTextureStageState(0, D3DTSS_ALPHAARG2, dwOldAArg2);
+	m_pGraphicDev->SetTextureStageState(0, D3DTSS_ALPHAOP, dwOldAOp);
+	m_pGraphicDev->SetTextureStageState(0, D3DTSS_COLORARG1, dwOldCArg1);
+	m_pGraphicDev->SetTextureStageState(0, D3DTSS_COLORARG2, dwOldCArg2);
+	m_pGraphicDev->SetTextureStageState(0, D3DTSS_COLOROP, dwOldCOp);
 
 	m_pGraphicDev->SetTextureStageState(0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE);
 
@@ -218,6 +225,7 @@ void CParticleEffect::Emit_Particle()
 	p.fSize = m_fSizeStart;
 	p.fAlpha = m_fAlphaStart;
 	p.iTexIdx = Get_Rand_Int(m_iMinTexIdx, m_iMaxTexIdx);
+	p.tColor = m_tBaseColor;
 	//p.tColor.r = m_tBaseColor.r + Get_Rand_Float(-m_fColorVariance, m_fColorVariance);
 	//p.tColor.g = m_tBaseColor.g + Get_Rand_Float(-m_fColorVariance, m_fColorVariance);
 	//p.tColor.b = m_tBaseColor.b + Get_Rand_Float(-m_fColorVariance, m_fColorVariance);

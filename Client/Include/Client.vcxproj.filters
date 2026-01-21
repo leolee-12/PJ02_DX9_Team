@@ -55,42 +55,6 @@
     <Filter Include="02. GameObject\00. System\03. TriggerPoint">
       <UniqueIdentifier>{5284baad-cc65-443f-8583-8ea20262c3bf}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\02. Environment">
-      <UniqueIdentifier>{0de463cf-3ddf-48a1-99ef-646d0b9d0b7e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\02. Environment\00. MapObject">
-      <UniqueIdentifier>{c73a576f-744b-4160-90e9-ca0038f8a214}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\02. Environment\02. Interactable">
-      <UniqueIdentifier>{2eb856ce-ff64-4444-a92e-e687d9b46140}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\02. Environment\02. Interactable\00. Grass">
-      <UniqueIdentifier>{20638477-cadd-4aa2-94a1-d3b5098d0639}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\02. Environment\02. Interactable\01. BreakableTree">
-      <UniqueIdentifier>{6045c0f4-0bbb-4825-9f07-1e4a96913560}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\02. Environment\02. Interactable\03. Building">
-      <UniqueIdentifier>{8148d31c-450c-4fc9-bae3-2e9fc2e68213}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\02. Environment\02. Interactable\02. BreakableRock">
-      <UniqueIdentifier>{3329f3da-37fb-41de-8fa1-0c729130dfb9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\02. Environment\01. Tile">
-      <UniqueIdentifier>{fd9114e4-ed18-4e95-93eb-47e4ebc69072}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\02. Environment\97. BackGround">
-      <UniqueIdentifier>{07693c01-70a4-4d6a-9bd8-fe0002596e8d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\02. Environment\98. Terrain">
-      <UniqueIdentifier>{8d635b76-59e8-4b1b-94c9-608c92cd7cb1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\02. Environment\99. TerrainWall">
-      <UniqueIdentifier>{52de0396-bdc9-4e24-8949-59503af9d2c0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\02. Environment\03. Chest">
-      <UniqueIdentifier>{b97e8f89-f997-4210-92a3-b845e316f88a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObject\03. Dependent">
       <UniqueIdentifier>{45b931e1-2ff5-4d2a-b1de-2176728aa00a}</UniqueIdentifier>
     </Filter>
@@ -370,9 +334,6 @@
     <Filter Include="02. GameObject\01. GameActor\01. Monster\Boss1">
       <UniqueIdentifier>{4835642c-34bd-4f07-9943-87d66889933e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\01. GameActor\01. Monster\Normal1">
-      <UniqueIdentifier>{a8173e77-340e-468f-9aa7-00e8cd1ad765}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObject\01. GameActor\01. Monster\Boss2">
       <UniqueIdentifier>{a2bf76f1-004d-4e27-ad5f-a12e80a7f38a}</UniqueIdentifier>
     </Filter>
@@ -444,6 +405,45 @@
     </Filter>
     <Filter Include="03. Manager\04. EffectMgr">
       <UniqueIdentifier>{613f16cb-d640-48b5-84eb-5098839b2c76}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\02. Environment">
+      <UniqueIdentifier>{0de463cf-3ddf-48a1-99ef-646d0b9d0b7e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\02. Environment\00. MapObject">
+      <UniqueIdentifier>{c73a576f-744b-4160-90e9-ca0038f8a214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\02. Environment\02. Interactable">
+      <UniqueIdentifier>{2eb856ce-ff64-4444-a92e-e687d9b46140}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\02. Environment\02. Interactable\00. Grass">
+      <UniqueIdentifier>{20638477-cadd-4aa2-94a1-d3b5098d0639}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\02. Environment\02. Interactable\01. BreakableTree">
+      <UniqueIdentifier>{6045c0f4-0bbb-4825-9f07-1e4a96913560}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\02. Environment\02. Interactable\03. Building">
+      <UniqueIdentifier>{8148d31c-450c-4fc9-bae3-2e9fc2e68213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\02. Environment\02. Interactable\02. BreakableRock">
+      <UniqueIdentifier>{3329f3da-37fb-41de-8fa1-0c729130dfb9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\02. Environment\01. Tile">
+      <UniqueIdentifier>{fd9114e4-ed18-4e95-93eb-47e4ebc69072}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\02. Environment\97. BackGround">
+      <UniqueIdentifier>{07693c01-70a4-4d6a-9bd8-fe0002596e8d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\02. Environment\98. Terrain">
+      <UniqueIdentifier>{8d635b76-59e8-4b1b-94c9-608c92cd7cb1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\02. Environment\99. TerrainWall">
+      <UniqueIdentifier>{52de0396-bdc9-4e24-8949-59503af9d2c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\02. Environment\03. Chest">
+      <UniqueIdentifier>{b97e8f89-f997-4210-92a3-b845e316f88a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. GameActor\01. Monster\Normal1">
+      <UniqueIdentifier>{a8173e77-340e-468f-9aa7-00e8cd1ad765}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

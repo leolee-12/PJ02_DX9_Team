@@ -25,6 +25,7 @@ public:
 		// Particle
 		, EK_PARTICLE_GREEN
 		, EK_PARTICLE_RED
+		, EK_PARTICLE_BLUE
 		, EK_PARTICLE_PURPLE
 		//,EK_DUST_LAND
 		//,EK_DUST_RUN

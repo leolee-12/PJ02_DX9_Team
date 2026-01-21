@@ -45,7 +45,7 @@ public:
 	void			Set_SpeedRange(const _vec3& v1, const _vec3& v2) { m_vMinSpeed = v1; m_vMaxSpeed = v2; }
 	void			Set_LifeTime(const _float& fTime) { m_fLifeTime = fTime; }
 	void			Set_EmitRate(const _float& fRate) { m_fEmitRate = fRate; }
-	//void			Set_BaseColor(const D3DXCOLOR& tColor) { m_tBaseColor = tColor; }
+	void			Set_BaseColor(const D3DXCOLOR& tColor) { m_tBaseColor = tColor; }
 	//void			Set_ColorVariance(_float fVar) { m_fColorVariance = fVar; }
 	void			Set_Texture(const _uint& iTexIdx);
 	void			Set_TextureRange(_uint iMin, _uint iMax) { m_iMinTexIdx = iMin; m_iMaxTexIdx = iMax; }
@@ -78,7 +78,7 @@ private:
 	_float      m_fSizeEnd;
 	_float      m_fAlphaStart;
 	_float      m_fAlphaEnd;
-	//D3DXCOLOR   m_tBaseColor;			// 기본 색상
+	D3DXCOLOR   m_tBaseColor;			// 기본 색상
 	//_float      m_fColorVariance;   // 색상 변동폭 (0.0 ~ 1.0)
 
 	_uint m_iMinTexIdx;  // 사용할 인덱스 시작 (포함)

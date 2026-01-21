@@ -73,11 +73,12 @@ HRESULT CEffectMgr::Ready_EffectMgr(LPDIRECT3DDEVICE9 pGraphicDev)
 	if (particlePair.second)
 	{
 		CParticleEffect* pParticleEffect = CParticleEffect::Create(pGraphicDev, L"Proto_MonsterParticleTexture");
-		pParticleEffect->Set_TextureRange(0, 9);
+		pParticleEffect->Set_TextureRange(0, 31);
 		pParticleEffect->Set_EmitRange(_vec3(-1.f, 0.f, -1.f), _vec3(1.f, 1.f, 1.f));
 		pParticleEffect->Set_SpeedRange(_vec3(-3.f, 5.f, -3.f), _vec3(3.f, 10.f, 3.f));
-		pParticleEffect->Set_LifeTime(3.f);
+		pParticleEffect->Set_LifeTime(1.5f);
 		pParticleEffect->Set_EmitRate(30.f);
+		pParticleEffect->Set_BaseColor(D3DXCOLOR(0.1f, 1.f, 0.1f, 1.f));
 		particlePair.first->second = pParticleEffect;
 	}
 
@@ -86,24 +87,26 @@ HRESULT CEffectMgr::Ready_EffectMgr(LPDIRECT3DDEVICE9 pGraphicDev)
 	if (particlePair.second)
 	{
 		CParticleEffect* pParticleEffect = CParticleEffect::Create(pGraphicDev, L"Proto_MonsterParticleTexture");
-		pParticleEffect->Set_TextureRange(10, 23);
+		pParticleEffect->Set_TextureRange(0, 31);
 		pParticleEffect->Set_EmitRange(_vec3(-1.f, 0.f, -1.f), _vec3(1.f, 1.f, 1.f));
 		pParticleEffect->Set_SpeedRange(_vec3(-3.f, 5.f, -3.f), _vec3(3.f, 10.f, 3.f));
 		pParticleEffect->Set_LifeTime(1.5f);
 		pParticleEffect->Set_EmitRate(30.f);
+		pParticleEffect->Set_BaseColor(D3DXCOLOR(1.f, 0.1f, 0.1f, 1.f));
 		particlePair.first->second = pParticleEffect;
 	}
 
-	particlePair = m_mapProtoEffect.try_emplace(EK_PARTICLE_PURPLE, nullptr);	// pair<iter, bool>
+	particlePair = m_mapProtoEffect.try_emplace(EK_PARTICLE_BLUE, nullptr);	// pair<iter, bool>
 
 	if (particlePair.second)
 	{
 		CParticleEffect* pParticleEffect = CParticleEffect::Create(pGraphicDev, L"Proto_MonsterParticleTexture");
-		pParticleEffect->Set_TextureRange(24, 31);
+		pParticleEffect->Set_TextureRange(0, 31);
 		pParticleEffect->Set_EmitRange(_vec3(-1.f, 0.f, -1.f), _vec3(1.f, 1.f, 1.f));
 		pParticleEffect->Set_SpeedRange(_vec3(-3.f, 5.f, -3.f), _vec3(3.f, 10.f, 3.f));
 		pParticleEffect->Set_LifeTime(1.5f);
 		pParticleEffect->Set_EmitRate(30.f);
+		pParticleEffect->Set_BaseColor(D3DXCOLOR(0.1f, 0.1f, 1.f, 1.f));
 		particlePair.first->second = pParticleEffect;
 	}
 

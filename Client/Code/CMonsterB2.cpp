@@ -741,6 +741,11 @@ void CMonsterB2::Check_Status()
 		AmduEvent.strType = L"Staging.Start";
 		AmduEvent.hmapData[L"StagingName"] = wstring(L"Leshy_Dead");
 		m_pMessageChannel->Publish(AmduEvent);
+
+		IMessageChannel::EVENT ESummonDead;
+		ESummonDead.strType = L"Summon.Dead";
+		ESummonDead.hmapData.emplace(L"LayerTag", L"Summon_Layer");
+		m_pMessageChannel->Publish(ESummonDead);
 	}
 }
 
@@ -796,13 +801,13 @@ void CMonsterB2::Summon_Minion(const _uint& iCount)
 
 		if (pMonster)
 		{
-			wstring strObjTag = L"Monster";
+			wstring strObjTag = L"SummonMonster";
 
 			IMessageChannel::EVENT ESummonMonster;
 			ESummonMonster.strType = L"Obj.Add";
 			ESummonMonster.eOBJID = Engine::OID_MONSTER;
 			ESummonMonster.hmapData.emplace(L"Obj", pMonster);
-			ESummonMonster.hmapData.emplace(L"LayerTag", L"GameLogic_Layer");
+			ESummonMonster.hmapData.emplace(L"LayerTag", L"Summon_Layer");
 			ESummonMonster.hmapData.emplace(L"ObjTag", strObjTag);
 			m_pMessageChannel->Publish(ESummonMonster);
 			CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_ENEMYSPAWN, 0, vEffectPos);

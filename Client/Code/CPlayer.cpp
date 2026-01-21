@@ -933,8 +933,11 @@ void	CPlayer::OnCollision(CGameObject* pObject)
 
 	else if (pObject->Get_OBJID() == OID_ITEM)
 	{
-		if(static_cast<CItem*>(pObject)->Get_State() != CItem::IS_SPAWN)
+		if (static_cast<CItem*>(pObject)->Get_State() == CItem::IS_CHASE)
+		{
+			CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_PICKUP, 0, _vec3(m_vPos.x, m_vPos.y - 1.f, m_vPos.z - 0.001f), _vec3(0.3f, 0.3f, 0.f));
 			CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_PICKUP, 1, _vec3(m_vPos.x, m_vPos.y - 1.f, m_vPos.z), _vec3(0.3f, 0.3f, 0.f));
+		}
 	}
 
   	if (pObject->Get_OBJID() == OID_BORDER)

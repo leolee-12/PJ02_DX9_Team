@@ -82,7 +82,7 @@ _int CMonsterN1::Update_GameObject(const _float& fTimeDelta)
 	if (iExit == DEAD)
 	{
 		m_pColliderCom->UnregisterFromManager();
-		CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_PARTICLE_PURPLE, 0, m_vEffectPos, _vec3(0.2f, 0.2f, 0.2f));
+		CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_PARTICLE_RED, 0, m_vEffectPos, _vec3(0.2f, 0.2f, 0.2f));
 		return iExit;
 	}
 

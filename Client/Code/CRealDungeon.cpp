@@ -488,19 +488,42 @@ void CRealDungeon::Ready_Event()
 {
 	m_hmapSubHandles.insert({ L"Obj_Add", m_pMessageChannel->Subscribe(L"Obj.Add", [this](const IMessageChannel::EVENT& Event) {
 	{
-		CGameObject* pGObj = any_cast<CGameObject*>(Event.hmapData.find(L"Obj")->second);
+		CGameObject* pObj = any_cast<CGameObject*>(Event.hmapData.find(L"Obj")->second);
 
-		if (pGObj != nullptr)
+		if (pObj != nullptr)
 		{
 			wstring strLayerTag = any_cast<const _tchar*>(Event.hmapData.find(L"LayerTag")->second);
 			wstring strObjTag = any_cast<wstring>(Event.hmapData.find(L"ObjTag")->second);
 			auto iter = m_mapLayer.find(strLayerTag);
 
 			if (iter != m_mapLayer.end())
-				iter->second->Add_GameObject(strObjTag, pGObj);
+				iter->second->Add_GameObject(strObjTag, pObj);
+			else
+			{
+				CLayer* pLayer = CLayer::Create();
+
+				if (nullptr == pLayer)
+					return E_FAIL;
+
+				if (FAILED(pLayer->Add_GameObject(strObjTag, pObj)))
+					return E_FAIL;
+
+				m_mapLayer.insert({ strLayerTag , pLayer });
+			}
 		}
 	}
 	}) });
+
+	m_hmapSubHandles.insert({ L"Summon_Dead", m_pMessageChannel->Subscribe(L"Summon.Dead", [this](const IMessageChannel::EVENT& Event) {
+{
+	wstring strLayerTag = any_cast<const _tchar*>(Event.hmapData.find(L"LayerTag")->second);
+
+	auto iter = m_mapLayer.find(strLayerTag);
+
+	if (iter != m_mapLayer.end())
+		iter->second->Reset_Layer();
+}
+}) });
 
 	m_hmapSubHandles.insert({ L"Dialogue", m_pMessageChannel->Subscribe(L"CutScene.Dialogue", [this](const IMessageChannel::EVENT& Event)
 	{

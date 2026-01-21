@@ -75,8 +75,10 @@ void CLayer::LateUpdate_Layer(const _float& fTimeDelta)
 	}
 }
 
-
-
+void CLayer::Reset_Layer()
+{
+	Free();
+}
 
 CLayer* CLayer::Create()
 {
