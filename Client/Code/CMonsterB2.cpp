@@ -371,7 +371,7 @@ void CMonsterB2::Move_Frame(const _float& fTimeDelta)
 	if(m_eCurState == B2S_IDLE) m_fFrame += m_fFrameSpeed * fTimeDelta;
 	if (m_eCurState == B2S_SPAWN && m_fFrame > 42.f && m_fFrame < 43.f)
 	{
-		CSoundMgr::GetInstance()->Play(L"LeshyRoar.wav", SOUND_BOSS, 0.4f);
+		CSoundMgr::GetInstance()->Play(L"LeshyRoar.wav", SOUND_BOSS, 0.2f);
 	}
 
 	m_fAcmlTime += fTimeDelta;

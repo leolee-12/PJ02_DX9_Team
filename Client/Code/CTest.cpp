@@ -21,6 +21,7 @@
 #include "CMonster.h"
 #include "CTerrain.h"
 #include <CMonsterB1.h>
+#include "CTarotCard.h"
 
 CTest::CTest(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -51,52 +52,6 @@ HRESULT CTest::Ready_Scene()
 
 _int CTest::Update_Scene(const _float& fTimeDelta)
 {
-	if (CDInputMgr::GetInstance()->Key_Down(DIK_R))
-	{
-		IMessageChannel::EVENT event;
-		event.strType = L"Select";
-
-		m_pMessageChannel->Publish(event);
-
-		CSoundMgr::GetInstance()->Play(L"AAAK.wav", SOUND_EFFECT, 0.1f);
-	}
-	if (CDInputMgr::GetInstance()->Key_Down(DIK_U))
-	{
-		IMessageChannel::EVENT event;
-		event.strType = L"Choose";
-		event.hmapData.insert({ L"Look_Stage", CDungeonLine::DL_1 });
-
-		m_pMessageChannel->Publish(event);
-	}
-	if (CDInputMgr::GetInstance()->Key_Down(DIK_I))
-	{
-		IMessageChannel::EVENT event;
-		event.strType = L"Enter";
-		event.hmapData.insert({ L"Look_Stage", CDungeonLine::DL_1 });
-
-		m_pMessageChannel->Publish(event);
-	}
-
-	if (CDInputMgr::GetInstance()->Key_Down(DIK_RIGHT))
-	{
-		m_pTestGauge->Set_GaugeState(Gauge::GS_FAITH);
-		m_pTestGauge->Set_GaugeValue(0.f);
-	}
-	if (CDInputMgr::GetInstance()->Key_Down(DIK_LEFT))
-	{
-		m_pTestGauge->Set_GaugeState(Gauge::GS_PASSION);
-		m_pTestGauge->Set_GaugeValue(0.f);
-	}
-	if (CDInputMgr::GetInstance()->Key_Down(DIK_DOWN))
-	{
-		m_pTestGauge->Add_GaugeValue(-0.5f);
-	}
-	if (CDInputMgr::GetInstance()->Key_Down(DIK_UP))
-	{
-		m_pTestGauge->Add_GaugeValue(0.5f);
-	}
-
-
 
 	_int iExit = Engine::CScene::Update_Scene(fTimeDelta);
 
@@ -105,9 +60,7 @@ _int CTest::Update_Scene(const _float& fTimeDelta)
 
 void CTest::LateUpdate_Scene(const _float& fTimeDelta)
 {
-	CCollisionMgr::GetInstance()->Check_Collisions(fTimeDelta);
 	Engine::CScene::LateUpdate_Scene(fTimeDelta);
-	CCollisionMgr::GetInstance()->Check_Collisions(fTimeDelta);
 }
 
 void CTest::Render_Scene()
@@ -121,27 +74,6 @@ HRESULT CTest::Ready_Environment_Layer(const _tchar* pLayerTag)
 		return E_FAIL;
 
 	CGameObject* pGameObject = nullptr;
-
-	pGameObject = CSkyBox::Create(m_pGraphicDev);
-
-	if (nullptr == pGameObject)
-		return E_FAIL;
-
-	if (FAILED(pLayer->Add_GameObject(L"SkyBox", pGameObject)))
-		return E_FAIL;
-
-	_vec3   vEye{ 0.f, 10.f, -10.f };
-	_vec3   vAt{ 0.f, 0.f, 1.f };
-	_vec3   vUp{ 0.f, 1.f, 0.f };
-
-	// DynamicCamera
-	/*pGameObject = CDynamicCamera::Create(m_pGraphicDev, &vEye, &vAt, &vUp);
-
-	if (nullptr == pGameObject)
-		return E_FAIL;
-
-	if (FAILED(pLayer->Add_GameObject(L"DynamicCamera", pGameObject)))
-		return E_FAIL;*/
 
 	pGameObject = CMainCamera::Create(m_pGraphicDev, m_pMessageChannel);
 
@@ -166,15 +98,6 @@ HRESULT CTest::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 
 	CGameObject* pGameObject = nullptr;
 
-	// Terrain
-	pGameObject = CTerrain::Create(m_pGraphicDev);
-
-	if (nullptr == pGameObject)
-		return E_FAIL;
-
-	if (FAILED(pLayer->Add_GameObject(L"Terrain", pGameObject)))
-		return E_FAIL;
-
 	// Player
 	pGameObject = CPersistentMgr::GetInstance()->Get_Player();
 
@@ -187,17 +110,6 @@ HRESULT CTest::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 		return E_FAIL;
 
 	pGameObject->AddRef();
-
-	for (_uint i = 0; i < 20; ++i)
-	{
-		pGameObject = CItem::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ _float(rand() % 20), 1.1f, _float(rand() % 20) }, CItem::ITEMID(rand() % 6), true);
-
-		if (nullptr == pGameObject)
-			return E_FAIL;
-
-		if (FAILED(pLayer->Add_GameObject(L"Item", pGameObject)))
-			return E_FAIL;
-	}
 
 	m_mapLayer.insert({ pLayerTag , pLayer });
 
@@ -212,93 +124,31 @@ HRESULT CTest::Ready_UI_Layer(const _tchar* pLayerTag)
 
 	CGameObject* pGameObject = nullptr;
 
-	pGameObject = CDungeonBack::Create(m_pGraphicDev, m_pMessageChannel);
+	_float fHalfwincx = _float(WINCX / 2);
+	_float fHalfwincy = _float(WINCY / 2);
+
+	_vec3 vPos = { fHalfwincx - (fHalfwincx * 0.6f), fHalfwincy, 0.01f };
+
+	pGameObject = CTarotCard::Create(m_pGraphicDev, m_pMessageChannel, vPos, CTarotCard::TCT_HEART);
 
 	if (nullptr == pGameObject)
 		return E_FAIL;
 
-	if (FAILED(pLayer->Add_GameObject(L"SelectBack", pGameObject)))
+	if (FAILED(pLayer->Add_GameObject(L"TarotCard", pGameObject)))
 		return E_FAIL;
 
-	pGameObject = CDungeonIcon::Create(m_pGraphicDev, m_pMessageChannel, CDungeonIcon::DI_STAGE1);
+	vPos = { fHalfwincx + (fHalfwincx * 0.3f), fHalfwincy, 0.01f };
+
+	pGameObject = CTarotCard::Create(m_pGraphicDev, m_pMessageChannel, vPos, CTarotCard::TCT_SPEED);
 
 	if (nullptr == pGameObject)
 		return E_FAIL;
 
-	if (FAILED(pLayer->Add_GameObject(L"SelectIcon", pGameObject)))
+	if (FAILED(pLayer->Add_GameObject(L"TarotCard", pGameObject)))
 		return E_FAIL;
-
-	pGameObject = CDungeonIcon::Create(m_pGraphicDev, m_pMessageChannel, CDungeonIcon::DI_STAGE2);
-
-	if (nullptr == pGameObject)
-		return E_FAIL;
-
-	if (FAILED(pLayer->Add_GameObject(L"SelectIcon", pGameObject)))
-		return E_FAIL;
-
-	pGameObject = CDungeonIcon::Create(m_pGraphicDev, m_pMessageChannel, CDungeonIcon::DI_STAGE3);
-
-	if (nullptr == pGameObject)
-		return E_FAIL;
-
-	if (FAILED(pLayer->Add_GameObject(L"SelectIcon", pGameObject)))
-		return E_FAIL;
-
-	pGameObject = CDungeonLine::Create(m_pGraphicDev, m_pMessageChannel, CDungeonLine::DL_1);
-
-	if (nullptr == pGameObject)
-		return E_FAIL;
-
-	if (FAILED(pLayer->Add_GameObject(L"SelectLine", pGameObject)))
-		return E_FAIL;
-
-	pGameObject = CDungeonLine::Create(m_pGraphicDev, m_pMessageChannel, CDungeonLine::DL_2);
-
-	if (nullptr == pGameObject)
-		return E_FAIL;
-
-	if (FAILED(pLayer->Add_GameObject(L"SelectLine", pGameObject)))
-		return E_FAIL;
-
-	pGameObject = CPlayerHP::Create(m_pGraphicDev);
-
-	if (nullptr == pGameObject)
-		return E_FAIL;
-
-	if (FAILED(pLayer->Add_GameObject(L"PlayerHP", pGameObject)))
-		return E_FAIL;
-
-	pGameObject = m_pTestGauge = CGauge::Create(m_pGraphicDev, Gauge::GS_PASSION);
-
-	if (nullptr == pGameObject)
-		return E_FAIL;
-
-	if (FAILED(pLayer->Add_GameObject(L"Gauge", pGameObject)))
-		return E_FAIL;
-
-
 
 
 	m_mapLayer.insert({ pLayerTag , pLayer });
-
-	return S_OK;
-}
-
-HRESULT CTest::Ready_Const_Layer(CLayer* pConstLayer)
-{
-	if (nullptr == pConstLayer)
-		return E_FAIL;
-
-	auto [iter, inserted] = m_mapLayer.try_emplace(L"Const_Layer");
-
-	if (inserted)
-	{
-		iter->second = pConstLayer;
-		return S_OK;
-	}
-
-	Safe_Release(iter->second);
-	iter->second = pConstLayer;
 
 	return S_OK;
 }

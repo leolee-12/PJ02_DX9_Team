@@ -257,6 +257,24 @@ void CPlayer::Ready_Event()
 		}
 	}) });
 
+	m_hmapSubHandles.insert({ L"Tarot.Selected", m_pMessageChannel->Subscribe(L"Tarot.Selected", [this](const IMessageChannel::EVENT& Event)
+		{
+			auto TarotTypeiter = Event.hmapData.find(L"TarotType");
+			if (TarotTypeiter == Event.hmapData.end()) { return; }
+			_uint iTarotType = any_cast<_uint>(TarotTypeiter->second);
+
+			switch (iTarotType)
+			{
+			case 0:
+				m_iMaxHp += 2;
+				break;
+			case 1:
+				m_iAttack = _int(_float(m_iAttack) * 1.5f);
+				break;
+			}
+		}
+	) });
+
 	m_bMsgRegistered = true;
 }
 
@@ -449,20 +467,20 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 		m_fLerp = 0.2f;
 	}
 
-	if (GetAsyncKeyState(VK_LBUTTON) & 0x0001)	// 눌렀을 때 한 번만 true
-	{			
-		if ((m_iCombo == 3) || (m_fCharge)) return;
+	//if (GetAsyncKeyState(VK_LBUTTON) & 0x0001)	// 눌렀을 때 한 번만 true
+	//{			
+	//	if ((m_iCombo == 3) || (m_fCharge)) return;
 
-		m_iCombo++;
-		m_bRoll = false;
-		m_fFrame = 0.f;
-		m_eCurState = PS_ATTACK;
-		//m_pTransformCom->Move_Pos(&m_vDir, fTimeDelta, m_fSpeed * 3.f);
-		m_vLerpPos = m_vPos + m_vDir * 1.f;
-		m_fLerp = 0.2f;
-		CSoundMgr::GetInstance()->Play(L"Player_Attack.wav", SOUND_EFFECT, 0.4f);
-		Attack_HitBox();
-	}
+	//	m_iCombo++;
+	//	m_bRoll = false;
+	//	m_fFrame = 0.f;
+	//	m_eCurState = PS_ATTACK;
+	//	//m_pTransformCom->Move_Pos(&m_vDir, fTimeDelta, m_fSpeed * 3.f);
+	//	m_vLerpPos = m_vPos + m_vDir * 1.f;
+	//	m_fLerp = 0.2f;
+	//	CSoundMgr::GetInstance()->Play(L"Player_Attack.wav", SOUND_EFFECT, 0.4f);
+	//	Attack_HitBox();
+	//}
 
 	if (GetAsyncKeyState(VK_RBUTTON) & 0x0001)	// 눌렀을 때 한 번만 true
 	{

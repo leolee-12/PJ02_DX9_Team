@@ -445,6 +445,9 @@
     <Filter Include="02. GameObject\01. GameActor\01. Monster\Normal1">
       <UniqueIdentifier>{a8173e77-340e-468f-9aa7-00e8cd1ad765}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\05. UI\09. Tarot">
+      <UniqueIdentifier>{85d1e91e-3763-4c02-a31b-f5945d271759}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -939,6 +942,12 @@
     <ClInclude Include="..\Header\CInteractMgr.h">
       <Filter>03. Manager\03. InteractMgr</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CTarotCard.h">
+      <Filter>02. GameObject\05. UI\09. Tarot</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CTarotInfo.h">
+      <Filter>02. GameObject\05. UI\09. Tarot</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1393,6 +1402,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\CInteractMgr.cpp">
       <Filter>03. Manager\03. InteractMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CTarotCard.cpp">
+      <Filter>02. GameObject\05. UI\09. Tarot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CTarotInfo.cpp">
+      <Filter>02. GameObject\05. UI\09. Tarot</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

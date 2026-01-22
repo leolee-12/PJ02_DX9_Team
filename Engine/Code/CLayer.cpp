@@ -21,6 +21,11 @@ HRESULT CLayer::Add_GameObject(const wstring& pObjTag, CGameObject* pGameObject)
 	if (nullptr == pGameObject)
 		return E_FAIL;
 
+	if (pObjTag == L"Chest")
+	{
+		_vec3 test;
+	}
+
 	m_mapObject[pObjTag].push_back(pGameObject);
 
 	return S_OK;

@@ -97,6 +97,8 @@ HRESULT CVillage::Ready_Scene()
 
 	CEffectMgr::GetInstance()->Ready_EffectMgr(m_pGraphicDev);
 
+	CSoundMgr::GetInstance()->PlayBGM(L"02.Village.mp3", 0.1f);
+
 	return S_OK;
 }
 

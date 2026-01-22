@@ -9,6 +9,9 @@ namespace Engine
 	class CCollider;
 }
 
+class CSpeechBubble;
+class CFontUI;
+
 class CTarotSeller : public CGameObject
 {
 public:
@@ -32,6 +35,7 @@ private:
 
 	void				Ready_Variable();
 	void				Ready_Event();
+	HRESULT				Ready_Dialogue(const _vec3& vDialoguePos);
 
 	void				Check_Frame();
 	void				Move_Frame(const _float& fTimeDelta);
@@ -56,6 +60,9 @@ private:
 
 	// 스테이터스 관련
 	_float		m_fGroundY;
+
+	CSpeechBubble* m_pSpeechBubble;
+	CFontUI* m_pFontUI;
 
 
 public:
