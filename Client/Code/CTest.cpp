@@ -127,7 +127,7 @@ HRESULT CTest::Ready_UI_Layer(const _tchar* pLayerTag)
 	_float fHalfwincx = _float(WINCX / 2);
 	_float fHalfwincy = _float(WINCY / 2);
 
-	_vec3 vPos = { fHalfwincx - (fHalfwincx * 0.5f), fHalfwincy, 0.01f };
+	_vec3 vPos = { fHalfwincx - (fHalfwincx * 0.6f), fHalfwincy, 0.01f };
 
 	pGameObject = CTarotCard::Create(m_pGraphicDev, m_pMessageChannel, vPos, CTarotCard::TCT_HEART);
 
@@ -137,7 +137,7 @@ HRESULT CTest::Ready_UI_Layer(const _tchar* pLayerTag)
 	if (FAILED(pLayer->Add_GameObject(L"TarotCard", pGameObject)))
 		return E_FAIL;
 
-	vPos = { fHalfwincx + (fHalfwincx * 0.5f), fHalfwincy, 0.01f };
+	vPos = { fHalfwincx + (fHalfwincx * 0.3f), fHalfwincy, 0.01f };
 
 	pGameObject = CTarotCard::Create(m_pGraphicDev, m_pMessageChannel, vPos, CTarotCard::TCT_SPEED);
 

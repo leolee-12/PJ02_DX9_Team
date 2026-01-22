@@ -454,7 +454,7 @@ void CMonsterN2::Attacked(const _int& iAttack)
 
 	_tchar strSoundName[128] = L"";
 	swprintf_s(strSoundName, L"N2Hit%d.wav", Get_Rand_Int(1, 3));
-	CSoundMgr::GetInstance()->Play(strSoundName, SOUND_HIT, 0.35f);
+	CSoundMgr::GetInstance()->Play(strSoundName, SOUND_HIT, 0.2f);
 }
 
 void CMonsterN2::Update_State()

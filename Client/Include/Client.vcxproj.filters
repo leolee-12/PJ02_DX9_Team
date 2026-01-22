@@ -945,6 +945,9 @@
     <ClInclude Include="..\Header\CTarotCard.h">
       <Filter>02. GameObject\05. UI\09. Tarot</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CTarotInfo.h">
+      <Filter>02. GameObject\05. UI\09. Tarot</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1401,6 +1404,9 @@
       <Filter>03. Manager\03. InteractMgr</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CTarotCard.cpp">
+      <Filter>02. GameObject\05. UI\09. Tarot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CTarotInfo.cpp">
       <Filter>02. GameObject\05. UI\09. Tarot</Filter>
     </ClCompile>
   </ItemGroup>

@@ -8,6 +8,8 @@ namespace Engine
 	class CTexture;
 }
 
+class CTarotInfo;
+
 class CTarotCard : public CUi
 {
 public:
@@ -47,7 +49,8 @@ private:
 	Engine::CTransform* m_pTransformCom;
 	Engine::CTexture* m_pTextureCom;
 
-	_vec3				m_vPos;
+	
+	_vec3 m_vScreenPos;
 
 	// 스프라이트 관련
 	TAROTCARD_STATE	m_ePreState = TCS_END;
@@ -62,6 +65,8 @@ private:
 	_vec2		m_vHitHalfScale = { 100.f, 150.f };
 
 	_bool		m_bWait = false;
+
+	CTarotInfo* m_pTarotInfo = nullptr;
 
 
 public:

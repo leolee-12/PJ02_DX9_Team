@@ -9,6 +9,7 @@
 #include "CSpeechBubble.h"
 #include "CFontUI.h"
 #include "CSoundMgr.h"
+#include "CTarotInfo.h"
 
 CTarotCard::CTarotCard(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CUi(pGraphicDev),
@@ -56,6 +57,7 @@ _int CTarotCard::Update_GameObject(const _float& fTimeDelta)
 
 	Check_CusorColl();
 
+	m_pTarotInfo->Update_GameObject(fTimeDelta);
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
 	if (iExit == DEAD)
@@ -77,6 +79,7 @@ void CTarotCard::LateUpdate_GameObject(const _float& fTimeDelta)
 	m_pTransformCom->Get_Info(INFO_POS, &m_vPos);
 	Compute_ViewDepth_Ortho(&m_vPos);
 
+	m_pTarotInfo->LateUpdate_GameObject(fTimeDelta);
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
 }
 
@@ -131,6 +134,7 @@ HRESULT CTarotCard::Add_Component()
 void CTarotCard::Ready_Variable()
 {
 	_vec3 fScale = { 1000.f, 1000.f, 1.f };
+	m_vPos = { m_vScreenPos.x - _float(WINCX / 2), -m_vScreenPos.y + _float(WINCY / 2), m_vScreenPos.z };
 	// Transform 세팅
 	m_pTransformCom->Set_Pos(m_vPos.x, m_vPos.y, m_vPos.z);
 	m_pTransformCom->Set_Scale(fScale.x, fScale.y, fScale.z);
@@ -138,10 +142,21 @@ void CTarotCard::Ready_Variable()
 	// Anim 관련 세팅
 	m_fFrameSpeed = 24.f;
 	D3DXMatrixIdentity(&m_matTex);
+
+	_vec2 vInfoPos = { m_vPos.x + 200.f, m_vPos.y };
+	
+	m_pTarotInfo = CTarotInfo::Create(m_pGraphicDev, vInfoPos, _uint(m_eType));
+
+	NULL_CHECK_MSG(m_pTarotInfo, L"타로인포 생성 실패.");
 }
 
 void CTarotCard::Ready_Event()
 {
+	m_hmapSubHandles.insert({ L"Tarot.Selected", m_pMessageChannel->Subscribe(L"Tarot.Selected", [this](const IMessageChannel::EVENT& Event)
+		{
+			m_iHp = 0;
+		}
+	) });
 }
 
 void CTarotCard::Check_Frame()
@@ -163,6 +178,7 @@ void CTarotCard::Check_Frame()
 	{
 		m_fFrame = 33.f;
 		m_fFrameEnd = 34.f;
+		m_pTarotInfo->Active();
 	}
 	break;
 	}
@@ -249,21 +265,26 @@ void CTarotCard::Check_CusorColl()
 	const float fScreenCenterY = _float(WINCY / 2);
 
 	RECT tRc = {
-		_long(fScreenCenterX + m_vPos.x - m_vHitHalfScale.x),
-		_long(fScreenCenterY - m_vPos.y - m_vHitHalfScale.y),
-		_long(fScreenCenterX + m_vPos.x + m_vHitHalfScale.x),
-		_long(fScreenCenterY - m_vPos.y + m_vHitHalfScale.y)
+		_long(m_vScreenPos.x - m_vHitHalfScale.x),
+		_long(m_vScreenPos.y - m_vHitHalfScale.y),
+		_long(m_vScreenPos.x + m_vHitHalfScale.x),
+		_long(m_vScreenPos.y + m_vHitHalfScale.y)
 	};
 
 
 	if (PtInRect(&tRc, pt))
 	{
-		if (GetAsyncKeyState(VK_LBUTTON) & 0x0001)
+		if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
 		{
-			CSoundMgr::GetInstance()->Play(L"AAAK.wav", SOUND_BOSS, 0.2f);
+			IMessageChannel::EVENT TarotEvent;
+			TarotEvent.strType = L"Tarot.Selected";
+			TarotEvent.hmapData[L"TarotType"] = _uint(m_eType);
+			m_pMessageChannel->Publish(TarotEvent);
 		}
+		m_pTransformCom->Set_Scale(1100.f, 1100.f, 1.f);
 	}
 	else {
+		m_pTransformCom->Set_Scale(1000.f, 1000.f, 1.f);
 	}
 }
 
@@ -271,7 +292,7 @@ CTarotCard* CTarotCard::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* S
 {
 	CTarotCard* pTarotCard = new CTarotCard(pGraphicDev, StageChannel);
 
-	pTarotCard->m_vPos = { vPos.x - _float(WINCX / 2), -vPos.y + _float(WINCY / 2), vPos.z };
+	pTarotCard->m_vScreenPos = vPos;
 	pTarotCard->m_eType = eType;
 
 	if (FAILED(pTarotCard->Ready_GameObject()))
@@ -287,5 +308,6 @@ CTarotCard* CTarotCard::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* S
 
 void CTarotCard::Free()
 {
+	Safe_Release(m_pTarotInfo);
 	CGameObject::Free();
 }

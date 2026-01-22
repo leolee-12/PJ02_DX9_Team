@@ -257,6 +257,24 @@ void CPlayer::Ready_Event()
 		}
 	}) });
 
+	m_hmapSubHandles.insert({ L"Tarot.Selected", m_pMessageChannel->Subscribe(L"Tarot.Selected", [this](const IMessageChannel::EVENT& Event)
+		{
+			auto TarotTypeiter = Event.hmapData.find(L"TarotType");
+			if (TarotTypeiter == Event.hmapData.end()) { return; }
+			_uint iTarotType = any_cast<_uint>(TarotTypeiter->second);
+
+			switch (iTarotType)
+			{
+			case 0:
+				m_iMaxHp += 2;
+				break;
+			case 1:
+				m_iAttack = _int(_float(m_iAttack) * 1.5f);
+				break;
+			}
+		}
+	) });
+
 	m_bMsgRegistered = true;
 }
 
