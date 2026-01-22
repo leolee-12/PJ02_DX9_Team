@@ -31,7 +31,7 @@ public:
 	CComponent* Clone_Prototype(const wstring& pComponentTag);
 
 
-private:
+//private:
 	CComponent* Find_Prototype(const wstring& pComponentTag);
 
 private:

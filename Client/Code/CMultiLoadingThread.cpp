@@ -951,6 +951,14 @@ unsigned int CMultiLoadingThread::Thread_Main(void* pArg)
 			if (g_bDistroyWindowFlag) break;
 			if (!pOwner->m_pGraphicDev) break;
 
+			//CProtoMgr::GetInstance()->Ready_Prototype(Texrequest.strProtoName,
+			//	CTexture::CreateFromThread(pOwner->m_pGraphicDev, Texrequest.eTexType, Texrequest.strFilepath, Texrequest.iTexIndex));
+			if (CProtoMgr::GetInstance()->Find_Prototype(Texrequest.strProtoName))
+			{
+				pOwner->m_iCompletedCount++;
+				continue;
+			}
+
 			CProtoMgr::GetInstance()->Ready_Prototype(Texrequest.strProtoName,
 				CTexture::CreateFromThread(pOwner->m_pGraphicDev, Texrequest.eTexType, Texrequest.strFilepath, Texrequest.iTexIndex));
 
@@ -969,6 +977,14 @@ unsigned int CMultiLoadingThread::Thread_Main(void* pArg)
 
 			CProtoMgr::GetInstance()->Ready_Prototype(texsetinfo.strProtoName,
 				CTextureSet::CreateFromThered(pOwner->m_pGraphicDev, texsetinfo.eTexType, vecTexsetLR));
+
+			//if (CProtoMgr::GetInstance()->Find_Prototype(texsetinfo.strProtoName))
+			//{
+			//	pOwner->m_iCompletedCount++;
+			//	continue;
+			//}
+			//CProtoMgr::GetInstance()->Ready_Prototype(texsetinfo.strProtoName,
+			//	CTextureSet::CreateFromThered(pOwner->m_pGraphicDev, texsetinfo.eTexType, vecTexsetLR));
 
 			pOwner->m_iCompletedCount++;
 			bDidWork = true;
