@@ -119,6 +119,14 @@ void CMonsterN3::Render_GameObject()
 
 void CMonsterN3::OnCollision(CGameObject* pObject)
 {
+	if (pObject->Get_OBJID() == OID_PROJECTILE)
+	{
+		if (!pObject->Get_Hp()) return;
+
+		_int iDamage = _int(static_cast<CTransform*>(pObject->Get_Component(ID_DYNAMIC, L"Com_Transform"))->Get_Scale(ROT_X));
+		Attacked(iDamage);
+	}
+
 	if (pObject->Get_OBJID() == OID_BORDER)
 	{
 		_vec3 vCurPos;

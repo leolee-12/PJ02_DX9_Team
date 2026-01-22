@@ -133,6 +133,14 @@ void CMonsterB2::Render_GameObject()
 
 void CMonsterB2::OnCollision(CGameObject* pObject)
 {
+	if (pObject->Get_OBJID() == OID_PROJECTILE)
+	{
+		if (!pObject->Get_Hp()) return;
+
+		_int iDamage = _int(static_cast<CTransform*>(pObject->Get_Component(ID_DYNAMIC, L"Com_Transform"))->Get_Scale(ROT_X));
+		Attacked(iDamage);
+	}
+
 	if (pObject->Get_OBJID() == OID_BORDER)
 	{
 		_vec3 vCurPos;
@@ -234,7 +242,7 @@ void CMonsterB2::Ready_Variable()
 	m_fBtmPadding = fScale * 0.51f;
 	m_fGroundY = -2.5f + fScale * 0.5f - m_fBtmPadding;
 	m_iAttack = 1;
-	m_iMaxHp = m_iHp = 10;
+	m_iMaxHp = m_iHp = 30;
 	m_iPhase = 1;
 
 	// Transform 세팅
@@ -547,19 +555,6 @@ void CMonsterB2::Set_TextureSet()
 
 	m_fFrameEnd = m_pTexSetCom->Get_TextureEnd(m_strFrameKey);
 
-	//_vec3 vDir = *(m_pAICom->Get_Dir());		// AI로부터 받아온 방향
-	//_bool bFlipX = vDir.x > 0.f ? true : false;	// 반전 여부
-	//
-	//if (bFlipX)
-	//{
-	//	m_matTex._11 *= -1.f;
-	//	m_matTex._31 = 1.f;	// 반전 O : 오른쪽에서 왼쪽으로 읽음
-	//}
-	//
-	//m_pGraphicDev->SetTransform(D3DTS_TEXTURE0, &m_matTex);
-	//
-	//D3DXMatrixIdentity(&m_matTex);
-
 	m_pTexSetCom->Set_Texture(m_strFrameKey, _uint(m_fFrame));
 }
 
@@ -768,7 +763,7 @@ void CMonsterB2::Launch_Projectile(const _uint& iCount, const _vec3& vTargetDir)
 						fBaseYSpeed + fRandY,
 						vTargetDir.z * fBaseSpeed + fRandZ };
 
-		CGameObject* pProjectile = CProjectile::Create(m_pGraphicDev, vPos, vSpeed, true, CProjectile::PJTL_GREEN);
+		CGameObject* pProjectile = CProjectile::Create(m_pGraphicDev, vPos, vSpeed, true, CL_MBULLET, D3DXCOLOR(0.4f, 1.f, 0.6f, 1.f));
 
 		if (pProjectile)
 		{

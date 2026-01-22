@@ -13,9 +13,6 @@ class CTrailEffect;
 
 class CProjectile : public CGameObject
 {
-public:
-	enum PROJECTILE_COLOR { PJTL_GREEN, PJTL_RED };
-
 private:
 	explicit	CProjectile(LPDIRECT3DDEVICE9 pGraphicDev);
 	explicit	CProjectile(const CProjectile& rhs);
@@ -41,7 +38,8 @@ private:
 	void				Check_Frame();
 	void				Move_Frame(const _float& fTimeDelta);
 	void				Set_Texture();
-
+	void				Set_Material();
+	void				Reset_Material();
 private:
 	Engine::CRcTex*		m_pBufferCom;
 	Engine::CTransform*	m_pTransformCom;
@@ -66,9 +64,12 @@ private:
 	_float				m_fGravity;
 
 	CTrailEffect*		m_pTrailEffect;
+	D3DXCOLOR			m_tColor;
+	_bool				m_bMtrl = false;
+	COLGROUP			m_eColGroup;
 
 public:
-	static CProjectile* Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vPos, _vec3 vSpeed, _bool bUseGravity, PROJECTILE_COLOR eTrailColor);
+	static CProjectile* Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vPos, _vec3 vSpeed, _bool bUseGravity, COLGROUP eGroup, D3DXCOLOR tColor = D3DXCOLOR(0.f, 0.f, 0.f, 1.f));
 
 private:
 	virtual void		Free();

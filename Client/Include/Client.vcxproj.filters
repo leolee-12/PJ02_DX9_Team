@@ -64,9 +64,6 @@
     <Filter Include="02. GameObject\03. Dependent\01. Effect">
       <UniqueIdentifier>{37f31870-dba2-4668-ad76-b1d69d78c68f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\03. Dependent\01. Effect\0. SpriteEffect">
-      <UniqueIdentifier>{3f4f1d7c-f64c-48fb-b131-1abee5b964e4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObject\03. Dependent\01. Effect\2. TrailEffect">
       <UniqueIdentifier>{9d15df12-d4e7-4ce5-89ef-f636016da868}</UniqueIdentifier>
     </Filter>
@@ -444,6 +441,9 @@
     </Filter>
     <Filter Include="02. GameObject\01. GameActor\01. Monster\Normal1">
       <UniqueIdentifier>{a8173e77-340e-468f-9aa7-00e8cd1ad765}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\03. Dependent\01. Effect\0. SpriteEffect">
+      <UniqueIdentifier>{3f4f1d7c-f64c-48fb-b131-1abee5b964e4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

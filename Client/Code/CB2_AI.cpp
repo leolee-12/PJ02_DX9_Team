@@ -210,9 +210,7 @@ void CB2_AI::Generate_Pattern(CMonsterB2::MONSTER_B2_STATE eLastPattern, _bool b
 		for (auto& pattern : m_vecAtkPatterns)
 		{
 			if (pattern.bIsActive)
-			{
 				iTotalWeight += pattern.iWeight;
-			}
 		}
 	}
 	else
@@ -220,9 +218,7 @@ void CB2_AI::Generate_Pattern(CMonsterB2::MONSTER_B2_STATE eLastPattern, _bool b
 		for (auto& pattern : m_vecAtkPatterns)
 		{
 			if (pattern.bIsActive && (pattern.eType != eLastPattern))
-			{
 				iTotalWeight += pattern.iWeight;
-			}
 		}
 	}
 
@@ -238,6 +234,9 @@ void CB2_AI::Generate_Pattern(CMonsterB2::MONSTER_B2_STATE eLastPattern, _bool b
 	for (auto& pattern : m_vecAtkPatterns)
 	{
 		if (!pattern.bIsActive) continue;
+
+		if (!bAllowDuplicate && iPatternCnt > 1 && pattern.eType == eLastPattern)
+			continue;
 
 		iAccumulated += pattern.iWeight;
 

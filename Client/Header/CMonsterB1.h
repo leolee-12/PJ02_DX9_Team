@@ -32,6 +32,8 @@ public:
 	virtual void		Render_GameObject();
 	virtual void		OnCollision(CGameObject* pObject);
 
+	void				Attack_HitBox();
+	void				Attack_HitBox_Land();
 	void				Launch_Projectile(const _uint& iCount);
 	void				Summon_Minion(const _uint& iCount);
 
@@ -48,7 +50,6 @@ private:
 	void				Set_Material();
 	void				Reset_Material();
 
-	void				Attack_HitBox();
 	void				Attacked(const _int& iAttack);
 	void				Update_State();
 	_vec3				Compute_LimitedDir(const _float& fAngle, const _vec3& vCurDir, const _vec3& vDesiredDir);

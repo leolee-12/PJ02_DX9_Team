@@ -130,10 +130,10 @@ HRESULT CEffectMgr::Ready_EffectMgr(LPDIRECT3DDEVICE9 pGraphicDev)
 	if (trailPair.second)
 	{
 		CTrailEffect* pTrailEffect = CTrailEffect::Create(pGraphicDev, L"Proto_GreenTrailTexture");
-		pTrailEffect->Set_Color(D3DXCOLOR(0.0f, 1.f, 0.0f, 1.f));
+		pTrailEffect->Set_Color(D3DXCOLOR(1.0f, 1.f, 1.0f, 0.8f));
 		pTrailEffect->Set_HeadSize(0.5f);
-		pTrailEffect->Set_TailLength(2.f);
-		pTrailEffect->Set_Emissive(true);
+		pTrailEffect->Set_TailLength(1.5f);
+		pTrailEffect->Set_Emissive(false);
 		trailPair.first->second = pTrailEffect;
 	}
 

@@ -46,16 +46,16 @@ HRESULT CB1_AI::Ready_AI(const _float& fDetectRange, const _float& fInteractRang
 
 	// 공격 패턴 설정
 	m_iDequeMinSize = 3;
-	//m_vecAtkPatterns.push_back({ CMonsterB1::B1S_JUMP, 40, true });
-	//m_vecAtkPatterns.push_back({ CMonsterB1::B1S_PREPARE, 40, true });
+	m_vecAtkPatterns.push_back({ CMonsterB1::B1S_JUMP, 40, true });
+	m_vecAtkPatterns.push_back({ CMonsterB1::B1S_PREPARE, 40, true });
 	m_vecAtkPatterns.push_back({ CMonsterB1::B1S_SHOOT, 40, true });
-	//m_vecAtkPatterns.push_back({ CMonsterB1::B1S_SUMMON, 20, true });
+	m_vecAtkPatterns.push_back({ CMonsterB1::B1S_SUMMON, 20, true });
 
 	// 시연용 : 모든 패턴이 순차적으로 실행
-	//m_patternDeque.push_back(CMonsterB1::B1S_JUMP);
-	//m_patternDeque.push_back(CMonsterB1::B1S_PREPARE);
+	m_patternDeque.push_back(CMonsterB1::B1S_JUMP);
+	m_patternDeque.push_back(CMonsterB1::B1S_PREPARE);
 	m_patternDeque.push_back(CMonsterB1::B1S_SHOOT);
-	//m_patternDeque.push_back(CMonsterB1::B1S_SUMMON);
+	m_patternDeque.push_back(CMonsterB1::B1S_SUMMON);
 
 	// 게임용 : 가중치와 난수를 통해 패턴을 채워줌
 	Refill_Pattern(true);
@@ -92,6 +92,7 @@ void CB1_AI::Enter_State(const _uint& iState)
 	{
 		m_fAcmlTime = 0.f;
 		m_fSpeed = 1.f;
+		m_bOnce = true;
 	}
 	break;
 
@@ -115,12 +116,10 @@ void CB1_AI::Enter_State(const _uint& iState)
 
 	case CMonsterB1::B1S_SHOOT:
 		m_fAcmlTime = 0.f;
-		m_bOnce = true;
 		break;
 
 	case CMonsterB1::B1S_SUMMON:
 		m_fAcmlTime = 0.f;
-		m_bOnce = true;
 		break;
 
 	case CMonsterB1::B1S_ROAR:
@@ -202,9 +201,7 @@ void CB1_AI::Generate_Pattern(CMonsterB1::MONSTER_B1_STATE eLastPattern, _bool b
 		for (auto& pattern : m_vecAtkPatterns)
 		{
 			if (pattern.bIsActive)
-			{
 				iTotalWeight += pattern.iWeight;
-			}
 		}
 	}
 	else
@@ -212,9 +209,7 @@ void CB1_AI::Generate_Pattern(CMonsterB1::MONSTER_B1_STATE eLastPattern, _bool b
 		for (auto& pattern : m_vecAtkPatterns)
 		{
 			if (pattern.bIsActive && (pattern.eType != eLastPattern))
-			{
 				iTotalWeight += pattern.iWeight;
-			}
 		}
 	}
 
@@ -230,6 +225,9 @@ void CB1_AI::Generate_Pattern(CMonsterB1::MONSTER_B1_STATE eLastPattern, _bool b
 	for (auto& pattern : m_vecAtkPatterns)
 	{
 		if (!pattern.bIsActive) continue;
+
+		if (!bAllowDuplicate && iPatternCnt > 1 && pattern.eType == eLastPattern)
+			continue;
 
 		iAccumulated += pattern.iWeight;
 
@@ -357,6 +355,15 @@ void CB1_AI::Update_Jump(const _float& fTimeDelta)
 
 void CB1_AI::Update_Land(const _float& fTimeDelta)
 {
+	if (m_pOwner)
+	{
+		if (m_bOnce)
+		{
+			m_pOwner->Attack_HitBox_Land();
+			m_bOnce = false;
+		}
+	}
+
 	if (m_fAcmlTime < 0.2f)  // 0.2초 동안
 	{
 		_vec3 vPos;
@@ -382,6 +389,15 @@ void CB1_AI::Update_Prepare(const _float& fTimeDelta)
 
 void CB1_AI::Update_Attack(const _float& fTimeDelta)
 {
+	if (m_pOwner)
+	{
+		if (m_bOnce)
+		{
+			m_pOwner->Attack_HitBox();
+			m_bOnce = false;
+		}
+	}
+
 	_vec3 vPos;
 	m_pOwnerTC->Get_Info(INFO_POS, &vPos);
 	D3DXVec3Lerp(&vPos, &vPos, &m_vLerpPos, m_fSpeed);

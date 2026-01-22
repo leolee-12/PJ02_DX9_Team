@@ -44,11 +44,11 @@ _int CTrailEffect::Update_GameObject(const _float& fTimeDelta)
 {
 	if (m_eState != ES_PLAY && m_eState != ES_LOOP) return NOEVENT;
 
-	CGameObject::Update_GameObject(fTimeDelta);
+	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
-	CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHA, this);
+	//CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHA, this);
 
-	return NOEVENT;
+	return iExit;
 }
 
 void CTrailEffect::LateUpdate_GameObject(const _float& fTimeDelta)
@@ -204,4 +204,5 @@ CTrailEffect* CTrailEffect::Clone()
 
 void CTrailEffect::Free()
 {
+	CEffect::Free();
 }

@@ -276,7 +276,7 @@ void CMultiLoadingThread::Loading_for_Tutorial()
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_SmokeParticleTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/Smoke/dds/SmokeParticle_%d.dds", 3));
 	m_iTotalProtoCount++;
 
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_GreenTrailTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/Trail/dds/Gradation.dds", 1));
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_GreenTrailTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/Trail/dds/Gradation2.dds", 1));
 	m_iTotalProtoCount++;
 
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_ImpactTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/Impact/dds/Impact_%d.dds", 2));
@@ -332,7 +332,7 @@ void CMultiLoadingThread::Loading_for_Dungeon()
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_Follower3Texture", TEX_NORMAL, L"../Bin/Resource/LWY//NPC/Follower3(2)/dds/Follower3_%02d.dds", 14));
 	m_iTotalProtoCount++;
 
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_ProjectileTexture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/dds/Projectile.dds", 1));
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_ProjectileTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/Etc/dds/Projectile3.dds", 1));
 	m_iTotalProtoCount++;
 
 	//m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingBarkCover", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingMiniGame/dds/CookingBar_Border.dds", 1));
@@ -663,7 +663,7 @@ void CMultiLoadingThread::Loading_for_RealDungeon()
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_SpikeTexture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Spike/dds/Spike%d.dds", 4));
 	m_iTotalProtoCount++;
 
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_ProjectileTexture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/dds/Projectile.dds", 1));
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_ProjectileTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/Etc/dds/Projectile3.dds", 1));
 	m_iTotalProtoCount++;
 
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_B1Node1Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Boss1/dds/B1Node_00.dds", 1));
@@ -756,7 +756,7 @@ void CMultiLoadingThread::Loading_for_RealDungeon()
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_SmokeParticleTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/Smoke/dds/SmokeParticle_%d.dds", 3));
 	m_iTotalProtoCount++;
 
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_GreenTrailTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/Trail/dds/Gradation.dds", 1));
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_GreenTrailTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/Trail/dds/Gradation2.dds", 1));
 	m_iTotalProtoCount++;
 
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_ImpactTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/Impact/dds/Impact_%d.dds", 2));
