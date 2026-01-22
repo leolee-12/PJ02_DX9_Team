@@ -626,14 +626,6 @@ HRESULT CDungeon::Ready_UI_Layer(const _tchar* pLayerTag)
 	if (FAILED(pLayer->Add_GameObject(L"SelectLine", pGameObject)))
 		return E_FAIL;
 
-	pGameObject = CCookingUIController::Create(m_pGraphicDev, m_pMessageChannel);
-
-	if (nullptr == pGameObject)
-		return E_FAIL;
-
-	if (FAILED(pLayer->Add_GameObject(L"CookingUIController", pGameObject)))
-		return E_FAIL;
-
 	pGameObject = CFade::Create(m_pGraphicDev, m_pMessageChannel);
 
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);

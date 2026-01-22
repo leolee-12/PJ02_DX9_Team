@@ -191,17 +191,6 @@ void CChest::Ready_Variable()
 
 void CChest::Ready_Event()
 {
-	m_hmapSubHandles.insert({ L"CutScene.End", m_pMessageChannel->Subscribe(L"CutScene.End", [this](const IMessageChannel::EVENT& Event) {
-		wstring SceneName = any_cast<wstring>(Event.hmapData.find(L"SceneName")->second);
-	if (SceneName == L"Ratau_01")
-	{
-		m_iHp = 0;
-	}
-	if (SceneName == L"Ratau_00")
-	{
-		m_iHp = 0;
-	}
-	}) });
 }
 
 
