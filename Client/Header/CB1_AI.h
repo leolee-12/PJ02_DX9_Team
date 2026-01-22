@@ -21,8 +21,8 @@ protected:
 	HRESULT		Ready_AI(const _float& fDetectRange, const _float& fInteractRange, const _uint& iInitState);
 	void		Enter_State(const _uint& iState)	override;
 	void		Exit_State(const _uint& iState)		override;
-	void		Generate_Pattern(CMonsterB1::MONSTER_B1_STATE eState);
-	void		Refill_Pattern();
+	void		Generate_Pattern(CMonsterB1::MONSTER_B1_STATE eState, _bool bAllowDuplicate = false);
+	void		Refill_Pattern(_bool bAllowDuplicate = false);
 
 public:
 	void		Set_Owner(CMonsterB1* pOwner) { m_pOwner = pOwner; }

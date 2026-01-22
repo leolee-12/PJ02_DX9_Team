@@ -55,7 +55,7 @@ private:
 public:
 	static CTextureSet* Create(LPDIRECT3DDEVICE9 pGraphicDev, TEXTUREID eID, vector<TEXINFO>& vecTexInfo);
 	static CTextureSet* CreateFromMemory(LPDIRECT3DDEVICE9 pGraphicDev, TEXTUREID eID, const vector<TEXSETLR>& vecTexSetLR);
-	static CTextureSet* CreateFromThered(LPDIRECT3DDEVICE9 pGraphicDev, TEXTUREID eID, const vector<TEXSETLR>& vecTexSetLR);
+	static CTextureSet* CreateFromThread(LPDIRECT3DDEVICE9 pGraphicDev, TEXTUREID eID, const vector<TEXSETLR>& vecTexSetLR);
 	virtual CComponent* Clone();
 
 private:

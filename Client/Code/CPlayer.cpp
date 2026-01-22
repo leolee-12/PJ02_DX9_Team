@@ -8,7 +8,7 @@
 #include "CWarp.h"
 #include "CSceneWarp.h"
 #include "CTriggerPoint.h"
-#include "Engine_Struct.h"
+//#include "Engine_Struct.h"
 #include "CCollider.h"
 #include "CCutSceneMgr.h"
 #include "CSoundMgr.h"

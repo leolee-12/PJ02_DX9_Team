@@ -46,19 +46,19 @@ HRESULT CB1_AI::Ready_AI(const _float& fDetectRange, const _float& fInteractRang
 
 	// 공격 패턴 설정
 	m_iDequeMinSize = 3;
-	m_vecAtkPatterns.push_back({ CMonsterB1::B1S_JUMP, 40, true });
-	m_vecAtkPatterns.push_back({ CMonsterB1::B1S_PREPARE, 40, true });
+	//m_vecAtkPatterns.push_back({ CMonsterB1::B1S_JUMP, 40, true });
+	//m_vecAtkPatterns.push_back({ CMonsterB1::B1S_PREPARE, 40, true });
 	m_vecAtkPatterns.push_back({ CMonsterB1::B1S_SHOOT, 40, true });
-	m_vecAtkPatterns.push_back({ CMonsterB1::B1S_SUMMON, 20, true });
+	//m_vecAtkPatterns.push_back({ CMonsterB1::B1S_SUMMON, 20, true });
 
 	// 시연용 : 모든 패턴이 순차적으로 실행
-	m_patternDeque.push_back(CMonsterB1::B1S_JUMP);
-	m_patternDeque.push_back(CMonsterB1::B1S_PREPARE);
+	//m_patternDeque.push_back(CMonsterB1::B1S_JUMP);
+	//m_patternDeque.push_back(CMonsterB1::B1S_PREPARE);
 	m_patternDeque.push_back(CMonsterB1::B1S_SHOOT);
-	m_patternDeque.push_back(CMonsterB1::B1S_SUMMON);
+	//m_patternDeque.push_back(CMonsterB1::B1S_SUMMON);
 
 	// 게임용 : 가중치와 난수를 통해 패턴을 채워줌
-	Refill_Pattern();
+	Refill_Pattern(true);
 
 	return S_OK;
 }
@@ -185,16 +185,43 @@ void CB1_AI::Exit_State(const _uint& iState)
 	}
 }
 
-void CB1_AI::Generate_Pattern(CMonsterB1::MONSTER_B1_STATE eLastPattern)
+void CB1_AI::Generate_Pattern(CMonsterB1::MONSTER_B1_STATE eLastPattern, _bool bAllowDuplicate)
 {
+	size_t iPatternCnt = m_vecAtkPatterns.size();
+
+	if (iPatternCnt == 0)	// error : 등록된 공격 패턴이 없음
+	{
+		m_patternDeque.push_back(CMonsterB1::MONSTER_B1_STATE(0));
+		return;
+	}
+
 	_uint iTotalWeight(0);
 
-	for (auto& pattern : m_vecAtkPatterns)
+	if (bAllowDuplicate || iPatternCnt == 1)
 	{
-		if (pattern.bIsActive && (pattern.eType != eLastPattern))
+		for (auto& pattern : m_vecAtkPatterns)
 		{
-			iTotalWeight += pattern.iWeight;
+			if (pattern.bIsActive)
+			{
+				iTotalWeight += pattern.iWeight;
+			}
 		}
+	}
+	else
+	{
+		for (auto& pattern : m_vecAtkPatterns)
+		{
+			if (pattern.bIsActive && (pattern.eType != eLastPattern))
+			{
+				iTotalWeight += pattern.iWeight;
+			}
+		}
+	}
+
+	if (iTotalWeight == 0)	// error : 활성화된 공격 패턴이 없음
+	{
+		m_patternDeque.push_back(CMonsterB1::MONSTER_B1_STATE(0));
+		return;
 	}
 
 	_uint iRandom = Get_Rand_Int(1, iTotalWeight);
@@ -202,20 +229,23 @@ void CB1_AI::Generate_Pattern(CMonsterB1::MONSTER_B1_STATE eLastPattern)
 
 	for (auto& pattern : m_vecAtkPatterns)
 	{
-		if (!pattern.bIsActive || (pattern.eType == eLastPattern))
-			continue;
+		if (!pattern.bIsActive) continue;
 
 		iAccumulated += pattern.iWeight;
 
 		if (iRandom <= iAccumulated)
 		{
+			// 정상 생성
 			m_patternDeque.push_back(pattern.eType);
-			break;
+			return;
 		}
 	}
+
+	// error : 정상적으로 생성되지 않음
+	m_patternDeque.push_back(CMonsterB1::MONSTER_B1_STATE(0));
 }
 
-void CB1_AI::Refill_Pattern()
+void CB1_AI::Refill_Pattern(_bool bAllowDuplicate)
 {
 	while (m_patternDeque.size() < m_iDequeMinSize)
 	{
@@ -224,7 +254,7 @@ void CB1_AI::Refill_Pattern()
 		if (m_patternDeque.empty()) eLastState = CMonsterB1::B1S_SUMMON;
 		else						eLastState = m_patternDeque.back();
 
-		Generate_Pattern(eLastState);
+		Generate_Pattern(eLastState, bAllowDuplicate);
 	}
 }
 

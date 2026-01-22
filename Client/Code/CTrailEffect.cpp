@@ -26,6 +26,8 @@ _int CTrailEffect::Update_GameObject(const _float& fTimeDelta)
 {
 	if (m_eState != ES_PLAY && m_eState != ES_LOOP) return NOEVENT;
 
+	CGameObject::Update_GameObject(fTimeDelta);
+
 	CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHA, this);
 
 	return NOEVENT;
@@ -34,6 +36,9 @@ _int CTrailEffect::Update_GameObject(const _float& fTimeDelta)
 void CTrailEffect::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	Compute_TrailWorldMatrix();
+	Compute_ViewDepth(&m_vPos);
+
+	CGameObject::LateUpdate_GameObject(fTimeDelta);
 }
 
 void CTrailEffect::Render_GameObject()
@@ -160,9 +165,11 @@ void CTrailEffect::Compute_TrailWorldMatrix()
 	m_matTrailWorld = matScale * matRot * matTrans;
 }
 
-CTrailEffect* CTrailEffect::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+CTrailEffect* CTrailEffect::Create(LPDIRECT3DDEVICE9 pGraphicDev, const wstring& strProtoTexKey)
 {
 	CTrailEffect* pTrailEffect = new CTrailEffect(pGraphicDev);
+
+	pTrailEffect->m_strProtoTexKey = strProtoTexKey;
 
 	if (FAILED(pTrailEffect->Ready_GameObject()))
 	{
@@ -178,12 +185,19 @@ CTrailEffect* CTrailEffect::Clone()
 {
 	CTrailEffect* pTrailEffect = new CTrailEffect(*this);
 
-	if (FAILED(pTrailEffect->Ready_GameObject()))
+	if (FAILED(pTrailEffect->CEffect::Add_Component()))
 	{
 		Safe_Release(pTrailEffect);
 		MSG_BOX("pTrailEffect Clone Failed");
 		return nullptr;
 	}
+
+	// 런타임 값 초기화
+	pTrailEffect->m_eState = ES_READY;
+	pTrailEffect->m_fAccTime = 0.f;
+	pTrailEffect->m_fEmitAcc = 0.f;
+	pTrailEffect->m_vecParticles.clear();
+	pTrailEffect->m_pTransformCom->Set_Scale(m_vScale.x, m_vScale.y, m_vScale.z);
 
 	return pTrailEffect;
 }

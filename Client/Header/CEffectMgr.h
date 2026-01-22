@@ -30,6 +30,10 @@ public:
 		//,EK_DUST_LAND
 		//,EK_DUST_RUN
 
+		// Trail
+		, EK_TRAIL_GREEN
+		, EK_TRAIL_RED
+
 		// Screen
 		//,EK_MONO_BLACK
 		//,EK_MONO_WHITE
@@ -44,7 +48,7 @@ public:
 	_int			Update_Effect(const _float& fTimeDelta);
 	void			LateUpdate_Effect(const _float& fTimeDelta);
 
-	void			Create_Effect(	EFFECT_KEY eEffectKey, const _uint& iTexIdx, const _vec3& vPos,
+	CEffect*		Create_Effect(	EFFECT_KEY eEffectKey, const _uint& iTexIdx, const _vec3& vPos,
 									const _vec3& vOffset = _vec3(0.f, 0.f, 0.f), CGameObject * pOwner = nullptr);
 	void			Clear_Effect();
 	

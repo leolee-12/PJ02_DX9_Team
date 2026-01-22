@@ -125,6 +125,18 @@ HRESULT CEffectMgr::Ready_EffectMgr(LPDIRECT3DDEVICE9 pGraphicDev)
 	//pConc->Set_FadeTime(0.1f, 0.2f);  // fadeIn, fadeOut
 	//m_mapProtoEffect.emplace(EK_MONO_BLACK, pConc);
 
+	auto trailPair = m_mapProtoEffect.try_emplace(EK_TRAIL_GREEN, nullptr);	// pair<iter, bool>
+
+	if (trailPair.second)
+	{
+		CTrailEffect* pTrailEffect = CTrailEffect::Create(pGraphicDev, L"Proto_GreenTrailTexture");
+		pTrailEffect->Set_Color(D3DXCOLOR(0.0f, 1.f, 0.0f, 1.f));
+		pTrailEffect->Set_HeadSize(0.5f);
+		pTrailEffect->Set_TailLength(2.f);
+		pTrailEffect->Set_Emissive(true);
+		particlePair.first->second = pTrailEffect;
+	}
+
 	m_bReady = true;
 
 	return S_OK;
@@ -155,15 +167,15 @@ void CEffectMgr::LateUpdate_Effect(const _float& fTimeDelta)
 	}
 }
 
-void CEffectMgr::Create_Effect(	EFFECT_KEY eEffectKey, const _uint& iTexIdx, const _vec3& vPos,
-								const _vec3& vOffset, CGameObject* pOwner)
+CEffect* CEffectMgr::Create_Effect(	EFFECT_KEY eEffectKey, const _uint& iTexIdx, const _vec3& vPos,
+									const _vec3& vOffset, CGameObject* pOwner)
 {
 	auto iter = m_mapProtoEffect.find(eEffectKey);
 
 	if (iter == m_mapProtoEffect.end())
 	{
 		MSG_BOX("Effect Not Found");
-		return;
+		return nullptr;
 	}
 
 	CEffect* pEffect = dynamic_cast<CEffect*>(iter->second->Clone());
@@ -171,7 +183,7 @@ void CEffectMgr::Create_Effect(	EFFECT_KEY eEffectKey, const _uint& iTexIdx, con
 	if (!pEffect)
 	{
 		MSG_BOX("Effect Clone Failed");
-		return;
+		return nullptr;
 	}
 
 	pEffect->Set_TextureIndex(iTexIdx);
@@ -190,6 +202,8 @@ void CEffectMgr::Create_Effect(	EFFECT_KEY eEffectKey, const _uint& iTexIdx, con
 	pEffect->Play();
 
 	m_EffectList.push_back(pEffect);
+
+	return pEffect;
 }
 
 void CEffectMgr::Clear_Effect()

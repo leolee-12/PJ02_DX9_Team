@@ -55,7 +55,7 @@ private:
 	_matrix		m_matTrailWorld;
 
 public:
-	static		CTrailEffect* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	static		CTrailEffect* Create(LPDIRECT3DDEVICE9 pGraphicDev, const wstring& strProtoTexKey);
 	virtual		CTrailEffect* Clone();
 
 private:
