@@ -5,6 +5,8 @@
 #include "CRenderer.h"
 #include "CPersistentMgr.h"
 #include "CCollisionMgr.h"
+#include "CEffectMgr.h"
+#include "CTrailEffect.h"
 
 CProjectile::CProjectile(LPDIRECT3DDEVICE9 pGraphicDev)
 	:	CGameObject(pGraphicDev),
@@ -17,7 +19,8 @@ CProjectile::CProjectile(LPDIRECT3DDEVICE9 pGraphicDev)
 		m_fAcmlTime(0.f),
 		m_fLifeTime(0.f),
 		m_fGravity(0.f),
-		m_bUseGravity(false)
+		m_bUseGravity(false),
+		m_pTrailEffect(nullptr)
 {
 	ZeroMemory(&m_vPos, sizeof(_vec3));
 }
@@ -33,7 +36,8 @@ CProjectile::CProjectile(const CProjectile& rhs)
 		m_fAcmlTime(rhs.m_fAcmlTime),
 		m_fLifeTime(rhs.m_fLifeTime),
 		m_fGravity(rhs.m_fGravity),
-		m_bUseGravity(rhs.m_bUseGravity)
+		m_bUseGravity(rhs.m_bUseGravity),
+		m_pTrailEffect(nullptr)
 {
 }
 
@@ -82,6 +86,9 @@ _int CProjectile::Update_GameObject(const _float& fTimeDelta)
 		m_pColliderCom->UnregisterFromManager();
 		return iExit;
 	}
+
+	if (m_pTrailEffect)
+		m_pTrailEffect->Update_OwnerData(m_vPos, m_vSpeed);
 
 	CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHA, this);
 
@@ -170,6 +177,8 @@ void CProjectile::Ready_Variable()
 	// Transform 세팅
 	m_pTransformCom->Set_Pos(_float(rand() % 20), m_fGroundY, _float(rand() % 20));
 	m_pTransformCom->Set_Scale(fScale, fScale, fScale);
+	m_pTransformCom->Update_Component(0.f);
+	m_pTransformCom->Get_Info(INFO_POS, &m_vPos);
 
 	// Collider 세팅
 	m_pColliderCom->RegisterToManager(this, CL_MBULLET);
@@ -194,7 +203,7 @@ void CProjectile::Move_Frame(const _float& fTimeDelta)
 	}
 }
 
-CProjectile* CProjectile::Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vPos, _vec3 vSpeed, _bool bUseGravity)
+CProjectile* CProjectile::Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vPos, _vec3 vSpeed, _bool bUseGravity, PROJECTILE_COLOR eTrailColor)
 {
 	CProjectile* pProjectile = new CProjectile(pGraphicDev);
 
@@ -209,10 +218,27 @@ CProjectile* CProjectile::Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vPos, _vec
 	pProjectile->Set_vecSpeed(vSpeed);
 	pProjectile->Set_UseGravity(bUseGravity);
 
+	switch (eTrailColor)
+	{
+	case PJTL_GREEN:
+		pProjectile->m_pTrailEffect = static_cast<CTrailEffect*>(CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_TRAIL_GREEN, 0, vPos));
+		break;
+
+	case PJTL_RED:
+		pProjectile->m_pTrailEffect = static_cast<CTrailEffect*>(CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_TRAIL_RED, 0, vPos));
+		break;
+	}
+
 	return pProjectile;
 }
 
 void CProjectile::Free()
 {
+	if (m_pTrailEffect)
+	{
+		m_pTrailEffect->Set_Dead();  // CEffectMgr가 정리
+		m_pTrailEffect = nullptr;
+	}
+
 	CGameObject::Free();
 }

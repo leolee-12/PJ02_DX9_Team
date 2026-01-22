@@ -134,7 +134,7 @@ HRESULT CEffectMgr::Ready_EffectMgr(LPDIRECT3DDEVICE9 pGraphicDev)
 		pTrailEffect->Set_HeadSize(0.5f);
 		pTrailEffect->Set_TailLength(2.f);
 		pTrailEffect->Set_Emissive(true);
-		particlePair.first->second = pTrailEffect;
+		trailPair.first->second = pTrailEffect;
 	}
 
 	m_bReady = true;
@@ -172,7 +172,7 @@ CEffect* CEffectMgr::Create_Effect(	EFFECT_KEY eEffectKey, const _uint& iTexIdx,
 {
 	auto iter = m_mapProtoEffect.find(eEffectKey);
 
-	if (iter == m_mapProtoEffect.end())
+	if (iter == m_mapProtoEffect.end() || iter->second == nullptr)
 	{
 		MSG_BOX("Effect Not Found");
 		return nullptr;

@@ -768,7 +768,7 @@ void CMonsterB2::Launch_Projectile(const _uint& iCount, const _vec3& vTargetDir)
 						fBaseYSpeed + fRandY,
 						vTargetDir.z * fBaseSpeed + fRandZ };
 
-		CGameObject* pProjectile = CProjectile::Create(m_pGraphicDev, vPos, vSpeed, true);
+		CGameObject* pProjectile = CProjectile::Create(m_pGraphicDev, vPos, vSpeed, true, CProjectile::PJTL_GREEN);
 
 		if (pProjectile)
 		{

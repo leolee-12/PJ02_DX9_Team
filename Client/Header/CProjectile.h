@@ -1,4 +1,4 @@
-#pragma once
+Ôªø#pragma once
 #include "CMonster.h"
 
 namespace Engine
@@ -9,8 +9,13 @@ namespace Engine
 	class CCollider;
 }
 
+class CTrailEffect;
+
 class CProjectile : public CGameObject
 {
+public:
+	enum PROJECTILE_COLOR { PJTL_GREEN, PJTL_RED };
+
 private:
 	explicit	CProjectile(LPDIRECT3DDEVICE9 pGraphicDev);
 	explicit	CProjectile(const CProjectile& rhs);
@@ -50,7 +55,7 @@ private:
 	_float				m_fFrameSpeed;
 	_matrix				m_matTex;
 
-	// Ω∫≈◊¿Ã≈ÕΩ∫ ∞¸∑√
+	// Ïä§ÌÖåÏù¥ÌÑ∞Ïä§ Í¥ÄÎ†®
 	_int				m_iAttack;
 	_float				m_fGroundY;
 	_bool				m_bActive;
@@ -60,8 +65,10 @@ private:
 	_bool				m_bUseGravity;
 	_float				m_fGravity;
 
+	CTrailEffect*		m_pTrailEffect;
+
 public:
-	static CProjectile* Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vPos, _vec3 vSpeed, _bool bUseGravity);
+	static CProjectile* Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vPos, _vec3 vSpeed, _bool bUseGravity, PROJECTILE_COLOR eTrailColor);
 
 private:
 	virtual void		Free();

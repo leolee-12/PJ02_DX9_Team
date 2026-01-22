@@ -753,7 +753,7 @@ void CMonsterB1::Launch_Projectile(const _uint& iCount)
 	{
 		_vec3 vSpeed{ cosf(fRadian) * fProjectileSpeed, 0.f, sinf(fRadian) * fProjectileSpeed };
 
-		CGameObject* pProjectile = CProjectile::Create(m_pGraphicDev, vPos, vSpeed, false);
+		CGameObject* pProjectile = CProjectile::Create(m_pGraphicDev, vPos, vSpeed, false, CProjectile::PJTL_GREEN);
 
 		if (pProjectile)
 		{

@@ -756,6 +756,9 @@ void CMultiLoadingThread::Loading_for_RealDungeon()
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_SmokeParticleTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/Smoke/dds/SmokeParticle_%d.dds", 3));
 	m_iTotalProtoCount++;
 
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_GreenTrailTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/Trail/dds/Gradation.dds", 1));
+	m_iTotalProtoCount++;
+
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_ImpactTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/Impact/dds/Impact_%d.dds", 2));
 	m_iTotalProtoCount++;
 

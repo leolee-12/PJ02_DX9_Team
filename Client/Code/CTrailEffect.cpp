@@ -5,12 +5,25 @@
 
 CTrailEffect::CTrailEffect(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CEffect(pGraphicDev)
+	, m_fHeadSize(0.f)
+	, m_fTailLength(0.f)
+	, m_bScaleBySpeed(0.f)
+	, m_tColor(D3DXCOLOR(0.f, 0.f, 0.f, 0.f))
+	, m_bEmissive(false)
+
 {
+	D3DXMatrixIdentity(&m_matTrailWorld);
 }
 
 CTrailEffect::CTrailEffect(const CTrailEffect& rhs)
 	: CEffect(rhs)
+	, m_fHeadSize(rhs.m_fHeadSize)
+	, m_fTailLength(rhs.m_fTailLength)
+	, m_bScaleBySpeed(rhs.m_bScaleBySpeed)
+	, m_tColor(rhs.m_tColor)
+	, m_bEmissive(rhs.m_bEmissive)
 {
+	D3DXMatrixIdentity(&m_matTrailWorld);
 }
 
 CTrailEffect::~CTrailEffect()
@@ -19,6 +32,11 @@ CTrailEffect::~CTrailEffect()
 
 HRESULT	CTrailEffect::Ready_GameObject()
 {
+	FAILED_CHECK_RETURN(CEffect::Add_Component(), E_FAIL);
+
+	m_eType = EF_TRAIL;
+	m_eState = ES_READY;
+
 	return S_OK;
 }
 
@@ -111,23 +129,6 @@ void CTrailEffect::Reset()
 {
 }
 
-void CTrailEffect::Add_Point(const _vec3& vPoint)
-{
-	_vec3 vGap = vPoint - m_vLastPoint;
-
-	if (m_dequePoints.empty() || D3DXVec3Length(&vGap) >= m_fPointInterval)
-	{
-		m_dequePoints.push_back(vPoint);
-		m_vLastPoint = vPoint;
-
-		if (m_dequePoints.size() > m_iMaxPoints)
-		{
-			m_dequePoints.pop_front();
-		}
-	}
-
-}
-
 void CTrailEffect::Compute_TrailWorldMatrix()
 {
 	// 1. 속도 및 방향 추출
@@ -192,12 +193,11 @@ CTrailEffect* CTrailEffect::Clone()
 		return nullptr;
 	}
 
-	// 런타임 값 초기화
 	pTrailEffect->m_eState = ES_READY;
 	pTrailEffect->m_fAccTime = 0.f;
-	pTrailEffect->m_fEmitAcc = 0.f;
-	pTrailEffect->m_vecParticles.clear();
-	pTrailEffect->m_pTransformCom->Set_Scale(m_vScale.x, m_vScale.y, m_vScale.z);
+	pTrailEffect->m_vPos = _vec3(0.f, 0.f, 0.f);
+	pTrailEffect->m_vSpeed = _vec3(0.f, 0.f, 0.f);
+	D3DXMatrixIdentity(&pTrailEffect->m_matTrailWorld);
 
 	return pTrailEffect;
 }
