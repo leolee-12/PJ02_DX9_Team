@@ -784,15 +784,18 @@ void CMonsterB2::Summon_Minion(const _uint& iCount)
 {
 	if (iCount > 1000) return;
 
-	_float fRadian = 0.f;
+	_float fRadian1 = 0.f;
+	_float fRadian2 = D3DX_PI;
 	_float fGap = 2.f * D3DX_PI / iCount;
-	_float fRadius = 5.f;
+	_float fRadius = 7.f;
+	_vec3 vPos, vEffectPos;
+	CGameObject* pMonster = nullptr;
 
 	for (_uint i = 0; i < iCount; ++i)
 	{
-		_vec3 vPos{ m_vPos.x + fRadius * cosf(fRadian), -1.f, m_vPos.z + fRadius * sinf(fRadian) };
-		_vec3 vEffectPos{ m_vPos.x + fRadius * cosf(fRadian), 7.f, m_vPos.z + fRadius * sinf(fRadian) - 1.f };
-		CGameObject* pMonster = CMonsterN2::Create(m_pGraphicDev, m_pMessageChannel, vPos);
+		vPos = { m_vPos.x + fRadius * cosf(fRadian1), -1.f, m_vPos.z + fRadius * sinf(fRadian1) };
+		vEffectPos = { m_vPos.x + fRadius * cosf(fRadian1), 7.f, m_vPos.z + fRadius * sinf(fRadian1) - 1.f };
+		pMonster = CMonsterN2::Create(m_pGraphicDev, m_pMessageChannel, vPos);
 
 		if (pMonster)
 		{
@@ -810,7 +813,28 @@ void CMonsterB2::Summon_Minion(const _uint& iCount)
 			CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_ENEMYSPAWN, 2, vEffectPos);
 		}
 
-		fRadian += fGap;
+		vPos = { m_vPos.x + fRadius * cosf(fRadian2), -1.f, m_vPos.z + fRadius * sinf(fRadian2) };
+		vEffectPos = { m_vPos.x + fRadius * cosf(fRadian2), 7.f, m_vPos.z + fRadius * sinf(fRadian2) - 1.f };
+		pMonster = CMonsterN1::Create(m_pGraphicDev, m_pMessageChannel, vPos);
+
+		if (pMonster)
+		{
+			wstring strObjTag = L"SummonMonster";
+
+			IMessageChannel::EVENT ESummonMonster;
+			ESummonMonster.strType = L"Obj.Add";
+			ESummonMonster.eOBJID = Engine::OID_MONSTER;
+			ESummonMonster.hmapData.emplace(L"Obj", pMonster);
+			ESummonMonster.hmapData.emplace(L"LayerTag", L"Summon_Layer");
+			ESummonMonster.hmapData.emplace(L"ObjTag", strObjTag);
+			m_pMessageChannel->Publish(ESummonMonster);
+			CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_ENEMYSPAWN, 0, vEffectPos);
+			CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_ENEMYSPAWN, 1, vEffectPos);
+			CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_ENEMYSPAWN, 2, vEffectPos);
+		}
+
+		fRadian1 += fGap;
+		fRadian2 += fGap;
 	}
 }
 

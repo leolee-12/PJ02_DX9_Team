@@ -70,10 +70,6 @@ _int CProjectile::Update_GameObject(const _float& fTimeDelta)
 
 	Move_Frame(fTimeDelta);
 
-	m_pColliderCom->UpdateFromTransform(m_pTransformCom);
-	// 충돌체 디버그용
-	if (g_bDebug) m_pColliderCom->Update_AABBforRender();
-
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
 	if (m_fAcmlTime >= m_fLifeTime)
@@ -100,6 +96,8 @@ void CProjectile::LateUpdate_GameObject(const _float& fTimeDelta)
 	AABB tAABB = { m_vPos.x, m_vPos.y, m_vPos.z, fHalfScale, fHalfScale, fHalfScale };
 	m_pColliderCom->Set_AABB(tAABB);
 	m_pColliderCom->UpdateFromCustom(tAABB);
+
+	if (g_bDebug) m_pColliderCom->Update_AABBforRender();
 
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
 }

@@ -43,16 +43,16 @@ HRESULT CB2_AI::Ready_AI(const _float& fDetectRange, const _float& fInteractRang
 
 	// 공격 패턴 설정
 	m_iDequeMinSize = 3;
-	//m_vecAtkPatterns.push_back({ CMonsterB2::B2S_SMASH,	 2, true });
+	m_vecAtkPatterns.push_back({ CMonsterB2::B2S_SMASH,	 2, true });
 	m_vecAtkPatterns.push_back({ CMonsterB2::B2S_SHOOT,	 2, true });
-	//m_vecAtkPatterns.push_back({ CMonsterB2::B2S_SUMMON, 2, true });
-	//m_vecAtkPatterns.push_back({ CMonsterB2::B2S_SPIKE1, 0, false });
-	//m_vecAtkPatterns.push_back({ CMonsterB2::B2S_SPIKE2, 0, false });
+	m_vecAtkPatterns.push_back({ CMonsterB2::B2S_SUMMON, 2, true });
+	m_vecAtkPatterns.push_back({ CMonsterB2::B2S_SPIKE1, 0, false });
+	m_vecAtkPatterns.push_back({ CMonsterB2::B2S_SPIKE2, 0, false });
 
 	// 시연용 : 모든 패턴이 순차적으로 실행
-	//m_patternDeque.push_back(CMonsterB2::B2S_SMASH);
+	m_patternDeque.push_back(CMonsterB2::B2S_SMASH);
 	m_patternDeque.push_back(CMonsterB2::B2S_SHOOT);
-	//m_patternDeque.push_back(CMonsterB2::B2S_SUMMON);
+	m_patternDeque.push_back(CMonsterB2::B2S_SUMMON);
 
 	// 게임용 : 가중치와 난수를 통해 패턴을 채워줌
 	Refill_Pattern(true);
@@ -91,19 +91,13 @@ void CB2_AI::Enter_State(const _uint& iState)
 		break;
 
 	case CMonsterB2::B2S_SMASH:
-	{
-	}
-	break;
+		break;
 
 	case CMonsterB2::B2S_SHOOT:
-	{
-	}
-	break;
+		break;
 
 	case CMonsterB2::B2S_SUMMON:
-	{
-	}
-	break;
+		break;
 
 	case CMonsterB2::B2S_SPAWN:
 		break;
@@ -422,7 +416,7 @@ void CB2_AI::Update_Summon(const _float& fTimeDelta)
 	if (m_bOnce)
 	{
 		if (m_pOwner)
-			m_pOwner->Summon_Minion(7);
+			m_pOwner->Summon_Minion(3);
 
 		m_bOnce = false;
 	}

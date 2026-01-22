@@ -17,13 +17,6 @@
 #include "CMonster.h"
 #include "CProjectile.h"
 
-// 이펙트 테스트용
-int Test_a = 100;
-int Test_r = 100;
-int Test_g = 200;
-int Test_b = 100;
-bool Test_toggle = true;
-
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev),
 	m_ePreState(PS_END),
@@ -329,39 +322,12 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 
 			if (i == 8)
 			{
-				_vec3 vEffectPos{ m_vPos.x, + 3.f, m_vPos.z };
+				_vec3 vEffectPos{ m_vPos.x, 3.f, m_vPos.z };
 				CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_ENEMYSPAWN, 0, vEffectPos);
 			}
 			else		CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_HIT, i, m_vPos);
 		}
 	}
-
-
-	if (CDInputMgr::GetInstance()->Key_Down(DIK_NUMPAD0))
-	{
-		Test_toggle = !Test_toggle;
-	}
-	if (CDInputMgr::GetInstance()->Key_Down(DIK_NUMPAD1))
-	{
-		if (Test_toggle)	Test_a+=3;
-		else				Test_a-=3;
-	}
-	if (CDInputMgr::GetInstance()->Key_Down(DIK_NUMPAD2))
-	{
-		if (Test_toggle)	Test_r+=3;
-		else				Test_r-=3;
-	}
-	if (CDInputMgr::GetInstance()->Key_Down(DIK_NUMPAD3))
-	{
-		if (Test_toggle)	Test_g+=3;
-		else				Test_g-=3;
-	}
-	if (CDInputMgr::GetInstance()->Key_Down(DIK_NUMPAD4))
-	{
-		if (Test_toggle)	Test_b+=3;
-		else				Test_b-=3;
-	}
-
 
 	if (CDInputMgr::GetInstance()->Key_Down(DIK_Z))
 	{

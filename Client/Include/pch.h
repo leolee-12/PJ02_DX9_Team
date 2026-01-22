@@ -45,11 +45,6 @@ extern bool g_bDebug;
 extern bool g_bChangeScene;
 extern std::atomic<bool> g_bDistroyWindowFlag;
 
-extern int Test_a;
-extern int Test_r;
-extern int Test_g;
-extern int Test_b;
-
 using namespace std;
 
 #endif //PCH_H

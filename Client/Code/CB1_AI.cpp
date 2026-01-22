@@ -420,7 +420,7 @@ void CB1_AI::Update_Summon(const _float& fTimeDelta)
 	if (m_bOnce)
 	{
 		if (m_pOwner)
-			m_pOwner->Summon_Minion(7);
+			m_pOwner->Summon_Minion(5);
 
 		m_bOnce = false;
 	}
