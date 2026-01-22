@@ -217,6 +217,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\Header\CSpriteEffect.h" />
+    <ClInclude Include="..\Header\CTarotCard.h" />
     <ClInclude Include="..\Header\CTrailEffect.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClInclude>
@@ -449,6 +450,7 @@
     <ClCompile Include="..\Code\CSpike.cpp" />
     <ClCompile Include="..\Code\CSpriteEffect.cpp" />
     <ClCompile Include="..\Code\CStage.cpp" />
+    <ClCompile Include="..\Code\CTarotCard.cpp" />
     <ClCompile Include="..\Code\CTarotSeller.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>

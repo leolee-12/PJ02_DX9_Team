@@ -150,6 +150,9 @@ void CMultiLoadingThread::Loading_for_Test()
 {
 	m_iTotalProtoCount = 0;
 
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_TarotCard", TEX_NORMAL, L"../Bin/Resource/LWY/UI/dds/TarotCard_%d.dds", 2));
+	m_iTotalProtoCount++;
+
 	m_NonTexReadyQueue.push(&CMultiLoadingThread::NonTex_for_Test);
 	m_iTotalProtoCount++;
 }
