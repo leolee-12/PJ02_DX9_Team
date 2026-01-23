@@ -5,6 +5,8 @@ class CKBTab;
 class CKBDice;
 class CKBBoardBack;
 class CKBMask;
+class CKBCharPlayer;
+class CKBCharNPC;
 
 class CKnuckleBone : public CScene
 {
@@ -120,5 +122,8 @@ private:
 	// 최초 입장 딜레이
 	_float		m_fEnterDelay;
 	_bool       m_bEnterDone;
+
+	CKBCharPlayer* m_pCharPlayer = nullptr;
+	CKBCharNPC* m_pCharNPC = nullptr;
 };
 

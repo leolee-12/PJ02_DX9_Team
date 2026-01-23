@@ -198,6 +198,12 @@ void CMultiLoadingThread::Loading_for_KnuckleBone()
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_KBBack", TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/dds/DiceTubBG.dds", 1));
 	m_iTotalProtoCount++;
 
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_KBCharPlayer", TEX_NORMAL, L"../Bin/Resource/LWY/Player/Player_knucklebones/dds/Player_knucklebones_%d.dds", 8));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_KBCharNPC", TEX_NORMAL, L"../Bin/Resource/LWY/NPC/Ratau_knucklebones/dds/Ratau_knucklebones_%d.dds", 8));
+	m_iTotalProtoCount++;
+
 	//m_iTotalProtoCount = m_TexturLoadingqueue.unsafe_size();
 }
 

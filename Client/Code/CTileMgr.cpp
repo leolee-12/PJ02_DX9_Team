@@ -150,5 +150,17 @@ void CTileMgr::Free()
 	}
 	m_vecTiles.clear();
 
+	// 스택에 보관된 이전 씬 타일들도 정리
+	while (!m_stackState.empty())
+	{
+		TILE_STATE& tState = m_stackState.top();
+		for (auto& pTile : tState.vecTiles)
+		{
+			Safe_Release(pTile);
+		}
+		tState.vecTiles.clear();
+		m_stackState.pop();
+	}
+
 	Safe_Release(m_pGraphicDev);
 }
