@@ -31,12 +31,15 @@ public:
 		//,EK_DUST_RUN
 
 		// Trail
-		, EK_TRAIL_GREEN
-		, EK_TRAIL_RED
+		//, EK_TRAIL_GREEN
+		//, EK_TRAIL_RED
 
 		// Screen
 		//,EK_MONO_BLACK
 		//,EK_MONO_WHITE
+
+		// Indicator
+		, EK_INDICATOR_CIRCLE
 	};
 
 private:

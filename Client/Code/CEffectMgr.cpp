@@ -4,8 +4,9 @@
 #include "CTransform.h"
 #include "CSpriteEffect.h"
 #include "CParticleEffect.h"
-#include "CTrailEffect.h"
+//#include "CTrailEffect.h"
 #include "CScreenEffect.h"
+#include "CIndicator.h"
 
 IMPLEMENT_SINGLETON(CEffectMgr);
 
@@ -125,16 +126,25 @@ HRESULT CEffectMgr::Ready_EffectMgr(LPDIRECT3DDEVICE9 pGraphicDev)
 	//pConc->Set_FadeTime(0.1f, 0.2f);  // fadeIn, fadeOut
 	//m_mapProtoEffect.emplace(EK_MONO_BLACK, pConc);
 
-	auto trailPair = m_mapProtoEffect.try_emplace(EK_TRAIL_GREEN, nullptr);	// pair<iter, bool>
+	//auto trailPair = m_mapProtoEffect.try_emplace(EK_TRAIL_GREEN, nullptr);	// pair<iter, bool>
+	//
+	//if (trailPair.second)
+	//{
+	//	CTrailEffect* pTrailEffect = CTrailEffect::Create(pGraphicDev, L"Proto_GreenTrailTexture");
+	//	pTrailEffect->Set_Color(D3DXCOLOR(1.0f, 1.f, 1.0f, 0.8f));
+	//	pTrailEffect->Set_HeadSize(0.5f);
+	//	pTrailEffect->Set_TailLength(1.5f);
+	//	pTrailEffect->Set_Emissive(false);
+	//	trailPair.first->second = pTrailEffect;
+	//}
 
-	if (trailPair.second)
+	auto indicatorPair = m_mapProtoEffect.try_emplace(EK_INDICATOR_CIRCLE, nullptr);	// pair<iter, bool>
+
+	if (indicatorPair.second)
 	{
-		CTrailEffect* pTrailEffect = CTrailEffect::Create(pGraphicDev, L"Proto_GreenTrailTexture");
-		pTrailEffect->Set_Color(D3DXCOLOR(1.0f, 1.f, 1.0f, 0.8f));
-		pTrailEffect->Set_HeadSize(0.5f);
-		pTrailEffect->Set_TailLength(1.5f);
-		pTrailEffect->Set_Emissive(false);
-		trailPair.first->second = pTrailEffect;
+		CIndicator* pIndicator = CIndicator::Create(pGraphicDev, L"Proto_IndicatorTexture");
+		pIndicator->Set_Scale(_vec3(2.f, 2.f, 1.f));
+		indicatorPair.first->second = pIndicator;
 	}
 
 	m_bReady = true;

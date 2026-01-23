@@ -9,7 +9,8 @@ namespace Engine
 	class CCollider;
 }
 
-class CTrailEffect;
+//class CTrailEffect;
+class CIndicator;
 
 class CProjectile : public CGameObject
 {
@@ -63,7 +64,8 @@ private:
 	_bool				m_bUseGravity;
 	_float				m_fGravity;
 
-	CTrailEffect*		m_pTrailEffect;
+	//CTrailEffect*		m_pTrailEffect;
+	CIndicator*			m_pIndicator;
 	D3DXCOLOR			m_tColor;
 	_bool				m_bMtrl = false;
 	COLGROUP			m_eColGroup;

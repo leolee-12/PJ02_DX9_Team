@@ -6,36 +6,39 @@
 #include "CPersistentMgr.h"
 #include "CCollisionMgr.h"
 #include "CEffectMgr.h"
-#include "CTrailEffect.h"
+//#include "CTrailEffect.h"
+#include "CIndicator.h"
 
 CProjectile::CProjectile(LPDIRECT3DDEVICE9 pGraphicDev)
-	:	CGameObject(pGraphicDev),
-		m_fFrame(0.f),
-		m_fFrameEnd(0.f),
-		m_fFrameSpeed(0.f),
-		m_iAttack(0),
-		m_fGroundY(0.f),
-		m_fAcmlTime(0.f),
-		m_fLifeTime(0.f),
-		m_fGravity(0.f),
-		m_bUseGravity(false),
-		m_pTrailEffect(nullptr)
+	:	CGameObject(pGraphicDev)
+	, m_fFrame(0.f)
+	, m_fFrameEnd(0.f)
+	, m_fFrameSpeed(0.f)
+	, m_iAttack(0)
+	, m_fGroundY(0.f)
+	, m_fAcmlTime(0.f)
+	, m_fLifeTime(0.f)
+	, m_fGravity(0.f)
+	, m_bUseGravity(false)
+	//, m_pTrailEffect(nullptr)
+	, m_pIndicator(nullptr)
 {
 	ZeroMemory(&m_vPos, sizeof(_vec3));
 }
 
 CProjectile::CProjectile(const CProjectile& rhs)
-	:	CGameObject(rhs),
-		m_fFrame(0.f),
-		m_fFrameEnd(0.f),
-		m_fFrameSpeed(0.f),
-		m_iAttack(rhs.m_iAttack),
-		m_fGroundY(rhs.m_fGroundY),
-		m_fAcmlTime(rhs.m_fAcmlTime),
-		m_fLifeTime(rhs.m_fLifeTime),
-		m_fGravity(rhs.m_fGravity),
-		m_bUseGravity(rhs.m_bUseGravity),
-		m_pTrailEffect(nullptr)
+	: CGameObject(rhs)
+	, m_fFrame(0.f)
+	, m_fFrameEnd(0.f)
+	, m_fFrameSpeed(0.f)
+	, m_iAttack(rhs.m_iAttack)
+	, m_fGroundY(rhs.m_fGroundY)
+	, m_fAcmlTime(rhs.m_fAcmlTime)
+	, m_fLifeTime(rhs.m_fLifeTime)
+	, m_fGravity(rhs.m_fGravity)
+	, m_bUseGravity(rhs.m_bUseGravity)
+	//, m_pTrailEffect(nullptr)
+	, m_pIndicator(nullptr)
 {
 }
 
@@ -70,16 +73,25 @@ _int CProjectile::Update_GameObject(const _float& fTimeDelta)
 
 	Move_Frame(fTimeDelta);
 
+	if (m_pIndicator)
+		m_pIndicator->Update_OwnerData(m_vPos, m_vSpeed, m_fGravity, m_fGroundY);
+
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
-	if (m_fAcmlTime >= m_fLifeTime)
+	if ((iExit == DEAD) || (m_vPos.y <= -2.5f) || (m_fAcmlTime >= m_fLifeTime))
 	{
+		if (m_pIndicator)
+		{
+			m_pIndicator->Set_Dead();
+			m_pIndicator = nullptr;
+		}
+
 		m_pColliderCom->UnregisterFromManager();
 		return DEAD;
 	}
 
-	if (m_pTrailEffect)
-		m_pTrailEffect->Update_OwnerData(m_vPos, m_vSpeed);
+	//if (m_pTrailEffect)
+	//	m_pTrailEffect->Update_OwnerData(m_vPos, m_vSpeed);
 
 	CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHA, this);
 
@@ -92,7 +104,7 @@ void CProjectile::LateUpdate_GameObject(const _float& fTimeDelta)
 	m_pTransformCom->Get_Info(INFO_POS, &m_vPos);
 	Compute_ViewDepth(&m_vPos);
 
-	_float fHalfScale = m_pTransformCom->Get_Scale(ROT_X) * 0.4f;
+	_float fHalfScale = m_pTransformCom->Get_Scale(ROT_X) * 0.3f;
 	AABB tAABB = { m_vPos.x, m_vPos.y, m_vPos.z, fHalfScale, fHalfScale, fHalfScale };
 	m_pColliderCom->Set_AABB(tAABB);
 	m_pColliderCom->UpdateFromCustom(tAABB);
@@ -248,15 +260,27 @@ CProjectile* CProjectile::Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vPos, _vec
 	pProjectile->Set_UseGravity(bUseGravity);
 	pProjectile->m_tColor = tColor;
 
+	if (pProjectile->m_bUseGravity)
+	{
+		pProjectile->m_pIndicator = static_cast<CIndicator*>(CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_INDICATOR_CIRCLE, 0, _vec3{}));
+		pProjectile->m_pIndicator->Play();
+	}
+
 	return pProjectile;
 }
 
 void CProjectile::Free()
 {
-	if (m_pTrailEffect)
+	//if (m_pTrailEffect)
+	//{
+	//	m_pTrailEffect->Set_Dead();  // CEffectMgr가 정리
+	//	m_pTrailEffect = nullptr;
+	//}
+
+	if (m_pIndicator)
 	{
-		m_pTrailEffect->Set_Dead();  // CEffectMgr가 정리
-		m_pTrailEffect = nullptr;
+		m_pIndicator->Set_Dead();  // CEffectMgr가 정리
+		m_pIndicator = nullptr;
 	}
 
 	CGameObject::Free();
