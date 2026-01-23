@@ -14,7 +14,6 @@
 
 CResourceHistoryUI::CResourceHistoryUI(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CUi(pGraphicDev)
-	, m_bRender(true)
 {
 	ZeroMemory(&m_vPos, sizeof(_vec3));
 }
@@ -82,7 +81,7 @@ HRESULT CResourceHistoryUI::Ready_GameObject()
 	m_fLerpTime = 1.1f;
 	m_fDisplayTimeMax = 5.0f;
 	Reset_DisPlayTime();
-	m_bRender = true;
+	//m_bRender = true;
 	m_iTotalCount = 0;
 	m_bClosing = false;
 	m_EndLerpTime = 1.0f;
@@ -95,27 +94,16 @@ _int CResourceHistoryUI::Update_GameObject(const _float& fTimeDelta)
 {
 	if (!m_bRender) { return NOEVENT; }
 
-	m_pResourceHistoryBack->Update_GameObject(fTimeDelta);
-	m_pResourceHistoryDeco->Update_GameObject(fTimeDelta);
-	m_pResourceHistoryItem->Update_GameObject(fTimeDelta);
-	m_pTotalCountFont->Update_GameObject(fTimeDelta);
-	m_pNameFont->Update_GameObject(fTimeDelta);
-	m_pDeltaAmountFont->Update_GameObject(fTimeDelta);
-	CRenderer::GetInstance()->Add_RenderGroup(RENDER_UI, this);
-
-	return NOEVENT;
-}
-
-void CResourceHistoryUI::LateUpdate_GameObject(const _float& fTimeDelta)
-{
-	if (!m_bRender) { return; }
-
 	if (m_bClosing)
 	{
 		if (m_EndLerpTime <= 1.0f)
 		{
 			D3DXVec3Lerp(&m_vPos, &m_vStartLerpPos, &m_vEndLerpPos, m_EndLerpTime);
 			m_EndLerpTime += fTimeDelta;
+		}
+		else
+		{
+			m_bRender = false;
 		}
 	}
 	else
@@ -124,7 +112,7 @@ void CResourceHistoryUI::LateUpdate_GameObject(const _float& fTimeDelta)
 		{
 			m_fDisplayTime -= fTimeDelta;
 		}
-		else if(m_iOrder == 0 && m_fLerpTime >= 1.0f)
+		else if (m_iOrder == 0 && m_fLerpTime >= 1.0f)
 		{
 			IMessageChannel::EVENT tEvent;
 			tEvent.strType = L"ResourceHistory.Close";
@@ -154,12 +142,6 @@ void CResourceHistoryUI::LateUpdate_GameObject(const _float& fTimeDelta)
 	m_pResourceHistoryBack->Set_Pos(m_vPos);
 	m_pResourceHistoryDeco->Set_Pos(m_vPos);
 	m_pResourceHistoryItem->Set_Pos(m_vPos);
-	m_pResourceHistoryBack->LateUpdate_GameObject(fTimeDelta);
-	m_pResourceHistoryDeco->LateUpdate_GameObject(fTimeDelta);
-	m_pResourceHistoryItem->LateUpdate_GameObject(fTimeDelta);
-	m_pTotalCountFont->LateUpdate_GameObject(fTimeDelta);
-	m_pNameFont->LateUpdate_GameObject(fTimeDelta);
-	m_pDeltaAmountFont->LateUpdate_GameObject(fTimeDelta);
 
 	m_pTotalCountFont->Set_Pos(_vec2(m_vPos.x - WINCX / 2 + 100.0f, -m_vPos.y + WINCY / 2));
 	m_pNameFont->Set_Pos(_vec2(m_vPos.x - WINCX / 2 + 60.0f, -m_vPos.y + WINCY / 2));
@@ -176,15 +158,31 @@ void CResourceHistoryUI::LateUpdate_GameObject(const _float& fTimeDelta)
 	{
 		m_pDeltaAmountFont->Set_Text((L"-" + to_wstring(m_iDeltaAmount)).c_str());
 	}
+
+	m_pResourceHistoryBack->Update_GameObject(fTimeDelta);
+	m_pResourceHistoryDeco->Update_GameObject(fTimeDelta);
+	m_pResourceHistoryItem->Update_GameObject(fTimeDelta);
+	m_pTotalCountFont->Update_GameObject(fTimeDelta);
+	m_pNameFont->Update_GameObject(fTimeDelta);
+	m_pDeltaAmountFont->Update_GameObject(fTimeDelta);
+
+	return NOEVENT;
+}
+
+void CResourceHistoryUI::LateUpdate_GameObject(const _float& fTimeDelta)
+{
+	if (!m_bRender) { return; }
+
+	m_pResourceHistoryBack->LateUpdate_GameObject(fTimeDelta);
+	m_pResourceHistoryDeco->LateUpdate_GameObject(fTimeDelta);
+	m_pResourceHistoryItem->LateUpdate_GameObject(fTimeDelta);
+	m_pTotalCountFont->LateUpdate_GameObject(fTimeDelta);
+	m_pNameFont->LateUpdate_GameObject(fTimeDelta);
+	m_pDeltaAmountFont->LateUpdate_GameObject(fTimeDelta);
 }
 
 void CResourceHistoryUI::Render_GameObject()
 {
-	if (!m_bRender) { return; }
-
-	m_pDeltaAmountFont->Render_GameObject();
-	m_pNameFont->Render_GameObject();
-	m_pTotalCountFont->Render_GameObject();
 }
 
 void CResourceHistoryUI::OnCollision(CGameObject* pObject)

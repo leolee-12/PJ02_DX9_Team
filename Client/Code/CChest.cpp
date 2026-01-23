@@ -306,7 +306,7 @@ void CChest::Set_Texture()
 
 void CChest::Create_Item()
 {
-	for (_uint i = 0; i <= m_iItemCount; ++i)
+	for (_uint i = 0; i < m_iItemCount; ++i)
 	{
 		CGameObject* pItem;
 		_float fY(m_vPos.y - m_pTransformCom->Get_Scale(ROT_Y) * 0.25f);

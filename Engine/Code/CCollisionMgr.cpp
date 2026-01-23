@@ -86,7 +86,14 @@ void CCollisionMgr::RegisterCollider(CGameObject* pOwner, const AABB& aabb, COLG
 
 inline void CCollisionMgr::Reset_For_SceneChange()
 {
-	Free();
+	for (auto& pair : m_hmapCollisionGroup) {
+		for (auto& colinfo : pair.second) {
+			m_vecReleaseQueue.push_back(colinfo.pOwner);  
+			colinfo.pOwner = nullptr;					  
+		}												  
+		pair.second.clear();
+	}
+	m_hmapCollisionGroup.clear();
 }
 
 void CCollisionMgr::Push_State()
@@ -106,7 +113,14 @@ void CCollisionMgr::Pop_State()
 		return;
 
 	// 현재 상태 정리 (미니게임 콜라이더 등)
-	Free();
+	for (auto& pair : m_hmapCollisionGroup) {
+		for (auto& colinfo : pair.second) {
+			m_vecReleaseQueue.push_back(colinfo.pOwner);  
+			colinfo.pOwner = nullptr;					  
+		}												  
+		pair.second.clear();
+	}
+	m_hmapCollisionGroup.clear();
 
 	// 보관된 상태 복원
 	m_hmapCollisionGroup = m_stackState.top();
