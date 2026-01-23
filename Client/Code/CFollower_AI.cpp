@@ -55,6 +55,10 @@ void CFollower_AI::Enter_State(const _uint& iState)
 		m_fAcmlTime = 0.f;
 		break;
 
+	case CFollower::FOLLOWER_CHEER:
+		m_fAcmlTime = 0.f;
+		break;
+
 	case CFollower::FOLLOWER_TRANSFORM:
 		break;
 	case CFollower::FOLLOWER_UNCONVERT:
@@ -164,14 +168,33 @@ void CFollower_AI::Update_Run(const _float& fTimeDelta)
 	}
 	else if (m_fDistance <= m_fInteractRange)
 	{
-		Change_State(CFollower::FOLLOWER_ACTION);
-		return;
+		_vec3 vOwnerPos, vTargetPos;
+		m_pOwnerTC->Get_Info(INFO_POS, &vOwnerPos);
+		m_pTargetTC->Get_Info(INFO_POS, &vTargetPos);
+
+		if (vOwnerPos.z < vTargetPos.z)
+		{
+			Change_State(CFollower::FOLLOWER_ACTION);
+			return;
+		}
 	}
 
 	m_pOwnerTC->Move_Pos(&m_vDir, fTimeDelta, m_fSpeed);
 }
 
 void CFollower_AI::Update_Dance(const _float& fTimeDelta)
+{
+	if ((!m_bChase) || (m_pTargetTC == nullptr))
+	{
+		if (m_fAcmlTime >= AUTO_ESCAPE_STATE_TIME)
+		{
+			Change_State(CFollower::FOLLOWER_IDLE);
+			return;
+		}
+	}
+}
+
+void CFollower_AI::Update_Cheer(const _float& fTimeDelta)
 {
 }
 
@@ -206,6 +229,8 @@ void CFollower_AI::Anim_End(CFollower::FOLLOWER_STATE eState)
 	case CFollower::FOLLOWER_RUN:
 		break;
 	case CFollower::FOLLOWER_DANCE:
+		break;
+	case CFollower::FOLLOWER_CHEER:
 		break;
 	case CFollower::FOLLOWER_TRANSFORM:
 		break;

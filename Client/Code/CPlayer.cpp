@@ -473,6 +473,8 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 		m_fLerp = 0.2f;
 	}
 
+	if (m_bVillage) return;
+
 	//if (GetAsyncKeyState(VK_LBUTTON) & 0x0001)	// 눌렀을 때 한 번만 true
 	if (CDInputMgr::GetInstance()->Mouse_Down(DIM_LB))
 	{			
@@ -915,8 +917,11 @@ void CPlayer::Attack_HitBox()
 		_vec3 vEffectPos;
 		for (auto& pObj : tempVec)
 		{
-			static_cast<CMonster*>(pObj)->Get_EffectPos(&vEffectPos);
-			CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_HIT, m_iCombo, vEffectPos, _vec3(0.2f, 0.2f, 0.f));
+			if (pObj->Get_OBJID() == OID_MONSTER)
+			{
+				static_cast<CMonster*>(pObj)->Get_EffectPos(&vEffectPos);
+				CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_HIT, m_iCombo, vEffectPos, _vec3(0.2f, 0.2f, 0.f));
+			}
 		}
 	}
 }

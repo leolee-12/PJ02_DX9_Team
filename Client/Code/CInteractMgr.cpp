@@ -96,6 +96,14 @@ _bool CInteractMgr::Apply_Work(INTERACT_TYPE eType, const _vec3& vPos, const flo
 
 	IInteractable* pIObj = dynamic_cast<IInteractable*>(pTarget);
 
+	_float fDist;
+	_vec3 vTargetPos;
+	static_cast<CTransform*>(pTarget->Get_Component(ID_DYNAMIC, L"Com_Transform"))->Get_Info(INFO_POS, &vTargetPos);
+	vTargetPos -= vPos;
+	fDist = D3DXVec3Length(&vTargetPos);
+
+	if (fDist > 1.f) return false;
+
 	if (pIObj)
 	{
 		pIObj->Add_WorkGauge(fWork);

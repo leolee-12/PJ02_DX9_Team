@@ -81,6 +81,7 @@ _int CFollower::Update_GameObject(const _float& fTimeDelta)
 
 void CFollower::LateUpdate_GameObject(const _float& fTimeDelta)
 {
+
 	Update_State();
 	Check_Frame();
 	Check_Work();
@@ -88,7 +89,7 @@ void CFollower::LateUpdate_GameObject(const _float& fTimeDelta)
 	m_pTransformCom->Compute_Bilboard(BBD_X);
 	m_pTransformCom->Get_Info(INFO_POS, &m_vPos);
 	Compute_ViewDepth(&m_vPos);
-
+		
 	m_pColliderCom->UpdateFromTransform(m_pTransformCom);
 	// 충돌체 디버그용
 	if (g_bDebug) m_pColliderCom->Update_AABBforRender();
@@ -209,10 +210,10 @@ void CFollower::Ready_Variable()
 {
 	// 게임로직 변수 세팅
 	_float fScale = 9.f;
-	m_fGroundY = -2.5f + fScale * 0.5f - 1.8f;
+	m_fGroundY = -2.5f + fScale * 0.5f - 1.5f;
 	m_iHp = 10;
 	m_eCurState = FOLLOWER_RECRUIT;
-	m_eCurWork = FOLLOWER_WORK(Get_Rand_Int(1, 2));
+	m_eCurWork = FOLLOWER_WORK(Get_Rand_Int(1, 5));
 	m_fWorkSpeed = FW_DEFAULT_WORK_SPEED + Get_Rand_Float(-0.002f, 0.002f);
 
 	// Transform 세팅
@@ -251,6 +252,7 @@ void CFollower::Check_Frame()
 	{
 	case FOLLOWER_IDLE:
 		m_fFrameEnd = 24.f;
+		m_eCurWork = FOLLOWER_WORK(Get_Rand_Int(0, 5));
 		break;
 
 	case FOLLOWER_RUN:
@@ -259,6 +261,10 @@ void CFollower::Check_Frame()
 
 	case FOLLOWER_DANCE:
 		m_fFrameEnd = 47.f;
+		break;
+
+	case FOLLOWER_CHEER:
+		m_fFrameEnd = 48.f;
 		break;
 
 	case FOLLOWER_TRANSFORM:
@@ -340,13 +346,6 @@ void CFollower::Move_Frame(const _float& fTimeDelta)
 				m_eCurState = FOLLOWER_IDLE;
 			}
 		}
-		else if (m_eCurState == FOLLOWER_IDLE || m_eCurState == FOLLOWER_DANCE)
-		{
-			if (m_eCurWork != FW_NONE)
-			{
-				m_ePreWork = FW_NONE;
-			}
-		}
 	}
 }
 
@@ -374,6 +373,9 @@ void CFollower::Set_Texture()
 	case FOLLOWER_DANCE:
 		break;
 
+	case FOLLOWER_CHEER:
+		break;
+
 	case FOLLOWER_TRANSFORM:
 		break;
 
@@ -391,19 +393,19 @@ void CFollower::Set_Texture()
 			iTexIdx = 0;
 			break;
 		case FW_WOOD:
-			iTexIdx = 6;
-			break;
-		case FW_ROCK:
 			iTexIdx = 7;
 			break;
-		case FW_BUILD:
+		case FW_ROCK:
 			iTexIdx = 8;
 			break;
-		case FW_EAT:
+		case FW_BUILD:
 			iTexIdx = 9;
 			break;
-		case FW_PRAY:
+		case FW_EAT:
 			iTexIdx = 10;
+			break;
+		case FW_PRAY:
+			iTexIdx = 11;
 			break;
 		}
 	}
@@ -414,13 +416,13 @@ void CFollower::Set_Texture()
 		switch (m_iRecruitState)
 		{
 		case 0:	// START
-			iTexIdx = 11;
-			break;
-		case 1:	// LOOP
 			iTexIdx = 12;
 			break;
-		case 2:	// END
+		case 1:	// LOOP
 			iTexIdx = 13;
+			break;
+		case 2:	// END
+			iTexIdx = 14;
 			break;
 		}
 	}
@@ -492,16 +494,34 @@ void CFollower::Execute_Work(const _float& fTimeDelta)
 {
 	if (m_eCurState != FOLLOWER_ACTION) return;
 
-	CGameObject* pTarget = CInteractMgr::GetInstance()->Find_Nearest(CInteractMgr::INTERACT_TYPE(m_eCurWork), m_vPos);
+	if (!m_bWorking)	// 작업 중이 아님 : 현재 위치 기준으로 대상 탐색 및 위치 저장
+	{
+		CGameObject* pTarget = CInteractMgr::GetInstance()->Find_Nearest(CInteractMgr::INTERACT_TYPE(m_eCurWork), m_vPos);
 
-	if (pTarget)	m_pAICom->Set_TargetTransform(static_cast<CTransform*>(pTarget->Get_Component(ID_DYNAMIC, L"Com_Transform")));
-	else			m_pAICom->Set_TargetTransform(nullptr);
+		if (pTarget)	// 타겟 존재 시 : 타겟 위치 저장 및 AI에 정보 전달, 작업 중으로 전환
+		{
+			CTransform* pTargetTC = static_cast<CTransform*>(pTarget->Get_Component(ID_DYNAMIC, L"Com_Transform"));
+			m_pAICom->Set_TargetTransform(pTargetTC);
+			pTargetTC->Get_Info(INFO_POS, &m_vWorkPos);
+			m_bWorking = true;
+		}
+		else			// 타겟 존재 X : IDLE 상태로 전환
+		{
+			m_pAICom->Set_TargetTransform(nullptr);
+			m_pAICom->Anim_End(m_eCurState);
+			m_eCurState = FOLLOWER_IDLE;
+			return;
+		}
+		
+	}
 
+	// 작업 위치 기준으로 대상 탐색
 	if (!CInteractMgr::GetInstance()->Apply_Work(	CInteractMgr::INTERACT_TYPE(m_eCurWork),
-													m_vPos,
+													m_vWorkPos,
 													m_fWorkSpeed * fTimeDelta))
 	{
-		m_pAICom->Anim_End(m_eCurState);
+		m_bWorking = false;	// 작업량 반영에 실패 시 작업이 끝난 것 : 작업에서 벗어남
+ 		m_pAICom->Anim_End(m_eCurState);
 		m_eCurState = FOLLOWER_IDLE;
 	}
 }

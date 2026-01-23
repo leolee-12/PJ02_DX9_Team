@@ -341,7 +341,7 @@ void CMultiLoadingThread::Loading_for_Dungeon()
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_N2Node3Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Normal2/dds/N2Node_02.dds", 1));
 	m_iTotalProtoCount++;
 
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_Follower3Texture", TEX_NORMAL, L"../Bin/Resource/LWY//NPC/Follower3(2)/dds/Follower3_%02d.dds", 14));
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_Follower3Texture", TEX_NORMAL, L"../Bin/Resource/LWY//NPC/Follower3(3)/dds/Follower3_%02d.dds", 15));
 	m_iTotalProtoCount++;
 
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_ProjectileTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/Etc/dds/Projectile3.dds", 1));
@@ -517,16 +517,19 @@ void CMultiLoadingThread::Loading_for_Village()
 	m_NonTexReadyQueue.push(&CMultiLoadingThread::NonTex_for_Village);
 	m_iTotalProtoCount++;
 
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_Follower1Texture", TEX_NORMAL, L"../Bin/Resource/LWY//NPC/Follower1(2)/dds/Follower1_%02d.dds", 14));
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_Follower1Texture", TEX_NORMAL, L"../Bin/Resource/LWY//NPC/Follower1(3)/dds/Follower1_%02d.dds", 15));
 	m_iTotalProtoCount++;
 
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_Follower2Texture", TEX_NORMAL, L"../Bin/Resource/LWY//NPC/Follower2(2)/dds/Follower2_%02d.dds", 14));
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_Follower2Texture", TEX_NORMAL, L"../Bin/Resource/LWY//NPC/Follower2(3)/dds/Follower2_%02d.dds", 15));
 	m_iTotalProtoCount++;
 
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_Follower3Texture", TEX_NORMAL, L"../Bin/Resource/LWY//NPC/Follower3(2)/dds/Follower3_%02d.dds", 14));
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_Follower3Texture", TEX_NORMAL, L"../Bin/Resource/LWY//NPC/Follower3(3)/dds/Follower3_%02d.dds", 15));
 	m_iTotalProtoCount++;
 
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_Follower4Texture", TEX_NORMAL, L"../Bin/Resource/LWY//NPC/Follower4/dds/Follower4_%02d.dds", 14));
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_Follower4Texture", TEX_NORMAL, L"../Bin/Resource/LWY//NPC/Follower4(3)/dds/Follower4_%02d.dds", 15));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_Follower5Texture", TEX_NORMAL, L"../Bin/Resource/LWY//NPC/Follower5(3)/dds/Follower5_%02d.dds", 15));
 	m_iTotalProtoCount++;
 
 	// 디버그용 바로진입 프로토타입
@@ -585,6 +588,14 @@ void CMultiLoadingThread::Loading_for_Village()
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_FireTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Maps/Fire/dds/Fire_%d.dds", 3));
 	m_iTotalProtoCount++;
 	// Building
+
+	// WYWYWY
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_MonsterHpCover", TEX_NORMAL, L"../Bin/Resource/YSH/UI/HpBarCover.png", 1));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_ResourceWorkFront", TEX_NORMAL, L"../Bin/Resource/LWY/UI/dds/WorkBarGreen.dds", 1));
+	m_iTotalProtoCount++;
+	// WYWYWY
 
 	// cookingUI
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingBarkCover", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingMiniGame/dds/CookingBar_Border.dds", 1));

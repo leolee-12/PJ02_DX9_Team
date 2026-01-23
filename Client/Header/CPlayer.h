@@ -36,6 +36,7 @@ public:
 	void			Set_Reborn();
 
 	void			Set_Action(_bool b) { m_bAction = b; }
+	void			Set_Village(_bool b) { m_bVillage = b; }
 
 	_int			Get_MaxHp() { return m_iMaxHp; }
 	_int			Get_Hp() { return m_iHp; }
@@ -109,6 +110,7 @@ private:
 	_int			m_iCombo;	// 공격 중인지? + 몇번째 콤보상태인지?
 	_bool			m_bAction;	// Action 중인지?
 	_float			m_fAcmlTime;
+	_bool			m_bVillage = false;
 	// 윤석현추가
 	_int			m_iMaxHp = 8;
 
