@@ -433,6 +433,21 @@
     <Filter Include="02. GameObject\01. GameActor\01. Monster\Normal1">
       <UniqueIdentifier>{a8173e77-340e-468f-9aa7-00e8cd1ad765}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\05. UI\09. ResourceHistoryUI">
+      <UniqueIdentifier>{870c7453-09cd-461b-8097-b4fcefebda6a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. UI\09. ResourceHistoryUI\00.ResourceHistoryBack">
+      <UniqueIdentifier>{dca744d9-8634-4551-af1c-220367fd32f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. UI\09. ResourceHistoryUI\01.ResourceHistoryDeco">
+      <UniqueIdentifier>{66b409fb-4d2a-49ff-b16c-75325a6fda6a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. UI\09. ResourceHistoryUI\02.ResourceHistoryItem">
+      <UniqueIdentifier>{9d1274ce-1cb6-4e06-b3e4-0f77fcead7b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. UI\09. ResourceHistoryUI\03.ResourceHistoryUI">
+      <UniqueIdentifier>{0b1b14e0-15ae-4265-8c11-b8d41f01eb2a}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02. GameObject\03. Dependent\01. Effect\04. Indicator">
       <UniqueIdentifier>{23008366-1cd3-4c07-b08f-5a32d0b7d5e3}</UniqueIdentifier>
     </Filter>
@@ -954,6 +969,24 @@
     <ClInclude Include="..\Header\CInteractMgr.h">
       <Filter>03. Manager\03. InteractMgr</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CResourceHistoryBack.h">
+      <Filter>02. GameObject\05. UI\09. ResourceHistoryUI\00.ResourceHistoryBack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CResourceHistoryDeco.h">
+      <Filter>02. GameObject\05. UI\09. ResourceHistoryUI\01.ResourceHistoryDeco</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\CResourceHistoryItem.h">
+      <Filter>02. GameObject\05. UI\09. ResourceHistoryUI\02.ResourceHistoryItem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CResourceHistoryUI.h">
+      <Filter>02. GameObject\05. UI\09. ResourceHistoryUI\03.ResourceHistoryUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CResourceHistoryController.h">
+      <Filter>02. GameObject\05. UI\09. ResourceHistoryUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CResourceHistoryEnum.h">
+      <Filter>02. GameObject\05. UI\09. ResourceHistoryUI</Filter>
+    </ClInclude>
     <ClInclude Include="..\Header\CIndicator.h">
       <Filter>02. GameObject\03. Dependent\01. Effect\04. Indicator</Filter>
     </ClInclude>
@@ -1423,6 +1456,21 @@
     </ClCompile>
     <ClCompile Include="..\Code\CInteractMgr.cpp">
       <Filter>03. Manager\03. InteractMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CResourceHistoryBack.cpp">
+      <Filter>02. GameObject\05. UI\09. ResourceHistoryUI\00.ResourceHistoryBack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CResourceHistoryItem.cpp">
+      <Filter>02. GameObject\05. UI\09. ResourceHistoryUI\02.ResourceHistoryItem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CResourceHistoryUI.cpp">
+      <Filter>02. GameObject\05. UI\09. ResourceHistoryUI\03.ResourceHistoryUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CResourceHistoryDeco.cpp">
+      <Filter>02. GameObject\05. UI\09. ResourceHistoryUI\01.ResourceHistoryDeco</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CResourceHistoryController.cpp">
+      <Filter>02. GameObject\05. UI\09. ResourceHistoryUI</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CIndicator.cpp">
       <Filter>02. GameObject\03. Dependent\01. Effect\04. Indicator</Filter>

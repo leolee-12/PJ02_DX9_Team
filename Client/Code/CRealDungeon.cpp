@@ -34,6 +34,7 @@
 #include "CEffectMgr.h"
 #include "CTarotSeller.h"
 #include "CTarotCard.h"
+#include "CResourceHistoryController.h"
 
 CRealDungeon::CRealDungeon(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -445,6 +446,18 @@ HRESULT CRealDungeon::Ready_UI_Layer(const _tchar* pLayerTag)
 
 	if (FAILED(pLayer->Add_GameObject(L"Font", pGameObject)))
 		return E_FAIL;
+
+	pGameObject = CPersistentMgr::GetInstance()->Get_ResourceHistory();
+
+	if (nullptr == pGameObject)
+		return E_FAIL;
+
+	CPersistentMgr::GetInstance()->Get_ResourceHistory()->Set_MessageChannel(m_pMessageChannel);
+
+	if (FAILED(pLayer->Add_GameObject(L"ResourceHistoryController", pGameObject)))
+		return E_FAIL;
+	pGameObject->AddRef();
+
 
 	m_mapLayer.insert({ pLayerTag , pLayer });
 
