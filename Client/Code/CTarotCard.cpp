@@ -170,14 +170,20 @@ void CTarotCard::Check_Frame()
 	{
 	case TCS_INTRO:
 	{
-		m_fFrameEnd = 33.f;
+		m_fFrameEnd = 16.f;
+	}
+	break;
+	case TCS_INTRO2:
+	{
+		m_fFrameEnd = 13.f;
+		m_eType = TAROTCARD_TYPE(_int(m_eType) + 1);
 	}
 	break;
 
 	case TCS_SHOWING:
 	{
-		m_fFrame = 33.f;
-		m_fFrameEnd = 34.f;
+		m_fFrame = 13.f;
+		m_fFrameEnd = 14.f;
 		m_pTarotInfo->Active();
 	}
 	break;
@@ -202,6 +208,12 @@ void CTarotCard::Move_Frame(const _float& fTimeDelta)
 		{
 		case TCS_INTRO:
 		{
+			m_eCurState = TCS_INTRO2;
+		}
+		break;
+
+		case TCS_INTRO2:
+		{
 			m_eCurState = TCS_SHOWING;
 		}
 		break;
@@ -221,11 +233,11 @@ void CTarotCard::Set_Texture()
 	_uint iFrame = _uint(m_fFrame);					// 현재 프레임
 
 	D3DXMatrixIdentity(&m_matTex);
-	_uint iU = iFrame % 8;
-	_uint iV = iFrame / 8;
+	_uint iU = iFrame % 4;
+	_uint iV = iFrame / 4;
 
-	m_matTex._11 = 0.125f;	// 가로는 8칸 고정
-	m_matTex._22 = 0.125f;	// 세로는 8칸 고정(Ratau)
+	m_matTex._11 = 0.25f;	// 가로는 8칸 고정
+	m_matTex._22 = 0.25f;	// 세로는 8칸 고정(Ratau)
 
 	switch (m_eCurState)
 	{
@@ -243,10 +255,10 @@ void CTarotCard::Set_Texture()
 	//}
 	//else
 	//{
-	m_matTex._31 = _float(iU) * 0.125f;	// 반전 X : 왼쪽에서 오른쪽으로 읽음
+	m_matTex._31 = _float(iU) * 0.25f;	// 반전 X : 왼쪽에서 오른쪽으로 읽음
 	//}
 
-	m_matTex._32 = _float(iV) * 0.125f;
+	m_matTex._32 = _float(iV) * 0.25f;
 
 	m_pGraphicDev->SetTransform(D3DTS_TEXTURE0, &m_matTex);
 

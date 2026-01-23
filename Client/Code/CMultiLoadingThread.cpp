@@ -150,7 +150,7 @@ void CMultiLoadingThread::Loading_for_Test()
 {
 	m_iTotalProtoCount = 0;
 
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_TarotCard", TEX_NORMAL, L"../Bin/Resource/LWY/UI/dds/TarotCard_%d.dds", 2));
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_TarotCard", TEX_NORMAL, L"../Bin/Resource/YSH/UI/dds/TarotCard%d.dds", 4));
 	m_iTotalProtoCount++;
 
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_TarotInfo", TEX_NORMAL, L"../Bin/Resource/YSH/UI/TarotInfo_%d.png", 2));
@@ -720,7 +720,7 @@ void CMultiLoadingThread::Loading_for_RealDungeon()
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_TarotSellerTexture", TEX_NORMAL, L"../Bin/Resource/Texture/NPC/TarotSeller/dds/TarotSeller_%d.dds", 2));
 	m_iTotalProtoCount++;
 
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_TarotCard", TEX_NORMAL, L"../Bin/Resource/LWY/UI/dds/TarotCard_%d.dds", 2));
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_TarotCard", TEX_NORMAL, L"../Bin/Resource/YSH/UI/dds/TarotCard%d.dds", 4));
 	m_iTotalProtoCount++;
 
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_TarotInfo", TEX_NORMAL, L"../Bin/Resource/YSH/UI/TarotInfo_%d.png", 2));
