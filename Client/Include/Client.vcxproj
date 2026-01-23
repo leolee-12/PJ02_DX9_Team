@@ -208,6 +208,8 @@
     <ClInclude Include="..\Header\CGaugeCover.h" />
     <ClInclude Include="..\Header\CGaugeStar.h" />
     <ClInclude Include="..\Header\CIndicator.h" />
+    <ClInclude Include="..\Header\CKBCharNPC.h" />
+    <ClInclude Include="..\Header\CKBCharPlayer.h" />
     <ClInclude Include="..\Header\CMonsterHpBar.h" />
     <ClInclude Include="..\Header\CMonsterHpBarCover.h" />
     <ClInclude Include="..\Header\CMonsterHpFront.h" />
@@ -391,6 +393,8 @@
     </ClCompile>
     <ClCompile Include="..\Code\CKBBoardSlot.cpp" />
     <ClCompile Include="..\Code\CKBCenter.cpp" />
+    <ClCompile Include="..\Code\CKBCharNPC.cpp" />
+    <ClCompile Include="..\Code\CKBCharPlayer.cpp" />
     <ClCompile Include="..\Code\CKBDice.cpp" />
     <ClCompile Include="..\Code\CKBDiceBox.cpp" />
     <ClCompile Include="..\Code\CKBMask.cpp" />

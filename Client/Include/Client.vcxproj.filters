@@ -451,6 +451,15 @@
     <Filter Include="02. GameObject\05. UI\09. Tarot">
       <UniqueIdentifier>{85d1e91e-3763-4c02-a31b-f5945d271759}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\05. UI\03. KBUI\03. Charactor">
+      <UniqueIdentifier>{647666b0-a857-4f93-8135-1f909f03015b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. UI\03. KBUI\03. Charactor\00. Player">
+      <UniqueIdentifier>{d80f373e-c5cd-4781-834c-0681c551d64f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. UI\03. KBUI\03. Charactor\01. NPC">
+      <UniqueIdentifier>{11f4e4fd-f02d-47f1-af62-d205e5aa67eb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -954,6 +963,12 @@
     <ClInclude Include="..\Header\CTarotInfo.h">
       <Filter>02. GameObject\05. UI\09. Tarot</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CKBCharPlayer.h">
+      <Filter>02. GameObject\05. UI\03. KBUI\03. Charactor\00. Player</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CKBCharNPC.h">
+      <Filter>02. GameObject\05. UI\03. KBUI\03. Charactor\01. NPC</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1417,6 +1432,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\CTarotInfo.cpp">
       <Filter>02. GameObject\05. UI\09. Tarot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CKBCharPlayer.cpp">
+      <Filter>02. GameObject\05. UI\03. KBUI\03. Charactor\00. Player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CKBCharNPC.cpp">
+      <Filter>02. GameObject\05. UI\03. KBUI\03. Charactor\01. NPC</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -363,14 +363,14 @@ HRESULT CRealDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	if (FAILED(pLayer->Add_GameObject(L"TriggerPoint", pGameObject)))
 		return E_FAIL;
 
-	vTriggerPos = { 12.f, 0.f, 16.6f };
+	/*vTriggerPos = { 12.f, 0.f, 16.6f };
 	vTriggerHalfSize = { 2.f, 2.f, 2.f };
 	pGameObject = CTriggerPoint::Create(m_pGraphicDev, m_pMessageChannel, vTriggerPos, vTriggerHalfSize, Trigger::TI_STAGING, L"Meet_Leshy", true);
 
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 
 	if (FAILED(pLayer->Add_GameObject(L"TriggerPoint", pGameObject)))
-		return E_FAIL;
+		return E_FAIL;*/
 
 	vTriggerPos = { -260.f, 0.f, 2.2f };
 	vTriggerHalfSize = { 5.f, 5.f, 2.f };

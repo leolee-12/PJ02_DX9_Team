@@ -202,5 +202,20 @@ void CCollisionMgr::Free()
 	}
 	m_hmapCollisionGroup.clear();
 
+	// 스택에 보관된 이전 씬 콜라이더들도 정리
+	while (!m_stackState.empty())
+	{
+		auto& hmapState = m_stackState.top();
+		for (auto& pair : hmapState) {
+			for (auto& colinfo : pair.second) {
+				m_vecReleaseQueue.push_back(colinfo.pOwner);
+				colinfo.pOwner = nullptr;
+			}
+			pair.second.clear();
+		}
+		hmapState.clear();
+		m_stackState.pop();
+	}
+
 	Execute_Release();
 }
