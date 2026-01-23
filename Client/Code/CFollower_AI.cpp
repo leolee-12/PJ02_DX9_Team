@@ -55,6 +55,10 @@ void CFollower_AI::Enter_State(const _uint& iState)
 		m_fAcmlTime = 0.f;
 		break;
 
+	case CFollower::FOLLOWER_CHEER:
+		m_fAcmlTime = 0.f;
+		break;
+
 	case CFollower::FOLLOWER_TRANSFORM:
 		break;
 	case CFollower::FOLLOWER_UNCONVERT:
@@ -173,6 +177,18 @@ void CFollower_AI::Update_Run(const _float& fTimeDelta)
 
 void CFollower_AI::Update_Dance(const _float& fTimeDelta)
 {
+	if ((!m_bChase) || (m_pTargetTC == nullptr))
+	{
+		if (m_fAcmlTime >= AUTO_ESCAPE_STATE_TIME)
+		{
+			Change_State(CFollower::FOLLOWER_IDLE);
+			return;
+		}
+	}
+}
+
+void CFollower_AI::Update_Cheer(const _float& fTimeDelta)
+{
 }
 
 void CFollower_AI::Update_Transform(const _float& fTimeDelta)
@@ -206,6 +222,8 @@ void CFollower_AI::Anim_End(CFollower::FOLLOWER_STATE eState)
 	case CFollower::FOLLOWER_RUN:
 		break;
 	case CFollower::FOLLOWER_DANCE:
+		break;
+	case CFollower::FOLLOWER_CHEER:
 		break;
 	case CFollower::FOLLOWER_TRANSFORM:
 		break;
