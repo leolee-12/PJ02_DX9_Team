@@ -1,4 +1,4 @@
-#pragma once
+Ôªø#pragma once
 #include "CMonster.h"
 
 namespace Engine
@@ -8,6 +8,9 @@ namespace Engine
 	class CTexture;
 	class CCollider;
 }
+
+//class CTrailEffect;
+class CIndicator;
 
 class CProjectile : public CGameObject
 {
@@ -36,7 +39,8 @@ private:
 	void				Check_Frame();
 	void				Move_Frame(const _float& fTimeDelta);
 	void				Set_Texture();
-
+	void				Set_Material();
+	void				Reset_Material();
 private:
 	Engine::CRcTex*		m_pBufferCom;
 	Engine::CTransform*	m_pTransformCom;
@@ -50,7 +54,7 @@ private:
 	_float				m_fFrameSpeed;
 	_matrix				m_matTex;
 
-	// Ω∫≈◊¿Ã≈ÕΩ∫ ∞¸∑√
+	// Ïä§ÌÖåÏù¥ÌÑ∞Ïä§ Í¥ÄÎ†®
 	_int				m_iAttack;
 	_float				m_fGroundY;
 	_bool				m_bActive;
@@ -60,8 +64,14 @@ private:
 	_bool				m_bUseGravity;
 	_float				m_fGravity;
 
+	//CTrailEffect*		m_pTrailEffect;
+	CIndicator*			m_pIndicator;
+	D3DXCOLOR			m_tColor;
+	_bool				m_bMtrl = false;
+	COLGROUP			m_eColGroup;
+
 public:
-	static CProjectile* Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vPos, _vec3 vSpeed, _bool bUseGravity);
+	static CProjectile* Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vPos, _vec3 vSpeed, _bool bUseGravity, COLGROUP eGroup, D3DXCOLOR tColor = D3DXCOLOR(0.f, 0.f, 0.f, 1.f));
 
 private:
 	virtual void		Free();

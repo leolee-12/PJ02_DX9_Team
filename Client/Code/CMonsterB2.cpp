@@ -133,6 +133,14 @@ void CMonsterB2::Render_GameObject()
 
 void CMonsterB2::OnCollision(CGameObject* pObject)
 {
+	if (pObject->Get_OBJID() == OID_PROJECTILE)
+	{
+		if (!pObject->Get_Hp()) return;
+
+		_int iDamage = _int(static_cast<CTransform*>(pObject->Get_Component(ID_DYNAMIC, L"Com_Transform"))->Get_Scale(ROT_X));
+		Attacked(iDamage);
+	}
+
 	if (pObject->Get_OBJID() == OID_BORDER)
 	{
 		_vec3 vCurPos;
@@ -234,7 +242,7 @@ void CMonsterB2::Ready_Variable()
 	m_fBtmPadding = fScale * 0.51f;
 	m_fGroundY = -2.5f + fScale * 0.5f - m_fBtmPadding;
 	m_iAttack = 1;
-	m_iMaxHp = m_iHp = 10;
+	m_iMaxHp = m_iHp = 30;
 	m_iPhase = 1;
 
 	// Transform 세팅
@@ -371,7 +379,7 @@ void CMonsterB2::Move_Frame(const _float& fTimeDelta)
 	if(m_eCurState == B2S_IDLE) m_fFrame += m_fFrameSpeed * fTimeDelta;
 	if (m_eCurState == B2S_SPAWN && m_fFrame > 42.f && m_fFrame < 43.f)
 	{
-		CSoundMgr::GetInstance()->Play(L"LeshyRoar.wav", SOUND_BOSS, 0.4f);
+		CSoundMgr::GetInstance()->Play(L"LeshyRoar.wav", SOUND_BOSS, 0.2f);
 	}
 
 	m_fAcmlTime += fTimeDelta;
@@ -546,19 +554,6 @@ void CMonsterB2::Set_TextureSet()
 	if (m_strFrameKey != strPreKey) m_fFrame = 0.f;
 
 	m_fFrameEnd = m_pTexSetCom->Get_TextureEnd(m_strFrameKey);
-
-	//_vec3 vDir = *(m_pAICom->Get_Dir());		// AI로부터 받아온 방향
-	//_bool bFlipX = vDir.x > 0.f ? true : false;	// 반전 여부
-	//
-	//if (bFlipX)
-	//{
-	//	m_matTex._11 *= -1.f;
-	//	m_matTex._31 = 1.f;	// 반전 O : 오른쪽에서 왼쪽으로 읽음
-	//}
-	//
-	//m_pGraphicDev->SetTransform(D3DTS_TEXTURE0, &m_matTex);
-	//
-	//D3DXMatrixIdentity(&m_matTex);
 
 	m_pTexSetCom->Set_Texture(m_strFrameKey, _uint(m_fFrame));
 }
@@ -768,7 +763,7 @@ void CMonsterB2::Launch_Projectile(const _uint& iCount, const _vec3& vTargetDir)
 						fBaseYSpeed + fRandY,
 						vTargetDir.z * fBaseSpeed + fRandZ };
 
-		CGameObject* pProjectile = CProjectile::Create(m_pGraphicDev, vPos, vSpeed, true);
+		CGameObject* pProjectile = CProjectile::Create(m_pGraphicDev, vPos, vSpeed, true, CL_MBULLET, D3DXCOLOR(0.4f, 1.f, 0.6f, 1.f));
 
 		if (pProjectile)
 		{
@@ -789,15 +784,18 @@ void CMonsterB2::Summon_Minion(const _uint& iCount)
 {
 	if (iCount > 1000) return;
 
-	_float fRadian = 0.f;
+	_float fRadian1 = 0.f;
+	_float fRadian2 = D3DX_PI;
 	_float fGap = 2.f * D3DX_PI / iCount;
-	_float fRadius = 5.f;
+	_float fRadius = 7.f;
+	_vec3 vPos, vEffectPos;
+	CGameObject* pMonster = nullptr;
 
 	for (_uint i = 0; i < iCount; ++i)
 	{
-		_vec3 vPos{ m_vPos.x + fRadius * cosf(fRadian), -1.f, m_vPos.z + fRadius * sinf(fRadian) };
-		_vec3 vEffectPos{ m_vPos.x + fRadius * cosf(fRadian), 7.f, m_vPos.z + fRadius * sinf(fRadian) - 1.f };
-		CGameObject* pMonster = CMonsterN2::Create(m_pGraphicDev, m_pMessageChannel, vPos);
+		vPos = { m_vPos.x + fRadius * cosf(fRadian1), -1.f, m_vPos.z + fRadius * sinf(fRadian1) };
+		vEffectPos = { m_vPos.x + fRadius * cosf(fRadian1), 7.f, m_vPos.z + fRadius * sinf(fRadian1) - 1.f };
+		pMonster = CMonsterN2::Create(m_pGraphicDev, m_pMessageChannel, vPos);
 
 		if (pMonster)
 		{
@@ -815,7 +813,28 @@ void CMonsterB2::Summon_Minion(const _uint& iCount)
 			CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_ENEMYSPAWN, 2, vEffectPos);
 		}
 
-		fRadian += fGap;
+		vPos = { m_vPos.x + fRadius * cosf(fRadian2), -1.f, m_vPos.z + fRadius * sinf(fRadian2) };
+		vEffectPos = { m_vPos.x + fRadius * cosf(fRadian2), 7.f, m_vPos.z + fRadius * sinf(fRadian2) - 1.f };
+		pMonster = CMonsterN1::Create(m_pGraphicDev, m_pMessageChannel, vPos);
+
+		if (pMonster)
+		{
+			wstring strObjTag = L"SummonMonster";
+
+			IMessageChannel::EVENT ESummonMonster;
+			ESummonMonster.strType = L"Obj.Add";
+			ESummonMonster.eOBJID = Engine::OID_MONSTER;
+			ESummonMonster.hmapData.emplace(L"Obj", pMonster);
+			ESummonMonster.hmapData.emplace(L"LayerTag", L"Summon_Layer");
+			ESummonMonster.hmapData.emplace(L"ObjTag", strObjTag);
+			m_pMessageChannel->Publish(ESummonMonster);
+			CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_ENEMYSPAWN, 0, vEffectPos);
+			CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_ENEMYSPAWN, 1, vEffectPos);
+			CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_ENEMYSPAWN, 2, vEffectPos);
+		}
+
+		fRadian1 += fGap;
+		fRadian2 += fGap;
 	}
 }
 

@@ -37,7 +37,7 @@ CSpike::~CSpike()
 
 HRESULT CSpike::Ready_GameObject()
 {
-	m_eOBJID = OID_MONSTER;
+	m_eOBJID = OID_PROJECTILE;
 
 	if (FAILED(Add_Component()))
 		return E_FAIL;
@@ -52,10 +52,6 @@ _int CSpike::Update_GameObject(const _float& fTimeDelta)
 	Move_Frame(fTimeDelta);
 
 	m_pTransformCom->Move_Pos(&m_vSpeed, fTimeDelta, 1.f);
-
-	m_pColliderCom->UpdateFromTransform(m_pTransformCom);
-	// 충돌체 디버그용
-	if (g_bDebug) m_pColliderCom->Update_AABBforRender();
 
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
@@ -78,6 +74,13 @@ void CSpike::LateUpdate_GameObject(const _float& fTimeDelta)
 	m_pTransformCom->Compute_Bilboard(BBD_X);
 	m_pTransformCom->Get_Info(INFO_POS, &m_vPos);
 	Compute_ViewDepth(&m_vPos);
+
+	_float fHalfScale = m_pTransformCom->Get_Scale(ROT_X) * 0.2f;
+	AABB tAABB = { m_vPos.x, -2.5f, m_vPos.z + 2.f, fHalfScale, 0.5f, fHalfScale };
+	m_pColliderCom->Set_AABB(tAABB);
+	m_pColliderCom->UpdateFromCustom(tAABB);
+
+	if (g_bDebug) m_pColliderCom->Update_AABBforRender();
 
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
 }
@@ -147,12 +150,15 @@ HRESULT CSpike::Add_Component()
 void CSpike::Ready_Variable()
 {
 	// 게임로직 변수 세팅
-	_float fScale = 10.f;
+	_float fScale = 8.f;
 	m_fGroundY = -2.5f + fScale * 0.5f;
 
 	// Transform 세팅
 	m_pTransformCom->Set_Pos(_float(rand() % 20), 1.f, _float(rand() % 20));
 	m_pTransformCom->Set_Scale(fScale, fScale, fScale);
+
+	// Collider 세팅
+	m_pColliderCom->RegisterToManager(this, CL_MBULLET);
 
 	// Anim 관련 세팅
 	m_fFrameEnd = 16.f;

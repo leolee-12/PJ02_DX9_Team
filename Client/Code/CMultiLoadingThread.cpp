@@ -150,6 +150,12 @@ void CMultiLoadingThread::Loading_for_Test()
 {
 	m_iTotalProtoCount = 0;
 
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_TarotCard", TEX_NORMAL, L"../Bin/Resource/YSH/UI/dds/TarotCard%d.dds", 4));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_TarotInfo", TEX_NORMAL, L"../Bin/Resource/YSH/UI/TarotInfo_%d.png", 2));
+	m_iTotalProtoCount++;
+
 	m_NonTexReadyQueue.push(&CMultiLoadingThread::NonTex_for_Test);
 	m_iTotalProtoCount++;
 }
@@ -190,6 +196,12 @@ void CMultiLoadingThread::Loading_for_KnuckleBone()
 	m_iTotalProtoCount++;
 
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_KBBack", TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/dds/DiceTubBG.dds", 1));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_KBCharPlayer", TEX_NORMAL, L"../Bin/Resource/LWY/Player/Player_knucklebones/dds/Player_knucklebones_%d.dds", 8));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_KBCharNPC", TEX_NORMAL, L"../Bin/Resource/LWY/NPC/Ratau_knucklebones/dds/Ratau_knucklebones_%d.dds", 8));
 	m_iTotalProtoCount++;
 
 	//m_iTotalProtoCount = m_TexturLoadingqueue.unsafe_size();
@@ -276,6 +288,9 @@ void CMultiLoadingThread::Loading_for_Tutorial()
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_SmokeParticleTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/Smoke/dds/SmokeParticle_%d.dds", 3));
 	m_iTotalProtoCount++;
 
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_GreenTrailTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/Trail/dds/Gradation2.dds", 1));
+	m_iTotalProtoCount++;
+
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_ImpactTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/Impact/dds/Impact_%d.dds", 2));
 	m_iTotalProtoCount++;
 
@@ -329,7 +344,7 @@ void CMultiLoadingThread::Loading_for_Dungeon()
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_Follower3Texture", TEX_NORMAL, L"../Bin/Resource/LWY//NPC/Follower3(2)/dds/Follower3_%02d.dds", 14));
 	m_iTotalProtoCount++;
 
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_ProjectileTexture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/dds/Projectile.dds", 1));
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_ProjectileTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/Etc/dds/Projectile3.dds", 1));
 	m_iTotalProtoCount++;
 
 	//m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingBarkCover", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingMiniGame/dds/CookingBar_Border.dds", 1));
@@ -398,8 +413,8 @@ void CMultiLoadingThread::Loading_for_Dungeon()
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_RatauTexture", TEX_NORMAL, L"../Bin/Resource/Texture/NPC/Ratau/dds/Ratau_%d.dds", 4));
 	m_iTotalProtoCount++;
 
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_TarotSellerTexture", TEX_NORMAL, L"../Bin/Resource/Texture/NPC/TarotSeller/dds/TarotSeller_%d.dds", 2));
-	m_iTotalProtoCount++;
+	/*m_TexturLoadingqueue.push(TEXLR(L"Proto_TarotSellerTexture", TEX_NORMAL, L"../Bin/Resource/Texture/NPC/TarotSeller/dds/TarotSeller_%d.dds", 2));
+	m_iTotalProtoCount++;*/
 
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_ChestTexture", TEX_NORMAL, L"../Bin/Resource/Texture/NPC/Chest/dds/Chest_%d.dds", 2));
 	m_iTotalProtoCount++;
@@ -660,7 +675,7 @@ void CMultiLoadingThread::Loading_for_RealDungeon()
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_SpikeTexture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Spike/dds/Spike%d.dds", 4));
 	m_iTotalProtoCount++;
 
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_ProjectileTexture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/dds/Projectile.dds", 1));
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_ProjectileTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/Etc/dds/Projectile3.dds", 1));
 	m_iTotalProtoCount++;
 
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_B1Node1Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Boss1/dds/B1Node_00.dds", 1));
@@ -708,6 +723,15 @@ void CMultiLoadingThread::Loading_for_RealDungeon()
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_BishopLeshyTransform", TEX_NORMAL, L"../Bin/Resource/YSH/Leshy/Leshy-Transform/dds/Leshy-Transform-%d.dds", 376));
 	m_iTotalProtoCount++;
 
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_TarotSellerTexture", TEX_NORMAL, L"../Bin/Resource/Texture/NPC/TarotSeller/dds/TarotSeller_%d.dds", 2));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_TarotCard", TEX_NORMAL, L"../Bin/Resource/YSH/UI/dds/TarotCard%d.dds", 4));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_TarotInfo", TEX_NORMAL, L"../Bin/Resource/YSH/UI/TarotInfo_%d.png", 2));
+	m_iTotalProtoCount++;
+
 	// 디버그용 그긴거
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_Fade", TEX_NORMAL, L"../Bin/Resource/YSH/Etc/Fade.png", 1));
 	m_iTotalProtoCount++;
@@ -751,6 +775,9 @@ void CMultiLoadingThread::Loading_for_RealDungeon()
 	m_iTotalProtoCount++;
 
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_SmokeParticleTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/Smoke/dds/SmokeParticle_%d.dds", 3));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_GreenTrailTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/Trail/dds/Gradation2.dds", 1));
 	m_iTotalProtoCount++;
 
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_ImpactTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/Impact/dds/Impact_%d.dds", 2));
@@ -951,6 +978,14 @@ unsigned int CMultiLoadingThread::Thread_Main(void* pArg)
 			if (g_bDistroyWindowFlag) break;
 			if (!pOwner->m_pGraphicDev) break;
 
+			//CProtoMgr::GetInstance()->Ready_Prototype(Texrequest.strProtoName,
+			//	CTexture::CreateFromThread(pOwner->m_pGraphicDev, Texrequest.eTexType, Texrequest.strFilepath, Texrequest.iTexIndex));
+			if (CProtoMgr::GetInstance()->Find_Prototype(Texrequest.strProtoName))
+			{
+				pOwner->m_iCompletedCount++;
+				continue;
+			}
+
 			CProtoMgr::GetInstance()->Ready_Prototype(Texrequest.strProtoName,
 				CTexture::CreateFromThread(pOwner->m_pGraphicDev, Texrequest.eTexType, Texrequest.strFilepath, Texrequest.iTexIndex));
 
@@ -967,8 +1002,15 @@ unsigned int CMultiLoadingThread::Thread_Main(void* pArg)
 			TEXSETINFO texsetinfo = std::move(Pairrequest.first);
 			vector<TEXSETLR> vecTexsetLR = std::move(Pairrequest.second);
 
+			//CProtoMgr::GetInstance()->Ready_Prototype(texsetinfo.strProtoName,
+			//	CTextureSet::CreateFromThread(pOwner->m_pGraphicDev, texsetinfo.eTexType, vecTexsetLR));
+			if (CProtoMgr::GetInstance()->Find_Prototype(texsetinfo.strProtoName))
+			{
+				pOwner->m_iCompletedCount++;
+				continue;
+			}
 			CProtoMgr::GetInstance()->Ready_Prototype(texsetinfo.strProtoName,
-				CTextureSet::CreateFromThered(pOwner->m_pGraphicDev, texsetinfo.eTexType, vecTexsetLR));
+				CTextureSet::CreateFromThread(pOwner->m_pGraphicDev, texsetinfo.eTexType, vecTexsetLR));
 
 			pOwner->m_iCompletedCount++;
 			bDidWork = true;

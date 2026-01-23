@@ -140,12 +140,11 @@ private:
 	_vec3  m_vWarpPos = {};
 	_bool  m_IsWarp = false;
 
-
 	// 상수
 	static constexpr _float PLAYER_DEFAULT_ATTACK = 1.f;
 	static constexpr _float PLAYER_INVINCIBLE_TIME = 3.f;
 	static constexpr _float PLAYER_DEFAULT_SPEED = 12.f;
-	static constexpr _float PLAYER_INTRO_SPEED = 9.f;
+	static constexpr _float PLAYER_INTRO_SPEED = 7.f;
 	static constexpr _float PLAYER_DEFAULT_SCALE = 10.f;
 	static constexpr _float PLAYER_INTRO_SCALE = 11.f;
 	static constexpr _float PLAYER_REBIRTH_SCALE = 20.f;

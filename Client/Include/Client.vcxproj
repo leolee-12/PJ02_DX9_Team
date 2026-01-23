@@ -208,6 +208,9 @@
     <ClInclude Include="..\Header\CGauge.h" />
     <ClInclude Include="..\Header\CGaugeCover.h" />
     <ClInclude Include="..\Header\CGaugeStar.h" />
+    <ClInclude Include="..\Header\CIndicator.h" />
+    <ClInclude Include="..\Header\CKBCharNPC.h" />
+    <ClInclude Include="..\Header\CKBCharPlayer.h" />
     <ClInclude Include="..\Header\CMonsterHpBar.h" />
     <ClInclude Include="..\Header\CMonsterHpBarCover.h" />
     <ClInclude Include="..\Header\CMonsterHpFront.h" />
@@ -222,6 +225,8 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\Header\CSpriteEffect.h" />
+    <ClInclude Include="..\Header\CTarotCard.h" />
+    <ClInclude Include="..\Header\CTarotInfo.h" />
     <ClInclude Include="..\Header\CTrailEffect.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClInclude>
@@ -384,6 +389,7 @@
     <ClCompile Include="..\Code\CGauge.cpp" />
     <ClCompile Include="..\Code\CGaugeCover.cpp" />
     <ClCompile Include="..\Code\CGaugeStar.cpp" />
+    <ClCompile Include="..\Code\CIndicator.cpp" />
     <ClCompile Include="..\Code\CInteractMgr.cpp" />
     <ClCompile Include="..\Code\CItem.cpp" />
     <ClCompile Include="..\Code\CKBBack.cpp" />
@@ -393,6 +399,8 @@
     </ClCompile>
     <ClCompile Include="..\Code\CKBBoardSlot.cpp" />
     <ClCompile Include="..\Code\CKBCenter.cpp" />
+    <ClCompile Include="..\Code\CKBCharNPC.cpp" />
+    <ClCompile Include="..\Code\CKBCharPlayer.cpp" />
     <ClCompile Include="..\Code\CKBDice.cpp" />
     <ClCompile Include="..\Code\CKBDiceBox.cpp" />
     <ClCompile Include="..\Code\CKBMask.cpp" />
@@ -460,6 +468,8 @@
     <ClCompile Include="..\Code\CSpike.cpp" />
     <ClCompile Include="..\Code\CSpriteEffect.cpp" />
     <ClCompile Include="..\Code\CStage.cpp" />
+    <ClCompile Include="..\Code\CTarotCard.cpp" />
+    <ClCompile Include="..\Code\CTarotInfo.cpp" />
     <ClCompile Include="..\Code\CTarotSeller.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>

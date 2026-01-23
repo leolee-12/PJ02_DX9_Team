@@ -97,6 +97,8 @@ HRESULT CVillage::Ready_Scene()
 
 	CEffectMgr::GetInstance()->Ready_EffectMgr(m_pGraphicDev);
 
+	CSoundMgr::GetInstance()->PlayBGM(L"02.Village.mp3", 0.1f);
+
 	return S_OK;
 }
 
@@ -219,8 +221,8 @@ HRESULT CVillage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 			switch (spawn.type)
 			{
 			case 0:
-				//CPersistentMgr::GetInstance()->Get_Player()->Set_Pos(_vec3(spawn.x * 0.8f, -0.95f, spawn.z * 0.8f)); // 실제 스폰 지점
-				CPersistentMgr::GetInstance()->Get_Player()->Set_Pos(_vec3(199.8f, -0.95f, 35.f));	// 디버그용
+				CPersistentMgr::GetInstance()->Get_Player()->Set_Pos(_vec3(spawn.x * 0.8f, -0.95f, spawn.z * 0.8f)); // 실제 스폰 지점
+				//CPersistentMgr::GetInstance()->Get_Player()->Set_Pos(_vec3(199.8f, -0.95f, 35.f));	// 디버그용
 				pGameObject = CPersistentMgr::GetInstance()->Get_Player();
 
 				if (nullptr == pGameObject)

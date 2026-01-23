@@ -8,13 +8,14 @@
 #include "CWarp.h"
 #include "CSceneWarp.h"
 #include "CTriggerPoint.h"
-#include "Engine_Struct.h"
+//#include "Engine_Struct.h"
 #include "CCollider.h"
 #include "CCutSceneMgr.h"
 #include "CSoundMgr.h"
 #include "CEffectMgr.h"
 #include "CItem.h"
 #include "CMonster.h"
+#include "CProjectile.h"
 
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev),
@@ -155,6 +156,11 @@ void CPlayer::Render_GameObject()
 	swprintf_s(szPos, L"[플레이어] 플레이어 중점 위치 X : %f, Y : %f, Z : %f", m_vPos.x, m_vPos.y, m_vPos.z);
 	OutputDebugString(szPos);
 	OutputDebugString(L"\n");
+
+	//_tchar szPos[256] = L"";
+	//swprintf_s(szPos, L"a : %d, r : %d, g : %d, b : %d", Test_a, Test_r, Test_g, Test_b);
+	//OutputDebugString(szPos);
+	//OutputDebugString(L"\n");
 }
 
 void CPlayer::Ready_Variable()
@@ -257,6 +263,24 @@ void CPlayer::Ready_Event()
 		}
 	}) });
 
+	m_hmapSubHandles.insert({ L"Tarot.Selected", m_pMessageChannel->Subscribe(L"Tarot.Selected", [this](const IMessageChannel::EVENT& Event)
+		{
+			auto TarotTypeiter = Event.hmapData.find(L"TarotType");
+			if (TarotTypeiter == Event.hmapData.end()) { return; }
+			_uint iTarotType = any_cast<_uint>(TarotTypeiter->second);
+
+			switch (iTarotType)
+			{
+			case 0:
+				m_iMaxHp += 2;
+				break;
+			case 1:
+				m_iAttack = _int(_float(m_iAttack) * 1.5f);
+				break;
+			}
+		}
+	) });
+
 	m_bMsgRegistered = true;
 }
 
@@ -316,7 +340,7 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 
 			if (i == 8)
 			{
-				_vec3 vEffectPos{ m_vPos.x, + 3.f, m_vPos.z };
+				_vec3 vEffectPos{ m_vPos.x, 3.f, m_vPos.z };
 				CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_ENEMYSPAWN, 0, vEffectPos);
 			}
 			else		CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_HIT, i, m_vPos);
@@ -479,6 +503,25 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 			m_fFrame = 0.f;
 			m_fChargeMax = m_fCharge;
 			m_strFrameKey = L"charge-end";
+
+			CProjectile* pTemp;
+			CGameObject* pProjectile = pTemp = CProjectile::Create(m_pGraphicDev, m_vPos, m_vDir * 10.f, false, CL_PBULLET, D3DXCOLOR(1.f, 0.f, 0.4f, 1.f));
+
+			_float fScale(1.5f + m_fCharge);
+			static_cast<CTransform*>(pProjectile->Get_Component(ID_DYNAMIC, L"Com_Transform"))->Set_Scale(fScale, fScale, fScale);
+
+			if (pProjectile)
+			{
+				wstring strObjTag = L"Projectile";
+
+				IMessageChannel::EVENT EProjectile;
+				EProjectile.strType = L"Obj.Add";
+				EProjectile.eOBJID = Engine::OID_PROJECTILE;
+				EProjectile.hmapData.emplace(L"Obj", pProjectile);
+				EProjectile.hmapData.emplace(L"LayerTag", L"GameLogic_Layer");
+				EProjectile.hmapData.emplace(L"ObjTag", strObjTag);
+				m_pMessageChannel->Publish(EProjectile);
+			}
 		}
 	}
 }
@@ -938,6 +981,13 @@ void	CPlayer::OnCollision(CGameObject* pObject)
 			CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_PICKUP, 0, _vec3(m_vPos.x, m_vPos.y - 1.f, m_vPos.z - 0.001f), _vec3(0.3f, 0.3f, 0.f));
 			CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_PICKUP, 1, _vec3(m_vPos.x, m_vPos.y - 1.f, m_vPos.z), _vec3(0.3f, 0.3f, 0.f));
 		}
+	}
+
+	if (pObject->Get_OBJID() == OID_PROJECTILE)
+	{
+		if (!pObject->Get_Hp()) return;
+
+		Attacked(1);
 	}
 
   	if (pObject->Get_OBJID() == OID_BORDER)

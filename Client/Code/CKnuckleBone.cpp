@@ -22,6 +22,8 @@
 #include "CKBDiceBox.h"
 #include "CPersistentMgr.h"
 #include "CKBBack2.h"
+#include "CKBCharPlayer.h"
+#include "CKBCharNPC.h"
 
 
 
@@ -354,6 +356,26 @@ HRESULT CKnuckleBone::Ready_Main_Layer(const _tchar* pLayerTag)
 	if (FAILED(pLayer->Add_GameObject(L"KBMask", pGameObject)))
 		return E_FAIL;
 
+	_vec3 vPos = { -420.f, 100.f, 0.2f };
+
+	pGameObject = m_pCharPlayer = CKBCharPlayer::Create(m_pGraphicDev, vPos);
+
+	if (nullptr == pGameObject)
+		return E_FAIL;
+
+	if (FAILED(pLayer->Add_GameObject(L"KBChar", pGameObject)))
+		return E_FAIL;
+
+	vPos = { 420.f, 20.f, 0.2f };
+
+	pGameObject = m_pCharNPC = CKBCharNPC::Create(m_pGraphicDev, vPos);
+
+	if (nullptr == pGameObject)
+		return E_FAIL;
+
+	if (FAILED(pLayer->Add_GameObject(L"KBChar", pGameObject)))
+		return E_FAIL;
+
 	m_mapLayer.insert({ pLayerTag , pLayer });
 
 	return S_OK;
@@ -583,6 +605,23 @@ void CKnuckleBone::Debug_Key_Input_KB()
 		m_iWinner = Get_Winner();
 		m_fResultTime = 0.f;
 		m_eMainState = MS_RESULT;
+
+		// 캐릭터 애니메이션: 승자/패자
+		if (m_iWinner == 0)
+		{
+			m_pCharPlayer->Set_State(CKBCharPlayer::KBC_WIN_GAME);
+			m_pCharNPC->Set_State(CKBCharNPC::KBC_LOSE_GAME);
+		}
+		else if (m_iWinner == 1)
+		{
+			m_pCharPlayer->Set_State(CKBCharPlayer::KBC_LOSE_GAME);
+			m_pCharNPC->Set_State(CKBCharNPC::KBC_WIN_GAME);
+		}
+		else
+		{
+			m_pCharPlayer->Set_State(CKBCharPlayer::KBC_IDLE);
+			m_pCharNPC->Set_State(CKBCharNPC::KBC_IDLE);
+		}
 	}
 }
 
@@ -688,6 +727,23 @@ _bool CKnuckleBone::Update_MainGame(const _float& fTimeDelta)
 				m_iWinner = Get_Winner();
 				m_fResultTime = 0.f;
 				m_eMainState = MS_RESULT;
+
+				// 캐릭터 애니메이션: 승자/패자
+				if (m_iWinner == 0)	// 플레이어 승리
+				{
+					m_pCharPlayer->Set_State(CKBCharPlayer::KBC_WIN_GAME);
+					m_pCharNPC->Set_State(CKBCharNPC::KBC_LOSE_GAME);
+				}
+				else if (m_iWinner == 1)	// NPC 승리
+				{
+					m_pCharPlayer->Set_State(CKBCharPlayer::KBC_LOSE_GAME);
+					m_pCharNPC->Set_State(CKBCharNPC::KBC_WIN_GAME);
+				}
+				else	// 무승부
+				{
+					m_pCharPlayer->Set_State(CKBCharPlayer::KBC_IDLE);
+					m_pCharNPC->Set_State(CKBCharNPC::KBC_IDLE);
+				}
 				break;
 			}
 
@@ -715,7 +771,7 @@ _bool CKnuckleBone::Update_MainGame(const _float& fTimeDelta)
 	case MS_RESULT:
 		// 결과 표시 후 2초 후 씬 전환 요청
 		m_fResultTime += fTimeDelta;
-		if (m_fResultTime >= 2.f)
+		if (m_fResultTime >= 5.f)
 		{
 			return true;	// 씬 전환 요청
 		}
@@ -738,6 +794,16 @@ void CKnuckleBone::Start_Roll()
 	// 주사위 굴리기 시작
 	m_pCurDice->Roll();
 	m_eMainState = MS_ROLL;
+
+	// 캐릭터 애니메이션: 현재 턴 캐릭터는 주사위 던지기
+	/*if (m_iCurTurn == 0)
+	{
+		m_pCharPlayer->Set_State(CKBCharPlayer::KBC_PLAY_DICE);
+	}
+	else
+	{
+		m_pCharNPC->Set_State(CKBCharNPC::KBC_PLAY_DICE);
+	}*/
 }
 
 // 주사위 배치
@@ -750,6 +816,11 @@ void CKnuckleBone::Place_Dice(_int iOwner, _int iCol)
 	_int iRow = Find_EmptyRow(iOwner, iCol);
 	if (iRow < 0)
 		return;		// 해당 열이 꽉 참
+
+	if (m_iCurTurn == 0)
+		m_pCharPlayer->Set_State(CKBCharPlayer::KBC_PLAY_DICE);
+	else
+		m_pCharNPC->Set_State(CKBCharNPC::KBC_PLAY_DICE);
 
 	// 보드 데이터 업데이트
 	_int iDiceValue = m_pCurDice->GetValue();
@@ -812,30 +883,29 @@ void CKnuckleBone::Render_Font_Main()
 	D3DXCOLOR FontGreen = D3DXCOLOR(0.2f, 1.f, 0.2f, 1.f);
 	D3DXCOLOR FontRed = D3DXCOLOR(1.f, 0.2f, 0.2f, 1.f);
 
+	_int iPlayerScore = Calc_TotalScore(0);
+	_int iNPCScore = Calc_TotalScore(1);
+
 	// 게임 결과 표시 (화면 중앙에 크게)
 	if (m_eMainState == MS_RESULT)
 	{
-		const wchar_t* strResult = L"";
-		D3DXCOLOR resultColor = FontColor;
+		wchar_t strResult[64];
 
 		switch (m_iWinner)
 		{
 		case 0:		// 플레이어 승리
-			strResult = L"YOU WIN!";
-			resultColor = FontGreen;
+			swprintf_s(strResult, L"어린 양 승리 %d - %d", iPlayerScore, iNPCScore);
 			break;
 		case 1:		// NPC 승리
-			strResult = L"YOU LOSE...";
-			resultColor = FontRed;
+			swprintf_s(strResult, L"라타우 승리 %d - %d", iNPCScore, iPlayerScore);
 			break;
 		default:	// 무승부
-			strResult = L"DRAW";
-			resultColor = FontYellow;
+			swprintf_s(strResult, L"무승부 %d - %d", iPlayerScore, iNPCScore);
 			break;
 		}
 
 		RECT rcResult = { 0, (WINCY / 2) - 50, WINCX, (WINCY / 2) + 50 };
-		CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans100", strResult, rcResult, resultColor, DT_CENTER | DT_VCENTER);
+		CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans80", strResult, rcResult, FontColor, DT_CENTER | DT_VCENTER);
 	}
 
 	// 선택된 열 표시 (열 선택 중일 때만)
@@ -847,19 +917,17 @@ void CKnuckleBone::Render_Font_Main()
 	//}
 
 	// 점수 표시
-	_int iPlayerScore = Calc_TotalScore(0);
-	_int iNPCScore = Calc_TotalScore(1);
 
 	wchar_t szScore[64];
 
 	// 플레이어 총점 (화면 중앙 왼쪽)
-	swprintf_s(szScore, L"Player\n%d", iPlayerScore);
+	swprintf_s(szScore, L"어린 양\n%d", iPlayerScore);
 	RECT rcPlayer = { 0, (WINCY / 2) - 20, (WINCX / 2) - 200, (WINCY / 2) + 100 };
 	CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans30", szScore, rcPlayer, FontColor, DT_CENTER | DT_BOTTOM);
 
 	// NPC 총점 (화면 중앙 오른쪽)
-	swprintf_s(szScore, L"NPC\n%d", iNPCScore);
-	RECT rcNPC = { (WINCX / 2) + 200, (WINCY / 2) - 20, WINCX, (WINCY / 2) + 100 };
+	swprintf_s(szScore, L"라타우\n%d", iNPCScore);
+	RECT rcNPC = { (WINCX / 2) + 200, (WINCY / 2) - 20, WINCX, (WINCY / 2) + 150};
 	CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans30", szScore, rcNPC, FontColor, DT_CENTER | DT_BOTTOM);
 
 	// 열별 점수 표시 (두 보드 사이에 표시)
@@ -1061,6 +1129,16 @@ void CKnuckleBone::Remove_OpponentDice(_int iOwner, _int iCol, _int iDiceValue)
 	if (bRemoved)
 	{
 		Compact_Column(iOpponent, iCol);
+
+		// 캐릭터 애니메이션: 상대방은 주사위 잃기
+		if (iOpponent == 0) {
+			m_pCharPlayer->Set_State(CKBCharPlayer::KBC_LOSE_DICE);
+			m_pCharNPC->Set_State(CKBCharNPC::KBC_TAKE_DICE);
+		}
+		else {
+			m_pCharNPC->Set_State(CKBCharNPC::KBC_LOSE_DICE);
+			m_pCharPlayer->Set_State(CKBCharPlayer::KBC_TAKE_DICE);
+		}
 	}
 }
 

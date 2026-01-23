@@ -130,5 +130,16 @@ void CLightMgr::Free()
     for_each(m_LightList.begin(), m_LightList.end(), CDeleteObj());
     m_LightList.clear();
 
+    // 스택에 보관된 이전 씬 라이트들도 정리
+    while (!m_stackState.empty())
+    {
+        LIGHT_STATE& tState = m_stackState.top();
+        for_each(tState.vecPointLights.begin(), tState.vecPointLights.end(), CDeleteObj());
+        tState.vecPointLights.clear();
+        for_each(tState.LightList.begin(), tState.LightList.end(), CDeleteObj());
+        tState.LightList.clear();
+        m_stackState.pop();
+    }
+
     Safe_Release(m_pGraphicDev);
 }

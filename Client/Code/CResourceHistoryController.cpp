@@ -23,47 +23,47 @@ CResourceHistoryController::~CResourceHistoryController()
 HRESULT CResourceHistoryController::Ready_GameObject()
 {
 	CResourceHistoryUI* pGameObject = nullptr;
-	pGameObject = CResourceHistoryUI::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ WINCX / 2,WINCY / 2 - 240.0f, 0 }, L"동전", 0);
+	pGameObject = CResourceHistoryUI::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ WINCX / 2,WINCY / 2 - 240.0f, 0.1f }, L"동전", 0);
 	if (nullptr == pGameObject)
 		return E_FAIL;
 
 	m_mResourceUI.insert({ 0 , pGameObject });
 
-	pGameObject = CResourceHistoryUI::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ WINCX / 2,WINCY / 2 - 180.0f, 0 }, L"나무", 1);
+	pGameObject = CResourceHistoryUI::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ WINCX / 2,(WINCY / 2 - 180.0f), 0.1f }, L"나무", 1);
 	if (nullptr == pGameObject)
 		return E_FAIL;
 
 	m_mResourceUI.insert({ 1 , pGameObject });
-	pGameObject = CResourceHistoryUI::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ WINCX / 2,WINCY / 2 - 120.0f, 0 }, L"돌", 2);
+	pGameObject = CResourceHistoryUI::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ WINCX / 2,WINCY / 2 - 120.0f, 0.1f }, L"돌", 2);
 	if (nullptr == pGameObject)
 		return E_FAIL;
 
 	m_mResourceUI.insert({ 2 , pGameObject });
-	pGameObject = CResourceHistoryUI::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ WINCX / 2,WINCY / 2 - 60.0f, 0 }, L"열매", 3);
+	pGameObject = CResourceHistoryUI::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ WINCX / 2,WINCY / 2 - 60.0f, 0.1f }, L"열매", 3);
 	if (nullptr == pGameObject)
 		return E_FAIL;
 
 	m_mResourceUI.insert({ 3 , pGameObject });
-	pGameObject = CResourceHistoryUI::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ WINCX / 2,WINCY / 2, 0 }, L"똥", 4);
+	pGameObject = CResourceHistoryUI::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ WINCX / 2,WINCY / 2, 0.1f }, L"똥", 4);
 	if (nullptr == pGameObject)
 		return E_FAIL;
 
 	m_mResourceUI.insert({ 4 , pGameObject });
-	pGameObject = CResourceHistoryUI::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ WINCX / 2,WINCY / 2 + 60.0f,0 }, L"빨콩", 5);
+	pGameObject = CResourceHistoryUI::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ WINCX / 2,WINCY / 2 + 60.0f,0.1f }, L"빨콩", 5);
 	if (nullptr == pGameObject)
 		return E_FAIL;
 
 	m_mResourceUI.insert({ 5 , pGameObject });
 
 
-	pGameObject = CResourceHistoryUI::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ WINCX / 2,WINCY / 2 + 120.0f,0 }, L"밥", 6);
+	pGameObject = CResourceHistoryUI::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ WINCX / 2,WINCY / 2 + 120.0f,0.1f }, L"밥", 6);
 	if (nullptr == pGameObject)
 		return E_FAIL;
 
 	m_mResourceUI.insert({ 6 , pGameObject });
 
 
-	pGameObject = CResourceHistoryUI::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ WINCX / 2,WINCY / 2 + 180.0f,0 }, L"탄밥", 7);
+	pGameObject = CResourceHistoryUI::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ WINCX / 2,WINCY / 2 + 180.0f,0.1f }, L"탄밥", 7);
 	if (nullptr == pGameObject)
 		return E_FAIL;
 

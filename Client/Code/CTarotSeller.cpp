@@ -6,6 +6,9 @@
 #include "CPersistentMgr.h"
 #include "CCollisionMgr.h"
 #include "CN1_AI.h"
+#include "CSpeechBubble.h"
+#include "CFontUI.h"
+#include "CSoundMgr.h"
 
 CTarotSeller::CTarotSeller(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev),
@@ -52,6 +55,11 @@ HRESULT CTarotSeller::Ready_GameObject()
 	Ready_Variable();
 	Ready_Event();
 
+	_vec3 vDialPos = m_vPos;
+	vDialPos.y += 7.5f;
+
+	Ready_Dialogue(vDialPos);
+
 	return S_OK;
 }
 
@@ -60,6 +68,9 @@ _int CTarotSeller::Update_GameObject(const _float& fTimeDelta)
 	Move_Frame(fTimeDelta);
 
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
+
+	m_pFontUI->Update_GameObject(fTimeDelta);
+	m_pSpeechBubble->Update_GameObject(fTimeDelta);
 
 	if (iExit == DEAD)
 	{
@@ -147,8 +158,55 @@ void CTarotSeller::Ready_Variable()
 	D3DXMatrixIdentity(&m_matTex);
 }
 
+HRESULT CTarotSeller::Ready_Dialogue(const _vec3& vDialoguePos)
+{
+	m_pFontUI = CFontUI::Create(m_pGraphicDev, m_pMessageChannel);
+
+	if (m_pFontUI == nullptr) { return E_FAIL; }
+
+	m_pFontUI->Set_Font(L"Font_Lapture30");
+	m_pFontUI->Set_FontColor(D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
+	//DT_CENTER | DT_VCENTER
+	m_pFontUI->Set_Flags(DT_CENTER | DT_VCENTER);
+	m_pFontUI->Set_Scale(_vec2(600.f, 150.f));
+
+	m_pFontUI->Set_WorldPos(vDialoguePos);
+	m_pFontUI->Set_RenderOwnerName(L"클라우넥");
+
+	m_pSpeechBubble = CSpeechBubble::Create(m_pGraphicDev, vDialoguePos, _vec2(600.f, 150.f));
+
+	if (m_pSpeechBubble == nullptr) { return E_FAIL; }
+
+	return S_OK;
+}
+
 void CTarotSeller::Ready_Event()
 {
+	m_hmapSubHandles.insert({ L"Dialogue", m_pMessageChannel->Subscribe(L"CutScene.Dialogue", [this](const IMessageChannel::EVENT& Event)
+		{
+			auto TargetNameiter = Event.hmapData.find(L"TargetName");
+			if (TargetNameiter == Event.hmapData.end()) { return; }
+			if (any_cast<wstring>(TargetNameiter->second) != L"Tarot_Saller")
+			{
+				m_pSpeechBubble->UnActive();
+				m_pFontUI->UnActive();
+				m_eCurState = TAROT_IDLE;
+				return;
+			}
+
+			auto Textiter = Event.hmapData.find(L"Text");
+			if (Textiter == Event.hmapData.end()) { return; }
+
+			m_pFontUI->Set_Text(any_cast<wstring>(Textiter->second));
+			m_pFontUI->Set_OwnerName(any_cast<wstring>(TargetNameiter->second));
+			m_pSpeechBubble->Active();
+			m_pFontUI->Active();
+			m_eCurState = TAROT_TALK;
+			_tchar strSoundName[128] = L"";
+			swprintf_s(strSoundName, L"GoatTalk%d.wav", Get_Rand_Int(1, 4));
+			CSoundMgr::GetInstance()->Play(strSoundName, SOUND_DIALOUGE, 0.2f);
+		}
+	) });
 }
 
 void CTarotSeller::Check_Frame()
@@ -239,6 +297,8 @@ CTarotSeller* CTarotSeller::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChanne
 {
 	CTarotSeller* pTarotSeller = new CTarotSeller(pGraphicDev, StageChannel);
 
+	pTarotSeller->m_vPos = vPos;
+
 	if (FAILED(pTarotSeller->Ready_GameObject()))
 	{
 		Safe_Release(pTarotSeller);
@@ -253,5 +313,7 @@ CTarotSeller* CTarotSeller::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChanne
 
 void CTarotSeller::Free()
 {
+	Safe_Release(m_pFontUI);
+	Safe_Release(m_pSpeechBubble);
 	CGameObject::Free();
 }

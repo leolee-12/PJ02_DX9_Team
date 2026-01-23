@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "Engine_Define.h"
 #include "CBase.h"
@@ -24,7 +24,7 @@ public:
 		return m_tMouseState.rgbButtons[eMouse];
 	}
 
-	// ÇöÀç ¸¶¿ì½ºÀÇ Æ¯Á¤ Ãà ÁÂÇ¥¸¦ ¹İÈ¯
+	// í˜„ì¬ ë§ˆìš°ìŠ¤ì˜ íŠ¹ì • ì¶• ì¢Œí‘œê°’ ë°˜í™˜
 	_long	Get_DIMouseMove(MOUSEMOVESTATE eMouseState)
 	{
 		return *(((_long*)&m_tMouseState) + eMouseState);
@@ -57,6 +57,33 @@ public:
 		return false;
 	}
 
+	// ë§ˆìš°ìŠ¤ ë²„íŠ¼ ì…ë ¥ í•¨ìˆ˜
+	_bool Mouse_Down(MOUSEKEYSTATE eMouse)
+	{
+		if (!(m_tPreMouseState.rgbButtons[eMouse] & 0x80) && (m_tMouseState.rgbButtons[eMouse] & 0x80))
+		{
+			return true;
+		}
+		return false;
+	}
+
+	_bool Mouse_Pressing(MOUSEKEYSTATE eMouse)
+	{
+		if (m_tMouseState.rgbButtons[eMouse] & 0x80)
+		{
+			return true;
+		}
+		return false;
+	}
+
+	_bool Mouse_Up(MOUSEKEYSTATE eMouse)
+	{
+		if ((m_tPreMouseState.rgbButtons[eMouse] & 0x80) && !(m_tMouseState.rgbButtons[eMouse] & 0x80))
+		{
+			return true;
+		}
+		return false;
+	}
 
 public:
 	HRESULT Ready_InputDev(HINSTANCE hInst, HWND hWnd);
@@ -70,14 +97,14 @@ private:
 	LPDIRECTINPUTDEVICE8	m_pMouse = nullptr;
 
 private:
-	_byte					m_byKeyState[256];		// Å°º¸µå¿¡ ÀÖ´Â ¸ğµç Å°°ªÀ» ÀúÀåÇÏ±â À§ÇÑ º¯¼ö
+	_byte					m_byKeyState[256];		// í‚¤ë³´ë“œì— ìˆëŠ” ëª¨ë“  í‚¤ê°’ì„ ì €ì¥í•˜ê¸° ìœ„í•œ ë³€ìˆ˜
 	_byte					m_byPreKeyState[256];
 	DIMOUSESTATE			m_tMouseState;
+	DIMOUSESTATE			m_tPreMouseState;
 
 public:
 	virtual void	Free(void);
 
 };
 END
-
 
