@@ -448,6 +448,9 @@
     <Filter Include="02. GameObject\03. Dependent\01. Effect\00. SpriteEffect">
       <UniqueIdentifier>{3f4f1d7c-f64c-48fb-b131-1abee5b964e4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\05. UI\09. Tarot">
+      <UniqueIdentifier>{85d1e91e-3763-4c02-a31b-f5945d271759}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -945,6 +948,12 @@
     <ClInclude Include="..\Header\CIndicator.h">
       <Filter>02. GameObject\03. Dependent\01. Effect\04. Indicator</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CTarotCard.h">
+      <Filter>02. GameObject\05. UI\09. Tarot</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CTarotInfo.h">
+      <Filter>02. GameObject\05. UI\09. Tarot</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1402,6 +1411,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\CIndicator.cpp">
       <Filter>02. GameObject\03. Dependent\01. Effect\04. Indicator</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CTarotCard.cpp">
+      <Filter>02. GameObject\05. UI\09. Tarot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CTarotInfo.cpp">
+      <Filter>02. GameObject\05. UI\09. Tarot</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -107,6 +107,12 @@ HRESULT CTriggerPoint::Add_Component()
 
 void CTriggerPoint::Activate()
 {
+	// 이미 비활성화된 트리거는 중복 이벤트 발행 방지
+
+	if (m_iHp <= 0)
+		return;
+
+
 	IMessageChannel::EVENT TriggerEvent;
 	TriggerEvent.strType = L"Trigger.Activate";
 	TriggerEvent.hmapData[L"Trigger_TID"] = m_eTID;

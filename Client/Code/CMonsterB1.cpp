@@ -479,7 +479,7 @@ void CMonsterB1::Move_Frame(const _float& fTimeDelta)
 			m_pAICom->Anim_End(m_eCurState);
 			AmduEvent.strType = L"Amdu.Done";
 			m_pMessageChannel->Publish(AmduEvent);
-			CSoundMgr::GetInstance()->Play(L"AmduRoar.wav", SOUND_BOSS, 0.35f);
+			CSoundMgr::GetInstance()->Play(L"AmduRoar.wav", SOUND_BOSS, 0.5f);
 			m_eCurState = B1S_ROAR;
 			break;
 

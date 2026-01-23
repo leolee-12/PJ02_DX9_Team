@@ -32,6 +32,8 @@
 #include "CFontAlpha.h"
 #include "CChest.h"
 #include "CEffectMgr.h"
+#include "CTarotSeller.h"
+#include "CTarotCard.h"
 
 CRealDungeon::CRealDungeon(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -59,40 +61,9 @@ HRESULT CRealDungeon::Ready_Scene()
 
 	Ready_Event();
 
-	CCutSceneMgr::GetInstance()->Ready_CutsceneMgr(m_pMessageChannel);
+	Ready_CutScene();
 
 	CEffectMgr::GetInstance()->Ready_EffectMgr(m_pGraphicDev);
-
-	CUTSCENE tRealDungeonScene;
-	tRealDungeonScene.strName = L"Meet_Amdu";
-	tRealDungeonScene.vecSteps =
-	{
-		{_vec3(-145.7f * 0.8f, 1.f, 13.5f * 0.8f), 0.75f, 0.5f, L"", L"", ADV_TIMED, 1.f},
-		{_vec3(-145.7f * 0.8f, 1.f, 13.5f * 0.8f), 0.75f, 0.5f, L"Font", L"암두시아스", ADV_IMMEDIATE},
-		{_vec3(-145.7f * 0.8f, 1.f, 13.5f * 0.8f), 0.75f, 0.5f, L"Amdu", L"Amdu_Intro", ADV_EVENT, 0.f, L"Amdu.Done"},
-		{_vec3(-145.7f * 0.8f, 1.f, 13.5f * 0.8f), 1.5f, 0.5f, L"Amdu", L"Amdu_Intro2", ADV_EVENT, 0.f, L"Amdu.Done"},
-		{_vec3(-145.7f * 0.8f, 1.f, 13.5f * 0.8f), 1.5f, 0.5f, L"Sound", L"PlayAmdu", ADV_IMMEDIATE},
-	};
-
-	CCutSceneMgr::GetInstance()->Register_CutScene(tRealDungeonScene);
-
-	tRealDungeonScene.strName = L"Meet_Leshy";
-	tRealDungeonScene.vecSteps =
-	{
-		{_vec3(-325.23975f * 0.8f, 4.f, 29.831284f * 0.8f), 0.75f, 0.5f, L"", L"", ADV_TIMED, 1.f},
-		{_vec3(-325.23975f * 0.8f, 4.f, 29.831284f * 0.8f), 0.75f, 0.5f, L"Bishop_Leshy", L"Leshy_Enter", ADV_EVENT, 0.f, L"Leshy.Done"},
-		{_vec3(-325.23975f * 0.8f, 4.f, 29.831284f * 0.8f), 1.f, 0.5f, L"Bishop_Leshy", L"네가 귀찮아지기 시작했다, 어린 양이여..."},
-		{_vec3(-325.23975f * 0.8f, 4.f, 29.831284f * 0.8f), 1.f, 0.5f, L"Bishop_Leshy", L"이 바보같은 가면무도회를 끝낼시간이다!"},
-		{_vec3(-325.23975f * 0.8f, 2.f, 29.831284f * 0.8f), 1.2f, 0.25f, L"", L"", ADV_TIMED, 1.f},
-		{_vec3(-325.23975f * 0.8f, 2.f, 29.831284f * 0.8f), 0.75f, 0.5f, L"Bishop_Leshy", L"Leshy_Transform", ADV_EVENT, 0.f, L"Leshy.Done"},
-		{_vec3(-325.23975f * 0.8f, 2.f, 29.831284f * 0.8f), 0.5f, 0.75f, L"Leshy", L"Leshy_Intro", ADV_IMMEDIATE},
-		{_vec3(-325.23975f * 0.8f, 2.f, 29.831284f * 0.8f), 0.5f, 0.75f, L"Font", L"레쉬", ADV_TIMED, 1.f},
-		{_vec3(-325.23975f * 0.8f, 2.f, 29.831284f * 0.8f), 0.75f, 0.75f, L"", L"", ADV_TIMED, 1.5f},
-		{_vec3(-325.23975f * 0.8f, 2.f, 29.831284f * 0.8f), 0.75f, 1.f, L"Cam", L"Shake", ADV_EVENT, 0.f, L"Leshy.Done"},
-		{_vec3(-325.23975f * 0.8f, 2.f, 29.831284f * 0.8f), 0.75f, 1.f, L"Sound", L"PlayLeshy", ADV_IMMEDIATE},
-	};
-
-	CCutSceneMgr::GetInstance()->Register_CutScene(tRealDungeonScene);
 
 	CSoundMgr::GetInstance()->PlayBGM(L"05.RealDungeon.mp3", 0.1f);
 
@@ -410,6 +381,22 @@ HRESULT CRealDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	if (FAILED(pLayer->Add_GameObject(L"TriggerPoint", pGameObject)))
 		return E_FAIL;
 
+	vTriggerPos = { 203.f, 0.f, 12.f };
+	vTriggerHalfSize = { 3.f, 3.f, 3.f };
+	pGameObject = CTriggerPoint::Create(m_pGraphicDev, m_pMessageChannel, vTriggerPos, vTriggerHalfSize, Trigger::TI_STAGING, L"Meet_Tarot", true);
+
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+
+	if (FAILED(pLayer->Add_GameObject(L"TriggerPoint", pGameObject)))
+		return E_FAIL;
+
+	pGameObject = CTarotSeller::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ 203.f, 0.f, 17.f });
+
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+
+	if (FAILED(pLayer->Add_GameObject(L"NPC", pGameObject)))
+		return E_FAIL;
+
 	m_mapLayer.insert({ pLayerTag , pLayer });
 
 	return S_OK;
@@ -580,6 +567,37 @@ void CRealDungeon::Ready_Event()
 				iter->second->Add_GameObject(L"Chest", pGameObject);
 				return;
 			}
+			if (strDothis == L"Create_Tarot") {
+
+				CGameObject* pGameObject = nullptr;
+
+				_float fHalfwincx = _float(WINCX / 2);
+				_float fHalfwincy = _float(WINCY / 2);
+
+				_vec3 vPos = { fHalfwincx - (fHalfwincx * 0.6f), fHalfwincy, 0.01f };
+
+				pGameObject = CTarotCard::Create(m_pGraphicDev, m_pMessageChannel, vPos, CTarotCard::TCT_HEART);
+
+				if (nullptr == pGameObject)
+					return;
+
+				auto iter = m_mapLayer.find(L"UI_Layer");
+				if (iter == m_mapLayer.end()) { return; }
+
+				iter->second->Add_GameObject(L"Tarot", pGameObject);
+
+				vPos = { fHalfwincx + (fHalfwincx * 0.3f), fHalfwincy, 0.01f };
+
+				pGameObject = CTarotCard::Create(m_pGraphicDev, m_pMessageChannel, vPos, CTarotCard::TCT_SPEED);
+
+				if (nullptr == pGameObject)
+					return;
+
+				iter->second->Add_GameObject(L"Tarot", pGameObject);
+
+				CSoundMgr::GetInstance()->Play(L"TarotCardIntro.wav", SOUND_EFFECT, 0.2f);
+				return;
+			}
 		}
 		return;
 	}
@@ -603,6 +621,53 @@ void CRealDungeon::Ready_Event()
 		return;
 	}
 	) });
+}
+
+void CRealDungeon::Ready_CutScene()
+{
+	CCutSceneMgr::GetInstance()->Ready_CutsceneMgr(m_pMessageChannel);
+
+	CUTSCENE tRealDungeonScene;
+	tRealDungeonScene.strName = L"Meet_Amdu";
+	tRealDungeonScene.vecSteps =
+	{
+		{_vec3(-145.7f * 0.8f, 1.f, 13.5f * 0.8f), 0.75f, 0.5f, L"", L"", ADV_TIMED, 1.f},
+		{_vec3(-145.7f * 0.8f, 1.f, 13.5f * 0.8f), 0.75f, 0.5f, L"Font", L"암두시아스", ADV_IMMEDIATE},
+		{_vec3(-145.7f * 0.8f, 1.f, 13.5f * 0.8f), 0.75f, 0.5f, L"Amdu", L"Amdu_Intro", ADV_EVENT, 0.f, L"Amdu.Done"},
+		{_vec3(-145.7f * 0.8f, 1.f, 13.5f * 0.8f), 1.5f, 0.5f, L"Amdu", L"Amdu_Intro2", ADV_EVENT, 0.f, L"Amdu.Done"},
+		{_vec3(-145.7f * 0.8f, 1.f, 13.5f * 0.8f), 1.5f, 0.5f, L"Sound", L"PlayAmdu", ADV_IMMEDIATE},
+	};
+
+	CCutSceneMgr::GetInstance()->Register_CutScene(tRealDungeonScene);
+
+	tRealDungeonScene.strName = L"Meet_Leshy";
+	tRealDungeonScene.vecSteps =
+	{
+		{_vec3(-325.23975f * 0.8f, 4.f, 29.831284f * 0.8f), 0.75f, 0.5f, L"", L"", ADV_TIMED, 1.f},
+		{_vec3(-325.23975f * 0.8f, 4.f, 29.831284f * 0.8f), 0.75f, 0.5f, L"Bishop_Leshy", L"Leshy_Enter", ADV_EVENT, 0.f, L"Leshy.Done"},
+		{_vec3(-325.23975f * 0.8f, 4.f, 29.831284f * 0.8f), 1.f, 0.5f, L"Bishop_Leshy", L"네가 귀찮아지기 시작했다, 어린 양이여..."},
+		{_vec3(-325.23975f * 0.8f, 4.f, 29.831284f * 0.8f), 1.f, 0.5f, L"Bishop_Leshy", L"이 바보같은 가면무도회를 끝낼시간이다!"},
+		{_vec3(-325.23975f * 0.8f, 2.f, 29.831284f * 0.8f), 1.2f, 0.25f, L"", L"", ADV_TIMED, 1.f},
+		{_vec3(-325.23975f * 0.8f, 2.f, 29.831284f * 0.8f), 0.75f, 0.5f, L"Bishop_Leshy", L"Leshy_Transform", ADV_EVENT, 0.f, L"Leshy.Done"},
+		{_vec3(-325.23975f * 0.8f, 2.f, 29.831284f * 0.8f), 0.5f, 0.75f, L"Leshy", L"Leshy_Intro", ADV_IMMEDIATE},
+		{_vec3(-325.23975f * 0.8f, 2.f, 29.831284f * 0.8f), 0.5f, 0.75f, L"Font", L"레쉬", ADV_TIMED, 1.f},
+		{_vec3(-325.23975f * 0.8f, 2.f, 29.831284f * 0.8f), 0.75f, 0.75f, L"", L"", ADV_TIMED, 1.5f},
+		{_vec3(-325.23975f * 0.8f, 2.f, 29.831284f * 0.8f), 0.75f, 1.f, L"Cam", L"Shake", ADV_EVENT, 0.f, L"Leshy.Done"},
+		{_vec3(-325.23975f * 0.8f, 2.f, 29.831284f * 0.8f), 0.75f, 1.f, L"Sound", L"PlayLeshy", ADV_IMMEDIATE},
+	};
+
+	CCutSceneMgr::GetInstance()->Register_CutScene(tRealDungeonScene);
+
+	tRealDungeonScene.strName = L"Meet_Tarot";
+	tRealDungeonScene.vecSteps =
+	{
+		{_vec3(203.f, 0.f, 17.f), 1.2f, 0.5f, L"", L"", ADV_TIMED, 1.f},
+		{_vec3(203.f, 0.f, 17.f), 1.2f, 0.5f, L"Tarot_Saller"
+		, L"어린 양을 찬양할지라, 위대한 힘의 전달자요,\n아래에서 기다리는 자의 약속된 해방자이니."},
+		{_vec3(203.f, 0.f, 17.f), 1.2f, 0.5f, L"Scene", L"Create_Tarot", ADV_EVENT, 0.f, L"Tarot.Selected"}
+	};
+
+	CCutSceneMgr::GetInstance()->Register_CutScene(tRealDungeonScene);
 }
 
 CRealDungeon* CRealDungeon::Create(LPDIRECT3DDEVICE9 pGraphicDev)

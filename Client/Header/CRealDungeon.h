@@ -21,6 +21,7 @@ private:
 
 	HRESULT			Ready_Light();
 	void			Ready_Event();
+	void			Ready_CutScene();
 
 public:
 	static CRealDungeon* Create(LPDIRECT3DDEVICE9 pGraphicDev);
