@@ -64,16 +64,23 @@ _int CActiveItem::Update_GameObject(const _float& fTimeDelta)
 
 void CActiveItem::OnCollision(CGameObject* pObject)
 {
+	if (m_iHp <= 0) { return; }
 	if(m_eCurState == IS_SPAWN)
 		return;
 
 	if(pObject->Get_OBJID() == OID_PLAYER)
 	{
 		// 아이템 획득 처리
+		IMessageChannel::EVENT tEvent;
+		tEvent.strType = L"ResourceHistory.AddItem";
+		tEvent.hmapData[L"ItemID"] = (int)m_eItemID;
+
+		m_pMessageChannel->Publish(tEvent);
 		m_iHp = 0;
 		_tchar strSoundName[128] = L"";
 		swprintf_s(strSoundName, L"ItemPickup%d.wav", Get_Rand_Int(1, 7));
 		CSoundMgr::GetInstance()->Play(strSoundName, SOUND_EFFECT, 0.5f);
+
 	}
 }
 
