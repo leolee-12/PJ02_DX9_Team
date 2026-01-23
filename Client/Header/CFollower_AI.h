@@ -25,6 +25,7 @@ private:
 	void		Update_Idle(const _float& fTimeDelta);
 	void		Update_Run(const _float& fTimeDelta);
 	void		Update_Dance(const _float& fTimeDelta);
+	void		Update_Cheer(const _float& fTimeDelta);
 	void		Update_Transform(const _float& fTimeDelta);
 	void		Update_Unconvert(const _float& fTimeDelta);
 	void		Update_Convert(const _float& fTimeDelta);

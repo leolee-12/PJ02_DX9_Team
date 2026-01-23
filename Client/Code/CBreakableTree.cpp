@@ -7,6 +7,7 @@
 #include "CCollider.h"
 #include "CInteractMgr.h"
 #include "CFontMgr.h"
+#include "CResourceWorkBar.h"
 
 CBreakableTree::CBreakableTree(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev)
@@ -18,6 +19,7 @@ CBreakableTree::CBreakableTree(LPDIRECT3DDEVICE9 pGraphicDev)
 	, m_fScale(1.f)
 	, m_fBaseScale(1.f)
 	, m_fWorkGauge(0.f)
+	, m_fPreWorkGauge(0.f)
 {
 }
 
@@ -31,6 +33,7 @@ CBreakableTree::CBreakableTree(const CBreakableTree& rhs)
 	, m_fScale(rhs.m_fScale)
 	, m_fBaseScale(rhs.m_fBaseScale)
 	, m_fWorkGauge(0.f)
+	, m_fPreWorkGauge(0.f)
 {
 }
 
@@ -60,6 +63,9 @@ HRESULT CBreakableTree::Ready_GameObject()
 		}
 	}) });
 
+	m_pWorkBar = CResourceWorkBar::Create(m_pGraphicDev, _float(m_iHp), _vec3{});
+	m_pWorkBar->UnActive();
+
 	return S_OK;
 }
 
@@ -69,9 +75,9 @@ _int CBreakableTree::Update_GameObject(const _float& fTimeDelta)
 
 	m_pColliderCom->UpdateFromTransform(m_pTransformCom);
 
-	Check_Status();
-
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
+
+	Update_WorkBar(fTimeDelta);
 
 	if (iExit == DEAD)
 	{
@@ -86,14 +92,21 @@ _int CBreakableTree::Update_GameObject(const _float& fTimeDelta)
 
 void CBreakableTree::LateUpdate_GameObject(const _float& fTimeDelta)
 {
-	if (m_fWorkGauge - m_fPreWorkGauge < 0.001f)	m_iTextureIndex = 0;	// IDLE
-	else 											m_iTextureIndex = 1;	// HIT
+	if (m_fWorkGauge - m_fPreWorkGauge < 0.0001f)	m_iTextureIndex = 0;	// IDLE
+	else
+	{
+		m_pWorkBar->Active();
+		m_iTextureIndex = 1;	// HIT
+	}
 
 	_vec3 vPos;
 	m_pTransformCom->Get_Info(Engine::INFO_POS, &vPos);
 	m_pTransformCom->Compute_Bilboard(BBD_X);
 	Compute_ViewDepth(&vPos);
 
+	Check_Status();
+
+	m_pWorkBar->LateUpdate_GameObject(fTimeDelta);
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
 }
 
@@ -112,25 +125,6 @@ void CBreakableTree::Render_GameObject()
 	m_pGraphicDev->SetTextureStageState(0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE);
 
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
-
-
-	// -------------------------디버그용------------------------------
-	_matrix matView, matProj;
-	m_pGraphicDev->GetTransform(D3DTS_VIEW, &matView);
-	m_pGraphicDev->GetTransform(D3DTS_PROJECTION, &matProj);
-	_vec3 vWorldPos, vViewPos, vndcPos, vScreenPos;
-	m_pTransformCom->Get_Info(INFO_POS, &vWorldPos);
-	D3DXVec3TransformCoord(&vViewPos, &vWorldPos, &matView);
-	D3DXVec3TransformCoord(&vndcPos, &vViewPos, &matProj);
-	vScreenPos.x = (vndcPos.x * 0.5f + 0.5f) * _float(WINCX);
-	vScreenPos.y = (-vndcPos.y * 0.5f + 0.5f) * _float(WINCY);
-	D3DXCOLOR FontColor = D3DXCOLOR(240.f / 256.f, 240.f / 256.f, 240.f / 256.f, 1.f);
-	wchar_t szGauge[16];
-
-	swprintf_s(szGauge, L" Gauge : %.3f", m_fWorkGauge);
-	RECT rcPlayer = { vScreenPos.x - 50, vScreenPos.y - 10, vScreenPos.x + 50, vScreenPos.y + 10 };
-	CFontMgr::GetInstance()->Render_Font(L"Font_Lapture20", szGauge, rcPlayer, FontColor, DT_RIGHT | DT_BOTTOM);
-	// -------------------------디버그용------------------------------
 }
 
 void CBreakableTree::Set_ObjectData(const Engine::OBJECTDATA& objData)
@@ -152,14 +146,6 @@ void CBreakableTree::Check_Status()
 
 void CBreakableTree::OnCollision(CGameObject* pObject)
 {
-	Engine::CTransform* pTransform = dynamic_cast<Engine::CTransform*>(
-		pObject->Get_Component(ID_DYNAMIC, L"Com_Transform"));
-
-	if (nullptr == pTransform)
-		return;
-
-	_vec3 vObjPos;
-	pTransform->Get_Info(INFO_POS, &vObjPos);
 }
 
 HRESULT CBreakableTree::Add_Component()
@@ -225,6 +211,16 @@ void CBreakableTree::Set_Texture()
 	m_pTextureCom->Set_Texture(m_iTextureIndex);
 }
 
+void CBreakableTree::Update_WorkBar(const _float& fTimeDelta)
+{
+	_vec3 vPos;
+	m_pTransformCom->Get_Info(INFO_POS, &vPos);
+	vPos.y += 3.f;
+	m_pWorkBar->Set_TargetPos(vPos);
+	m_pWorkBar->Update_CurWork(m_fWorkGauge);
+	m_pWorkBar->Update_GameObject(fTimeDelta);
+}
+
 CBreakableTree* CBreakableTree::Create(LPDIRECT3DDEVICE9 pGraphicDev, const Engine::OBJECTDATA& objData, IMessageChannel* pMessageChannel)
 {
 	CBreakableTree* pBreakableTree = new CBreakableTree(pGraphicDev);
@@ -247,8 +243,6 @@ CBreakableTree* CBreakableTree::Create(LPDIRECT3DDEVICE9 pGraphicDev, const Engi
 
 void CBreakableTree::Free()
 {
-	// m_pBufferCom, m_pTransformCom, m_pTextureCom are in m_mapComponent
-	// They will be released by CGameObject::Free()
-
+	Safe_Release(m_pWorkBar);
 	CGameObject::Free();
 }

@@ -11,7 +11,7 @@ namespace Engine
 }
 
 class CTriggerPoint;
-
+class CResourceWorkBar;
 
 class CBuilding : public CGameObject, public IInteractable
 {
@@ -44,6 +44,8 @@ private:
 	void	Set_Texture();
 	void	Ready_Variable();
 	void	Ready_Event();
+	void	Ready_Trigger();
+	void	Update_WorkBar(const _float& fTimeDelta);
 
 private:
 	Engine::CRcTex*		m_pBufferCom;
@@ -61,8 +63,10 @@ private:
 
 
 	// 상호작용 관련(추종자)
+	_float				m_fPreWorkGauge;
 	_float				m_fWorkGauge;
 	_uint				m_iTexIdx;
+	CResourceWorkBar*	m_pWorkBar;
 
 	static constexpr _float MAX_WORK_GAUGE = 1.f;
 	static constexpr _float DEFAULT_CONSTRUCT_GROUNDY = -2.49f;

@@ -127,6 +127,8 @@ _int CVillage::Update_Scene(const _float& fTimeDelta)
 		CTileMgr::GetInstance()->Reset_For_SceneChange();
 		CSoundMgr::GetInstance()->StopAll();
 		CLightMgr::GetInstance()->DestroyInstance();
+		CPersistentMgr::GetInstance()->Get_Player()->Set_Village(false);
+		CPersistentMgr::GetInstance()->Get_Gauge()->Set_GaugeState(Gauge::GS_PASSION);
 
 		if (FAILED(CManagement::GetInstance()->Set_Scene(pLoading)))
 		{
@@ -221,8 +223,9 @@ HRESULT CVillage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 			switch (spawn.type)
 			{
 			case 0:
-				CPersistentMgr::GetInstance()->Get_Player()->Set_Pos(_vec3(spawn.x * 0.8f, -0.95f, spawn.z * 0.8f)); // 실제 스폰 지점
-				//CPersistentMgr::GetInstance()->Get_Player()->Set_Pos(_vec3(199.8f, -0.95f, 35.f));	// 디버그용
+				//CPersistentMgr::GetInstance()->Get_Player()->Set_Pos(_vec3(spawn.x * 0.8f, -0.95f, spawn.z * 0.8f)); // 실제 스폰 지점
+				CPersistentMgr::GetInstance()->Get_Player()->Set_Pos(_vec3(199.8f, -0.95f, 35.f));	// 디버그용
+				CPersistentMgr::GetInstance()->Get_Player()->Set_Village(true);
 				pGameObject = CPersistentMgr::GetInstance()->Get_Player();
 
 				if (nullptr == pGameObject)
@@ -406,6 +409,11 @@ HRESULT CVillage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 		NULL_CHECK_RETURN(pGameObject, E_FAIL);
 		if (FAILED(pLayer->Add_GameObject(L"NPC", pGameObject)))
 			return E_FAIL;
+
+		pGameObject = CFollower::Create(m_pGraphicDev, m_pMessageChannel, L"Proto_Follower5Texture");
+		NULL_CHECK_RETURN(pGameObject, E_FAIL);
+		if (FAILED(pLayer->Add_GameObject(L"NPC", pGameObject)))
+			return E_FAIL;
 	}
 
 	// Village 지형물
@@ -413,9 +421,9 @@ HRESULT CVillage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	{
 		OBJECTDATA tObjData1 = {"BreakableRock",						// 카테고리
 								0,										// 텍스처인덱스
-								199.8f + Get_Rand_Float(-40.f, 40.f),	// x
+								199.8f + Get_Rand_Float(-30.f, 30.f),	// x
 								-0.5f,									// y
-								35.f + Get_Rand_Float(-40.f, 40.f),		// z
+								35.f + Get_Rand_Float(-30.f, 30.f),		// z
 								5.f,									// 스케일
 								0 };									// Standing or Floor
 
@@ -426,9 +434,9 @@ HRESULT CVillage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 
 		OBJECTDATA tObjData2 = {"BreakableTree",						// 카테고리
 								0,										// 텍스처인덱스
-								199.8f + Get_Rand_Float(-40.f, 40.f),	// x
-								0.8f,									// y
-								35.f + Get_Rand_Float(-40.f, 40.f),		// z
+								199.8f + Get_Rand_Float(-30.f, 30.f),	// x
+								2.5f,									// y
+								35.f + Get_Rand_Float(-30.f, 30.f),		// z
 								10.f,									// 스케일
 								0 };									// Standing or Floor
 
@@ -496,6 +504,19 @@ HRESULT CVillage::Ready_UI_Layer(const _tchar* pLayerTag)
 		return E_FAIL;
 
 	CGameObject* pGameObject = nullptr;
+
+	//----------------------------- 플레이어 UI -----------------------------
+	pGameObject = CPersistentMgr::GetInstance()->Get_Gauge();
+
+	if (nullptr == pGameObject)
+		return E_FAIL;
+
+	CPersistentMgr::GetInstance()->Get_Gauge()->Set_GaugeState(Gauge::GS_FAITH);
+
+	if (FAILED(pLayer->Add_GameObject(L"Gauge", pGameObject)))
+		return E_FAIL;
+	pGameObject->AddRef();
+	//----------------------------- 플레이어 UI -----------------------------
 
 	pGameObject = CFade::Create(m_pGraphicDev, m_pMessageChannel);
 
