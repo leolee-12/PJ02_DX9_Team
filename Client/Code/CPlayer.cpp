@@ -473,7 +473,8 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 		m_fLerp = 0.2f;
 	}
 
-	if (GetAsyncKeyState(VK_LBUTTON) & 0x0001)	// 눌렀을 때 한 번만 true
+	//if (GetAsyncKeyState(VK_LBUTTON) & 0x0001)	// 눌렀을 때 한 번만 true
+	if (CDInputMgr::GetInstance()->Mouse_Down(DIM_LB))
 	{			
 		if ((m_iCombo == 3) || (m_fCharge)) return;
 

@@ -64,7 +64,7 @@ private:
 	CFontUIOrtho*		  m_pNameFont;
 	CFontUIOrtho*		  m_pTotalCountFont;
 
-	_bool		m_bRender;
+	_bool		m_bRender = false;
 	_bool		m_bisGet;
 
 	_vec3		m_vStartLerpPos;
@@ -83,5 +83,5 @@ private:
 	wstring		m_szName;
 
 	_bool		m_bClosing;
-	_vec3 m_vPos;
+	_vec3		m_vPos;
 };

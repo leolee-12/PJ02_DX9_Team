@@ -60,6 +60,12 @@ HRESULT CPersistentMgr::Ready_GlobalObjects(LPDIRECT3DDEVICE9 pGraphicDev)
 
 		m_pPlayer = CPlayer::Create(pGraphicDev);
 
+		if (nullptr == m_pPlayer)
+			return E_FAIL;
+	}
+
+	if (m_pGauge == nullptr)
+	{
 		if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_GaugeCover", Engine::CTexture::Create(pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Player/PassionGauge/dds/GaugeCover.dds", 1))))
 			return E_FAIL;
 
@@ -73,12 +79,18 @@ HRESULT CPersistentMgr::Ready_GlobalObjects(LPDIRECT3DDEVICE9 pGraphicDev)
 			return E_FAIL;
 
 		m_pGauge = CGauge::Create(pGraphicDev, Gauge::GS_PASSION);
+	}
 
+	if (m_pPlayerHPUI == nullptr)
+	{
 		if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_PlayerHP", Engine::CTexture::Create(pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Player/dds/Health_%d.dds", 3))))
 			return E_FAIL;
 
 		m_pPlayerHPUI = CPlayerHP::Create(pGraphicDev);
+	}
 
+	if (m_pResourceHistoryUI == nullptr)
+	{
 		if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_ItemHistoryBack", Engine::CTexture::Create(pGraphicDev, TEX_NORMAL, L"../Bin/Resource/YSD/ResourceHistory/ItemHistoryBack.png", 1))))
 			return E_FAIL;
 		if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_ItemHistoryDeco", Engine::CTexture::Create(pGraphicDev, TEX_NORMAL, L"../Bin/Resource/YSD/ResourceHistory/ItemHistoryDeco.png", 1))))
@@ -87,10 +99,6 @@ HRESULT CPersistentMgr::Ready_GlobalObjects(LPDIRECT3DDEVICE9 pGraphicDev)
 			return E_FAIL;
 
 		m_pResourceHistoryUI = CResourceHistoryController::Create(pGraphicDev);
-		
-
-		if (nullptr == m_pPlayer)
-			return E_FAIL;
 	}
 	return S_OK;
 }
