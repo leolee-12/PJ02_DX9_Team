@@ -5,6 +5,7 @@
 #include "CManagement.h"
 #include "CInteractMgr.h"
 #include "CFontMgr.h"
+#include "CResourceWorkBar.h"
 
 CBreakableRock::CBreakableRock(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev)
@@ -22,6 +23,7 @@ CBreakableRock::CBreakableRock(LPDIRECT3DDEVICE9 pGraphicDev)
 	, m_fReactStrength(0.f)
 	, m_vReactDir(0.f, 0.f, 0.f)
 	, m_fWorkGauge(0.f)
+	, m_fPreWorkGauge(0.f)
 {
 }
 
@@ -41,6 +43,7 @@ CBreakableRock::CBreakableRock(const CBreakableRock& rhs)
 	, m_fReactStrength(0.f)
 	, m_vReactDir(0.f, 0.f, 0.f)
 	, m_fWorkGauge(0.f)
+	, m_fPreWorkGauge(0.f)
 {
 }
 
@@ -66,6 +69,10 @@ HRESULT CBreakableRock::Ready_GameObject()
 		}
 	}) });
 
+	m_iTextureIndex = 0;
+	m_pWorkBar = CResourceWorkBar::Create(m_pGraphicDev, _float(m_iHp), _vec3{});
+	m_pWorkBar->UnActive();
+
 	return S_OK;
 }
 
@@ -75,24 +82,15 @@ _int CBreakableRock::Update_GameObject(const _float& fTimeDelta)
 
 	m_pColliderCom->UpdateFromTransform(m_pTransformCom);
 
-	Check_Status();
-
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
+
+	Update_WorkBar(fTimeDelta);
 
 	if (iExit == DEAD)
 	{
 		m_pColliderCom->UnregisterFromManager();
 		CInteractMgr::GetInstance()->Unregister_IObj(CInteractMgr::ROCK, this);
 	}
-
-
-	m_fAccTime += fTimeDelta;
-
-	// React is now called via OnCollision callback
-	Update_VertexSway(fTimeDelta);
-
-	// Decay react strength over time
-	m_fReactStrength *= 0.9f;
 
 	CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHA, this);
 
@@ -101,11 +99,19 @@ _int CBreakableRock::Update_GameObject(const _float& fTimeDelta)
 
 void CBreakableRock::LateUpdate_GameObject(const _float& fTimeDelta)
 {
+	if (!(m_fWorkGauge - m_fPreWorkGauge < 0.0001f))
+	{
+		m_pWorkBar->Active();
+	}
+
 	_vec3 vPos;
 	m_pTransformCom->Get_Info(Engine::INFO_POS, &vPos);
 	m_pTransformCom->Compute_Bilboard(BBD_X);
 	Compute_ViewDepth(&vPos);
 
+	Check_Status();
+
+	m_pWorkBar->LateUpdate_GameObject(fTimeDelta);
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
 }
 
@@ -115,36 +121,11 @@ void CBreakableRock::Render_GameObject()
 
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 
-	// Alpha test (remove fully transparent pixels)
-	//m_pGraphicDev->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
-	//m_pGraphicDev->SetRenderState(D3DRS_ALPHAREF, 0x10);
-	//m_pGraphicDev->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
-
 	m_pTextureCom->Set_Texture(m_iTextureIndex);
+
 	m_pBufferCom->Render_Buffer();
 
-	// Restore
-	//m_pGraphicDev->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
-
-	_matrix matView, matProj;
-	m_pGraphicDev->GetTransform(D3DTS_VIEW, &matView);
-	m_pGraphicDev->GetTransform(D3DTS_PROJECTION, &matProj);
-
-	_vec3 vWorldPos, vViewPos, vndcPos, vScreenPos;
-	m_pTransformCom->Get_Info(INFO_POS, &vWorldPos);
-	D3DXVec3TransformCoord(&vViewPos, &vWorldPos, &matView);
-	D3DXVec3TransformCoord(&vndcPos, &vViewPos, &matProj);
-
-	vScreenPos.x = (vndcPos.x * 0.5f + 0.5f) * _float(WINCX);
-	vScreenPos.y = (-vndcPos.y * 0.5f + 0.5f) * _float(WINCY);
-
-	D3DXCOLOR FontColor = D3DXCOLOR(240.f / 256.f, 240.f / 256.f, 240.f / 256.f, 1.f);
-	wchar_t szGauge[16];
-
-	swprintf_s(szGauge, L" Gauge : %.3f", m_fWorkGauge);
-	RECT rcPlayer = { vScreenPos.x - 50, vScreenPos.y - 10, vScreenPos.x + 50, vScreenPos.y + 10 };
-	CFontMgr::GetInstance()->Render_Font(L"Font_Lapture20", szGauge, rcPlayer, FontColor, DT_RIGHT | DT_BOTTOM);
 }
 
 void CBreakableRock::Set_ObjectData(const Engine::OBJECTDATA& objData)
@@ -155,67 +136,27 @@ void CBreakableRock::Set_ObjectData(const Engine::OBJECTDATA& objData)
 
 	m_pTransformCom->Set_Pos(objData.x, objData.y, objData.z);
 	m_pTransformCom->Set_Scale(m_fScale, m_fScale, m_fScale);
-
-	// Position-based phase for individual sway timing
-	m_fPhase = fmodf(objData.x * 12.9898f + objData.z * 78.233f, D3DX_PI * 2.f);
 }
 
 void CBreakableRock::Check_Status()
 {
 	if (Is_WorkComplete()) m_iHp = 0;
+
+	m_fPreWorkGauge = m_fWorkGauge;
 }
 
 void CBreakableRock::OnCollision(CGameObject* pObject)
 {
-	Engine::CTransform* pTransform = dynamic_cast<Engine::CTransform*>(
-		pObject->Get_Component(ID_DYNAMIC, L"Com_Transform"));
-
-	if (nullptr == pTransform)
-		return;
-
-	_vec3 vObjPos;
-	pTransform->Get_Info(INFO_POS, &vObjPos);
-
-	React(vObjPos);
 }
 
-void CBreakableRock::React(const _vec3& vObjPos)
+void CBreakableRock::Update_WorkBar(const _float& fTimeDelta)
 {
 	_vec3 vPos;
 	m_pTransformCom->Get_Info(INFO_POS, &vPos);
-
-	_vec3 vDist = vObjPos - vPos;
-	vDist.y = 0.f;
-	_float fDist = D3DXVec3Length(&vDist);
-
-	const _float fReactDistance = 2.f;
-
-	if (fDist < fReactDistance)
-	{
-		// Push grass away from object
-		D3DXVec3Normalize(&m_vReactDir, &vDist);
-		m_vReactDir = -m_vReactDir;
-
-		// Distance-based strength (closer = stronger)
-		m_fReactStrength = (1.f - fDist / fReactDistance);
-	}
-}
-
-void CBreakableRock::Update_VertexSway(const _float& fTimeDelta)
-{
-	if (nullptr == m_pBufferCom)
-		return;
-
-	// 1. Base wind sway (always applied)
-	_float fWindOffset = sinf(m_fAccTime * m_fWindSpeed + m_fPhase) * m_fWindStrength;
-
-	// 2. Player reaction sway
-	_float fReactOffset = m_vReactDir.x * m_fReactStrength * 0.3f;
-
-	// 3. Apply total offset to buffer
-	_float fTotalOffset = fWindOffset + fReactOffset;
-
-	//m_pGrassBuffer->Set_TopVertexOffset(fTotalOffset);
+	vPos.y += 3.f;
+	m_pWorkBar->Set_TargetPos(vPos);
+	m_pWorkBar->Update_CurWork(m_fWorkGauge);
+	m_pWorkBar->Update_GameObject(fTimeDelta);
 }
 
 HRESULT CBreakableRock::Add_Component()
@@ -284,5 +225,6 @@ CBreakableRock* CBreakableRock::Create(LPDIRECT3DDEVICE9 pGraphicDev, const Engi
 
 void CBreakableRock::Free()
 {
+	Safe_Release(m_pWorkBar);
 	CGameObject::Free();
 }

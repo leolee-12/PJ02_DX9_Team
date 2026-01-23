@@ -221,6 +221,8 @@
     <ClInclude Include="..\Header\CResourceHistoryController.h" />
     <ClInclude Include="..\Header\CResourceHistoryDeco.h" />
     <ClInclude Include="..\Header\CResourceHistoryUI.h" />
+    <ClInclude Include="..\Header\CResourceWorkBar.h" />
+    <ClInclude Include="..\Header\CResourceWorkFront.h" />
     <ClInclude Include="..\Header\CScreenEffect.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClInclude>
@@ -457,6 +459,8 @@
     <ClCompile Include="..\Code\CResourceHistoryDeco.cpp" />
     <ClCompile Include="..\Code\CResourceHistoryItem.cpp" />
     <ClCompile Include="..\Code\CResourceHistoryUI.cpp" />
+    <ClCompile Include="..\Code\CResourceWorkBar.cpp" />
+    <ClCompile Include="..\Code\CResourceWorkFront.cpp" />
     <ClCompile Include="..\Code\CSceneWarp.cpp" />
     <ClCompile Include="..\Code\CScreenEffect.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
