@@ -196,7 +196,7 @@ CTextureSet* CTextureSet::CreateFromMemory(LPDIRECT3DDEVICE9 pGraphicDev, TEXTUR
 	return pTexture;
 }
 
-CTextureSet* CTextureSet::CreateFromThered(LPDIRECT3DDEVICE9 pGraphicDev, TEXTUREID eID, const vector<TEXSETLR>& vecTexSetLR)
+CTextureSet* CTextureSet::CreateFromThread(LPDIRECT3DDEVICE9 pGraphicDev, TEXTUREID eID, const vector<TEXSETLR>& vecTexSetLR)
 {
 	CTextureSet* pTexture = new CTextureSet(pGraphicDev);
 

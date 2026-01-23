@@ -5,35 +5,40 @@
 #include "CRenderer.h"
 #include "CPersistentMgr.h"
 #include "CCollisionMgr.h"
+#include "CEffectMgr.h"
+//#include "CTrailEffect.h"
+#include "CIndicator.h"
 
 CProjectile::CProjectile(LPDIRECT3DDEVICE9 pGraphicDev)
-	:	CGameObject(pGraphicDev),
-		m_fFrame(0.f),
-		m_fFrameEnd(0.f),
-		m_fFrameSpeed(0.f),
-		m_iAttack(0),
-		m_fGroundY(0.f),
-		m_bActive(true),
-		m_fAcmlTime(0.f),
-		m_fLifeTime(0.f),
-		m_fGravity(0.f),
-		m_bUseGravity(false)
+	:	CGameObject(pGraphicDev)
+	, m_fFrame(0.f)
+	, m_fFrameEnd(0.f)
+	, m_fFrameSpeed(0.f)
+	, m_iAttack(0)
+	, m_fGroundY(0.f)
+	, m_fAcmlTime(0.f)
+	, m_fLifeTime(0.f)
+	, m_fGravity(0.f)
+	, m_bUseGravity(false)
+	//, m_pTrailEffect(nullptr)
+	, m_pIndicator(nullptr)
 {
 	ZeroMemory(&m_vPos, sizeof(_vec3));
 }
 
 CProjectile::CProjectile(const CProjectile& rhs)
-	:	CGameObject(rhs),
-		m_fFrame(0.f),
-		m_fFrameEnd(0.f),
-		m_fFrameSpeed(0.f),
-		m_iAttack(rhs.m_iAttack),
-		m_fGroundY(rhs.m_fGroundY),
-		m_bActive(rhs.m_bActive),
-		m_fAcmlTime(rhs.m_fAcmlTime),
-		m_fLifeTime(rhs.m_fLifeTime),
-		m_fGravity(rhs.m_fGravity),
-		m_bUseGravity(rhs.m_bUseGravity)
+	: CGameObject(rhs)
+	, m_fFrame(0.f)
+	, m_fFrameEnd(0.f)
+	, m_fFrameSpeed(0.f)
+	, m_iAttack(rhs.m_iAttack)
+	, m_fGroundY(rhs.m_fGroundY)
+	, m_fAcmlTime(rhs.m_fAcmlTime)
+	, m_fLifeTime(rhs.m_fLifeTime)
+	, m_fGravity(rhs.m_fGravity)
+	, m_bUseGravity(rhs.m_bUseGravity)
+	//, m_pTrailEffect(nullptr)
+	, m_pIndicator(nullptr)
 {
 }
 
@@ -48,7 +53,7 @@ void CProjectile::Set_Pos(const _vec3& vPos)
 
 HRESULT CProjectile::Ready_GameObject()
 {
-	m_eOBJID = OID_MONSTER;
+	m_eOBJID = OID_PROJECTILE;
 
 	if (FAILED(Add_Component()))
 		return E_FAIL;
@@ -68,20 +73,25 @@ _int CProjectile::Update_GameObject(const _float& fTimeDelta)
 
 	Move_Frame(fTimeDelta);
 
-	m_pColliderCom->UpdateFromTransform(m_pTransformCom);
-	// 충돌체 디버그용
-	if (g_bDebug) m_pColliderCom->Update_AABBforRender();
+	if (m_pIndicator)
+		m_pIndicator->Update_OwnerData(m_vPos, m_vSpeed, m_fGravity, m_fGroundY);
 
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
-	if (m_fAcmlTime >= m_fLifeTime)
-		iExit = DEAD;
-
-	if (iExit == DEAD)
+	if ((iExit == DEAD) || (m_vPos.y <= -2.5f) || (m_fAcmlTime >= m_fLifeTime))
 	{
+		if (m_pIndicator)
+		{
+			m_pIndicator->Set_Dead();
+			m_pIndicator = nullptr;
+		}
+
 		m_pColliderCom->UnregisterFromManager();
-		return iExit;
+		return DEAD;
 	}
+
+	//if (m_pTrailEffect)
+	//	m_pTrailEffect->Update_OwnerData(m_vPos, m_vSpeed);
 
 	CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHA, this);
 
@@ -94,6 +104,13 @@ void CProjectile::LateUpdate_GameObject(const _float& fTimeDelta)
 	m_pTransformCom->Get_Info(INFO_POS, &m_vPos);
 	Compute_ViewDepth(&m_vPos);
 
+	_float fHalfScale = m_pTransformCom->Get_Scale(ROT_X) * 0.3f;
+	AABB tAABB = { m_vPos.x, m_vPos.y, m_vPos.z, fHalfScale, fHalfScale, fHalfScale };
+	m_pColliderCom->Set_AABB(tAABB);
+	m_pColliderCom->UpdateFromCustom(tAABB);
+
+	if (g_bDebug) m_pColliderCom->Update_AABBforRender();
+
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
 }
 
@@ -103,17 +120,20 @@ void CProjectile::Render_GameObject()
 
 	m_pTextureCom->Set_Texture(0);
 
+	Set_Material();
+
 	m_pBufferCom->Render_Buffer();
+
+	Reset_Material();
 }
 
 void CProjectile::OnCollision(CGameObject* pObject)
 {
-	if (!m_bActive) return;
+	if (m_iHp == 0) return;
 
-	if (pObject->Get_OBJID() == OID_PLAYER)
+	if (pObject->Get_OBJID() == OID_PLAYER || pObject->Get_OBJID() == OID_MONSTER)
 	{
 		m_iHp = 0;
-		m_bActive = false;
 	}
 }
 
@@ -159,7 +179,7 @@ HRESULT CProjectile::Add_Component()
 void CProjectile::Ready_Variable()
 {
 	// 게임로직 변수 세팅
-	_float fScale = 1.f;
+	_float fScale = 1.5f;
 	m_fGroundY = -2.5f + fScale * 0.5f;
 	m_iAttack = 1;
 	m_iHp = 1;
@@ -170,9 +190,11 @@ void CProjectile::Ready_Variable()
 	// Transform 세팅
 	m_pTransformCom->Set_Pos(_float(rand() % 20), m_fGroundY, _float(rand() % 20));
 	m_pTransformCom->Set_Scale(fScale, fScale, fScale);
+	m_pTransformCom->Update_Component(0.f);
+	m_pTransformCom->Get_Info(INFO_POS, &m_vPos);
 
 	// Collider 세팅
-	m_pColliderCom->RegisterToManager(this, CL_MBULLET);
+	m_pColliderCom->RegisterToManager(this, m_eColGroup);
 
 	// Anim 관련 세팅
 	m_fFrameSpeed = 24.f;
@@ -194,9 +216,37 @@ void CProjectile::Move_Frame(const _float& fTimeDelta)
 	}
 }
 
-CProjectile* CProjectile::Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vPos, _vec3 vSpeed, _bool bUseGravity)
+void CProjectile::Set_Material()
+{
+	// 텍스처 색상 혼합
+	m_pGraphicDev->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_LERP);	// 색상 : 선형 보간
+	m_pGraphicDev->SetTextureStageState(0, D3DTSS_COLORARG0, D3DTA_TEXTURE | D3DTA_ALPHAREPLICATE);	// Arg0 : 텍스처의 알파
+	m_pGraphicDev->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);	// Arg1 : Arg0이 1일 때 색상 = 텍스처 원본
+	m_pGraphicDev->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_TFACTOR);	// Arg2 : Arg0이 0일 때 색상 = TFACTOR
+	m_pGraphicDev->SetRenderState(D3DRS_TEXTUREFACTOR, m_tColor);	// TFACTOR 설정 (가장자리 색상)
+
+	m_pGraphicDev->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE4X);	// 알파 : x2
+	m_pGraphicDev->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);	// Arg1 : 텍스처의 알파
+
+	m_bMtrl = true;
+}
+
+void CProjectile::Reset_Material()
+{
+	if (!m_bMtrl) return;
+
+	m_pGraphicDev->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
+	m_pGraphicDev->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_DIFFUSE);
+	m_pGraphicDev->SetRenderState(D3DRS_TEXTUREFACTOR, D3DCOLOR_ARGB(255, 255, 255, 255));
+
+	m_bMtrl = false;
+}
+
+CProjectile* CProjectile::Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vPos, _vec3 vSpeed, _bool bUseGravity, COLGROUP eGroup, D3DXCOLOR tColor)
 {
 	CProjectile* pProjectile = new CProjectile(pGraphicDev);
+
+	pProjectile->m_eColGroup = eGroup;
 
 	if (FAILED(pProjectile->Ready_GameObject()))
 	{
@@ -208,11 +258,30 @@ CProjectile* CProjectile::Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vPos, _vec
 	pProjectile->Set_Pos(vPos);
 	pProjectile->Set_vecSpeed(vSpeed);
 	pProjectile->Set_UseGravity(bUseGravity);
+	pProjectile->m_tColor = tColor;
+
+	if (pProjectile->m_bUseGravity)
+	{
+		pProjectile->m_pIndicator = static_cast<CIndicator*>(CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_INDICATOR_CIRCLE, 0, _vec3{}));
+		pProjectile->m_pIndicator->Play();
+	}
 
 	return pProjectile;
 }
 
 void CProjectile::Free()
 {
+	//if (m_pTrailEffect)
+	//{
+	//	m_pTrailEffect->Set_Dead();  // CEffectMgr가 정리
+	//	m_pTrailEffect = nullptr;
+	//}
+
+	if (m_pIndicator)
+	{
+		m_pIndicator->Set_Dead();  // CEffectMgr가 정리
+		m_pIndicator = nullptr;
+	}
+
 	CGameObject::Free();
 }

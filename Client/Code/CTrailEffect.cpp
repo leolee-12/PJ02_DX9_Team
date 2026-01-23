@@ -5,12 +5,25 @@
 
 CTrailEffect::CTrailEffect(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CEffect(pGraphicDev)
+	, m_fHeadSize(0.f)
+	, m_fTailLength(0.f)
+	, m_bScaleBySpeed(0.f)
+	, m_tColor(D3DXCOLOR(0.f, 0.f, 0.f, 0.f))
+	, m_bEmissive(false)
+
 {
+	D3DXMatrixIdentity(&m_matTrailWorld);
 }
 
 CTrailEffect::CTrailEffect(const CTrailEffect& rhs)
 	: CEffect(rhs)
+	, m_fHeadSize(rhs.m_fHeadSize)
+	, m_fTailLength(rhs.m_fTailLength)
+	, m_bScaleBySpeed(rhs.m_bScaleBySpeed)
+	, m_tColor(rhs.m_tColor)
+	, m_bEmissive(rhs.m_bEmissive)
 {
+	D3DXMatrixIdentity(&m_matTrailWorld);
 }
 
 CTrailEffect::~CTrailEffect()
@@ -19,6 +32,11 @@ CTrailEffect::~CTrailEffect()
 
 HRESULT	CTrailEffect::Ready_GameObject()
 {
+	FAILED_CHECK_RETURN(CEffect::Add_Component(), E_FAIL);
+
+	m_eType = EF_TRAIL;
+	m_eState = ES_READY;
+
 	return S_OK;
 }
 
@@ -26,14 +44,19 @@ _int CTrailEffect::Update_GameObject(const _float& fTimeDelta)
 {
 	if (m_eState != ES_PLAY && m_eState != ES_LOOP) return NOEVENT;
 
-	CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHA, this);
+	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
-	return NOEVENT;
+	//CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHA, this);
+
+	return iExit;
 }
 
 void CTrailEffect::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	Compute_TrailWorldMatrix();
+	Compute_ViewDepth(&m_vPos);
+
+	CGameObject::LateUpdate_GameObject(fTimeDelta);
 }
 
 void CTrailEffect::Render_GameObject()
@@ -106,23 +129,6 @@ void CTrailEffect::Reset()
 {
 }
 
-void CTrailEffect::Add_Point(const _vec3& vPoint)
-{
-	_vec3 vGap = vPoint - m_vLastPoint;
-
-	if (m_dequePoints.empty() || D3DXVec3Length(&vGap) >= m_fPointInterval)
-	{
-		m_dequePoints.push_back(vPoint);
-		m_vLastPoint = vPoint;
-
-		if (m_dequePoints.size() > m_iMaxPoints)
-		{
-			m_dequePoints.pop_front();
-		}
-	}
-
-}
-
 void CTrailEffect::Compute_TrailWorldMatrix()
 {
 	// 1. 속도 및 방향 추출
@@ -160,9 +166,11 @@ void CTrailEffect::Compute_TrailWorldMatrix()
 	m_matTrailWorld = matScale * matRot * matTrans;
 }
 
-CTrailEffect* CTrailEffect::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+CTrailEffect* CTrailEffect::Create(LPDIRECT3DDEVICE9 pGraphicDev, const wstring& strProtoTexKey)
 {
 	CTrailEffect* pTrailEffect = new CTrailEffect(pGraphicDev);
+
+	pTrailEffect->m_strProtoTexKey = strProtoTexKey;
 
 	if (FAILED(pTrailEffect->Ready_GameObject()))
 	{
@@ -178,16 +186,23 @@ CTrailEffect* CTrailEffect::Clone()
 {
 	CTrailEffect* pTrailEffect = new CTrailEffect(*this);
 
-	if (FAILED(pTrailEffect->Ready_GameObject()))
+	if (FAILED(pTrailEffect->CEffect::Add_Component()))
 	{
 		Safe_Release(pTrailEffect);
 		MSG_BOX("pTrailEffect Clone Failed");
 		return nullptr;
 	}
 
+	pTrailEffect->m_eState = ES_READY;
+	pTrailEffect->m_fAccTime = 0.f;
+	pTrailEffect->m_vPos = _vec3(0.f, 0.f, 0.f);
+	pTrailEffect->m_vSpeed = _vec3(0.f, 0.f, 0.f);
+	D3DXMatrixIdentity(&pTrailEffect->m_matTrailWorld);
+
 	return pTrailEffect;
 }
 
 void CTrailEffect::Free()
 {
+	CEffect::Free();
 }

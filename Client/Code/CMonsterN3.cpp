@@ -119,6 +119,14 @@ void CMonsterN3::Render_GameObject()
 
 void CMonsterN3::OnCollision(CGameObject* pObject)
 {
+	if (pObject->Get_OBJID() == OID_PROJECTILE)
+	{
+		if (!pObject->Get_Hp()) return;
+
+		_int iDamage = _int(static_cast<CTransform*>(pObject->Get_Component(ID_DYNAMIC, L"Com_Transform"))->Get_Scale(ROT_X));
+		Attacked(iDamage);
+	}
+
 	if (pObject->Get_OBJID() == OID_BORDER)
 	{
 		_vec3 vCurPos;
@@ -302,7 +310,9 @@ void CMonsterN3::Check_Frame()
 
 void CMonsterN3::Move_Frame(const _float& fTimeDelta)
 {
+	_uint m_iPreAnim = _uint(m_fFrame);
 	m_fFrame += m_fFrameSpeed * fTimeDelta;
+	_uint m_iCurAnim = _uint(m_fFrame);
 
 	if (m_fFrame >= m_fFrameEnd)
 	{
@@ -324,6 +334,16 @@ void CMonsterN3::Move_Frame(const _float& fTimeDelta)
 			m_pAICom->Anim_End(m_eCurState);
 			m_eCurState = N3S_FLY;
 			break;
+		}
+	}
+	else if (m_iPreAnim != m_iCurAnim)
+	{
+		if (m_eCurState == N3S_RUSH)
+		{
+			if ((m_iCurAnim == 1) ||
+				(m_iCurAnim == 6) ||
+				(m_iCurAnim == 11) ||
+				(m_iCurAnim == 15)) Attack_HitBox();
 		}
 	}
 }
@@ -400,9 +420,11 @@ void CMonsterN3::Set_Texture()
 void CMonsterN3::Attack_HitBox()
 {
 	AABB tAABB = { m_vPos.x, m_vPos.y, m_vPos.z,
-					2.f, 1.f, 2.f };
+					1.f, 1.f, 1.f };
 
 	vector<CGameObject*> tempVec = CCollisionMgr::GetInstance()->Test_AABB(tAABB, CL_PLAYER);
+
+	if (g_bDebug) CRenderer::GetInstance()->Add_TestCollider(tAABB, 60);
 
 	if (!tempVec.empty())
 	{

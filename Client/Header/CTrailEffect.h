@@ -9,6 +9,12 @@ private:
 	virtual		~CTrailEffect();
 
 public:
+	void			Set_Color(const D3DXCOLOR& tColor) { m_tColor = tColor; }
+	void			Set_HeadSize(_float fHeadSize) { m_fHeadSize = fHeadSize;}
+	void			Set_TailLength(_float fTailLength) { m_fTailLength = fTailLength; }
+	void			Set_Emissive(_bool bEmissive) { m_bEmissive = bEmissive; }
+	void			Update_OwnerData(const _vec3& vPos, const _vec3& vSpeed) { m_vPos = vPos; m_vSpeed = vSpeed; }
+
 	virtual HRESULT	Ready_GameObject();
 	virtual _int	Update_GameObject(const _float& fTimeDelta);
 	virtual void	LateUpdate_GameObject(const _float& fTimeDelta);
@@ -25,23 +31,13 @@ public:
 	virtual void    OnFinish() {}       // 완료 시
 	virtual void    OnLoop() {}         // 루프 시
 
-	void			Add_Point(const _vec3& vPoint);
 	void			Compute_TrailWorldMatrix();
 
 private:
-	deque<_vec3>	m_dequePoints;      // 궤적 점들
-	_uint			m_iMaxPoints;
-	_float			m_fPointInterval;   // 점 추가 간격 (거리)
-	_vec3			m_vLastPoint;
-
-	_float			m_fWidth;           // 트레일 너비
-	_float			m_fAlphaStart;
-	_float			m_fAlphaEnd;
-	DWORD			m_dwColor;
-
 	// 위치/방향
 	_vec3       m_vPos;
 	_vec3       m_vSpeed;
+	_matrix		m_matTrailWorld;
 
 	// 크기
 	_float      m_fHeadSize;        // 머리 크기 (반지름)
@@ -52,10 +48,9 @@ private:
 	D3DXCOLOR   m_tColor;
 	_bool       m_bEmissive;	// Emissive 사용 여부
 
-	_matrix		m_matTrailWorld;
 
 public:
-	static		CTrailEffect* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	static		CTrailEffect* Create(LPDIRECT3DDEVICE9 pGraphicDev, const wstring& strProtoTexKey);
 	virtual		CTrailEffect* Clone();
 
 private:

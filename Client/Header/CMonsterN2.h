@@ -66,7 +66,7 @@ private:
 	CMonsterHpBar* m_pHpBar;
 
 	static constexpr _uint	N2_DEFAULT_HP = 5;
-	static constexpr _float	N2_DEFAULT_SCALE = 5.f;
+	static constexpr _float	N2_DEFAULT_SCALE = 4.f;
 
 public:
 	static CMonsterN2*	Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel);

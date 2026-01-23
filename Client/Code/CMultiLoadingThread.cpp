@@ -282,6 +282,9 @@ void CMultiLoadingThread::Loading_for_Tutorial()
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_SmokeParticleTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/Smoke/dds/SmokeParticle_%d.dds", 3));
 	m_iTotalProtoCount++;
 
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_GreenTrailTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/Trail/dds/Gradation2.dds", 1));
+	m_iTotalProtoCount++;
+
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_ImpactTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/Impact/dds/Impact_%d.dds", 2));
 	m_iTotalProtoCount++;
 
@@ -335,7 +338,7 @@ void CMultiLoadingThread::Loading_for_Dungeon()
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_Follower3Texture", TEX_NORMAL, L"../Bin/Resource/LWY//NPC/Follower3(2)/dds/Follower3_%02d.dds", 14));
 	m_iTotalProtoCount++;
 
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_ProjectileTexture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/dds/Projectile.dds", 1));
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_ProjectileTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/Etc/dds/Projectile3.dds", 1));
 	m_iTotalProtoCount++;
 
 	//m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingBarkCover", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingMiniGame/dds/CookingBar_Border.dds", 1));
@@ -666,7 +669,7 @@ void CMultiLoadingThread::Loading_for_RealDungeon()
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_SpikeTexture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Spike/dds/Spike%d.dds", 4));
 	m_iTotalProtoCount++;
 
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_ProjectileTexture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/dds/Projectile.dds", 1));
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_ProjectileTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/Etc/dds/Projectile3.dds", 1));
 	m_iTotalProtoCount++;
 
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_B1Node1Texture", TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Boss1/dds/B1Node_00.dds", 1));
@@ -766,6 +769,9 @@ void CMultiLoadingThread::Loading_for_RealDungeon()
 	m_iTotalProtoCount++;
 
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_SmokeParticleTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/Smoke/dds/SmokeParticle_%d.dds", 3));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_GreenTrailTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/Trail/dds/Gradation2.dds", 1));
 	m_iTotalProtoCount++;
 
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_ImpactTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/Impact/dds/Impact_%d.dds", 2));
@@ -966,6 +972,14 @@ unsigned int CMultiLoadingThread::Thread_Main(void* pArg)
 			if (g_bDistroyWindowFlag) break;
 			if (!pOwner->m_pGraphicDev) break;
 
+			//CProtoMgr::GetInstance()->Ready_Prototype(Texrequest.strProtoName,
+			//	CTexture::CreateFromThread(pOwner->m_pGraphicDev, Texrequest.eTexType, Texrequest.strFilepath, Texrequest.iTexIndex));
+			if (CProtoMgr::GetInstance()->Find_Prototype(Texrequest.strProtoName))
+			{
+				pOwner->m_iCompletedCount++;
+				continue;
+			}
+
 			CProtoMgr::GetInstance()->Ready_Prototype(Texrequest.strProtoName,
 				CTexture::CreateFromThread(pOwner->m_pGraphicDev, Texrequest.eTexType, Texrequest.strFilepath, Texrequest.iTexIndex));
 
@@ -982,8 +996,15 @@ unsigned int CMultiLoadingThread::Thread_Main(void* pArg)
 			TEXSETINFO texsetinfo = std::move(Pairrequest.first);
 			vector<TEXSETLR> vecTexsetLR = std::move(Pairrequest.second);
 
+			//CProtoMgr::GetInstance()->Ready_Prototype(texsetinfo.strProtoName,
+			//	CTextureSet::CreateFromThread(pOwner->m_pGraphicDev, texsetinfo.eTexType, vecTexsetLR));
+			if (CProtoMgr::GetInstance()->Find_Prototype(texsetinfo.strProtoName))
+			{
+				pOwner->m_iCompletedCount++;
+				continue;
+			}
 			CProtoMgr::GetInstance()->Ready_Prototype(texsetinfo.strProtoName,
-				CTextureSet::CreateFromThered(pOwner->m_pGraphicDev, texsetinfo.eTexType, vecTexsetLR));
+				CTextureSet::CreateFromThread(pOwner->m_pGraphicDev, texsetinfo.eTexType, vecTexsetLR));
 
 			pOwner->m_iCompletedCount++;
 			bDidWork = true;

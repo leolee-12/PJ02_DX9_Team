@@ -158,6 +158,14 @@ void CMonsterB1::Render_GameObject()
 
 void CMonsterB1::OnCollision(CGameObject* pObject)
 {
+	if (pObject->Get_OBJID() == OID_PROJECTILE)
+	{
+		if (!pObject->Get_Hp()) return;
+
+		_int iDamage = _int(static_cast<CTransform*>(pObject->Get_Component(ID_DYNAMIC, L"Com_Transform"))->Get_Scale(ROT_X));
+		Attacked(iDamage);
+	}
+
 	if (pObject->Get_OBJID() == OID_BORDER)
 	{
 		_vec3 vCurPos;
@@ -417,7 +425,9 @@ void CMonsterB1::Check_Frame()
 
 void CMonsterB1::Move_Frame(const _float& fTimeDelta)
 {
+	_uint iPreFrame = _uint(m_fFrame);
 	m_fFrame += m_fFrameSpeed * fTimeDelta;
+	_uint iCurFrame = _uint(m_fFrame);
 
 	m_fAcmlTime += fTimeDelta;
 
@@ -480,6 +490,23 @@ void CMonsterB1::Move_Frame(const _float& fTimeDelta)
 			AmduEvent.strType = L"Boss.Dead";
 			AmduEvent.hmapData[L"BossName"] = wstring(L"Amdu");
 			m_pMessageChannel->Publish(AmduEvent);
+			break;
+		}
+	}
+	else if (iPreFrame != iCurFrame)
+	{
+		switch (m_eCurState)
+		{
+		case B1S_ATTACK:
+			if ((iCurFrame - 1) % 3 == 0) m_pAICom->Set_Signal();
+			break;
+
+		case B1S_SHOOT:
+		case B1S_SUMMON:
+			if (iCurFrame == 4) m_pAICom->Set_Signal();
+			break;
+
+		default:
 			break;
 		}
 	}
@@ -578,8 +605,29 @@ void CMonsterB1::Reset_Material()
 
 void CMonsterB1::Attack_HitBox()
 {
-	AABB tAABB = { m_vPos.x, m_vPos.y, m_vPos.z,
-					2.f, 1.f, 2.f };
+	_float fY(m_vPos.y - m_pTransformCom->Get_Scale(ROT_Y) * 0.125f);
+	AABB tAABB = { m_vPos.x, fY, m_vPos.z, 2.5f, 2.5f, 2.5f };
+
+	if (g_bDebug) CRenderer::GetInstance()->Add_TestCollider(tAABB, 60);
+
+	vector<CGameObject*> tempVec = CCollisionMgr::GetInstance()->Test_AABB(tAABB, CL_PLAYER);
+
+	if (!tempVec.empty())
+	{
+		IMessageChannel::EVENT EAttack;
+		EAttack.strType = L"Player.Attacked";
+		EAttack.eOBJID = Engine::OID_PLAYER;
+		EAttack.hmapData.emplace(L"Attack", m_iAttack);
+		EAttack.hmapData.emplace(L"Target", tempVec);
+		m_pMessageChannel->Publish(EAttack);
+	}
+}
+
+void CMonsterB1::Attack_HitBox_Land()
+{
+	AABB tAABB = { m_vPos.x, -2.5f, m_vPos.z + 0.5f, 3.f, 0.5f, 3.f };
+
+	if (g_bDebug) CRenderer::GetInstance()->Add_TestCollider(tAABB, 60);
 
 	vector<CGameObject*> tempVec = CCollisionMgr::GetInstance()->Test_AABB(tAABB, CL_PLAYER);
 
@@ -746,14 +794,14 @@ void CMonsterB1::Launch_Projectile(const _uint& iCount)
 	_float fRadian = 0.f;
 	_float fGap = 2.f * D3DX_PI / iCount;
 	_float fProjectileSpeed = 5.f;
-	_vec3 vPos{ m_vPos.x, m_vPos.y - m_fGroundY, m_vPos.z };
+	_vec3 vPos{ m_vPos.x, m_vPos.y - m_fGroundY - 1.f, m_vPos.z };
 
 
 	for (_uint i = 0; i < iCount; ++i)
 	{
 		_vec3 vSpeed{ cosf(fRadian) * fProjectileSpeed, 0.f, sinf(fRadian) * fProjectileSpeed };
 
-		CGameObject* pProjectile = CProjectile::Create(m_pGraphicDev, vPos, vSpeed, false);
+		CGameObject* pProjectile = CProjectile::Create(m_pGraphicDev, vPos, vSpeed, false, CL_MBULLET, D3DXCOLOR(0.4f, 1.f, 0.6f, 1.f));
 
 		if (pProjectile)
 		{

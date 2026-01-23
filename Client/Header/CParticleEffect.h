@@ -22,6 +22,16 @@ private:
 	virtual		~CParticleEffect();
 
 public:
+	void			Set_TextureKey(wstring strKey) { m_strProtoTexKey = strKey; }
+	void			Set_EmitRange(const _vec3& v1, const _vec3& v2) { m_vEmitMinPos = v1; m_vEmitMaxPos = v2; }
+	void			Set_SpeedRange(const _vec3& v1, const _vec3& v2) { m_vMinSpeed = v1; m_vMaxSpeed = v2; }
+	void			Set_LifeTime(const _float& fTime) { m_fLifeTime = fTime; }
+	void			Set_EmitRate(const _float& fRate) { m_fEmitRate = fRate; }
+	void			Set_BaseColor(const D3DXCOLOR& tColor) { m_tBaseColor = tColor; }
+	//void			Set_ColorVariance(_float fVar) { m_fColorVariance = fVar; }
+	void			Set_Texture(const _uint& iTexIdx);
+	void			Set_TextureRange(_uint iMin, _uint iMax) { m_iMinTexIdx = iMin; m_iMaxTexIdx = iMax; }
+
 	virtual HRESULT	Ready_GameObject();
 	virtual _int	Update_GameObject(const _float& fTimeDelta);
 	virtual void	LateUpdate_GameObject(const _float& fTimeDelta);
@@ -39,16 +49,6 @@ public:
 	virtual void    OnLoop() {}         // 루프 시
 
 	void			Emit_Particle();
-
-	void			Set_TextureKey(wstring strKey) { m_strProtoTexKey = strKey; }
-	void			Set_EmitRange(const _vec3& v1, const _vec3& v2) { m_vEmitMinPos = v1; m_vEmitMaxPos = v2; }
-	void			Set_SpeedRange(const _vec3& v1, const _vec3& v2) { m_vMinSpeed = v1; m_vMaxSpeed = v2; }
-	void			Set_LifeTime(const _float& fTime) { m_fLifeTime = fTime; }
-	void			Set_EmitRate(const _float& fRate) { m_fEmitRate = fRate; }
-	void			Set_BaseColor(const D3DXCOLOR& tColor) { m_tBaseColor = tColor; }
-	//void			Set_ColorVariance(_float fVar) { m_fColorVariance = fVar; }
-	void			Set_Texture(const _uint& iTexIdx);
-	void			Set_TextureRange(_uint iMin, _uint iMax) { m_iMinTexIdx = iMin; m_iMaxTexIdx = iMax; }
 	void			Compute_ParticleBBD(_matrix* pOut, const _vec3& vPos, const _float& fSize);
 
 public:

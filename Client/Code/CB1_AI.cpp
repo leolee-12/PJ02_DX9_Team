@@ -58,7 +58,7 @@ HRESULT CB1_AI::Ready_AI(const _float& fDetectRange, const _float& fInteractRang
 	m_patternDeque.push_back(CMonsterB1::B1S_SUMMON);
 
 	// 게임용 : 가중치와 난수를 통해 패턴을 채워줌
-	Refill_Pattern();
+	Refill_Pattern(true);
 
 	return S_OK;
 }
@@ -92,6 +92,7 @@ void CB1_AI::Enter_State(const _uint& iState)
 	{
 		m_fAcmlTime = 0.f;
 		m_fSpeed = 1.f;
+		m_bOnce = true;
 	}
 	break;
 
@@ -115,12 +116,10 @@ void CB1_AI::Enter_State(const _uint& iState)
 
 	case CMonsterB1::B1S_SHOOT:
 		m_fAcmlTime = 0.f;
-		m_bOnce = true;
 		break;
 
 	case CMonsterB1::B1S_SUMMON:
 		m_fAcmlTime = 0.f;
-		m_bOnce = true;
 		break;
 
 	case CMonsterB1::B1S_ROAR:
@@ -185,16 +184,39 @@ void CB1_AI::Exit_State(const _uint& iState)
 	}
 }
 
-void CB1_AI::Generate_Pattern(CMonsterB1::MONSTER_B1_STATE eLastPattern)
+void CB1_AI::Generate_Pattern(CMonsterB1::MONSTER_B1_STATE eLastPattern, _bool bAllowDuplicate)
 {
+	size_t iPatternCnt = m_vecAtkPatterns.size();
+
+	if (iPatternCnt == 0)	// error : 등록된 공격 패턴이 없음
+	{
+		m_patternDeque.push_back(CMonsterB1::MONSTER_B1_STATE(0));
+		return;
+	}
+
 	_uint iTotalWeight(0);
 
-	for (auto& pattern : m_vecAtkPatterns)
+	if (bAllowDuplicate || iPatternCnt == 1)
 	{
-		if (pattern.bIsActive && (pattern.eType != eLastPattern))
+		for (auto& pattern : m_vecAtkPatterns)
 		{
-			iTotalWeight += pattern.iWeight;
+			if (pattern.bIsActive)
+				iTotalWeight += pattern.iWeight;
 		}
+	}
+	else
+	{
+		for (auto& pattern : m_vecAtkPatterns)
+		{
+			if (pattern.bIsActive && (pattern.eType != eLastPattern))
+				iTotalWeight += pattern.iWeight;
+		}
+	}
+
+	if (iTotalWeight == 0)	// error : 활성화된 공격 패턴이 없음
+	{
+		m_patternDeque.push_back(CMonsterB1::MONSTER_B1_STATE(0));
+		return;
 	}
 
 	_uint iRandom = Get_Rand_Int(1, iTotalWeight);
@@ -202,20 +224,26 @@ void CB1_AI::Generate_Pattern(CMonsterB1::MONSTER_B1_STATE eLastPattern)
 
 	for (auto& pattern : m_vecAtkPatterns)
 	{
-		if (!pattern.bIsActive || (pattern.eType == eLastPattern))
+		if (!pattern.bIsActive) continue;
+
+		if (!bAllowDuplicate && iPatternCnt > 1 && pattern.eType == eLastPattern)
 			continue;
 
 		iAccumulated += pattern.iWeight;
 
 		if (iRandom <= iAccumulated)
 		{
+			// 정상 생성
 			m_patternDeque.push_back(pattern.eType);
-			break;
+			return;
 		}
 	}
+
+	// error : 정상적으로 생성되지 않음
+	m_patternDeque.push_back(CMonsterB1::MONSTER_B1_STATE(0));
 }
 
-void CB1_AI::Refill_Pattern()
+void CB1_AI::Refill_Pattern(_bool bAllowDuplicate)
 {
 	while (m_patternDeque.size() < m_iDequeMinSize)
 	{
@@ -224,7 +252,7 @@ void CB1_AI::Refill_Pattern()
 		if (m_patternDeque.empty()) eLastState = CMonsterB1::B1S_SUMMON;
 		else						eLastState = m_patternDeque.back();
 
-		Generate_Pattern(eLastState);
+		Generate_Pattern(eLastState, bAllowDuplicate);
 	}
 }
 
@@ -327,6 +355,15 @@ void CB1_AI::Update_Jump(const _float& fTimeDelta)
 
 void CB1_AI::Update_Land(const _float& fTimeDelta)
 {
+	if (m_pOwner)
+	{
+		if (m_bOnce)
+		{
+			m_pOwner->Attack_HitBox_Land();
+			m_bOnce = false;
+		}
+	}
+
 	if (m_fAcmlTime < 0.2f)  // 0.2초 동안
 	{
 		_vec3 vPos;
@@ -352,6 +389,15 @@ void CB1_AI::Update_Prepare(const _float& fTimeDelta)
 
 void CB1_AI::Update_Attack(const _float& fTimeDelta)
 {
+	if (m_pOwner)
+	{
+		if (m_bOnce)
+		{
+			m_pOwner->Attack_HitBox();
+			m_bOnce = false;
+		}
+	}
+
 	_vec3 vPos;
 	m_pOwnerTC->Get_Info(INFO_POS, &vPos);
 	D3DXVec3Lerp(&vPos, &vPos, &m_vLerpPos, m_fSpeed);
@@ -374,7 +420,7 @@ void CB1_AI::Update_Summon(const _float& fTimeDelta)
 	if (m_bOnce)
 	{
 		if (m_pOwner)
-			m_pOwner->Summon_Minion(7);
+			m_pOwner->Summon_Minion(5);
 
 		m_bOnce = false;
 	}

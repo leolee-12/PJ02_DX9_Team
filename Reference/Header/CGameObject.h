@@ -23,8 +23,9 @@ public:
 		m_pMessageChannel = pChannel;
 		m_pMessageChannel->AddRef();
 	}*/
-	CComponent* Get_Component(COMPONENTID eID, const wstring& strComponentTag);
-	OBJID		Get_OBJID() { return m_eOBJID; }
+	CComponent*			Get_Component(COMPONENTID eID, const wstring& strComponentTag);
+	OBJID				Get_OBJID() { return m_eOBJID; }
+	const _int			Get_Hp() const { return m_iHp; }
 	const _float		Get_Depth() { return m_fDepth; }
 	const _float		Get_DepthZ() { return m_vDepth.z; }
 	const _float		Get_DepthY() { return m_vDepth.y; }
