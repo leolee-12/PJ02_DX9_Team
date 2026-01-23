@@ -435,7 +435,7 @@ HRESULT CVillage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 		OBJECTDATA tObjData2 = {"BreakableTree",						// 카테고리
 								0,										// 텍스처인덱스
 								199.8f + Get_Rand_Float(-30.f, 30.f),	// x
-								0.8f,									// y
+								2.5f,									// y
 								35.f + Get_Rand_Float(-30.f, 30.f),		// z
 								10.f,									// 스케일
 								0 };									// Standing or Floor

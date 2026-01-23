@@ -7,6 +7,7 @@
 #include "CFontMgr.h"
 #include "CTriggerPoint.h"
 #include "CItem.h"
+#include "CResourceWorkBar.h"
 
 CBuilding::CBuilding(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev)
@@ -17,6 +18,7 @@ CBuilding::CBuilding(LPDIRECT3DDEVICE9 pGraphicDev)
 	, m_eBuildingType(BT_END)
 	, m_eBuildingState(BS_END)
 	, m_fWorkGauge(0.f)
+	, m_fPreWorkGauge(0.f)
 {
 }
 
@@ -29,6 +31,7 @@ CBuilding::CBuilding(const CBuilding& rhs)
 	, m_eBuildingType(rhs.m_eBuildingType)
 	, m_eBuildingState(rhs.m_eBuildingState)
 	, m_fWorkGauge(0.f)
+	, m_fPreWorkGauge(0.f)
 {
 }
 
@@ -53,9 +56,11 @@ _int CBuilding::Update_GameObject(const _float& fTimeDelta)
 	//if (g_bDebug) { m_pColliderCom->Update_AABBforRender(); }
 
 	//m_pColliderCom->UpdateFromTransform(m_pTransformCom);
-	m_pTrigger->Update_GameObject(fTimeDelta);
 
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
+
+	if (m_eBuildingState == BS_CONSTRUCTING)	Update_WorkBar(fTimeDelta);
+	else 										m_pTrigger->Update_GameObject(fTimeDelta);
 
 	if (iExit == DEAD)
 	{
@@ -72,15 +77,25 @@ _int CBuilding::Update_GameObject(const _float& fTimeDelta)
 
 void CBuilding::LateUpdate_GameObject(const _float& fTimeDelta)
 {
-	m_pTrigger->LateUpdate_GameObject(fTimeDelta);
+	if ((m_eBuildingState == BS_CONSTRUCTING) && !(m_fWorkGauge - m_fPreWorkGauge < 0.0001f))
+	{
+		m_pWorkBar->Active();
+	}
 
 	_vec3 vPos;
 	m_pTransformCom->Get_Info(Engine::INFO_POS, &vPos);
 
-	if (m_eBuildingState == BS_COMPLETE) m_pTransformCom->Compute_Bilboard(BBD_X);
+	if (m_eBuildingState == BS_COMPLETE)
+	{
+		m_pTrigger->LateUpdate_GameObject(fTimeDelta);
 
-	Compute_ViewDepth(&vPos);
+		m_pTransformCom->Compute_Bilboard(BBD_X);
 
+		Compute_ViewDepth(&vPos);
+	}
+	else if (m_eBuildingState == BS_CONSTRUCTING) m_fPreWorkGauge = m_fWorkGauge;
+
+	m_pWorkBar->LateUpdate_GameObject(fTimeDelta);
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
 }
 
@@ -101,25 +116,6 @@ void CBuilding::Render_GameObject()
 	// Restore
 	m_pGraphicDev->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
-
-	_matrix matView, matProj;
-	m_pGraphicDev->GetTransform(D3DTS_VIEW, &matView);
-	m_pGraphicDev->GetTransform(D3DTS_PROJECTION, &matProj);
-
-	_vec3 vWorldPos, vViewPos, vndcPos, vScreenPos;
-	m_pTransformCom->Get_Info(INFO_POS, &vWorldPos);
-	D3DXVec3TransformCoord(&vViewPos, &vWorldPos, &matView);
-	D3DXVec3TransformCoord(&vndcPos, &vViewPos, &matProj);
-
-	vScreenPos.x = (vndcPos.x * 0.5f + 0.5f) * _float(WINCX);
-	vScreenPos.y = (-vndcPos.y * 0.5f + 0.5f) * _float(WINCY);
-
-	D3DXCOLOR FontColor = D3DXCOLOR(240.f / 256.f, 240.f / 256.f, 240.f / 256.f, 1.f);
-	wchar_t szGauge[16];
-
-	swprintf_s(szGauge, L" Gauge : %.3f", m_fWorkGauge);
-	RECT rcPlayer = { vScreenPos.x - 50, vScreenPos.y - 10, vScreenPos.x + 50, vScreenPos.y + 10 };
-	CFontMgr::GetInstance()->Render_Font(L"Font_Lapture20", szGauge, rcPlayer, FontColor, DT_RIGHT | DT_BOTTOM);
 }
 
 void CBuilding::OnCollision(CGameObject* pObject)
@@ -233,6 +229,8 @@ void CBuilding::Change_State(BUILDING_STATE eState)
 		m_pTransformCom->Get_Info(INFO_POS, &vPos);
 		m_pTransformCom->Set_Pos(vPos.x, m_fGroundY, vPos.z);
 		m_pTransformCom->Rotation(ROT_X, 0.f);
+
+		Ready_Trigger();
 	}
 		break;
 	}
@@ -252,34 +250,17 @@ void CBuilding::Ready_Variable()
 	_float fScale = 5.f;
 	m_pTransformCom->Set_Scale(fScale, fScale, fScale);
 
-	//Change_State(BS_CONSTRUCTING);
-	//m_fWorkGauge = 0.f;
-
-	_vec3 vTriggerPos = m_vPos;
-	vTriggerPos.y -= 1.f;
-	_vec3 vTriggetHalfSize = { 2.f,2.f,2.f };
-
-	switch (m_eBuildingType)
-	{
-	case BT_DUMMY:
-		break;
-	case BT_WORKSHOP:
-		m_pTrigger = CTriggerPoint::Create(m_pGraphicDev, m_pMessageChannel, vTriggerPos, vTriggetHalfSize, Trigger::TI_CRAFTING, L"Crafting");
-		break;
-	case BT_COOK:
-		m_pTrigger = CTriggerPoint::Create(m_pGraphicDev, m_pMessageChannel, vTriggerPos, vTriggetHalfSize, Trigger::TI_COOKING, L"Cooking");
-		break;
-	case BT_KNUCKLEBONE:
-		m_pTrigger = CTriggerPoint::Create(m_pGraphicDev, m_pMessageChannel, vTriggerPos, vTriggetHalfSize, Trigger::TI_KNUCKLE, L"KnuckleBone");
-		break;
-	}
+	Change_State(BS_CONSTRUCTING);
+	m_fWorkGauge = 0.f;
 
 	// 테스트용
-	m_fWorkGauge = 1.f;
-	Change_State(BS_COMPLETE);
+	//m_fWorkGauge = 1.f;
+	//Change_State(BS_COMPLETE);
 	// 테스트용
 
 	//m_pColliderCom->RegisterToManager(this, CL_GRASS);
+	m_pWorkBar = CResourceWorkBar::Create(m_pGraphicDev, _float(m_iHp), _vec3{});
+	m_pWorkBar->UnActive();
 }
 
 void CBuilding::Ready_Event()
@@ -327,6 +308,38 @@ void CBuilding::Ready_Event()
 	}
 }
 
+void CBuilding::Ready_Trigger()
+{
+	_vec3 vTriggerPos = m_vPos;
+	vTriggerPos.y -= 1.f;
+	_vec3 vTriggetHalfSize = { 2.f,2.f,2.f };
+
+	switch (m_eBuildingType)
+	{
+	case BT_DUMMY:
+		break;
+	case BT_WORKSHOP:
+		m_pTrigger = CTriggerPoint::Create(m_pGraphicDev, m_pMessageChannel, vTriggerPos, vTriggetHalfSize, Trigger::TI_CRAFTING, L"Crafting");
+		break;
+	case BT_COOK:
+		m_pTrigger = CTriggerPoint::Create(m_pGraphicDev, m_pMessageChannel, vTriggerPos, vTriggetHalfSize, Trigger::TI_COOKING, L"Cooking");
+		break;
+	case BT_KNUCKLEBONE:
+		m_pTrigger = CTriggerPoint::Create(m_pGraphicDev, m_pMessageChannel, vTriggerPos, vTriggetHalfSize, Trigger::TI_KNUCKLE, L"KnuckleBone");
+		break;
+	}
+}
+
+void CBuilding::Update_WorkBar(const _float& fTimeDelta)
+{
+	_vec3 vPos;
+	m_pTransformCom->Get_Info(INFO_POS, &vPos);
+	vPos.y += 3.f;
+	m_pWorkBar->Set_TargetPos(vPos);
+	m_pWorkBar->Update_CurWork(m_fWorkGauge);
+	m_pWorkBar->Update_GameObject(fTimeDelta);
+}
+
 CBuilding* CBuilding::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMessageChannel, const _vec3& vPos, BUILDING_TYPE eType)
 {
 	CBuilding* pBuilding = new CBuilding(pGraphicDev);
@@ -352,5 +365,6 @@ CBuilding* CBuilding::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMe
 void CBuilding::Free()
 {
 	Safe_Release(m_pTrigger);
+	Safe_Release(m_pWorkBar);
 	CGameObject::Free();
 }

@@ -10,6 +10,8 @@ namespace Engine
 	class CCollider;
 }
 
+class CResourceWorkBar;
+
 // ===================================================
 //	CBreakableRock
 // ===================================================
@@ -38,8 +40,7 @@ public:
 
 private:
 	HRESULT	Add_Component();
-	void	React(const _vec3& vObjPos);
-	void	Update_VertexSway(const _float& fTimeDelta);
+	void	Update_WorkBar(const _float& fTimeDelta);
 
 private:
 	Engine::CRcTex*		m_pBufferCom;
@@ -60,7 +61,9 @@ private:
 	_vec3				m_vReactDir;
 
 	// 상호작용 관련
+	_float				m_fPreWorkGauge;
 	_float				m_fWorkGauge;
+	CResourceWorkBar*	m_pWorkBar;
 
 	static constexpr _float MAX_WORK_GAUGE = 1.f;
 

@@ -10,6 +10,8 @@ namespace Engine
 	class CCollider;
 }
 
+class CResourceWorkBar;
+
 // =====================================================
 //	CBreakableTree
 // =====================================================
@@ -39,6 +41,7 @@ public:
 private:
 	HRESULT	Add_Component();
 	void	Set_Texture();
+	void	Update_WorkBar(const _float& fTimeDelta);
 
 private:
 	Engine::CRcTex*			m_pBufferCom;
@@ -55,8 +58,9 @@ private:
 	_float				m_fBaseScale;
 
 	// 상호작용 관련
-	_float				m_fPreWorkGauge;
-	_float				m_fWorkGauge;
+	_float					m_fPreWorkGauge;
+	_float					m_fWorkGauge;
+	CResourceWorkBar*		m_pWorkBar;
 
 	static constexpr _float MAX_WORK_GAUGE = 1.f;
 

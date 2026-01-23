@@ -89,7 +89,7 @@ void CFollower::LateUpdate_GameObject(const _float& fTimeDelta)
 	m_pTransformCom->Compute_Bilboard(BBD_X);
 	m_pTransformCom->Get_Info(INFO_POS, &m_vPos);
 	Compute_ViewDepth(&m_vPos);
-
+		
 	m_pColliderCom->UpdateFromTransform(m_pTransformCom);
 	// 충돌체 디버그용
 	if (g_bDebug) m_pColliderCom->Update_AABBforRender();
@@ -210,7 +210,7 @@ void CFollower::Ready_Variable()
 {
 	// 게임로직 변수 세팅
 	_float fScale = 9.f;
-	m_fGroundY = -2.5f + fScale * 0.5f - 1.8f;
+	m_fGroundY = -2.5f + fScale * 0.5f - 1.5f;
 	m_iHp = 10;
 	m_eCurState = FOLLOWER_RECRUIT;
 	m_eCurWork = FOLLOWER_WORK(Get_Rand_Int(1, 5));

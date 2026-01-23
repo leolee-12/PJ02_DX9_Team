@@ -589,6 +589,14 @@ void CMultiLoadingThread::Loading_for_Village()
 	m_iTotalProtoCount++;
 	// Building
 
+	// WYWYWY
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_MonsterHpCover", TEX_NORMAL, L"../Bin/Resource/YSH/UI/HpBarCover.png", 1));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_ResourceWorkFront", TEX_NORMAL, L"../Bin/Resource/LWY/UI/dds/WorkBarGreen.dds", 1));
+	m_iTotalProtoCount++;
+	// WYWYWY
+
 	// cookingUI
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingBarkCover", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingMiniGame/dds/CookingBar_Border.dds", 1));
 	m_iTotalProtoCount++;

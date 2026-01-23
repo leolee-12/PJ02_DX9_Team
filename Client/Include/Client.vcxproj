@@ -216,6 +216,8 @@
     <ClInclude Include="..\Header\CParticleEffect.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClInclude>
+    <ClInclude Include="..\Header\CResourceWorkBar.h" />
+    <ClInclude Include="..\Header\CResourceWorkFront.h" />
     <ClInclude Include="..\Header\CScreenEffect.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClInclude>
@@ -446,6 +448,8 @@
     <ClCompile Include="..\Code\CRatau.cpp" />
     <ClCompile Include="..\Code\CRealDungeon.cpp" />
     <ClCompile Include="..\Code\CBreakableRock.cpp" />
+    <ClCompile Include="..\Code\CResourceWorkBar.cpp" />
+    <ClCompile Include="..\Code\CResourceWorkFront.cpp" />
     <ClCompile Include="..\Code\CSceneWarp.cpp" />
     <ClCompile Include="..\Code\CScreenEffect.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>

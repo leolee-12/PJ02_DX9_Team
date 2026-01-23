@@ -168,8 +168,15 @@ void CFollower_AI::Update_Run(const _float& fTimeDelta)
 	}
 	else if (m_fDistance <= m_fInteractRange)
 	{
-		Change_State(CFollower::FOLLOWER_ACTION);
-		return;
+		_vec3 vOwnerPos, vTargetPos;
+		m_pOwnerTC->Get_Info(INFO_POS, &vOwnerPos);
+		m_pTargetTC->Get_Info(INFO_POS, &vTargetPos);
+
+		if (vOwnerPos.z < vTargetPos.z)
+		{
+			Change_State(CFollower::FOLLOWER_ACTION);
+			return;
+		}
 	}
 
 	m_pOwnerTC->Move_Pos(&m_vDir, fTimeDelta, m_fSpeed);
