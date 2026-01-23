@@ -148,6 +148,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\Code\CResourceHistoryItem.h" />
     <ClInclude Include="..\Header\Bishops_Enum.h" />
     <ClInclude Include="..\Header\CAmdusiasRoom.h" />
     <ClInclude Include="..\Header\CB1_AI.h" />
@@ -216,6 +217,10 @@
     <ClInclude Include="..\Header\CParticleEffect.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClInclude>
+    <ClInclude Include="..\Header\CResourceHistoryBack.h" />
+    <ClInclude Include="..\Header\CResourceHistoryController.h" />
+    <ClInclude Include="..\Header\CResourceHistoryDeco.h" />
+    <ClInclude Include="..\Header\CResourceHistoryUI.h" />
     <ClInclude Include="..\Header\CScreenEffect.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClInclude>
@@ -314,6 +319,7 @@
     <ClInclude Include="..\Header\CTileMgr.h" />
     <ClInclude Include="..\Header\CMapObject.h" />
     <ClInclude Include="..\Header\CGrass.h" />
+    <ClInclude Include="..\Header\CResourceHistoryEnum.h" />
     <ClInclude Include="..\Header\SaveLoad.h" />
     <ClInclude Include="..\Header\Trigger_Enum.h" />
     <ClInclude Include="CFontAlpha.h" />
@@ -446,6 +452,11 @@
     <ClCompile Include="..\Code\CRatau.cpp" />
     <ClCompile Include="..\Code\CRealDungeon.cpp" />
     <ClCompile Include="..\Code\CBreakableRock.cpp" />
+    <ClCompile Include="..\Code\CResourceHistoryBack.cpp" />
+    <ClCompile Include="..\Code\CResourceHistoryController.cpp" />
+    <ClCompile Include="..\Code\CResourceHistoryDeco.cpp" />
+    <ClCompile Include="..\Code\CResourceHistoryItem.cpp" />
+    <ClCompile Include="..\Code\CResourceHistoryUI.cpp" />
     <ClCompile Include="..\Code\CSceneWarp.cpp" />
     <ClCompile Include="..\Code\CScreenEffect.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>

@@ -6,7 +6,7 @@
 #include "CGauge.h"
 #include "CPlayerHP.h"
 #include "CVillage.h"
-
+#include "CResourceHistoryController.h"
 
 namespace Engine
 {
@@ -31,6 +31,7 @@ public:
 	CGauge* Get_Gauge() { return m_pGauge; }
 	CPlayerHP* Get_PlayerHPUI() { return m_pPlayerHPUI; }
 	CVillage* Get_Village() { return m_pVillage; }
+	CResourceHistoryController* Get_ResourceHistory() { return m_pResourceHistoryUI; }
 
 	void	Set_Village(CVillage* pVillage)
 	{
@@ -82,12 +83,12 @@ private:
 	void	Update_PlayerGage();
 
 private:
-	CPlayer*	m_pPlayer		= nullptr;
-	CGauge*		m_pGauge		= nullptr;
-	CPlayerHP*	m_pPlayerHPUI	= nullptr;
-	CVillage*	m_pVillage		= nullptr;
-	_bool		m_bVillageReentry = false;
-
+	CPlayer*			m_pPlayer				= nullptr;
+	CGauge*				m_pGauge				= nullptr;
+	CPlayerHP*			m_pPlayerHPUI			= nullptr;
+	CVillage*			m_pVillage				= nullptr;
+	_bool				m_bVillageReentry		= false;
+	CResourceHistoryController* m_pResourceHistoryUI	= nullptr;
 
 private:
 	static CPersistentMgr* m_pInstance;

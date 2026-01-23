@@ -5,7 +5,7 @@
 CPersistentMgr* CPersistentMgr::m_pInstance = nullptr;
 
 CPersistentMgr::CPersistentMgr()
-	: m_pPlayer(nullptr), m_pGauge(nullptr), m_pPlayerHPUI(nullptr)
+	: m_pPlayer(nullptr), m_pGauge(nullptr), m_pPlayerHPUI(nullptr), m_pResourceHistoryUI(nullptr)
 {
 }
 
@@ -79,6 +79,15 @@ HRESULT CPersistentMgr::Ready_GlobalObjects(LPDIRECT3DDEVICE9 pGraphicDev)
 
 		m_pPlayerHPUI = CPlayerHP::Create(pGraphicDev);
 
+		if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_ItemHistoryBack", Engine::CTexture::Create(pGraphicDev, TEX_NORMAL, L"../Bin/Resource/YSD/ResourceHistory/ItemHistoryBack.png", 1))))
+			return E_FAIL;
+		if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_ItemHistoryDeco", Engine::CTexture::Create(pGraphicDev, TEX_NORMAL, L"../Bin/Resource/YSD/ResourceHistory/ItemHistoryDeco.png", 1))))
+			return E_FAIL;
+		if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_ItemHistoryItem", Engine::CTexture::Create(pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Item/dds/Item_%02d.dds", 8))))
+			return E_FAIL;
+
+		m_pResourceHistoryUI = CResourceHistoryController::Create(pGraphicDev);
+		
 
 		if (nullptr == m_pPlayer)
 			return E_FAIL;
@@ -118,4 +127,5 @@ void CPersistentMgr::Free()
 	Safe_Release(m_pGauge);
 	Safe_Release(m_pPlayerHPUI);
 	Safe_Release(m_pVillage);
+	Safe_Release(m_pResourceHistoryUI);
 }
