@@ -48,6 +48,7 @@ private:
 	void				Update_State();
 	void				Check_Work();
 	void				Execute_Work(const _float& fTimeDelta);
+	void				ReTarget() { m_ePreWork = FW_NONE; }
 
 private:
 	Engine::CRcTex*			m_pBufferCom;

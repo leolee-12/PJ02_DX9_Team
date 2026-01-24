@@ -481,6 +481,9 @@
     <Filter Include="02. GameObject\05. UI\11. NPCCommandUI\03. RestUI">
       <UniqueIdentifier>{33720c82-568f-40a2-b938-b203a1099aa9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\02. Environment\02. Interactable\04. ShrineSpot">
+      <UniqueIdentifier>{107e2f94-70cc-4ef4-8a30-2b6a671b9b9a}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02. GameObject\05. UI\10. ResourceHistoryUI">
       <UniqueIdentifier>{870c7453-09cd-461b-8097-b4fcefebda6a}</UniqueIdentifier>
     </Filter>
@@ -1047,6 +1050,9 @@
     <ClInclude Include="..\Header\CLookingEyeUI.h">
       <Filter>02. GameObject\05. UI\11. NPCCommandUI\04. Eye</Filter>
     </ClInclude>
+    <ClInclude Include="CShrineSpot.h">
+      <Filter>02. GameObject\02. Environment\02. Interactable\04. ShrineSpot</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1555,6 +1561,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CLookingEyeUI.cpp">
       <Filter>02. GameObject\05. UI\11. NPCCommandUI\04. Eye</Filter>
+    </ClCompile>
+    <ClCompile Include="CShrineSpot.cpp">
+      <Filter>02. GameObject\02. Environment\02. Interactable\04. ShrineSpot</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -16,7 +16,7 @@ class CResourceWorkBar;
 class CBuilding : public CGameObject, public IInteractable
 {
 public:
-	enum BUILDING_TYPE { BT_DUMMY, BT_WORKSHOP, BT_COOK, BT_KNUCKLEBONE, BT_END };
+	enum BUILDING_TYPE { BT_DUMMY, BT_WORKSHOP, BT_COOK, BT_KNUCKLEBONE, BT_SHRINE, BT_END };
 	enum BUILDING_STATE { BS_CONSTRUCTING, BS_COMPLETE, BS_END };
 
 private:
@@ -34,6 +34,7 @@ public:
 	virtual void		Add_WorkGauge(_float fWork);
 	virtual _float		Get_WorkGauge() const { return m_fWorkGauge; }
 	virtual _bool		Is_WorkComplete() const { return m_fWorkGauge >= MAX_WORK_GAUGE; }
+	virtual _vec3*		Get_WorkPos(_vec3* pWorkPos) const;
 
 	wstring				Get_CompleteTexKey();
 
@@ -63,14 +64,16 @@ private:
 
 
 	// 상호작용 관련(추종자)
-	_float				m_fPreWorkGauge;
-	_float				m_fWorkGauge;
-	_uint				m_iTexIdx;
-	CResourceWorkBar*	m_pWorkBar;
+	_float					m_fPreWorkGauge;
+	_float					m_fWorkGauge;
+	_uint					m_iTexIdx;
+	CResourceWorkBar*		m_pWorkBar;
 
 	static constexpr _float MAX_WORK_GAUGE = 1.f;
 	static constexpr _float DEFAULT_CONSTRUCT_GROUNDY = -2.49f;
 	static constexpr _float DEFAULT_COMPLETE_GROUNDY = -0.5f;
+	vector<CGameObject*>	m_vecSubObjects;
+
 public:
 	static CBuilding* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMessageChannel, const _vec3& vPos, BUILDING_TYPE eType);
 

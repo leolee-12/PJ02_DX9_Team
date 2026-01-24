@@ -13,10 +13,10 @@ class CItem : public CGameObject
 {
 public:
 	enum ITEMSTATE { IS_SPAWN, IS_IDLE, IS_CHASE, IS_SUMMON, IS_END };
-	enum ITEMID {	IG_GOLD, IG_WOOD, IG_STONE, IG_BERRY, IG_FERTILIZER, IG_FERVOR,
-					FD_GFOOD, FD_BFOOD,
-					WP_SWORD, WP_GAUNTLET, WP_FIREBALL, WP_TENTACLE,
-					ID_END };
+	enum ITEMID {	/*Ingredient*/	IG_GOLD, IG_WOOD, IG_STONE, IG_BERRY, IG_FERTILIZER, IG_PASSION,
+					/*Food*/		FD_GFOOD, FD_BFOOD,
+					/*Weapon*/		WP_SWORD, WP_GAUNTLET, WP_FIREBALL, WP_TENTACLE,
+									ID_END };
 
 protected:
 	explicit	CItem(LPDIRECT3DDEVICE9 pGraphicDev);

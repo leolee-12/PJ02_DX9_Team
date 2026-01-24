@@ -324,7 +324,6 @@ void CChest::Create_Item()
 			ESummonMonster.hmapData.emplace(L"ObjTag", strObjTag);
 			m_pMessageChannel->Publish(ESummonMonster);
 		}
-
 	}
 }
 
