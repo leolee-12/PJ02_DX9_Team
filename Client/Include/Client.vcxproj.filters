@@ -496,6 +496,15 @@
     <Filter Include="02. GameObject\05. UI\11. NPCCommandUI\03. RestUI">
       <UniqueIdentifier>{33720c82-568f-40a2-b938-b203a1099aa9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\05. UI\12. FoodReviewUI">
+      <UniqueIdentifier>{85a2cc54-83ba-4663-9666-60069c72f836}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. UI\12. FoodReviewUI\00. FoodReviewBack">
+      <UniqueIdentifier>{dced33b3-5885-4425-9b01-c6bf56e9c4cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. UI\12. FoodReviewUI\01. FoodReviewImage">
+      <UniqueIdentifier>{e5864e32-2ca4-4e62-811f-59ca0abf0031}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -996,9 +1005,6 @@
     <ClInclude Include="..\Header\CResourceHistoryDeco.h">
       <Filter>02. GameObject\05. UI\09. ResourceHistoryUI\01.ResourceHistoryDeco</Filter>
     </ClInclude>
-    <ClInclude Include="..\Code\CResourceHistoryItem.h">
-      <Filter>02. GameObject\05. UI\09. ResourceHistoryUI\02.ResourceHistoryItem</Filter>
-    </ClInclude>
     <ClInclude Include="..\Header\CResourceHistoryUI.h">
       <Filter>02. GameObject\05. UI\09. ResourceHistoryUI\03.ResourceHistoryUI</Filter>
     </ClInclude>
@@ -1046,6 +1052,18 @@
     </ClInclude>
     <ClInclude Include="..\Header\CLookingEyeUI.h">
       <Filter>02. GameObject\05. UI\11. NPCCommandUI\04. Eye</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CFoodReviewBack.h">
+      <Filter>02. GameObject\05. UI\12. FoodReviewUI\00. FoodReviewBack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CFoodReviewImage.h">
+      <Filter>02. GameObject\05. UI\12. FoodReviewUI\01. FoodReviewImage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CResourceHistoryItem.h">
+      <Filter>02. GameObject\05. UI\09. ResourceHistoryUI\02.ResourceHistoryItem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CFoodReviewUI.h">
+      <Filter>02. GameObject\05. UI\12. FoodReviewUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1555,6 +1573,15 @@
     </ClCompile>
     <ClCompile Include="..\Code\CLookingEyeUI.cpp">
       <Filter>02. GameObject\05. UI\11. NPCCommandUI\04. Eye</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CFoodReviewBack.cpp">
+      <Filter>02. GameObject\05. UI\12. FoodReviewUI\00. FoodReviewBack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CFoodReviewImage.cpp">
+      <Filter>02. GameObject\05. UI\12. FoodReviewUI\01. FoodReviewImage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CFoodReviewUI.cpp">
+      <Filter>02. GameObject\05. UI\12. FoodReviewUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

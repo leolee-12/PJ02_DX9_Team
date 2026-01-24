@@ -148,7 +148,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\Code\CResourceHistoryItem.h" />
     <ClInclude Include="..\Header\Bishops_Enum.h" />
     <ClInclude Include="..\Header\CAmdusiasRoom.h" />
     <ClInclude Include="..\Header\CB1_AI.h" />
@@ -205,6 +204,9 @@
     <ClInclude Include="..\Header\CFollower_AI.h" />
     <ClInclude Include="..\Header\CFontUI.h" />
     <ClInclude Include="..\Header\CFontUIOrtho.h" />
+    <ClInclude Include="..\Header\CFoodReviewBack.h" />
+    <ClInclude Include="..\Header\CFoodReviewImage.h" />
+    <ClInclude Include="..\Header\CFoodReviewUI.h" />
     <ClInclude Include="..\Header\CGauge.h" />
     <ClInclude Include="..\Header\CGaugeCover.h" />
     <ClInclude Include="..\Header\CGaugeStar.h" />
@@ -222,6 +224,7 @@
     <ClInclude Include="..\Header\CResourceHistoryBack.h" />
     <ClInclude Include="..\Header\CResourceHistoryController.h" />
     <ClInclude Include="..\Header\CResourceHistoryDeco.h" />
+    <ClInclude Include="..\Header\CResourceHistoryItem.h" />
     <ClInclude Include="..\Header\CResourceHistoryUI.h" />
     <ClInclude Include="..\Header\CResourceWorkBar.h" />
     <ClInclude Include="..\Header\CResourceWorkFront.h" />
@@ -394,6 +397,9 @@
     <ClCompile Include="..\Code\CFollower_AI.cpp" />
     <ClCompile Include="..\Code\CFontUI.cpp" />
     <ClCompile Include="..\Code\CFontUIOrtho.cpp" />
+    <ClCompile Include="..\Code\CFoodReviewBack.cpp" />
+    <ClCompile Include="..\Code\CFoodReviewImage.cpp" />
+    <ClCompile Include="..\Code\CFoodReviewUI.cpp" />
     <ClCompile Include="..\Code\CGauge.cpp" />
     <ClCompile Include="..\Code\CGaugeCover.cpp" />
     <ClCompile Include="..\Code\CGaugeStar.cpp" />

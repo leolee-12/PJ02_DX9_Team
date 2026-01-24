@@ -649,6 +649,14 @@ void CMultiLoadingThread::Loading_for_Village()
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_NPCCommaderUIEye", TEX_NORMAL, L"../Bin/Resource/YSD/NPCCommanderUI/Eye.png", 1));
 	m_iTotalProtoCount++;
 
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_ReviewImage", TEX_NORMAL, L"../Bin/Resource/YSD/FoodReview/FoodReviewImage_%d.png", 2));
+	m_iTotalProtoCount++;
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_ReviewBack", TEX_NORMAL, L"../Bin/Resource/YSD/FoodReview/ReviewBack.png", 2));
+	m_iTotalProtoCount++;
+
+
+
 	// 덴저러스 수동 PNG존 지뢰밟지않게 조심할것
 
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingCardInfoFaithTexture", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/dds/FaithTexture.dds", 1));
