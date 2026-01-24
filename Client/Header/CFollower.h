@@ -43,6 +43,7 @@ private:
 	void				Update_State();
 	void				Check_Work();
 	void				Execute_Work(const _float& fTimeDelta);
+	void				ReTarget() { m_ePreWork = FW_NONE; }
 
 private:
 	Engine::CRcTex*			m_pBufferCom;
@@ -75,7 +76,7 @@ private:
 	_vec3		m_vWorkPos;
 	_bool		m_bWorking = false;
 
-	static constexpr _float FW_DEFAULT_WORK_SPEED = 0.03f + 1.f;
+	static constexpr _float FW_DEFAULT_WORK_SPEED = 0.03f;
 	static constexpr _float FW_DEFAULT_WORK_GAP_TIME = 1.f;
 
 public:

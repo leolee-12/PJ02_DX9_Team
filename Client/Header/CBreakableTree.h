@@ -57,7 +57,6 @@ private:
 	_float				m_fFrameEnd;
 	_matrix				m_matTex;
 	_float				m_fScale;
-	_float				m_fBaseScale;
 
 	// 상호작용 관련
 	_float					m_fPreWorkGauge;

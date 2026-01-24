@@ -18,7 +18,6 @@ CBreakableTree::CBreakableTree(LPDIRECT3DDEVICE9 pGraphicDev)
 	, m_pColliderCom(nullptr)
 	, m_iTextureIndex(0)
 	, m_fScale(1.f)
-	, m_fBaseScale(1.f)
 	, m_fWorkGauge(0.f)
 	, m_fPreWorkGauge(0.f)
 {
@@ -32,7 +31,6 @@ CBreakableTree::CBreakableTree(const CBreakableTree& rhs)
 	, m_pColliderCom(nullptr)
 	, m_iTextureIndex(rhs.m_iTextureIndex)
 	, m_fScale(rhs.m_fScale)
-	, m_fBaseScale(rhs.m_fBaseScale)
 	, m_fWorkGauge(0.f)
 	, m_fPreWorkGauge(0.f)
 {
@@ -48,7 +46,7 @@ HRESULT CBreakableTree::Ready_GameObject()
 		return E_FAIL;
 
 	m_fFrame = 0.f;
-	m_fFrameSpeed = 24.f;
+	m_fFrameSpeed = 6.f;
 	m_fFrameEnd = 32.f;
 
 	m_pColliderCom->RegisterToManager(this, CL_GRASS);
@@ -84,11 +82,9 @@ _int CBreakableTree::Update_GameObject(const _float& fTimeDelta)
 
 void CBreakableTree::LateUpdate_GameObject(const _float& fTimeDelta)
 {
-	if (m_fWorkGauge - m_fPreWorkGauge < 0.0001f)	m_iTextureIndex = 0;	// IDLE
-	else
+	if (!(m_fWorkGauge - m_fPreWorkGauge < 0.0001f))
 	{
 		m_pWorkBar->Active();
-		m_iTextureIndex = 1;	// HIT
 	}
 
 	_vec3 vPos;
@@ -129,7 +125,6 @@ void CBreakableTree::Set_ObjectData(const Engine::OBJECTDATA& objData)
 {
 	m_iTextureIndex = objData.textureIndex;
 	m_fScale = objData.scale;
-	m_fBaseScale = objData.scale;
 
 	m_pTransformCom->Set_Pos(objData.x, objData.y, objData.z);
 	m_pTransformCom->Set_Scale(m_fScale, m_fScale, m_fScale);
@@ -219,7 +214,6 @@ HRESULT CBreakableTree::Add_Component()
 
 void CBreakableTree::Set_Texture()
 {
-	//_bool bFilpX = vDir.x > 0.f ? true : false;	// 반전 여부
 	_uint iFrame = _uint(m_fFrame);					// 현재 프레임
 
 	D3DXMatrixIdentity(&m_matTex);

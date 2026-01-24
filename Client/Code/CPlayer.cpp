@@ -282,6 +282,22 @@ void CPlayer::Ready_Event()
 		}
 	) });
 
+	m_hmapSubHandles.insert({ L"Player.AddPassion", m_pMessageChannel->Subscribe(L"Player.AddPassion", [this](const IMessageChannel::EVENT& Event)
+		{
+			m_fPassion += DEFAULT_PASSION_GAIN;
+
+			if (m_fPassion > MAX_PASSION_VALUE)
+				m_fPassion = MAX_PASSION_VALUE;
+		}) });
+
+	m_hmapSubHandles.insert({ L"Player.AddFaith", m_pMessageChannel->Subscribe(L"Player.AddFaith", [this](const IMessageChannel::EVENT& Event)
+		{
+			m_fFaith += DEFAULT_FAITH_GAIN;
+
+			if (m_fPassion > MAX_FAITH_VALUE)
+				m_fPassion = MAX_FAITH_VALUE;
+		}) });
+
 	m_bMsgRegistered = true;
 }
 
@@ -647,6 +663,8 @@ void CPlayer::Move_Frame(const _float& fTimeDelta)
 	m_fFrame += m_fFrameSpeed * fTimeDelta;
 	m_fAcmlTime += fTimeDelta;
 	m_fFaith -= FAITH_DECREASE_RATE * fTimeDelta;
+
+	if (m_fFaith < 0.f) m_fFaith = 0.f;
 
 	if (m_fFrame > m_fFrameEnd)
 	{

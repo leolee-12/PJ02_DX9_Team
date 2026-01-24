@@ -7,7 +7,7 @@
 #include "CFontMgr.h"
 #include "CResourceWorkBar.h"
 #include "CItem.h"
-#include "CPersistentMgr.h"
+//#include "CPersistentMgr.h"
 
 CShrineSpot::CShrineSpot(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev)
@@ -112,7 +112,11 @@ void CShrineSpot::Check_Status()
 	{
 		m_fWorkGauge = 0.f;
 		m_pWorkBar->UnActive();
-		CPersistentMgr::GetInstance()->Get_Player()->Add_Faith(1.f);
+
+		IMessageChannel::EVENT tEvent;
+		tEvent.strType = L"Player.AddFaith";
+		m_pMessageChannel->Publish(tEvent);
+		//CPersistentMgr::GetInstance()->Get_Player()->Add_Faith(1.f);
 	}
 
 	m_fPreWorkGauge = m_fWorkGauge;

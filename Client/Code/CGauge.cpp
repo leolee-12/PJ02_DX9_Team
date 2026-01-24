@@ -20,8 +20,8 @@ CGauge::CGauge(LPDIRECT3DDEVICE9 pGraphicDev)
 	, m_eCurGaugeState(Gauge::GS_END)
 	, m_ePreGaugeState(Gauge::GS_END)
 	, m_bFontRender(true)
-	, m_fMaxPassionGaugeValue(4.f)
-	, m_fMaxFaithGaugeValue(100.f)
+	, m_fMaxPassionGaugeValue(CPlayer::MAX_PASSION_VALUE)
+	, m_fMaxFaithGaugeValue(CPlayer::MAX_FAITH_VALUE)
 {
 	ZeroMemory(&m_vPos, sizeof(_vec3));
 }
@@ -143,7 +143,7 @@ void CGauge::Accumulate_GaugeValue(const _float& fTimeDelta)
 	{
 		case Gauge::GS_PASSION:
 		{
-			if (m_fGaugeValue >= m_fMaxPassionGaugeValue)
+			if (m_fGaugeValue > m_fMaxPassionGaugeValue)
 			{
 				m_fGaugeValue = m_fMaxPassionGaugeValue;
 				return;
@@ -154,7 +154,7 @@ void CGauge::Accumulate_GaugeValue(const _float& fTimeDelta)
 		break;
 		case Gauge::GS_FAITH:
 		{
-			if (m_fGaugeValue >= m_fMaxFaithGaugeValue)
+			if (m_fGaugeValue > m_fMaxFaithGaugeValue)
 			{
 				m_fGaugeValue = m_fMaxFaithGaugeValue;
 				return;

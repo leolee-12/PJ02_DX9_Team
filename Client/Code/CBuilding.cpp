@@ -319,6 +319,12 @@ void CBuilding::Ready_Variable()
 	//Change_State(BS_COMPLETE);
 	// 테스트용
 
+	if(m_eBuildingType == BT_WORKSHOP)
+	{
+		m_fWorkGauge = 1.f;
+		Change_State(BS_COMPLETE);
+	}
+
 	//m_pColliderCom->RegisterToManager(this, CL_GRASS);
 	m_pWorkBar = CResourceWorkBar::Create(m_pGraphicDev, _float(m_iHp), _vec3{});
 	m_pWorkBar->UnActive();

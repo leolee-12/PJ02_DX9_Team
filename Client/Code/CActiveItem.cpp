@@ -73,10 +73,21 @@ void CActiveItem::OnCollision(CGameObject* pObject)
 	{
 		// 아이템 획득 처리
 		IMessageChannel::EVENT tEvent;
-		tEvent.strType = L"ResourceHistory.AddItem";
-		tEvent.hmapData[L"ItemID"] = (int)m_eItemID;
 
-		m_pMessageChannel->Publish(tEvent);
+		switch (m_eItemID)
+		{
+		case IG_PASSION:
+			tEvent.strType = L"Player.AddPassion";
+			m_pMessageChannel->Publish(tEvent);
+			break;
+
+		default:
+			tEvent.strType = L"ResourceHistory.AddItem";
+			tEvent.hmapData[L"ItemID"] = (int)m_eItemID;
+			m_pMessageChannel->Publish(tEvent);
+			break;
+		}
+
 		m_iHp = 0;
 		_tchar strSoundName[128] = L"";
 		swprintf_s(strSoundName, L"ItemPickup%d.wav", Get_Rand_Int(1, 7));

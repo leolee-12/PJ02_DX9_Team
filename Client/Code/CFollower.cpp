@@ -217,6 +217,8 @@ void CFollower::Ready_Variable()
 	m_iHp = 10;
 	m_eCurState = FOLLOWER_RECRUIT;
 	m_eCurWork = FOLLOWER_WORK(Get_Rand_Int(1, 5));
+	//m_eCurWork = FW_NONE;
+
 	m_fWorkSpeed = FW_DEFAULT_WORK_SPEED + Get_Rand_Float(-0.002f, 0.002f);
 
 	// Transform 세팅
@@ -255,7 +257,7 @@ void CFollower::Check_Frame()
 	{
 	case FOLLOWER_IDLE:
 		m_fFrameEnd = 24.f;
-		//m_eCurWork = FOLLOWER_WORK(Get_Rand_Int(0, 5));
+		ReTarget();
 		break;
 
 	case FOLLOWER_RUN:
@@ -491,10 +493,16 @@ void CFollower::Check_Work()
 		break;
 	}
 
-	if (pTarget)	m_pAICom->Set_TargetTransform(static_cast<CTransform*>(pTarget->Get_Component(ID_DYNAMIC, L"Com_Transform")));
-	else			m_pAICom->Set_TargetTransform(nullptr);
-
-	m_ePreWork = m_eCurWork;
+	if (pTarget)
+	{
+		m_pAICom->Set_TargetTransform(static_cast<CTransform*>(pTarget->Get_Component(ID_DYNAMIC, L"Com_Transform")));
+		m_ePreWork = m_eCurWork;
+	}
+	else
+	{
+		m_pAICom->Set_TargetTransform(nullptr);
+		m_eCurWork = FOLLOWER_WORK(Get_Rand_Int(1, 5));
+	}
 }
 
 void CFollower::Execute_Work(const _float& fTimeDelta)
