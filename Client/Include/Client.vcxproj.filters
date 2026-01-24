@@ -499,6 +499,9 @@
     <Filter Include="02. GameObject\05. UI\10. ResourceHistoryUI\03.ResourceHistoryUI">
       <UniqueIdentifier>{0b1b14e0-15ae-4265-8c11-b8d41f01eb2a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\02. Environment\00. MapObject\00. Door">
+      <UniqueIdentifier>{70bf6cfa-c377-46b3-9795-f4edbfa4b503}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -1053,6 +1056,9 @@
     <ClInclude Include="CShrineSpot.h">
       <Filter>02. GameObject\02. Environment\02. Interactable\04. ShrineSpot</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CMapDoor.h">
+      <Filter>02. GameObject\02. Environment\00. MapObject\00. Door</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1564,6 +1570,9 @@
     </ClCompile>
     <ClCompile Include="CShrineSpot.cpp">
       <Filter>02. GameObject\02. Environment\02. Interactable\04. ShrineSpot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CMapDoor.cpp">
+      <Filter>02. GameObject\02. Environment\00. MapObject\00. Door</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

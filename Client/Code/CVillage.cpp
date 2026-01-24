@@ -105,6 +105,12 @@ HRESULT CVillage::Ready_Scene()
 
 _int CVillage::Update_Scene(const _float& fTimeDelta)
 {
+	if (m_bReEnterFlag)
+	{
+		CSoundMgr::GetInstance()->PlayBGM(L"02.Village.mp3", 0.1f);
+		m_bReEnterFlag = false;
+	}
+
 	Engine::CTransform* pPlayerTransform = CPersistentMgr::GetInstance()->Get_PlayerTransform();
 	if (pPlayerTransform)
 	{
@@ -159,6 +165,7 @@ _int CVillage::Update_Scene(const _float& fTimeDelta)
 			return NOEVENT;
 		}
 		m_bKnuckleBoneFlag = false;
+		m_bReEnterFlag = true;
 	}
 
 	return iExit;
@@ -323,18 +330,6 @@ HRESULT CVillage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 				pGameObject = CGrass::Create(m_pGraphicDev, obj, m_pMessageChannel);
 				if (pGameObject)
 					pLayer->Add_GameObject(L"Grass", pGameObject);
-			}
-			else if (obj.category == "BreakableRock")
-			{
-				//pGameObject = CBreakableRock::Create(m_pGraphicDev, obj, m_pMessageChannel);
-				//if (pGameObject)
-				//	pLayer->Add_GameObject(L"BreakableRock", pGameObject);
-			}
-			else if (obj.category == "BreakableTree")
-			{
-				//pGameObject = CBreakableTree::Create(m_pGraphicDev, obj, m_pMessageChannel);
-				//if (pGameObject)
-				//	pLayer->Add_GameObject(L"BreakableTree", pGameObject);
 			}
 			else
 			{

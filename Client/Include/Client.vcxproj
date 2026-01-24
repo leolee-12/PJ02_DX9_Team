@@ -211,6 +211,9 @@
     <ClInclude Include="..\Header\CIndicator.h" />
     <ClInclude Include="..\Header\CKBCharNPC.h" />
     <ClInclude Include="..\Header\CKBCharPlayer.h" />
+    <ClInclude Include="..\Header\CMapDoor.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="..\Header\CMonsterHpBar.h" />
     <ClInclude Include="..\Header\CMonsterHpBarCover.h" />
     <ClInclude Include="..\Header\CMonsterHpFront.h" />
@@ -429,6 +432,9 @@
     <ClCompile Include="..\Code\CMainApp.cpp" />
     <ClCompile Include="..\Code\CMainCamera.cpp" />
     <ClCompile Include="..\Code\CMapBorder.cpp" />
+    <ClCompile Include="..\Code\CMapDoor.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\Code\CMapWarp.cpp" />
     <ClCompile Include="..\Code\CMonster.cpp" />
     <ClCompile Include="..\Code\CMonsterB1.cpp" />

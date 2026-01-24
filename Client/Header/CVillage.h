@@ -38,4 +38,6 @@ private:
 	_bool	m_bKnuckleBoneFlag = false;
 	_bool	m_bCookingFlag = false;
 	CCookingUIController* m_pCookingUI;
+
+	_bool	m_bReEnterFlag = false;
 };
