@@ -1,6 +1,8 @@
 ﻿#pragma once
 #include "CItem.h"
 
+class CTriggerPoint;
+
 class CPassiveItem : public CItem
 {
 protected:
@@ -24,6 +26,9 @@ protected:
 
 public:
 	static CPassiveItem* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, _float fThrowRange);
+
+private:
+	CTriggerPoint* m_pTrigger = nullptr;
 
 protected:
 	virtual void Free();

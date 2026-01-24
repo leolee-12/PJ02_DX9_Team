@@ -35,6 +35,8 @@
 #include "CTarotSeller.h"
 #include "CTarotCard.h"
 #include "CResourceHistoryController.h"
+#include "CLoading.h"
+#include "CManagement.h"
 
 CRealDungeon::CRealDungeon(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -82,6 +84,23 @@ _int CRealDungeon::Update_Scene(const _float& fTimeDelta)
 	}
 
 	_int iExit = Engine::CScene::Update_Scene(fTimeDelta);
+
+	if (m_bEndVillageFlag)
+	{
+		Engine::CScene* pLoading = CLoading::Create(m_pGraphicDev, LOADING_AMDUSIASROOM);
+
+		if (nullptr == pLoading)
+			return NOEVENT;
+
+		CPersistentMgr::GetInstance()->Get_Player()->Set_Village(true);
+		CPersistentMgr::GetInstance()->Get_Gauge()->Set_GaugeState(Gauge::GS_FAITH);
+
+		if (FAILED(CManagement::GetInstance()->Set_Scene(pLoading)))
+		{
+			MSG_BOX("Stage Scene Failed");
+			return NOEVENT;
+		}
+	}
 
 	return iExit;
 }
@@ -153,9 +172,10 @@ HRESULT CRealDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 			switch (spawn.type)
 			{
 			case 0:
-				CPersistentMgr::GetInstance()->Get_Player()->Set_Pos(_vec3(spawn.x, -0.95f, spawn.z));
+				//CPersistentMgr::GetInstance()->Get_Player()->Set_Pos(_vec3(spawn.x, -0.95f, spawn.z));
 				//CPersistentMgr::GetInstance()->Get_Player()->Set_Pos(_vec3(-88.f, -0.95f, 11.7f)); // 암두방 앞
 				//CPersistentMgr::GetInstance()->Get_Player()->Set_Pos(_vec3(-260.f, -0.95f, -5.2f)); // 레쉬방 앞
+				CPersistentMgr::GetInstance()->Get_Player()->Set_Pos(_vec3(-260.f, -0.95f, 7.2f)); // 레쉬방 안
 				pGameObject = CPersistentMgr::GetInstance()->Get_Player();
 
 				if (nullptr == pGameObject)
@@ -385,6 +405,15 @@ HRESULT CRealDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	vTriggerPos = { 203.f, 0.f, 12.f };
 	vTriggerHalfSize = { 3.f, 3.f, 3.f };
 	pGameObject = CTriggerPoint::Create(m_pGraphicDev, m_pMessageChannel, vTriggerPos, vTriggerHalfSize, Trigger::TI_STAGING, L"Meet_Tarot", true);
+
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+
+	if (FAILED(pLayer->Add_GameObject(L"TriggerPoint", pGameObject)))
+		return E_FAIL;
+
+	vTriggerPos = { -260.f, 0.f, 50.8f };
+	vTriggerHalfSize = { 5.f, 5.f, 5.f };
+	pGameObject = CTriggerPoint::Create(m_pGraphicDev, m_pMessageChannel, vTriggerPos, vTriggerHalfSize, Trigger::TI_SCENE, L"End_Village", true);
 
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 
@@ -634,6 +663,22 @@ void CRealDungeon::Ready_Event()
 		return;
 	}
 	) });
+
+	m_hmapSubHandles.insert({ L"Trigger.Activate", m_pMessageChannel->Subscribe(L"Trigger.Activate", [this](const IMessageChannel::EVENT& Event)
+		{
+			auto TIDiter = Event.hmapData.find(L"Trigger_TID");
+			if (TIDiter == Event.hmapData.end()) { return; }
+			auto TriggetNameiter = Event.hmapData.find(L"Trigger_Name");
+			if (TriggetNameiter == Event.hmapData.end()) { return; }
+			if (any_cast<Trigger::TRIGGERID>(TIDiter->second) == Trigger::TI_SCENE)
+			{
+				if (any_cast<wstring>(TriggetNameiter->second) == L"End_Village")
+				{
+					m_bEndVillageFlag = true;
+				}
+			}
+		}
+	) });
 }
 
 void CRealDungeon::Ready_CutScene()
@@ -699,7 +744,9 @@ CRealDungeon* CRealDungeon::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 
 void CRealDungeon::Free()
 {
-	CScene::Free();
 	CCollisionMgr::GetInstance()->Reset_For_SceneChange();
+	CTileMgr::GetInstance()->Reset_For_SceneChange();
+	CSoundMgr::GetInstance()->StopAll();
 	CLightMgr::GetInstance()->DestroyInstance();
+	CScene::Free();
 }

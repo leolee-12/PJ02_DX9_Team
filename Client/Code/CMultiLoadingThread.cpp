@@ -803,9 +803,149 @@ void CMultiLoadingThread::Loading_for_AmdusiasRoom()
 {
 	m_iTotalProtoCount = 0;
 
-	m_NonTexReadyQueue.push(&CMultiLoadingThread::NonTex_for_AmdusiasRoom);
+	// 디버그용 바로진입
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_Follower1Texture", TEX_NORMAL, L"../Bin/Resource/LWY//NPC/Follower1(3)/dds/Follower1_%02d.dds", 15));
 	m_iTotalProtoCount++;
 
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_Follower2Texture", TEX_NORMAL, L"../Bin/Resource/LWY//NPC/Follower2(3)/dds/Follower2_%02d.dds", 15));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_Follower3Texture", TEX_NORMAL, L"../Bin/Resource/LWY//NPC/Follower3(3)/dds/Follower3_%02d.dds", 15));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_Follower4Texture", TEX_NORMAL, L"../Bin/Resource/LWY//NPC/Follower4(3)/dds/Follower4_%02d.dds", 15));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_Follower5Texture", TEX_NORMAL, L"../Bin/Resource/LWY//NPC/Follower5(3)/dds/Follower5_%02d.dds", 15));
+	m_iTotalProtoCount++;
+
+	// 디버그용 바로진입 프로토타입
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_RatauTexture", TEX_NORMAL, L"../Bin/Resource/Texture/NPC/Ratau/dds/Ratau_%d.dds", 4));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_SpeechBubble", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Etc/dds/SpeechBubble.dds", 1));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_Fade", TEX_NORMAL, L"../Bin/Resource/YSH/Etc/Fade.png", 1));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_ItemTexture", TEX_NORMAL, L"../Bin/Resource/Texture/Item/dds/Item_%02d.dds", 8));
+	m_iTotalProtoCount++;
+	// 디버그용 바로진입 프로토타입
+
+	// Effect
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_HitEffectTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/Hit-Effect/dds/Hit-Effect_%02d.dds", 8));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_PickUpEffectTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/PickUp-Effect/dds/PickUp-Effect_%d.dds", 5));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_SpawnEffectTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/Enemy-Spawn/dds/EnemySpawn_%d.dds", 3));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_MonsterParticleTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/Etc/dds/MonsterParticle.dds", 1));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_SmokeSpriteTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/Smoke/dds/SmokeSprite.dds", 1));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_SmokeParticleTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/Smoke/dds/SmokeParticle_%d.dds", 3));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_ImpactTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/Impact/dds/Impact_%d.dds", 2));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_IndicatorTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/Etc/dds/ProjectileIndicator.dds", 1));
+	m_iTotalProtoCount++;
+	// Effect
+
+	// Building
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_Building_Constructing", TEX_NORMAL, L"../Bin/Resource/LWY/Maps/Building/dds/Constructing.dds", 1));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_Building_Cook", TEX_NORMAL, L"../Bin/Resource/LWY/Maps/Building/dds/kitchen_1.dds", 1));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_Building_Knucklebone", TEX_NORMAL, L"../Bin/Resource/LWY/Maps/Building/dds/knucklebones.dds", 1));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_BTreeTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Maps/BreakableTree/dds/BreakableTree_%d.dds", 2));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_FireTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Maps/Fire/dds/Fire_%d.dds", 3));
+	m_iTotalProtoCount++;
+	// Building
+
+	// WYWYWY
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_MonsterHpCover", TEX_NORMAL, L"../Bin/Resource/YSH/UI/HpBarCover.png", 1));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_ResourceWorkFront", TEX_NORMAL, L"../Bin/Resource/LWY/UI/dds/WorkBarGreen.dds", 1));
+	m_iTotalProtoCount++;
+	// WYWYWY
+
+	// cookingUI
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingBarkCover", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingMiniGame/dds/CookingBar_Border.dds", 1));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingBarRed", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingMiniGame/dds/CookingBar_Red.dds", 1));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingBarGreen", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingMiniGame/dds/CookingBar_Green.dds", 1));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingMarker", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingMiniGame/dds/Cooking_Marker.dds", 1));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingButton", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingMiniGame/dds/CookingButton.dds", 1));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingTarget", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingMiniGame/dds/FoodTexture_%d.dds", 1));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingTargetBack", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingMiniGame/dds/CookingTargetBack.dds", 1));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingSelectBack", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/dds/CookingSelectBack.dds", 1));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingSelectSlot", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/dds/SelectSlot.dds", 1));
+	m_iTotalProtoCount++;
+
+
+	// 덴저러스 수동 PNG존 지뢰밟지않게 조심할것
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingSelectStartBtn", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/SelectFoodTexture.png", 1));
+	m_iTotalProtoCount++;
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingStar", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/Star_%d.png", 2));
+	m_iTotalProtoCount++;
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingCardInfoRecipe", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/Recipe.png", 1));
+	m_iTotalProtoCount++;
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingArrowUpDown", TEX_NORMAL, L"../Bin/Resource/YSD/CookingSelect/FaithArrowUpDown_%d.png", 2));
+	m_iTotalProtoCount++;
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingSelectButton", TEX_NORMAL, L"../Bin/Resource/YSD/CookingSelect/Button_%d.png", 2));
+	m_iTotalProtoCount++;
+
+
+
+	// 덴저러스 수동 PNG존 지뢰밟지않게 조심할것
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingCardInfoFaithTexture", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/dds/FaithTexture.dds", 1));
+	m_iTotalProtoCount++;
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingCardInfoCardBack", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/dds/InfoCardBackground.dds", 1));
+	m_iTotalProtoCount++;
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_Divider", TEX_NORMAL, L"../Bin/Resource/Texture/UI/KnuckleBone/dds/TileDivider_%d.dds", 2));
+	m_iTotalProtoCount++;
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingCardInfoFaithTexture", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/dds/FaithTexture.dds", 1));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingCardInfoRightPattern", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/dds/Rightpattern.dds", 1));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingCardInfoLeftPattern", TEX_NORMAL, L"../Bin/Resource/Texture/UI/Cooking/CookingSelect/dds/Leftpattern.dds", 1));
+	m_iTotalProtoCount++;
+
+	m_NonTexReadyQueue.push(&CMultiLoadingThread::NonTex_for_AmdusiasRoom);
+	m_iTotalProtoCount++;
 }
 
 void CMultiLoadingThread::Loading_for_LeshyRoom()
@@ -916,7 +1056,18 @@ void CMultiLoadingThread::NonTex_for_RealDungeon()
 
 void CMultiLoadingThread::NonTex_for_AmdusiasRoom()
 {
-	//Load_Object_Texture(AmdusiasRoom_Texture);
+	CPersistentMgr::GetInstance()->Ready_GlobalObjects(m_pGraphicDev);
+	CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_CubeTex", Engine::CCubeTex::Create(m_pGraphicDev));
+	CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_TerrainTex", Engine::CTerrainTex::Create(m_pGraphicDev, VTXCNTX, VTXCNTZ, VTXITV, L"../Bin/Resource/Texture/Terrain/Height.bmp"));
+	CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_TerrainWallTex", Engine::CTerrainWallTex::Create(m_pGraphicDev, 51, 51, VTXITV));
+	CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_RcTexXZ", Engine::CRcTexXZ::Create(m_pGraphicDev));
+	CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_TileTexture", Engine::CTexture::CreateFromFolder(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Maps/Texture/Tile"));
+	CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_TileMaskTexture", Engine::CTexture::CreateFromFolder(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Maps/Texture/TileMasking"));
+	CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_GrassBuffer", Engine::CGrassBuffer::Create(m_pGraphicDev));
+	CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Collider", Engine::CCollider::Create(m_pGraphicDev));
+	CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Follower_AI", CFollower_AI::Create(m_pGraphicDev, 40.f, 1.f));
+
+	Load_Object_Texture(Village_Texture);
 }
 
 void CMultiLoadingThread::NonTex_for_LeshyRoom()

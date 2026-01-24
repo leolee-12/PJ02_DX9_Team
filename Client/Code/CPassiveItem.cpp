@@ -3,6 +3,7 @@
 #include "CProtoMgr.h"
 #include "CRenderer.h"
 #include "CPersistentMgr.h"
+#include "CTriggerPoint.h"
 
 CPassiveItem::CPassiveItem(LPDIRECT3DDEVICE9 pGraphicDev)
 	:	CItem(pGraphicDev),
@@ -82,7 +83,20 @@ void CPassiveItem::OnCollision(CGameObject* pObject)
 
 void CPassiveItem::Update_Idle(const _float& fTimeDelta)
 {
+	if (m_pTrigger == nullptr)
+	{
+		switch (m_eItemID)
+		{
+		case FD_GFOOD:
+			m_pTrigger = CTriggerPoint::Create(m_pGraphicDev, m_pMessageChannel, m_vPos, _vec3(1.f, 1.f, 1.f), Trigger::TI_FOOD, L"GoodFood", false);
+			break;
+		case FD_BFOOD:
+			m_pTrigger = CTriggerPoint::Create(m_pGraphicDev, m_pMessageChannel, m_vPos, _vec3(1.f, 1.f, 1.f), Trigger::TI_FOOD, L"BadFood", false);
+			break;
+		}
+	}
 	m_fAcmlTime += fTimeDelta;
+	m_pTrigger->Update_GameObject(fTimeDelta);
 }
 
 void CPassiveItem::Update_Summon(const _float& fTimeDelta)
@@ -132,5 +146,6 @@ CPassiveItem* CPassiveItem::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChanne
 
 void CPassiveItem::Free()
 {
+	Safe_Release(m_pTrigger);
 	CItem::Free();
 }
