@@ -3,6 +3,7 @@
 #include "CDInputMgr.h"
 #include "CTransform.h"
 #include "CPersistentMgr.h"
+#include "CSoundMgr.h"
 
 CMainCamera::CMainCamera(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CCamera(pGraphicDev), m_bFix(true), m_bCheck(true), m_fLerpSpeed(0.f), m_bShaking(false), m_fZoom(0.f)
@@ -203,6 +204,7 @@ void CMainCamera::Ready_Event_MainCam()
 			}
 			if (strDothis == L"Shake_Village") {
 				Set_Shake(1.f, 2.f, 10.f);
+				CSoundMgr::GetInstance()->Play(L"Earthquake.wav", SOUND_EFFECT, 0.2f);
 				return;
 			}
 		}
