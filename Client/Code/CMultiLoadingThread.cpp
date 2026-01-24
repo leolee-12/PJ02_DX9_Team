@@ -638,7 +638,16 @@ void CMultiLoadingThread::Loading_for_Village()
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_CookingSelectButton", TEX_NORMAL, L"../Bin/Resource/YSD/CookingSelect/Button_%d.png", 2));
 	m_iTotalProtoCount++;
 
-
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_NPCCommaderUIBack", TEX_NORMAL, L"../Bin/Resource/YSD/NPCCommanderUI/CommanderBack.png", 1));
+	m_iTotalProtoCount++;
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_NPCCommaderUIWood", TEX_NORMAL, L"../Bin/Resource/YSD/NPCCommanderUI/Wood.png", 1));
+	m_iTotalProtoCount++;
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_NPCCommaderUIRock", TEX_NORMAL, L"../Bin/Resource/YSD/NPCCommanderUI/Rock.png", 1));
+	m_iTotalProtoCount++;
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_NPCCommaderUIRest", TEX_NORMAL, L"../Bin/Resource/YSD/NPCCommanderUI/Rest.png", 1));
+	m_iTotalProtoCount++;
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_NPCCommaderUIEye", TEX_NORMAL, L"../Bin/Resource/YSD/NPCCommanderUI/Eye.png", 1));
+	m_iTotalProtoCount++;
 
 	// 덴저러스 수동 PNG존 지뢰밟지않게 조심할것
 

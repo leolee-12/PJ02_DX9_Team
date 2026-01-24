@@ -463,6 +463,24 @@
     <Filter Include="02. GameObject\05. UI\10. ResourceWorkBar">
       <UniqueIdentifier>{4e3793ed-0e37-49a0-ad86-04beb9621bbf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\05. UI\11. NPCCommandUI">
+      <UniqueIdentifier>{cba57ced-697f-466d-bde6-bca945c3141c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. UI\11. NPCCommandUI\00. NPCCommanderBack">
+      <UniqueIdentifier>{d8663169-49a1-4a4f-a529-74a19e982054}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. UI\11. NPCCommandUI\01. WorkWoodUI">
+      <UniqueIdentifier>{a27d4819-b1f3-4845-bd75-f383189d120a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. UI\11. NPCCommandUI\02. WorkRockUI">
+      <UniqueIdentifier>{3d9732dc-5b4b-4c59-955e-b1b3cad54f18}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. UI\11. NPCCommandUI\04. Eye">
+      <UniqueIdentifier>{fa81aa07-a3d2-49f4-87fa-9ec5f8a9b4aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. UI\11. NPCCommandUI\03. RestUI">
+      <UniqueIdentifier>{33720c82-568f-40a2-b938-b203a1099aa9}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02. GameObject\05. UI\10. ResourceHistoryUI">
       <UniqueIdentifier>{870c7453-09cd-461b-8097-b4fcefebda6a}</UniqueIdentifier>
     </Filter>
@@ -1011,6 +1029,24 @@
     <ClInclude Include="..\Header\CResourceWorkFront.h">
       <Filter>02. GameObject\05. UI\10. ResourceWorkBar</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CNPCCommandUI.h">
+      <Filter>02. GameObject\05. UI\11. NPCCommandUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CNPCCommandUIBack.h">
+      <Filter>02. GameObject\05. UI\11. NPCCommandUI\00. NPCCommanderBack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CWorkWoodUI.h">
+      <Filter>02. GameObject\05. UI\11. NPCCommandUI\01. WorkWoodUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CWorkRockUI.h">
+      <Filter>02. GameObject\05. UI\11. NPCCommandUI\02. WorkRockUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CRestUI.h">
+      <Filter>02. GameObject\05. UI\11. NPCCommandUI\03. RestUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CLookingEyeUI.h">
+      <Filter>02. GameObject\05. UI\11. NPCCommandUI\04. Eye</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1501,6 +1537,24 @@
     </ClCompile>
     <ClCompile Include="..\Code\CResourceWorkFront.cpp">
       <Filter>02. GameObject\05. UI\10. ResourceWorkBar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CNPCCommandUI.cpp">
+      <Filter>02. GameObject\05. UI\11. NPCCommandUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CNPCCommandUIBack.cpp">
+      <Filter>02. GameObject\05. UI\11. NPCCommandUI\00. NPCCommanderBack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CWorkWoodUI.cpp">
+      <Filter>02. GameObject\05. UI\11. NPCCommandUI\01. WorkWoodUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CWorkRockUI.cpp">
+      <Filter>02. GameObject\05. UI\11. NPCCommandUI\02. WorkRockUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CRestUI.cpp">
+      <Filter>02. GameObject\05. UI\11. NPCCommandUI\03. RestUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CLookingEyeUI.cpp">
+      <Filter>02. GameObject\05. UI\11. NPCCommandUI\04. Eye</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
