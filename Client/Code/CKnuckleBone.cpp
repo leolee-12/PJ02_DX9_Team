@@ -84,7 +84,7 @@ _int CKnuckleBone::Update_Scene(const _float& fTimeDelta)
 	_bool bSceneChange = false;
 	if (m_eCurKBState == KB_MAIN)
 	{
-		bSceneChange = Update_MainGame(fTimeDelta);
+		m_bSceneChange = Update_MainGame(fTimeDelta);
 	}
 
 	map<wstring, CLayer*>::iterator iter;
@@ -99,7 +99,7 @@ _int CKnuckleBone::Update_Scene(const _float& fTimeDelta)
 	}
 
 	// 씬 전환 (Update 최하단에서 수행)
-	if (bSceneChange)
+	if (m_bSceneChange)
 	{
 		// 마을 재진입 플래그 설정
 		CPersistentMgr::GetInstance()->Set_VillageReentry(true);
@@ -565,7 +565,7 @@ void CKnuckleBone::Key_Input_KB()
 				m_eCurKBState = KB_TITLE;
 				break;
 			case KBT_EXIT:
-				DestroyWindow(g_hWnd);
+				m_bSceneChange = true;
 				break;
 			}
 		}

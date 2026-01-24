@@ -24,6 +24,9 @@ private:
 
 public:
 	static CAmdusiasRoom* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+
+private:
+	
 private:
 	virtual void Free();
 };

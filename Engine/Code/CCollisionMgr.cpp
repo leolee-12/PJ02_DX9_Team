@@ -84,9 +84,36 @@ void CCollisionMgr::RegisterCollider(CGameObject* pOwner, const AABB& aabb, COLG
 	pOwner->AddRef();								// 레퍼런스카운트 증가
 }
 
+void CCollisionMgr::ImmediateUnregister(CGameObject* pOwner, COLGROUP Group)
+{
+	if (pOwner == nullptr) return;
+
+	auto iter = m_hmapCollisionGroup.find(Group);
+	if (iter == m_hmapCollisionGroup.end()) return;
+
+	auto& vec = iter->second;
+	for (auto it = vec.begin(); it != vec.end(); ++it)
+	{
+		if (it->pOwner == pOwner)
+		{
+			CGameObject* pTemp = it->pOwner;
+			vec.erase(it);
+			Safe_Release(pTemp);  // 즉시 Release
+			return;
+		}
+	}
+}
+
 inline void CCollisionMgr::Reset_For_SceneChange()
 {
-	Free();
+	for (auto& pair : m_hmapCollisionGroup) {
+		for (auto& colinfo : pair.second) {
+			m_vecReleaseQueue.push_back(colinfo.pOwner);  
+			colinfo.pOwner = nullptr;					  
+		}												  
+		pair.second.clear();
+	}
+	m_hmapCollisionGroup.clear();
 }
 
 void CCollisionMgr::Push_State()
@@ -106,7 +133,14 @@ void CCollisionMgr::Pop_State()
 		return;
 
 	// 현재 상태 정리 (미니게임 콜라이더 등)
-	Free();
+	for (auto& pair : m_hmapCollisionGroup) {
+		for (auto& colinfo : pair.second) {
+			m_vecReleaseQueue.push_back(colinfo.pOwner);  
+			colinfo.pOwner = nullptr;					  
+		}												  
+		pair.second.clear();
+	}
+	m_hmapCollisionGroup.clear();
 
 	// 보관된 상태 복원
 	m_hmapCollisionGroup = m_stackState.top();

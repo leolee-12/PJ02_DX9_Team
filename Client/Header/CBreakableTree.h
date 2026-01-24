@@ -33,6 +33,7 @@ public:
 	virtual void	Add_WorkGauge(_float fWork) { m_fWorkGauge += fWork; }
 	virtual _float	Get_WorkGauge() const { return m_fWorkGauge; }
 	virtual _bool	Is_WorkComplete() const { return m_fWorkGauge >= MAX_WORK_GAUGE; }
+	virtual _vec3*	Get_WorkPos(_vec3* pWorkPos) const;
 
 public:
 	void	Set_ObjectData(const Engine::OBJECTDATA& objData);
@@ -42,6 +43,7 @@ private:
 	HRESULT	Add_Component();
 	void	Set_Texture();
 	void	Update_WorkBar(const _float& fTimeDelta);
+	void	Create_Item();
 
 private:
 	Engine::CRcTex*			m_pBufferCom;
@@ -55,7 +57,6 @@ private:
 	_float				m_fFrameEnd;
 	_matrix				m_matTex;
 	_float				m_fScale;
-	_float				m_fBaseScale;
 
 	// 상호작용 관련
 	_float					m_fPreWorkGauge;

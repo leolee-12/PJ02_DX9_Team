@@ -448,6 +448,16 @@ HRESULT CVillage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 			return E_FAIL;
 	}
 
+	pGameObject = CBuilding::Create(m_pGraphicDev, m_pMessageChannel, _vec3(175.5f, -0.95f, 40.f), CBuilding::BT_WORKSHOP);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	if (FAILED(pLayer->Add_GameObject(L"Building", pGameObject)))
+		return E_FAIL;
+
+	pGameObject = CBuilding::Create(m_pGraphicDev, m_pMessageChannel, _vec3(198.5f, -0.95f, 40.f), CBuilding::BT_SHRINE);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	if (FAILED(pLayer->Add_GameObject(L"Building", pGameObject)))
+		return E_FAIL;
+
 	pGameObject = CBuilding::Create(m_pGraphicDev, m_pMessageChannel, _vec3(199.8f + 10.f, -0.95f, 35.f - 10.f), CBuilding::BT_KNUCKLEBONE);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	if (FAILED(pLayer->Add_GameObject(L"Building", pGameObject)))

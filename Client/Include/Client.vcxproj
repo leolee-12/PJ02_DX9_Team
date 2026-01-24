@@ -335,6 +335,7 @@
     <ClInclude Include="..\Header\CLookingEyeUI.h" />
     <ClInclude Include="CFontAlpha.h" />
     <ClInclude Include="Client.h" />
+    <ClInclude Include="CShrineSpot.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Resource.h" />
@@ -520,6 +521,7 @@
     <ClCompile Include="..\Code\CWorkWoodUI.cpp" />
     <ClCompile Include="CFontAlpha.cpp" />
     <ClCompile Include="Client.cpp" />
+    <ClCompile Include="CShrineSpot.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

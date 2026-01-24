@@ -125,5 +125,7 @@ private:
 
 	CKBCharPlayer* m_pCharPlayer = nullptr;
 	CKBCharNPC* m_pCharNPC = nullptr;
+
+	_bool		m_bSceneChange = false;
 };
 

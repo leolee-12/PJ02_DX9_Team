@@ -25,6 +25,10 @@
 #include "CMapWarp.h"
 #include "CWarp.h"
 #include "CMapBorder.h"
+#include "CFollower.h"
+#include "CTriggerPoint.h"
+#include "CLoading.h"
+#include "CManagement.h"
 
 CAmdusiasRoom::CAmdusiasRoom(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -50,7 +54,7 @@ HRESULT CAmdusiasRoom::Ready_Scene()
 
 	Ready_Light();
 
-	//CCollisionMgr::GetInstance()->Ready_CollisionMgr();
+	CSoundMgr::GetInstance()->PlayBGM(L"02.Village.mp3", 0.1f);
 
 	return S_OK;
 }
@@ -116,7 +120,7 @@ HRESULT CAmdusiasRoom::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	// Map Load
 	Engine::MAPDATA mapData;
 	if (SUCCEEDED(Engine::CMapLoader::GetInstance()->LoadMapA(
-		"../Bin/Resource/Maps/MapData/AmdusiasRoom.txt", mapData)))
+		"../Bin/Resource/Maps/MapData/Village.txt", mapData)))
 	{
 		// �� �������� skyType���� SkyBox ����
 		pGameObject = CMySkyBox::Create(m_pGraphicDev, mapData.skyType);
@@ -126,13 +130,14 @@ HRESULT CAmdusiasRoom::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 		// Tile
 		CTileMgr::GetInstance()->Initialize(m_pGraphicDev, mapData);
 
-		// Spawns (Monster)
 		for (const auto& spawn : mapData.spawns)
 		{
 			switch (spawn.type)
 			{
 			case 0:
-				CPersistentMgr::GetInstance()->Get_Player()->Set_Pos(_vec3(spawn.x, 0.f, spawn.z));
+				CPersistentMgr::GetInstance()->Get_Player()->Set_Pos(_vec3(spawn.x * 0.8f, -0.95f, spawn.z * 0.8f)); // 실제 스폰 지점
+				//CPersistentMgr::GetInstance()->Get_Player()->Set_Pos(_vec3(199.8f, -0.95f, 35.f));	// 디버그용
+				CPersistentMgr::GetInstance()->Get_Player()->Set_Village(true);
 				pGameObject = CPersistentMgr::GetInstance()->Get_Player();
 
 				if (nullptr == pGameObject)
@@ -145,79 +150,6 @@ HRESULT CAmdusiasRoom::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 
 				pGameObject->AddRef();
 				break;
-			case 1:
-				switch (spawn.monsterType)
-				{
-				case 0:
-					// Bat | 일반몬스터 |
-					break;
-				case 1:
-					// Worm | 일반몬스터 |
-					pGameObject = CMonsterN1::Create(m_pGraphicDev, m_pMessageChannel);
-					if (pGameObject)
-					{
-						Engine::CTransform* pTransform = dynamic_cast<Engine::CTransform*>(
-							pGameObject->Get_Component(ID_DYNAMIC, L"Com_Transform"));
-						if (pTransform)
-							pTransform->Set_Pos(spawn.x, 0.f, spawn.z);
-						pLayer->Add_GameObject(L"Monster", pGameObject);
-					}
-					break;
-				case 2:
-					// Humanoid | 일반몬스터 |
-					break;
-				case 3:
-					// Amdusias | 중간보스 |
-					break;
-				case 4:
-					// Rash | 최종보스 |
-					break;
-				case 5:
-					// WaitingOne | 연출용 |
-					break;
-				case 6:
-					pGameObject = CBishop_Leshy::Create(m_pGraphicDev, m_pMessageChannel, spawn);
-
-					NULL_CHECK_RETURN(pGameObject, E_FAIL)
-
-						if (FAILED(pLayer->Add_GameObject(L"Bishop_Leshy", pGameObject)))
-							return E_FAIL;
-
-					break;
-				case 7:
-					pGameObject = CBishop_Heket::Create(m_pGraphicDev, m_pMessageChannel, spawn);
-
-					NULL_CHECK_RETURN(pGameObject, E_FAIL)
-
-						if (FAILED(pLayer->Add_GameObject(L"Bishop_Heket", pGameObject)))
-							return E_FAIL;
-
-					break;
-
-				case 8:
-					pGameObject = CBishop_Kallamar::Create(m_pGraphicDev, m_pMessageChannel, spawn);
-
-					NULL_CHECK_RETURN(pGameObject, E_FAIL)
-
-						if (FAILED(pLayer->Add_GameObject(L"Bishop_Kallamar", pGameObject)))
-							return E_FAIL;
-
-					break;
-
-				case 9:
-					pGameObject = CBishop_Shamura::Create(m_pGraphicDev, m_pMessageChannel, spawn);
-
-					NULL_CHECK_RETURN(pGameObject, E_FAIL)
-
-						if (FAILED(pLayer->Add_GameObject(L"Bishop_Shamura", pGameObject)))
-							return E_FAIL;
-
-					break;
-				}
-				break;
-			default:
-				MSG_BOX("스폰섹션 타입오류");
-				return E_FAIL;
 			}
 		}
 
@@ -242,29 +174,7 @@ HRESULT CAmdusiasRoom::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 		{
 			Engine::CLightMgr::GetInstance()->Ready_PointLight(m_pGraphicDev, light);
 		}
-		// Process MapWarps - Group by PairId and create CMapWarp
-		std::map<_int, std::vector<MAPWARPDATA>> warpGroups;
-		for (const auto& warp : mapData.mapWarps)
-		{
-			warpGroups[warp.pairId].push_back(warp);
-		}
-		for (const auto& group : warpGroups)
-		{
-			if (group.second.size() >= 2)
-			{
-				const MAPWARPDATA& w1 = group.second[0];
-				const MAPWARPDATA& w2 = group.second[1];
-
-				_vec3 pos1 = { w1.x, 0.f, w1.z };
-				_vec3 pos2 = { w2.x, 0.f, w2.z };
-
-				pGameObject = CMapWarp::Create(m_pGraphicDev, m_pMessageChannel,
-					pos1, w1.direction, pos2, w2.direction);
-
-				if (pGameObject)
-					pLayer->Add_GameObject(L"MapWarp", pGameObject);
-			}
-		}
+	
 		// Border
 		for (const auto& col : mapData.collisions)
 		{
@@ -281,7 +191,55 @@ HRESULT CAmdusiasRoom::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 			pLayer->Add_GameObject(L"SkyBox", pGameObject);
 	}
 
-	// ����׿�
+	_vec3 vFollowerPos = { 205.f, 0.f, 101.f };
+
+	pGameObject = CFollower::Create(m_pGraphicDev, m_pMessageChannel, L"Proto_Follower1Texture", vFollowerPos, CFollower::FOLLOWER_CHEER);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	if (FAILED(pLayer->Add_GameObject(L"NPC", pGameObject)))
+		return E_FAIL;
+
+	vFollowerPos = { 193.8f, 0.f, 100.7f };
+	pGameObject = CFollower::Create(m_pGraphicDev, m_pMessageChannel, L"Proto_Follower2Texture", vFollowerPos, CFollower::FOLLOWER_CHEER);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	if (FAILED(pLayer->Add_GameObject(L"NPC", pGameObject)))
+		return E_FAIL;
+
+	vFollowerPos = { 199.9f, 0.f, 106.f };
+	pGameObject = CFollower::Create(m_pGraphicDev, m_pMessageChannel, L"Proto_Follower3Texture", vFollowerPos, CFollower::FOLLOWER_CHEER);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	if (FAILED(pLayer->Add_GameObject(L"NPC", pGameObject)))
+		return E_FAIL;
+
+	vFollowerPos = { 199.9f, 0.f, 95.f };
+	pGameObject = CFollower::Create(m_pGraphicDev, m_pMessageChannel, L"Proto_Follower4Texture", vFollowerPos, CFollower::FOLLOWER_CHEER);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	if (FAILED(pLayer->Add_GameObject(L"NPC", pGameObject)))
+		return E_FAIL;
+
+	vFollowerPos = { 196.5f, 0.f, 96.8f };
+	pGameObject = CFollower::Create(m_pGraphicDev, m_pMessageChannel, L"Proto_Follower5Texture", vFollowerPos, CFollower::FOLLOWER_CHEER);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	if (FAILED(pLayer->Add_GameObject(L"NPC", pGameObject)))
+		return E_FAIL;
+
+	vFollowerPos = { 204.3f, 0.f, 96.8f};
+	pGameObject = CFollower::Create(m_pGraphicDev, m_pMessageChannel, L"Proto_Follower2Texture", vFollowerPos, CFollower::FOLLOWER_CHEER);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	if (FAILED(pLayer->Add_GameObject(L"NPC", pGameObject)))
+		return E_FAIL;
+
+	vFollowerPos = { 203.3f, 0.f, 104.3f };
+	pGameObject = CFollower::Create(m_pGraphicDev, m_pMessageChannel, L"Proto_Follower4Texture", vFollowerPos, CFollower::FOLLOWER_CHEER);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	if (FAILED(pLayer->Add_GameObject(L"NPC", pGameObject)))
+		return E_FAIL;
+
+	vFollowerPos = { 196.8f, 0.f, 104.4f};
+	pGameObject = CFollower::Create(m_pGraphicDev, m_pMessageChannel, L"Proto_Follower1Texture", vFollowerPos, CFollower::FOLLOWER_CHEER);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	if (FAILED(pLayer->Add_GameObject(L"NPC", pGameObject)))
+		return E_FAIL;
+
 
 	m_mapLayer.insert({ pLayerTag , pLayer });
 
@@ -320,7 +278,7 @@ CAmdusiasRoom* CAmdusiasRoom::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 	if (FAILED(pTest->Ready_Scene()))
 	{
 		Safe_Release(pTest);
-		MSG_BOX("pVillage Create Failed");
+		MSG_BOX("pVillage2 Create Failed");
 		return nullptr;
 	}
 

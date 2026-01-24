@@ -158,23 +158,32 @@ void CFollower_AI::Update_Idle(const _float& fTimeDelta)
 
 void CFollower_AI::Update_Run(const _float& fTimeDelta)
 {
-	if ((!m_bChase) || (m_pTargetTC == nullptr))
+	if ((m_bChase) && (m_pTargetTC != nullptr))
 	{
-		if (m_fAcmlTime >= AUTO_ESCAPE_STATE_TIME)
+		m_vDir = Compute_TargetDir();
+
+		if (D3DXVec3Length(&m_vDir) < 0.1f)
 		{
 			Change_State(CFollower::FOLLOWER_IDLE);
 			return;
 		}
-	}
-	else if (m_fDistance <= m_fInteractRange)
-	{
-		_vec3 vOwnerPos, vTargetPos;
-		m_pOwnerTC->Get_Info(INFO_POS, &vOwnerPos);
-		m_pTargetTC->Get_Info(INFO_POS, &vTargetPos);
 
-		if (vOwnerPos.z < vTargetPos.z)
+		if (m_fDistance <= m_fInteractRange)
 		{
-			Change_State(CFollower::FOLLOWER_ACTION);
+			_vec3 vOwnerPos, vTargetPos;
+			m_pOwnerTC->Get_Info(INFO_POS, &vOwnerPos);
+			m_pTargetTC->Get_Info(INFO_POS, &vTargetPos);
+
+			if (vOwnerPos.z < vTargetPos.z)
+			{
+				Change_State(CFollower::FOLLOWER_ACTION);
+				return;
+			}
+		}
+
+		if (m_fAcmlTime >= AUTO_ESCAPE_STATE_TIME)
+		{
+			Change_State(CFollower::FOLLOWER_IDLE);
 			return;
 		}
 	}

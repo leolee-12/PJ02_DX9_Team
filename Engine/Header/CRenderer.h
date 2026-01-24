@@ -23,8 +23,7 @@ public:
 	void		Clear_RenderGroup();
 	void        Add_TestCollider(const AABB& tAABB, _int iFrame);
 
-	void		Set_RenderFont() { m_bRenderFont = true; }
-	void		Set_UnRenderFont() { m_bRenderFont = false; }
+	void		Set_RenderFont(_bool b) { m_bRenderFont = b; }
 
 private:
 	void			Render_Priority(LPDIRECT3DDEVICE9& pGraphicDev);

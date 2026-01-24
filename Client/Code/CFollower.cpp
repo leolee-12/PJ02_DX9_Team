@@ -7,6 +7,7 @@
 #include "CCollisionMgr.h"
 #include "CFollower_AI.h"
 #include "CDInputMgr.h"
+#include "CTriggerPoint.h"
 
 CFollower::CFollower(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev),
@@ -31,7 +32,6 @@ CFollower::CFollower(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChanne
 	m_eCurWork(FW_NONE)
 {
 }
-
 
 CFollower::CFollower(const CFollower& rhs)
 	: CGameObject(rhs),
@@ -66,6 +66,8 @@ _int CFollower::Update_GameObject(const _float& fTimeDelta)
 {
 	Move_Frame(fTimeDelta);
 	Execute_Work(fTimeDelta);
+	
+	m_pTrigger->Update_GameObject(fTimeDelta);
 
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
@@ -82,7 +84,6 @@ _int CFollower::Update_GameObject(const _float& fTimeDelta)
 
 void CFollower::LateUpdate_GameObject(const _float& fTimeDelta)
 {
-
 	Update_State();
 	Check_Frame();
 	Check_Work();
@@ -91,9 +92,19 @@ void CFollower::LateUpdate_GameObject(const _float& fTimeDelta)
 	m_pTransformCom->Get_Info(INFO_POS, &m_vPos);
 	Compute_ViewDepth(&m_vPos);
 		
-	m_pColliderCom->UpdateFromTransform(m_pTransformCom);
+	//------스프라이트 높이와 충돌체 위치 맞춤---------
+	_float fY(m_vPos.y - m_pTransformCom->Get_Scale(ROT_Y) * 0.25f);
+	AABB tAABB = { m_vPos.x, fY, m_vPos.z, 1.f, 1.f, 1.f };
+	_vec3 vTriggerPos = { m_vPos.x, fY, m_vPos.z };
+	m_pColliderCom->Set_AABB(tAABB);
+	m_pColliderCom->UpdateFromCustom(tAABB);
+	m_pTrigger->Set_Pos_Trigger(vTriggerPos);
+	//-------------------------------------------------
 	// 충돌체 디버그용
+
 	if (g_bDebug) m_pColliderCom->Update_AABBforRender();
+
+	m_pTrigger->LateUpdate_GameObject(fTimeDelta);
 
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
 }
@@ -154,20 +165,30 @@ void CFollower::OnCollision(CGameObject* pObject)
 			m_pTransformCom->Update_Component(0.f);
 			m_pTransformCom->Compute_Bilboard(BBD_X);
 			m_vLerpPos = vCurPos;
+
+
+			_vec3 vDir = m_vPos - vCurPos;
+			m_pAICom->Set_Dir(-vDir);
+			m_pAICom->Set_TargetTransform(nullptr);
 		}
 
 		return;
 	}
-	if (pObject->Get_OBJID() == OID_PLAYER)
-	{
-		if (CDInputMgr::GetInstance()->Key_Down(DIK_E))
-		{
-			IMessageChannel::EVENT tEvent;
-			tEvent.strType = L"Follower.OpenCommaderUI";
-			m_pMessageChannel->Publish(tEvent);
-		}
-	}
-		
+}
+
+void CFollower::WaitForCommand()
+{
+	m_eCurState = FOLLOWER_IDLE;
+	m_eCurWork = FW_NONE;
+	m_pAICom->Set_ActiveAI(false);
+	m_pAICom->Set_State(FOLLOWER_IDLE);
+}
+
+void CFollower::SetCommand(const FOLLOWER_WORK eWork)
+{
+	m_eCurWork = eWork;
+	m_pAICom->Set_ActiveAI(true);
+	m_pAICom->Set_TargetTransform(nullptr);
 }
 
 HRESULT CFollower::Add_Component()
@@ -225,6 +246,8 @@ void CFollower::Ready_Variable()
 	m_iHp = 10;
 	m_eCurState = FOLLOWER_RECRUIT;
 	m_eCurWork = FOLLOWER_WORK(Get_Rand_Int(1, 5));
+	//m_eCurWork = FW_NONE;
+
 	m_fWorkSpeed = FW_DEFAULT_WORK_SPEED + Get_Rand_Float(-0.002f, 0.002f);
 
 	// Transform 세팅
@@ -246,6 +269,8 @@ void CFollower::Ready_Variable()
 	// Anim 관련 세팅
 	m_fFrameSpeed = 24.f;
 	D3DXMatrixIdentity(&m_matTex);
+
+	m_pTrigger = CTriggerPoint::Create(m_pGraphicDev, m_pMessageChannel, m_vPos, _vec3(1.f, 1.f, 1.f), Trigger::TI_FOLLOWER, L"Follower", false, this);
 }
 
 void CFollower::Ready_Event()
@@ -263,7 +288,7 @@ void CFollower::Check_Frame()
 	{
 	case FOLLOWER_IDLE:
 		m_fFrameEnd = 24.f;
-		m_eCurWork = FOLLOWER_WORK(Get_Rand_Int(0, 5));
+		ReTarget();
 		break;
 
 	case FOLLOWER_RUN:
@@ -474,6 +499,10 @@ void CFollower::Check_Work()
 
 	switch (m_eCurWork)
 	{
+	case FW_NONE:
+		pTarget = nullptr;
+		break;
+
 	case FW_WOOD:
 		pTarget = CInteractMgr::GetInstance()->Find_Nearest(CInteractMgr::WOOD, m_vPos);
 		break;
@@ -495,10 +524,16 @@ void CFollower::Check_Work()
 		break;
 	}
 
-	if (pTarget)	m_pAICom->Set_TargetTransform(static_cast<CTransform*>(pTarget->Get_Component(ID_DYNAMIC, L"Com_Transform")));
-	else			m_pAICom->Set_TargetTransform(nullptr);
-
-	m_ePreWork = m_eCurWork;
+	if (pTarget)
+	{
+		m_pAICom->Set_TargetTransform(static_cast<CTransform*>(pTarget->Get_Component(ID_DYNAMIC, L"Com_Transform")));
+		m_ePreWork = m_eCurWork;
+	}
+	else
+	{
+		m_pAICom->Set_TargetTransform(nullptr);
+		m_eCurWork = FOLLOWER_WORK(Get_Rand_Int(1, 5));
+	}
 }
 
 void CFollower::Execute_Work(const _float& fTimeDelta)
@@ -521,6 +556,7 @@ void CFollower::Execute_Work(const _float& fTimeDelta)
 			m_pAICom->Set_TargetTransform(nullptr);
 			m_pAICom->Anim_End(m_eCurState);
 			m_eCurState = FOLLOWER_IDLE;
+			m_eCurWork = FOLLOWER_WORK(Get_Rand_Int(1, 5));
 			return;
 		}
 		
@@ -533,10 +569,11 @@ void CFollower::Execute_Work(const _float& fTimeDelta)
 	{
 		m_bWorking = false;	// 작업량 반영에 실패 시 작업이 끝난 것 : 작업에서 벗어남
  		m_pAICom->Anim_End(m_eCurState);
+		m_pAICom->Set_TargetTransform(nullptr);
 		m_eCurState = FOLLOWER_IDLE;
+		m_ePreWork = FW_NONE;
 	}
 }
-
 
 CFollower* CFollower::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, const _tchar* pProtoKey)
 {
@@ -576,5 +613,6 @@ CFollower* CFollower::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* Sta
 
 void CFollower::Free()
 {
+	Safe_Destroy(m_pTrigger);
 	CGameObject::Free();
 }

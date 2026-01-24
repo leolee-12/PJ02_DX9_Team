@@ -6,6 +6,7 @@
 #include "CInteractMgr.h"
 #include "CFontMgr.h"
 #include "CResourceWorkBar.h"
+#include <CItem.h>
 
 CBreakableRock::CBreakableRock(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev)
@@ -59,16 +60,6 @@ HRESULT CBreakableRock::Ready_GameObject()
 	m_pColliderCom->RegisterToManager(this, CL_GRASS);
 	CInteractMgr::GetInstance()->Register_IObj(CInteractMgr::ROCK, this);
 
-	m_hmapSubHandles.insert({ L"Monster_Damaged", m_pMessageChannel->Subscribe(L"Monster.Attacked", [this](const IMessageChannel::EVENT& Event) {
-		for (auto& Target : any_cast<vector<CGameObject*>>(Event.hmapData.find(L"Target")->second))
-		{
-			if (Target == this)
-			{
-				this->m_iHp = 0;
-			}
-		}
-	}) });
-
 	m_iTextureIndex = 0;
 	m_pWorkBar = CResourceWorkBar::Create(m_pGraphicDev, _float(m_iHp), _vec3{});
 	m_pWorkBar->UnActive();
@@ -90,6 +81,7 @@ _int CBreakableRock::Update_GameObject(const _float& fTimeDelta)
 	{
 		m_pColliderCom->UnregisterFromManager();
 		CInteractMgr::GetInstance()->Unregister_IObj(CInteractMgr::ROCK, this);
+		Create_Item();
 	}
 
 	CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHA, this);
@@ -128,6 +120,12 @@ void CBreakableRock::Render_GameObject()
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 }
 
+_vec3* CBreakableRock::Get_WorkPos(_vec3* pWorkPos) const
+{
+	m_pTransformCom->Get_Info(INFO_POS, pWorkPos);
+	return pWorkPos;
+}
+
 void CBreakableRock::Set_ObjectData(const Engine::OBJECTDATA& objData)
 {
 	m_iTextureIndex = objData.textureIndex;
@@ -157,6 +155,33 @@ void CBreakableRock::Update_WorkBar(const _float& fTimeDelta)
 	m_pWorkBar->Set_TargetPos(vPos);
 	m_pWorkBar->Update_CurWork(m_fWorkGauge);
 	m_pWorkBar->Update_GameObject(fTimeDelta);
+}
+
+void CBreakableRock::Create_Item()
+{
+	_int itemCount = Get_Rand_Int(3, 5);
+	_vec3 vPos;
+	m_pTransformCom->Get_Info(Engine::INFO_POS, &vPos);
+
+	for (_uint i = 0; i < itemCount; ++i)
+	{
+		CGameObject* pItem;
+		_float fY(vPos.y - m_pTransformCom->Get_Scale(ROT_Y) * 0.25f);
+		pItem = CItem::Create(m_pGraphicDev, m_pMessageChannel, _vec3(vPos.x, fY, vPos.z), CItem::IG_STONE, true);
+
+		if (pItem)
+		{
+			wstring strObjTag = L"Item";
+
+			IMessageChannel::EVENT ESummonMonster;
+			ESummonMonster.strType = L"Obj.Add";
+			ESummonMonster.eOBJID = Engine::OID_ITEM;
+			ESummonMonster.hmapData.emplace(L"Obj", pItem);
+			ESummonMonster.hmapData.emplace(L"LayerTag", L"GameLogic_Layer");
+			ESummonMonster.hmapData.emplace(L"ObjTag", strObjTag);
+			m_pMessageChannel->Publish(ESummonMonster);
+		}
+	}
 }
 
 HRESULT CBreakableRock::Add_Component()

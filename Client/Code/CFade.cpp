@@ -216,14 +216,14 @@ void	CFade::Ready_Event()
 void	CFade::Active()
 {
 	m_bActive = true;
-	CRenderer::GetInstance()->Set_UnRenderFont();
+	CRenderer::GetInstance()->Set_RenderFont(false);
 	CPersistentMgr::GetInstance()->Set_GaugeFontRender(false);
 }
 
 void	CFade::UnActive()
 {
 	m_bActive = false;
-	CRenderer::GetInstance()->Set_RenderFont();
+	CRenderer::GetInstance()->Set_RenderFont(true);
 	CPersistentMgr::GetInstance()->Set_GaugeFontRender(true);
 }
 

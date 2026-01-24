@@ -57,17 +57,39 @@ HRESULT CFoodReviewUI::Ready_GameObject()
 	m_pBackReivewFont->Set_Font(L"Font_Default30_Heavy");
 	m_pBackReivewFont->Active();
 	m_pBackReivewFont->Set_Text((L"생존"));
-
 	m_bActive = false;
+	Ready_Event();
 	return S_OK;
 }
 
+void CFoodReviewUI::Ready_Event()
+{
+	m_hmapSubHandles.insert({ L"FoodReview.Open",m_pMessageChannel->Subscribe(L"Trigger.Activate.Owner" ,[this](const IMessageChannel::EVENT& Event)
+{
+		auto iter = Event.hmapData.find(L"Trigger_Name");
+		if (iter == Event.hmapData.end())
+			return;
+
+		wstring name = any_cast<wstring>(iter->second);
+		if (name == L"GoodFood")
+		{
+			ReviewGoodFood();
+		}
+		else if (name == L"BadFood")
+		{
+			ReviewBadFood();
+		}
+}
+) });
+
+}
 _int CFoodReviewUI::Update_GameObject(const _float& fTimeDelta)
 {
 	m_fRenderTimer += fTimeDelta;
 
 	if (CDInputMgr::GetInstance()->Key_Down(DIK_C))
 	{
+		//L"GoodFood"
 		ReviewGoodFood();
 	}
 	if (CDInputMgr::GetInstance()->Key_Down(DIK_V))
@@ -78,15 +100,15 @@ _int CFoodReviewUI::Update_GameObject(const _float& fTimeDelta)
 	if (!m_bActive) { return NOEVENT; }
 	m_pReviewBackUI->Update_GameObject(fTimeDelta);
 
-	if (m_fRenderTimer >= 1.0f)
+	if (m_fRenderTimer >= 0.5f)
 	{
 		m_pBackReivewFont->Update_GameObject(fTimeDelta);
 	}
-	if (m_fRenderTimer >= 2.0f)
+	if (m_fRenderTimer >= 1.0f)
 	{
 		m_pAHNReivewFont->Update_GameObject(fTimeDelta);
 	}
-	if (m_fRenderTimer >= 3.0f)
+	if (m_fRenderTimer >= 1.5f)
 	{
 		if (!m_soundPlayed)
 		{
@@ -95,7 +117,7 @@ _int CFoodReviewUI::Update_GameObject(const _float& fTimeDelta)
 		}
 		m_pReviewImageUI->Update_GameObject(fTimeDelta);
 	}
-	if (m_fRenderTimer >= 5.0f)
+	if (m_fRenderTimer >= 3.0f)
 	{
 		m_bActive = false;
 	}
@@ -195,3 +217,4 @@ void CFoodReviewUI::ReviewBadFood()
 	m_pBackReivewFont->Set_Text((L"탈락"));
 	m_szSoundText = L"BadFood.wav";
 }
+

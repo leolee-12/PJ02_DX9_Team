@@ -168,9 +168,10 @@ void CPlayer::Ready_Variable()
 	m_bIntro = false;
 	m_fSpeed = PLAYER_DEFAULT_SPEED;
 	m_iAttack = PLAYER_DEFAULT_ATTACK;
-	//m_iAttack = 10;
 	m_iHp = 8;
 	m_fAcmlTime = 0.f;
+	m_fPassion = 4.f;
+	m_fFaith = 50.f;
 
 	m_eOBJID = OID_PLAYER;
 	_float fScale = PLAYER_DEFAULT_SCALE;
@@ -280,6 +281,22 @@ void CPlayer::Ready_Event()
 			}
 		}
 	) });
+
+	m_hmapSubHandles.insert({ L"Player.AddPassion", m_pMessageChannel->Subscribe(L"Player.AddPassion", [this](const IMessageChannel::EVENT& Event)
+		{
+			m_fPassion += DEFAULT_PASSION_GAIN;
+
+			if (m_fPassion > MAX_PASSION_VALUE)
+				m_fPassion = MAX_PASSION_VALUE;
+		}) });
+
+	m_hmapSubHandles.insert({ L"Player.AddFaith", m_pMessageChannel->Subscribe(L"Player.AddFaith", [this](const IMessageChannel::EVENT& Event)
+		{
+			m_fFaith += DEFAULT_FAITH_GAIN;
+
+			if (m_fPassion > MAX_FAITH_VALUE)
+				m_fPassion = MAX_FAITH_VALUE;
+		}) });
 
 	m_bMsgRegistered = true;
 }
@@ -475,7 +492,8 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 
 	if (m_bVillage) return;
 
-	if (GetAsyncKeyState(VK_LBUTTON) & 0x0001)	// 눌렀을 때 한 번만 true
+	//if (GetAsyncKeyState(VK_LBUTTON) & 0x0001)	// 눌렀을 때 한 번만 true
+	if (CDInputMgr::GetInstance()->Mouse_Down(DIM_LB))
 	{			
 		if ((m_iCombo == 3) || (m_fCharge)) return;
 
@@ -493,9 +511,13 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 	if (GetAsyncKeyState(VK_RBUTTON) & 0x0001)	// 눌렀을 때 한 번만 true
 	{
 		if ((m_bRoll) || (m_iCombo)) return;
-	
+
 		if (!m_fCharge)
 		{
+			if (m_fPassion < 1.f) return;
+
+			m_fPassion -= 1.f;
+
 			m_eCurState = PS_CHARGE;
 			m_strFrameKey = L"charge-start";
 			m_fCharge += fTimeDelta;
@@ -641,6 +663,9 @@ void CPlayer::Move_Frame(const _float& fTimeDelta)
 {
 	m_fFrame += m_fFrameSpeed * fTimeDelta;
 	m_fAcmlTime += fTimeDelta;
+	m_fFaith -= FAITH_DECREASE_RATE * fTimeDelta;
+
+	if (m_fFaith < 0.f) m_fFaith = 0.f;
 
 	if (m_fFrame > m_fFrameEnd)
 	{
@@ -983,8 +1008,8 @@ void	CPlayer::OnCollision(CGameObject* pObject)
 	{
 		if (static_cast<CItem*>(pObject)->Get_State() == CItem::IS_CHASE)
 		{
-			CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_PICKUP, 0, _vec3(m_vPos.x, m_vPos.y - 1.f, m_vPos.z - 0.001f), _vec3(0.3f, 0.3f, 0.f));
-			CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_PICKUP, 1, _vec3(m_vPos.x, m_vPos.y - 1.f, m_vPos.z), _vec3(0.3f, 0.3f, 0.f));
+			//CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_PICKUP, 0, _vec3(m_vPos.x, m_vPos.y - 1.f, m_vPos.z - 0.001f), _vec3(0.3f, 0.3f, 0.f));
+			//CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_PICKUP, 1, _vec3(m_vPos.x, m_vPos.y - 1.f, m_vPos.z), _vec3(0.3f, 0.3f, 0.f));
 		}
 	}
 

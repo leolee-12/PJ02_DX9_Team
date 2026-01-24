@@ -46,6 +46,17 @@ namespace Engine
 		return dwRefCnt;
 	}
 
+	// 윤석현 추가
+	template<typename T>
+	void Safe_Destroy(T*& pGameObject)
+	{
+		if (pGameObject)
+		{
+			pGameObject->PrepareDestroy();
+			Safe_Release(pGameObject);
+		}
+	}
+
 
 	// Functor
 	class CTag_Finder

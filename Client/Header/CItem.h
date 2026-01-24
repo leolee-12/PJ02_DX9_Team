@@ -13,10 +13,10 @@ class CItem : public CGameObject
 {
 public:
 	enum ITEMSTATE { IS_SPAWN, IS_IDLE, IS_CHASE, IS_SUMMON, IS_END };
-	enum ITEMID {	IG_GOLD, IG_WOOD, IG_STONE, IG_BERRY, IG_FERTILIZER, IG_FERVOR,
-					FD_GFOOD, FD_BFOOD,
-					WP_SWORD, WP_GAUNTLET, WP_FIREBALL, WP_TENTACLE,
-					ID_END };
+	enum ITEMID {	/*Ingredient*/	IG_GOLD, IG_WOOD, IG_STONE, IG_BERRY, IG_FERTILIZER, IG_PASSION,
+					/*Food*/		FD_GFOOD, FD_BFOOD,
+					/*Weapon*/		WP_SWORD, WP_GAUNTLET, WP_FIREBALL, WP_TENTACLE,
+									ID_END };
 
 protected:
 	explicit	CItem(LPDIRECT3DDEVICE9 pGraphicDev);
@@ -31,9 +31,9 @@ public:
 	virtual void		LateUpdate_GameObject(const _float& fTimeDelta);	// 아직은 동일하므로 추상클래스에 넣었으나, 달라지면 각자 override하여 사용
 	virtual void		Render_GameObject();								// 아직은 동일하므로 추상클래스에 넣었으나, 달라지면 각자 override하여 사용
 	virtual void		OnCollision(CGameObject* pObject) PURE;				// 하위클래스에 구현 강제
+	virtual void		Ready_Event();
 
 	void				Ready_Variable();
-	void				Ready_Event();
 	void				Check_State();
 	void				Update_Spawn(const _float& fTimeDelta);
 

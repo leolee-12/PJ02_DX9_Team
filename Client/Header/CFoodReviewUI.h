@@ -26,16 +26,17 @@ public:
 	virtual			void		LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual			void		Render_GameObject();
 	virtual			void		OnCollision(CGameObject* pObject);
+		
 
 public:
 	static CFoodReviewUI* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMessageChannel);
-
 public:
 
 private:
 	virtual			void		Free();
 	void						ReviewGoodFood();
 	void						ReviewBadFood();
+	void						Ready_Event();
 private:
 	CFoodReviewBack* m_pReviewBackUI;
 	CFoodReviewImage* m_pReviewImageUI;

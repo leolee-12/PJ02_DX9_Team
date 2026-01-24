@@ -5,6 +5,7 @@
 #include "CRenderer.h"
 #include "CManagement.h"
 #include "CMapWarp.h"
+#include "CCollisionMgr.h"
 
 CTriggerPoint::CTriggerPoint(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev)
@@ -49,7 +50,10 @@ _int CTriggerPoint::Update_GameObject(const _float& fTimeDelta)
 
 	if (iExit == DEAD)
 	{
-		m_pColliderCom->UnregisterFromManager();
+		if (!m_bUnregister) {
+			m_pColliderCom->UnregisterFromManager();
+			m_bUnregister = true;
+		}
 		return iExit;
 	}
 
@@ -105,6 +109,12 @@ HRESULT CTriggerPoint::Add_Component()
 	return S_OK;
 }
 
+void CTriggerPoint::Set_Pos_Trigger(const _vec3& vPos)
+{
+	m_vPos = vPos;
+	m_pTransformCom->Set_Pos(m_vPos.x, m_vPos.y, m_vPos.z);
+}
+
 void CTriggerPoint::Activate()
 {
 	// 이미 비활성화된 트리거는 중복 이벤트 발행 방지
@@ -112,18 +122,30 @@ void CTriggerPoint::Activate()
 	if (m_iHp <= 0)
 		return;
 
+	if (m_bHaveOwner)
+	{
+		IMessageChannel::EVENT TriggerEvent;
+		TriggerEvent.strType = L"Trigger.Activate.Owner";
+		TriggerEvent.hmapData[L"Trigger_TID"] = m_eTID;
+		TriggerEvent.hmapData[L"Trigger_Name"] = m_strTriggerName;
+		TriggerEvent.hmapData[L"Trigger_Owner"] = m_pOwner;
+		m_pMessageChannel->Publish(TriggerEvent);
+	}
+	else
+	{
+		IMessageChannel::EVENT TriggerEvent;
+		TriggerEvent.strType = L"Trigger.Activate";
+		TriggerEvent.hmapData[L"Trigger_TID"] = m_eTID;
+		TriggerEvent.hmapData[L"Trigger_Name"] = m_strTriggerName;
+		m_pMessageChannel->Publish(TriggerEvent);
+	}
+	
 
-	IMessageChannel::EVENT TriggerEvent;
-	TriggerEvent.strType = L"Trigger.Activate";
-	TriggerEvent.hmapData[L"Trigger_TID"] = m_eTID;
-	TriggerEvent.hmapData[L"Trigger_Name"] = m_strTriggerName;
-	m_pMessageChannel->Publish(TriggerEvent);
-
-	if (m_eTID == Trigger::TI_STAGING)
+	if (m_eTID == Trigger::TI_STAGING /*|| m_eTID == Trigger::TI_FOOD*/)
 		m_iHp = 0;
 }
 
-CTriggerPoint* CTriggerPoint::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMessageChannel, _vec3 vPos, _vec3 vHalfSize, Trigger::TRIGGERID eTID, const wstring& strTriggerName, _bool bPassive)
+CTriggerPoint* CTriggerPoint::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMessageChannel, _vec3 vPos, _vec3 vHalfSize, Trigger::TRIGGERID eTID, const wstring& strTriggerName, _bool bPassive, CGameObject* pOwner)
 {
 	CTriggerPoint* pTrigger = new CTriggerPoint(pGraphicDev);
 
@@ -135,6 +157,12 @@ CTriggerPoint* CTriggerPoint::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChan
 	pTrigger->m_eTID = eTID;
 	pTrigger->m_strTriggerName = strTriggerName;
 	pTrigger->m_bPassive = bPassive;
+
+	if (pOwner != nullptr)
+	{
+		pTrigger->m_pOwner = pOwner;
+		pTrigger->m_bHaveOwner = true;
+	}
 
 	if (FAILED(pTrigger->Ready_GameObject()))
 	{
@@ -149,4 +177,13 @@ CTriggerPoint* CTriggerPoint::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChan
 void CTriggerPoint::Free()
 {
 	CGameObject::Free();
+}
+
+void CTriggerPoint::PrepareDestroy()
+{
+	if (!m_bUnregister) {
+		m_pColliderCom->UnregisterFromManager();
+		m_bUnregister = true;
+	}
+	m_pOwner = nullptr;
 }
