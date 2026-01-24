@@ -1,4 +1,4 @@
-#include "pch.h"
+癤�#include "pch.h"
 #include "CCookingGauge.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
@@ -122,8 +122,7 @@ void CCookingGauge::Get_GaugeRange(float& fLeft, float& fRight)
 	m_pTransformCom->Get_Info(INFO_POS, &vPos);
 
 
-	// 0.3f임시 값 상수로 넣어둔거 나중에 수정해야함
-	float  xHarlf = (598.f * 0.4f *0.3f * 0.5f) * 0.5f;
+	float  xHarlf = (598.f * 0.4f * 0.3f * 0.5f);
 
 	fLeft  = vPos.x - xHarlf;
 	fRight = vPos.x + xHarlf;
