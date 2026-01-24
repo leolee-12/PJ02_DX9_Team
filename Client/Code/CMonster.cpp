@@ -3,6 +3,7 @@
 #include "CProtoMgr.h"
 #include "CManagement.h"
 #include "CRenderer.h"
+#include <CItem.h>
 
 CMonster::CMonster(LPDIRECT3DDEVICE9 pGraphicDev)
 	:	CGameObject(pGraphicDev),
@@ -192,6 +193,33 @@ HRESULT CMonster::Add_Component()
 	m_mapComponent[ID_STATIC].insert({ L"Com_Collider", pComponent });
 
 	return S_OK;
+}
+
+void CMonster::Create_Item()
+{
+	_int itemCount = Get_Rand_Int(3, 5);
+	_vec3 vPos;
+	m_pTransformCom->Get_Info(Engine::INFO_POS, &vPos);
+
+	for (_uint i = 0; i < itemCount; ++i)
+	{
+		CGameObject* pItem;
+		_float fY(vPos.y - m_pTransformCom->Get_Scale(ROT_Y) * 0.25f);
+		pItem = CItem::Create(m_pGraphicDev, m_pMessageChannel, _vec3(vPos.x, fY, vPos.z), CItem::IG_PASSION, true);
+
+		if (pItem)
+		{
+			wstring strObjTag = L"Item";
+
+			IMessageChannel::EVENT ESummonMonster;
+			ESummonMonster.strType = L"Obj.Add";
+			ESummonMonster.eOBJID = Engine::OID_ITEM;
+			ESummonMonster.hmapData.emplace(L"Obj", pItem);
+			ESummonMonster.hmapData.emplace(L"LayerTag", L"GameLogic_Layer");
+			ESummonMonster.hmapData.emplace(L"ObjTag", strObjTag);
+			m_pMessageChannel->Publish(ESummonMonster);
+		}
+	}
 }
 
 CMonster* CMonster::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel)

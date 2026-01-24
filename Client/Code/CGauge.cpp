@@ -2,6 +2,7 @@
 #include "CGauge.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
+#include "CPersistentMgr.h"
 
 #include "CGaugeCover.h"
 #include "CGaugeStar.h"
@@ -19,8 +20,8 @@ CGauge::CGauge(LPDIRECT3DDEVICE9 pGraphicDev)
 	, m_eCurGaugeState(Gauge::GS_END)
 	, m_ePreGaugeState(Gauge::GS_END)
 	, m_bFontRender(true)
-	, m_fMaxPassionGaugeValue(4.f)
-	, m_fMaxFaithGaugeValue(1.f)
+	, m_fMaxPassionGaugeValue(CPlayer::MAX_PASSION_VALUE)
+	, m_fMaxFaithGaugeValue(CPlayer::MAX_FAITH_VALUE)
 {
 	ZeroMemory(&m_vPos, sizeof(_vec3));
 }
@@ -47,7 +48,6 @@ HRESULT CGauge::Ready_GameObject()
 		return E_FAIL;
 
 	m_vecGaugeUI.push_back(pGameObject);
-
 
 	pGameObject = m_pPassionGauge = CPassionGauge::Create(m_pGraphicDev, m_eCurGaugeState, m_fMaxPassionGaugeValue, m_fMaxFaithGaugeValue);
 
@@ -143,24 +143,24 @@ void CGauge::Accumulate_GaugeValue(const _float& fTimeDelta)
 	{
 		case Gauge::GS_PASSION:
 		{
-			if (m_fGaugeValue >= m_fMaxPassionGaugeValue)
+			if (m_fGaugeValue > m_fMaxPassionGaugeValue)
 			{
 				m_fGaugeValue = m_fMaxPassionGaugeValue;
 				return;
 			}
 
-				m_fGaugeValue += fTimeDelta * 0.5f;
+			m_fGaugeValue = CPersistentMgr::GetInstance()->Get_Player()->Get_Passion();
 		}
 		break;
 		case Gauge::GS_FAITH:
 		{
-			if (m_fGaugeValue >= m_fMaxFaithGaugeValue)
+			if (m_fGaugeValue > m_fMaxFaithGaugeValue)
 			{
 				m_fGaugeValue = m_fMaxFaithGaugeValue;
 				return;
 			}
 
-				m_fGaugeValue += fTimeDelta * 0.5f;
+			m_fGaugeValue = CPersistentMgr::GetInstance()->Get_Player()->Get_Faith();
 		}
 	}
 }

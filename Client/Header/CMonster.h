@@ -28,6 +28,7 @@ public:
 
 protected:
 	HRESULT			Add_Component();
+	void			Create_Item();
 
 protected:
 	Engine::CRcTex*		m_pBufferCom;

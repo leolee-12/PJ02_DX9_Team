@@ -8,6 +8,7 @@
 #include "CInteractMgr.h"
 #include "CFontMgr.h"
 #include "CResourceWorkBar.h"
+#include <CItem.h>
 
 CBreakableTree::CBreakableTree(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev)
@@ -17,7 +18,6 @@ CBreakableTree::CBreakableTree(LPDIRECT3DDEVICE9 pGraphicDev)
 	, m_pColliderCom(nullptr)
 	, m_iTextureIndex(0)
 	, m_fScale(1.f)
-	, m_fBaseScale(1.f)
 	, m_fWorkGauge(0.f)
 	, m_fPreWorkGauge(0.f)
 {
@@ -31,7 +31,6 @@ CBreakableTree::CBreakableTree(const CBreakableTree& rhs)
 	, m_pColliderCom(nullptr)
 	, m_iTextureIndex(rhs.m_iTextureIndex)
 	, m_fScale(rhs.m_fScale)
-	, m_fBaseScale(rhs.m_fBaseScale)
 	, m_fWorkGauge(0.f)
 	, m_fPreWorkGauge(0.f)
 {
@@ -47,21 +46,11 @@ HRESULT CBreakableTree::Ready_GameObject()
 		return E_FAIL;
 
 	m_fFrame = 0.f;
-	m_fFrameSpeed = 24.f;
+	m_fFrameSpeed = 6.f;
 	m_fFrameEnd = 32.f;
 
 	m_pColliderCom->RegisterToManager(this, CL_GRASS);
 	CInteractMgr::GetInstance()->Register_IObj(CInteractMgr::WOOD, this);
-
-	m_hmapSubHandles.insert({ L"Monster_Damaged", m_pMessageChannel->Subscribe(L"Monster.Attacked", [this](const IMessageChannel::EVENT& Event) {
-		for (auto& Target : any_cast<vector<CGameObject*>>(Event.hmapData.find(L"Target")->second))
-		{
-			if (Target == this)
-			{
-				this->m_iHp = 0;
-			}
-		}
-	}) });
 
 	m_pWorkBar = CResourceWorkBar::Create(m_pGraphicDev, _float(m_iHp), _vec3{});
 	m_pWorkBar->UnActive();
@@ -83,6 +72,7 @@ _int CBreakableTree::Update_GameObject(const _float& fTimeDelta)
 	{
 		m_pColliderCom->UnregisterFromManager();
 		CInteractMgr::GetInstance()->Unregister_IObj(CInteractMgr::WOOD, this);
+		Create_Item();
 	}
 
 	CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHA, this);
@@ -92,11 +82,9 @@ _int CBreakableTree::Update_GameObject(const _float& fTimeDelta)
 
 void CBreakableTree::LateUpdate_GameObject(const _float& fTimeDelta)
 {
-	if (m_fWorkGauge - m_fPreWorkGauge < 0.0001f)	m_iTextureIndex = 0;	// IDLE
-	else
+	if (!(m_fWorkGauge - m_fPreWorkGauge < 0.0001f))
 	{
 		m_pWorkBar->Active();
-		m_iTextureIndex = 1;	// HIT
 	}
 
 	_vec3 vPos;
@@ -127,11 +115,16 @@ void CBreakableTree::Render_GameObject()
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 }
 
+_vec3* CBreakableTree::Get_WorkPos(_vec3* pWorkPos) const
+{
+	m_pTransformCom->Get_Info(INFO_POS, pWorkPos);
+	return pWorkPos;
+}
+
 void CBreakableTree::Set_ObjectData(const Engine::OBJECTDATA& objData)
 {
 	m_iTextureIndex = objData.textureIndex;
 	m_fScale = objData.scale;
-	m_fBaseScale = objData.scale;
 
 	m_pTransformCom->Set_Pos(objData.x, objData.y, objData.z);
 	m_pTransformCom->Set_Scale(m_fScale, m_fScale, m_fScale);
@@ -146,6 +139,33 @@ void CBreakableTree::Check_Status()
 
 void CBreakableTree::OnCollision(CGameObject* pObject)
 {
+}
+
+void CBreakableTree::Create_Item()
+{
+	_int itemCount = Get_Rand_Int(3, 5);
+	_vec3 vPos;
+	m_pTransformCom->Get_Info(Engine::INFO_POS, &vPos);
+
+	for (_uint i = 0; i < itemCount; ++i)
+	{
+		CGameObject* pItem;
+		_float fY(vPos.y - m_pTransformCom->Get_Scale(ROT_Y) * 0.25f);
+		pItem = CItem::Create(m_pGraphicDev, m_pMessageChannel, _vec3(vPos.x, fY, vPos.z), CItem::IG_WOOD, true);
+
+		if (pItem)
+		{
+			wstring strObjTag = L"Item";
+
+			IMessageChannel::EVENT ESummonMonster;
+			ESummonMonster.strType = L"Obj.Add";
+			ESummonMonster.eOBJID = Engine::OID_ITEM;
+			ESummonMonster.hmapData.emplace(L"Obj", pItem);
+			ESummonMonster.hmapData.emplace(L"LayerTag", L"GameLogic_Layer");
+			ESummonMonster.hmapData.emplace(L"ObjTag", strObjTag);
+			m_pMessageChannel->Publish(ESummonMonster);
+		}
+	}
 }
 
 HRESULT CBreakableTree::Add_Component()
@@ -194,7 +214,6 @@ HRESULT CBreakableTree::Add_Component()
 
 void CBreakableTree::Set_Texture()
 {
-	//_bool bFilpX = vDir.x > 0.f ? true : false;	// 반전 여부
 	_uint iFrame = _uint(m_fFrame);					// 현재 프레임
 
 	D3DXMatrixIdentity(&m_matTex);

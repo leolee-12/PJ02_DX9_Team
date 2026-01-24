@@ -76,6 +76,7 @@ _int CMonsterN3::Update_GameObject(const _float& fTimeDelta)
 	{
 		m_pColliderCom->UnregisterFromManager();
 		CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_PARTICLE_BLUE, 0, m_vEffectPos, _vec3(0.2f, 0.2f, 0.2f));
+		Create_Item();
 		return iExit;
 	}
 

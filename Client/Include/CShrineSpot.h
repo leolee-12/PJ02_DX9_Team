@@ -6,22 +6,22 @@ namespace Engine
 {
 	class CRcTex;
 	class CTransform;
-	class CTexture;
+	//class CTexture;
 	class CCollider;
 }
 
 class CResourceWorkBar;
 
 // ===================================================
-//	CBreakableRock
+//	CShrineSpot
 // ===================================================
 
-class CBreakableRock : public CGameObject, public IInteractable
+class CShrineSpot : public CGameObject, public IInteractable
 {
 private:
-	explicit CBreakableRock(LPDIRECT3DDEVICE9 pGraphicDev);
-	explicit CBreakableRock(const CBreakableRock& rhs);
-	virtual ~CBreakableRock();
+	explicit CShrineSpot(LPDIRECT3DDEVICE9 pGraphicDev);
+	explicit CShrineSpot(const CShrineSpot& rhs);
+	virtual ~CShrineSpot();
 
 public:
 	virtual HRESULT		Ready_GameObject();
@@ -42,25 +42,14 @@ public:
 private:
 	HRESULT	Add_Component();
 	void	Update_WorkBar(const _float& fTimeDelta);
-	void	Create_Item();
 
 private:
-	Engine::CRcTex*		m_pBufferCom;
+	Engine::CRcTex* m_pBufferCom;
 	Engine::CTransform* m_pTransformCom;
-	Engine::CTexture*	m_pTextureCom;
-	Engine::CCollider*	m_pColliderCom;
+	//Engine::CTexture* m_pTextureCom;
+	Engine::CCollider* m_pColliderCom;
 
-	_int				m_iTextureIndex;
 	_float				m_fScale;
-	_float				m_fBaseScale;
-
-	// Vertex sway variables (replaced old Interaction vars)
-	_float				m_fPhase;
-	_float				m_fWindSpeed;
-	_float				m_fWindStrength;
-	_float				m_fAccTime;
-	_float				m_fReactStrength;
-	_vec3				m_vReactDir;
 
 	// 상호작용 관련
 	_float				m_fPreWorkGauge;
@@ -70,7 +59,7 @@ private:
 	static constexpr _float MAX_WORK_GAUGE = 1.f;
 
 public:
-	static CBreakableRock* Create(LPDIRECT3DDEVICE9 pGraphicDev, const Engine::OBJECTDATA& objData, IMessageChannel* pMessageChannel);
+	static CShrineSpot* Create(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vPos, IMessageChannel* pMessageChannel);
 
 private:
 	virtual void Free();

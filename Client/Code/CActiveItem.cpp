@@ -4,6 +4,7 @@
 #include "CRenderer.h"
 #include "CPersistentMgr.h"
 #include "CSoundMgr.h"
+#include "CEffectMgr.h"
 
 CActiveItem::CActiveItem(LPDIRECT3DDEVICE9 pGraphicDev)
 	:	CItem(pGraphicDev)
@@ -72,15 +73,27 @@ void CActiveItem::OnCollision(CGameObject* pObject)
 	{
 		// 아이템 획득 처리
 		IMessageChannel::EVENT tEvent;
-		tEvent.strType = L"ResourceHistory.AddItem";
-		tEvent.hmapData[L"ItemID"] = (int)m_eItemID;
 
-		m_pMessageChannel->Publish(tEvent);
+		switch (m_eItemID)
+		{
+		case IG_PASSION:
+			tEvent.strType = L"Player.AddPassion";
+			m_pMessageChannel->Publish(tEvent);
+			break;
+
+		default:
+			tEvent.strType = L"ResourceHistory.AddItem";
+			tEvent.hmapData[L"ItemID"] = (int)m_eItemID;
+			m_pMessageChannel->Publish(tEvent);
+			break;
+		}
+
 		m_iHp = 0;
 		_tchar strSoundName[128] = L"";
 		swprintf_s(strSoundName, L"ItemPickup%d.wav", Get_Rand_Int(1, 7));
 		CSoundMgr::GetInstance()->Play(strSoundName, SOUND_EFFECT, 0.5f);
-
+		CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_PICKUP, 0, _vec3(m_vPos.x, m_vPos.y + 1.f, m_vPos.z - 0.5f), _vec3(0.5f, 0.2f, 0.f));
+		CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_PICKUP, 1, _vec3(m_vPos.x, m_vPos.y + 1.f, m_vPos.z - 0.5f), _vec3(0.5f, 0.2f, 0.f));
 	}
 }
 
@@ -90,7 +103,20 @@ void CActiveItem::Update_Idle(const _float& fTimeDelta)
 
 	if (m_fAcmlTime >= 1.f)
 	{
-		m_eCurState = IS_CHASE;
+		CTransform* pTransformCom = CPersistentMgr::GetInstance()->Get_PlayerTransform();
+
+		NULL_CHECK(pTransformCom);
+
+		_vec3 vTargetPos;
+
+		pTransformCom->Get_Info(INFO_POS, &vTargetPos);
+
+		vTargetPos -= m_vPos;
+
+		_float fDist = D3DXVec3Length(&vTargetPos);
+
+		if (fDist <= AUTO_CHASE_RANGE)	m_eCurState = IS_CHASE;
+		else							m_fAcmlTime = 0.f;
 	}
 }
 
@@ -106,7 +132,7 @@ void CActiveItem::Update_Chase(const _float& fTimeDelta)
 
 	m_vSpeed = vTargetPos - m_vPos;
 
-	m_pTransformCom->Chase_Target(&vTargetPos, fTimeDelta, 7.f * D3DXVec3Length(&m_vSpeed));
+	m_pTransformCom->Chase_Target(&vTargetPos, fTimeDelta, 7.5f * D3DXVec3Length(&m_vSpeed));
 }
 
 CActiveItem* CActiveItem::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, _float fThrowRange)

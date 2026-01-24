@@ -582,6 +582,12 @@ void CMultiLoadingThread::Loading_for_Village()
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_Building_Knucklebone", TEX_NORMAL, L"../Bin/Resource/LWY/Maps/Building/dds/knucklebones.dds", 1));
 	m_iTotalProtoCount++;
 
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_Building_Workshop", TEX_NORMAL, L"../Bin/Resource/LWY/Maps/Building/dds/WorkShop.dds", 1));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_Building_Shrine", TEX_NORMAL, L"../Bin/Resource/LWY/Maps/Building/dds/Shrine.dds", 1));
+	m_iTotalProtoCount++;
+
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_BTreeTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Maps/BreakableTree/dds/BreakableTree_%d.dds", 2));
 	m_iTotalProtoCount++;
 

@@ -145,5 +145,7 @@ void CNPCCommandUI::Free()
 	Safe_Release(m_pBackUI);
 	Safe_Release(m_pWoodUI);
 	Safe_Release(m_pRockUI);
+	Safe_Release(m_pRestUI);
+	Safe_Release(m_pLookingEyeUI);
 	CUi::Free();
 }
