@@ -25,6 +25,10 @@ private:
 
 public:
 	static CRealDungeon* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+
+private:
+	_bool m_bEndVillageFlag = false;
+
 private:
 	virtual void Free();
 };

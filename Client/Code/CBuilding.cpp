@@ -311,12 +311,12 @@ void CBuilding::Ready_Variable()
 	_float fScale = 5.f;
 	m_pTransformCom->Set_Scale(fScale, fScale, fScale);
 
-	Change_State(BS_CONSTRUCTING);
-	m_fWorkGauge = 0.f;
+	//Change_State(BS_CONSTRUCTING);
+	//m_fWorkGauge = 0.f;
 
 	// 테스트용
-	//m_fWorkGauge = 1.f;
-	//Change_State(BS_COMPLETE);
+	m_fWorkGauge = 1.f;
+	Change_State(BS_COMPLETE);
 	// 테스트용
 
 	if(m_eBuildingType == BT_WORKSHOP)

@@ -27,6 +27,7 @@ public:
 	void Check_Collisions(const _float& fDeltaTime);								// 매프레임 충돌체크 함수
 	void RequestUnregister(CGameObject* pOwner, COLGROUP Group);					// 삭제요청을 보내는 함수
 	void RegisterCollider(CGameObject* pOwner, const AABB& aabb, COLGROUP Group);	// 콜라이더 등록/갱신 함수
+	void ImmediateUnregister(CGameObject* pOwner, COLGROUP Group);					// 콜라이더 정보 즉시 삭제 함수
 
 	void Reset_For_SceneChange();		// 씬전환용 등록된 충돌체 비우기 함수
 

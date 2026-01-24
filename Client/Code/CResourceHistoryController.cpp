@@ -74,7 +74,7 @@ HRESULT CResourceHistoryController::Ready_GameObject()
 		_vec3 pos;
 		pos.x = 100;
 		pos.y = 230 + (50 * i);
-		pos.z = 0.f;
+		pos.z = 0.1f;
 
 		m_vHistoryPos.push_back(pos);
 	}
@@ -103,7 +103,6 @@ _int CResourceHistoryController::Update_GameObject(const _float& fTimeDelta)
 	for (auto& UI : m_mResourceUI)
 		UI.second->Update_GameObject(fTimeDelta);
 
-	CRenderer::GetInstance()->Add_RenderGroup(RENDER_UI, this);
 	return NOEVENT;
 }
 
@@ -118,7 +117,6 @@ void CResourceHistoryController::LateUpdate_GameObject(const _float& fTimeDelta)
 
 void CResourceHistoryController::Render_GameObject()
 {
-	if (!m_bRender) { return; }
 }
 
 void CResourceHistoryController::OnCollision(CGameObject* pObject)
@@ -197,6 +195,7 @@ void CResourceHistoryController::UpdateHistory(CResourceHistoryUI* _TargetUI, RE
 		_TargetUI->Moveto(_vStart, _vEnd);
 		_TargetUI->SetOrder(_Order);
 		_TargetUI->Set_bClose(false);
+		_TargetUI->Set_Render(true);
 		break;
 	}
 	case STATE_UPDATE:
@@ -206,6 +205,7 @@ void CResourceHistoryController::UpdateHistory(CResourceHistoryUI* _TargetUI, RE
 		_TargetUI->Apply_TotalCount(_iCount);
 		_TargetUI->Apply_DeltaAmount(_iCount);
 		_TargetUI->Set_bClose(false);
+		_TargetUI->Set_Render(true);
 		break;
 	}
 	case STATE_REORDER:

@@ -10,6 +10,8 @@ namespace Trigger
 		TI_BUILDING,
 		TI_SCENE,
 		TI_KNUCKLE,
+		TI_FOLLOWER,
+		TI_FOOD,
 		TI_END
 	};
 }
