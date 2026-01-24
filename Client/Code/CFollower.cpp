@@ -179,6 +179,7 @@ void CFollower::OnCollision(CGameObject* pObject)
 void CFollower::WaitForCommand()
 {
 	m_eCurState = FOLLOWER_IDLE;
+	m_eCurWork = FW_NONE;
 	m_pAICom->Set_ActiveAI(false);
 	m_pAICom->Set_State(FOLLOWER_IDLE);
 }
@@ -187,6 +188,7 @@ void CFollower::SetCommand(const FOLLOWER_WORK eWork)
 {
 	m_eCurWork = eWork;
 	m_pAICom->Set_ActiveAI(true);
+	m_pAICom->Set_TargetTransform(nullptr);
 }
 
 HRESULT CFollower::Add_Component()

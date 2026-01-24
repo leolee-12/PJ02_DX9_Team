@@ -113,7 +113,7 @@ void CWorkRockUI::Check_CusorColl()
 		if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
 		{
 			IMessageChannel::EVENT WorkRockEvent;
-			WorkRockEvent.strType = L"CWorkRest.Selected";
+			WorkRockEvent.strType = L"CWorkRock.Selected";
 			//WorkRockEvent.hmapData[L"TarotType"];
 			m_pMessageChannel->Publish(WorkRockEvent);
 		}
