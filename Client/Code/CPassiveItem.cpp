@@ -29,7 +29,8 @@ CPassiveItem::~CPassiveItem()
 
 HRESULT CPassiveItem::Ready_GameObject()
 {
-	if (FAILED(CItem::Ready_GameObject()))
+	m_eOBJID = OID_ITEM;
+	if (FAILED(Add_Component()))
 		return E_FAIL;
 
 	Ready_Variable();
@@ -81,6 +82,22 @@ void CPassiveItem::OnCollision(CGameObject* pObject)
 	}
 }
 
+void CPassiveItem::Ready_Event()
+{
+	m_hmapSubHandles.insert({ L"Trigger.Activate.Owner", m_pMessageChannel->Subscribe(L"Trigger.Activate.Owner", [this](const IMessageChannel::EVENT& Event)
+		{
+			auto Owneriter = Event.hmapData.find(L"Trigger_Owner");
+			if (Owneriter == Event.hmapData.end()) { return; }
+
+			if (any_cast<CGameObject*>(Owneriter->second) == this)
+			{
+				m_iHp = 0;
+			}
+		}
+	) });
+
+}
+
 void CPassiveItem::Update_Idle(const _float& fTimeDelta)
 {
 	if (m_pTrigger == nullptr)
@@ -88,10 +105,10 @@ void CPassiveItem::Update_Idle(const _float& fTimeDelta)
 		switch (m_eItemID)
 		{
 		case FD_GFOOD:
-			m_pTrigger = CTriggerPoint::Create(m_pGraphicDev, m_pMessageChannel, m_vPos, _vec3(1.f, 1.f, 1.f), Trigger::TI_FOOD, L"GoodFood", false);
+			m_pTrigger = CTriggerPoint::Create(m_pGraphicDev, m_pMessageChannel, m_vPos, _vec3(1.f, 1.f, 1.f), Trigger::TI_FOOD, L"GoodFood", false, this);
 			break;
 		case FD_BFOOD:
-			m_pTrigger = CTriggerPoint::Create(m_pGraphicDev, m_pMessageChannel, m_vPos, _vec3(1.f, 1.f, 1.f), Trigger::TI_FOOD, L"BadFood", false);
+			m_pTrigger = CTriggerPoint::Create(m_pGraphicDev, m_pMessageChannel, m_vPos, _vec3(1.f, 1.f, 1.f), Trigger::TI_FOOD, L"BadFood", false, this);
 			break;
 		}
 	}
@@ -146,6 +163,6 @@ CPassiveItem* CPassiveItem::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChanne
 
 void CPassiveItem::Free()
 {
-	Safe_Release(m_pTrigger);
+	Safe_Destroy(m_pTrigger);
 	CItem::Free();
 }

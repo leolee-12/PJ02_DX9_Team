@@ -30,12 +30,15 @@ public:
 	const _float		Get_DepthZ() { return m_vDepth.z; }
 	const _float		Get_DepthY() { return m_vDepth.y; }
 
+	//void				Set_Dead() { m_iHp = 0; }
+
 public:
 	virtual			HRESULT		Ready_GameObject();
 	virtual			_int		Update_GameObject(const _float& fTimeDelta);
 	virtual			void		LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual			void		Render_GameObject();
 	virtual			void		OnCollision(CGameObject* pObject);
+	virtual			void		PrepareDestroy() {}
 
 	void			Compute_ViewDepth(const _vec3* pPos);
 

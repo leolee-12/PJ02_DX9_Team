@@ -22,13 +22,19 @@ public:
 	virtual void		Render_GameObject();
 	virtual void		OnCollision(CGameObject* pObject) override;
 
+	virtual	void		PrepareDestroy();
+
 public:
 	_int				Get_TID_for_int() { return _int(m_eTID); }
+	void				Set_Pos_Trigger(const _vec3& vPos);
+	
 
 	void				Activate();
 
 public:
-	static CTriggerPoint* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMessageChannel, _vec3 vPos, _vec3 vHalfSize, Trigger::TRIGGERID eTID, const wstring& strTriggerName, _bool bPassive = false);
+	static CTriggerPoint* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMessageChannel, _vec3 vPos, _vec3 vHalfSize, Trigger::TRIGGERID eTID, const wstring& strTriggerName
+								, _bool bPassive = false, CGameObject* pOwner = nullptr);
+	
 
 private:
 	HRESULT	Add_Component();
@@ -46,5 +52,10 @@ private:
 	Trigger::TRIGGERID  m_eTID;
 	wstring				m_strTriggerName;
 	_bool				m_bPassive = false;
+
+	_bool				m_bHaveOwner = false;
+	CGameObject*		m_pOwner = nullptr;
+
+	_bool				m_bUnregister = false;
 };
 

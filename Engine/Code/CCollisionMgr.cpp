@@ -84,6 +84,26 @@ void CCollisionMgr::RegisterCollider(CGameObject* pOwner, const AABB& aabb, COLG
 	pOwner->AddRef();								// 레퍼런스카운트 증가
 }
 
+void CCollisionMgr::ImmediateUnregister(CGameObject* pOwner, COLGROUP Group)
+{
+	if (pOwner == nullptr) return;
+
+	auto iter = m_hmapCollisionGroup.find(Group);
+	if (iter == m_hmapCollisionGroup.end()) return;
+
+	auto& vec = iter->second;
+	for (auto it = vec.begin(); it != vec.end(); ++it)
+	{
+		if (it->pOwner == pOwner)
+		{
+			CGameObject* pTemp = it->pOwner;
+			vec.erase(it);
+			Safe_Release(pTemp);  // 즉시 Release
+			return;
+		}
+	}
+}
+
 inline void CCollisionMgr::Reset_For_SceneChange()
 {
 	for (auto& pair : m_hmapCollisionGroup) {

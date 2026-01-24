@@ -30,7 +30,7 @@ public:
 	CComponent* Clone() override;
 
 	void UpdateFromTransform(CTransform* pTransform);				// 충돌체위치 갱신 함수
-	void UpdateFromCustom(AABB& tAABB);								// 충돌체위치 갱신 함수
+	void UpdateFromCustom(const AABB& tAABB);						// 충돌체위치 갱신 함수
 	void RegisterToManager(CGameObject* pOwner, COLGROUP Group);	// 매니저에 콜라이더 정보 등록 함수
 	void UnregisterFromManager();									// 매니저에 콜라이더 정보 등록 해제함수
 

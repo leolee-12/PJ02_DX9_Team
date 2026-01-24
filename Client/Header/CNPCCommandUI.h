@@ -14,6 +14,7 @@ class CWorkWoodUI;
 class CWorkRockUI;
 class CRestUI;
 class CLookingEyeUI;
+class CFollower;
 
 class CNPCCommandUI :
 	public CUi
@@ -32,7 +33,8 @@ public:
 public:
 	static CNPCCommandUI* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMessageChannel);
 
-public:
+private:
+	void		Ready_Event();
 private:
 	virtual			void		Free();
 
@@ -43,7 +45,8 @@ private:
 	CRestUI*			m_pRestUI;
 	CLookingEyeUI*		m_pLookingEyeUI;
 
-	_bool				m_bRender;
+	CFollower*			m_pOwner;
 
+	_bool				m_bRender = false;
 };
 

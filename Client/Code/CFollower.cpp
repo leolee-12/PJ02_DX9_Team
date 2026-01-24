@@ -7,6 +7,7 @@
 #include "CCollisionMgr.h"
 #include "CFollower_AI.h"
 #include "CDInputMgr.h"
+#include "CTriggerPoint.h"
 
 CFollower::CFollower(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev),
@@ -66,6 +67,8 @@ _int CFollower::Update_GameObject(const _float& fTimeDelta)
 {
 	Move_Frame(fTimeDelta);
 	Execute_Work(fTimeDelta);
+	
+	m_pTrigger->Update_GameObject(fTimeDelta);
 
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
@@ -91,9 +94,19 @@ void CFollower::LateUpdate_GameObject(const _float& fTimeDelta)
 	m_pTransformCom->Get_Info(INFO_POS, &m_vPos);
 	Compute_ViewDepth(&m_vPos);
 		
-	m_pColliderCom->UpdateFromTransform(m_pTransformCom);
+	//------스프라이트 높이와 충돌체 위치 맞춤---------
+	_float fY(m_vPos.y - m_pTransformCom->Get_Scale(ROT_Y) * 0.25f);
+	AABB tAABB = { m_vPos.x, fY, m_vPos.z, 1.f, 1.f, 1.f };
+	_vec3 vTriggerPos = { m_vPos.x, fY, m_vPos.z };
+	m_pColliderCom->Set_AABB(tAABB);
+	m_pColliderCom->UpdateFromCustom(tAABB);
+	m_pTrigger->Set_Pos_Trigger(vTriggerPos);
+	//-------------------------------------------------
 	// 충돌체 디버그용
+
 	if (g_bDebug) m_pColliderCom->Update_AABBforRender();
+
+	m_pTrigger->LateUpdate_GameObject(fTimeDelta);
 
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
 }
@@ -158,16 +171,19 @@ void CFollower::OnCollision(CGameObject* pObject)
 
 		return;
 	}
-	if (pObject->Get_OBJID() == OID_PLAYER)
-	{
-		if (CDInputMgr::GetInstance()->Key_Down(DIK_E))
-		{
-			IMessageChannel::EVENT tEvent;
-			tEvent.strType = L"Follower.OpenCommaderUI";
-			m_pMessageChannel->Publish(tEvent);
-		}
-	}
-		
+}
+
+void CFollower::WaitForCommand()
+{
+	m_eCurState = FOLLOWER_IDLE;
+	m_pAICom->Set_ActiveAI(false);
+	m_pAICom->Set_State(FOLLOWER_IDLE);
+}
+
+void CFollower::SetCommand(const FOLLOWER_WORK eWork)
+{
+	m_eCurWork = eWork;
+	m_pAICom->Set_ActiveAI(true);
 }
 
 HRESULT CFollower::Add_Component()
@@ -246,6 +262,8 @@ void CFollower::Ready_Variable()
 	// Anim 관련 세팅
 	m_fFrameSpeed = 24.f;
 	D3DXMatrixIdentity(&m_matTex);
+
+	m_pTrigger = CTriggerPoint::Create(m_pGraphicDev, m_pMessageChannel, m_vPos, _vec3(1.f, 1.f, 1.f), Trigger::TI_FOLLOWER, L"Follower", false, this);
 }
 
 void CFollower::Ready_Event()
@@ -576,5 +594,6 @@ CFollower* CFollower::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* Sta
 
 void CFollower::Free()
 {
+	Safe_Destroy(m_pTrigger);
 	CGameObject::Free();
 }

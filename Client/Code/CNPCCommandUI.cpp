@@ -3,14 +3,6 @@
 #include "CProtoMgr.h"
 #include "CRenderer.h"
 
-#include "CCookingCover.h"
-#include "CCookingGauge.h"
-#include "CCookingGaugeBack.h"
-#include "CCookingMarker.h"
-#include "CCookingTarget.h"
-#include "CCookingTargetBack.h"
-#include "CCookingButton.h"
-
 #include "CNPCCommandUIBack.h"
 #include "CWorkWoodUI.h"
 #include "CWorkRockUI.h"
@@ -19,6 +11,7 @@
 
 #include "CFontMgr.h"
 #include "CDInputMgr.h"
+#include "CFollower.h"
 
 
 CNPCCommandUI::CNPCCommandUI(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -33,6 +26,10 @@ CNPCCommandUI::~CNPCCommandUI()
 
 HRESULT CNPCCommandUI::Ready_GameObject()
 {
+	Ready_Event();
+
+
+
 	CGameObject* pGameObject = nullptr;
 
 	pGameObject = m_pBackUI = CNPCCommandUIBack::Create(m_pGraphicDev, _vec3(0, 175.0f, 0.1f), 2.0f);
@@ -51,28 +48,8 @@ HRESULT CNPCCommandUI::Ready_GameObject()
 	if (nullptr == pGameObject)
 		return E_FAIL;
 
+	
 
-	// 임시
-	m_hmapSubHandles.insert({ L"CommandUI1.Close",m_pMessageChannel->Subscribe(L"CWorkWood.Selected",[this](const IMessageChannel::EVENT& Event)
-	{
-		m_bRender = false;
-	}
-) });
-	m_hmapSubHandles.insert({ L"CommandUI2.Close",m_pMessageChannel->Subscribe(L"CWorkRock.Selected",[this](const IMessageChannel::EVENT& Event)
-{
-	m_bRender = false;
-}
-) });
-	m_hmapSubHandles.insert({ L"CommandUI3.Close",m_pMessageChannel->Subscribe(L"CWorkRest.Selected",[this](const IMessageChannel::EVENT& Event)
-{
-	m_bRender = false;
-}
-) });
-	m_hmapSubHandles.insert({ L"CommandUI.Open",m_pMessageChannel->Subscribe(L"Follower.OpenCommaderUI",[this](const IMessageChannel::EVENT& Event)
-{
-	m_bRender = true;
-}
-) });
 
 	return S_OK;
 }
@@ -123,6 +100,64 @@ void CNPCCommandUI::OnCollision(CGameObject* pObject)
 
 }
 
+void CNPCCommandUI::Ready_Event()
+{
+	m_hmapSubHandles.insert({ L"CommandUI1.Close",m_pMessageChannel->Subscribe(L"CWorkWood.Selected",[this](const IMessageChannel::EVENT& Event)
+	{
+		m_pOwner->SetCommand(CFollower::FW_WOOD);
+		m_pOwner = nullptr;
+		m_bRender = false;
+	}
+	) });
+	m_hmapSubHandles.insert({ L"CommandUI2.Close",m_pMessageChannel->Subscribe(L"CWorkRock.Selected",[this](const IMessageChannel::EVENT& Event)
+	{
+		m_pOwner->SetCommand(CFollower::FW_ROCK);
+		m_pOwner = nullptr;
+		m_bRender = false;
+	}
+	) });
+	m_hmapSubHandles.insert({ L"CommandUI3.Close",m_pMessageChannel->Subscribe(L"CWorkRest.Selected",[this](const IMessageChannel::EVENT& Event)
+	{
+		m_pOwner->SetCommand(CFollower::FW_PRAY);
+		m_pOwner = nullptr;
+		m_bRender = false;
+	}
+	) });
+	m_hmapSubHandles.insert({ L"Trigger.Activate.Owner", m_pMessageChannel->Subscribe(L"Trigger.Activate.Owner", [this](const IMessageChannel::EVENT& Event)
+		{
+			auto Nameiter = Event.hmapData.find(L"Trigger_Name");
+			if (Nameiter == Event.hmapData.end()) { return; }
+			auto Owneriter = Event.hmapData.find(L"Trigger_Owner");
+			if (Owneriter == Event.hmapData.end()) { return; }
+
+			if (any_cast<wstring>(Nameiter->second) == L"Follower")
+			{
+				m_pOwner = dynamic_cast<CFollower*>(any_cast<CGameObject*>(Owneriter->second));
+				if (!m_pOwner)
+				{
+					MSG_BOX("팔로워 오너등록 실패 (형변환실패)");
+				}
+
+				if (m_pOwner->Get_State() == CFollower::FOLLOWER_RECRUIT || m_pOwner->Get_State() == CFollower::FOLLOWER_UNCONVERT)
+				{
+					m_pOwner = nullptr;
+					return;
+				}
+
+				m_bRender = true;
+				m_pOwner->WaitForCommand();
+			}
+		}
+	) });
+
+	/*IMessageChannel::EVENT TriggerEvent;
+	TriggerEvent.strType = L"Trigger.Activate.Owner";
+	TriggerEvent.hmapData[L"Trigger_TID"] = m_eTID;
+	TriggerEvent.hmapData[L"Trigger_Name"] = m_strTriggerName;
+	TriggerEvent.hmapData[L"Trigger_Owner"] = m_pOwner;
+	m_pMessageChannel->Publish(TriggerEvent);*/
+}
+
 CNPCCommandUI* CNPCCommandUI::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMessageChannel)
 {
 	CNPCCommandUI* pNPCCommandUI = new CNPCCommandUI(pGraphicDev);
@@ -145,5 +180,7 @@ void CNPCCommandUI::Free()
 	Safe_Release(m_pBackUI);
 	Safe_Release(m_pWoodUI);
 	Safe_Release(m_pRockUI);
+	Safe_Release(m_pRestUI);
+	Safe_Release(m_pLookingEyeUI);
 	CUi::Free();
 }

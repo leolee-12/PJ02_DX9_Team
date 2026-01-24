@@ -45,7 +45,7 @@ void CCollider::UpdateFromTransform(CTransform* pTransform)
 		Engine::CCollisionMgr::GetInstance()->RegisterCollider(m_pOwner, m_tAABB, m_Group);
 }
 
-void CCollider::UpdateFromCustom(AABB& tAABB)
+void CCollider::UpdateFromCustom(const AABB& tAABB)
 {
 	// 매니저에 갱신: 등록된 소유자가 있으면 매니저에 갱신 전달
 	if (m_pOwner)

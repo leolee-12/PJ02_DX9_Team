@@ -11,6 +11,7 @@ namespace Engine
 }
 
 class CFollower_AI;
+class CTriggerPoint;
 
 class CFollower : public CGameObject
 {
@@ -31,6 +32,10 @@ public:
 	virtual void		LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual void		Render_GameObject();
 	virtual void		OnCollision(CGameObject* pObject);
+
+	void				WaitForCommand();
+	void				SetCommand(const FOLLOWER_WORK eWork);
+	FOLLOWER_STATE		Get_State() { return m_eCurState; }
 
 private:
 	HRESULT				Add_Component();
@@ -74,6 +79,9 @@ private:
 	_float		m_fWorkSpeed;
 	_vec3		m_vWorkPos;
 	_bool		m_bWorking = false;
+
+	//트리거 관련
+	CTriggerPoint* m_pTrigger = nullptr;
 
 	static constexpr _float FW_DEFAULT_WORK_SPEED = 0.03f;
 	static constexpr _float FW_DEFAULT_WORK_GAP_TIME = 1.f;
