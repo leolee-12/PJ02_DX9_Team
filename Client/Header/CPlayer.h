@@ -40,6 +40,10 @@ public:
 
 	_int			Get_MaxHp() { return m_iMaxHp; }
 	_int			Get_Hp() { return m_iHp; }
+	const _float&	Get_Passion() { return m_fPassion; }
+	const _float&	Get_Faith() { return m_fFaith; }
+	void			Add_passion(const _float& fNum) { m_fPassion += fNum; if (m_fPassion > 4.f) m_fPassion = 4.f; }
+	void			Add_Faith(const _float& fNum) { m_fFaith += fNum; if (m_fFaith > 100.f) m_fFaith = 100.f; }
 
 	void			Set_MessageChannel(IMessageChannel* pMessageChannel);
 
@@ -111,6 +115,9 @@ private:
 	_bool			m_bAction;	// Action 중인지?
 	_float			m_fAcmlTime;
 	_bool			m_bVillage = false;
+	_float			m_fPassion;
+	_float			m_fFaith;
+
 	// 윤석현추가
 	_int			m_iMaxHp = 8;
 
@@ -143,13 +150,14 @@ private:
 	_bool  m_IsWarp = false;
 
 	// 상수
-	static constexpr _float PLAYER_DEFAULT_ATTACK = 1.f;
+	static constexpr _float PLAYER_DEFAULT_ATTACK = 1.f + 5.f;
 	static constexpr _float PLAYER_INVINCIBLE_TIME = 3.f;
 	static constexpr _float PLAYER_DEFAULT_SPEED = 12.f;
 	static constexpr _float PLAYER_INTRO_SPEED = 7.f;
 	static constexpr _float PLAYER_DEFAULT_SCALE = 10.f;
 	static constexpr _float PLAYER_INTRO_SCALE = 11.f;
 	static constexpr _float PLAYER_REBIRTH_SCALE = 20.f;
+	static constexpr _float FAITH_DECREASE_RATE = 0.5f;
 
 public:
 	static CPlayer* Create(LPDIRECT3DDEVICE9 pGraphicDev);

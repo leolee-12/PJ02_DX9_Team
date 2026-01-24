@@ -168,9 +168,10 @@ void CPlayer::Ready_Variable()
 	m_bIntro = false;
 	m_fSpeed = PLAYER_DEFAULT_SPEED;
 	m_iAttack = PLAYER_DEFAULT_ATTACK;
-	//m_iAttack = 10;
 	m_iHp = 8;
 	m_fAcmlTime = 0.f;
+	m_fPassion = 4.f;
+	m_fFaith = 50.f;
 
 	m_eOBJID = OID_PLAYER;
 	_float fScale = PLAYER_DEFAULT_SCALE;
@@ -493,9 +494,13 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 	if (GetAsyncKeyState(VK_RBUTTON) & 0x0001)	// 눌렀을 때 한 번만 true
 	{
 		if ((m_bRoll) || (m_iCombo)) return;
-	
+
 		if (!m_fCharge)
 		{
+			if (m_fPassion < 1.f) return;
+
+			m_fPassion -= 1.f;
+
 			m_eCurState = PS_CHARGE;
 			m_strFrameKey = L"charge-start";
 			m_fCharge += fTimeDelta;
@@ -641,6 +646,7 @@ void CPlayer::Move_Frame(const _float& fTimeDelta)
 {
 	m_fFrame += m_fFrameSpeed * fTimeDelta;
 	m_fAcmlTime += fTimeDelta;
+	m_fFaith -= FAITH_DECREASE_RATE * fTimeDelta;
 
 	if (m_fFrame > m_fFrameEnd)
 	{
@@ -983,8 +989,8 @@ void	CPlayer::OnCollision(CGameObject* pObject)
 	{
 		if (static_cast<CItem*>(pObject)->Get_State() == CItem::IS_CHASE)
 		{
-			CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_PICKUP, 0, _vec3(m_vPos.x, m_vPos.y - 1.f, m_vPos.z - 0.001f), _vec3(0.3f, 0.3f, 0.f));
-			CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_PICKUP, 1, _vec3(m_vPos.x, m_vPos.y - 1.f, m_vPos.z), _vec3(0.3f, 0.3f, 0.f));
+			//CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_PICKUP, 0, _vec3(m_vPos.x, m_vPos.y - 1.f, m_vPos.z - 0.001f), _vec3(0.3f, 0.3f, 0.f));
+			//CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_PICKUP, 1, _vec3(m_vPos.x, m_vPos.y - 1.f, m_vPos.z), _vec3(0.3f, 0.3f, 0.f));
 		}
 	}
 

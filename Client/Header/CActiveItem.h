@@ -23,4 +23,7 @@ public:
 
 protected:
 	virtual void Free();
+
+	// 상수
+	static constexpr _float AUTO_CHASE_RANGE = 10.f;
 };

@@ -4,24 +4,24 @@
 
 namespace Engine
 {
-	class CTransform;
-	class CTexture;
 	class CRcTex;
+	class CTransform;
+	//class CTexture;
 	class CCollider;
 }
 
 class CResourceWorkBar;
 
-// =====================================================
-//	CBreakableTree
-// =====================================================
+// ===================================================
+//	CShrineSpot
+// ===================================================
 
-class CBreakableTree : public CGameObject, public IInteractable
+class CShrineSpot : public CGameObject, public IInteractable
 {
 private:
-	explicit CBreakableTree(LPDIRECT3DDEVICE9 pGraphicDev);
-	explicit CBreakableTree(const CBreakableTree& rhs);
-	virtual ~CBreakableTree();
+	explicit CShrineSpot(LPDIRECT3DDEVICE9 pGraphicDev);
+	explicit CShrineSpot(const CShrineSpot& rhs);
+	virtual ~CShrineSpot();
 
 public:
 	virtual HRESULT		Ready_GameObject();
@@ -41,33 +41,25 @@ public:
 
 private:
 	HRESULT	Add_Component();
-	void	Set_Texture();
 	void	Update_WorkBar(const _float& fTimeDelta);
-	void	Create_Item();
 
 private:
-	Engine::CRcTex*			m_pBufferCom;
-	Engine::CTransform*		m_pTransformCom;
-	Engine::CTexture*		m_pTextureCom;
-	Engine::CCollider*		m_pColliderCom;
+	Engine::CRcTex* m_pBufferCom;
+	Engine::CTransform* m_pTransformCom;
+	//Engine::CTexture* m_pTextureCom;
+	Engine::CCollider* m_pColliderCom;
 
-	_int				m_iTextureIndex;
-	_float				m_fFrame;
-	_float				m_fFrameSpeed;
-	_float				m_fFrameEnd;
-	_matrix				m_matTex;
 	_float				m_fScale;
-	_float				m_fBaseScale;
 
 	// 상호작용 관련
-	_float					m_fPreWorkGauge;
-	_float					m_fWorkGauge;
-	CResourceWorkBar*		m_pWorkBar;
+	_float				m_fPreWorkGauge;
+	_float				m_fWorkGauge;
+	CResourceWorkBar*	m_pWorkBar;
 
 	static constexpr _float MAX_WORK_GAUGE = 1.f;
 
 public:
-	static CBreakableTree* Create(LPDIRECT3DDEVICE9 pGraphicDev, const Engine::OBJECTDATA& objData, IMessageChannel* pMessageChannel);
+	static CShrineSpot* Create(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vPos, IMessageChannel* pMessageChannel);
 
 private:
 	virtual void Free();

@@ -31,7 +31,6 @@ CFollower::CFollower(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChanne
 {
 }
 
-
 CFollower::CFollower(const CFollower& rhs)
 	: CGameObject(rhs),
 	m_ePreState(FOLLOWER_END),
@@ -81,7 +80,6 @@ _int CFollower::Update_GameObject(const _float& fTimeDelta)
 
 void CFollower::LateUpdate_GameObject(const _float& fTimeDelta)
 {
-
 	Update_State();
 	Check_Frame();
 	Check_Work();
@@ -153,6 +151,11 @@ void CFollower::OnCollision(CGameObject* pObject)
 			m_pTransformCom->Update_Component(0.f);
 			m_pTransformCom->Compute_Bilboard(BBD_X);
 			m_vLerpPos = vCurPos;
+
+
+			_vec3 vDir = m_vPos - vCurPos;
+			m_pAICom->Set_Dir(-vDir);
+			m_pAICom->Set_TargetTransform(nullptr);
 		}
 
 		return;
@@ -252,7 +255,7 @@ void CFollower::Check_Frame()
 	{
 	case FOLLOWER_IDLE:
 		m_fFrameEnd = 24.f;
-		m_eCurWork = FOLLOWER_WORK(Get_Rand_Int(0, 5));
+		//m_eCurWork = FOLLOWER_WORK(Get_Rand_Int(0, 5));
 		break;
 
 	case FOLLOWER_RUN:
@@ -463,6 +466,10 @@ void CFollower::Check_Work()
 
 	switch (m_eCurWork)
 	{
+	case FW_NONE:
+		pTarget = nullptr;
+		break;
+
 	case FW_WOOD:
 		pTarget = CInteractMgr::GetInstance()->Find_Nearest(CInteractMgr::WOOD, m_vPos);
 		break;
@@ -510,6 +517,7 @@ void CFollower::Execute_Work(const _float& fTimeDelta)
 			m_pAICom->Set_TargetTransform(nullptr);
 			m_pAICom->Anim_End(m_eCurState);
 			m_eCurState = FOLLOWER_IDLE;
+			m_eCurWork = FOLLOWER_WORK(Get_Rand_Int(1, 5));
 			return;
 		}
 		
@@ -522,10 +530,11 @@ void CFollower::Execute_Work(const _float& fTimeDelta)
 	{
 		m_bWorking = false;	// 작업량 반영에 실패 시 작업이 끝난 것 : 작업에서 벗어남
  		m_pAICom->Anim_End(m_eCurState);
+		m_pAICom->Set_TargetTransform(nullptr);
 		m_eCurState = FOLLOWER_IDLE;
+		m_ePreWork = FW_NONE;
 	}
 }
-
 
 CFollower* CFollower::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, const _tchar* pProtoKey)
 {

@@ -478,6 +478,9 @@
     <Filter Include="02. GameObject\05. UI\10. ResourceWorkBar">
       <UniqueIdentifier>{4e3793ed-0e37-49a0-ad86-04beb9621bbf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\02. Environment\02. Interactable\04. ShrineSpot">
+      <UniqueIdentifier>{107e2f94-70cc-4ef4-8a30-2b6a671b9b9a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -1011,6 +1014,9 @@
     <ClInclude Include="..\Header\CResourceWorkFront.h">
       <Filter>02. GameObject\05. UI\10. ResourceWorkBar</Filter>
     </ClInclude>
+    <ClInclude Include="CShrineSpot.h">
+      <Filter>02. GameObject\02. Environment\02. Interactable\04. ShrineSpot</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1501,6 +1507,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CResourceWorkFront.cpp">
       <Filter>02. GameObject\05. UI\10. ResourceWorkBar</Filter>
+    </ClCompile>
+    <ClCompile Include="CShrineSpot.cpp">
+      <Filter>02. GameObject\02. Environment\02. Interactable\04. ShrineSpot</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -33,6 +33,7 @@ public:
 	virtual void	Add_WorkGauge(_float fWork) { m_fWorkGauge += fWork; }
 	virtual _float	Get_WorkGauge() const { return m_fWorkGauge; }
 	virtual _bool	Is_WorkComplete() const { return m_fWorkGauge >= MAX_WORK_GAUGE; }
+	virtual _vec3*	Get_WorkPos(_vec3* pWorkPos) const;
 
 public:
 	void	Set_ObjectData(const Engine::OBJECTDATA& objData);
@@ -41,6 +42,7 @@ public:
 private:
 	HRESULT	Add_Component();
 	void	Update_WorkBar(const _float& fTimeDelta);
+	void	Create_Item();
 
 private:
 	Engine::CRcTex*		m_pBufferCom;
