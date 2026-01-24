@@ -37,6 +37,7 @@
 #include "CBuilding.h"
 #include "CCookingUIController.h"
 #include "CEffectMgr.h"
+#include "CNPCCommandUI.h"
 
 CVillage::CVillage(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -541,6 +542,14 @@ HRESULT CVillage::Ready_UI_Layer(const _tchar* pLayerTag)
 		return E_FAIL;
 
 	if (FAILED(pLayer->Add_GameObject(L"CookingUIController", pGameObject)))
+		return E_FAIL;
+
+	pGameObject = CNPCCommandUI::Create(m_pGraphicDev, m_pMessageChannel);
+
+	if (nullptr == pGameObject)
+		return E_FAIL;
+
+	if (FAILED(pLayer->Add_GameObject(L"CNPCCommandUI", pGameObject)))
 		return E_FAIL;
 
 	m_mapLayer.insert({ pLayerTag , pLayer });

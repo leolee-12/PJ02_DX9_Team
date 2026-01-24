@@ -214,6 +214,8 @@
     <ClInclude Include="..\Header\CMonsterHpBar.h" />
     <ClInclude Include="..\Header\CMonsterHpBarCover.h" />
     <ClInclude Include="..\Header\CMonsterHpFront.h" />
+    <ClInclude Include="..\Header\CNPCCommandUI.h" />
+    <ClInclude Include="..\Header\CNPCCommandUIBack.h" />
     <ClInclude Include="..\Header\CParticleEffect.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClInclude>
@@ -223,6 +225,7 @@
     <ClInclude Include="..\Header\CResourceHistoryUI.h" />
     <ClInclude Include="..\Header\CResourceWorkBar.h" />
     <ClInclude Include="..\Header\CResourceWorkFront.h" />
+    <ClInclude Include="..\Header\CRestUI.h" />
     <ClInclude Include="..\Header\CScreenEffect.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClInclude>
@@ -232,6 +235,8 @@
     <ClInclude Include="..\Header\CTrailEffect.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClInclude>
+    <ClInclude Include="..\Header\CWorkRockUI.h" />
+    <ClInclude Include="..\Header\CWorkWoodUI.h" />
     <ClInclude Include="..\Header\IInteractable.h" />
     <ClInclude Include="..\Header\CInteractMgr.h" />
     <ClInclude Include="..\Header\CItem.h" />
@@ -324,6 +329,7 @@
     <ClInclude Include="..\Header\CResourceHistoryEnum.h" />
     <ClInclude Include="..\Header\SaveLoad.h" />
     <ClInclude Include="..\Header\Trigger_Enum.h" />
+    <ClInclude Include="..\Header\CLookingEyeUI.h" />
     <ClInclude Include="CFontAlpha.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="CShrineSpot.h" />
@@ -419,6 +425,7 @@
     <ClCompile Include="..\Code\CLoadingLogo.cpp" />
     <ClCompile Include="..\Code\CLoadingBack.cpp" />
     <ClCompile Include="..\Code\CLogo.cpp" />
+    <ClCompile Include="..\Code\CLookingEyeUI.cpp" />
     <ClCompile Include="..\Code\CMainApp.cpp" />
     <ClCompile Include="..\Code\CMainCamera.cpp" />
     <ClCompile Include="..\Code\CMapBorder.cpp" />
@@ -439,6 +446,8 @@
     <ClCompile Include="..\Code\CN1_AI.cpp" />
     <ClCompile Include="..\Code\CCookingSelectBack.cpp" />
     <ClCompile Include="..\Code\CNarinder.cpp" />
+    <ClCompile Include="..\Code\CNPCCommandUI.cpp" />
+    <ClCompile Include="..\Code\CNPCCommandUIBack.cpp" />
     <ClCompile Include="..\Code\CParticleEffect.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
@@ -462,6 +471,7 @@
     <ClCompile Include="..\Code\CResourceHistoryUI.cpp" />
     <ClCompile Include="..\Code\CResourceWorkBar.cpp" />
     <ClCompile Include="..\Code\CResourceWorkFront.cpp" />
+    <ClCompile Include="..\Code\CRestUI.cpp" />
     <ClCompile Include="..\Code\CSceneWarp.cpp" />
     <ClCompile Include="..\Code\CScreenEffect.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
@@ -501,6 +511,8 @@
     <ClCompile Include="..\Code\CTileMgr.cpp" />
     <ClCompile Include="..\Code\CMapObject.cpp" />
     <ClCompile Include="..\Code\CGrass.cpp" />
+    <ClCompile Include="..\Code\CWorkRockUI.cpp" />
+    <ClCompile Include="..\Code\CWorkWoodUI.cpp" />
     <ClCompile Include="CFontAlpha.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="CShrineSpot.cpp" />

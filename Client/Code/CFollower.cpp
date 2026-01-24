@@ -6,6 +6,7 @@
 #include "CPersistentMgr.h"
 #include "CCollisionMgr.h"
 #include "CFollower_AI.h"
+#include "CDInputMgr.h"
 
 CFollower::CFollower(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev),
@@ -160,6 +161,16 @@ void CFollower::OnCollision(CGameObject* pObject)
 
 		return;
 	}
+	if (pObject->Get_OBJID() == OID_PLAYER)
+	{
+		if (CDInputMgr::GetInstance()->Key_Down(DIK_E))
+		{
+			IMessageChannel::EVENT tEvent;
+			tEvent.strType = L"Follower.OpenCommaderUI";
+			m_pMessageChannel->Publish(tEvent);
+		}
+	}
+		
 }
 
 HRESULT CFollower::Add_Component()
