@@ -226,6 +226,7 @@
     <ClInclude Include="..\Header\CParticleEffect.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClInclude>
+    <ClInclude Include="..\Header\CPlayerWeaponUI.h" />
     <ClInclude Include="..\Header\CResourceHistoryBack.h" />
     <ClInclude Include="..\Header\CResourceHistoryController.h" />
     <ClInclude Include="..\Header\CResourceHistoryDeco.h" />
@@ -533,6 +534,7 @@
     <ClCompile Include="..\Code\CWorkRockUI.cpp" />
     <ClCompile Include="..\Code\CWorkWoodUI.cpp" />
     <ClCompile Include="..\Code\CPlayerTarotCard.cpp" />
+    <ClCompile Include="..\CPlayerWeaponUI.cpp" />
     <ClCompile Include="CFontAlpha.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="CShrineSpot.cpp" />
