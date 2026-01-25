@@ -1,30 +1,36 @@
 ﻿#include "pch.h"
-#include "CInteractionUI.h"
+#include "CWeaponInfo.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
 
-CInteractionUI::CInteractionUI(LPDIRECT3DDEVICE9 pGraphicDev)
+CWeaponInfo::CWeaponInfo(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CUi(pGraphicDev), m_pBufferCom(nullptr), m_pTransformCom(nullptr)
 {
 	ZeroMemory(&m_vPos, sizeof(_vec3));
 }
 
-CInteractionUI::~CInteractionUI()
+CWeaponInfo::~CWeaponInfo()
 {
 }
 
-HRESULT CInteractionUI::Ready_GameObject()
+HRESULT CWeaponInfo::Ready_GameObject()
 {
 	if (FAILED(Add_Component()))
 		return E_FAIL;
 
-	m_pTransformCom->Set_Scale((900.f * 0.15f), (374.f * 0.15f), 1.f);
-	m_pTransformCom->Set_Pos(0.f, -275.f, 0.2f);
+	m_pTransformCom->Set_Scale((420.f * 0.9f), (200.f * 0.9f), 1.f);
+	m_pTransformCom->Set_Pos(0.f, -175.f, 0.3f);
+
+	if (m_eType >= WINFO_END || m_eType < WINFO_SWORD)
+	{
+		MSG_BOX("웨폰인포 인덱스 범위초과");
+		return E_FAIL;
+	}
 
 	return S_OK;
 }
 
-_int CInteractionUI::Update_GameObject(const _float& fTimeDelta)
+_int CWeaponInfo::Update_GameObject(const _float& fTimeDelta)
 {
 	if (!m_bActive) { return NOEVENT; }
 
@@ -35,7 +41,7 @@ _int CInteractionUI::Update_GameObject(const _float& fTimeDelta)
 	return iExit;
 }
 
-void CInteractionUI::LateUpdate_GameObject(const _float& fTimeDelta)
+void CWeaponInfo::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	if (!m_bActive) { return; }
 
@@ -44,21 +50,21 @@ void CInteractionUI::LateUpdate_GameObject(const _float& fTimeDelta)
 	Compute_ViewDepth_Ortho(&m_vPos);
 }
 
-void CInteractionUI::Render_GameObject()
+void CWeaponInfo::Render_GameObject()
 {
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
 
-	m_pTextureCom->Set_Texture();
+	m_pTextureCom->Set_Texture(_uint(m_eType));
 
 	m_pBufferCom->Render_Buffer();
 }
 
-void CInteractionUI::OnCollision(CGameObject* pObject)
+void CWeaponInfo::OnCollision(CGameObject* pObject)
 {
 
 }
 
-HRESULT CInteractionUI::Add_Component()
+HRESULT CWeaponInfo::Add_Component()
 {
 	Engine::CComponent* pComponent = nullptr;
 
@@ -81,7 +87,7 @@ HRESULT CInteractionUI::Add_Component()
 	m_mapComponent[ID_DYNAMIC].insert({ L"Com_Transform", pComponent });
 
 	pComponent = m_pTextureCom = dynamic_cast<Engine::CTexture*>
-		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_InteractionUI"));
+		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_WeaponInfo"));
 
 	if (nullptr == pComponent)
 		return E_FAIL;
@@ -93,21 +99,23 @@ HRESULT CInteractionUI::Add_Component()
 
 
 
-CInteractionUI* CInteractionUI::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+CWeaponInfo* CWeaponInfo::Create(LPDIRECT3DDEVICE9 pGraphicDev, WINFOTYPE eType)
 {
-	CInteractionUI* pInteractionUI = new CInteractionUI(pGraphicDev);
+	CWeaponInfo* pWeaponInfo = new CWeaponInfo(pGraphicDev);
 
-	if (FAILED(pInteractionUI->Ready_GameObject()))
+	pWeaponInfo->m_eType = eType;
+
+	if (FAILED(pWeaponInfo->Ready_GameObject()))
 	{
-		Safe_Release(pInteractionUI);
-		MSG_BOX("pInteractionUI Create Failed");
+		Safe_Release(pWeaponInfo);
+		MSG_BOX("pWeaponInfo Create Failed");
 		return nullptr;
 	}
 
-	return pInteractionUI;
+	return pWeaponInfo;
 }
 
-void CInteractionUI::Free()
+void CWeaponInfo::Free()
 {
 	CUi::Free();
 }

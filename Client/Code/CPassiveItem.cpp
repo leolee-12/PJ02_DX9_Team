@@ -4,6 +4,7 @@
 #include "CRenderer.h"
 #include "CPersistentMgr.h"
 #include "CTriggerPoint.h"
+#include "CWeaponInfo.h"
 
 CPassiveItem::CPassiveItem(LPDIRECT3DDEVICE9 pGraphicDev)
 	:	CItem(pGraphicDev),
@@ -40,6 +41,14 @@ HRESULT CPassiveItem::Ready_GameObject()
 	if (m_eItemID == WP_SWORD || m_eItemID == WP_GAUNTLET)
 	{
 		m_eCurState = IS_IDLE;
+		if (m_eItemID == WP_SWORD)
+		{
+			m_pWeaponInfo = CWeaponInfo::Create(m_pGraphicDev, CWeaponInfo::WINFO_SWORD);
+		}
+		else if (m_eItemID == WP_GAUNTLET)
+		{
+			m_pWeaponInfo = CWeaponInfo::Create(m_pGraphicDev, CWeaponInfo::WINFO_GAUNTLET);
+		}
 	}
 
 	return S_OK;
@@ -47,8 +56,6 @@ HRESULT CPassiveItem::Ready_GameObject()
 
 _int CPassiveItem::Update_GameObject(const _float& fTimeDelta)
 {
-	m_pColliderCom->UpdateFromTransform(m_pTransformCom);
-
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
 	if (iExit == DEAD)
@@ -77,11 +84,30 @@ _int CPassiveItem::Update_GameObject(const _float& fTimeDelta)
 
 void CPassiveItem::LateUpdate_GameObject(const _float& fTimeDelta)
 {
-	CItem::LateUpdate_GameObject(fTimeDelta);
-
 	if (m_pTrigger) {
 		m_pTrigger->LateUpdate_GameObject(fTimeDelta);
 	}
+	if (m_eItemID == WP_SWORD || m_eItemID == WP_GAUNTLET)
+	{
+		m_pWeaponInfo->LateUpdate_GameObject(fTimeDelta);
+	}
+
+	CItem::LateUpdate_GameObject(fTimeDelta);
+
+
+	if (m_eItemID == WP_SWORD || m_eItemID == WP_GAUNTLET)
+	{
+		AABB tWeaponAABB = { m_vPos, _vec3(1.f,2.f,1.f) };
+		m_pColliderCom->UpdateFromCustom(tWeaponAABB);
+	}
+	else
+	{
+		m_pColliderCom->UpdateFromTransform(m_pTransformCom);
+	}
+
+	if (g_bDebug) { m_pColliderCom->Update_AABBforRender(); }
+
+	m_pWeaponInfo->UnActive();
 }
 
 void CPassiveItem::OnCollision(CGameObject* pObject)
@@ -91,7 +117,7 @@ void CPassiveItem::OnCollision(CGameObject* pObject)
 
 	if (pObject->Get_OBJID() == OID_PLAYER)
 	{
-		// 상호작용 가능
+		m_pWeaponInfo->Active();
 		m_bTriggered = true;
 	}
 }
@@ -135,6 +161,10 @@ void CPassiveItem::Update_Idle(const _float& fTimeDelta)
 	m_fAcmlTime += fTimeDelta;
 	m_pTrigger->Set_Pos_Trigger(m_vPos);
 	m_pTrigger->Update_GameObject(fTimeDelta);
+	if (m_eItemID == WP_SWORD || m_eItemID == WP_GAUNTLET)
+	{
+		m_pWeaponInfo->Update_GameObject(fTimeDelta);
+	}
 }
 
 void CPassiveItem::Update_Summon(const _float& fTimeDelta)
@@ -186,5 +216,6 @@ CPassiveItem* CPassiveItem::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChanne
 void CPassiveItem::Free()
 {
 	Safe_Destroy(m_pTrigger);
+	Safe_Release(m_pWeaponInfo);
 	CItem::Free();
 }

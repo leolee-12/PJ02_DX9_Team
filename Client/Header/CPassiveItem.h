@@ -2,6 +2,7 @@
 #include "CItem.h"
 
 class CTriggerPoint;
+class CWeaponInfo;
 
 class CPassiveItem : public CItem
 {
@@ -24,8 +25,9 @@ protected:
 	void				Interact();
 
 protected:
-	_bool		m_bTriggered;
+	_bool		   m_bTriggered;
 	CTriggerPoint* m_pTrigger = nullptr;
+	CWeaponInfo*   m_pWeaponInfo = nullptr;
 
 public:
 	static CPassiveItem* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, ITEMID eID, _float fThrowRange);

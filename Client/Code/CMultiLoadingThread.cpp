@@ -766,6 +766,11 @@ void CMultiLoadingThread::Loading_for_RealDungeon()
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_TarotInfo", TEX_NORMAL, L"../Bin/Resource/YSH/UI/TarotInfo_%d.png", 2));
 	m_iTotalProtoCount++;
 
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_WeaponInfo", TEX_NORMAL, L"../Bin/Resource/YSH/UI/WeaponInfo%d.png", 2));
+	m_iTotalProtoCount++;
+
+	
+
 	// 디버그용 그긴거
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_Fade", TEX_NORMAL, L"../Bin/Resource/YSH/Etc/Fade.png", 1));
 	m_iTotalProtoCount++;

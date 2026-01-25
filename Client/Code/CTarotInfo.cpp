@@ -97,6 +97,11 @@ CTarotInfo* CTarotInfo::Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec2 _vPos, _uint
 	pTarotInfo->m_vCenterPos = _vPos;
 	pTarotInfo->m_iType = iType;
 
+	if (pTarotInfo->m_iType > 1)
+	{
+		pTarotInfo->m_iType = 1;
+	}
+
 	if (FAILED(pTarotInfo->Ready_GameObject()))
 	{
 		Safe_Release(pTarotInfo);

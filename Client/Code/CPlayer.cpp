@@ -281,12 +281,12 @@ void CPlayer::Ready_Event()
 			if (TarotTypeiter == Event.hmapData.end()) { return; }
 			_uint iTarotType = any_cast<_uint>(TarotTypeiter->second);
 
-			switch (iTarotType)
+			switch (iTarotType - 1)
 			{
 			case 0:
 				m_iMaxHp += 2;
 				break;
-			case 1:
+			case 2:
 				m_iAttack = _int(_float(m_iAttack) * 1.5f);
 				break;
 			}
