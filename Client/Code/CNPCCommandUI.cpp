@@ -31,7 +31,7 @@ HRESULT CNPCCommandUI::Ready_GameObject()
 
 
 	CGameObject* pGameObject = nullptr;
-
+			 
 	pGameObject = m_pBackUI = CNPCCommandUIBack::Create(m_pGraphicDev, _vec3(0, 175.0f, 0.1f), 2.0f);
 	if (nullptr == pGameObject)
 		return E_FAIL;
@@ -47,8 +47,6 @@ HRESULT CNPCCommandUI::Ready_GameObject()
 	pGameObject = m_pLookingEyeUI = CLookingEyeUI::Create(m_pGraphicDev, _vec3(0.0f, 175.0f, 0.01f), 0.3f);
 	if (nullptr == pGameObject)
 		return E_FAIL;
-
-	
 
 
 	return S_OK;

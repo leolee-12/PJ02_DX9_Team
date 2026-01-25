@@ -38,6 +38,7 @@
 #include "CLoading.h"
 #include "CManagement.h"
 #include "CPlayerTarotCard.h"
+#include "CPlayerWeaponUI.h"
 
 CRealDungeon::CRealDungeon(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -493,6 +494,20 @@ HRESULT CRealDungeon::Ready_UI_Layer(const _tchar* pLayerTag)
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 
 	if (FAILED(pLayer->Add_GameObject(L"PlayerTarotCard", pGameObject)))
+		return E_FAIL;
+
+	pGameObject = CPlayerWeaponUI::Create(m_pGraphicDev, m_pMessageChannel, _vec3{-500.0f,260.0f,0.1f},0.2f,0);
+
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+
+	if (FAILED(pLayer->Add_GameObject(L"PlayerWeaponUI1", pGameObject)))
+		return E_FAIL;
+
+	pGameObject = CPlayerWeaponUI::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ -535.0f,230.0f,0.1f }, 0.2f, 1);
+
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+
+	if (FAILED(pLayer->Add_GameObject(L"PlayerWeaponUI2", pGameObject)))
 		return E_FAIL;
 
 	m_mapLayer.insert({ pLayerTag , pLayer });

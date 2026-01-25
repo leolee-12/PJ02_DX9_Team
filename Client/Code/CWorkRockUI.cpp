@@ -3,6 +3,7 @@
 #include "CProtoMgr.h"
 #include "CRenderer.h"
 
+#include "CFontUIOrtho.h"
 
 CWorkRockUI::CWorkRockUI(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CUi(pGraphicDev), m_pBufferCom(nullptr), m_pTransformCom(nullptr)
@@ -18,6 +19,35 @@ HRESULT CWorkRockUI::Ready_GameObject()
 {
 	if (FAILED(Add_Component()))
 		return E_FAIL;
+
+	CGameObject* pGameObject = nullptr;
+
+	pGameObject = m_pWorkName = CFontUIOrtho::Create(m_pGraphicDev);
+
+	if (nullptr == pGameObject)
+		return E_FAIL;
+
+	m_pWorkName->Set_Flags(DT_CENTER | DT_VCENTER);
+	m_pWorkName->Set_FontColor(D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
+	m_pWorkName->Set_Pos(_vec2(0.0f, 230.0f));
+	m_pWorkName->Set_Scale(_vec2(59.f * 2.f, 123.f * 0.5f));
+	m_pWorkName->Set_Font(L"Font_Default30_Heavy");
+	m_pWorkName->Set_Text(L"돌 채광");
+	m_pWorkName->UnActive();
+
+	pGameObject = m_pInfoTextUI = CFontUIOrtho::Create(m_pGraphicDev);
+
+	if (nullptr == pGameObject)
+		return E_FAIL;
+
+	m_pInfoTextUI->Set_Flags(DT_CENTER | DT_VCENTER);
+	m_pInfoTextUI->Set_FontColor(D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
+	m_pInfoTextUI->Set_Pos(_vec2(0.0f, 120.0f));
+	m_pInfoTextUI->Set_Scale(_vec2(60.f * 2.f, 123.f * 0.5f));
+	m_pInfoTextUI->Set_Font(L"Font_Default");
+	m_pInfoTextUI->Set_Text(L"돌무더기를 치워\n 돌을 수집합니다.");
+	m_pInfoTextUI->UnActive();
+
 
 	m_pTransformCom->Set_Scale(121.0f * m_fScale , 92.0f * m_fScale, 1.0f);
 	m_pTransformCom->Set_Pos(m_vPos.x, m_vPos.y, m_vPos.z);
@@ -35,7 +65,8 @@ _int CWorkRockUI::Update_GameObject(const _float& fTimeDelta)
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
 	CRenderer::GetInstance()->Add_RenderGroup(RENDER_UI, this);
-
+	m_pWorkName->Update_GameObject(fTimeDelta);
+	m_pInfoTextUI->Update_GameObject(fTimeDelta);
 	return iExit;
 }
 
@@ -43,6 +74,9 @@ void CWorkRockUI::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
 	Compute_ViewDepth_Ortho(&m_vPos);
+	m_pWorkName->LateUpdate_GameObject(fTimeDelta);
+	m_pInfoTextUI->LateUpdate_GameObject(fTimeDelta);
+
 }
 
 void CWorkRockUI::Render_GameObject()
@@ -117,6 +151,14 @@ void CWorkRockUI::Check_CusorColl()
 			//WorkRockEvent.hmapData[L"TarotType"];
 			m_pMessageChannel->Publish(WorkRockEvent);
 		}
+		m_pTransformCom->Set_Scale(121.0f * m_fScale * 1.3f, 92.0f * m_fScale * 1.3f, 1.0f);
+		m_pInfoTextUI->Active();
+		m_pWorkName->Active();
+	}
+	else {
+		m_pTransformCom->Set_Scale(121.0f * m_fScale, 92.0f * m_fScale, 1.0f);
+		m_pInfoTextUI->UnActive();
+		m_pWorkName->UnActive();
 	}
 
 }
@@ -143,5 +185,7 @@ CWorkRockUI* CWorkRockUI::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel*
 
 void CWorkRockUI::Free()
 {
+	Safe_Release(m_pInfoTextUI);
+	Safe_Release(m_pWorkName);
 	CUi::Free();
 }
