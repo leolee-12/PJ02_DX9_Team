@@ -253,6 +253,8 @@ void CPlayer::Ready_Event()
 					Set_Crying();
 					m_pTransformCom->Set_Pos(-4.f, 0.f, 88.f);
 					m_vPos = _vec3(-4.f, 2.f, 88.f);
+					// 문제 생기면 정규화할것
+					m_vDir = _vec3(1.f, 0.f, -1.f);
 					return;
 				}
 				if (strDothis == L"Stop_Crying") {
@@ -1169,8 +1171,11 @@ void	CPlayer::OnCollision(CGameObject* pObject)
 	{
 		if (m_bAction) { return; }
 		m_bCanTrigger = true;
-		m_pInteractionUI->Active();
 		m_pTriggerPoint = static_cast<CTriggerPoint*>(pObject);
+
+		if (!m_pTriggerPoint->Get_Passive()) {
+			m_pInteractionUI->Active();
+		}
 	}
 	if (pObject->Get_OBJID() == OID_WARP)
 	{

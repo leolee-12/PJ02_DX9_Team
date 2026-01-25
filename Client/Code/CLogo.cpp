@@ -68,9 +68,9 @@ _int CLogo::Update_Scene(const _float& fTimeDelta)
 			switch (m_eLogoState)
 			{
 			case LS_START:
-				//LSTmp = LOADING_TUTORIAL;
+				LSTmp = LOADING_TUTORIAL;
 				//LSTmp = LOADING_REALDUNGEON;
-				LSTmp = LOADING_VILLAGE;
+				//LSTmp = LOADING_VILLAGE;
 				//LSTmp = LOADING_DUNGEON;
 				//LSTmp = LOADING_KNUCKLEBONE;
 				//LSTmp = LOADING_AMDUSIASROOM;

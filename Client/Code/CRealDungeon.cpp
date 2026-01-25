@@ -547,10 +547,10 @@ void CRealDungeon::Ready_Event()
 				CLayer* pLayer = CLayer::Create();
 
 				if (nullptr == pLayer)
-					return E_FAIL;
+					return;
 
 				if (FAILED(pLayer->Add_GameObject(strObjTag, pObj)))
-					return E_FAIL;
+					return;
 
 				m_mapLayer.insert({ strLayerTag , pLayer });
 			}
