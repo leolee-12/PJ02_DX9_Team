@@ -8,6 +8,8 @@ namespace Engine
 	class CTexture;
 }
 
+class CFontUIOrtho;
+
 class CRestUI :
 	public CUi
 {
@@ -35,8 +37,12 @@ private:
 	CTransform* m_pTransformCom;
 	CTexture* m_pTextureCom;
 
+	CFontUIOrtho* m_pWorkName;
+	CFontUIOrtho* m_pInfoTextUI;
+
 	_vec2		m_vScreenPos;
 	_vec2       m_vHitHalfScale;
+
 
 	_vec3 m_vPos;
 	float m_fScale;

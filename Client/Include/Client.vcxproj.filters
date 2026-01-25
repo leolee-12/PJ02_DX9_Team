@@ -511,6 +511,9 @@
     <Filter Include="02. GameObject\05. UI\04. PlayerUI\02. PlayerTarotCard">
       <UniqueIdentifier>{65f80286-6539-4ec7-b2aa-91d3a26cfb90}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\05. UI\04. PlayerUI\03. PlayerWeapon">
+      <UniqueIdentifier>{d5dbeaa5-dbc8-4179-9175-83065cdb8409}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02. GameObject\05. UI\06. WorldUI\03. Interaction">
       <UniqueIdentifier>{a588698f-c386-4f8a-a10c-43bf51beddda}</UniqueIdentifier>
     </Filter>
@@ -1089,6 +1092,9 @@
     <ClInclude Include="..\Header\CResourceHistoryItem.h">
       <Filter>02. GameObject\05. UI\10. ResourceHistoryUI\02.ResourceHistoryItem</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CPlayerWeaponUI.h">
+      <Filter>02. GameObject\05. UI\04. PlayerUI\03. PlayerWeapon</Filter>
+    </ClInclude>
     <ClInclude Include="..\Header\CMapDoor.h">
       <Filter>02. GameObject\02. Environment\00. MapObject\00. Door</Filter>
     </ClInclude>
@@ -1624,6 +1630,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CPlayerTarotCard.cpp">
       <Filter>02. GameObject\05. UI\04. PlayerUI\02. PlayerTarotCard</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CPlayerWeaponUI.cpp">
+      <Filter>02. GameObject\05. UI\04. PlayerUI\03. PlayerWeapon</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CMapDoor.cpp">
       <Filter>02. GameObject\02. Environment\00. MapObject\00. Door</Filter>

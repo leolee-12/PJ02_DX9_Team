@@ -1,32 +1,32 @@
 ﻿#include "pch.h"
-#include "CPlayerTarotCard.h"
+#include "CPlayerWeaponUI.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
 
-CPlayerTarotCard::CPlayerTarotCard(LPDIRECT3DDEVICE9 pGraphicDev)
+CPlayerWeaponUI::CPlayerWeaponUI(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CUi(pGraphicDev), m_pBufferCom(nullptr), m_pTransformCom(nullptr)
 {
 	ZeroMemory(&m_vPos, sizeof(_vec3));
 }
 
-CPlayerTarotCard::~CPlayerTarotCard()
+CPlayerWeaponUI::~CPlayerWeaponUI()
 {
 }
 
-HRESULT CPlayerTarotCard::Ready_GameObject()
+HRESULT CPlayerWeaponUI::Ready_GameObject()
 {
 	if (FAILED(Add_Component()))
 		return E_FAIL;
 
-	m_pTransformCom->Set_Scale(100.0f * 0.5f, 100.0f* 0.5f, 0.f);
-	m_pTransformCom->Set_Pos(-460.f, 250.f, 0.1f);
+	m_pTransformCom->Set_Scale(154.0f * m_fScale, 154.0f * m_fScale, 0.f);
+	m_pTransformCom->Set_Pos(m_vPos.x, m_vPos.y, 0.001f);
 
-	m_bRender = false;
+	m_bRender = true;
 	Ready_Event();
 	return S_OK;
 }
 
-HRESULT CPlayerTarotCard::Ready_Material()
+HRESULT CPlayerWeaponUI::Ready_Material()
 {
 	D3DMATERIAL9			tMtrl;
 	ZeroMemory(&tMtrl, sizeof(D3DMATERIAL9));
@@ -43,7 +43,7 @@ HRESULT CPlayerTarotCard::Ready_Material()
 	return S_OK;
 }
 
-_int CPlayerTarotCard::Update_GameObject(const _float& fTimeDelta)
+_int CPlayerWeaponUI::Update_GameObject(const _float& fTimeDelta)
 {
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
@@ -52,31 +52,31 @@ _int CPlayerTarotCard::Update_GameObject(const _float& fTimeDelta)
 	return iExit;
 }
 
-void CPlayerTarotCard::LateUpdate_GameObject(const _float& fTimeDelta)
+void CPlayerWeaponUI::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
 	m_pTransformCom->Get_Info(INFO_POS, &m_vPos);
 	Compute_ViewDepth_Ortho(&m_vPos);
 }
 
-void CPlayerTarotCard::Render_GameObject()
+void CPlayerWeaponUI::Render_GameObject()
 {
 	if (!m_bRender) { return; }
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
 
 
-	m_pTextureCom->Set_Texture();
+	m_pTextureCom->Set_Texture(m_iPage);
 
 
 	m_pBufferCom->Render_Buffer();
 }
 
-void CPlayerTarotCard::OnCollision(CGameObject* pObject)
+void CPlayerWeaponUI::OnCollision(CGameObject* pObject)
 {
 
 }
 
-HRESULT CPlayerTarotCard::Add_Component()
+HRESULT CPlayerWeaponUI::Add_Component()
 {
 	Engine::CComponent* pComponent = nullptr;
 
@@ -99,7 +99,7 @@ HRESULT CPlayerTarotCard::Add_Component()
 	m_mapComponent[ID_DYNAMIC].insert({ L"Com_Transform", pComponent });
 
 	pComponent = m_pTextureCom = dynamic_cast<Engine::CTexture*>
-		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_PlayerTarotCard"));
+		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_PlayerWeaponUI"));
 
 	if (nullptr == pComponent)
 		return E_FAIL;
@@ -111,10 +111,13 @@ HRESULT CPlayerTarotCard::Add_Component()
 
 
 
-CPlayerTarotCard* CPlayerTarotCard::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMessageChannel)
+CPlayerWeaponUI* CPlayerWeaponUI::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMessageChannel, _vec3 _vPos, _float _fScale, _int _iPage)
 {
-	CPlayerTarotCard* pGaugeCover = new CPlayerTarotCard(pGraphicDev);
+	CPlayerWeaponUI* pGaugeCover = new CPlayerWeaponUI(pGraphicDev);
 
+	pGaugeCover->m_iPage = _iPage;
+	pGaugeCover->m_vPos = _vPos;
+	pGaugeCover->m_fScale = _fScale;
 	pGaugeCover->m_pMessageChannel = pMessageChannel;
 	pGaugeCover->m_pMessageChannel->AddRef();
 
@@ -128,12 +131,12 @@ CPlayerTarotCard* CPlayerTarotCard::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessa
 	return pGaugeCover;
 }
 
-void CPlayerTarotCard::Free()
+void CPlayerWeaponUI::Free()
 {
 	CUi::Free();
 }
 
-void CPlayerTarotCard::Ready_Event()
+void CPlayerWeaponUI::Ready_Event()
 {
 	m_hmapSubHandles.insert({ L"Tarot.Selected", m_pMessageChannel->Subscribe(L"Tarot.Selected", [this](const IMessageChannel::EVENT& Event)
 	{

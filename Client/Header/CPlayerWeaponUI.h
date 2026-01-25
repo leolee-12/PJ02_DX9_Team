@@ -1,5 +1,4 @@
 ﻿#pragma once
-#pragma once
 #include "CUi.h"
 
 namespace Engine
@@ -9,14 +8,13 @@ namespace Engine
 	class CTexture;
 }
 
-class CFontUIOrtho;
 
-class CWorkRockUI :
+class CPlayerWeaponUI :
 	public CUi
 {
 private:
-	explicit CWorkRockUI(LPDIRECT3DDEVICE9 pGraphicDev);
-	virtual ~CWorkRockUI();
+	explicit CPlayerWeaponUI(LPDIRECT3DDEVICE9 pGraphicDev);
+	virtual ~CPlayerWeaponUI();
 
 public:
 	virtual			HRESULT		Ready_GameObject();
@@ -26,28 +24,25 @@ public:
 	virtual			void		OnCollision(CGameObject* pObject);
 
 public:
-	static CWorkRockUI* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMessageChannel, _vec3 _vPos, float _fScale);
-	void	Set_Pos(_vec3 _vPos) { m_vPos = _vPos; }
+	static CPlayerWeaponUI* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMessageChannel,_vec3 _vPos, _float _fScale, _int _iPage);
+
 private:
 	virtual			void		Free();
-	void    Check_CusorColl();
-
+	void						Ready_Event();
 	HRESULT						Add_Component();
+	HRESULT						Ready_Material();
 
 private:
 	CRcTex* m_pBufferCom;
 	CTransform* m_pTransformCom;
 	CTexture* m_pTextureCom;
 
-	CFontUIOrtho* m_pWorkName;
-	CFontUIOrtho* m_pInfoTextUI;
+	_int	m_iPage;
 
-
-	_vec2		m_vScreenPos;
-	_vec2       m_vHitHalfScale;
-
+	_bool m_bRender;
 
 	_vec3 m_vPos;
-	float m_fScale;
+	_float m_fScale;
+
 };
 
