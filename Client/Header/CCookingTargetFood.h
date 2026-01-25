@@ -34,8 +34,9 @@ public:
 	static CCookingTargetFood* Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vPos, _float fScale, FOODTYPE ft, _int iQulity = 0);
 
 	void Set_Render(_bool _bRender) { m_bRender = _bRender; };
-	void CalcuCraftableCount(_int _ihave, _int _ineed);
-	_int Get_CrftableCount() { return m_iCraftableCount; }
+	_int Get_CraftableCount() { return m_iCraftableCount; }
+	_int Set_CraftableCount(_int _iCount) { return m_iCraftableCount = _iCount; }
+	void ApplayCraftableCount(_int _iCount) { m_iCraftableCount += _iCount; }
 
 private:
 	virtual			void		Free();

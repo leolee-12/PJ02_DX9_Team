@@ -5,6 +5,9 @@
 #include "CCookingSelectUI.h"
 #include "CCookingMiniGameUI.h"
 #include "CDInputMgr.h"
+#include "CProtoMgr.h"
+#include "CPersistentMgr.h"
+
 CCookingUIController::CCookingUIController(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CUi(pGraphicDev)
 	, m_pSelectUI(nullptr)
@@ -15,11 +18,12 @@ CCookingUIController::CCookingUIController(LPDIRECT3DDEVICE9 pGraphicDev)
 
 CCookingUIController::~CCookingUIController()
 {
+
 }
 
 HRESULT CCookingUIController::Ready_GameObject()
 {
-	m_pSelectUI = CCookingSelectUI::Create(m_pGraphicDev);
+	m_pSelectUI = CCookingSelectUI::Create(m_pGraphicDev, m_pMessageChannel);
 	if (nullptr == m_pSelectUI)
 		return E_FAIL;
 
@@ -28,11 +32,7 @@ HRESULT CCookingUIController::Ready_GameObject()
 		return E_FAIL;
 
 	m_eState = CS_IDLE;
-
-	m_pMiniGameUI->Set_CookingEndCallback([this]()
-		{
-			Set_CookingState(COOKINGUISTATE::CS_SELECT);
-		});
+	Ready_Event();
 
 	return S_OK;
 }
@@ -44,6 +44,8 @@ _int CCookingUIController::Update_GameObject(const _float& fTimeDelta)
 
 	m_pSelectUI->Update_GameObject(fTimeDelta);
 	m_pMiniGameUI->Update_GameObject(fTimeDelta);
+
+
 
 	//CRenderer::GetInstance()->Add_RenderGroup(RENDER_UI, this);
 
@@ -69,6 +71,13 @@ void CCookingUIController::Start_Cooking(_int iCookingCount)
 	if (m_pSelectUI->Get_CookingCount() <= 0) { return; }
 	m_pMiniGameUI->CookingStart(iCookingCount);
 	Set_CookingState(COOKINGUISTATE::CS_MINIGAME);
+
+	CPersistentMgr::GetInstance()->Get_ResourceHistory()->UseItem(TYPE_BERRY, -iCookingCount * m_pSelectUI->Get_RecipeCount());
+}
+
+void CCookingUIController::CalcuCookingAbleCount()
+{
+
 }
 
 void CCookingUIController::Key_Input_Cooking()
@@ -109,6 +118,7 @@ void CCookingUIController::State_Machine()
 			m_pMiniGameUI->Set_Render(false);
 			break;
 		case CS_SELECT:
+			m_pSelectUI->init_data();
 			m_pSelectUI->SetRender(true);
 			m_pMiniGameUI->Set_Render(false);
 			break;
@@ -126,6 +136,20 @@ void CCookingUIController::State_Machine()
 		}
 		m_ePrevState = m_eState;
 	}
+}
+
+void CCookingUIController::Ready_Event()
+{
+	//m_pMiniGameUI->Set_CookingEndCallback([this]()
+	//	{
+	//		Set_CookingState(COOKINGUISTATE::CS_SELECT);
+	//	});
+
+	m_hmapSubHandles.insert({ L"CookingUI.Finish", m_pMessageChannel->Subscribe(L"Cooking.Finish", [this](const IMessageChannel::EVENT& Event) {
+{
+		Set_CookingState(COOKINGUISTATE::CS_SELECT);
+}
+}) });
 }
 
 CCookingUIController* CCookingUIController::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMessageChannel)

@@ -12,6 +12,7 @@ namespace Engine
 class CCookingTargetFood;
 class CCookingSelectButton;
 class CCookingSelectSlot;
+class CCookingInfoCard;
 
 class CCookingSelectUI :
 	public CUi
@@ -28,7 +29,7 @@ public:
 	virtual void    OnCollision(CGameObject* pObject);
 
 public:
-	static CCookingSelectUI* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	static CCookingSelectUI* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMessageChannel);
 	void SetRender(_bool _bRender) { m_bRender = _bRender; }
 
 	void AddFood();
@@ -36,7 +37,8 @@ public:
 	void ReSetSelecting();
 	void Set_CookingCount(_int num) { m_iCurCookingCount = num; }
 	_int Get_CookingCount() { return m_iCurCookingCount; }
-
+	void init_data();
+	_int Get_RecipeCount();
 private:
 	virtual void Free();
 
@@ -49,11 +51,12 @@ private:
 
 	CCookingTargetFood*		m_pCookingtargetFood;
 	CCookingSelectButton*	m_pCookingBtn;
+	CCookingInfoCard*		m_pCookingInfoCard;
+
 	_bool  m_bRender;
 
 	_int   m_iCurCookingCount;
 	_int   m_iCookingCountMax;
 
-	_int tempResourceCount;
-	_int tempNeedRecipeCount;
+	_int m_iResourceCount;
 };

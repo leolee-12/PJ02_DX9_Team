@@ -820,6 +820,9 @@ void CMultiLoadingThread::Loading_for_RealDungeon()
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_IndicatorTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/Etc/dds/ProjectileIndicator.dds", 1));
 	m_iTotalProtoCount++;
 	// Effect
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_PlayerTarotCard", TEX_NORMAL, L"../Bin/Resource/YSD/TarotCard/TarotCard.png", 1));
+	m_iTotalProtoCount++;
 }
 
 void CMultiLoadingThread::Loading_for_AmdusiasRoom()
