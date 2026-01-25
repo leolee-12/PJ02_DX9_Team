@@ -465,6 +465,8 @@ HRESULT CRealDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 
 		_vec3 vDir = _vec3{ -260.f, 0.f, 24.f } - vPos;
 
+		D3DXVec3Normalize(&vDir, &vDir);
+
 		pTemp->Set_Dir(vDir);
 
 		if (FAILED(pLayer->Add_GameObject(L"ForCutScene", pGameObject)))

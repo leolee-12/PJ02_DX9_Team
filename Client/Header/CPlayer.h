@@ -11,6 +11,7 @@ namespace Engine
 }
 
 class CTriggerPoint;
+class CChargeArrow;
 
 class CPlayer : public CGameObject
 {
@@ -137,6 +138,7 @@ private:
 	// 차지 공격 관련
 	_float			m_fCharge;
 	_float			m_fChargeMax;
+	CChargeArrow*	m_pChargeArrow;
 
 	// 메시지 채널 관련
 	_bool 			m_bMsgRegistered;
@@ -164,6 +166,7 @@ public:
 	static constexpr _float PLAYER_INVINCIBLE_TIME = 3.f;
 	static constexpr _float PLAYER_DEFAULT_SPEED = 12.f;
 	static constexpr _float PLAYER_INTRO_SPEED = 7.f;
+	static constexpr _float PLAYER_CHARGE_SPEED = 2.f;
 	static constexpr _float PLAYER_DEFAULT_SCALE = 10.f;
 	static constexpr _float PLAYER_INTRO_SCALE = 11.f;
 	static constexpr _float PLAYER_REBIRTH_SCALE = 20.f;

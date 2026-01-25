@@ -7,6 +7,7 @@
 //#include "CTrailEffect.h"
 #include "CScreenEffect.h"
 #include "CIndicator.h"
+#include <CChargeArrow.h>
 
 IMPLEMENT_SINGLETON(CEffectMgr);
 
@@ -145,6 +146,15 @@ HRESULT CEffectMgr::Ready_EffectMgr(LPDIRECT3DDEVICE9 pGraphicDev)
 		CIndicator* pIndicator = CIndicator::Create(pGraphicDev, L"Proto_IndicatorTexture");
 		pIndicator->Set_Scale(_vec3(2.f, 2.f, 1.f));
 		indicatorPair.first->second = pIndicator;
+	}
+
+	auto chargeArrowPair = m_mapProtoEffect.try_emplace(EK_INDICATOR_ARROW, nullptr);	// pair<iter, bool>
+
+	if (chargeArrowPair.second)
+	{
+		CChargeArrow* pArrow = CChargeArrow::Create(pGraphicDev, L"Proto_ChargeArrowTexture");
+		pArrow->Set_Scale(_vec3(5.f, 1.f, 1.f));
+		chargeArrowPair.first->second = pArrow;
 	}
 
 	m_bReady = true;

@@ -40,6 +40,7 @@ public:
 
 		// Indicator
 		, EK_INDICATOR_CIRCLE
+		, EK_INDICATOR_ARROW
 	};
 
 private:

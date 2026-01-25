@@ -1071,6 +1071,9 @@
     <ClInclude Include="..\Header\CResourceHistoryItem.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CChargeArrow.h">
+      <Filter>02. GameObject\03. Dependent\01. Effect\04. Indicator</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1591,6 +1594,9 @@
     </ClCompile>
     <ClCompile Include="CShrineSpot.cpp">
       <Filter>02. GameObject\02. Environment\02. Interactable\04. ShrineSpot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CChargeArrow.cpp">
+      <Filter>02. GameObject\03. Dependent\01. Effect\04. Indicator</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
