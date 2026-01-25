@@ -180,35 +180,6 @@ HRESULT CLogo::Ready_UI_Layer(const _tchar* pLayerTag)
 
 HRESULT CLogo::Ready_Prototype()
 {
-
-	//if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_MainMenuTex", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Mainmenu(2)/animation_%04d.png", 48))))
-	//	return E_FAIL;
-
-	//if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_MainLogoTex", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Mainmenu/Logo.png", 1))))
-	//	return E_FAIL;
-
-	//if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_MainTabTex", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Mainmenu/Tab.png", 1))))
-	//	return E_FAIL;
-
-	//if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Transform", Engine::CTransform::Create(m_pGraphicDev))))
-	//	return E_FAIL;
-
-
-	//// 로딩씬 미리 로딩
-
-	//if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_LoadingCenterTex", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Loading/LoadingCenter.png", 1))))
-	//	return E_FAIL;
-
-	//if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_LoadingFGTex", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Loading/LoadingFG.png", 1))))
-	//	return E_FAIL;
-
-	//if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_LoadingLogoTex", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Loading/LoadingLogo.png", 1))))
-	//	return E_FAIL;
-
-	//if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_LoadingCircleTex", Engine::CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Loading/LoadingCircle.png", 1))))
-	//	return E_FAIL;
-
-
 	return S_OK;
 }
 

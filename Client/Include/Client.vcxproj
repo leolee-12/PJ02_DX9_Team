@@ -479,6 +479,7 @@
     <ClCompile Include="..\Code\CPersistentMgr.cpp" />
     <ClCompile Include="..\Code\CPlayer.cpp" />
     <ClCompile Include="..\Code\CPlayerHP.cpp" />
+    <ClCompile Include="..\Code\CPlayerWeaponUI.cpp" />
     <ClCompile Include="..\Code\CProjectile.cpp" />
     <ClCompile Include="..\Code\CRatau.cpp" />
     <ClCompile Include="..\Code\CRealDungeon.cpp" />
@@ -534,7 +535,6 @@
     <ClCompile Include="..\Code\CWorkRockUI.cpp" />
     <ClCompile Include="..\Code\CWorkWoodUI.cpp" />
     <ClCompile Include="..\Code\CPlayerTarotCard.cpp" />
-    <ClCompile Include="..\CPlayerWeaponUI.cpp" />
     <ClCompile Include="CFontAlpha.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="CShrineSpot.cpp" />

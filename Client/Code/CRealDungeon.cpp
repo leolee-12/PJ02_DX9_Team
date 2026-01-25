@@ -507,6 +507,7 @@ HRESULT CRealDungeon::Ready_UI_Layer(const _tchar* pLayerTag)
 
 	//////////////////////////////////////////////////////
 	//플레이어 UI
+
 	pGameObject = CPersistentMgr::GetInstance()->Get_PlayerHPUI();
 
 	if (nullptr == pGameObject)
@@ -516,6 +517,7 @@ HRESULT CRealDungeon::Ready_UI_Layer(const _tchar* pLayerTag)
 		return E_FAIL;
 	pGameObject->AddRef();
 
+
 	pGameObject = CPersistentMgr::GetInstance()->Get_Gauge();
 
 	if (nullptr == pGameObject)
@@ -524,6 +526,25 @@ HRESULT CRealDungeon::Ready_UI_Layer(const _tchar* pLayerTag)
 	if (FAILED(pLayer->Add_GameObject(L"Gauge", pGameObject)))
 		return E_FAIL;
 	pGameObject->AddRef();
+
+
+	pGameObject = CPersistentMgr::GetInstance()->Get_WeaponUIfirst();
+
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+
+	if (FAILED(pLayer->Add_GameObject(L"PlayerWeaponUI1", pGameObject)))
+		return E_FAIL;
+	pGameObject->AddRef();
+
+
+	pGameObject = CPersistentMgr::GetInstance()->Get_WeaponUIsecond();
+
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+
+	if (FAILED(pLayer->Add_GameObject(L"PlayerWeaponUI2", pGameObject)))
+		return E_FAIL;
+	pGameObject->AddRef();
+
 	//플레이어 UI
 	////////////////////////////////////////////////////////
 
@@ -557,20 +578,6 @@ HRESULT CRealDungeon::Ready_UI_Layer(const _tchar* pLayerTag)
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 
 	if (FAILED(pLayer->Add_GameObject(L"PlayerTarotCard", pGameObject)))
-		return E_FAIL;
-
-	pGameObject = CPlayerWeaponUI::Create(m_pGraphicDev, m_pMessageChannel, _vec3{-500.0f,260.0f,0.1f},0.2f,0);
-
-	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-
-	if (FAILED(pLayer->Add_GameObject(L"PlayerWeaponUI1", pGameObject)))
-		return E_FAIL;
-
-	pGameObject = CPlayerWeaponUI::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ -535.0f,230.0f,0.1f }, 0.2f, 1);
-
-	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-
-	if (FAILED(pLayer->Add_GameObject(L"PlayerWeaponUI2", pGameObject)))
 		return E_FAIL;
 
 	m_mapLayer.insert({ pLayerTag , pLayer });

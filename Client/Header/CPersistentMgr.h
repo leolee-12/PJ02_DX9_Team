@@ -7,6 +7,7 @@
 #include "CPlayerHP.h"
 #include "CVillage.h"
 #include "CResourceHistoryController.h"
+#include "CPlayerWeaponUI.h"
 
 namespace Engine
 {
@@ -32,6 +33,8 @@ public:
 	CPlayerHP* Get_PlayerHPUI() { return m_pPlayerHPUI; }
 	CVillage* Get_Village() { return m_pVillage; }
 	CResourceHistoryController* Get_ResourceHistory() { return m_pResourceHistoryUI; }
+	CPlayerWeaponUI* Get_WeaponUIfirst() { return m_pWeaponUIfirst; }
+	CPlayerWeaponUI* Get_WeaponUIsecond() { return m_pWeaponUIsecond; }
 
 	void	Set_Village(CVillage* pVillage)
 	{
@@ -81,14 +84,19 @@ public:
 private:
 	void	Update_PlayerHp();
 	void	Update_PlayerGage();
+	void	Update_PlayerWeaponUI();
 
 private:
 	CPlayer*			m_pPlayer				= nullptr;
 	CGauge*				m_pGauge				= nullptr;
 	CPlayerHP*			m_pPlayerHPUI			= nullptr;
 	CVillage*			m_pVillage				= nullptr;
-	_bool				m_bVillageReentry		= false;
 	CResourceHistoryController* m_pResourceHistoryUI	= nullptr;
+
+	CPlayerWeaponUI*    m_pWeaponUIfirst = nullptr;
+	CPlayerWeaponUI*	m_pWeaponUIsecond = nullptr;
+
+	_bool				m_bVillageReentry		= false;
 
 private:
 	static CPersistentMgr* m_pInstance;

@@ -1631,9 +1631,6 @@
     <ClCompile Include="..\Code\CPlayerTarotCard.cpp">
       <Filter>02. GameObject\05. UI\04. PlayerUI\02. PlayerTarotCard</Filter>
     </ClCompile>
-    <ClCompile Include="..\CPlayerWeaponUI.cpp">
-      <Filter>02. GameObject\05. UI\04. PlayerUI\03. PlayerWeapon</Filter>
-    </ClCompile>
     <ClCompile Include="..\Code\CMapDoor.cpp">
       <Filter>02. GameObject\02. Environment\00. MapObject\00. Door</Filter>
     </ClCompile>
@@ -1645,6 +1642,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CChargeArrow.cpp">
       <Filter>02. GameObject\03. Dependent\01. Effect\04. Indicator</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CPlayerWeaponUI.cpp">
+      <Filter>02. GameObject\05. UI\04. PlayerUI\03. PlayerWeapon</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -111,6 +111,16 @@ HRESULT CPersistentMgr::Ready_GlobalObjects(LPDIRECT3DDEVICE9 pGraphicDev)
 
 		m_pResourceHistoryUI = CResourceHistoryController::Create(pGraphicDev);
 	}
+
+	if (m_pWeaponUIfirst == nullptr && m_pWeaponUIsecond == nullptr)
+	{
+		if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_PlayerWeaponUI", Engine::CTexture::Create(pGraphicDev, TEX_NORMAL, L"../Bin/Resource/YSD/PlayerWeapon/Weapon_%d.png", 2))))
+			return E_FAIL;
+		
+		m_pWeaponUIfirst = CPlayerWeaponUI::Create(pGraphicDev, _vec3{ -535.0f,230.0f,0.1f }, 0.2f, 0);
+		m_pWeaponUIsecond = CPlayerWeaponUI::Create(pGraphicDev, _vec3{ -500.0f,260.0f,0.1f }, 0.2f, 0);
+	}
+
 	return S_OK;
 }
 
@@ -118,6 +128,7 @@ void CPersistentMgr::Update_PersistnetMgr(const _float fTimeDelta)
 {
 	Update_PlayerHp();
 	Update_PlayerGage();
+	Update_PlayerWeaponUI();
 }
 
 Engine::CTransform* CPersistentMgr::Get_PlayerTransform()
@@ -140,6 +151,11 @@ void CPersistentMgr::Update_PlayerGage()
 {
 }
 
+void CPersistentMgr::Update_PlayerWeaponUI()
+{
+	m_pWeaponUIfirst->Set_WeaponType(_int(m_pPlayer->Get_Weapon()));
+}
+
 void CPersistentMgr::Free()
 {
 	Safe_Release(m_pPlayer);
@@ -147,4 +163,6 @@ void CPersistentMgr::Free()
 	Safe_Release(m_pPlayerHPUI);
 	Safe_Release(m_pVillage);
 	Safe_Release(m_pResourceHistoryUI);
+	Safe_Release(m_pWeaponUIfirst);
+	Safe_Release(m_pWeaponUIsecond);
 }
