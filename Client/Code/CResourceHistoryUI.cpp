@@ -153,10 +153,12 @@ _int CResourceHistoryUI::Update_GameObject(const _float& fTimeDelta)
 	if (m_iDeltaAmount > 0)
 	{
 		m_pDeltaAmountFont->Set_Text((L"+" + to_wstring(m_iDeltaAmount)).c_str());
+		m_pResourceHistoryBack->Set_Page(0);
 	}
 	else
 	{
-		m_pDeltaAmountFont->Set_Text((L"-" + to_wstring(m_iDeltaAmount)).c_str());
+		m_pDeltaAmountFont->Set_Text((L"-" + to_wstring(abs(m_iDeltaAmount))).c_str());
+		m_pResourceHistoryBack->Set_Page(1);
 	}
 
 	m_pResourceHistoryBack->Update_GameObject(fTimeDelta);

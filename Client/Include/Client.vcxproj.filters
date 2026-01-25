@@ -508,6 +508,12 @@
     <Filter Include="02. GameObject\05. UI\12. FoodReviewUI\01. FoodReviewImage">
       <UniqueIdentifier>{e5864e32-2ca4-4e62-811f-59ca0abf0031}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\05. UI\1">
+      <UniqueIdentifier>{d639a8cf-f804-43f9-b40b-14849f6c0cae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. UI\04. PlayerUI\02. PlayerTarotCard">
+      <UniqueIdentifier>{65f80286-6539-4ec7-b2aa-91d3a26cfb90}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -1008,9 +1014,6 @@
     <ClInclude Include="..\Header\CResourceHistoryDeco.h">
       <Filter>02. GameObject\05. UI\10. ResourceHistoryUI\01.ResourceHistoryDeco</Filter>
     </ClInclude>
-    <ClInclude Include="..\Code\CResourceHistoryItem.h">
-      <Filter>02. GameObject\05. UI\10. ResourceHistoryUI\02.ResourceHistoryItem</Filter>
-    </ClInclude>
     <ClInclude Include="..\Header\CResourceHistoryUI.h">
       <Filter>02. GameObject\05. UI\10. ResourceHistoryUI\03.ResourceHistoryUI</Filter>
     </ClInclude>
@@ -1065,14 +1068,17 @@
     <ClInclude Include="..\Header\CFoodReviewImage.h">
       <Filter>02. GameObject\05. UI\12. FoodReviewUI\01. FoodReviewImage</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\CResourceHistoryItem.h">
-      <Filter>02. GameObject\05. UI\09. ResourceHistoryUI\02.ResourceHistoryItem</Filter>
-    </ClInclude>
     <ClInclude Include="..\Header\CFoodReviewUI.h">
       <Filter>02. GameObject\05. UI\12. FoodReviewUI</Filter>
     </ClInclude>
     <ClInclude Include="CShrineSpot.h">
       <Filter>02. GameObject\02. Environment\02. Interactable\04. ShrineSpot</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CPlayerTarotCard.h">
+      <Filter>02. GameObject\05. UI\04. PlayerUI\02. PlayerTarotCard</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CResourceHistoryItem.h">
+      <Filter>02. GameObject\05. UI\10. ResourceHistoryUI\02.ResourceHistoryItem</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1594,6 +1600,9 @@
     </ClCompile>
     <ClCompile Include="CShrineSpot.cpp">
       <Filter>02. GameObject\02. Environment\02. Interactable\04. ShrineSpot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CPlayerTarotCard.cpp">
+      <Filter>02. GameObject\05. UI\04. PlayerUI\02. PlayerTarotCard</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

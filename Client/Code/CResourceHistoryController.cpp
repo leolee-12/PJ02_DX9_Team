@@ -9,6 +9,7 @@
 #include "CFontMgr.h"
 #include "CItem.h"
 
+
 CResourceHistoryController::CResourceHistoryController(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CUi(pGraphicDev)
 	, m_bRender(true)
@@ -23,47 +24,47 @@ CResourceHistoryController::~CResourceHistoryController()
 HRESULT CResourceHistoryController::Ready_GameObject()
 {
 	CResourceHistoryUI* pGameObject = nullptr;
-	pGameObject = CResourceHistoryUI::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ WINCX / 2,WINCY / 2 - 240.0f, 0.1f }, L"동전", 0);
+	pGameObject = CResourceHistoryUI::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ WINCX / 2,WINCY / 2 - 240.0f, 0.1f }, L"동전", TYPE_COIN);
 	if (nullptr == pGameObject)
 		return E_FAIL;
 
 	m_mResourceUI.insert({ 0 , pGameObject });
 
-	pGameObject = CResourceHistoryUI::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ WINCX / 2,(WINCY / 2 - 180.0f), 0.1f }, L"나무", 1);
+	pGameObject = CResourceHistoryUI::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ WINCX / 2,(WINCY / 2 - 180.0f), 0.1f }, L"나무", TYPE_TIMBER);
 	if (nullptr == pGameObject)
 		return E_FAIL;
 
 	m_mResourceUI.insert({ 1 , pGameObject });
-	pGameObject = CResourceHistoryUI::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ WINCX / 2,WINCY / 2 - 120.0f, 0.1f }, L"돌", 2);
+	pGameObject = CResourceHistoryUI::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ WINCX / 2,WINCY / 2 - 120.0f, 0.1f }, L"돌", TYPE_ROCK);
 	if (nullptr == pGameObject)
 		return E_FAIL;
 
 	m_mResourceUI.insert({ 2 , pGameObject });
-	pGameObject = CResourceHistoryUI::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ WINCX / 2,WINCY / 2 - 60.0f, 0.1f }, L"열매", 3);
+	pGameObject = CResourceHistoryUI::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ WINCX / 2,WINCY / 2 - 60.0f, 0.1f }, L"열매", TYPE_BERRY);
 	if (nullptr == pGameObject)
 		return E_FAIL;
 
 	m_mResourceUI.insert({ 3 , pGameObject });
-	pGameObject = CResourceHistoryUI::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ WINCX / 2,WINCY / 2, 0.1f }, L"똥", 4);
+	pGameObject = CResourceHistoryUI::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ WINCX / 2,WINCY / 2, 0.1f }, L"똥", TYPE_POOP);
 	if (nullptr == pGameObject)
 		return E_FAIL;
 
 	m_mResourceUI.insert({ 4 , pGameObject });
-	pGameObject = CResourceHistoryUI::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ WINCX / 2,WINCY / 2 + 60.0f,0.1f }, L"빨콩", 5);
+	pGameObject = CResourceHistoryUI::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ WINCX / 2,WINCY / 2 + 60.0f,0.1f }, L"빨콩", TYPE_REDBEAN);
 	if (nullptr == pGameObject)
 		return E_FAIL;
 
 	m_mResourceUI.insert({ 5 , pGameObject });
 
 
-	pGameObject = CResourceHistoryUI::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ WINCX / 2,WINCY / 2 + 120.0f,0.1f }, L"밥", 6);
+	pGameObject = CResourceHistoryUI::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ WINCX / 2,WINCY / 2 + 120.0f,0.1f }, L"밥", TYPE_RICE);
 	if (nullptr == pGameObject)
 		return E_FAIL;
 
 	m_mResourceUI.insert({ 6 , pGameObject });
 
 
-	pGameObject = CResourceHistoryUI::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ WINCX / 2,WINCY / 2 + 180.0f,0.1f }, L"탄밥", 7);
+	pGameObject = CResourceHistoryUI::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ WINCX / 2,WINCY / 2 + 180.0f,0.1f }, L"탄밥", TYPE_BURNRICE);
 	if (nullptr == pGameObject)
 		return E_FAIL;
 
@@ -78,7 +79,8 @@ HRESULT CResourceHistoryController::Ready_GameObject()
 
 		m_vHistoryPos.push_back(pos);
 	}
-	tempcount = 0;
+
+	m_mResourceUI.find(TYPE_BERRY)->second->Apply_TotalCount(300);
 
 	return S_OK;
 }
@@ -86,19 +88,6 @@ HRESULT CResourceHistoryController::Ready_GameObject()
 _int CResourceHistoryController::Update_GameObject(const _float& fTimeDelta)
 {
 	if (!m_bRender) return NOEVENT;
-
-	// 테스트용
-	//if (CDInputMgr::GetInstance()->Key_Down(DIK_X))
-	//{
-	//	IMessageChannel::EVENT tEvent;
-	//	tEvent.strType = L"ResourceHistory.AddItem";
-	//	tEvent.hmapData[L"ItemID"] = tempcount;
-
-
-	//	m_pMessageChannel->Publish(tEvent);
-	//	tempcount++;
-	//}
-	//*if (tempcount > 4) tempcount = 0;*/
 
 	for (auto& UI : m_mResourceUI)
 		UI.second->Update_GameObject(fTimeDelta);
@@ -173,6 +162,19 @@ void CResourceHistoryController::Ready_Event()
 
 		int ItemIndex = any_cast<int>(iter->second);
 		AddItem(ItemIndex,1);
+}
+) });
+	m_hmapSubHandles.insert({ L"History.UseItem",m_pMessageChannel->Subscribe(L"ResourceHistory.UseItem",[this](const IMessageChannel::EVENT& Event)
+{
+		auto iter = Event.hmapData.find(L"ItemID");
+		if (iter == Event.hmapData.end())
+			return;
+		auto iter2 = Event.hmapData.find(L"ItemCount");
+		if (iter2 == Event.hmapData.end())
+			return;
+		int ItemIndex = any_cast<int>(iter->second);
+		int ItemCount = any_cast<int>(iter2->second);
+		UseItem(ItemIndex, ItemCount);
 }
 ) });
 	m_bMsgRegistered = true;
@@ -298,7 +300,44 @@ void CResourceHistoryController::Set_MessageChannel(IMessageChannel* pMessageCha
 
 void CResourceHistoryController::UseItem(_int _iItemIndex, _int _iCount)
 {
+	// UseItem 동일하게 일단 씀 사용로직 합쳐야하는데 일단 그냥쓰자..
+	auto iter = m_mResourceUI.find(_iItemIndex);
+	if (iter == m_mResourceUI.end())
+		return;
 
+	CResourceHistoryUI* pUI = iter->second;
+
+	if (!pUI)
+		return;
+
+
+	auto it = std::find(m_vHistoryData.begin(), m_vHistoryData.end(), _iItemIndex);
+	if (it != m_vHistoryData.end())
+	{
+		// UPDATE
+		UpdateHistory(pUI, STATE_UPDATE, _iCount, pUI->Get_Pos(), m_vHistoryPos[m_vHistoryData.size()], pUI->GetOrder());
+	}
+	else
+	{
+		// NEW
+		_vec3 EndPos = m_vHistoryPos[m_vHistoryData.size()];
+		_vec3 startPos = _vec3{ EndPos.x - 300.0f,EndPos.y,EndPos.z };
+		UpdateHistory(pUI, STATE_NEW, _iCount, startPos, EndPos, m_vHistoryData.size());
+		m_vHistoryData.push_back(_iItemIndex);
+	}
+}
+
+_int CResourceHistoryController::GetIndexHistoryItemCount(_int _iIndex)
+{
+	auto iter = m_mResourceUI.find(_iIndex);
+	if (iter == m_mResourceUI.end())
+		return 0;
+	CResourceHistoryUI* pUI = iter->second;
+	if (!pUI)
+		return 0;
+	_int Count = pUI->Get_totalCount();
+
+	return Count;
 }
 
 void CResourceHistoryController::Free()

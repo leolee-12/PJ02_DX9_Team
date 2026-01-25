@@ -628,6 +628,17 @@ HRESULT CDungeon::Ready_UI_Layer(const _tchar* pLayerTag)
 	if (FAILED(pLayer->Add_GameObject(L"Fade", pGameObject)))
 		return E_FAIL;
 
+	pGameObject = CPersistentMgr::GetInstance()->Get_ResourceHistory();
+
+	if (nullptr == pGameObject)
+		return E_FAIL;
+
+	CPersistentMgr::GetInstance()->Get_ResourceHistory()->Set_MessageChannel(m_pMessageChannel);
+
+	if (FAILED(pLayer->Add_GameObject(L"ResourceHistoryController", pGameObject)))
+		return E_FAIL;
+	pGameObject->AddRef();
+
 	m_mapLayer.insert({ pLayerTag , pLayer });
 
 	return S_OK;

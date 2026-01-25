@@ -181,11 +181,6 @@ CCookingTargetFood* CCookingTargetFood::Create(LPDIRECT3DDEVICE9 pGraphicDev, _v
 	return pCookingTarget;
 }
 
-void CCookingTargetFood::CalcuCraftableCount(_int _ihave, _int _ineed)
-{
-	m_iCraftableCount = _ihave / _ineed;
-}
-
 void CCookingTargetFood::Free()
 {
 	for (CGameObject* StarUI : m_vecQualityStar)

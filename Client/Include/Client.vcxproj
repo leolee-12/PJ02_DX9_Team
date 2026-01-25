@@ -323,6 +323,7 @@
     <ClInclude Include="..\Header\CWarp.h" />
     <ClInclude Include="..\Header\Gage_Enum.h" />
     <ClInclude Include="..\Header\LoadObjectList.h" />
+    <ClInclude Include="..\Header\CPlayerTarotCard.h" />
     <ClInclude Include="..\Header\PlayerUI.h" />
     <ClInclude Include="..\Header\CSpeechBubble.h" />
     <ClInclude Include="..\Header\CTile.h" />
@@ -519,6 +520,7 @@
     <ClCompile Include="..\Code\CGrass.cpp" />
     <ClCompile Include="..\Code\CWorkRockUI.cpp" />
     <ClCompile Include="..\Code\CWorkWoodUI.cpp" />
+    <ClCompile Include="..\Code\CPlayerTarotCard.cpp" />
     <ClCompile Include="CFontAlpha.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="CShrineSpot.cpp" />

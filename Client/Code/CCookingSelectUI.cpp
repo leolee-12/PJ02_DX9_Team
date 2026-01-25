@@ -12,6 +12,7 @@
 
 #include "CFontMgr.h"
 #include "CDInputMgr.h"
+#include "CPersistentMgr.h"
 
 CCookingSelectUI::CCookingSelectUI(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CUi(pGraphicDev)
@@ -92,16 +93,13 @@ HRESULT CCookingSelectUI::Ready_GameObject()
 
 
 
-	pGameObject = CCookingInfoCard::Create(m_pGraphicDev);
+	pGameObject = m_pCookingInfoCard = CCookingInfoCard::Create(m_pGraphicDev, m_pMessageChannel);
 	if (nullptr == pGameObject)
 		return E_FAIL;
-	m_vecCookingSelectUI.push_back(pGameObject);
 
 	m_iCookingCountMax = 12;
 	m_iCurCookingCount = 0;
-	tempNeedRecipeCount = 5;
-	tempResourceCount = 100;
-	m_pCookingtargetFood->CalcuCraftableCount(tempResourceCount, tempNeedRecipeCount);
+	m_iResourceCount = 0;
 	return S_OK;
 }
 
@@ -121,6 +119,7 @@ _int CCookingSelectUI::Update_GameObject(const _float& fTimeDelta)
 		{
 			Obj2->Update_GameObject(fTimeDelta);
 		}
+		m_pCookingInfoCard->Update_GameObject(fTimeDelta);
 	}
 
 	//CRenderer::GetInstance()->Add_RenderGroup(RENDER_UI, this);
@@ -151,6 +150,7 @@ void CCookingSelectUI::LateUpdate_GameObject(const _float& fTimeDelta)
 	{
 		Obj2->LateUpdate_GameObject(fTimeDelta);
 	}
+	m_pCookingInfoCard->LateUpdate_GameObject(fTimeDelta);
 }
 
 void CCookingSelectUI::Render_GameObject()
@@ -163,9 +163,12 @@ void CCookingSelectUI::OnCollision(CGameObject* pObject)
 
 }
 
-CCookingSelectUI* CCookingSelectUI::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+CCookingSelectUI* CCookingSelectUI::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMessageChannel)
 {
 	CCookingSelectUI* pInstance = new CCookingSelectUI(pGraphicDev);
+
+	pInstance->m_pMessageChannel = pMessageChannel;
+	pInstance->m_pMessageChannel->AddRef();
 
 	if (FAILED(pInstance->Ready_GameObject()))
 	{
@@ -180,12 +183,13 @@ CCookingSelectUI* CCookingSelectUI::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 void CCookingSelectUI::AddFood()
 {
 
-	if (m_iCurCookingCount < m_iCookingCountMax && m_pCookingtargetFood->Get_CrftableCount() > 0)
+	if (m_iCurCookingCount < m_iCookingCountMax && m_pCookingtargetFood->Get_CraftableCount() > 0)
 	{
 		m_vecFood[m_iCurCookingCount]->Set_Render(true);
 		++m_iCurCookingCount;
-		tempResourceCount -= tempNeedRecipeCount;
-		m_pCookingtargetFood->CalcuCraftableCount(tempResourceCount, tempNeedRecipeCount);
+		m_iResourceCount -= m_pCookingInfoCard->Get_RecipeCount();
+		m_pCookingtargetFood->ApplayCraftableCount(-1);
+		m_pCookingInfoCard->ApplayRecourceCountText(-m_pCookingInfoCard->Get_RecipeCount());
 	}
 }
 
@@ -195,8 +199,9 @@ void CCookingSelectUI::DeleteFood()
 	{
 		--m_iCurCookingCount;
 		m_vecFood[m_iCurCookingCount]->Set_Render(false);
-		tempResourceCount += tempNeedRecipeCount;
-		m_pCookingtargetFood->CalcuCraftableCount(tempResourceCount, tempNeedRecipeCount);
+		m_iResourceCount += m_pCookingInfoCard->Get_RecipeCount();
+		m_pCookingInfoCard->ApplayRecourceCountText(m_pCookingInfoCard->Get_RecipeCount());
+		m_pCookingtargetFood->ApplayCraftableCount(1);
 	}
 }
 
@@ -209,6 +214,19 @@ void CCookingSelectUI::ReSetSelecting()
 	m_iCurCookingCount = 0;
 }
 
+
+void CCookingSelectUI::init_data()
+{
+	ReSetSelecting();
+	m_iResourceCount = CPersistentMgr::GetInstance()->Get_ResourceHistory()->GetIndexHistoryItemCount(TYPE_BERRY);
+	m_pCookingtargetFood->Set_CraftableCount(m_iResourceCount / m_pCookingInfoCard->Get_RecipeCount());
+	m_pCookingInfoCard->Init_CalcuResouceCount(m_iResourceCount);
+}
+
+_int CCookingSelectUI::Get_RecipeCount()
+{
+	return m_pCookingInfoCard->Get_RecipeCount();
+}
 
 void CCookingSelectUI::Free()
 {
@@ -229,6 +247,7 @@ void CCookingSelectUI::Free()
 		Safe_Release(ptr);
 	}
 	m_vecFood.clear();
+	Safe_Release(m_pCookingInfoCard);
 
 	CUi::Free();
 }
