@@ -65,6 +65,8 @@ _int CBuilding::Update_GameObject(const _float& fTimeDelta)
 
 	//m_pColliderCom->UpdateFromTransform(m_pTransformCom);
 
+	m_fAcmlTime += fTimeDelta;
+
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
 	for(size_t i = 0; i < m_vecSubObjects.size(); ++i)
@@ -93,6 +95,14 @@ void CBuilding::LateUpdate_GameObject(const _float& fTimeDelta)
 	if (!(m_fWorkGauge - m_fPreWorkGauge < 0.0001f))
 	{
 		m_pWorkBar->Active();
+	}
+	else
+	{
+		if (m_fAcmlTime >= 3.f)
+		{
+			m_pWorkBar->UnActive();
+			m_fAcmlTime = 0.f;
+		}
 	}
 
 	_vec3 vPos;
@@ -310,6 +320,7 @@ void CBuilding::Ready_Variable()
 {
 	_float fScale = 5.f;
 	m_pTransformCom->Set_Scale(fScale, fScale, fScale);
+	m_fAcmlTime = 0.f;
 
 	//Change_State(BS_CONSTRUCTING);
 	//m_fWorkGauge = 0.f;

@@ -5,11 +5,31 @@
 
 CScreenEffect::CScreenEffect(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CEffect(pGraphicDev)
+	, m_fAlpha(0.f)
+	, m_fScale(0.f)
+	, m_fRotation(0.f)
+	, m_fLifeTime(0.f)
+	, m_fFadeInTime(0.f)
+	, m_fFadeOutTime(0.f)
+	, m_fPulseTimer(0.f)
+	, m_fPulseSpeed(0.f)
+	, m_fBaseAlpha(0.f)
+	, m_fBaseScale(0.f)
 {
 }
 
 CScreenEffect::CScreenEffect(const CScreenEffect& rhs)
 	: CEffect(rhs)
+	, m_fAlpha(rhs.m_fAlpha)
+	, m_fScale(rhs.m_fScale)
+	, m_fRotation(rhs.m_fRotation)
+	, m_fLifeTime(rhs.m_fLifeTime)
+	, m_fFadeInTime(rhs.m_fFadeInTime)
+	, m_fFadeOutTime(rhs.m_fFadeOutTime)
+	, m_fPulseTimer(rhs.m_fPulseTimer)
+	, m_fPulseSpeed(rhs.m_fPulseSpeed)
+	, m_fBaseAlpha(rhs.m_fBaseAlpha)
+	, m_fBaseScale(rhs.m_fBaseScale)
 {
 }
 
@@ -26,6 +46,11 @@ HRESULT	CScreenEffect::Ready_GameObject()
 	m_fAlpha = 0.f;
 	m_fScale = 1.f;
 	m_fRotation = 0.f;
+	m_fLifeTime = 0.1f;
+
+	m_pTransformCom->Set_Pos(0.f, 0.f, 0.f);
+	m_pTransformCom->Set_Scale(_float(WINCX), _float(WINCY), 1.f);
+	//m_pTransformCom->Set_Scale(1.f, 1.f, 1.f);
 
 	return S_OK;
 }
@@ -76,6 +101,8 @@ _int CScreenEffect::Update_GameObject(const _float& fTimeDelta)
 
 void CScreenEffect::LateUpdate_GameObject(const _float& fTimeDelta)
 {
+	m_fDepth = 0.1f;
+
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
 }
 
@@ -83,14 +110,11 @@ void CScreenEffect::Render_GameObject()
 {
 	if (m_fAlpha <= 0.f) return;
 
-	DWORD dwAlpha = DWORD(m_fAlpha * 255.f);
-	DWORD dwOldColor, dwOldAlphaOp, dwOldAlphaArg1, dwOldAlphaArg2;
-	m_pGraphicDev->GetRenderState(D3DRS_TEXTUREFACTOR, &dwOldColor);
-	m_pGraphicDev->GetTextureStageState(0, D3DTSS_ALPHAOP, &dwOldAlphaOp);
-	m_pGraphicDev->GetTextureStageState(0, D3DTSS_ALPHAARG1, &dwOldAlphaArg1);
-	m_pGraphicDev->GetTextureStageState(0, D3DTSS_ALPHAARG2, &dwOldAlphaArg2);
+	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
 
-	m_pGraphicDev->SetRenderState(D3DRS_TEXTUREFACTOR, D3DCOLOR_ARGB(dwAlpha, 255, 255, 255));
+	DWORD dwAlpha = DWORD(m_fAlpha * 255.f);
+	m_pGraphicDev->SetRenderState(D3DRS_TEXTUREFACTOR,
+		D3DCOLOR_ARGB(dwAlpha, 255, 255, 255));
 	m_pGraphicDev->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
 	m_pGraphicDev->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
 	m_pGraphicDev->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_TFACTOR);
@@ -98,10 +122,8 @@ void CScreenEffect::Render_GameObject()
 	m_pTextureCom->Set_Texture(0);
 	m_pBufferCom->Render_Buffer();
 
-	m_pGraphicDev->SetRenderState(D3DRS_TEXTUREFACTOR, dwOldColor);
-	m_pGraphicDev->SetTextureStageState(0, D3DTSS_ALPHAOP, dwOldAlphaOp);
-	m_pGraphicDev->SetTextureStageState(0, D3DTSS_ALPHAARG1, dwOldAlphaArg1);
-	m_pGraphicDev->SetTextureStageState(0, D3DTSS_ALPHAARG2, dwOldAlphaArg2);
+	// 상태 복원 (선택적)
+	m_pGraphicDev->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1);
 }
 
 void CScreenEffect::Play()
@@ -114,10 +136,14 @@ void CScreenEffect::Play()
 
 void CScreenEffect::Stop()
 {
+	m_eState = ES_READY;
 }
 
 void CScreenEffect::Reset()
 {
+	m_eState = ES_READY;
+	m_fAccTime = 0.f;
+	m_fAlpha = 1.f;
 }
 
 void CScreenEffect::Pulse(const _float& fTimeDelta)
@@ -139,21 +165,23 @@ void CScreenEffect::Rotation(const _float& fTimeDelta)
 
 void CScreenEffect::Zoom(const _float& fTimeDelta)
 {
-	if (m_eType == SEF_DARK)
-	{
-		_float fRatio = m_fAccTime / m_fLifeTime;
-		m_fScale = MyLerp(1.5f, 1.f, fRatio);
-	}
-	else
-	{
-		_float fRatio = m_fAccTime / m_fLifeTime;
-		m_fScale = MyLerp(0.8f, 1.5f, fRatio);
-	}
+	//if (m_eType == SEF_DARK)
+	//{
+	//	_float fRatio = m_fAccTime / m_fLifeTime;
+	//	m_fScale = MyLerp(1.5f, 1.f, fRatio);
+	//}
+	//else
+	//{
+	//	_float fRatio = m_fAccTime / m_fLifeTime;
+	//	m_fScale = MyLerp(0.8f, 1.5f, fRatio);
+	//}
 }
 
-CScreenEffect* CScreenEffect::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+CScreenEffect* CScreenEffect::Create(LPDIRECT3DDEVICE9 pGraphicDev, const wstring& strProtoTexKey)
 {
 	CScreenEffect* pScreenEffect = new CScreenEffect(pGraphicDev);
+
+	pScreenEffect->m_strProtoTexKey = strProtoTexKey;
 
 	if (FAILED(pScreenEffect->Ready_GameObject()))
 	{
@@ -168,17 +196,28 @@ CScreenEffect* CScreenEffect::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 CScreenEffect* CScreenEffect::Clone()
 {
 	CScreenEffect* pScreenEffect = new CScreenEffect(*this);
-	
-	if (FAILED(pScreenEffect->Ready_GameObject()))
+
+	if (FAILED(pScreenEffect->CEffect::Add_Component()))
 	{
 		Safe_Release(pScreenEffect);
 		MSG_BOX("pScreenEffect Clone Failed");
 		return nullptr;
 	}
 
+	// 런타임 값 초기화
+	pScreenEffect->m_eState = ES_READY;
+	pScreenEffect->m_fAccTime = 0.f;
+
+	_vec3 vPos, vScale;
+	m_pTransformCom->Get_Info(INFO_POS, &vPos);
+	m_pTransformCom->Get_Scale(&vScale);
+	pScreenEffect->m_pTransformCom->Set_Pos(vPos.x, vPos.y, vPos.z);
+	pScreenEffect->m_pTransformCom->Set_Scale(vScale.x, vScale.y, vScale.z);
+
 	return pScreenEffect;
 }
 
 void CScreenEffect::Free()
 {
+	CEffect::Free();
 }

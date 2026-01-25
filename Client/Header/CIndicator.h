@@ -29,7 +29,7 @@ private:
 	_matrix		m_matWorld;         // 월드 행렬
 
 public:
-	static CIndicator* Create(LPDIRECT3DDEVICE9 pGraphicDev, const wstring& strProtoTexKey);
+	static	CIndicator* Create(LPDIRECT3DDEVICE9 pGraphicDev, const wstring& strProtoTexKey);
 	virtual CIndicator* Clone();
 
 private:

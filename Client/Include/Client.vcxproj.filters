@@ -346,9 +346,6 @@
     <Filter Include="01. Scene\01. Maps\08. RealDungeon">
       <UniqueIdentifier>{85febe2e-07d2-42fc-850d-8663b92acb9a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. Scene\01. Maps\04. Tutorial">
-      <UniqueIdentifier>{08f675a5-4005-4bed-9f8c-e9c1ef960dbb}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01. Scene\01. Maps\06. Dungeon">
       <UniqueIdentifier>{9560bf2c-af50-4eb8-bef4-9c6ceb52c988}</UniqueIdentifier>
     </Filter>
@@ -519,6 +516,9 @@
     </Filter>
     <Filter Include="02. GameObject\05. UI\13. WeaponInfo">
       <UniqueIdentifier>{46435509-dc5b-4c02-97e9-ebce58294faf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\01. Maps\04. Tutorial">
+      <UniqueIdentifier>{08f675a5-4005-4bed-9f8c-e9c1ef960dbb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1098,6 +1098,9 @@
     <ClInclude Include="..\Header\CWeaponInfo.h">
       <Filter>02. GameObject\05. UI\13. WeaponInfo</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CChargeArrow.h">
+      <Filter>02. GameObject\03. Dependent\01. Effect\04. Indicator</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1630,6 +1633,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CWeaponInfo.cpp">
       <Filter>02. GameObject\05. UI\13. WeaponInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CChargeArrow.cpp">
+      <Filter>02. GameObject\03. Dependent\01. Effect\04. Indicator</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -162,6 +162,7 @@
     <ClInclude Include="..\Header\CBossHpBarMiddle.h" />
     <ClInclude Include="..\Header\CBrute.h" />
     <ClInclude Include="..\Header\CBuilding.h" />
+    <ClInclude Include="..\Header\CChargeArrow.h" />
     <ClInclude Include="..\Header\CChest.h" />
     <ClInclude Include="..\Header\CCookingButton.h" />
     <ClInclude Include="..\Header\CCookingCover.h" />
@@ -234,7 +235,7 @@
     <ClInclude Include="..\Header\CResourceWorkFront.h" />
     <ClInclude Include="..\Header\CRestUI.h" />
     <ClInclude Include="..\Header\CScreenEffect.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\Header\CSpriteEffect.h" />
     <ClInclude Include="..\Header\CTarotCard.h" />
@@ -360,6 +361,7 @@
     <ClCompile Include="..\Code\CBossHpBarFront.cpp" />
     <ClCompile Include="..\Code\CBossHpBarMiddle.cpp" />
     <ClCompile Include="..\Code\CBrute.cpp" />
+    <ClCompile Include="..\Code\CChargeArrow.cpp" />
     <ClCompile Include="..\Code\CChest.cpp" />
     <ClCompile Include="..\Code\CBuilding.cpp" />
     <ClCompile Include="..\Code\CCookingButton.cpp" />
@@ -490,7 +492,7 @@
     <ClCompile Include="..\Code\CRestUI.cpp" />
     <ClCompile Include="..\Code\CSceneWarp.cpp" />
     <ClCompile Include="..\Code\CScreenEffect.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\Code\CSelectionArrow.cpp" />
     <ClCompile Include="..\Code\CSkyBox.cpp" />

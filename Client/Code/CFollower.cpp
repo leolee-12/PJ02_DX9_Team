@@ -8,6 +8,7 @@
 #include "CFollower_AI.h"
 #include "CDInputMgr.h"
 #include "CTriggerPoint.h"
+#include <CSoundMgr.h>
 
 CFollower::CFollower(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev),
@@ -181,6 +182,10 @@ void CFollower::WaitForCommand()
 	m_eCurWork = FW_NONE;
 	m_pAICom->Set_ActiveAI(false);
 	m_pAICom->Set_State(FOLLOWER_IDLE);
+
+	_tchar strSoundName[128] = L"";
+	swprintf_s(strSoundName, L"follower talk%d.wav", Get_Rand_Int(1, 8));
+	CSoundMgr::GetInstance()->Play(strSoundName, SOUND_DIALOGUE, 0.1f);
 }
 
 void CFollower::SetCommand(const FOLLOWER_WORK eWork)
@@ -300,6 +305,7 @@ void CFollower::Check_Frame()
 
 	case FOLLOWER_CHEER:
 		m_fFrameEnd = 48.f;
+		m_fFrame += Get_Rand_Int(0, 47);
 		break;
 
 	case FOLLOWER_TRANSFORM:
@@ -357,7 +363,9 @@ void CFollower::Check_Frame()
 
 void CFollower::Move_Frame(const _float& fTimeDelta)
 {
+	_uint iPreAnimFrame = _uint(m_fFrame);
 	m_fFrame += m_fFrameSpeed * fTimeDelta;
+	_uint iCurAnimFrame = _uint(m_fFrame);
 
 	if (m_fFrame >= m_fFrameEnd)
 	{
@@ -380,6 +388,30 @@ void CFollower::Move_Frame(const _float& fTimeDelta)
 				m_pAICom->Anim_End(m_eCurState);
 				m_eCurState = FOLLOWER_IDLE;
 			}
+		}
+	}
+	else if (iPreAnimFrame != iCurAnimFrame)
+	{
+		switch (m_eCurState)
+		{
+		case FOLLOWER_DANCE:
+			break;
+		case FOLLOWER_CHEER:
+		{
+			if (iCurAnimFrame == 1)
+			{
+				_int iRand = Get_Rand_Int(1, 3);
+
+				if (iRand == 1)
+				{
+					_uint iChannel = Get_Rand_Int(SOUND_EFFECT1, SOUND_EFFECT10);
+					_tchar strSoundName[128] = L"";
+					swprintf_s(strSoundName, L"cheer%d.wav", Get_Rand_Int(1, 9));
+					CSoundMgr::GetInstance()->Play(strSoundName, CHANNELID(iChannel), 0.02f);
+				}
+			}
+		}
+		break;
 		}
 	}
 }

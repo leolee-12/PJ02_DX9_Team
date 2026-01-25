@@ -16,6 +16,7 @@
 #include "CItem.h"
 #include "CMonster.h"
 #include "CProjectile.h"
+#include "CChargeArrow.h"
 #include "CInteractionUI.h"
 
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -34,7 +35,8 @@ CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
 	m_fChargeMax(3.f),
 	m_bMsgRegistered(false),
 	m_bIntro(false),
-	m_bAction(false)
+	m_bAction(false),
+	m_pChargeArrow(nullptr)
 {
 }
 
@@ -54,7 +56,8 @@ CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel)
 		m_fChargeMax(3.f),
 		m_bMsgRegistered(false),
 		m_bIntro(false),
-		m_bAction(false)
+		m_bAction(false),
+		m_pChargeArrow(nullptr)
 {
 }
 
@@ -75,7 +78,8 @@ CPlayer::CPlayer(const CPlayer& rhs)
 		m_fChargeMax(rhs.m_fChargeMax),
 		m_bMsgRegistered(rhs.m_bMsgRegistered),
 		m_bIntro(rhs.m_bIntro),
-		m_bAction(false)
+		m_bAction(false),
+		m_pChargeArrow(nullptr)
 {
 }
 
@@ -559,6 +563,31 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 			m_strFrameKey = L"charge-start";
 			m_fCharge += fTimeDelta;
 		}
+
+		// 화면 중앙 기준 방향 계산
+		POINT pt{};
+		GetCursorPos(&pt);
+		ScreenToClient(g_hWnd, &pt);
+
+		_float fCenterX = WINCX * 0.5f;
+		_float fCenterZ = WINCY * 0.5f;
+
+		_vec3 vDir;
+		vDir.x = (pt.x - fCenterX);
+		vDir.z = -(pt.y - fCenterZ);  // Y축 반전 (스크린→월드)
+		vDir.y = 0.f;
+		D3DXVec3Normalize(&m_vDir, &vDir);
+
+		// 화살표 이펙트에 방향 전달
+		if (!m_pChargeArrow)
+		{
+			m_pChargeArrow = static_cast<CChargeArrow*>(CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_INDICATOR_ARROW, 0, m_vPos, _vec3(0.f, 0.f, 1.f), this));
+		}
+
+		m_pChargeArrow->Update_OwnerData(m_vPos, m_vDir);
+		m_pChargeArrow->Set_Scale(_vec3(5.f * m_fCharge, 1.f * m_fCharge, 1.f * m_fCharge));
+		m_pChargeArrow->Play();
+		
 		//else if(m_strFrameKey == L"charge-loop")
 		//{
 		//	m_fFrame = 0.f;
@@ -590,8 +619,8 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 		if (m_strFrameKey == L"charge-start" || m_strFrameKey == L"charge-loop")
 		{
 			m_fFrame = 0.f;
-			m_fChargeMax = m_fCharge;
 			m_strFrameKey = L"charge-end";
+			m_pChargeArrow->Stop();
 
 			CProjectile* pTemp;
 			CGameObject* pProjectile = pTemp = CProjectile::Create(m_pGraphicDev, m_vPos, m_vDir * 10.f, false, CL_PBULLET, D3DXCOLOR(1.f, 0.f, 0.4f, 1.f));
@@ -954,7 +983,9 @@ void CPlayer::Charge(const _float& fTimeDelta)
 {
 	if (!m_fCharge) return;
 
-	m_fCharge += fTimeDelta;
+	m_fCharge += PLAYER_CHARGE_SPEED * fTimeDelta;
+
+	if(m_fCharge > m_fChargeMax) m_fCharge = m_fChargeMax;
 }
 
 void CPlayer::Set_Pos(const _vec3& vPos)
@@ -1087,6 +1118,7 @@ void CPlayer::Attacked(_int iDamage)
 	CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_PLAYERHIT, 6, _vec3(m_vPos.x, m_vPos.y - 1.f, m_vPos.z), _vec3(0.2f, 0.2f, 0.f));
 
 	m_iCombo = 0;
+	m_pInteractionUI->UnActive();
 }
 
 void CPlayer::Update_Warp(const _float fTimeDelta)
@@ -1240,6 +1272,12 @@ CPlayer* CPlayer::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 
 void CPlayer::Free()
 {
+	if (m_pChargeArrow)
+	{
+		m_pChargeArrow->Set_Dead();  // CEffectMgr가 정리
+		m_pChargeArrow = nullptr;
+	}
+
 	Safe_Release(m_pInteractionUI);
 	CGameObject::Free();
 }

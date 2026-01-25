@@ -53,14 +53,7 @@ private:
 	_int				m_iTextureIndex;
 	_float				m_fScale;
 	_float				m_fBaseScale;
-
-	// Vertex sway variables (replaced old Interaction vars)
-	_float				m_fPhase;
-	_float				m_fWindSpeed;
-	_float				m_fWindStrength;
-	_float				m_fAccTime;
-	_float				m_fReactStrength;
-	_vec3				m_vReactDir;
+	_float				m_fAcmlTime;
 
 	// 상호작용 관련
 	_float				m_fPreWorkGauge;

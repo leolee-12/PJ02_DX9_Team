@@ -202,7 +202,7 @@ void CRatau::Ready_Event()
 			m_eCurState = RATAU_TALK;
 			_tchar strSoundName[128] = L"";
 			swprintf_s(strSoundName, L"Ratau_Dial%d.wav", Get_Rand_Int(1, 15));
-			CSoundMgr::GetInstance()->Play(strSoundName, SOUND_DIALOUGE, 0.1f);
+			CSoundMgr::GetInstance()->Play(strSoundName, SOUND_DIALOGUE, 0.1f);
 		}
 	) });
 

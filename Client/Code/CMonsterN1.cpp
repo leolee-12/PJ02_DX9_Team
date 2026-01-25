@@ -269,6 +269,9 @@ void CMonsterN1::Ready_Event()
 		}
 	}
 	}) });
+
+		m_hmapSubHandles.insert({ L"Leshy.Appeared", m_pMessageChannel->Subscribe(L"Leshy.Appeared", [this](const IMessageChannel::EVENT& Event)
+			{ m_iHp = 0; }) });
 }
 
 void CMonsterN1::Check_Frame()
@@ -550,6 +553,7 @@ CMonsterN1* CMonsterN1::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* S
 	pMonster->m_pTransformCom->Set_Pos(vPos.x, pMonster->m_fGroundY, vPos.z);
 	pMonster->m_eCurState = eState;
 	pMonster->m_pAICom->Set_State(eState);
+	pMonster->m_pTransformCom->Update_Component(0.f);
 
 	return pMonster;
 }

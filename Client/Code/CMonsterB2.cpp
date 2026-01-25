@@ -493,6 +493,16 @@ void CMonsterB2::Move_Frame(const _float& fTimeDelta)
 			if (iCurAnimFrame == 27) m_pAICom->Set_Signal();
 		}
 		break;
+
+		case B2S_SPAWN:
+		{
+			if (iCurAnimFrame == 1)
+			{
+				IMessageChannel::EVENT tEvent;
+				tEvent.strType = L"Leshy.Appeared";
+				m_pMessageChannel->Publish(tEvent);
+			}
+		}
 		}
 	}
 }

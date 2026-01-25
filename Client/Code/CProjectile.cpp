@@ -8,6 +8,7 @@
 #include "CEffectMgr.h"
 //#include "CTrailEffect.h"
 #include "CIndicator.h"
+#include <CSoundMgr.h>
 
 CProjectile::CProjectile(LPDIRECT3DDEVICE9 pGraphicDev)
 	:	CGameObject(pGraphicDev)
@@ -134,6 +135,11 @@ void CProjectile::OnCollision(CGameObject* pObject)
 	if (pObject->Get_OBJID() == OID_PLAYER || pObject->Get_OBJID() == OID_MONSTER)
 	{
 		m_iHp = 0;
+
+		_uint iChannel = Get_Rand_Int(SOUND_EFFECT1, SOUND_EFFECT10);
+		_tchar strSoundName[128] = L"";
+		swprintf_s(strSoundName, L"Curse Projectile Impact_%d.wav", Get_Rand_Int(0, 3));
+		CSoundMgr::GetInstance()->Play(strSoundName, CHANNELID(iChannel), 0.005f);
 	}
 }
 
