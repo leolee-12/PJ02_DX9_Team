@@ -1118,6 +1118,7 @@ void CPlayer::Attacked(_int iDamage)
 	CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_PLAYERHIT, 6, _vec3(m_vPos.x, m_vPos.y - 1.f, m_vPos.z), _vec3(0.2f, 0.2f, 0.f));
 
 	m_iCombo = 0;
+	m_pInteractionUI->UnActive();
 }
 
 void CPlayer::Update_Warp(const _float fTimeDelta)

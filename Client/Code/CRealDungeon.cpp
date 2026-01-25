@@ -429,6 +429,20 @@ HRESULT CRealDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	if (FAILED(pLayer->Add_GameObject(L"NPC", pGameObject)))
 		return E_FAIL;
 
+	pGameObject = CItem::Create(m_pGraphicDev, m_pMessageChannel, _vec3(9.f * 0.8f, 0.f, 18.f * 0.8f), CItem::WP_SWORD, false, 0.f);
+
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+
+	if (FAILED(pLayer->Add_GameObject(L"WeaponItem", pGameObject)))
+		return E_FAIL;
+
+	pGameObject = CItem::Create(m_pGraphicDev, m_pMessageChannel, _vec3(20.f * 0.8f, 0.f, 18.f * 0.8f), CItem::WP_GAUNTLET, false, 0.f);
+
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+
+	if (FAILED(pLayer->Add_GameObject(L"WeaponItem", pGameObject)))
+		return E_FAIL;
+
 	_float fRadius = 10.f;
 	_float fRadian = 0.f;
 	_float fCount = 10.f;

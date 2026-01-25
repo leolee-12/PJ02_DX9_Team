@@ -400,11 +400,15 @@ void CFollower::Move_Frame(const _float& fTimeDelta)
 		{
 			if (iCurAnimFrame == 1)
 			{
-				_uint iChannel = Get_Rand_Int(SOUND_EFFECT1, SOUND_EFFECT10);
+				_int iRand = Get_Rand_Int(1, 3);
 
-				_tchar strSoundName[128] = L"";
-				swprintf_s(strSoundName, L"cheer%d.wav", Get_Rand_Int(1, 9));
-				CSoundMgr::GetInstance()->Play(strSoundName, CHANNELID(iChannel), 0.02f);
+				if (iRand == 1)
+				{
+					_uint iChannel = Get_Rand_Int(SOUND_EFFECT1, SOUND_EFFECT10);
+					_tchar strSoundName[128] = L"";
+					swprintf_s(strSoundName, L"cheer%d.wav", Get_Rand_Int(1, 9));
+					CSoundMgr::GetInstance()->Play(strSoundName, CHANNELID(iChannel), 0.02f);
+				}
 			}
 		}
 		break;
