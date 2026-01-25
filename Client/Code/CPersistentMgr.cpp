@@ -66,6 +66,9 @@ HRESULT CPersistentMgr::Ready_GlobalObjects(LPDIRECT3DDEVICE9 pGraphicDev)
 		if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_Calculator", Engine::CCalculator::Create(pGraphicDev))))
 			return E_FAIL;
 
+		if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_InteractionUI", Engine::CTexture::Create(pGraphicDev, TEX_NORMAL, L"../Bin/Resource/YSH/UI/dds/Interaction.dds", 1))))
+			return E_FAIL;
+
 		m_pPlayer = CPlayer::Create(pGraphicDev);
 
 		if (nullptr == m_pPlayer)

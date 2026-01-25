@@ -1,48 +1,33 @@
 ﻿#include "pch.h"
-#include "CCookingSelectBack.h"
+#include "CInteractionUI.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
 
-CCookingSelectBack::CCookingSelectBack(LPDIRECT3DDEVICE9 pGraphicDev)
+CInteractionUI::CInteractionUI(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CUi(pGraphicDev), m_pBufferCom(nullptr), m_pTransformCom(nullptr)
 {
 	ZeroMemory(&m_vPos, sizeof(_vec3));
 }
 
-CCookingSelectBack::~CCookingSelectBack()
+CInteractionUI::~CInteractionUI()
 {
 }
 
-HRESULT CCookingSelectBack::Ready_GameObject()
+HRESULT CInteractionUI::Ready_GameObject()
 {
 	if (FAILED(Add_Component()))
 		return E_FAIL;
 
-	m_pTransformCom->Set_Scale(WINCX/2, WINCY, 0.f);
-	m_pTransformCom->Set_Pos(-WINCX/4, 0, 0.49f);
+	m_pTransformCom->Set_Scale((900.f * 0.15f), (374.f * 0.15f), 1.f);
+	m_pTransformCom->Set_Pos(0.f, -275.f, 0.2f);
 
 	return S_OK;
 }
 
-HRESULT CCookingSelectBack::Ready_Material()
+_int CInteractionUI::Update_GameObject(const _float& fTimeDelta)
 {
-	D3DMATERIAL9			tMtrl;
-	ZeroMemory(&tMtrl, sizeof(D3DMATERIAL9));
+	if (!m_bActive) { return NOEVENT; }
 
-	tMtrl.Diffuse = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-	tMtrl.Specular = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-	tMtrl.Ambient = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-
-	tMtrl.Emissive = D3DXCOLOR(1.f, 0.f, 0.f, 1.f);
-	tMtrl.Power = 0.f;
-
-	m_pGraphicDev->SetMaterial(&tMtrl);
-
-	return S_OK;
-}
-
-_int CCookingSelectBack::Update_GameObject(const _float& fTimeDelta)
-{
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
 	CRenderer::GetInstance()->Add_RenderGroup(RENDER_UI, this);
@@ -50,14 +35,16 @@ _int CCookingSelectBack::Update_GameObject(const _float& fTimeDelta)
 	return iExit;
 }
 
-void CCookingSelectBack::LateUpdate_GameObject(const _float& fTimeDelta)
+void CInteractionUI::LateUpdate_GameObject(const _float& fTimeDelta)
 {
+	if (!m_bActive) { return; }
+
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
 	m_pTransformCom->Get_Info(INFO_POS, &m_vPos);
 	Compute_ViewDepth_Ortho(&m_vPos);
 }
 
-void CCookingSelectBack::Render_GameObject()
+void CInteractionUI::Render_GameObject()
 {
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
 
@@ -66,12 +53,12 @@ void CCookingSelectBack::Render_GameObject()
 	m_pBufferCom->Render_Buffer();
 }
 
-void CCookingSelectBack::OnCollision(CGameObject* pObject)
+void CInteractionUI::OnCollision(CGameObject* pObject)
 {
 
 }
 
-HRESULT CCookingSelectBack::Add_Component()
+HRESULT CInteractionUI::Add_Component()
 {
 	Engine::CComponent* pComponent = nullptr;
 
@@ -94,7 +81,7 @@ HRESULT CCookingSelectBack::Add_Component()
 	m_mapComponent[ID_DYNAMIC].insert({ L"Com_Transform", pComponent });
 
 	pComponent = m_pTextureCom = dynamic_cast<Engine::CTexture*>
-		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_CookingSelectBack"));
+		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_InteractionUI"));
 
 	if (nullptr == pComponent)
 		return E_FAIL;
@@ -106,21 +93,21 @@ HRESULT CCookingSelectBack::Add_Component()
 
 
 
-CCookingSelectBack* CCookingSelectBack::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+CInteractionUI* CInteractionUI::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 {
-	CCookingSelectBack* pCookingSelectBack = new CCookingSelectBack(pGraphicDev);
+	CInteractionUI* pInteractionUI = new CInteractionUI(pGraphicDev);
 
-	if (FAILED(pCookingSelectBack->Ready_GameObject()))
+	if (FAILED(pInteractionUI->Ready_GameObject()))
 	{
-		Safe_Release(pCookingSelectBack);
-		MSG_BOX("pCCookingSelectBack Create Failed");
+		Safe_Release(pInteractionUI);
+		MSG_BOX("pInteractionUI Create Failed");
 		return nullptr;
 	}
 
-	return pCookingSelectBack;
+	return pInteractionUI;
 }
 
-void CCookingSelectBack::Free()
+void CInteractionUI::Free()
 {
 	CUi::Free();
 }

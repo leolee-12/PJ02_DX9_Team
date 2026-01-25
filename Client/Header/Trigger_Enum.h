@@ -11,7 +11,7 @@ namespace Trigger
 		TI_SCENE,
 		TI_KNUCKLE,
 		TI_FOLLOWER,
-		TI_FOOD,
+		TI_ITEM,
 		TI_END
 	};
 }

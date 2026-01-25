@@ -646,7 +646,8 @@ void CMonsterB2::Attacked(const _int& iAttack)
 void CMonsterB2::Update_State()
 {
 	if (m_eCurState == B2S_SPAWN ||
-		m_eCurState == B2S_ESCAPE) return;
+		m_eCurState == B2S_ESCAPE ||
+		m_eCurState == B2S_DIE ) return;
 
 	m_eCurState = m_pAICom->Get_RecommendState<MONSTER_B2_STATE>();
 }
@@ -699,24 +700,12 @@ void CMonsterB2::Check_Status()
 {
 	//m_pColliderCom->UpdateFromTransform(m_pTransformCom);
 
-	//------스프라이트 높이와 충돌체 위치 맞춤---------
-	_float fY(0.f);
-	if (m_eCurState == B2S_SPAWN || m_eCurState == B2S_DIG ||
-		m_eCurState == B2S_JUMP || m_eCurState == B2S_DIVE)
-		 fY = m_vPos.y - m_pTransformCom->Get_Scale(ROT_Y) * 0.24f;	// 충돌체 위치를 내려서 공격받지 않게 무적상태 구현
-	else fY = m_vPos.y + m_pTransformCom->Get_Scale(ROT_Y) * 0.06f;
-	AABB tAABB = { m_vPos.x, fY, m_vPos.z + 2.5f, 2.5f, 2.5f, 2.5f };
-	m_pColliderCom->Set_AABB(tAABB);
-	m_pColliderCom->UpdateFromCustom(tAABB);
-	if (g_bDebug) m_pColliderCom->Update_AABBforRender();
-	m_vEffectPos = { m_vPos.x + 1.f, fY, m_vPos.z };
-	//-------------------------------------------------
-
 	// 충돌체 디버그용
 
 	if ((m_iPhase != 0) && (m_iHp <= 0))
 	{
 		m_pColliderCom->UnregisterFromManager();
+		m_eCurState = B2S_DIE;
 		m_pAICom->Set_State(B2S_DIE);
 		m_iPhase = 0;
 
@@ -741,6 +730,22 @@ void CMonsterB2::Check_Status()
 		ESummonDead.strType = L"Summon.Dead";
 		ESummonDead.hmapData.emplace(L"LayerTag", L"Summon_Layer");
 		m_pMessageChannel->Publish(ESummonDead);
+	}
+	else if (m_iHp > 0)
+	{
+		//------스프라이트 높이와 충돌체 위치 맞춤---------
+		_float fY(0.f);
+		if (m_eCurState == B2S_SPAWN || m_eCurState == B2S_DIG ||
+			m_eCurState == B2S_JUMP || m_eCurState == B2S_DIVE)
+			fY = m_vPos.y - m_pTransformCom->Get_Scale(ROT_Y) * 0.24f;	// 충돌체 위치를 내려서 공격받지 않게 무적상태 구현
+
+		else fY = m_vPos.y + m_pTransformCom->Get_Scale(ROT_Y) * 0.06f;
+		AABB tAABB = { m_vPos.x, fY, m_vPos.z + 2.5f, 2.5f, 2.5f, 2.5f };
+		m_pColliderCom->Set_AABB(tAABB);
+		m_pColliderCom->UpdateFromCustom(tAABB);
+		if (g_bDebug) m_pColliderCom->Update_AABBforRender();
+		m_vEffectPos = { m_vPos.x + 1.f, fY, m_vPos.z };
+		//-------------------------------------------------
 	}
 }
 

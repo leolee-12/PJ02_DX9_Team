@@ -73,7 +73,7 @@ _int CBuilding::Update_GameObject(const _float& fTimeDelta)
 	}
 
 	if (m_eBuildingState == BS_CONSTRUCTING) 	Update_WorkBar(fTimeDelta);
-	else										m_pTrigger->Update_GameObject(fTimeDelta);
+	else if (m_bUsingTrigger)					m_pTrigger->Update_GameObject(fTimeDelta);
 
 	if (iExit == DEAD)
 	{
@@ -100,7 +100,7 @@ void CBuilding::LateUpdate_GameObject(const _float& fTimeDelta)
 
 	if (m_eBuildingState == BS_COMPLETE)
 	{
-		m_pTrigger->LateUpdate_GameObject(fTimeDelta);
+		if (m_bUsingTrigger) { m_pTrigger->LateUpdate_GameObject(fTimeDelta); }
 
 		//m_pTransformCom->Compute_Bilboard(BBD_X);
 
@@ -395,7 +395,8 @@ void CBuilding::Ready_Trigger()
 		m_pTrigger = CTriggerPoint::Create(m_pGraphicDev, m_pMessageChannel, vTriggerPos, vTriggetHalfSize, Trigger::TI_KNUCKLE, L"KnuckleBone");
 		break;
 	case BT_SHRINE:
-		m_pTrigger = CTriggerPoint::Create(m_pGraphicDev, m_pMessageChannel, vTriggerPos, vTriggetHalfSize, Trigger::TI_CRAFTING, L"Crafting");
+		//m_pTrigger = CTriggerPoint::Create(m_pGraphicDev, m_pMessageChannel, vTriggerPos, vTriggetHalfSize, Trigger::TI_CRAFTING, L"Crafting");
+		m_bUsingTrigger = false;
 		break;
 	}
 }
