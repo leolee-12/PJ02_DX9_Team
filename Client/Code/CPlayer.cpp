@@ -106,6 +106,7 @@ _int CPlayer::Update_GameObject(const _float& fTimeDelta)
 	Charge(fTimeDelta);
 	Move_Frame(fTimeDelta);
 	Update_Warp(fTimeDelta);
+	Check_Scale();
 	
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
@@ -173,6 +174,9 @@ void CPlayer::Ready_Variable()
 	m_fPassion = 4.f;
 	m_fFaith = 50.f;
 
+	//m_eWeaponType = WT_SWORD;
+	m_eWeaponType = WT_GAUNTLETS;
+
 	m_eOBJID = OID_PLAYER;
 	_float fScale = PLAYER_DEFAULT_SCALE;
 	m_pTransformCom->Set_Scale(fScale, fScale, fScale);		// Player 폴더
@@ -219,7 +223,6 @@ void CPlayer::Ready_Event()
 		{
 			Attacked(any_cast<_int>(Event.hmapData.find(L"Attack")->second));
 		}
-
 	}
 	}) });
 
@@ -513,7 +516,9 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 	//if (GetAsyncKeyState(VK_LBUTTON) & 0x0001)	// 눌렀을 때 한 번만 true
 	if (CDInputMgr::GetInstance()->Mouse_Down(DIM_LB))
 	{			
-		if ((m_iCombo == 3) || (m_fCharge)) return;
+		if ((m_iCombo == m_iMaxCombo) || (m_fCharge)) return;
+
+		if (m_fAcmlTime2 < m_fComboDelay) return;
 
 		m_iCombo++;
 		m_bRoll = false;
@@ -522,11 +527,12 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 		//m_pTransformCom->Move_Pos(&m_vDir, fTimeDelta, m_fSpeed * 3.f);
 		m_vLerpPos = m_vPos + m_vDir * 1.f;
 		m_fLerp = 0.2f;
+		m_fAcmlTime2 = 0.f;
 		CSoundMgr::GetInstance()->Play(L"Player_Attack.wav", SOUND_EFFECT, 0.4f);
 		Attack_HitBox();
 	}
 
-	if (GetAsyncKeyState(VK_RBUTTON) & 0x0001)	// 눌렀을 때 한 번만 true
+	if (CDInputMgr::GetInstance()->Mouse_Pressing(DIM_RB))	// 눌렀을 때 한 번만 true
 	{
 		if ((m_bRoll) || (m_iCombo)) return;
 
@@ -540,7 +546,35 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 			m_strFrameKey = L"charge-start";
 			m_fCharge += fTimeDelta;
 		}
-		else if(m_strFrameKey == L"charge-loop")
+		//else if(m_strFrameKey == L"charge-loop")
+		//{
+		//	m_fFrame = 0.f;
+		//	m_fChargeMax = m_fCharge;
+		//	m_strFrameKey = L"charge-end";
+		//
+		//	CProjectile* pTemp;
+		//	CGameObject* pProjectile = pTemp = CProjectile::Create(m_pGraphicDev, m_vPos, m_vDir * 10.f, false, CL_PBULLET, D3DXCOLOR(1.f, 0.f, 0.4f, 1.f));
+		//
+		//	_float fScale(1.5f + m_fCharge);
+		//	static_cast<CTransform*>(pProjectile->Get_Component(ID_DYNAMIC, L"Com_Transform"))->Set_Scale(fScale, fScale, fScale);
+		//
+		//	if (pProjectile)
+		//	{
+		//		wstring strObjTag = L"Projectile";
+		//
+		//		IMessageChannel::EVENT EProjectile;
+		//		EProjectile.strType = L"Obj.Add";
+		//		EProjectile.eOBJID = Engine::OID_PROJECTILE;
+		//		EProjectile.hmapData.emplace(L"Obj", pProjectile);
+		//		EProjectile.hmapData.emplace(L"LayerTag", L"GameLogic_Layer");
+		//		EProjectile.hmapData.emplace(L"ObjTag", strObjTag);
+		//		m_pMessageChannel->Publish(EProjectile);
+		//	}
+		//}
+	}
+	else if (CDInputMgr::GetInstance()->Mouse_Up(DIM_RB))
+	{
+		if (m_strFrameKey == L"charge-start" || m_strFrameKey == L"charge-loop")
 		{
 			m_fFrame = 0.f;
 			m_fChargeMax = m_fCharge;
@@ -644,7 +678,20 @@ void CPlayer::Check_Frame()
 
 	case PS_ATTACK:
 	{
-		m_fFrameEnd = m_pTextureCom->Get_TextureEnd(L"attack-combo1");
+		switch (m_eWeaponType)
+		{
+			case WT_SWORD:
+				m_fFrameEnd = m_pTextureCom->Get_TextureEnd(L"attack-combo1");
+				m_iMaxCombo = 3;
+				m_fComboDelay = SWORD_COMBO_DELAY_TIME;
+				break;
+
+			case WT_GAUNTLETS:
+				m_fFrameEnd = m_pTextureCom->Get_TextureEnd(L"attack-gauntlets-combo1");
+				m_iMaxCombo = 4;
+				m_fComboDelay = GAUNTLETS_COMBO_DELAY_TIME;
+				break;
+		}
 	}
 	break;
 
@@ -677,10 +724,25 @@ void CPlayer::Check_Frame()
 	m_ePreState = m_eCurState;
 }
 
+void CPlayer::Check_Scale()
+{
+	if ((m_eCurState == PS_ATTACK) && (m_iCombo == 4))
+	{
+		_float fScale = 11.f;
+		m_pTransformCom->Set_Scale(fScale, fScale, fScale);
+	}
+	else if (m_eCurState != PS_REBIRTH)
+	{
+		_float fScale = PLAYER_DEFAULT_SCALE;
+		m_pTransformCom->Set_Scale(fScale, fScale, fScale);
+	}
+}
+
 void CPlayer::Move_Frame(const _float& fTimeDelta)
 {
 	m_fFrame += m_fFrameSpeed * fTimeDelta;
 	m_fAcmlTime += fTimeDelta;
+	m_fAcmlTime2 += fTimeDelta;
 	m_fFaith -= FAITH_DECREASE_RATE * fTimeDelta;
 
 	if (m_fFaith < 0.f) m_fFaith = 0.f;
@@ -834,9 +896,21 @@ void CPlayer::Set_FrameKey()
 
 		case PS_ATTACK:
 		{
-			if		(m_iCombo == 1)	m_strFrameKey = L"attack-combo1";
-			else if (m_iCombo == 2)	m_strFrameKey = L"attack-combo2";
-			else if (m_iCombo == 3)	m_strFrameKey = L"attack-combo3";
+			switch (m_eWeaponType)
+			{
+			case WT_SWORD:
+				if		(m_iCombo == 1)	m_strFrameKey = L"attack-combo1";
+				else if (m_iCombo == 2)	m_strFrameKey = L"attack-combo2";
+				else if (m_iCombo == 3)	m_strFrameKey = L"attack-combo3";
+				break;
+
+			case WT_GAUNTLETS:
+				if		(m_iCombo == 1)	m_strFrameKey = L"attack-combo1-gauntlets";
+				else if (m_iCombo == 2)	m_strFrameKey = L"attack-combo2-gauntlets";
+				else if (m_iCombo == 3)	m_strFrameKey = L"attack-combo3-gauntlets";
+				else if (m_iCombo == 4)	m_strFrameKey = L"attack-combo4-gauntlets";
+				break;
+			}
 		}
 		break;
 

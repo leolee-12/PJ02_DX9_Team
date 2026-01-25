@@ -166,9 +166,8 @@ void CFollower::OnCollision(CGameObject* pObject)
 			m_pTransformCom->Compute_Bilboard(BBD_X);
 			m_vLerpPos = vCurPos;
 
-
 			_vec3 vDir = m_vPos - vCurPos;
-			m_pAICom->Set_Dir(-vDir);
+			m_pAICom->Set_Dir(-*D3DXVec3Normalize(&vDir, &vDir));
 			m_pAICom->Set_TargetTransform(nullptr);
 		}
 

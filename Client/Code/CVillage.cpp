@@ -397,13 +397,18 @@ HRESULT CVillage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	}
 
 	// Village 지형물
-	for (int i = 0; i < 12; ++i)
+	_float fRadius(0.f);
+	_float fRadian(0.f);
+	for (int i = 0; i < 18; ++i)
 	{
+		fRadius = Get_Rand_Float(17.5f, 35.f);
+		fRadian = Get_Rand_Float(0.f, D3DX_PI * 2.f);
+
 		OBJECTDATA tObjData1 = {"BreakableRock",						// 카테고리
 								0,										// 텍스처인덱스
-								199.8f + Get_Rand_Float(-30.f, 30.f),	// x
-								-0.5f,									// y
-								35.f + Get_Rand_Float(-30.f, 30.f),		// z
+								200.f + fRadius * cosf(fRadian),		// x
+								-0.75f,									// y
+								37.5f + fRadius * sinf(fRadian),		// z
 								5.f,									// 스케일
 								0 };									// Standing or Floor
 
@@ -412,11 +417,14 @@ HRESULT CVillage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 		if (FAILED(pLayer->Add_GameObject(L"Breakable", pGameObject)))
 			return E_FAIL;
 
+		fRadius = Get_Rand_Float(17.5f, 35.f);
+		fRadian = Get_Rand_Float(0.f, D3DX_PI * 2.f);
+
 		OBJECTDATA tObjData2 = {"BreakableTree",						// 카테고리
 								0,										// 텍스처인덱스
-								199.8f + Get_Rand_Float(-30.f, 30.f),	// x
-								2.5f,									// y
-								35.f + Get_Rand_Float(-30.f, 30.f),		// z
+								200.f + fRadius * cosf(fRadian),		// x
+								1.75f,									// y
+								37.5f + fRadius * sinf(fRadian),		// z
 								10.f,									// 스케일
 								0 };									// Standing or Floor
 
