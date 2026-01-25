@@ -10,6 +10,8 @@ CChargeArrow::CChargeArrow(LPDIRECT3DDEVICE9 pGraphicDev)
 
 CChargeArrow::CChargeArrow(const CChargeArrow& rhs)
 	: CEffect(rhs)
+	, m_pPixelShader(rhs.m_pPixelShader)
+	, m_fRatio(rhs.m_fRatio)
 {
 }
 
@@ -27,6 +29,11 @@ HRESULT	CChargeArrow::Ready_GameObject()
 	_float fScale = 4.f;
 	m_pTransformCom->Set_Scale(fScale, fScale, fScale);
 
+	m_vDepth = { 0.f, 0.f, FLT_MAX };
+
+	if (FAILED(Ready_PixelShader()))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -36,7 +43,13 @@ _int CChargeArrow::Update_GameObject(const _float& fTimeDelta)
 
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
-	CRenderer::GetInstance()->Add_RenderGroup(RENDER_TILE, this);
+	//CRenderer::GetInstance()->Add_RenderGroup(RENDER_TILE, this);
+	CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHA, this);
+
+	_tchar szPos[256] = L"";
+	swprintf_s(szPos, L"[차지에로우] Ratio값 : %.2f", m_fRatio);
+	OutputDebugString(szPos);
+	OutputDebugString(L"\n");
 
 	return NOEVENT;
 }
@@ -65,7 +78,7 @@ void CChargeArrow::LateUpdate_GameObject(const _float& fTimeDelta)
 	m_matWorld = matScale * matRotX * matRotY * matTrans;
 
 	// 뷰 뎁스는 바닥 기준
-	Compute_ViewDepth(&vPos);
+	//Compute_ViewDepth(&vPos);
 
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
 }
@@ -73,23 +86,14 @@ void CChargeArrow::LateUpdate_GameObject(const _float& fTimeDelta)
 void CChargeArrow::Render_GameObject()
 {
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, &m_matWorld);
-	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 
-	//m_pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
-	//m_pGraphicDev->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-	//m_pGraphicDev->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
-
-	m_pGraphicDev->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
-	m_pGraphicDev->SetRenderState(D3DRS_ALPHAREF, 0x08);
-	m_pGraphicDev->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
+	m_pGraphicDev->SetPixelShader(m_pPixelShader);
+	m_pGraphicDev->SetPixelShaderConstantF(0, &m_fRatio, 1);
 
 	m_pTextureCom->Set_Texture(0);
 	m_pBufferCom->Render_Buffer();
 
-	//m_pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
-	m_pGraphicDev->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
-
-	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
+	m_pGraphicDev->SetPixelShader(NULL);
 }
 
 void CChargeArrow::Play()
@@ -108,10 +112,53 @@ void CChargeArrow::Reset()
 	m_vDir = _vec3(0.f, 0.f, 1.f);
 }
 
-void CChargeArrow::Update_OwnerData(const _vec3& vPos, const _vec3& vDir)
+void CChargeArrow::Update_OwnerData(const _vec3& vPos, const _vec3& vDir, _float fRatio)
 {
 	m_pTransformCom->Set_Pos(vPos.x, vPos.y, vPos.z);  // 발 아래
 	m_vDir = vDir;
+	m_fRatio = fRatio;
+}
+
+HRESULT CChargeArrow::Ready_PixelShader()
+{
+	LPD3DXBUFFER pCode = NULL;
+	LPD3DXBUFFER pError = NULL;
+
+	// HLSL 파일 컴파일 
+	HRESULT hr = D3DXCompileShaderFromFile(
+		L"../Shader/Arrow.hlsl", // 파일명 
+		NULL, // 매크로 
+		NULL, // include 
+		"PS_Arrow", // 엔트리 포인트 
+		"ps_2_0", // 셰이더 모델 
+		0, // 플래그 
+		&pCode,
+		&pError,
+		NULL);
+
+	if (FAILED(hr))
+	{
+		if (pError)
+		{
+			MessageBoxA(NULL,
+				(char*)pError->GetBufferPointer(),
+				"Shader Error",
+				MB_OK);
+			pError->Release();
+		}
+		return E_FAIL;
+	} // 픽셀 셰이더 생성 
+
+	if (pCode) {
+		m_pGraphicDev->CreatePixelShader((DWORD*)pCode->GetBufferPointer(), &m_pPixelShader);
+		pCode->Release();
+	}
+
+	if (pError) {
+		pError->Release();
+	}
+
+	return S_OK;
 }
 
 CChargeArrow* CChargeArrow::Create(LPDIRECT3DDEVICE9 pGraphicDev, const wstring& strProtoTexKey)
@@ -150,5 +197,6 @@ CChargeArrow* CChargeArrow::Clone()
 
 void CChargeArrow::Free()
 {
+	if (!m_bClone) { Safe_Release(m_pPixelShader); }
 	CEffect::Free();
 }

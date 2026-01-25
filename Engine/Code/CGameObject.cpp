@@ -17,7 +17,7 @@ CGameObject::CGameObject(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* SceneCh
 
 CGameObject::CGameObject(const CGameObject& rhs)
     : m_pGraphicDev(rhs.m_pGraphicDev), m_pMessageChannel(nullptr), m_eOBJID(rhs.m_eOBJID)
-    , m_fDepth(rhs.m_fDepth)
+    , m_fDepth(rhs.m_fDepth), m_vDepth(rhs.m_vDepth)
 {
 	m_pGraphicDev->AddRef();
 }

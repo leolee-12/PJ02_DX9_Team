@@ -19,11 +19,22 @@ public:
 	virtual void    Stop() override;
 	virtual void    Reset() override;
 
-	void			Update_OwnerData(const _vec3& vPos, const _vec3& vDir);
+	// Ratio는 0~1로 클램핑 된 값 넣어줄것
+	void			Update_OwnerData(const _vec3& vPos, const _vec3& vDir, _float fRatio);
 
+private:
+	HRESULT 		Ready_PixelShader();
+
+private:
 	// ─── 런타임 값 ───
 	_vec3       m_vDir;				// 계산된 착탄 지점
 	_matrix		m_matWorld;			// 월드 행렬
+
+	// 셰이딩용 변수
+	_float		m_fRatio = 0.f;
+
+	LPDIRECT3DPIXELSHADER9 m_pPixelShader;
+
 
 public:
 	static	CChargeArrow* Create(LPDIRECT3DDEVICE9 pGraphicDev, const wstring& strProtoTexKey);

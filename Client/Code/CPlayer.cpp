@@ -161,10 +161,10 @@ void CPlayer::Render_GameObject()
 
 	m_pGraphicDev->SetTextureStageState(0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE);
 
-	_tchar szPos[256] = L"";
+	/*_tchar szPos[256] = L"";
 	swprintf_s(szPos, L"[플레이어] 플레이어 중점 위치 X : %f, Y : %f, Z : %f", m_vPos.x, m_vPos.y, m_vPos.z);
 	OutputDebugString(szPos);
-	OutputDebugString(L"\n");
+	OutputDebugString(L"\n");*/
 
 	//_tchar szPos[256] = L"";
 	//swprintf_s(szPos, L"a : %d, r : %d, g : %d, b : %d", Test_a, Test_r, Test_g, Test_b);
@@ -584,7 +584,7 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 			m_pChargeArrow = static_cast<CChargeArrow*>(CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_INDICATOR_ARROW, 0, m_vPos, _vec3(0.f, 0.f, 1.f), this));
 		}
 
-		m_pChargeArrow->Update_OwnerData(m_vPos, m_vDir);
+		m_pChargeArrow->Update_OwnerData(m_vPos, m_vDir, clamp((m_fCharge / m_fChargeMax), 0.f, 1.f));
 		m_pChargeArrow->Set_Scale(_vec3(5.f * m_fCharge, 1.f * m_fCharge, 1.f * m_fCharge));
 		m_pChargeArrow->Play();
 		

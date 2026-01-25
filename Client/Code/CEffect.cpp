@@ -29,6 +29,7 @@ CEffect::CEffect(const CEffect& rhs)
 	, m_bLoop(rhs.m_bLoop)
 	, m_pOwner(nullptr)
 	, m_iTexIdx(rhs.m_iTexIdx)
+	, m_bClone(true)
 {
 	m_strProtoTexKey = rhs.m_strProtoTexKey;
 }
