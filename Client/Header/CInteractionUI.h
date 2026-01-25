@@ -8,12 +8,12 @@ namespace Engine
 	class CTexture;
 }
 
-class CResourceHistoryBack :
+class CInteractionUI :
 	public CUi
 {
 private:
-	explicit CResourceHistoryBack(LPDIRECT3DDEVICE9 pGraphicDev);
-	virtual ~CResourceHistoryBack();
+	explicit CInteractionUI(LPDIRECT3DDEVICE9 pGraphicDev);
+	virtual ~CInteractionUI();
 
 public:
 	virtual			HRESULT		Ready_GameObject();
@@ -22,10 +22,12 @@ public:
 	virtual			void		Render_GameObject();
 	virtual			void		OnCollision(CGameObject* pObject);
 
+	void			Active() { m_bActive = true; }
+	void			UnActive() { m_bActive = false; }
+
 public:
-	static CResourceHistoryBack* Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 _vPos, float _fScale);
-	void	Set_Pos(_vec3 _vPos) { m_vPos = _vPos; }
-	void	Set_Page(_int i) { m_iPage = i; }
+	static CInteractionUI* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+
 private:
 	virtual			void		Free();
 
@@ -36,8 +38,6 @@ private:
 	CTransform* m_pTransformCom;
 	CTexture* m_pTextureCom;
 
-	_vec3	m_vPos;
-	float	m_fScale;
-	_int	m_iPage;
+	_bool	 m_bActive = false;
 };
 

@@ -602,7 +602,7 @@ void CFollower::Execute_Work(const _float& fTimeDelta)
 	}
 }
 
-CFollower* CFollower::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, const _tchar* pProtoKey)
+CFollower* CFollower::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, const wstring& pProtoKey)
 {
 	CFollower* pFollower = new CFollower(pGraphicDev, StageChannel);
 
@@ -618,7 +618,7 @@ CFollower* CFollower::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* Sta
 	return pFollower;
 }
 
-CFollower* CFollower::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, const _tchar* pProtoKey, const _vec3& vPos, FOLLOWER_STATE eState)
+CFollower* CFollower::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, const wstring& pProtoKey, const _vec3& vPos, FOLLOWER_STATE eState)
 {
 	CFollower* pFollower = new CFollower(pGraphicDev, StageChannel);
 
@@ -632,6 +632,7 @@ CFollower* CFollower::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* Sta
 	}
 
 	pFollower->m_pTransformCom->Set_Pos(vPos.x, pFollower->m_fGroundY, vPos.z);
+	pFollower->m_pTransformCom->Update_Component(0.f);
 	pFollower->m_eCurState = eState;
 	pFollower->m_pAICom->Set_State(eState);
 

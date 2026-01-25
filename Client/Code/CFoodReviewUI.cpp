@@ -112,7 +112,7 @@ _int CFoodReviewUI::Update_GameObject(const _float& fTimeDelta)
 	{
 		if (!m_soundPlayed)
 		{
-			CSoundMgr::GetInstance()->Play(m_szSoundText.c_str(), SOUND_EFFECT, 0.6f);
+			CSoundMgr::GetInstance()->Play(m_szSoundText.c_str(), SOUND_DIALOGUE, 0.6f);
 			m_soundPlayed = true;
 		}
 		m_pReviewImageUI->Update_GameObject(fTimeDelta);

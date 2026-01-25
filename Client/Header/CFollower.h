@@ -88,8 +88,8 @@ private:
 	static constexpr _float FW_DEFAULT_WORK_GAP_TIME = 1.f;
 
 public:
-	static CFollower*	Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, const _tchar* pProtoTexKey);
-	static CFollower* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, const _tchar* pProtoTexKey, const _vec3& vPos, FOLLOWER_STATE eState);
+	static CFollower*	Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, const wstring& pProtoTexKey);
+	static CFollower* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, const wstring& pProtoTexKey, const _vec3& vPos, FOLLOWER_STATE eState = FOLLOWER_RECRUIT);
 
 private:
 	virtual void		Free();

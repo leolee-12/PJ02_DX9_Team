@@ -1,48 +1,39 @@
 ﻿#include "pch.h"
-#include "CCookingSelectBack.h"
+#include "CWeaponInfo.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
 
-CCookingSelectBack::CCookingSelectBack(LPDIRECT3DDEVICE9 pGraphicDev)
+CWeaponInfo::CWeaponInfo(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CUi(pGraphicDev), m_pBufferCom(nullptr), m_pTransformCom(nullptr)
 {
 	ZeroMemory(&m_vPos, sizeof(_vec3));
 }
 
-CCookingSelectBack::~CCookingSelectBack()
+CWeaponInfo::~CWeaponInfo()
 {
 }
 
-HRESULT CCookingSelectBack::Ready_GameObject()
+HRESULT CWeaponInfo::Ready_GameObject()
 {
 	if (FAILED(Add_Component()))
 		return E_FAIL;
 
-	m_pTransformCom->Set_Scale(WINCX/2, WINCY, 0.f);
-	m_pTransformCom->Set_Pos(-WINCX/4, 0, 0.49f);
+	m_pTransformCom->Set_Scale((420.f * 0.9f), (200.f * 0.9f), 1.f);
+	m_pTransformCom->Set_Pos(0.f, -175.f, 0.3f);
+
+	if (m_eType >= WINFO_END || m_eType < WINFO_SWORD)
+	{
+		MSG_BOX("웨폰인포 인덱스 범위초과");
+		return E_FAIL;
+	}
 
 	return S_OK;
 }
 
-HRESULT CCookingSelectBack::Ready_Material()
+_int CWeaponInfo::Update_GameObject(const _float& fTimeDelta)
 {
-	D3DMATERIAL9			tMtrl;
-	ZeroMemory(&tMtrl, sizeof(D3DMATERIAL9));
+	if (!m_bActive) { return NOEVENT; }
 
-	tMtrl.Diffuse = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-	tMtrl.Specular = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-	tMtrl.Ambient = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-
-	tMtrl.Emissive = D3DXCOLOR(1.f, 0.f, 0.f, 1.f);
-	tMtrl.Power = 0.f;
-
-	m_pGraphicDev->SetMaterial(&tMtrl);
-
-	return S_OK;
-}
-
-_int CCookingSelectBack::Update_GameObject(const _float& fTimeDelta)
-{
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
 	CRenderer::GetInstance()->Add_RenderGroup(RENDER_UI, this);
@@ -50,28 +41,30 @@ _int CCookingSelectBack::Update_GameObject(const _float& fTimeDelta)
 	return iExit;
 }
 
-void CCookingSelectBack::LateUpdate_GameObject(const _float& fTimeDelta)
+void CWeaponInfo::LateUpdate_GameObject(const _float& fTimeDelta)
 {
+	if (!m_bActive) { return; }
+
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
 	m_pTransformCom->Get_Info(INFO_POS, &m_vPos);
 	Compute_ViewDepth_Ortho(&m_vPos);
 }
 
-void CCookingSelectBack::Render_GameObject()
+void CWeaponInfo::Render_GameObject()
 {
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
 
-	m_pTextureCom->Set_Texture();
+	m_pTextureCom->Set_Texture(_uint(m_eType));
 
 	m_pBufferCom->Render_Buffer();
 }
 
-void CCookingSelectBack::OnCollision(CGameObject* pObject)
+void CWeaponInfo::OnCollision(CGameObject* pObject)
 {
 
 }
 
-HRESULT CCookingSelectBack::Add_Component()
+HRESULT CWeaponInfo::Add_Component()
 {
 	Engine::CComponent* pComponent = nullptr;
 
@@ -94,7 +87,7 @@ HRESULT CCookingSelectBack::Add_Component()
 	m_mapComponent[ID_DYNAMIC].insert({ L"Com_Transform", pComponent });
 
 	pComponent = m_pTextureCom = dynamic_cast<Engine::CTexture*>
-		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_CookingSelectBack"));
+		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_WeaponInfo"));
 
 	if (nullptr == pComponent)
 		return E_FAIL;
@@ -106,21 +99,23 @@ HRESULT CCookingSelectBack::Add_Component()
 
 
 
-CCookingSelectBack* CCookingSelectBack::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+CWeaponInfo* CWeaponInfo::Create(LPDIRECT3DDEVICE9 pGraphicDev, WINFOTYPE eType)
 {
-	CCookingSelectBack* pCookingSelectBack = new CCookingSelectBack(pGraphicDev);
+	CWeaponInfo* pWeaponInfo = new CWeaponInfo(pGraphicDev);
 
-	if (FAILED(pCookingSelectBack->Ready_GameObject()))
+	pWeaponInfo->m_eType = eType;
+
+	if (FAILED(pWeaponInfo->Ready_GameObject()))
 	{
-		Safe_Release(pCookingSelectBack);
-		MSG_BOX("pCCookingSelectBack Create Failed");
+		Safe_Release(pWeaponInfo);
+		MSG_BOX("pWeaponInfo Create Failed");
 		return nullptr;
 	}
 
-	return pCookingSelectBack;
+	return pWeaponInfo;
 }
 
-void CCookingSelectBack::Free()
+void CWeaponInfo::Free()
 {
 	CUi::Free();
 }

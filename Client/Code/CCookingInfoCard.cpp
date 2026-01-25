@@ -3,7 +3,6 @@
 #include "CProtoMgr.h"
 #include "CRenderer.h"
 
-
 #include "CCookingInfoCardBack.h"
 #include "CCookingTargetFood.h"
 #include "CCookingSelectSlot.h"
@@ -14,7 +13,7 @@
 #include "CCookingUpDownArrow.h"
 
 #include "CFontMgr.h"
-
+#include "CFontUIOrtho.h"
 
 CCookingInfoCard::CCookingInfoCard(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CUi(pGraphicDev)
@@ -78,6 +77,29 @@ HRESULT CCookingInfoCard::Ready_GameObject()
 		return E_FAIL;
 	m_vecCookingSelectUI.push_back(pGameObject);
 
+	pGameObject = m_pResourceFont = CFontUIOrtho::Create(m_pGraphicDev);
+
+	if (nullptr == pGameObject)
+		return E_FAIL;
+
+	m_pResourceFont->Set_Flags(DT_CENTER | DT_VCENTER);
+	m_pResourceFont->Set_FontColor(D3DXCOLOR(0.5f, 0.5f, 0.5f, 1.f));
+	m_pResourceFont->Set_Pos(_vec2(360.0f, -150.0f));
+	m_pResourceFont->Set_Scale(_vec2(59.f * 2.f, 123.f * 0.5f));
+	m_pResourceFont->Set_Font(L"Font_Default30_Heavy");
+	m_pResourceFont->Active();
+
+	pGameObject = m_pRecipeFont = CFontUIOrtho::Create(m_pGraphicDev);
+
+	if (nullptr == pGameObject)
+		return E_FAIL;
+
+	m_pRecipeFont->Set_Flags(DT_CENTER | DT_VCENTER);
+	m_pRecipeFont->Set_FontColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+	m_pRecipeFont->Set_Pos(_vec2(330.0f, -150.0f));
+	m_pRecipeFont->Set_Scale(_vec2(59.f * 2.f, 123.f * 0.5f));
+	m_pRecipeFont->Set_Font(L"Font_Default30_Heavy");
+	m_pRecipeFont->Active();
 
 
 	for (int i = 0; i < 3; ++i)
@@ -90,6 +112,11 @@ HRESULT CCookingInfoCard::Ready_GameObject()
 		m_vecCookingSelectUI.push_back(pGameObject);
 	}
 
+	m_iRecipeCount = 2;
+	m_iResourceCount = 0;
+	m_pRecipeFont->Set_Text(to_wstring(m_iRecipeCount).c_str());
+	Set_RecourceCountText(m_iResourceCount);
+	Ready_Event();
 	return S_OK;
 }
 
@@ -102,7 +129,8 @@ _int CCookingInfoCard::Update_GameObject(const _float& fTimeDelta)
 	}
 
 	CRenderer::GetInstance()->Add_RenderGroup(RENDER_UI, this);
-
+	m_pRecipeFont->Update_GameObject(fTimeDelta);
+	m_pResourceFont->Update_GameObject(fTimeDelta);
 	return NOEVENT;
 }
 
@@ -113,6 +141,8 @@ void CCookingInfoCard::LateUpdate_GameObject(const _float& fTimeDelta)
 	{
 		CookingUI->LateUpdate_GameObject(fTimeDelta);
 	}
+	m_pRecipeFont->LateUpdate_GameObject(fTimeDelta);
+	m_pResourceFont->LateUpdate_GameObject(fTimeDelta);
 }
 
 void CCookingInfoCard::Render_GameObject()
@@ -144,23 +174,43 @@ void CCookingInfoCard::Render_GameObject()
 
 void CCookingInfoCard::OnCollision(CGameObject* pObject)
 {
-
 }
 
 
-CCookingInfoCard* CCookingInfoCard::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+CCookingInfoCard* CCookingInfoCard::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMessageChannel)
 {
-	CCookingInfoCard* pCookingMiniGame = new CCookingInfoCard(pGraphicDev);
+	CCookingInfoCard* pCookingInfoCard = new CCookingInfoCard(pGraphicDev);
 
-	if (FAILED(pCookingMiniGame->Ready_GameObject()))
+	pCookingInfoCard->m_pMessageChannel = pMessageChannel;
+	pCookingInfoCard->m_pMessageChannel->AddRef();
+
+	if (FAILED(pCookingInfoCard->Ready_GameObject()))
 	{
-		Safe_Release(pCookingMiniGame);
+		Safe_Release(pCookingInfoCard);
 		MSG_BOX("pCookingSelectUI Create Failed");
 		return nullptr;
 	}
 
-	return pCookingMiniGame;
+	return pCookingInfoCard;
 }
+
+void CCookingInfoCard::Init_CalcuResouceCount(_int _iCount)
+{
+	Set_RecourceCountText(_iCount);
+}
+
+void CCookingInfoCard::Set_RecourceCountText(_int _iCount)
+{
+	m_iResourceCount = _iCount;
+	m_pResourceFont->Set_Text((L"(" + to_wstring(m_iResourceCount)+ L")").c_str());
+}
+
+void CCookingInfoCard::ApplayRecourceCountText(_int _Count)
+{
+	m_iResourceCount += _Count;
+	m_pResourceFont->Set_Text((L"(" + to_wstring(m_iResourceCount) + L")").c_str());
+}
+
 
 void CCookingInfoCard::Free()
 {
@@ -169,6 +219,21 @@ void CCookingInfoCard::Free()
 		Safe_Release(CookingUI);
 	}
 	m_vecCookingSelectUI.clear();
-
+	Safe_Release(m_pResourceFont);
+	Safe_Release(m_pRecipeFont);
 	CUi::Free();
+}
+
+void CCookingInfoCard::Ready_Event()
+{
+	m_hmapSubHandles.insert({ L"CookInfoCard.Calcu", m_pMessageChannel->Subscribe(L"CookingInfoCard.CalcuResouce", [this](const IMessageChannel::EVENT& Event) {
+{
+		auto iter = Event.hmapData.find(L"ResourceCount");
+		if (iter == Event.hmapData.end())
+			return;
+
+		int ResourceCount = any_cast<int>(iter->second);
+			Set_RecourceCountText(ResourceCount);
+}
+}) });
 }

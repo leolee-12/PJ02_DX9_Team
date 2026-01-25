@@ -12,6 +12,7 @@
 #include "CFontMgr.h"
 #include "CDInputMgr.h"
 #include "CFollower.h"
+#include "CSoundMgr.h"
 
 
 CNPCCommandUI::CNPCCommandUI(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -56,16 +57,6 @@ HRESULT CNPCCommandUI::Ready_GameObject()
 
 _int CNPCCommandUI::Update_GameObject(const _float& fTimeDelta)
 {
-
-	if (CDInputMgr::GetInstance()->Key_Down(DIK_X))
-	{
-		//IMessageChannel::EVENT tEvent;
-		//tEvent.strType = L"ResourceHistory.AddItem";
-		//tEvent.hmapData[L"ItemID"] = tempcount;
-		//m_pMessageChannel->Publish(tEvent);
-		m_bRender = !m_bRender;
-	}
-
 	if (!m_bRender) { return NOEVENT; }
 	m_pBackUI->Update_GameObject(fTimeDelta);
 	m_pRockUI->Update_GameObject(fTimeDelta);
@@ -146,6 +137,7 @@ void CNPCCommandUI::Ready_Event()
 
 				m_bRender = true;
 				m_pOwner->WaitForCommand();
+				CSoundMgr::GetInstance()->Play(L"OpenMenu.wav", SOUND_UI, 0.3f);
 			}
 		}
 	) });

@@ -429,7 +429,7 @@ void CMultiLoadingThread::Loading_for_Dungeon()
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_ChestTexture", TEX_NORMAL, L"../Bin/Resource/Texture/NPC/Chest/dds/Chest_%d.dds", 2));
 	m_iTotalProtoCount++;
 
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_ItemTexture", TEX_NORMAL, L"../Bin/Resource/Texture/Item/dds/Item_%02d.dds", 8));
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_ItemTexture", TEX_NORMAL, L"../Bin/Resource/Texture/Item/dds/Item_%02d.dds", 10));
 	m_iTotalProtoCount++;
 
 	// 메인보스
@@ -775,6 +775,11 @@ void CMultiLoadingThread::Loading_for_RealDungeon()
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_TarotInfo", TEX_NORMAL, L"../Bin/Resource/YSH/UI/TarotInfo_%d.png", 2));
 	m_iTotalProtoCount++;
 
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_WeaponInfo", TEX_NORMAL, L"../Bin/Resource/YSH/UI/WeaponInfo%d.png", 2));
+	m_iTotalProtoCount++;
+
+	
+
 	// 디버그용 그긴거
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_Fade", TEX_NORMAL, L"../Bin/Resource/YSH/Etc/Fade.png", 1));
 	m_iTotalProtoCount++;
@@ -797,7 +802,7 @@ void CMultiLoadingThread::Loading_for_RealDungeon()
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_ChestTexture", TEX_NORMAL, L"../Bin/Resource/Texture/NPC/Chest/dds/Chest_%d.dds", 2));
 	m_iTotalProtoCount++;
 
-	m_TexturLoadingqueue.push(TEXLR(L"Proto_ItemTexture", TEX_NORMAL, L"../Bin/Resource/Texture/Item/dds/Item_%02d.dds", 8));
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_ItemTexture", TEX_NORMAL, L"../Bin/Resource/Texture/Item/dds/Item_%02d.dds", 10));
 	m_iTotalProtoCount++;
 	// 디버그용 그긴거
 
@@ -832,6 +837,9 @@ void CMultiLoadingThread::Loading_for_RealDungeon()
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_ChargeArrowTexture", TEX_NORMAL, L"../Bin/Resource/LWY/UI/Arrow/dds/AimDirection.dds", 1));
 	m_iTotalProtoCount++;
 	// Effect
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_PlayerTarotCard", TEX_NORMAL, L"../Bin/Resource/YSD/TarotCard/TarotCard.png", 1));
+	m_iTotalProtoCount++;
 }
 
 void CMultiLoadingThread::Loading_for_AmdusiasRoom()

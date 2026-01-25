@@ -478,6 +478,9 @@
     <Filter Include="02. GameObject\02. Environment\02. Interactable\00. Grass">
       <UniqueIdentifier>{20638477-cadd-4aa2-94a1-d3b5098d0639}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\02. Environment\00. MapObject\00. Door">
+      <UniqueIdentifier>{70bf6cfa-c377-46b3-9795-f4edbfa4b503}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02. GameObject\05. UI\12. FoodReviewUI">
       <UniqueIdentifier>{85a2cc54-83ba-4663-9666-60069c72f836}</UniqueIdentifier>
     </Filter>
@@ -504,6 +507,15 @@
     </Filter>
     <Filter Include="03. Manager\04. EffectMgr">
       <UniqueIdentifier>{613f16cb-d640-48b5-84eb-5098839b2c76}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. UI\04. PlayerUI\02. PlayerTarotCard">
+      <UniqueIdentifier>{65f80286-6539-4ec7-b2aa-91d3a26cfb90}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. UI\06. WorldUI\03. Interaction">
+      <UniqueIdentifier>{a588698f-c386-4f8a-a10c-43bf51beddda}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. UI\13. WeaponInfo">
+      <UniqueIdentifier>{46435509-dc5b-4c02-97e9-ebce58294faf}</UniqueIdentifier>
     </Filter>
     <Filter Include="01. Scene\01. Maps\04. Tutorial">
       <UniqueIdentifier>{08f675a5-4005-4bed-9f8c-e9c1ef960dbb}</UniqueIdentifier>
@@ -1071,6 +1083,21 @@
     <ClInclude Include="..\Header\CResourceHistoryItem.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CPlayerTarotCard.h">
+      <Filter>02. GameObject\05. UI\04. PlayerUI\02. PlayerTarotCard</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CResourceHistoryItem.h">
+      <Filter>02. GameObject\05. UI\10. ResourceHistoryUI\02.ResourceHistoryItem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CMapDoor.h">
+      <Filter>02. GameObject\02. Environment\00. MapObject\00. Door</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CInteractionUI.h">
+      <Filter>02. GameObject\05. UI\06. WorldUI\03. Interaction</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CWeaponInfo.h">
+      <Filter>02. GameObject\05. UI\13. WeaponInfo</Filter>
+    </ClInclude>
     <ClInclude Include="..\Header\CChargeArrow.h">
       <Filter>02. GameObject\03. Dependent\01. Effect\04. Indicator</Filter>
     </ClInclude>
@@ -1594,6 +1621,18 @@
     </ClCompile>
     <ClCompile Include="CShrineSpot.cpp">
       <Filter>02. GameObject\02. Environment\02. Interactable\04. ShrineSpot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CPlayerTarotCard.cpp">
+      <Filter>02. GameObject\05. UI\04. PlayerUI\02. PlayerTarotCard</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CMapDoor.cpp">
+      <Filter>02. GameObject\02. Environment\00. MapObject\00. Door</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CInteractionUI.cpp">
+      <Filter>02. GameObject\05. UI\06. WorldUI\03. Interaction</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CWeaponInfo.cpp">
+      <Filter>02. GameObject\05. UI\13. WeaponInfo</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CChargeArrow.cpp">
       <Filter>02. GameObject\03. Dependent\01. Effect\04. Indicator</Filter>

@@ -13,6 +13,7 @@
 
 
 #include "CFontMgr.h"
+#include "CSoundMgr.h"
 
 
 CCookingMiniGameUI::CCookingMiniGameUI(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -108,8 +109,12 @@ _int CCookingMiniGameUI::Update_GameObject(const _float& fTimeDelta)
 	
 	if (m_iCurCookingCount <= 0)
 	{
+		IMessageChannel::EVENT CookingEvent;
+		CookingEvent.strType = L"Cooking.Finish";
+		m_pMessageChannel->Publish(CookingEvent);
 		m_iCookingCount = 0;
-		CookingEnd();
+		Set_Render(false);
+		//CookingEnd();
 	}
 
 
@@ -187,6 +192,10 @@ _bool CCookingMiniGameUI::CookingInput()
 	CookingEvent.hmapData[L"isSuccess"] = bResult;
 	m_pMessageChannel->Publish(CookingEvent);
 
+	_tchar szSound[128] = L"";
+	swprintf_s(szSound, L"Meal Cooked_%d.wav", Get_Rand_Int(0, 2));
+	CSoundMgr::GetInstance()->Play(szSound, SOUND_UI, 0.5f);
+
 	return bResult;
 }
 
@@ -213,13 +222,13 @@ void CCookingMiniGameUI::CookingStart(_int CookingCount)
 	Set_Render(true);
 	m_iCurCookingCount = CookingCount;
 	m_iCookingCount = CookingCount;
+
 	m_bInputLock = false;
 }
 
 void CCookingMiniGameUI::CookingEnd()
 {
-	Set_Render(false);
-	m_OnCookingEnd();
+	//m_OnCookingEnd();
 }
 
 void CCookingMiniGameUI::Free()

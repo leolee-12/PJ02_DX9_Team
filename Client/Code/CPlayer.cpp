@@ -17,6 +17,7 @@
 #include "CMonster.h"
 #include "CProjectile.h"
 #include "CChargeArrow.h"
+#include "CInteractionUI.h"
 
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev),
@@ -111,7 +112,8 @@ _int CPlayer::Update_GameObject(const _float& fTimeDelta)
 	Move_Frame(fTimeDelta);
 	Update_Warp(fTimeDelta);
 	Check_Scale();
-	
+
+	m_pInteractionUI->Update_GameObject(fTimeDelta);
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
 	Set_OnTerrain();
@@ -129,6 +131,7 @@ void CPlayer::LateUpdate_GameObject(const _float& fTimeDelta)
 	m_pTransformCom->Get_Info(INFO_POS, &m_vPos);
 	Compute_ViewDepth(&m_vPos);
 
+	m_pInteractionUI->LateUpdate_GameObject(fTimeDelta);
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
 
 	//------스프라이트 높이와 충돌체 위치 맞춤---------
@@ -141,6 +144,7 @@ void CPlayer::LateUpdate_GameObject(const _float& fTimeDelta)
 	// 충돌체 디버그용
 	if (g_bDebug) m_pColliderCom->Update_AABBforRender();
 
+	m_pInteractionUI->UnActive();
 	m_bCanTrigger = false;
 	m_pTriggerPoint = nullptr;
 }
@@ -178,8 +182,8 @@ void CPlayer::Ready_Variable()
 	m_fPassion = 4.f;
 	m_fFaith = 50.f;
 
-	//m_eWeaponType = WT_SWORD;
-	m_eWeaponType = WT_GAUNTLETS;
+	m_eWeaponType = WT_SWORD;
+	//m_eWeaponType = WT_GAUNTLETS;
 
 	m_eOBJID = OID_PLAYER;
 	_float fScale = PLAYER_DEFAULT_SCALE;
@@ -200,6 +204,8 @@ void CPlayer::Ready_Variable()
 	}
 
 	m_vDir = m_vNormDir[DIR_LEFT];
+
+	m_pInteractionUI = CInteractionUI::Create(m_pGraphicDev);
 }
 
 void CPlayer::Ready_Event()
@@ -251,6 +257,8 @@ void CPlayer::Ready_Event()
 					Set_Crying();
 					m_pTransformCom->Set_Pos(-4.f, 0.f, 88.f);
 					m_vPos = _vec3(-4.f, 2.f, 88.f);
+					// 문제 생기면 정규화할것
+					m_vDir = _vec3(1.f, 0.f, -1.f);
 					return;
 				}
 				if (strDothis == L"Stop_Crying") {
@@ -277,12 +285,13 @@ void CPlayer::Ready_Event()
 			if (TarotTypeiter == Event.hmapData.end()) { return; }
 			_uint iTarotType = any_cast<_uint>(TarotTypeiter->second);
 
-			switch (iTarotType)
+			switch (iTarotType - 1)
 			{
 			case 0:
 				m_iMaxHp += 2;
+				m_iHp += 2;
 				break;
-			case 1:
+			case 2:
 				m_iAttack = _int(_float(m_iAttack) * 1.5f);
 				break;
 			}
@@ -304,6 +313,28 @@ void CPlayer::Ready_Event()
 			if (m_fPassion > MAX_FAITH_VALUE)
 				m_fPassion = MAX_FAITH_VALUE;
 		}) });
+
+	m_hmapSubHandles.insert({ L"Trigger.Activate.Owner",m_pMessageChannel->Subscribe(L"Trigger.Activate.Owner" ,[this](const IMessageChannel::EVENT& Event)
+{
+		auto iter = Event.hmapData.find(L"Trigger_Name");
+		if (iter == Event.hmapData.end())
+			return;
+
+		wstring name = any_cast<wstring>(iter->second);
+		if (name == L"Sword")
+		{
+			// 검 먹은 로직
+			m_eWeaponType = WT_SWORD;
+			m_iAttack = 1;
+		}
+		else if (name == L"Gauntlet")
+		{
+			// 건틀릿 먹은 로직
+			m_eWeaponType = WT_GAUNTLETS;
+			m_iAttack = 2;
+		}
+}
+) });
 
 	m_bMsgRegistered = true;
 }
@@ -357,19 +388,19 @@ HRESULT CPlayer::Add_Component()
 
 void CPlayer::Key_Input(const _float& fTimeDelta)
 {
-	for (int i = 0; i < 9; ++i)
-	{
-		if (GetAsyncKeyState(i + 48))
-		{	// 디버그용
+	//for (int i = 0; i < 9; ++i)
+	//{
+	//	if (GetAsyncKeyState(i + 48))
+	//	{	// 디버그용
 
-			if (i == 8)
-			{
-				_vec3 vEffectPos{ m_vPos.x, 3.f, m_vPos.z };
-				CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_SCREEN_IMPACT, 0, _vec3(0.f, 0.f, 0.f));
-			}
-			else		CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_HIT, i, m_vPos);
-		}
-	}
+	//		if (i == 8)
+	//		{
+	//			_vec3 vEffectPos{ m_vPos.x, 3.f, m_vPos.z };
+	//			CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_ENEMYSPAWN, 0, vEffectPos);
+	//		}
+	//		else		CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_HIT, i, m_vPos);
+	//	}
+	//}
 
 	if (CDInputMgr::GetInstance()->Key_Down(DIK_Z))
 	{
@@ -1029,7 +1060,8 @@ void CPlayer::Attack_HitBox()
 
 	if(g_bDebug) CRenderer::GetInstance()->Add_TestCollider(tAABB, 60);
 
-	vector<CGameObject*> tempVec = CCollisionMgr::GetInstance()->Test_AABB(tAABB, CL_MONSTER | CL_GRASS);
+	vector<CGameObject*> tempVec = CCollisionMgr::GetInstance()->Test_AABB(tAABB, CL_MONSTER);
+	vector<CGameObject*> vecGrass = CCollisionMgr::GetInstance()->Test_AABB(tAABB, CL_GRASS);
 
 	if (!tempVec.empty())
 	{
@@ -1052,6 +1084,15 @@ void CPlayer::Attack_HitBox()
 				CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_HIT, m_iCombo, vEffectPos, _vec3(0.2f, 0.2f, 0.f));
 			}
 		}
+	}
+	if (!vecGrass.empty())
+	{
+		IMessageChannel::EVENT EAttack;
+		EAttack.strType = L"Grass.Attacked";
+		EAttack.hmapData.emplace(L"Attack", m_iAttack);
+		EAttack.hmapData.emplace(L"Target", vecGrass);
+		m_pMessageChannel->Publish(EAttack);
+		CSoundMgr::GetInstance()->Play(L"GrassHit.wav", SOUND_EFFECT, 0.35f);
 	}
 }
 
@@ -1172,8 +1213,13 @@ void	CPlayer::OnCollision(CGameObject* pObject)
 	}
 	if (pObject->Get_OBJID() == OID_TRIGGER)
 	{
+		if (m_bAction) { return; }
 		m_bCanTrigger = true;
 		m_pTriggerPoint = static_cast<CTriggerPoint*>(pObject);
+
+		if (!m_pTriggerPoint->Get_Passive()) {
+			m_pInteractionUI->Active();
+		}
 	}
 	if (pObject->Get_OBJID() == OID_WARP)
 	{
@@ -1231,5 +1277,6 @@ void CPlayer::Free()
 		m_pChargeArrow = nullptr;
 	}
 
+	Safe_Release(m_pInteractionUI);
 	CGameObject::Free();
 }

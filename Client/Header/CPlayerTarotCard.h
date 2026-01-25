@@ -8,12 +8,12 @@ namespace Engine
 	class CTexture;
 }
 
-class CResourceHistoryBack :
+class CPlayerTarotCard :
 	public CUi
 {
 private:
-	explicit CResourceHistoryBack(LPDIRECT3DDEVICE9 pGraphicDev);
-	virtual ~CResourceHistoryBack();
+	explicit CPlayerTarotCard(LPDIRECT3DDEVICE9 pGraphicDev);
+	virtual ~CPlayerTarotCard();
 
 public:
 	virtual			HRESULT		Ready_GameObject();
@@ -23,21 +23,19 @@ public:
 	virtual			void		OnCollision(CGameObject* pObject);
 
 public:
-	static CResourceHistoryBack* Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 _vPos, float _fScale);
-	void	Set_Pos(_vec3 _vPos) { m_vPos = _vPos; }
-	void	Set_Page(_int i) { m_iPage = i; }
+	static CPlayerTarotCard* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMessageChannel);
+
 private:
 	virtual			void		Free();
-
+	void						Ready_Event();
 	HRESULT						Add_Component();
+	HRESULT						Ready_Material();
 
 private:
 	CRcTex* m_pBufferCom;
 	CTransform* m_pTransformCom;
 	CTexture* m_pTextureCom;
 
-	_vec3	m_vPos;
-	float	m_fScale;
-	_int	m_iPage;
+	_bool m_bRender;
 };
 

@@ -8,12 +8,14 @@ namespace Engine
 	class CTexture;
 }
 
-class CResourceHistoryBack :
+class CWeaponInfo :
 	public CUi
 {
+public:
+	enum WINFOTYPE {WINFO_SWORD, WINFO_GAUNTLET, WINFO_END};
 private:
-	explicit CResourceHistoryBack(LPDIRECT3DDEVICE9 pGraphicDev);
-	virtual ~CResourceHistoryBack();
+	explicit CWeaponInfo(LPDIRECT3DDEVICE9 pGraphicDev);
+	virtual ~CWeaponInfo();
 
 public:
 	virtual			HRESULT		Ready_GameObject();
@@ -22,10 +24,12 @@ public:
 	virtual			void		Render_GameObject();
 	virtual			void		OnCollision(CGameObject* pObject);
 
+	void			Active() { m_bActive = true; }
+	void			UnActive() { m_bActive = false; }
+
 public:
-	static CResourceHistoryBack* Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 _vPos, float _fScale);
-	void	Set_Pos(_vec3 _vPos) { m_vPos = _vPos; }
-	void	Set_Page(_int i) { m_iPage = i; }
+	static CWeaponInfo* Create(LPDIRECT3DDEVICE9 pGraphicDev, WINFOTYPE eType);
+
 private:
 	virtual			void		Free();
 
@@ -36,8 +40,8 @@ private:
 	CTransform* m_pTransformCom;
 	CTexture* m_pTextureCom;
 
-	_vec3	m_vPos;
-	float	m_fScale;
-	_int	m_iPage;
+	WINFOTYPE m_eType = WINFO_END;
+
+	_bool	 m_bActive = false;
 };
 

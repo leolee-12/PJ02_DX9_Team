@@ -82,9 +82,10 @@ void CActiveItem::OnCollision(CGameObject* pObject)
 			break;
 
 		default:
-			tEvent.strType = L"ResourceHistory.AddItem";
-			tEvent.hmapData[L"ItemID"] = (int)m_eItemID;
-			m_pMessageChannel->Publish(tEvent);
+			CPersistentMgr::GetInstance()->Get_ResourceHistory()->AddItem(m_eItemID,1);
+			//tEvent.strType = L"ResourceHistory.AddItem";
+			//tEvent.hmapData[L"ItemID"] = (int)m_eItemID;
+			//m_pMessageChannel->Publish(tEvent);
 			break;
 		}
 

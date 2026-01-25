@@ -37,6 +37,8 @@
 #include "CResourceHistoryController.h"
 #include "CLoading.h"
 #include "CManagement.h"
+#include "CPlayerTarotCard.h"
+#include "CItem.h"
 
 CRealDungeon::CRealDungeon(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -172,9 +174,9 @@ HRESULT CRealDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 			switch (spawn.type)
 			{
 			case 0:
-				//CPersistentMgr::GetInstance()->Get_Player()->Set_Pos(_vec3(spawn.x, -0.95f, spawn.z));
+				CPersistentMgr::GetInstance()->Get_Player()->Set_Pos(_vec3(spawn.x, -0.95f, spawn.z));
 				//CPersistentMgr::GetInstance()->Get_Player()->Set_Pos(_vec3(-88.f, -0.95f, 11.7f)); // 암두방 앞
-				CPersistentMgr::GetInstance()->Get_Player()->Set_Pos(_vec3(-260.f, -0.95f, -5.2f)); // 레쉬방 앞
+				//CPersistentMgr::GetInstance()->Get_Player()->Set_Pos(_vec3(-260.f, -0.95f, -5.2f)); // 레쉬방 앞
 				//CPersistentMgr::GetInstance()->Get_Player()->Set_Pos(_vec3(-260.f, -0.95f, 7.2f)); // 레쉬방 안
 				pGameObject = CPersistentMgr::GetInstance()->Get_Player();
 
@@ -535,6 +537,12 @@ HRESULT CRealDungeon::Ready_UI_Layer(const _tchar* pLayerTag)
 		return E_FAIL;
 	pGameObject->AddRef();
 
+	pGameObject = CPlayerTarotCard::Create(m_pGraphicDev, m_pMessageChannel);
+
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+
+	if (FAILED(pLayer->Add_GameObject(L"PlayerTarotCard", pGameObject)))
+		return E_FAIL;
 
 	m_mapLayer.insert({ pLayerTag , pLayer });
 
@@ -580,10 +588,10 @@ void CRealDungeon::Ready_Event()
 				CLayer* pLayer = CLayer::Create();
 
 				if (nullptr == pLayer)
-					return E_FAIL;
+					return;
 
 				if (FAILED(pLayer->Add_GameObject(strObjTag, pObj)))
-					return E_FAIL;
+					return;
 
 				m_mapLayer.insert({ strLayerTag , pLayer });
 			}

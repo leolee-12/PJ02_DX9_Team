@@ -106,6 +106,12 @@ HRESULT CVillage::Ready_Scene()
 
 _int CVillage::Update_Scene(const _float& fTimeDelta)
 {
+	if (m_bReEnterFlag)
+	{
+		CSoundMgr::GetInstance()->PlayBGM(L"02.Village.mp3", 0.1f);
+		m_bReEnterFlag = false;
+	}
+
 	Engine::CTransform* pPlayerTransform = CPersistentMgr::GetInstance()->Get_PlayerTransform();
 	if (pPlayerTransform)
 	{
@@ -113,6 +119,9 @@ _int CVillage::Update_Scene(const _float& fTimeDelta)
 		pPlayerTransform->Get_Info(INFO_POS, &vPlayerPos);
 		Engine::CLightMgr::GetInstance()->Update_PointLights(vPlayerPos);
 	}
+
+	// 팔로워 스폰 작업 큐 처리
+	Process_FollowerSpawnQueue(fTimeDelta);
 
 	Key_Input_Village();
 
@@ -160,6 +169,7 @@ _int CVillage::Update_Scene(const _float& fTimeDelta)
 			return NOEVENT;
 		}
 		m_bKnuckleBoneFlag = false;
+		m_bReEnterFlag = true;
 	}
 
 	return iExit;
@@ -325,18 +335,6 @@ HRESULT CVillage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 				if (pGameObject)
 					pLayer->Add_GameObject(L"Grass", pGameObject);
 			}
-			else if (obj.category == "BreakableRock")
-			{
-				//pGameObject = CBreakableRock::Create(m_pGraphicDev, obj, m_pMessageChannel);
-				//if (pGameObject)
-				//	pLayer->Add_GameObject(L"BreakableRock", pGameObject);
-			}
-			else if (obj.category == "BreakableTree")
-			{
-				//pGameObject = CBreakableTree::Create(m_pGraphicDev, obj, m_pMessageChannel);
-				//if (pGameObject)
-				//	pLayer->Add_GameObject(L"BreakableTree", pGameObject);
-			}
 			else
 			{
 				pGameObject = CMapObject::Create(m_pGraphicDev, obj);
@@ -386,36 +384,6 @@ HRESULT CVillage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 		pGameObject = CMySkyBox::Create(m_pGraphicDev, 0);
 		if (pGameObject)
 			pLayer->Add_GameObject(L"SkyBox", pGameObject);
-	}
-
-	// 디버그용
-
-	for (int i = 0; i < 3; ++i)
-	{
-		pGameObject = CFollower::Create(m_pGraphicDev, m_pMessageChannel, L"Proto_Follower1Texture");
-		NULL_CHECK_RETURN(pGameObject, E_FAIL);
-		if (FAILED(pLayer->Add_GameObject(L"NPC", pGameObject)))
-			return E_FAIL;
-
-		pGameObject = CFollower::Create(m_pGraphicDev, m_pMessageChannel, L"Proto_Follower2Texture");
-		NULL_CHECK_RETURN(pGameObject, E_FAIL);
-		if (FAILED(pLayer->Add_GameObject(L"NPC", pGameObject)))
-			return E_FAIL;
-
-		pGameObject = CFollower::Create(m_pGraphicDev, m_pMessageChannel, L"Proto_Follower3Texture");
-		NULL_CHECK_RETURN(pGameObject, E_FAIL);
-		if (FAILED(pLayer->Add_GameObject(L"NPC", pGameObject)))
-			return E_FAIL;
-
-		pGameObject = CFollower::Create(m_pGraphicDev, m_pMessageChannel, L"Proto_Follower4Texture");
-		NULL_CHECK_RETURN(pGameObject, E_FAIL);
-		if (FAILED(pLayer->Add_GameObject(L"NPC", pGameObject)))
-			return E_FAIL;
-
-		pGameObject = CFollower::Create(m_pGraphicDev, m_pMessageChannel, L"Proto_Follower5Texture");
-		NULL_CHECK_RETURN(pGameObject, E_FAIL);
-		if (FAILED(pLayer->Add_GameObject(L"NPC", pGameObject)))
-			return E_FAIL;
 	}
 
 	// Village 지형물
@@ -569,6 +537,17 @@ HRESULT CVillage::Ready_UI_Layer(const _tchar* pLayerTag)
 	if (FAILED(pLayer->Add_GameObject(L"CFoodReviewUI", pGameObject)))
 		return E_FAIL;
 
+	pGameObject = CPersistentMgr::GetInstance()->Get_ResourceHistory();
+
+	if (nullptr == pGameObject)
+		return E_FAIL;
+
+	CPersistentMgr::GetInstance()->Get_ResourceHistory()->Set_MessageChannel(m_pMessageChannel);
+
+	if (FAILED(pLayer->Add_GameObject(L"ResourceHistoryController", pGameObject)))
+		return E_FAIL;
+	pGameObject->AddRef();
+
 
 	m_mapLayer.insert({ pLayerTag , pLayer });
 
@@ -640,6 +619,7 @@ void CVillage::Ready_Event_Village()
 				m_pCookingUI->Set_CookingState(CCookingUIController::CS_SELECT);
 				CPersistentMgr::GetInstance()->Get_Player()->Set_Action(true);
 				m_bCookingFlag = true;
+				CSoundMgr::GetInstance()->Play(L"OpenMenu.wav", SOUND_UI, 0.3f);
 			}
 		}
 	) });
@@ -656,6 +636,58 @@ void CVillage::Key_Input_Village()
 			m_pCookingUI->Set_State(CCookingUIController::CS_COOKINGEND);
 			CPersistentMgr::GetInstance()->Get_Player()->Set_Action(false);
 			m_bCookingFlag = false;
+		}
+	}
+	else
+	{
+		if (CDInputMgr::GetInstance()->Key_Down(DIK_1))
+		{
+			_tchar strFollowerTex[128] = L"";
+			swprintf_s(strFollowerTex, L"Proto_Follower%dTexture", Get_Rand_Int(1, 5));
+			Add_FollowerSpawnWork(FOLLOWER_SPAWN_WORK(strFollowerTex, _vec3(217.7f, 0.f, 38.3f)));
+		}
+	}
+}
+
+void CVillage::Add_FollowerSpawnWork(const FOLLOWER_SPAWN_WORK& tWork)
+{
+	m_queueFollowerSpawn.push(tWork);
+}
+
+void CVillage::Process_FollowerSpawnQueue(const _float& fTimeDelta)
+{
+	m_fSpawnTimer += fTimeDelta;
+
+	if (m_fSpawnTimer >= FOLLOWER_SPAWN_DELAY)
+	{
+		if (m_queueFollowerSpawn.empty())
+			return;
+
+		m_fSpawnTimer = 0.f;
+
+		FOLLOWER_SPAWN_WORK tWork = m_queueFollowerSpawn.front();
+		m_queueFollowerSpawn.pop();
+
+		CGameObject* pGameObject = nullptr;
+
+		if (tWork.bUseTransform)
+		{
+			pGameObject = CFollower::Create(m_pGraphicDev, m_pMessageChannel,
+				tWork.strProtoTexKey.c_str(), tWork.vPos, tWork.eState);
+		}
+		else
+		{
+			pGameObject = CFollower::Create(m_pGraphicDev, m_pMessageChannel,
+				tWork.strProtoTexKey.c_str());
+		}
+
+		if (pGameObject)
+		{
+			auto iter = m_mapLayer.find(L"GameLogic_Layer");
+			if (iter != m_mapLayer.end())
+			{
+				iter->second->Add_GameObject(L"NPC", pGameObject);
+			}
 		}
 	}
 }

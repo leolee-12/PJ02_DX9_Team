@@ -212,8 +212,12 @@
     <ClInclude Include="..\Header\CGaugeCover.h" />
     <ClInclude Include="..\Header\CGaugeStar.h" />
     <ClInclude Include="..\Header\CIndicator.h" />
+    <ClInclude Include="..\Header\CInteractionUI.h" />
     <ClInclude Include="..\Header\CKBCharNPC.h" />
     <ClInclude Include="..\Header\CKBCharPlayer.h" />
+    <ClInclude Include="..\Header\CMapDoor.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="..\Header\CMonsterHpBar.h" />
     <ClInclude Include="..\Header\CMonsterHpBarCover.h" />
     <ClInclude Include="..\Header\CMonsterHpFront.h" />
@@ -239,6 +243,7 @@
     <ClInclude Include="..\Header\CTrailEffect.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClInclude>
+    <ClInclude Include="..\Header\CWeaponInfo.h" />
     <ClInclude Include="..\Header\CWorkRockUI.h" />
     <ClInclude Include="..\Header\CWorkWoodUI.h" />
     <ClInclude Include="..\Header\IInteractable.h" />
@@ -324,6 +329,7 @@
     <ClInclude Include="..\Header\CWarp.h" />
     <ClInclude Include="..\Header\Gage_Enum.h" />
     <ClInclude Include="..\Header\LoadObjectList.h" />
+    <ClInclude Include="..\Header\CPlayerTarotCard.h" />
     <ClInclude Include="..\Header\PlayerUI.h" />
     <ClInclude Include="..\Header\CSpeechBubble.h" />
     <ClInclude Include="..\Header\CTile.h" />
@@ -407,6 +413,7 @@
     <ClCompile Include="..\Code\CGaugeCover.cpp" />
     <ClCompile Include="..\Code\CGaugeStar.cpp" />
     <ClCompile Include="..\Code\CIndicator.cpp" />
+    <ClCompile Include="..\Code\CInteractionUI.cpp" />
     <ClCompile Include="..\Code\CInteractMgr.cpp" />
     <ClCompile Include="..\Code\CItem.cpp" />
     <ClCompile Include="..\Code\CKBBack.cpp" />
@@ -437,6 +444,9 @@
     <ClCompile Include="..\Code\CMainApp.cpp" />
     <ClCompile Include="..\Code\CMainCamera.cpp" />
     <ClCompile Include="..\Code\CMapBorder.cpp" />
+    <ClCompile Include="..\Code\CMapDoor.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\Code\CMapWarp.cpp" />
     <ClCompile Include="..\Code\CMonster.cpp" />
     <ClCompile Include="..\Code\CMonsterB1.cpp" />
@@ -519,8 +529,10 @@
     <ClCompile Include="..\Code\CTileMgr.cpp" />
     <ClCompile Include="..\Code\CMapObject.cpp" />
     <ClCompile Include="..\Code\CGrass.cpp" />
+    <ClCompile Include="..\Code\CWeaponInfo.cpp" />
     <ClCompile Include="..\Code\CWorkRockUI.cpp" />
     <ClCompile Include="..\Code\CWorkWoodUI.cpp" />
+    <ClCompile Include="..\Code\CPlayerTarotCard.cpp" />
     <ClCompile Include="CFontAlpha.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="CShrineSpot.cpp" />
