@@ -102,7 +102,7 @@ HRESULT CPersistentMgr::Ready_GlobalObjects(LPDIRECT3DDEVICE9 pGraphicDev)
 
 	if (m_pResourceHistoryUI == nullptr)
 	{
-		if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_ItemHistoryBack", Engine::CTexture::Create(pGraphicDev, TEX_NORMAL, L"../Bin/Resource/YSD/ResourceHistory/ItemHistoryBack.png", 1))))
+		if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_ItemHistoryBack", Engine::CTexture::Create(pGraphicDev, TEX_NORMAL, L"../Bin/Resource/YSD/ResourceHistory/ItemHistoryBack_%d.png", 2))))
 			return E_FAIL;
 		if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_ItemHistoryDeco", Engine::CTexture::Create(pGraphicDev, TEX_NORMAL, L"../Bin/Resource/YSD/ResourceHistory/ItemHistoryDeco.png", 1))))
 			return E_FAIL;

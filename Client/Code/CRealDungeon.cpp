@@ -37,6 +37,7 @@
 #include "CResourceHistoryController.h"
 #include "CLoading.h"
 #include "CManagement.h"
+#include "CPlayerTarotCard.h"
 #include "CItem.h"
 
 CRealDungeon::CRealDungeon(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -502,6 +503,12 @@ HRESULT CRealDungeon::Ready_UI_Layer(const _tchar* pLayerTag)
 		return E_FAIL;
 	pGameObject->AddRef();
 
+	pGameObject = CPlayerTarotCard::Create(m_pGraphicDev, m_pMessageChannel);
+
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+
+	if (FAILED(pLayer->Add_GameObject(L"PlayerTarotCard", pGameObject)))
+		return E_FAIL;
 
 	m_mapLayer.insert({ pLayerTag , pLayer });
 

@@ -38,9 +38,10 @@ public:
 	void Set_CookingState(COOKINGUISTATE cs) { m_eState = cs; }
 private:
 	virtual void Free();
-
+	void	CalcuCookingAbleCount();
 	void	Key_Input_Cooking();
 	void	State_Machine();
+	void    Ready_Event();
 
 private:
 	CCookingSelectUI* m_pSelectUI;

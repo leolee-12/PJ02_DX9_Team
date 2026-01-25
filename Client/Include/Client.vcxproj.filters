@@ -511,6 +511,12 @@
     <Filter Include="03. Manager\04. EffectMgr">
       <UniqueIdentifier>{613f16cb-d640-48b5-84eb-5098839b2c76}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\05. UI\1">
+      <UniqueIdentifier>{d639a8cf-f804-43f9-b40b-14849f6c0cae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. UI\04. PlayerUI\02. PlayerTarotCard">
+      <UniqueIdentifier>{65f80286-6539-4ec7-b2aa-91d3a26cfb90}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02. GameObject\05. UI\06. WorldUI\03. Interaction">
       <UniqueIdentifier>{a588698f-c386-4f8a-a10c-43bf51beddda}</UniqueIdentifier>
     </Filter>
@@ -1080,6 +1086,12 @@
     <ClInclude Include="..\Header\CResourceHistoryItem.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CPlayerTarotCard.h">
+      <Filter>02. GameObject\05. UI\04. PlayerUI\02. PlayerTarotCard</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CResourceHistoryItem.h">
+      <Filter>02. GameObject\05. UI\10. ResourceHistoryUI\02.ResourceHistoryItem</Filter>
+    </ClInclude>
     <ClInclude Include="..\Header\CMapDoor.h">
       <Filter>02. GameObject\02. Environment\00. MapObject\00. Door</Filter>
     </ClInclude>
@@ -1609,6 +1621,9 @@
     </ClCompile>
     <ClCompile Include="CShrineSpot.cpp">
       <Filter>02. GameObject\02. Environment\02. Interactable\04. ShrineSpot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CPlayerTarotCard.cpp">
+      <Filter>02. GameObject\05. UI\04. PlayerUI\02. PlayerTarotCard</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CMapDoor.cpp">
       <Filter>02. GameObject\02. Environment\00. MapObject\00. Door</Filter>

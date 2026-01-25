@@ -9,6 +9,19 @@ namespace Engine
 	class CTexture;
 }
 
+enum ResourceType
+{
+	TYPE_COIN,
+	TYPE_TIMBER,
+	TYPE_ROCK,
+	TYPE_BERRY,
+	TYPE_POOP,
+	TYPE_REDBEAN,
+	TYPE_RICE,
+	TYPE_BURNRICE,
+	TYPE_END
+};
+
 class CResourceHistoryUI;
 
 class CResourceHistoryController :
@@ -41,6 +54,7 @@ public:
 	void ReorderHistory();
 	void AddItem(_int _iItemIndex, _int _iCount);
 	void UseItem(_int _iItemIndex, _int _iCount);
+	_int GetIndexHistoryItemCount(_int _iIndex);
 private:
 	virtual            void        Free();
 
@@ -50,6 +64,5 @@ private:
 	_bool        m_bRender;
 
 	vector<_vec3> m_vHistoryPos;
-	_int tempcount;
 	_bool m_bMsgRegistered;
 };

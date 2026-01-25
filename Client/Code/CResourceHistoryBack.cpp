@@ -47,7 +47,7 @@ void CResourceHistoryBack::Render_GameObject()
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
 
 
-	m_pTextureCom->Set_Texture();
+	m_pTextureCom->Set_Texture(m_iPage);
 
 
 	m_pBufferCom->Render_Buffer();

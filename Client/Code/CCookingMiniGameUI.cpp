@@ -109,8 +109,12 @@ _int CCookingMiniGameUI::Update_GameObject(const _float& fTimeDelta)
 	
 	if (m_iCurCookingCount <= 0)
 	{
+		IMessageChannel::EVENT CookingEvent;
+		CookingEvent.strType = L"Cooking.Finish";
+		m_pMessageChannel->Publish(CookingEvent);
 		m_iCookingCount = 0;
-		CookingEnd();
+		Set_Render(false);
+		//CookingEnd();
 	}
 
 
@@ -218,13 +222,13 @@ void CCookingMiniGameUI::CookingStart(_int CookingCount)
 	Set_Render(true);
 	m_iCurCookingCount = CookingCount;
 	m_iCookingCount = CookingCount;
+
 	m_bInputLock = false;
 }
 
 void CCookingMiniGameUI::CookingEnd()
 {
-	Set_Render(false);
-	m_OnCookingEnd();
+	//m_OnCookingEnd();
 }
 
 void CCookingMiniGameUI::Free()
