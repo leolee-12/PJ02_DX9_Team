@@ -346,9 +346,6 @@
     <Filter Include="01. Scene\01. Maps\08. RealDungeon">
       <UniqueIdentifier>{85febe2e-07d2-42fc-850d-8663b92acb9a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. Scene\01. Maps\04. Tutorial">
-      <UniqueIdentifier>{08f675a5-4005-4bed-9f8c-e9c1ef960dbb}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01. Scene\01. Maps\06. Dungeon">
       <UniqueIdentifier>{9560bf2c-af50-4eb8-bef4-9c6ceb52c988}</UniqueIdentifier>
     </Filter>
@@ -507,6 +504,9 @@
     </Filter>
     <Filter Include="03. Manager\04. EffectMgr">
       <UniqueIdentifier>{613f16cb-d640-48b5-84eb-5098839b2c76}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\01. Maps\04. Tutorial">
+      <UniqueIdentifier>{08f675a5-4005-4bed-9f8c-e9c1ef960dbb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

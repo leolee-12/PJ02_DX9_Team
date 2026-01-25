@@ -226,7 +226,9 @@ void CChest::Move_Frame(const _float& fTimeDelta)
 {
 	if (m_bWait) { return; }
 
+	_uint iPreFrame = _uint(m_fFrame);
 	m_fFrame += m_fFrameSpeed * fTimeDelta;
+	_uint iCurFrame = _uint(m_fFrame);
 
 	if (m_fFrame >= m_fFrameEnd)
 	{
@@ -251,6 +253,22 @@ void CChest::Move_Frame(const _float& fTimeDelta)
 
 		case CHEST_END:
 			break;
+		}
+	}
+	else if (!m_bWait && iPreFrame != iCurFrame)
+	{
+		switch (m_eCurState)
+		{
+		case CHEST_INTRO:
+		{
+		}
+		break;
+
+		case CHEST_OPEN:
+		{
+			if (iCurFrame == 3) CSoundMgr::GetInstance()->Play(L"Chest_Open.wav", SOUND_EFFECT, 0.2f);
+		}
+		break;
 		}
 	}
 }

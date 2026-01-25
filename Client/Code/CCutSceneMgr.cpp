@@ -162,7 +162,7 @@ void CCutSceneMgr::Key_Input_CutScene()
 				return;
 			}
 
-			CSoundMgr::GetInstance()->StopSound(SOUND_DIALOUGE);
+			CSoundMgr::GetInstance()->StopSound(SOUND_DIALOGUE);
 			Next_Step();
 		}
 		else

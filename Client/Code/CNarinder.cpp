@@ -200,7 +200,7 @@ void CNarinder::Ready_Event()
 			m_eCurState = Bishops::BS_TALK;
 			_tchar strSoundName[128] = L"";
 			swprintf_s(strSoundName, L"Deathcat%d.wav", Get_Rand_Int(6, 12));
-			CSoundMgr::GetInstance()->Play(strSoundName, SOUND_DIALOUGE, 0.1f);
+			CSoundMgr::GetInstance()->Play(strSoundName, SOUND_DIALOGUE, 0.1f);
 		}
 	) });
 

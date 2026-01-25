@@ -204,7 +204,7 @@ void CTarotSeller::Ready_Event()
 			m_eCurState = TAROT_TALK;
 			_tchar strSoundName[128] = L"";
 			swprintf_s(strSoundName, L"GoatTalk%d.wav", Get_Rand_Int(1, 4));
-			CSoundMgr::GetInstance()->Play(strSoundName, SOUND_DIALOUGE, 0.2f);
+			CSoundMgr::GetInstance()->Play(strSoundName, SOUND_DIALOGUE, 0.2f);
 		}
 	) });
 }

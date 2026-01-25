@@ -208,12 +208,14 @@ void		CBishop_Leshy::Update_State()
 				m_iFrameEnd = 133;
 				m_pTransformCom->Set_Scale(320.f * 0.025f, 442.f * 0.025f, 0.f);
 				m_pTransformCom->Set_Pos(m_vPos.x, 3.f, m_vPos.z);
+				CSoundMgr::GetInstance()->Play(L"Cult Member Ascend.wav", SOUND_EFFECT, 0.2f);
 				break;
 			case LS_TRANS:
 				m_iFrame = 0;
 				m_iFrameEnd = 375;
 				m_pTransformCom->Set_Scale(480.f * 0.025f, 618.f * 0.025f, 0.f);
 				m_pTransformCom->Set_Pos(m_vPos.x, 5.f, m_vPos.z);
+				CSoundMgr::GetInstance()->Play(L"cult_leader_transform.wav", SOUND_EFFECT, 0.2f);
 				break;
 			}
 			m_ePreNewState = m_eCurNewState;
@@ -352,7 +354,7 @@ void CBishop_Leshy::Ready_Event()
 			m_pFontUI->Active();
 			m_eCurState = Bishops::BS_TALK;
 			m_bNew = false;
-			CSoundMgr::GetInstance()->Play(L"bc_Leshy.wav", SOUND_DIALOUGE, 0.1f);
+			CSoundMgr::GetInstance()->Play(L"bc_Leshy.wav", SOUND_DIALOGUE, 0.1f);
 		}
 	) });
 

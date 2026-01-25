@@ -7,6 +7,7 @@
 #include "CFontMgr.h"
 #include "CResourceWorkBar.h"
 #include <CItem.h>
+#include <CSoundMgr.h>
 
 CBreakableRock::CBreakableRock(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev)
@@ -17,12 +18,6 @@ CBreakableRock::CBreakableRock(LPDIRECT3DDEVICE9 pGraphicDev)
 	, m_iTextureIndex(0)
 	, m_fScale(1.f)
 	, m_fBaseScale(1.f)
-	, m_fPhase(0.f)
-	, m_fWindSpeed(3.f)
-	, m_fWindStrength(0.1f)
-	, m_fAccTime(0.f)
-	, m_fReactStrength(0.f)
-	, m_vReactDir(0.f, 0.f, 0.f)
 	, m_fWorkGauge(0.f)
 	, m_fPreWorkGauge(0.f)
 {
@@ -37,12 +32,6 @@ CBreakableRock::CBreakableRock(const CBreakableRock& rhs)
 	, m_iTextureIndex(rhs.m_iTextureIndex)
 	, m_fScale(rhs.m_fScale)
 	, m_fBaseScale(rhs.m_fBaseScale)
-	, m_fPhase(0.f)
-	, m_fWindSpeed(3.f)
-	, m_fWindStrength(0.1f)
-	, m_fAccTime(0.f)
-	, m_fReactStrength(0.f)
-	, m_vReactDir(0.f, 0.f, 0.f)
 	, m_fWorkGauge(0.f)
 	, m_fPreWorkGauge(0.f)
 {
@@ -63,6 +52,7 @@ HRESULT CBreakableRock::Ready_GameObject()
 	m_iTextureIndex = 0;
 	m_pWorkBar = CResourceWorkBar::Create(m_pGraphicDev, _float(m_iHp), _vec3{});
 	m_pWorkBar->UnActive();
+	m_fAcmlTime = 0.f;
 
 	return S_OK;
 }
@@ -70,6 +60,8 @@ HRESULT CBreakableRock::Ready_GameObject()
 _int CBreakableRock::Update_GameObject(const _float& fTimeDelta)
 {
 	if (g_bDebug) { m_pColliderCom->Update_AABBforRender(); }
+
+	m_fAcmlTime += fTimeDelta;
 
 	m_pColliderCom->UpdateFromTransform(m_pTransformCom);
 
@@ -94,6 +86,25 @@ void CBreakableRock::LateUpdate_GameObject(const _float& fTimeDelta)
 	if (!(m_fWorkGauge - m_fPreWorkGauge < 0.0001f))
 	{
 		m_pWorkBar->Active();
+
+		if (m_fAcmlTime >= 1.f)
+		{
+			_uint iChannel = Get_Rand_Int(SOUND_EFFECT1, SOUND_EFFECT10);
+
+			_tchar strSoundName[128] = L"";
+			swprintf_s(strSoundName, L"Stone Impact %d.wav", Get_Rand_Int(0, 4));
+			CSoundMgr::GetInstance()->Play(strSoundName, CHANNELID(iChannel), 0.005f);
+
+			m_fAcmlTime = 0.f;
+		}
+	}
+	else
+	{
+		if (m_fAcmlTime >= 3.f)
+		{
+			m_pWorkBar->UnActive();
+			m_fAcmlTime = 0.f;
+		}
 	}
 
 	_vec3 vPos;
@@ -188,7 +199,7 @@ HRESULT CBreakableRock::Add_Component()
 {
 	Engine::CComponent* pComponent = nullptr;
 
-	// GrassBuffer (dynamic vertex buffer for sway effect)
+	// RcTex
 	pComponent = m_pBufferCom = dynamic_cast<Engine::CRcTex*>
 		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_RcTex"));
 
