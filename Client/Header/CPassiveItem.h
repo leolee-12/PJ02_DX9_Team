@@ -14,6 +14,7 @@ protected:
 public:
 	virtual HRESULT		Ready_GameObject();
 	virtual _int		Update_GameObject(const _float& fTimeDelta);
+	virtual void		LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual void		OnCollision(CGameObject* pObject);
 	virtual void		Ready_Event();
 
@@ -27,7 +28,7 @@ protected:
 	CTriggerPoint* m_pTrigger = nullptr;
 
 public:
-	static CPassiveItem* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, _float fThrowRange);
+	static CPassiveItem* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, ITEMID eID, _float fThrowRange);
 
 
 protected:

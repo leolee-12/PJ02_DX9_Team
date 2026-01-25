@@ -1,8 +1,40 @@
 ﻿#pragma once
 
 #include "CScene.h"
+#include "CFollower.h"
+#include <queue>
 
 class CCookingUIController;
+
+// 팔로워 스폰 작업 구조체
+struct FOLLOWER_SPAWN_WORK
+{
+	wstring			strProtoTexKey;
+	_vec3			vPos;
+	CFollower::FOLLOWER_STATE	eState;
+	_bool			bUseTransform;	// 위치/상태 사용 여부
+
+	FOLLOWER_SPAWN_WORK()
+		: strProtoTexKey(L"")
+		, vPos(0.f, 0.f, 0.f)
+		, eState(CFollower::FOLLOWER_IDLE)
+		, bUseTransform(false)
+	{}
+
+	FOLLOWER_SPAWN_WORK(const _tchar* pKey)
+		: strProtoTexKey(pKey)
+		, vPos(0.f, 0.f, 0.f)
+		, eState(CFollower::FOLLOWER_IDLE)
+		, bUseTransform(false)
+	{}
+
+	FOLLOWER_SPAWN_WORK(const _tchar* pKey, const _vec3& _vPos, CFollower::FOLLOWER_STATE _eState = CFollower::FOLLOWER_RECRUIT)
+		: strProtoTexKey(pKey)
+		, vPos(_vPos)
+		, eState(_eState)
+		, bUseTransform(true)
+	{}
+};
 
 class CVillage : public CScene
 {
@@ -28,6 +60,9 @@ private:
 
 	void			Key_Input_Village();
 
+	void			Process_FollowerSpawnQueue(const _float& fTimeDelta);
+	void			Add_FollowerSpawnWork(const FOLLOWER_SPAWN_WORK& tWork);
+
 public:
 	static CVillage* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 private:
@@ -40,4 +75,9 @@ private:
 	CCookingUIController* m_pCookingUI;
 
 	_bool	m_bReEnterFlag = false;
+
+	// 팔로워 스폰 작업 큐
+	queue<FOLLOWER_SPAWN_WORK>	m_queueFollowerSpawn;
+	_float						m_fSpawnTimer = 0.f;
+	static constexpr _float		FOLLOWER_SPAWN_DELAY = 7.f;
 };

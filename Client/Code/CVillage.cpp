@@ -120,6 +120,9 @@ _int CVillage::Update_Scene(const _float& fTimeDelta)
 		Engine::CLightMgr::GetInstance()->Update_PointLights(vPlayerPos);
 	}
 
+	// 팔로워 스폰 작업 큐 처리
+	Process_FollowerSpawnQueue(fTimeDelta);
+
 	Key_Input_Village();
 
 	_int iExit = Engine::CScene::Update_Scene(fTimeDelta);
@@ -383,34 +386,14 @@ HRESULT CVillage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 			pLayer->Add_GameObject(L"SkyBox", pGameObject);
 	}
 
-	// 디버그용
-
+	// 팔로워 스폰 작업 큐에 추가 (2초 딜레이로 순차 생성)
 	for (int i = 0; i < 3; ++i)
 	{
-		pGameObject = CFollower::Create(m_pGraphicDev, m_pMessageChannel, L"Proto_Follower1Texture");
-		NULL_CHECK_RETURN(pGameObject, E_FAIL);
-		if (FAILED(pLayer->Add_GameObject(L"NPC", pGameObject)))
-			return E_FAIL;
-
-		pGameObject = CFollower::Create(m_pGraphicDev, m_pMessageChannel, L"Proto_Follower2Texture");
-		NULL_CHECK_RETURN(pGameObject, E_FAIL);
-		if (FAILED(pLayer->Add_GameObject(L"NPC", pGameObject)))
-			return E_FAIL;
-
-		pGameObject = CFollower::Create(m_pGraphicDev, m_pMessageChannel, L"Proto_Follower3Texture");
-		NULL_CHECK_RETURN(pGameObject, E_FAIL);
-		if (FAILED(pLayer->Add_GameObject(L"NPC", pGameObject)))
-			return E_FAIL;
-
-		pGameObject = CFollower::Create(m_pGraphicDev, m_pMessageChannel, L"Proto_Follower4Texture");
-		NULL_CHECK_RETURN(pGameObject, E_FAIL);
-		if (FAILED(pLayer->Add_GameObject(L"NPC", pGameObject)))
-			return E_FAIL;
-
-		pGameObject = CFollower::Create(m_pGraphicDev, m_pMessageChannel, L"Proto_Follower5Texture");
-		NULL_CHECK_RETURN(pGameObject, E_FAIL);
-		if (FAILED(pLayer->Add_GameObject(L"NPC", pGameObject)))
-			return E_FAIL;
+		Add_FollowerSpawnWork(FOLLOWER_SPAWN_WORK(L"Proto_Follower1Texture", _vec3(217.7f, 0.f, 38.3f)));
+		Add_FollowerSpawnWork(FOLLOWER_SPAWN_WORK(L"Proto_Follower2Texture", _vec3(217.7f, 0.f, 38.3f)));
+		Add_FollowerSpawnWork(FOLLOWER_SPAWN_WORK(L"Proto_Follower3Texture", _vec3(217.7f, 0.f, 38.3f)));
+		Add_FollowerSpawnWork(FOLLOWER_SPAWN_WORK(L"Proto_Follower4Texture", _vec3(217.7f, 0.f, 38.3f)));
+		Add_FollowerSpawnWork(FOLLOWER_SPAWN_WORK(L"Proto_Follower5Texture", _vec3(217.7f, 0.f, 38.3f)));
 	}
 
 	// Village 지형물
@@ -643,6 +626,49 @@ void CVillage::Key_Input_Village()
 			m_pCookingUI->Set_State(CCookingUIController::CS_COOKINGEND);
 			CPersistentMgr::GetInstance()->Get_Player()->Set_Action(false);
 			m_bCookingFlag = false;
+		}
+	}
+}
+
+void CVillage::Add_FollowerSpawnWork(const FOLLOWER_SPAWN_WORK& tWork)
+{
+	m_queueFollowerSpawn.push(tWork);
+}
+
+void CVillage::Process_FollowerSpawnQueue(const _float& fTimeDelta)
+{
+	if (m_queueFollowerSpawn.empty())
+		return;
+
+	m_fSpawnTimer += fTimeDelta;
+
+	if (m_fSpawnTimer >= FOLLOWER_SPAWN_DELAY)
+	{
+		m_fSpawnTimer = 0.f;
+
+		FOLLOWER_SPAWN_WORK tWork = m_queueFollowerSpawn.front();
+		m_queueFollowerSpawn.pop();
+
+		CGameObject* pGameObject = nullptr;
+
+		if (tWork.bUseTransform)
+		{
+			pGameObject = CFollower::Create(m_pGraphicDev, m_pMessageChannel,
+				tWork.strProtoTexKey.c_str(), tWork.vPos, tWork.eState);
+		}
+		else
+		{
+			pGameObject = CFollower::Create(m_pGraphicDev, m_pMessageChannel,
+				tWork.strProtoTexKey.c_str());
+		}
+
+		if (pGameObject)
+		{
+			auto iter = m_mapLayer.find(L"GameLogic_Layer");
+			if (iter != m_mapLayer.end())
+			{
+				iter->second->Add_GameObject(L"NPC", pGameObject);
+			}
 		}
 	}
 }

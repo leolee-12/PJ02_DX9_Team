@@ -298,6 +298,24 @@ void CPlayer::Ready_Event()
 				m_fPassion = MAX_FAITH_VALUE;
 		}) });
 
+	m_hmapSubHandles.insert({ L"FoodReview.Open",m_pMessageChannel->Subscribe(L"Trigger.Activate.Owner" ,[this](const IMessageChannel::EVENT& Event)
+{
+		auto iter = Event.hmapData.find(L"Trigger_Name");
+		if (iter == Event.hmapData.end())
+			return;
+
+		wstring name = any_cast<wstring>(iter->second);
+		if (name == L"Sword")
+		{
+			// 검 먹은 로직
+		}
+		else if (name == L"Gauntlet")
+		{
+			// 건틀릿 먹은 로직
+		}
+}
+) });
+
 	m_bMsgRegistered = true;
 }
 

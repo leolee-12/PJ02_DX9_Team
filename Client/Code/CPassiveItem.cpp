@@ -37,6 +37,11 @@ HRESULT CPassiveItem::Ready_GameObject()
 
 	Ready_Event();
 
+	if (m_eItemID == WP_SWORD || m_eItemID == WP_GAUNTLET)
+	{
+		m_eCurState = IS_IDLE;
+	}
+
 	return S_OK;
 }
 
@@ -68,6 +73,15 @@ _int CPassiveItem::Update_GameObject(const _float& fTimeDelta)
 	CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHA, this);
 
 	return iExit;
+}
+
+void CPassiveItem::LateUpdate_GameObject(const _float& fTimeDelta)
+{
+	CItem::LateUpdate_GameObject(fTimeDelta);
+
+	if (m_pTrigger) {
+		m_pTrigger->LateUpdate_GameObject(fTimeDelta);
+	}
 }
 
 void CPassiveItem::OnCollision(CGameObject* pObject)
@@ -105,14 +119,21 @@ void CPassiveItem::Update_Idle(const _float& fTimeDelta)
 		switch (m_eItemID)
 		{
 		case FD_GFOOD:
-			m_pTrigger = CTriggerPoint::Create(m_pGraphicDev, m_pMessageChannel, m_vPos, _vec3(1.f, 1.f, 1.f), Trigger::TI_FOOD, L"GoodFood", false, this);
+			m_pTrigger = CTriggerPoint::Create(m_pGraphicDev, m_pMessageChannel, m_vPos, _vec3(1.f, 1.f, 1.f), Trigger::TI_ITEM, L"GoodFood", false, this);
 			break;
 		case FD_BFOOD:
-			m_pTrigger = CTriggerPoint::Create(m_pGraphicDev, m_pMessageChannel, m_vPos, _vec3(1.f, 1.f, 1.f), Trigger::TI_FOOD, L"BadFood", false, this);
+			m_pTrigger = CTriggerPoint::Create(m_pGraphicDev, m_pMessageChannel, m_vPos, _vec3(1.f, 1.f, 1.f), Trigger::TI_ITEM, L"BadFood", false, this);
+			break;
+		case WP_SWORD:
+			m_pTrigger = CTriggerPoint::Create(m_pGraphicDev, m_pMessageChannel, m_vPos, _vec3(1.f, 2.f, 1.f), Trigger::TI_ITEM, L"Sword", false, this);
+			break;
+		case WP_GAUNTLET:
+			m_pTrigger = CTriggerPoint::Create(m_pGraphicDev, m_pMessageChannel, m_vPos, _vec3(1.f, 2.f, 1.f), Trigger::TI_ITEM, L"Gauntlet", false, this);
 			break;
 		}
 	}
 	m_fAcmlTime += fTimeDelta;
+	m_pTrigger->Set_Pos_Trigger(m_vPos);
 	m_pTrigger->Update_GameObject(fTimeDelta);
 }
 
@@ -145,11 +166,12 @@ void CPassiveItem::Interact()
 
 }
 
-CPassiveItem* CPassiveItem::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, _float fThrowRange)
+CPassiveItem* CPassiveItem::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, ITEMID eID, _float fThrowRange)
 {
 	CPassiveItem* pItem = new CPassiveItem(pGraphicDev, StageChannel);
 
 	pItem->m_fThrowRange = fThrowRange;
+	pItem->m_eItemID = eID;
 
 	if (FAILED(pItem->Ready_GameObject()))
 	{
