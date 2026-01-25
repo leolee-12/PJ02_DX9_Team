@@ -46,8 +46,8 @@ protected:
 	map<wstring, CComponent*>				m_mapComponent[ID_END];
 	LPDIRECT3DDEVICE9						m_pGraphicDev;
 	
-	_float									m_fDepth;
-	_vec3									m_vDepth;
+	_float									m_fDepth; // 유아이용
+	_vec3									m_vDepth; // 3차원용
 
 protected:
 	virtual		void		Free();

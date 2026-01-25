@@ -67,6 +67,9 @@ protected:
 	_vec3           m_vOffset;          // 부모로부터의 오프셋
 	CGameObject*	m_pOwner;           // 부착 대상 (nullptr = 월드)
 
+	// 복사생성 관련
+	_bool			m_bClone = false;
+
 public:
 	virtual CEffect*	Clone() PURE;
 

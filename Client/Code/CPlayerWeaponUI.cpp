@@ -19,27 +19,10 @@ HRESULT CPlayerWeaponUI::Ready_GameObject()
 		return E_FAIL;
 
 	m_pTransformCom->Set_Scale(154.0f * m_fScale, 154.0f * m_fScale, 0.f);
-	m_pTransformCom->Set_Pos(m_vPos.x, m_vPos.y, 0.001f);
+	m_pTransformCom->Set_Pos(m_vPos.x, m_vPos.y, 0.02f);
 
 	m_bRender = true;
 	Ready_Event();
-	return S_OK;
-}
-
-HRESULT CPlayerWeaponUI::Ready_Material()
-{
-	D3DMATERIAL9			tMtrl;
-	ZeroMemory(&tMtrl, sizeof(D3DMATERIAL9));
-
-	tMtrl.Diffuse = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-	tMtrl.Specular = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-	tMtrl.Ambient = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-
-	tMtrl.Emissive = D3DXCOLOR(1.f, 0.f, 0.f, 1.f);
-	tMtrl.Power = 0.f;
-
-	m_pGraphicDev->SetMaterial(&tMtrl);
-
 	return S_OK;
 }
 
@@ -111,24 +94,22 @@ HRESULT CPlayerWeaponUI::Add_Component()
 
 
 
-CPlayerWeaponUI* CPlayerWeaponUI::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMessageChannel, _vec3 _vPos, _float _fScale, _int _iPage)
+CPlayerWeaponUI* CPlayerWeaponUI::Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 _vPos, _float _fScale, _int _iPage)
 {
-	CPlayerWeaponUI* pGaugeCover = new CPlayerWeaponUI(pGraphicDev);
+	CPlayerWeaponUI* pPlayerWeaponUI = new CPlayerWeaponUI(pGraphicDev);
 
-	pGaugeCover->m_iPage = _iPage;
-	pGaugeCover->m_vPos = _vPos;
-	pGaugeCover->m_fScale = _fScale;
-	pGaugeCover->m_pMessageChannel = pMessageChannel;
-	pGaugeCover->m_pMessageChannel->AddRef();
+	pPlayerWeaponUI->m_iPage = _iPage;
+	pPlayerWeaponUI->m_vPos = _vPos;
+	pPlayerWeaponUI->m_fScale = _fScale;
 
-	if (FAILED(pGaugeCover->Ready_GameObject()))
+	if (FAILED(pPlayerWeaponUI->Ready_GameObject()))
 	{
-		Safe_Release(pGaugeCover);
-		MSG_BOX("pGaugeCover Create Failed");
+		Safe_Release(pPlayerWeaponUI);
+		MSG_BOX("pPlayerWeaponUI Create Failed");
 		return nullptr;
 	}
 
-	return pGaugeCover;
+	return pPlayerWeaponUI;
 }
 
 void CPlayerWeaponUI::Free()
@@ -138,9 +119,4 @@ void CPlayerWeaponUI::Free()
 
 void CPlayerWeaponUI::Ready_Event()
 {
-	m_hmapSubHandles.insert({ L"Tarot.Selected", m_pMessageChannel->Subscribe(L"Tarot.Selected", [this](const IMessageChannel::EVENT& Event)
-	{
-			m_bRender = true;
-	}
-) });
 }

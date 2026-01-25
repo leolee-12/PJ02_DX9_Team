@@ -24,13 +24,15 @@ public:
 	virtual			void		OnCollision(CGameObject* pObject);
 
 public:
-	static CPlayerWeaponUI* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMessageChannel,_vec3 _vPos, _float _fScale, _int _iPage);
+	void			Set_WeaponType(_int iType) { m_iPage = iType; }
+
+public:
+	static CPlayerWeaponUI* Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 _vPos, _float _fScale, _int _iPage);
 
 private:
 	virtual			void		Free();
 	void						Ready_Event();
 	HRESULT						Add_Component();
-	HRESULT						Ready_Material();
 
 private:
 	CRcTex* m_pBufferCom;

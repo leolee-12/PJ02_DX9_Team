@@ -42,6 +42,7 @@ public:
 	void			Set_Action(_bool b) { m_bAction = b; }
 	void			Set_Village(_bool b) { m_bVillage = b; }
 
+	WEAPONTYPE		Get_Weapon() { return m_eWeaponType; }
 	_int			Get_MaxHp() { return m_iMaxHp; }
 	_int			Get_Hp() { return m_iHp; }
 	const _float&	Get_Passion() { return m_fPassion; }
