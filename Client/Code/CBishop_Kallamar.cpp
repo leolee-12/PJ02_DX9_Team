@@ -198,7 +198,7 @@ void CBishop_Kallamar::Ready_Event()
 			m_pSpeechBubble->Active();
 			m_pFontUI->Active();
 			m_eCurState = Bishops::BS_TALK;
-			CSoundMgr::GetInstance()->Play(L"bc_kallamar.wav", SOUND_DIALOUGE, 0.1f);
+			CSoundMgr::GetInstance()->Play(L"bc_kallamar.wav", SOUND_DIALOGUE, 0.1f);
 		}
 	) });
 

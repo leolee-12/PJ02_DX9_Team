@@ -21,7 +21,7 @@ HRESULT	CIndicator::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(CEffect::Add_Component(), E_FAIL);
 
-	m_eType = EF_SPRITE;
+	m_eType = EF_INDICATOR;
 	m_eState = ES_READY;
 
 	return S_OK;

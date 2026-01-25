@@ -40,7 +40,6 @@ CMonsterB1::CMonsterB1(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChan
 	ZeroMemory(m_pNode, sizeof(m_pNode));
 }
 
-
 CMonsterB1::CMonsterB1(const CMonsterB1& rhs)
 	: CMonster(rhs),
 	m_ePreState(B1S_END),
@@ -501,9 +500,35 @@ void CMonsterB1::Move_Frame(const _float& fTimeDelta)
 			if ((iCurFrame - 1) % 3 == 0) m_pAICom->Set_Signal();
 			break;
 
+		case B1S_JUMP:
+		{
+			if (iCurFrame == 1)
+			{
+				_tchar strSoundName[128] = L"";
+				swprintf_s(strSoundName, L"Patrol Worm Jump%d.wav", Get_Rand_Int(0, 2));
+				CSoundMgr::GetInstance()->Play(strSoundName, SOUND_EFFECT, 0.2f);
+			}
+		}
+		break;
+
+		case B1S_LAND:
+		{
+			if (iCurFrame == 1)
+			{
+				_tchar strSoundName[128] = L"";
+				swprintf_s(strSoundName, L"Patrol Worm Land%d.wav", Get_Rand_Int(0, 2));
+				CSoundMgr::GetInstance()->Play(strSoundName, SOUND_EFFECT, 0.2f);
+			}
+		}
+			break;
+
 		case B1S_SHOOT:
 		case B1S_SUMMON:
-			if (iCurFrame == 4) m_pAICom->Set_Signal();
+		{
+			if (iCurFrame == 1) 		CSoundMgr::GetInstance()->Play(L"Summon.wav", SOUND_EFFECT, 0.2f);
+			else if (iCurFrame == 4)	m_pAICom->Set_Signal();
+
+		}
 			break;
 
 		default:

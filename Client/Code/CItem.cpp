@@ -187,7 +187,7 @@ CItem* CItem::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChanne
 	CItem* pItem = nullptr;
 
 	if (isActive)	pItem = CActiveItem::Create(pGraphicDev, StageChannel, fThrowRange);
-	else			pItem = CPassiveItem::Create(pGraphicDev, StageChannel, fThrowRange);
+	else			pItem = CPassiveItem::Create(pGraphicDev, StageChannel, eID, fThrowRange);
 
 	NULL_CHECK_RETURN(pItem, nullptr);
 

@@ -162,6 +162,7 @@
     <ClInclude Include="..\Header\CBossHpBarMiddle.h" />
     <ClInclude Include="..\Header\CBrute.h" />
     <ClInclude Include="..\Header\CBuilding.h" />
+    <ClInclude Include="..\Header\CChargeArrow.h" />
     <ClInclude Include="..\Header\CChest.h" />
     <ClInclude Include="..\Header\CCookingButton.h" />
     <ClInclude Include="..\Header\CCookingCover.h" />
@@ -211,8 +212,12 @@
     <ClInclude Include="..\Header\CGaugeCover.h" />
     <ClInclude Include="..\Header\CGaugeStar.h" />
     <ClInclude Include="..\Header\CIndicator.h" />
+    <ClInclude Include="..\Header\CInteractionUI.h" />
     <ClInclude Include="..\Header\CKBCharNPC.h" />
     <ClInclude Include="..\Header\CKBCharPlayer.h" />
+    <ClInclude Include="..\Header\CMapDoor.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="..\Header\CMonsterHpBar.h" />
     <ClInclude Include="..\Header\CMonsterHpBarCover.h" />
     <ClInclude Include="..\Header\CMonsterHpFront.h" />
@@ -231,7 +236,7 @@
     <ClInclude Include="..\Header\CResourceWorkFront.h" />
     <ClInclude Include="..\Header\CRestUI.h" />
     <ClInclude Include="..\Header\CScreenEffect.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\Header\CSpriteEffect.h" />
     <ClInclude Include="..\Header\CTarotCard.h" />
@@ -239,6 +244,7 @@
     <ClInclude Include="..\Header\CTrailEffect.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClInclude>
+    <ClInclude Include="..\Header\CWeaponInfo.h" />
     <ClInclude Include="..\Header\CWorkRockUI.h" />
     <ClInclude Include="..\Header\CWorkWoodUI.h" />
     <ClInclude Include="..\Header\IInteractable.h" />
@@ -356,6 +362,7 @@
     <ClCompile Include="..\Code\CBossHpBarFront.cpp" />
     <ClCompile Include="..\Code\CBossHpBarMiddle.cpp" />
     <ClCompile Include="..\Code\CBrute.cpp" />
+    <ClCompile Include="..\Code\CChargeArrow.cpp" />
     <ClCompile Include="..\Code\CChest.cpp" />
     <ClCompile Include="..\Code\CBuilding.cpp" />
     <ClCompile Include="..\Code\CCookingButton.cpp" />
@@ -407,6 +414,7 @@
     <ClCompile Include="..\Code\CGaugeCover.cpp" />
     <ClCompile Include="..\Code\CGaugeStar.cpp" />
     <ClCompile Include="..\Code\CIndicator.cpp" />
+    <ClCompile Include="..\Code\CInteractionUI.cpp" />
     <ClCompile Include="..\Code\CInteractMgr.cpp" />
     <ClCompile Include="..\Code\CItem.cpp" />
     <ClCompile Include="..\Code\CKBBack.cpp" />
@@ -437,6 +445,9 @@
     <ClCompile Include="..\Code\CMainApp.cpp" />
     <ClCompile Include="..\Code\CMainCamera.cpp" />
     <ClCompile Include="..\Code\CMapBorder.cpp" />
+    <ClCompile Include="..\Code\CMapDoor.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\Code\CMapWarp.cpp" />
     <ClCompile Include="..\Code\CMonster.cpp" />
     <ClCompile Include="..\Code\CMonsterB1.cpp" />
@@ -482,7 +493,7 @@
     <ClCompile Include="..\Code\CRestUI.cpp" />
     <ClCompile Include="..\Code\CSceneWarp.cpp" />
     <ClCompile Include="..\Code\CScreenEffect.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\Code\CSelectionArrow.cpp" />
     <ClCompile Include="..\Code\CSkyBox.cpp" />
@@ -519,6 +530,7 @@
     <ClCompile Include="..\Code\CTileMgr.cpp" />
     <ClCompile Include="..\Code\CMapObject.cpp" />
     <ClCompile Include="..\Code\CGrass.cpp" />
+    <ClCompile Include="..\Code\CWeaponInfo.cpp" />
     <ClCompile Include="..\Code\CWorkRockUI.cpp" />
     <ClCompile Include="..\Code\CWorkWoodUI.cpp" />
     <ClCompile Include="..\Code\CPlayerTarotCard.cpp" />

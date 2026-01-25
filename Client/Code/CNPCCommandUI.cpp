@@ -12,6 +12,7 @@
 #include "CFontMgr.h"
 #include "CDInputMgr.h"
 #include "CFollower.h"
+#include "CSoundMgr.h"
 
 
 CNPCCommandUI::CNPCCommandUI(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -134,6 +135,7 @@ void CNPCCommandUI::Ready_Event()
 
 				m_bRender = true;
 				m_pOwner->WaitForCommand();
+				CSoundMgr::GetInstance()->Play(L"OpenMenu.wav", SOUND_UI, 0.3f);
 			}
 		}
 	) });

@@ -19,7 +19,7 @@ HRESULT CPlayerTarotCard::Ready_GameObject()
 		return E_FAIL;
 
 	m_pTransformCom->Set_Scale(100.0f * 0.5f, 100.0f* 0.5f, 0.f);
-	m_pTransformCom->Set_Pos(-500.f, 250.f, 0.1f);
+	m_pTransformCom->Set_Pos(-460.f, 250.f, 0.1f);
 
 	m_bRender = false;
 	Ready_Event();

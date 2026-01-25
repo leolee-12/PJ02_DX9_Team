@@ -292,6 +292,7 @@ void CTarotCard::Check_CusorColl()
 			TarotEvent.strType = L"Tarot.Selected";
 			TarotEvent.hmapData[L"TarotType"] = _uint(m_eType);
 			m_pMessageChannel->Publish(TarotEvent);
+			CSoundMgr::GetInstance()->Play(L"TarotCardClose.wav", SOUND_EFFECT, 0.2f);
 		}
 		m_pTransformCom->Set_Scale(1100.f, 1100.f, 1.f);
 	}

@@ -11,6 +11,8 @@ namespace Engine
 }
 
 class CTriggerPoint;
+class CChargeArrow;
+class CInteractionUI;
 
 class CPlayer : public CGameObject
 {
@@ -137,6 +139,7 @@ private:
 	// 차지 공격 관련
 	_float			m_fCharge;
 	_float			m_fChargeMax;
+	CChargeArrow*	m_pChargeArrow;
 
 	// 메시지 채널 관련
 	_bool 			m_bMsgRegistered;
@@ -146,6 +149,7 @@ private:
 	CTriggerPoint*	m_pTriggerPoint = nullptr;
 	_bool			m_bIntro;			// Ready에서 false 처리 (Intro 스프라이트 사용하려면 Ready 이후 Set 해주기)
 	_uint			m_iInteractType;	// 상호작용하는 대상 구분용
+	CInteractionUI* m_pInteractionUI = nullptr;
 
 	// 캐릭터 border 처리 관련
 	_vec3 m_vPrevPos;
@@ -160,10 +164,11 @@ public:
 	static CPlayer* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel);
 
 	// 상수
-	static constexpr _float PLAYER_DEFAULT_ATTACK = 1.f + 5.f;
+	static constexpr _float PLAYER_DEFAULT_ATTACK = 1.f;// +5.f;
 	static constexpr _float PLAYER_INVINCIBLE_TIME = 3.f;
 	static constexpr _float PLAYER_DEFAULT_SPEED = 12.f;
 	static constexpr _float PLAYER_INTRO_SPEED = 7.f;
+	static constexpr _float PLAYER_CHARGE_SPEED = 2.f;
 	static constexpr _float PLAYER_DEFAULT_SCALE = 10.f;
 	static constexpr _float PLAYER_INTRO_SCALE = 11.f;
 	static constexpr _float PLAYER_REBIRTH_SCALE = 20.f;

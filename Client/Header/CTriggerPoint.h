@@ -24,6 +24,8 @@ public:
 
 	virtual	void		PrepareDestroy();
 
+	_bool				Get_Passive() { return m_bPassive; }
+
 public:
 	_int				Get_TID_for_int() { return _int(m_eTID); }
 	void				Set_Pos_Trigger(const _vec3& vPos);

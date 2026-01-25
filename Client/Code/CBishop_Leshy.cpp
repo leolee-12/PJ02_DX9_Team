@@ -5,6 +5,7 @@
 #include "CFontUI.h"
 #include "CSpeechBubble.h"
 #include "CSoundMgr.h"
+#include "CEffectMgr.h"
 
 CBishop_Leshy::CBishop_Leshy(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev), m_pBufferCom(nullptr), m_pTransformCom(nullptr), m_pTextureCom(nullptr)
@@ -208,12 +209,14 @@ void		CBishop_Leshy::Update_State()
 				m_iFrameEnd = 133;
 				m_pTransformCom->Set_Scale(320.f * 0.025f, 442.f * 0.025f, 0.f);
 				m_pTransformCom->Set_Pos(m_vPos.x, 3.f, m_vPos.z);
+				CSoundMgr::GetInstance()->Play(L"Cult Member Ascend.wav", SOUND_EFFECT, 0.2f);
 				break;
 			case LS_TRANS:
 				m_iFrame = 0;
 				m_iFrameEnd = 375;
 				m_pTransformCom->Set_Scale(480.f * 0.025f, 618.f * 0.025f, 0.f);
 				m_pTransformCom->Set_Pos(m_vPos.x, 5.f, m_vPos.z);
+				CSoundMgr::GetInstance()->Play(L"cult_leader_transform.wav", SOUND_EFFECT, 0.2f);
 				break;
 			}
 			m_ePreNewState = m_eCurNewState;
@@ -308,6 +311,11 @@ void CBishop_Leshy::Update_Frame(const _float& fTimeDelta)
 			}
 		}
 	}
+
+
+
+	if ((m_eCurNewState == LS_TRANS) && (m_iFrame == 250) && (m_fFrameTime > 0.040f))
+		CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_SCREEN_IMPACT, 0, _vec3(0.f, 0.f, 0.f));
 }
 
 void CBishop_Leshy::Ready_Event()
@@ -352,7 +360,7 @@ void CBishop_Leshy::Ready_Event()
 			m_pFontUI->Active();
 			m_eCurState = Bishops::BS_TALK;
 			m_bNew = false;
-			CSoundMgr::GetInstance()->Play(L"bc_Leshy.wav", SOUND_DIALOUGE, 0.1f);
+			CSoundMgr::GetInstance()->Play(L"bc_Leshy.wav", SOUND_DIALOGUE, 0.1f);
 		}
 	) });
 

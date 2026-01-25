@@ -38,8 +38,6 @@
 #include "CLoading.h"
 #include "CManagement.h"
 #include "CPlayerTarotCard.h"
-#include "CItem.h"
-#include "CPlayerWeaponUI.h"
 
 CRealDungeon::CRealDungeon(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -72,7 +70,7 @@ HRESULT CRealDungeon::Ready_Scene()
 	CEffectMgr::GetInstance()->Ready_EffectMgr(m_pGraphicDev);
 
 	CSoundMgr::GetInstance()->PlayBGM(L"05.RealDungeon.mp3", 0.1f);
-	CSoundMgr::GetInstance()->Play(L"RealDungeon_Enter.wav", SOUND_EFFECT, 0.2f);
+
 	return S_OK;
 }
 
@@ -175,10 +173,10 @@ HRESULT CRealDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 			switch (spawn.type)
 			{
 			case 0:
-				CPersistentMgr::GetInstance()->Get_Player()->Set_Pos(_vec3(spawn.x, -0.95f, spawn.z));
+				//CPersistentMgr::GetInstance()->Get_Player()->Set_Pos(_vec3(spawn.x, -0.95f, spawn.z));
 				//CPersistentMgr::GetInstance()->Get_Player()->Set_Pos(_vec3(-88.f, -0.95f, 11.7f)); // 암두방 앞
 				//CPersistentMgr::GetInstance()->Get_Player()->Set_Pos(_vec3(-260.f, -0.95f, -5.2f)); // 레쉬방 앞
-				//CPersistentMgr::GetInstance()->Get_Player()->Set_Pos(_vec3(-260.f, -0.95f, 7.2f)); // 레쉬방 안
+				CPersistentMgr::GetInstance()->Get_Player()->Set_Pos(_vec3(-260.f, -0.95f, 7.2f)); // 레쉬방 안
 				pGameObject = CPersistentMgr::GetInstance()->Get_Player();
 
 				if (nullptr == pGameObject)
@@ -430,68 +428,6 @@ HRESULT CRealDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 	if (FAILED(pLayer->Add_GameObject(L"NPC", pGameObject)))
 		return E_FAIL;
 
-	pGameObject = CItem::Create(m_pGraphicDev, m_pMessageChannel, _vec3(9.f * 0.8f, 0.f, 18.f * 0.8f), CItem::WP_SWORD, false, 0.f);
-
-	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-
-	if (FAILED(pLayer->Add_GameObject(L"WeaponItem", pGameObject)))
-		return E_FAIL;
-
-	pGameObject = CItem::Create(m_pGraphicDev, m_pMessageChannel, _vec3(20.f * 0.8f, 0.f, 18.f * 0.8f), CItem::WP_GAUNTLET, false, 0.f);
-
-	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-
-	if (FAILED(pLayer->Add_GameObject(L"WeaponItem", pGameObject)))
-		return E_FAIL;
-
-	_float fRadius = 10.f;
-	_float fRadian = 0.f;
-	_float fCount = 10.f;
-	_float fGap = 2.f * D3DX_PI / fCount;
-	CMonsterN1* pTemp = nullptr;
-
-	for (_uint i = 0; i < fCount; ++i)
-	{
-		_vec3 vPos{ -260.f + fRadius * cosf(fRadian), 0.f, 24.f + fRadius * sinf(fRadian) };
-
-		pGameObject = pTemp = CMonsterN1::Create(m_pGraphicDev, m_pMessageChannel, vPos, CMonsterN1::N1S_PRAY);
-		
-		NULL_CHECK_RETURN(pGameObject, E_FAIL);
-
-		_vec3 vDir = _vec3{ -260.f, 0.f, 24.f } - vPos;
-
-		pTemp->Set_Dir(vDir);
-		
-		if (FAILED(pLayer->Add_GameObject(L"ForCutScene", pGameObject)))
-			return E_FAIL;
-
-		fRadian += fGap;
-	}
-
-	fRadius += 5.f;
-	fCount = 20.f;
-	fGap = 2.f * D3DX_PI / fCount;
-
-	for (_uint i = 0; i < fCount; ++i)
-	{
-		_vec3 vPos{ -260.f + fRadius * cosf(fRadian), 0.f, 24.f + fRadius * sinf(fRadian) };
-
-		pGameObject = pTemp = CMonsterN1::Create(m_pGraphicDev, m_pMessageChannel, vPos, CMonsterN1::N1S_PRAY);
-
-		NULL_CHECK_RETURN(pGameObject, E_FAIL);
-
-		_vec3 vDir = _vec3{ -260.f, 0.f, 24.f } - vPos;
-
-		D3DXVec3Normalize(&vDir, &vDir);
-
-		pTemp->Set_Dir(vDir);
-
-		if (FAILED(pLayer->Add_GameObject(L"ForCutScene", pGameObject)))
-			return E_FAIL;
-
-		fRadian += fGap;
-	}
-
 	m_mapLayer.insert({ pLayerTag , pLayer });
 
 	return S_OK;
@@ -559,20 +495,6 @@ HRESULT CRealDungeon::Ready_UI_Layer(const _tchar* pLayerTag)
 	if (FAILED(pLayer->Add_GameObject(L"PlayerTarotCard", pGameObject)))
 		return E_FAIL;
 
-	pGameObject = CPlayerWeaponUI::Create(m_pGraphicDev, m_pMessageChannel, _vec3{-500.0f,260.0f,0.1f},0.2f,0);
-
-	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-
-	if (FAILED(pLayer->Add_GameObject(L"PlayerWeaponUI1", pGameObject)))
-		return E_FAIL;
-
-	pGameObject = CPlayerWeaponUI::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ -535.0f,230.0f,0.1f }, 0.2f, 1);
-
-	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-
-	if (FAILED(pLayer->Add_GameObject(L"PlayerWeaponUI2", pGameObject)))
-		return E_FAIL;
-
 	m_mapLayer.insert({ pLayerTag , pLayer });
 
 	return S_OK;
@@ -617,10 +539,10 @@ void CRealDungeon::Ready_Event()
 				CLayer* pLayer = CLayer::Create();
 
 				if (nullptr == pLayer)
-					return;
+					return E_FAIL;
 
 				if (FAILED(pLayer->Add_GameObject(strObjTag, pObj)))
-					return;
+					return E_FAIL;
 
 				m_mapLayer.insert({ strLayerTag , pLayer });
 			}

@@ -65,6 +65,8 @@ _int CBuilding::Update_GameObject(const _float& fTimeDelta)
 
 	//m_pColliderCom->UpdateFromTransform(m_pTransformCom);
 
+	m_fAcmlTime += fTimeDelta;
+
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
 	for(size_t i = 0; i < m_vecSubObjects.size(); ++i)
@@ -73,7 +75,7 @@ _int CBuilding::Update_GameObject(const _float& fTimeDelta)
 	}
 
 	if (m_eBuildingState == BS_CONSTRUCTING) 	Update_WorkBar(fTimeDelta);
-	else										m_pTrigger->Update_GameObject(fTimeDelta);
+	else if (m_bUsingTrigger)					m_pTrigger->Update_GameObject(fTimeDelta);
 
 	if (iExit == DEAD)
 	{
@@ -94,13 +96,21 @@ void CBuilding::LateUpdate_GameObject(const _float& fTimeDelta)
 	{
 		m_pWorkBar->Active();
 	}
+	else
+	{
+		if (m_fAcmlTime >= 3.f)
+		{
+			m_pWorkBar->UnActive();
+			m_fAcmlTime = 0.f;
+		}
+	}
 
 	_vec3 vPos;
 	m_pTransformCom->Get_Info(Engine::INFO_POS, &vPos);
 
 	if (m_eBuildingState == BS_COMPLETE)
 	{
-		m_pTrigger->LateUpdate_GameObject(fTimeDelta);
+		if (m_bUsingTrigger) { m_pTrigger->LateUpdate_GameObject(fTimeDelta); }
 
 		//m_pTransformCom->Compute_Bilboard(BBD_X);
 
@@ -310,6 +320,7 @@ void CBuilding::Ready_Variable()
 {
 	_float fScale = 5.f;
 	m_pTransformCom->Set_Scale(fScale, fScale, fScale);
+	m_fAcmlTime = 0.f;
 
 	//Change_State(BS_CONSTRUCTING);
 	//m_fWorkGauge = 0.f;
@@ -395,7 +406,8 @@ void CBuilding::Ready_Trigger()
 		m_pTrigger = CTriggerPoint::Create(m_pGraphicDev, m_pMessageChannel, vTriggerPos, vTriggetHalfSize, Trigger::TI_KNUCKLE, L"KnuckleBone");
 		break;
 	case BT_SHRINE:
-		m_pTrigger = CTriggerPoint::Create(m_pGraphicDev, m_pMessageChannel, vTriggerPos, vTriggetHalfSize, Trigger::TI_CRAFTING, L"Crafting");
+		//m_pTrigger = CTriggerPoint::Create(m_pGraphicDev, m_pMessageChannel, vTriggerPos, vTriggetHalfSize, Trigger::TI_CRAFTING, L"Crafting");
+		m_bUsingTrigger = false;
 		break;
 	}
 }
