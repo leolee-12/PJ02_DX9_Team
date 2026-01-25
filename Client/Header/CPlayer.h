@@ -162,7 +162,7 @@ public:
 	static CPlayer* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel);
 
 	// 상수
-	static constexpr _float PLAYER_DEFAULT_ATTACK = 1.f + 5.f;
+	static constexpr _float PLAYER_DEFAULT_ATTACK = 1.f;// +5.f;
 	static constexpr _float PLAYER_INVINCIBLE_TIME = 3.f;
 	static constexpr _float PLAYER_DEFAULT_SPEED = 12.f;
 	static constexpr _float PLAYER_INTRO_SPEED = 7.f;

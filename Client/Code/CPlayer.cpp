@@ -178,8 +178,8 @@ void CPlayer::Ready_Variable()
 	m_fPassion = 4.f;
 	m_fFaith = 50.f;
 
-	//m_eWeaponType = WT_SWORD;
-	m_eWeaponType = WT_GAUNTLETS;
+	m_eWeaponType = WT_SWORD;
+	//m_eWeaponType = WT_GAUNTLETS;
 
 	m_eOBJID = OID_PLAYER;
 	_float fScale = PLAYER_DEFAULT_SCALE;
@@ -285,6 +285,7 @@ void CPlayer::Ready_Event()
 			{
 			case 0:
 				m_iMaxHp += 2;
+				m_iHp += 2;
 				break;
 			case 2:
 				m_iAttack = _int(_float(m_iAttack) * 1.5f);
@@ -320,11 +321,13 @@ void CPlayer::Ready_Event()
 		{
 			// 검 먹은 로직
 			m_eWeaponType = WT_SWORD;
+			m_iAttack = 1;
 		}
 		else if (name == L"Gauntlet")
 		{
 			// 건틀릿 먹은 로직
 			m_eWeaponType = WT_GAUNTLETS;
+			m_iAttack = 2;
 		}
 }
 ) });
@@ -1026,7 +1029,8 @@ void CPlayer::Attack_HitBox()
 
 	if(g_bDebug) CRenderer::GetInstance()->Add_TestCollider(tAABB, 60);
 
-	vector<CGameObject*> tempVec = CCollisionMgr::GetInstance()->Test_AABB(tAABB, CL_MONSTER | CL_GRASS);
+	vector<CGameObject*> tempVec = CCollisionMgr::GetInstance()->Test_AABB(tAABB, CL_MONSTER);
+	vector<CGameObject*> vecGrass = CCollisionMgr::GetInstance()->Test_AABB(tAABB, CL_GRASS);
 
 	if (!tempVec.empty())
 	{
@@ -1049,6 +1053,15 @@ void CPlayer::Attack_HitBox()
 				CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_HIT, m_iCombo, vEffectPos, _vec3(0.2f, 0.2f, 0.f));
 			}
 		}
+	}
+	if (!vecGrass.empty())
+	{
+		IMessageChannel::EVENT EAttack;
+		EAttack.strType = L"Grass.Attacked";
+		EAttack.hmapData.emplace(L"Attack", m_iAttack);
+		EAttack.hmapData.emplace(L"Target", vecGrass);
+		m_pMessageChannel->Publish(EAttack);
+		CSoundMgr::GetInstance()->Play(L"GrassHit.wav", SOUND_EFFECT, 0.35f);
 	}
 }
 

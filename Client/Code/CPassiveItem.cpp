@@ -98,7 +98,9 @@ void CPassiveItem::LateUpdate_GameObject(const _float& fTimeDelta)
 	if (m_eItemID == WP_SWORD || m_eItemID == WP_GAUNTLET)
 	{
 		AABB tWeaponAABB = { m_vPos, _vec3(1.f,2.f,1.f) };
+		m_pColliderCom->Set_AABB(tWeaponAABB);
 		m_pColliderCom->UpdateFromCustom(tWeaponAABB);
+		m_pWeaponInfo->UnActive();
 	}
 	else
 	{
@@ -106,8 +108,6 @@ void CPassiveItem::LateUpdate_GameObject(const _float& fTimeDelta)
 	}
 
 	if (g_bDebug) { m_pColliderCom->Update_AABBforRender(); }
-
-	m_pWeaponInfo->UnActive();
 }
 
 void CPassiveItem::OnCollision(CGameObject* pObject)
@@ -117,7 +117,10 @@ void CPassiveItem::OnCollision(CGameObject* pObject)
 
 	if (pObject->Get_OBJID() == OID_PLAYER)
 	{
-		m_pWeaponInfo->Active();
+		if (m_eItemID == WP_SWORD || m_eItemID == WP_GAUNTLET)
+		{
+			m_pWeaponInfo->Active();
+		}
 		m_bTriggered = true;
 	}
 }

@@ -62,21 +62,6 @@ void CBossHpBarFront::Render_GameObject()
 	m_pBufferCom->Render_Buffer();
 
 	m_pGraphicDev->SetPixelShader(NULL);
-
-	D3DXCOLOR FontColor = D3DXCOLOR(240.f / 256.f, 240.f / 256.f, 240.f / 256.f, 1.f);
-	wchar_t szGauge[128];
-
-	swprintf_s(szGauge, L" Front : %.3f", m_fRatio);
-	RECT rcPlayer = { 0, 0, 200, 300 };
-	CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans30", szGauge, rcPlayer, FontColor, DT_RIGHT | DT_BOTTOM);
-
-	D3DXCOLOR FontColor1 = D3DXCOLOR(240.f / 256.f, 240.f / 256.f, 240.f / 256.f, 1.f);
-	wchar_t szGauge1[128];
-
-
-	rcPlayer = { 0, 0, 200, 200 };
-	swprintf_s(szGauge1, L" Front : %.3f", m_fLerpHp);
-	CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans30", szGauge1, rcPlayer, FontColor1, DT_RIGHT | DT_BOTTOM);
 }
 
 void CBossHpBarFront::OnCollision(CGameObject* pObject)
