@@ -365,7 +365,7 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 			if (i == 8)
 			{
 				_vec3 vEffectPos{ m_vPos.x, 3.f, m_vPos.z };
-				CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_SCREEN_IMPACT, 0, vEffectPos);
+				CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_SCREEN_IMPACT, 0, _vec3(0.f, 0.f, 0.f));
 			}
 			else		CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_HIT, i, m_vPos);
 		}

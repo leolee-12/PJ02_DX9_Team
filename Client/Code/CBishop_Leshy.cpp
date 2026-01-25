@@ -5,6 +5,7 @@
 #include "CFontUI.h"
 #include "CSpeechBubble.h"
 #include "CSoundMgr.h"
+#include "CEffectMgr.h"
 
 CBishop_Leshy::CBishop_Leshy(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev), m_pBufferCom(nullptr), m_pTransformCom(nullptr), m_pTextureCom(nullptr)
@@ -310,6 +311,11 @@ void CBishop_Leshy::Update_Frame(const _float& fTimeDelta)
 			}
 		}
 	}
+
+
+
+	if ((m_eCurNewState == LS_TRANS) && (m_iFrame == 250) && (m_fFrameTime > 0.040f))
+		CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_SCREEN_IMPACT, 0, _vec3(0.f, 0.f, 0.f));
 }
 
 void CBishop_Leshy::Ready_Event()

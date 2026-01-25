@@ -46,8 +46,11 @@ HRESULT	CScreenEffect::Ready_GameObject()
 	m_fAlpha = 0.f;
 	m_fScale = 1.f;
 	m_fRotation = 0.f;
-	m_fLifeTime = 1.f;
-	m_pTransformCom->Set_Scale(WINCX, WINCY, 1.f);
+	m_fLifeTime = 0.1f;
+
+	m_pTransformCom->Set_Pos(0.f, 0.f, 0.f);
+	m_pTransformCom->Set_Scale(_float(WINCX), _float(WINCY), 1.f);
+	//m_pTransformCom->Set_Scale(1.f, 1.f, 1.f);
 
 	return S_OK;
 }
@@ -107,25 +110,20 @@ void CScreenEffect::Render_GameObject()
 {
 	if (m_fAlpha <= 0.f) return;
 
-	//DWORD dwAlpha = DWORD(m_fAlpha * 255.f);
-	//DWORD dwOldColor, dwOldAlphaOp, dwOldAlphaArg1, dwOldAlphaArg2;
-	//m_pGraphicDev->GetRenderState(D3DRS_TEXTUREFACTOR, &dwOldColor);
-	//m_pGraphicDev->GetTextureStageState(0, D3DTSS_ALPHAOP, &dwOldAlphaOp);
-	//m_pGraphicDev->GetTextureStageState(0, D3DTSS_ALPHAARG1, &dwOldAlphaArg1);
-	//m_pGraphicDev->GetTextureStageState(0, D3DTSS_ALPHAARG2, &dwOldAlphaArg2);
-	//
-	//m_pGraphicDev->SetRenderState(D3DRS_TEXTUREFACTOR, D3DCOLOR_ARGB(dwAlpha, 255, 255, 255));
-	//m_pGraphicDev->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
-	//m_pGraphicDev->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
-	//m_pGraphicDev->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_TFACTOR);
+	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
+
+	DWORD dwAlpha = DWORD(m_fAlpha * 255.f);
+	m_pGraphicDev->SetRenderState(D3DRS_TEXTUREFACTOR,
+		D3DCOLOR_ARGB(dwAlpha, 255, 255, 255));
+	m_pGraphicDev->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
+	m_pGraphicDev->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
+	m_pGraphicDev->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_TFACTOR);
 
 	m_pTextureCom->Set_Texture(0);
 	m_pBufferCom->Render_Buffer();
 
-	//m_pGraphicDev->SetRenderState(D3DRS_TEXTUREFACTOR, dwOldColor);
-	//m_pGraphicDev->SetTextureStageState(0, D3DTSS_ALPHAOP, dwOldAlphaOp);
-	//m_pGraphicDev->SetTextureStageState(0, D3DTSS_ALPHAARG1, dwOldAlphaArg1);
-	//m_pGraphicDev->SetTextureStageState(0, D3DTSS_ALPHAARG2, dwOldAlphaArg2);
+	// 상태 복원 (선택적)
+	m_pGraphicDev->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1);
 }
 
 void CScreenEffect::Play()
@@ -209,6 +207,12 @@ CScreenEffect* CScreenEffect::Clone()
 	// 런타임 값 초기화
 	pScreenEffect->m_eState = ES_READY;
 	pScreenEffect->m_fAccTime = 0.f;
+
+	_vec3 vPos, vScale;
+	m_pTransformCom->Get_Info(INFO_POS, &vPos);
+	m_pTransformCom->Get_Scale(&vScale);
+	pScreenEffect->m_pTransformCom->Set_Pos(vPos.x, vPos.y, vPos.z);
+	pScreenEffect->m_pTransformCom->Set_Scale(vScale.x, vScale.y, vScale.z);
 
 	return pScreenEffect;
 }
