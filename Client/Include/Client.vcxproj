@@ -231,7 +231,7 @@
     <ClInclude Include="..\Header\CResourceWorkFront.h" />
     <ClInclude Include="..\Header\CRestUI.h" />
     <ClInclude Include="..\Header\CScreenEffect.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\Header\CSpriteEffect.h" />
     <ClInclude Include="..\Header\CTarotCard.h" />
@@ -482,7 +482,7 @@
     <ClCompile Include="..\Code\CRestUI.cpp" />
     <ClCompile Include="..\Code\CSceneWarp.cpp" />
     <ClCompile Include="..\Code\CScreenEffect.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\Code\CSelectionArrow.cpp" />
     <ClCompile Include="..\Code\CSkyBox.cpp" />

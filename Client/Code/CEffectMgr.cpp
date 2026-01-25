@@ -7,7 +7,7 @@
 //#include "CTrailEffect.h"
 #include "CScreenEffect.h"
 #include "CIndicator.h"
-#include <CChargeArrow.h>
+#include "CChargeArrow.h"
 
 IMPLEMENT_SINGLETON(CEffectMgr);
 
@@ -119,13 +119,6 @@ HRESULT CEffectMgr::Ready_EffectMgr(LPDIRECT3DDEVICE9 pGraphicDev)
 	//pDustLand->Set_LifeTime(0.5f);
 	//pDustLand->Set_EmitRate(30.f);
 	//m_mapProtoEffect.emplace(EK_DUST_LAND, pDustLand);
-	//
-	//
-	//CScreenEffect* pConc = CScreenEffect::Create(pGraphicDev);
-	//pConc->Set_TextureKey(L"Proto_ConcentrationTexture");
-	//pConc->Set_SEFType(CScreenEffect::SEF_DARK);
-	//pConc->Set_FadeTime(0.1f, 0.2f);  // fadeIn, fadeOut
-	//m_mapProtoEffect.emplace(EK_MONO_BLACK, pConc);
 
 	//auto trailPair = m_mapProtoEffect.try_emplace(EK_TRAIL_GREEN, nullptr);	// pair<iter, bool>
 	//
@@ -138,6 +131,14 @@ HRESULT CEffectMgr::Ready_EffectMgr(LPDIRECT3DDEVICE9 pGraphicDev)
 	//	pTrailEffect->Set_Emissive(false);
 	//	trailPair.first->second = pTrailEffect;
 	//}
+
+	auto screenPair = m_mapProtoEffect.try_emplace(EK_SCREEN_IMPACT, nullptr);	// pair<iter, bool>
+
+	if (screenPair.second)
+	{
+		CScreenEffect* pScreenEffect = CScreenEffect::Create(pGraphicDev, L"Proto_ImpactTexture");
+		screenPair.first->second = pScreenEffect;
+	}
 
 	auto indicatorPair = m_mapProtoEffect.try_emplace(EK_INDICATOR_CIRCLE, nullptr);	// pair<iter, bool>
 

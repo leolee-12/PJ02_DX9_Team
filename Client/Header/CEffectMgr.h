@@ -35,7 +35,7 @@ public:
 		//, EK_TRAIL_RED
 
 		// Screen
-		//,EK_MONO_BLACK
+		, EK_SCREEN_IMPACT
 		//,EK_MONO_WHITE
 
 		// Indicator

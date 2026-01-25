@@ -3,9 +3,6 @@
 
 class CScreenEffect : public CEffect
 {
-public:
-	enum SCREENEFFECT_TYPE { SEF_DARK, SEF_WHITE };
-
 private:
 	explicit	CScreenEffect(LPDIRECT3DDEVICE9 pGraphicDev);
 	explicit	CScreenEffect(const CScreenEffect& rhs);
@@ -28,7 +25,6 @@ public:
 	virtual void    OnFinish() {}       // 완료 시
 	virtual void    OnLoop() {}         // 루프 시
 
-	void			Set_SEFType(SCREENEFFECT_TYPE eType) { m_eSEFType = eType; }
 	void			Set_TextureKey(wstring strKey) { m_strProtoTexKey = strKey; }
 	void			Set_FadeTime(const _float& fFadeIn, const _float& fFadeOut) { m_fFadeInTime = fFadeIn; m_fFadeOutTime = fFadeOut; }
 	void			Pulse(const _float& fTimeDelta);
@@ -36,7 +32,6 @@ public:
 	void			Zoom(const _float& fTimeDelta);
 
 private:
-	SCREENEFFECT_TYPE m_eSEFType;
 	_float	m_fAlpha;           // 전체 투명도 (0~1)
 	_float	m_fScale;           // 크기 (줌 효과용)
 	_float	m_fRotation;        // 회전 (동적 효과용)
@@ -51,7 +46,7 @@ private:
 	_float m_fBaseScale;
 
 public:
-	static CScreenEffect* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	static CScreenEffect* Create(LPDIRECT3DDEVICE9 pGraphicDev, const wstring& strProtoTexKey);
 	virtual CScreenEffect* Clone();
 
 private:
