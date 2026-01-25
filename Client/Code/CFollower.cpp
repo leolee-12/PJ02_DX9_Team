@@ -574,7 +574,7 @@ void CFollower::Execute_Work(const _float& fTimeDelta)
 	}
 }
 
-CFollower* CFollower::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, const _tchar* pProtoKey)
+CFollower* CFollower::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, const wstring& pProtoKey)
 {
 	CFollower* pFollower = new CFollower(pGraphicDev, StageChannel);
 
@@ -590,7 +590,7 @@ CFollower* CFollower::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* Sta
 	return pFollower;
 }
 
-CFollower* CFollower::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, const _tchar* pProtoKey, const _vec3& vPos, FOLLOWER_STATE eState)
+CFollower* CFollower::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, const wstring& pProtoKey, const _vec3& vPos, FOLLOWER_STATE eState)
 {
 	CFollower* pFollower = new CFollower(pGraphicDev, StageChannel);
 

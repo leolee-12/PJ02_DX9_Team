@@ -16,6 +16,7 @@
 #include "CItem.h"
 #include "CMonster.h"
 #include "CProjectile.h"
+#include "CInteractionUI.h"
 
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev),
@@ -107,7 +108,8 @@ _int CPlayer::Update_GameObject(const _float& fTimeDelta)
 	Move_Frame(fTimeDelta);
 	Update_Warp(fTimeDelta);
 	Check_Scale();
-	
+
+	m_pInteractionUI->Update_GameObject(fTimeDelta);
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
 	Set_OnTerrain();
@@ -125,6 +127,7 @@ void CPlayer::LateUpdate_GameObject(const _float& fTimeDelta)
 	m_pTransformCom->Get_Info(INFO_POS, &m_vPos);
 	Compute_ViewDepth(&m_vPos);
 
+	m_pInteractionUI->LateUpdate_GameObject(fTimeDelta);
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
 
 	//------스프라이트 높이와 충돌체 위치 맞춤---------
@@ -137,6 +140,7 @@ void CPlayer::LateUpdate_GameObject(const _float& fTimeDelta)
 	// 충돌체 디버그용
 	if (g_bDebug) m_pColliderCom->Update_AABBforRender();
 
+	m_pInteractionUI->UnActive();
 	m_bCanTrigger = false;
 	m_pTriggerPoint = nullptr;
 }
@@ -196,6 +200,8 @@ void CPlayer::Ready_Variable()
 	}
 
 	m_vDir = m_vNormDir[DIR_LEFT];
+
+	m_pInteractionUI = CInteractionUI::Create(m_pGraphicDev);
 }
 
 void CPlayer::Ready_Event()
@@ -301,7 +307,7 @@ void CPlayer::Ready_Event()
 				m_fPassion = MAX_FAITH_VALUE;
 		}) });
 
-	m_hmapSubHandles.insert({ L"FoodReview.Open",m_pMessageChannel->Subscribe(L"Trigger.Activate.Owner" ,[this](const IMessageChannel::EVENT& Event)
+	m_hmapSubHandles.insert({ L"Trigger.Activate.Owner",m_pMessageChannel->Subscribe(L"Trigger.Activate.Owner" ,[this](const IMessageChannel::EVENT& Event)
 {
 		auto iter = Event.hmapData.find(L"Trigger_Name");
 		if (iter == Event.hmapData.end())
@@ -311,10 +317,12 @@ void CPlayer::Ready_Event()
 		if (name == L"Sword")
 		{
 			// 검 먹은 로직
+			m_eWeaponType = WT_SWORD;
 		}
 		else if (name == L"Gauntlet")
 		{
 			// 건틀릿 먹은 로직
+			m_eWeaponType = WT_GAUNTLETS;
 		}
 }
 ) });
@@ -371,19 +379,19 @@ HRESULT CPlayer::Add_Component()
 
 void CPlayer::Key_Input(const _float& fTimeDelta)
 {
-	for (int i = 0; i < 9; ++i)
-	{
-		if (GetAsyncKeyState(i + 48))
-		{	// 디버그용
+	//for (int i = 0; i < 9; ++i)
+	//{
+	//	if (GetAsyncKeyState(i + 48))
+	//	{	// 디버그용
 
-			if (i == 8)
-			{
-				_vec3 vEffectPos{ m_vPos.x, 3.f, m_vPos.z };
-				CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_ENEMYSPAWN, 0, vEffectPos);
-			}
-			else		CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_HIT, i, m_vPos);
-		}
-	}
+	//		if (i == 8)
+	//		{
+	//			_vec3 vEffectPos{ m_vPos.x, 3.f, m_vPos.z };
+	//			CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_ENEMYSPAWN, 0, vEffectPos);
+	//		}
+	//		else		CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_HIT, i, m_vPos);
+	//	}
+	//}
 
 	if (CDInputMgr::GetInstance()->Key_Down(DIK_Z))
 	{
@@ -1159,7 +1167,9 @@ void	CPlayer::OnCollision(CGameObject* pObject)
 	}
 	if (pObject->Get_OBJID() == OID_TRIGGER)
 	{
+		if (m_bAction) { return; }
 		m_bCanTrigger = true;
+		m_pInteractionUI->Active();
 		m_pTriggerPoint = static_cast<CTriggerPoint*>(pObject);
 	}
 	if (pObject->Get_OBJID() == OID_WARP)
@@ -1212,5 +1222,6 @@ CPlayer* CPlayer::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 
 void CPlayer::Free()
 {
+	Safe_Release(m_pInteractionUI);
 	CGameObject::Free();
 }

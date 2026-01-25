@@ -11,6 +11,7 @@ namespace Engine
 }
 
 class CTriggerPoint;
+class CInteractionUI;
 
 class CPlayer : public CGameObject
 {
@@ -146,6 +147,7 @@ private:
 	CTriggerPoint*	m_pTriggerPoint = nullptr;
 	_bool			m_bIntro;			// Ready에서 false 처리 (Intro 스프라이트 사용하려면 Ready 이후 Set 해주기)
 	_uint			m_iInteractType;	// 상호작용하는 대상 구분용
+	CInteractionUI* m_pInteractionUI = nullptr;
 
 	// 캐릭터 border 처리 관련
 	_vec3 m_vPrevPos;

@@ -211,6 +211,7 @@
     <ClInclude Include="..\Header\CGaugeCover.h" />
     <ClInclude Include="..\Header\CGaugeStar.h" />
     <ClInclude Include="..\Header\CIndicator.h" />
+    <ClInclude Include="..\Header\CInteractionUI.h" />
     <ClInclude Include="..\Header\CKBCharNPC.h" />
     <ClInclude Include="..\Header\CKBCharPlayer.h" />
     <ClInclude Include="..\Header\CMapDoor.h">
@@ -408,6 +409,7 @@
     <ClCompile Include="..\Code\CGaugeCover.cpp" />
     <ClCompile Include="..\Code\CGaugeStar.cpp" />
     <ClCompile Include="..\Code\CIndicator.cpp" />
+    <ClCompile Include="..\Code\CInteractionUI.cpp" />
     <ClCompile Include="..\Code\CInteractMgr.cpp" />
     <ClCompile Include="..\Code\CItem.cpp" />
     <ClCompile Include="..\Code\CKBBack.cpp" />

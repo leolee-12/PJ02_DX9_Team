@@ -386,16 +386,6 @@ HRESULT CVillage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 			pLayer->Add_GameObject(L"SkyBox", pGameObject);
 	}
 
-	// 팔로워 스폰 작업 큐에 추가 (2초 딜레이로 순차 생성)
-	for (int i = 0; i < 3; ++i)
-	{
-		Add_FollowerSpawnWork(FOLLOWER_SPAWN_WORK(L"Proto_Follower1Texture", _vec3(217.7f, 0.f, 38.3f)));
-		Add_FollowerSpawnWork(FOLLOWER_SPAWN_WORK(L"Proto_Follower2Texture", _vec3(217.7f, 0.f, 38.3f)));
-		Add_FollowerSpawnWork(FOLLOWER_SPAWN_WORK(L"Proto_Follower3Texture", _vec3(217.7f, 0.f, 38.3f)));
-		Add_FollowerSpawnWork(FOLLOWER_SPAWN_WORK(L"Proto_Follower4Texture", _vec3(217.7f, 0.f, 38.3f)));
-		Add_FollowerSpawnWork(FOLLOWER_SPAWN_WORK(L"Proto_Follower5Texture", _vec3(217.7f, 0.f, 38.3f)));
-	}
-
 	// Village 지형물
 	_float fRadius(0.f);
 	_float fRadian(0.f);
@@ -618,6 +608,7 @@ void CVillage::Ready_Event_Village()
 				m_pCookingUI->Set_CookingState(CCookingUIController::CS_SELECT);
 				CPersistentMgr::GetInstance()->Get_Player()->Set_Action(true);
 				m_bCookingFlag = true;
+				CSoundMgr::GetInstance()->Play(L"OpenMenu.wav", SOUND_UI, 0.3f);
 			}
 		}
 	) });
@@ -636,6 +627,15 @@ void CVillage::Key_Input_Village()
 			m_bCookingFlag = false;
 		}
 	}
+	else
+	{
+		if (CDInputMgr::GetInstance()->Key_Down(DIK_1))
+		{
+			_tchar strFollowerTex[128] = L"";
+			swprintf_s(strFollowerTex, L"Proto_Follower%dTexture", Get_Rand_Int(1, 5));
+			Add_FollowerSpawnWork(FOLLOWER_SPAWN_WORK(strFollowerTex, _vec3(217.7f, 0.f, 38.3f)));
+		}
+	}
 }
 
 void CVillage::Add_FollowerSpawnWork(const FOLLOWER_SPAWN_WORK& tWork)
@@ -645,13 +645,13 @@ void CVillage::Add_FollowerSpawnWork(const FOLLOWER_SPAWN_WORK& tWork)
 
 void CVillage::Process_FollowerSpawnQueue(const _float& fTimeDelta)
 {
-	if (m_queueFollowerSpawn.empty())
-		return;
-
 	m_fSpawnTimer += fTimeDelta;
 
 	if (m_fSpawnTimer >= FOLLOWER_SPAWN_DELAY)
 	{
+		if (m_queueFollowerSpawn.empty())
+			return;
+
 		m_fSpawnTimer = 0.f;
 
 		FOLLOWER_SPAWN_WORK tWork = m_queueFollowerSpawn.front();

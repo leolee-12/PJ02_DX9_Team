@@ -511,6 +511,9 @@
     <Filter Include="03. Manager\04. EffectMgr">
       <UniqueIdentifier>{613f16cb-d640-48b5-84eb-5098839b2c76}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\05. UI\06. WorldUI\03. Interaction">
+      <UniqueIdentifier>{a588698f-c386-4f8a-a10c-43bf51beddda}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -1077,6 +1080,9 @@
     <ClInclude Include="..\Header\CMapDoor.h">
       <Filter>02. GameObject\02. Environment\00. MapObject\00. Door</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CInteractionUI.h">
+      <Filter>02. GameObject\05. UI\06. WorldUI\03. Interaction</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1600,6 +1606,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CMapDoor.cpp">
       <Filter>02. GameObject\02. Environment\00. MapObject\00. Door</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CInteractionUI.cpp">
+      <Filter>02. GameObject\05. UI\06. WorldUI\03. Interaction</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

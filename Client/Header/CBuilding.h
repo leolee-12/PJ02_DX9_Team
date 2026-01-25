@@ -62,6 +62,8 @@ private:
 
 	_vec3			m_vPos = {};
 
+	// 트리거 관련
+	_bool			m_bUsingTrigger = true;
 
 	// 상호작용 관련(추종자)
 	_float					m_fPreWorkGauge;
