@@ -403,9 +403,6 @@
     <Filter Include="02. GameObject\02. Environment\02. Interactable">
       <UniqueIdentifier>{2eb856ce-ff64-4444-a92e-e687d9b46140}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\02. Environment\02. Interactable\00. Grass">
-      <UniqueIdentifier>{20638477-cadd-4aa2-94a1-d3b5098d0639}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObject\02. Environment\02. Interactable\01. BreakableTree">
       <UniqueIdentifier>{6045c0f4-0bbb-4825-9f07-1e4a96913560}</UniqueIdentifier>
     </Filter>
@@ -498,6 +495,9 @@
     </Filter>
     <Filter Include="02. GameObject\05. UI\10. ResourceHistoryUI\03.ResourceHistoryUI">
       <UniqueIdentifier>{0b1b14e0-15ae-4265-8c11-b8d41f01eb2a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\02. Environment\02. Interactable\00. Grass">
+      <UniqueIdentifier>{20638477-cadd-4aa2-94a1-d3b5098d0639}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

@@ -219,7 +219,6 @@ void CPlayer::Ready_Event()
 		{
 			Attacked(any_cast<_int>(Event.hmapData.find(L"Attack")->second));
 		}
-
 	}
 	}) });
 
@@ -508,7 +507,7 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 		Attack_HitBox();
 	}
 
-	if (GetAsyncKeyState(VK_RBUTTON) & 0x0001)	// 눌렀을 때 한 번만 true
+	if (CDInputMgr::GetInstance()->Mouse_Pressing(DIM_RB))	// 눌렀을 때 한 번만 true
 	{
 		if ((m_bRoll) || (m_iCombo)) return;
 
@@ -522,7 +521,35 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 			m_strFrameKey = L"charge-start";
 			m_fCharge += fTimeDelta;
 		}
-		else if(m_strFrameKey == L"charge-loop")
+		//else if(m_strFrameKey == L"charge-loop")
+		//{
+		//	m_fFrame = 0.f;
+		//	m_fChargeMax = m_fCharge;
+		//	m_strFrameKey = L"charge-end";
+		//
+		//	CProjectile* pTemp;
+		//	CGameObject* pProjectile = pTemp = CProjectile::Create(m_pGraphicDev, m_vPos, m_vDir * 10.f, false, CL_PBULLET, D3DXCOLOR(1.f, 0.f, 0.4f, 1.f));
+		//
+		//	_float fScale(1.5f + m_fCharge);
+		//	static_cast<CTransform*>(pProjectile->Get_Component(ID_DYNAMIC, L"Com_Transform"))->Set_Scale(fScale, fScale, fScale);
+		//
+		//	if (pProjectile)
+		//	{
+		//		wstring strObjTag = L"Projectile";
+		//
+		//		IMessageChannel::EVENT EProjectile;
+		//		EProjectile.strType = L"Obj.Add";
+		//		EProjectile.eOBJID = Engine::OID_PROJECTILE;
+		//		EProjectile.hmapData.emplace(L"Obj", pProjectile);
+		//		EProjectile.hmapData.emplace(L"LayerTag", L"GameLogic_Layer");
+		//		EProjectile.hmapData.emplace(L"ObjTag", strObjTag);
+		//		m_pMessageChannel->Publish(EProjectile);
+		//	}
+		//}
+	}
+	else if (CDInputMgr::GetInstance()->Mouse_Up(DIM_RB))
+	{
+		if (m_strFrameKey == L"charge-start" || m_strFrameKey == L"charge-loop")
 		{
 			m_fFrame = 0.f;
 			m_fChargeMax = m_fCharge;

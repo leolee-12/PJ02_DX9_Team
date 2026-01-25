@@ -163,8 +163,8 @@ public:
 
 
 	static constexpr _float DEFAULT_PASSION_GAIN = 0.2f;
-	static constexpr _float DEFAULT_FAITH_GAIN = 1.f;
-	static constexpr _float FAITH_DECREASE_RATE = 0.3f;
+	static constexpr _float DEFAULT_FAITH_GAIN = 5.f;
+	static constexpr _float FAITH_DECREASE_RATE = 0.3;
 
 	static constexpr _float MAX_PASSION_VALUE = 4.f;
 	static constexpr _float	MAX_FAITH_VALUE = 100.f;
