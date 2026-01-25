@@ -18,7 +18,7 @@ HRESULT CPersistentMgr::Ready_GlobalObjects(LPDIRECT3DDEVICE9 pGraphicDev)
 {
 	if (m_pPlayer == nullptr)
 	{
-		vector<CTextureSet::TEXINFO> tempVec(28);
+		vector<CTextureSet::TEXINFO> tempVec(32);
 		tempVec[0] = CTextureSet::TEXINFO(L"idle", L"../Bin/Resource/Texture/Player/idle/dds/idle_%04d.dds", 72);
 		tempVec[1] = CTextureSet::TEXINFO(L"idle-up", L"../Bin/Resource/Texture/Player/idle-up/dds/idle-up_%04d.dds", 72);
 		tempVec[2] = CTextureSet::TEXINFO(L"run-up", L"../Bin/Resource/Texture/Player/run-up/dds/run-up_%04d.dds", 9);
@@ -29,9 +29,12 @@ HRESULT CPersistentMgr::Ready_GlobalObjects(LPDIRECT3DDEVICE9 pGraphicDev)
 		tempVec[7] = CTextureSet::TEXINFO(L"roll-up", L"../Bin/Resource/Texture/Player/roll-up/dds/roll-up_%04d.dds", 8);
 		tempVec[8] = CTextureSet::TEXINFO(L"roll-down", L"../Bin/Resource/Texture/Player/roll-down/dds/roll-down_%04d.dds", 8);
 		tempVec[9] = CTextureSet::TEXINFO(L"roll-horizontal", L"../Bin/Resource/Texture/Player/roll/dds/roll_%04d.dds", 9);
-		tempVec[10] = CTextureSet::TEXINFO(L"attack-combo1", L"../Bin/Resource/Texture/Player/attack-combo1/dds/attack-combo1_%04d.dds", 15);
-		tempVec[11] = CTextureSet::TEXINFO(L"attack-combo2", L"../Bin/Resource/Texture/Player/attack-combo2/dds/attack-combo2_%04d.dds", 19);
-		tempVec[12] = CTextureSet::TEXINFO(L"attack-combo3", L"../Bin/Resource/Texture/Player/attack-combo3/dds/attack-combo3_%04d.dds", 19);
+		//tempVec[10] = CTextureSet::TEXINFO(L"attack-combo1", L"../Bin/Resource/Texture/Player/attack-combo1/dds/attack-combo1_%04d.dds", 15);
+		//tempVec[11] = CTextureSet::TEXINFO(L"attack-combo2", L"../Bin/Resource/Texture/Player/attack-combo2/dds/attack-combo2_%04d.dds", 19);
+		//tempVec[12] = CTextureSet::TEXINFO(L"attack-combo3", L"../Bin/Resource/Texture/Player/attack-combo3/dds/attack-combo3_%04d.dds", 19);
+		tempVec[10] = CTextureSet::TEXINFO(L"attack-combo1", L"../Bin/Resource/LWY/Player/attack-combo1/dds/attack-combo1_%04d.dds", 15);
+		tempVec[11] = CTextureSet::TEXINFO(L"attack-combo2", L"../Bin/Resource/LWY/Player/attack-combo2/dds/attack-combo2_%04d.dds", 19);
+		tempVec[12] = CTextureSet::TEXINFO(L"attack-combo3", L"../Bin/Resource/LWY/Player/attack-combo3/dds/attack-combo3_%04d.dds", 19);
 		tempVec[13] = CTextureSet::TEXINFO(L"charge-start", L"../Bin/Resource/Texture/Player/cast-spell2/dds/cast-spell2_%04d.dds", 16);
 		tempVec[14] = CTextureSet::TEXINFO(L"charge-loop", L"../Bin/Resource/Texture/Player/cast-spell2-loop/dds/cast-spell2-loop_%04d.dds", 13);
 		tempVec[15] = CTextureSet::TEXINFO(L"charge-end", L"../Bin/Resource/Texture/Player/cast-spell/dds/cast-spell_%04d.dds", 16);
@@ -48,6 +51,11 @@ HRESULT CPersistentMgr::Ready_GlobalObjects(LPDIRECT3DDEVICE9 pGraphicDev)
 		tempVec[25] = CTextureSet::TEXINFO(L"intro_kneel-loop", L"../Bin/Resource/LWY/Player/Player_intro/intro_kneel-loop/dds/intro_kneel-loop_%04d.dds", 16);
 		tempVec[26] = CTextureSet::TEXINFO(L"intro_kneel-wake", L"../Bin/Resource/LWY/Player/Player_intro/intro_kneel-wake/dds/intro_kneel-wake_%04d.dds", 108);
 		tempVec[27] = CTextureSet::TEXINFO(L"intro_rebirth", L"../Bin/Resource/LWY/Player/Player_intro/intro_rebirth/dds/intro_rebirth_%04d.dds", 164);
+
+		tempVec[28] = CTextureSet::TEXINFO(L"attack-combo1-gauntlets", L"../Bin/Resource/Texture/Player/attack-combo1-gauntlets/dds/attack-combo1-gauntlets_%04d.dds", 20);
+		tempVec[29] = CTextureSet::TEXINFO(L"attack-combo2-gauntlets", L"../Bin/Resource/Texture/Player/attack-combo2-gauntlets/dds/attack-combo2-gauntlets_%04d.dds", 22);
+		tempVec[30] = CTextureSet::TEXINFO(L"attack-combo3-gauntlets", L"../Bin/Resource/Texture/Player/attack-combo3-gauntlets/dds/attack-combo3-gauntlets_%04d.dds", 22);
+		tempVec[31] = CTextureSet::TEXINFO(L"attack-combo4-gauntlets", L"../Bin/Resource/LWY/Player/attack-combo4-gauntlets/dds/attack-combo4-gauntlet2_%04d.dds", 28);
 
 		if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_PlayerTexture", Engine::CTextureSet::Create(pGraphicDev, TEX_NORMAL, tempVec))))
 			return E_FAIL;

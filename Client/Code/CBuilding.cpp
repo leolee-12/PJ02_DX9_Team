@@ -102,7 +102,7 @@ void CBuilding::LateUpdate_GameObject(const _float& fTimeDelta)
 	{
 		m_pTrigger->LateUpdate_GameObject(fTimeDelta);
 
-		m_pTransformCom->Compute_Bilboard(BBD_X);
+		//m_pTransformCom->Compute_Bilboard(BBD_X);
 
 		Compute_ViewDepth(&vPos);
 	}

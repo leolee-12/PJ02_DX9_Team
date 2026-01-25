@@ -16,6 +16,7 @@ class CPlayer : public CGameObject
 {
 public:
 	enum PLAYERSTATE { PS_IDLE, PS_RUN, PS_ROLL, PS_ATTACK, PS_CHARGE, PS_HIT, PS_ACTION, PS_REBIRTH, PS_END };
+	enum WEAPONTYPE { WT_SWORD, WT_GAUNTLETS, WT_END };
 
 	// ==========================
 	//	PLAYERSTATE : 플레이어 상태 관리용 enum
@@ -34,6 +35,7 @@ public:
 	void			Set_Crying();
 	void			Set_StopCrying();
 	void			Set_Reborn();
+	void			Set_Weapon(WEAPONTYPE eType) { m_eWeaponType = eType; }
 
 	void			Set_Action(_bool b) { m_bAction = b; }
 	void			Set_Village(_bool b) { m_bVillage = b; }
@@ -66,6 +68,7 @@ private:
 	// ==========================
 
 	void			Check_Frame();
+	void			Check_Scale();
 	void			Move_Frame(const _float& fTimeDelta);
 	void			Set_TextureSet();
 	void			Set_FrameKey();
@@ -98,6 +101,7 @@ private:
 	// 스프라이트 관련
 	PLAYERSTATE		m_ePreState;
 	PLAYERSTATE		m_eCurState;
+	WEAPONTYPE		m_eWeaponType;
 	wstring			m_strFrameKey;
 	_float			m_fFrame;
 	_float			m_fFrameEnd;
@@ -111,8 +115,11 @@ private:
 	_int			m_iAttack;
 	_bool			m_bRoll;	// 구르기 중인지?
 	_int			m_iCombo;	// 공격 중인지? + 몇번째 콤보상태인지?
+	_int			m_iMaxCombo;
+	_float			m_fComboDelay;
 	_bool			m_bAction;	// Action 중인지?
-	_float			m_fAcmlTime;
+	_float			m_fAcmlTime;	// 무적용
+	_float			m_fAcmlTime2;	// 콤보딜레이용
 	_bool			m_bVillage = false;
 	_float			m_fPassion;
 	_float			m_fFaith;
@@ -161,10 +168,12 @@ public:
 	static constexpr _float PLAYER_INTRO_SCALE = 11.f;
 	static constexpr _float PLAYER_REBIRTH_SCALE = 20.f;
 
+	static constexpr _float SWORD_COMBO_DELAY_TIME = 0.1f;
+	static constexpr _float GAUNTLETS_COMBO_DELAY_TIME = 0.3f;
 
 	static constexpr _float DEFAULT_PASSION_GAIN = 0.2f;
-	static constexpr _float DEFAULT_FAITH_GAIN = 1.f;
-	static constexpr _float FAITH_DECREASE_RATE = 0.3f;
+	static constexpr _float DEFAULT_FAITH_GAIN = 5.f;
+	static constexpr _float FAITH_DECREASE_RATE = 0.3;
 
 	static constexpr _float MAX_PASSION_VALUE = 4.f;
 	static constexpr _float	MAX_FAITH_VALUE = 100.f;

@@ -16,21 +16,6 @@
     <Filter Include="00. MainApp">
       <UniqueIdentifier>{21f60bca-e0f3-45e8-a17c-6be69ba5f684}</UniqueIdentifier>
     </Filter>
-    <Filter Include="03. Manager">
-      <UniqueIdentifier>{f4a5af23-1cb1-4c65-b73d-7132d05ea4c2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="03. Manager\02. TileMgr">
-      <UniqueIdentifier>{01b64606-77a6-499b-92aa-0bad3eff8f84}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="03. Manager\00. CutSceneMgr">
-      <UniqueIdentifier>{37f20989-8197-4784-9469-9d8b5aef87c6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="03. Manager\03. InteractMgr">
-      <UniqueIdentifier>{cc4ab9a0-c95b-4ff8-939b-ac400d44b4d1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="03. Manager\01. PersistentMgr">
-      <UniqueIdentifier>{153d294d-a813-4bb7-9dee-2e2680526024}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObject">
       <UniqueIdentifier>{51b52b49-f21d-4d34-bf24-26f7774a4f3b}</UniqueIdentifier>
     </Filter>
@@ -391,9 +376,6 @@
     <Filter Include="01. Scene\02. KnuckleBone">
       <UniqueIdentifier>{fbdfd1c6-2a58-45e4-970b-5fac37bacfcb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="03. Manager\04. EffectMgr">
-      <UniqueIdentifier>{613f16cb-d640-48b5-84eb-5098839b2c76}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObject\02. Environment">
       <UniqueIdentifier>{0de463cf-3ddf-48a1-99ef-646d0b9d0b7e}</UniqueIdentifier>
     </Filter>
@@ -402,9 +384,6 @@
     </Filter>
     <Filter Include="02. GameObject\02. Environment\02. Interactable">
       <UniqueIdentifier>{2eb856ce-ff64-4444-a92e-e687d9b46140}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\02. Environment\02. Interactable\00. Grass">
-      <UniqueIdentifier>{20638477-cadd-4aa2-94a1-d3b5098d0639}</UniqueIdentifier>
     </Filter>
     <Filter Include="02. GameObject\02. Environment\02. Interactable\01. BreakableTree">
       <UniqueIdentifier>{6045c0f4-0bbb-4825-9f07-1e4a96913560}</UniqueIdentifier>
@@ -499,6 +478,9 @@
     <Filter Include="02. GameObject\05. UI\10. ResourceHistoryUI\03.ResourceHistoryUI">
       <UniqueIdentifier>{0b1b14e0-15ae-4265-8c11-b8d41f01eb2a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\02. Environment\02. Interactable\00. Grass">
+      <UniqueIdentifier>{20638477-cadd-4aa2-94a1-d3b5098d0639}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02. GameObject\05. UI\12. FoodReviewUI">
       <UniqueIdentifier>{85a2cc54-83ba-4663-9666-60069c72f836}</UniqueIdentifier>
     </Filter>
@@ -507,6 +489,24 @@
     </Filter>
     <Filter Include="02. GameObject\05. UI\12. FoodReviewUI\01. FoodReviewImage">
       <UniqueIdentifier>{e5864e32-2ca4-4e62-811f-59ca0abf0031}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Manager">
+      <UniqueIdentifier>{f4a5af23-1cb1-4c65-b73d-7132d05ea4c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Manager\02. TileMgr">
+      <UniqueIdentifier>{01b64606-77a6-499b-92aa-0bad3eff8f84}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Manager\00. CutSceneMgr">
+      <UniqueIdentifier>{37f20989-8197-4784-9469-9d8b5aef87c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Manager\03. InteractMgr">
+      <UniqueIdentifier>{cc4ab9a0-c95b-4ff8-939b-ac400d44b4d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Manager\01. PersistentMgr">
+      <UniqueIdentifier>{153d294d-a813-4bb7-9dee-2e2680526024}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Manager\04. EffectMgr">
+      <UniqueIdentifier>{613f16cb-d640-48b5-84eb-5098839b2c76}</UniqueIdentifier>
     </Filter>
     <Filter Include="02. GameObject\05. UI\1">
       <UniqueIdentifier>{d639a8cf-f804-43f9-b40b-14849f6c0cae}</UniqueIdentifier>
@@ -1073,6 +1073,9 @@
     </ClInclude>
     <ClInclude Include="CShrineSpot.h">
       <Filter>02. GameObject\02. Environment\02. Interactable\04. ShrineSpot</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CResourceHistoryItem.h">
+      <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CPlayerTarotCard.h">
       <Filter>02. GameObject\05. UI\04. PlayerUI\02. PlayerTarotCard</Filter>
