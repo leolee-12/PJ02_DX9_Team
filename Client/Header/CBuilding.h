@@ -38,6 +38,8 @@ public:
 
 	wstring				Get_CompleteTexKey();
 
+	void				Set_PosForPick(const _vec3& vPos);
+
 private:
 	HRESULT	Add_Component();
 	void	Change_State(BUILDING_STATE eState);

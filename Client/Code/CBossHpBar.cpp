@@ -26,13 +26,13 @@ HRESULT CBossHpBar::Ready_GameObject()
 {
 	CGameObject* pGameObject = nullptr;
 
-	pGameObject = m_pBossHpBarFront = CBossHpBarFront::Create(m_pGraphicDev, _vec3(0.0f, _float(- WINCY / 2) + 50, 0.01f));
+	pGameObject = m_pBossHpBarFront = CBossHpBarFront::Create(m_pGraphicDev, _vec3(0.0f, _float(- WINCY / 2) + 50, 0.11f));
 	if (nullptr == pGameObject)
 		return E_FAIL;
 
 	m_vecHpBarUI.push_back(pGameObject);
 
-	pGameObject = CBossHpBarBackground::Create(m_pGraphicDev, _vec3(0.0f, _float(- WINCY / 2) + 50.0f, 0.1f));
+	pGameObject = CBossHpBarBackground::Create(m_pGraphicDev, _vec3(0.0f, _float(- WINCY / 2) + 50.0f, 0.12f));
 
 	if (nullptr == pGameObject)
 		return E_FAIL;
@@ -57,6 +57,7 @@ HRESULT CBossHpBar::Ready_GameObject()
 	m_fLefpPrevHp = m_fMaxHp;
 	m_fLerpTime = 0.0f;
 	m_pBossHpBarFront->InitHp(m_fMaxHp, m_fCurHp);
+	m_fDepth = 0.05f;
 
 
 	//Active();
@@ -97,6 +98,8 @@ _int CBossHpBar::Update_GameObject(const _float& fTimeDelta)
 	}
 
 	m_pFont->Update_GameObject(fTimeDelta);
+
+	CRenderer::GetInstance()->Add_RenderGroup(RENDER_FONT, m_pFont);
 
 	return NOEVENT;
 }

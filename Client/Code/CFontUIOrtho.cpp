@@ -45,7 +45,7 @@ _int CFontUIOrtho::Update_GameObject(const _float& fTimeDelta)
 			_long(vScreenPos.y + m_vScale.y * 0.5f)
 		};
 
-		CRenderer::GetInstance()->Add_RenderGroup(RENDER_FONT, this);
+		//CRenderer::GetInstance()->Add_RenderGroup(RENDER_FONT, this);
 	}
 
 	return NOEVENT;

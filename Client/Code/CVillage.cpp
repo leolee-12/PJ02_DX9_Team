@@ -107,6 +107,7 @@ HRESULT CVillage::Ready_Scene()
 
 _int CVillage::Update_Scene(const _float& fTimeDelta)
 {
+
 	if (m_bReEnterFlag)
 	{
 		CSoundMgr::GetInstance()->PlayBGM(L"02.Village.mp3", 0.1f);
@@ -125,6 +126,9 @@ _int CVillage::Update_Scene(const _float& fTimeDelta)
 	Process_FollowerSpawnQueue(fTimeDelta);
 
 	Key_Input_Village();
+
+	// 빌딩 마우스 피킹 처리
+	Update_Building(fTimeDelta);
 
 	_int iExit = Engine::CScene::Update_Scene(fTimeDelta);
 
@@ -178,6 +182,7 @@ _int CVillage::Update_Scene(const _float& fTimeDelta)
 
 void CVillage::LateUpdate_Scene(const _float& fTimeDelta)
 {
+	LateUpdate_Building(fTimeDelta);
 	Engine::CScene::LateUpdate_Scene(fTimeDelta);
 }
 
@@ -628,6 +633,28 @@ void CVillage::Ready_Event_Village()
 
 void CVillage::Key_Input_Village()
 {
+	// 디버그 키인풋 윤석현
+	if (CDInputMgr::GetInstance()->Key_Down(DIK_F9))
+	{
+		if (!m_bBuildingFlag && m_pCurBuilding == nullptr)
+		{
+			m_pCurBuilding = CBuilding::Create(m_pGraphicDev, m_pMessageChannel, _vec3(175.5f, -0.95f, 40.f), CBuilding::BT_KNUCKLEBONE);
+
+			m_bBuildingFlag = true;
+		}
+	}
+	if (CDInputMgr::GetInstance()->Key_Down(DIK_F10))
+	{
+		if (m_bBuildingFlag)
+		{
+			Safe_Release(m_pCurBuilding);
+			m_bBuildingFlag = false;
+		}
+	}
+
+
+
+
 	if (m_bCookingFlag)
 	{
 		if (CDInputMgr::GetInstance()->Key_Down(DIK_BACKSPACE))
@@ -653,6 +680,29 @@ void CVillage::Key_Input_Village()
 void CVillage::Add_FollowerSpawnWork(const FOLLOWER_SPAWN_WORK& tWork)
 {
 	m_queueFollowerSpawn.push(tWork);
+}
+
+void CVillage::Update_Building(const _float& fTimeDelta)
+{
+	if (!m_bBuildingFlag || m_pCurBuilding == nullptr) { return; }
+
+	_vec3 vPos = {};
+	if (CCollisionMgr::GetInstance()->PickOnPlane(&vPos, m_pGraphicDev, g_hWnd))
+	{
+		_vec3 vGridPos = vPos;
+		vGridPos.x = floorf(vPos.x / BUILDING_GRIDSIZE) * BUILDING_GRIDSIZE;
+		vGridPos.z = floorf(vPos.z / BUILDING_GRIDSIZE) * BUILDING_GRIDSIZE;
+		m_pCurBuilding->Set_PosForPick(vGridPos);
+	}
+
+	m_pCurBuilding->Update_GameObject(fTimeDelta);
+}
+
+void CVillage::LateUpdate_Building(const _float& fTimeDelta)
+{
+	if (!m_bBuildingFlag || m_pCurBuilding == nullptr) { return; }
+
+	m_pCurBuilding->LateUpdate_GameObject(fTimeDelta);
 }
 
 void CVillage::Process_FollowerSpawnQueue(const _float& fTimeDelta)
@@ -709,6 +759,7 @@ CVillage* CVillage::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 
 void CVillage::Free()
 {
+	Safe_Release(m_pCurBuilding);
 	CCollisionMgr::GetInstance()->Reset_For_SceneChange();
 	CTileMgr::GetInstance()->Reset_For_SceneChange();
 	CSoundMgr::GetInstance()->StopAll();
