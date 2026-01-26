@@ -39,6 +39,7 @@
 #include "CEffectMgr.h"
 #include "CNPCCommandUI.h"
 #include "CFoodReviewUI.h"
+#include "CTerrain.h"
 
 CVillage::CVillage(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)

@@ -1,4 +1,4 @@
-#include "CTerrainTex.h"
+ï»¿#include "CTerrainTex.h"
 
 CTerrainTex::CTerrainTex()
 	: m_pPos(nullptr)
@@ -25,11 +25,11 @@ HRESULT CTerrainTex::Ready_Buffer(const _ulong& dwCntX,
 	const _ulong& dwVtxItv,
 	optional<wstring> Heightmappath)
 {
-	// optional < °ªÀÌ ÀÖÀ»¼öµµ ÀÖ°í ¾øÀ» ¼öµµ ÀÖ´Â º¯¼ö
-	// ÇØ´ç °´Ã¼¸¦ »ý¼ºÇÒ¶§ optional¿¡ ¹®ÀÚ¿­ÀÌ µé¾î°¡¸é(³ôÀÌ¸Ê°æ·Î)
-	// ³ôÀÌ¸ÊÀ» Àû¿ë½ÃÅ² ÁöÇüÀ» ¸¸µé°í
-	// ¾Æ´Ï¶ó¸é Æò¸éÁöÇü »ý¼ºÀ¸·Î ¼öÁ¤
-	// ÂüÁ¶) CTerrainTex::Create()
+	// optional < ê°’ì´ ìžˆì„ìˆ˜ë„ ìžˆê³  ì—†ì„ ìˆ˜ë„ ìžˆëŠ” ë³€ìˆ˜
+	// í•´ë‹¹ ê°ì²´ë¥¼ ìƒì„±í• ë•Œ optionalì— ë¬¸ìžì—´ì´ ë“¤ì–´ê°€ë©´(ë†’ì´ë§µê²½ë¡œ)
+	// ë†’ì´ë§µì„ ì ìš©ì‹œí‚¨ ì§€í˜•ì„ ë§Œë“¤ê³ 
+	// ì•„ë‹ˆë¼ë©´ í‰ë©´ì§€í˜• ìƒì„±ìœ¼ë¡œ ìˆ˜ì •
+	// ì°¸ì¡°) CTerrainTex::Create()
 
 	m_dwVtxSize = sizeof(VTXTEX);
 	m_dwVtxCnt = dwCntX * dwCntZ;
@@ -46,12 +46,12 @@ HRESULT CTerrainTex::Ready_Buffer(const _ulong& dwCntX,
 		return E_FAIL;
 
 	if (Heightmappath.has_value()) {
-		// ³ôÀÌ¸Ê °æ·Î ÁöÁ¤ ÇÔ -> ³ôÀÌ¸Ê »ç¿ëÇÔ
+		// ë†’ì´ë§µ ê²½ë¡œ ì§€ì • í•¨ -> ë†’ì´ë§µ ì‚¬ìš©í•¨
 		if (FAILED(Ready_Heightmap(dwCntX, dwCntZ, dwVtxItv, Heightmappath.value()))) { return E_FAIL; }
 	}
 
 	if (!Heightmappath.has_value()) {
-		// ³ôÀÌ¸Ê °æ·Î ÁöÁ¤ ¾ÈÇÔ -> ³ôÀÌ¸Ê »ç¿ë¾ÈÇÔ
+		// ë†’ì´ë§µ ê²½ë¡œ ì§€ì • ì•ˆí•¨ -> ë†’ì´ë§µ ì‚¬ìš©ì•ˆí•¨
 		if (FAILED(Ready_Flat(dwCntX, dwCntZ, dwVtxItv))) { return E_FAIL; }
 	}
 
@@ -65,27 +65,12 @@ void CTerrainTex::Render_Buffer()
 
 HRESULT CTerrainTex::Ready_Heightmap(const _ulong& dwCntX, const _ulong& dwCntZ, const _ulong& dwVtxItv, wstring Heightmappath)
 {
-	/*m_hFile = CreateFile(Heightmappath.c_str(),
-		GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
-
-	if (INVALID_HANDLE_VALUE == m_hFile)
-		return E_FAIL;
-
-	_ulong dwByte(0);
-
-	ReadFile(m_hFile, &m_fH, sizeof(BITMAPFILEHEADER), &dwByte, NULL);
-	ReadFile(m_hFile, &m_iH, sizeof(BITMAPINFOHEADER), &dwByte, NULL);
-
-	_ulong* pPixel = new _ulong[m_iH.biWidth * m_iH.biHeight];
-
-	ReadFile(m_hFile, pPixel, sizeof(_ulong) * m_iH.biWidth * m_iH.biHeight, &dwByte, NULL);*/
-
 	LPDIRECT3DTEXTURE9 pHeightTex = nullptr;
 
-	// ³ôÀÌ¸Ê Æ÷¸Ë ¹ü¿ë¼ºÀ» À§ÇØ ´ÙÀÌ·ºÆ® Á¦°ø À¯Æ¿ÇÔ¼ö·Î ´ëÃ¼ 
-	// ¹öÅØ½º »çÀÌÁî¶û ³ôÀÌ¸Ê »çÀÌÁî°¡ ¸ÂÁö¾Ê¾Æµµ ¹öÅØ½º »çÀÌÁî¿¡ ¸Â°Ô ³ôÀÌ¸Ê Á¶Á¤
-	// Æ÷¸ËÀº D3DFMT_A8R8G8B8 ÇÈ¼¿´ç 32ºñÆ® Æ÷¸ËÀ¸·Î Á¶Á¤
-	// D3DPOOL_SYSTEMMEM ÇØ´ç ÀÌ¹ÌÁöµ¥ÀÌÅÍ´Â ½Ã½ºÅÛ ¸Þ¸ð¸®¿¡ ¿Ã·Á¼­ cpu¸¸ Á÷Á¢ Á¢±ÙÇÏ°Ô °ü¸® (ÇÈ¼¿ µ¥ÀÌÅÍ ÀÐ´Â °úÁ¤Àº ¿ì¸®°¡ Á÷Á¢ ÄÚµå·Î cpu¿¡°Ô ¿¬»ê½ÃÅ°±â ¶§¹®)
+	// ë†’ì´ë§µ í¬ë§· ë²”ìš©ì„±ì„ ìœ„í•´ ë‹¤ì´ë ‰íŠ¸ ì œê³µ ìœ í‹¸í•¨ìˆ˜ë¡œ ëŒ€ì²´ 
+	// ë²„í…ìŠ¤ ì‚¬ì´ì¦ˆëž‘ ë†’ì´ë§µ ì‚¬ì´ì¦ˆê°€ ë§žì§€ì•Šì•„ë„ ë²„í…ìŠ¤ ì‚¬ì´ì¦ˆì— ë§žê²Œ ë†’ì´ë§µ ì¡°ì •
+	// í¬ë§·ì€ D3DFMT_A8R8G8B8 í”½ì…€ë‹¹ 32ë¹„íŠ¸ í¬ë§·ìœ¼ë¡œ ì¡°ì •
+	// D3DPOOL_SYSTEMMEM í•´ë‹¹ ì´ë¯¸ì§€ë°ì´í„°ëŠ” ì‹œìŠ¤í…œ ë©”ëª¨ë¦¬ì— ì˜¬ë ¤ì„œ cpuë§Œ ì§ì ‘ ì ‘ê·¼í•˜ê²Œ ê´€ë¦¬ (í”½ì…€ ë°ì´í„° ì½ëŠ” ê³¼ì •ì€ ìš°ë¦¬ê°€ ì§ì ‘ ì½”ë“œë¡œ cpuì—ê²Œ ì—°ì‚°ì‹œí‚¤ê¸° ë•Œë¬¸)
 	D3DXCreateTextureFromFileEx(m_pGraphicDev, Heightmappath.c_str(), dwCntX, dwCntZ,
 		D3DX_DEFAULT, 0, D3DFMT_A8R8G8B8, D3DPOOL_SYSTEMMEM, D3DX_DEFAULT, D3DX_DEFAULT, 0, NULL, NULL, &pHeightTex);
 
@@ -99,10 +84,10 @@ HRESULT CTerrainTex::Ready_Heightmap(const _ulong& dwCntX, const _ulong& dwCntZ,
 
 	_ulong* pPixel = new _ulong[dwCntX * dwCntZ];
 
-	// ´ÙÀÌ·ºÆ® Á¦°ø À¯Æ¿ÇÔ¼ö·Î ÀÌ¹ÌÁö¸¦ ÀÐ¾î¿À¸é ¿øº» Æ÷¸Ë°ú °ü·Ã ¾øÀÌ »õ·Î Æ÷¸ËÀ» »ý¼ºÇÏ±â ¶§¹®¿¡
-	// bmpÀÇ ½ÃÀÛÇÈ¼¿ÀÌ(¿ÞÂÊ¾Æ·¡) ´ÙÀÌ·ºÆ® ÁÂÇ¥°è ±âÁØÀ¸·Î ÀÚµ¿ Á¶Á¤µÊ(¿ÞÂÊ À§)
-	// ¿ì¸®´Â ¸ÊÀÇ ¹öÅØ½º¸¦ ¿ÞÂÊ¾Æ·¡ºÎÅÍ Âï±â ½ÃÀÛÇØ¼­ ÀÌ¹ÌÁö µ¥ÀÌÅÍ¸¦ ±×´ë·Î ÀÐ¾î¿À¸é »óÇÏ¹ÝÀüÀÌ ÀÏ¾î³²
-	// ±×°É ¼öÁ¤ÇØÁÖ´Â ÄÚµå - ÀÌÈÄ´Â ¼ö¾÷ÄÚµå¶û µ¿ÀÏ
+	// ë‹¤ì´ë ‰íŠ¸ ì œê³µ ìœ í‹¸í•¨ìˆ˜ë¡œ ì´ë¯¸ì§€ë¥¼ ì½ì–´ì˜¤ë©´ ì›ë³¸ í¬ë§·ê³¼ ê´€ë ¨ ì—†ì´ ìƒˆë¡œ í¬ë§·ì„ ìƒì„±í•˜ê¸° ë•Œë¬¸ì—
+	// bmpì˜ ì‹œìž‘í”½ì…€ì´(ì™¼ìª½ì•„ëž˜) ë‹¤ì´ë ‰íŠ¸ ì¢Œí‘œê³„ ê¸°ì¤€ìœ¼ë¡œ ìžë™ ì¡°ì •ë¨(ì™¼ìª½ ìœ„)
+	// ìš°ë¦¬ëŠ” ë§µì˜ ë²„í…ìŠ¤ë¥¼ ì™¼ìª½ì•„ëž˜ë¶€í„° ì°ê¸° ì‹œìž‘í•´ì„œ ì´ë¯¸ì§€ ë°ì´í„°ë¥¼ ê·¸ëŒ€ë¡œ ì½ì–´ì˜¤ë©´ ìƒí•˜ë°˜ì „ì´ ì¼ì–´ë‚¨
+	// ê·¸ê±¸ ìˆ˜ì •í•´ì£¼ëŠ” ì½”ë“œ - ì´í›„ëŠ” ìˆ˜ì—…ì½”ë“œëž‘ ë™ì¼
 	for (int z = 0; z < VTXCNTZ; ++z) {
 		BYTE* pRow = pBits + (VTXCNTZ - 1 - z) * iPitch;
 		//BYTE* pRow = pBits + z * iPitch;
@@ -117,7 +102,7 @@ HRESULT CTerrainTex::Ready_Heightmap(const _ulong& dwCntX, const _ulong& dwCntZ,
 
 	VTXTEX* pVertex = NULL;
 
-	// &pVertex : ¹öÅØ½º ¹öÆÛ¿¡ ÀúÀåµÈ Á¤Á¡ Áß Ã¹ ¹øÂ° ÁÖ¼Ò¸¦ ¾ò¾î ¿È.
+	// &pVertex : ë²„í…ìŠ¤ ë²„í¼ì— ì €ìž¥ëœ ì •ì  ì¤‘ ì²« ë²ˆì§¸ ì£¼ì†Œë¥¼ ì–»ì–´ ì˜´.
 
 	_ulong	dwIndex(0);
 
@@ -160,7 +145,7 @@ HRESULT CTerrainTex::Ready_Heightmap(const _ulong& dwCntX, const _ulong& dwCntZ,
 		{
 			dwIndex = i * dwCntX + j;
 
-			// ¿À¸¥ÂÊ À§
+			// ì˜¤ë¥¸ìª½ ìœ„
 			pIndex[dwTriCnt]._0 = dwIndex + dwCntX;
 			pIndex[dwTriCnt]._1 = dwIndex + dwCntX + 1;
 			pIndex[dwTriCnt]._2 = dwIndex + 1;
@@ -176,7 +161,7 @@ HRESULT CTerrainTex::Ready_Heightmap(const _ulong& dwCntX, const _ulong& dwCntZ,
 
 			dwTriCnt++;
 
-			// ¿ÞÂÊ ¾Æ·¡
+			// ì™¼ìª½ ì•„ëž˜
 			pIndex[dwTriCnt]._0 = dwIndex + dwCntX;
 			pIndex[dwTriCnt]._1 = dwIndex + 1;
 			pIndex[dwTriCnt]._2 = dwIndex;
@@ -209,7 +194,7 @@ HRESULT CTerrainTex::Ready_Flat(const _ulong& dwCntX, const _ulong& dwCntZ, cons
 {
 	VTXTEX* pVertex = NULL;
 
-	// &pVertex : ¹öÅØ½º ¹öÆÛ¿¡ ÀúÀåµÈ Á¤Á¡ Áß Ã¹ ¹øÂ° ÁÖ¼Ò¸¦ ¾ò¾î ¿È.
+	// &pVertex : ë²„í…ìŠ¤ ë²„í¼ì— ì €ìž¥ëœ ì •ì  ì¤‘ ì²« ë²ˆì§¸ ì£¼ì†Œë¥¼ ì–»ì–´ ì˜´.
 
 	_ulong	dwIndex(0);
 
@@ -224,7 +209,7 @@ HRESULT CTerrainTex::Ready_Flat(const _ulong& dwCntX, const _ulong& dwCntZ, cons
 			pVertex[dwIndex].vPosition =
 			{
 			  _float(j * dwVtxItv),
-			  0.f,
+			  -0.95f,
 			  _float(i * dwVtxItv)
 			};
 			pVertex[dwIndex].vTexUV = { ((_float)j / (dwCntX - 1)) * 20.f ,
@@ -250,7 +235,7 @@ HRESULT CTerrainTex::Ready_Flat(const _ulong& dwCntX, const _ulong& dwCntZ, cons
 		{
 			dwIndex = i * dwCntX + j;
 
-			// ¿À¸¥ÂÊ À§
+			// ì˜¤ë¥¸ìª½ ìœ„
 			pIndex[dwTriCnt]._0 = dwIndex + dwCntX;
 			pIndex[dwTriCnt]._1 = dwIndex + dwCntX + 1;
 			pIndex[dwTriCnt]._2 = dwIndex + 1;
@@ -266,7 +251,7 @@ HRESULT CTerrainTex::Ready_Flat(const _ulong& dwCntX, const _ulong& dwCntZ, cons
 
 			dwTriCnt++;
 
-			// ¿ÞÂÊ ¾Æ·¡
+			// ì™¼ìª½ ì•„ëž˜
 			pIndex[dwTriCnt]._0 = dwIndex + dwCntX;
 			pIndex[dwTriCnt]._1 = dwIndex + 1;
 			pIndex[dwTriCnt]._2 = dwIndex;
