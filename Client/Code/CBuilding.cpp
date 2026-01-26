@@ -112,7 +112,7 @@ void CBuilding::LateUpdate_GameObject(const _float& fTimeDelta)
 	{
 		if (m_bUsingTrigger) { m_pTrigger->LateUpdate_GameObject(fTimeDelta); }
 
-		//m_pTransformCom->Compute_Bilboard(BBD_X);
+		m_pTransformCom->Compute_Bilboard(BBD_X);
 
 		Compute_ViewDepth(&vPos);
 	}
@@ -269,6 +269,7 @@ void CBuilding::Change_State(BUILDING_STATE eState)
 			fScale = 7.f;
 			m_fGroundY -= fScale * 0.1f;
 			break;
+
 		case BT_SHRINE:
 		{
 			fScale = 10.f;
@@ -291,6 +292,7 @@ void CBuilding::Change_State(BUILDING_STATE eState)
 			}
 		}
 			break;
+
 		default:
 			break;
 		}
@@ -298,7 +300,7 @@ void CBuilding::Change_State(BUILDING_STATE eState)
 		_vec3 vPos;
 		m_pTransformCom->Get_Info(INFO_POS, &vPos);
 		m_pTransformCom->Set_Pos(vPos.x, m_fGroundY, vPos.z);
-		m_pTransformCom->Rotation(ROT_X, 0.f);
+		m_pTransformCom->Rotation(ROT_X, -90.f);
 		m_pTransformCom->Set_Scale(fScale, fScale, fScale);
 
 		Ready_Trigger();
@@ -322,12 +324,12 @@ void CBuilding::Ready_Variable()
 	m_pTransformCom->Set_Scale(fScale, fScale, fScale);
 	m_fAcmlTime = 0.f;
 
-	//Change_State(BS_CONSTRUCTING);
-	//m_fWorkGauge = 0.f;
+	Change_State(BS_CONSTRUCTING);
+	m_fWorkGauge = 0.f;
 
 	// 테스트용
-	m_fWorkGauge = 1.f;
-	Change_State(BS_COMPLETE);
+	//m_fWorkGauge = 1.f;
+	//Change_State(BS_COMPLETE);
 	// 테스트용
 
 	if(m_eBuildingType == BT_WORKSHOP)

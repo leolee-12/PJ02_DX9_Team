@@ -19,6 +19,7 @@ class CPlayer : public CGameObject
 public:
 	enum PLAYERSTATE { PS_IDLE, PS_RUN, PS_ROLL, PS_ATTACK, PS_CHARGE, PS_HIT, PS_ACTION, PS_REBIRTH, PS_END };
 	enum WEAPONTYPE { WT_SWORD, WT_GAUNTLETS, WT_END };
+	enum PLAYER_WORK { PW_NONE, PW_WOOD, PW_ROCK, PW_BUILD, PW_EAT, PW_END };
 
 	// ==========================
 	//	PLAYERSTATE : 플레이어 상태 관리용 enum
@@ -39,7 +40,7 @@ public:
 	void			Set_Reborn();
 	void			Set_Weapon(WEAPONTYPE eType) { m_eWeaponType = eType; }
 
-	void			Set_Action(_bool b) { m_bAction = b; }
+	void			Set_Action(_bool b) { m_bCutScene = b; }
 	void			Set_Village(_bool b) { m_bVillage = b; }
 
 	WEAPONTYPE		Get_Weapon() { return m_eWeaponType; }
@@ -94,6 +95,12 @@ private:
 	// 워프관련
 	void			Update_Warp(const _float fTimeDelta);
 
+	// 작업(Work) 관련
+	_bool 			Find_WorkTarget(const _float& fMaxDist);
+	void			Start_Work();
+	void			Execute_Work(const _float& fTimeDelta);
+	void			Stop_Work();
+
 private:
 	Engine::CRcTex*			m_pBufferCom;
 	Engine::CTransform*		m_pTransformCom;
@@ -120,7 +127,7 @@ private:
 	_int			m_iCombo;	// 공격 중인지? + 몇번째 콤보상태인지?
 	_int			m_iMaxCombo;
 	_float			m_fComboDelay;
-	_bool			m_bAction;	// Action 중인지?
+	_bool			m_bCutScene;	// CutScene 중인지?
 	_float			m_fAcmlTime;	// 무적용
 	_float			m_fAcmlTime2;	// 콤보딜레이용
 	_bool			m_bVillage = false;
@@ -160,6 +167,12 @@ private:
 	_vec3  m_vWarpPos = {};
 	_bool  m_IsWarp = false;
 
+	// 작업(Work) 관련
+	PLAYER_WORK		m_eWork;
+	_vec3			m_vWorkPos;
+	_float 			m_fWorkSpeed;
+	_bool			m_bWorking;
+
 public:
 	static CPlayer* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 	static CPlayer* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel);
@@ -170,6 +183,7 @@ public:
 	static constexpr _float PLAYER_DEFAULT_SPEED = 12.f;
 	static constexpr _float PLAYER_INTRO_SPEED = 7.f;
 	static constexpr _float PLAYER_CHARGE_SPEED = 2.f;
+	static constexpr _float PLAYER_WORK_SPEED = 0.1f;
 	static constexpr _float PLAYER_DEFAULT_SCALE = 10.f;
 	static constexpr _float PLAYER_INTRO_SCALE = 11.f;
 	static constexpr _float PLAYER_REBIRTH_SCALE = 20.f;

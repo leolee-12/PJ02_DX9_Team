@@ -109,7 +109,7 @@ void CBreakableRock::LateUpdate_GameObject(const _float& fTimeDelta)
 
 	_vec3 vPos;
 	m_pTransformCom->Get_Info(Engine::INFO_POS, &vPos);
-	//m_pTransformCom->Compute_Bilboard(BBD_X);
+	m_pTransformCom->Compute_Bilboard(BBD_X);
 	Compute_ViewDepth(&vPos);
 
 	Check_Status();

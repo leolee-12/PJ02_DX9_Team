@@ -18,6 +18,8 @@
 #include "CProjectile.h"
 #include "CChargeArrow.h"
 #include "CInteractionUI.h"
+#include "CInteractMgr.h"
+#include <IInteractable.h>
 
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev),
@@ -35,8 +37,9 @@ CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
 	m_fChargeMax(3.f),
 	m_bMsgRegistered(false),
 	m_bIntro(false),
-	m_bAction(false),
-	m_pChargeArrow(nullptr)
+	m_bCutScene(false),
+	m_pChargeArrow(nullptr),
+	m_bWorking(false)
 {
 }
 
@@ -56,8 +59,9 @@ CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel)
 		m_fChargeMax(3.f),
 		m_bMsgRegistered(false),
 		m_bIntro(false),
-		m_bAction(false),
-		m_pChargeArrow(nullptr)
+		m_bCutScene(false),
+		m_pChargeArrow(nullptr),
+		m_bWorking(false)
 {
 }
 
@@ -78,8 +82,9 @@ CPlayer::CPlayer(const CPlayer& rhs)
 		m_fChargeMax(rhs.m_fChargeMax),
 		m_bMsgRegistered(rhs.m_bMsgRegistered),
 		m_bIntro(rhs.m_bIntro),
-		m_bAction(false),
-		m_pChargeArrow(nullptr)
+		m_bCutScene(false),
+		m_pChargeArrow(nullptr),
+		m_bWorking(false)
 {
 }
 
@@ -111,6 +116,7 @@ _int CPlayer::Update_GameObject(const _float& fTimeDelta)
 	Charge(fTimeDelta);
 	Move_Frame(fTimeDelta);
 	Update_Warp(fTimeDelta);
+	Execute_Work(fTimeDelta);
 	Check_Scale();
 
 	m_pInteractionUI->Update_GameObject(fTimeDelta);
@@ -181,6 +187,7 @@ void CPlayer::Ready_Variable()
 	m_fAcmlTime = 0.f;
 	m_fPassion = 4.f;
 	m_fFaith = 50.f;
+	m_fWorkSpeed = PLAYER_WORK_SPEED;
 
 	m_eWeaponType = WT_SWORD;
 	//m_eWeaponType = WT_GAUNTLETS;
@@ -239,7 +246,7 @@ void CPlayer::Ready_Event()
 	m_hmapSubHandles.insert({ L"CutScene.Dialogue", m_pMessageChannel->Subscribe(L"CutScene.Dialogue", [this](const IMessageChannel::EVENT& Event) {
 	{
 
-			if (!m_bAction && (m_eCurState != PS_REBIRTH)) {
+			if (!m_bCutScene && (m_eCurState != PS_REBIRTH)) {
 				m_eCurState = PS_IDLE;
 				m_iCombo = 0;
 				m_bRoll = false;
@@ -427,9 +434,9 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 	{	// 디버그용
 		if (!m_bIntro) return;
 
-		if (!m_bAction)
+		if (!m_bCutScene)
 		{
-			m_bAction = true;
+			m_bCutScene = true;
 			m_eCurState = PS_ACTION;
 			m_strFrameKey = L"intro_kneel";
 		}
@@ -452,10 +459,12 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 	if (CCutSceneMgr::GetInstance()->Get_Playing())				{ return; }
 	if ((m_eCurState == PS_HIT) || (m_eCurState == PS_REBIRTH))	{ return; }
 
-	if (!m_bRoll && !m_iCombo && !m_fCharge && !m_bAction)
+	if (!m_bRoll && !m_iCombo && !m_fCharge && !m_bCutScene)
 	{
 		if (CDInputMgr::GetInstance()->Key_Pressing(DIK_W))
 		{
+			Stop_Work();
+
 			m_eCurState = PS_RUN;
 
 			if (CDInputMgr::GetInstance()->Key_Pressing(DIK_A)) m_vDir = m_vNormDir[DIR_LU];
@@ -469,6 +478,8 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 
 		else if (CDInputMgr::GetInstance()->Key_Pressing(DIK_S))
 		{
+			Stop_Work();
+
 			m_eCurState = PS_RUN;
 
 			if (CDInputMgr::GetInstance()->Key_Pressing(DIK_A)) m_vDir = m_vNormDir[DIR_LD];
@@ -482,6 +493,8 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 
 		else if (CDInputMgr::GetInstance()->Key_Pressing(DIK_A))
 		{
+			Stop_Work();
+
 			m_eCurState = PS_RUN;
 			m_vDir = m_vNormDir[DIR_LEFT];
 			m_pTransformCom->Move_Pos(&m_vDir, fTimeDelta, m_fSpeed);
@@ -489,6 +502,8 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 
 		else if (CDInputMgr::GetInstance()->Key_Pressing(DIK_D))
 		{
+			Stop_Work();
+
 			m_eCurState = PS_RUN;
 			m_vDir = m_vNormDir[DIR_RIGHT];
 			m_pTransformCom->Move_Pos(&m_vDir, fTimeDelta, m_fSpeed);
@@ -496,17 +511,27 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 
 		else
 		{
-			if (m_eCurState != PS_REBIRTH)
-			m_eCurState = PS_IDLE;
+			if (m_eCurState != PS_REBIRTH && m_eCurState != PS_ACTION)
+				m_eCurState = PS_IDLE;
 		}
 	}
 
 	// 트리거 키인풋
 	if (CDInputMgr::GetInstance()->Key_Down(DIK_E))
 	{
-		if (!m_pTriggerPoint) { return; }
+		if (m_pTriggerPoint)
+		{
+			m_pTriggerPoint->Activate();
+			return;
+		}
 
-		m_pTriggerPoint->Activate();
+		if (!m_bWorking)
+		{
+			_float fFindDist = 3.f;
+
+			if (Find_WorkTarget(fFindDist))
+				Start_Work();
+		}
 	}
 
 	if (CDInputMgr::GetInstance()->Key_Down(DIK_P))
@@ -516,7 +541,7 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 	}
 
 	// 인트로 상태에서는 사용 불가
-	if (m_bIntro || m_bAction) return;
+	if (m_bIntro || m_bCutScene) return;
 
 	if (CDInputMgr::GetInstance()->Key_Down(DIK_SPACE))
 	{
@@ -752,7 +777,23 @@ void CPlayer::Check_Frame()
 	case PS_ACTION:
 	{
 		if (m_bIntro)	m_fFrameEnd = m_pTextureCom->Get_TextureEnd(L"intro_kneel");
-		else			m_fFrameEnd = m_pTextureCom->Get_TextureEnd(L"action");
+		else
+		{
+			switch (m_eWork)
+			{
+			case PW_WOOD:
+				m_fFrameEnd = m_pTextureCom->Get_TextureEnd(L"actions_chop-wood");
+				break;
+
+			case PW_ROCK:
+				m_fFrameEnd = m_pTextureCom->Get_TextureEnd(L"actions_chop-stone");
+				break;
+
+			case PW_BUILD:
+				m_fFrameEnd = m_pTextureCom->Get_TextureEnd(L"actions_hammer");
+				break;
+			}
+		}
 	}
 	break;
 
@@ -831,7 +872,7 @@ void CPlayer::Move_Frame(const _float& fTimeDelta)
 			if		(m_strFrameKey == L"intro_kneel")		m_strFrameKey = L"intro_kneel-loop";
 			else if (m_strFrameKey == L"intro_kneel-wake")
 			{
-				m_bAction = false;
+				m_bCutScene = false;
 				m_eCurState = PS_IDLE;
 			}
 		}
@@ -1006,9 +1047,9 @@ void CPlayer::Set_Tied()
 
 void CPlayer::Set_Crying()
 {
-	if (!m_bAction)
+	if (!m_bCutScene)
 	{
-		m_bAction = true;
+		m_bCutScene = true;
 		m_eCurState = PS_ACTION;
 		m_strFrameKey = L"intro_kneel";
 	}
@@ -1016,7 +1057,7 @@ void CPlayer::Set_Crying()
 
 void CPlayer::Set_StopCrying()
 {
-	if (m_bAction)
+	if (m_bCutScene)
 	{
 		m_strFrameKey = L"intro_kneel-wake";
 	}
@@ -1110,7 +1151,7 @@ void CPlayer::Attacked(_int iDamage)
 		else m_fCharge = 0.f;
 	}
 	else if (m_eCurState == PS_ACTION)
-	{ m_bAction = false; return; }
+	{ m_bCutScene = false; return; }
 
 	m_eCurState = PS_HIT;
 	m_fAcmlTime = 0.f;
@@ -1142,6 +1183,79 @@ void CPlayer::Update_Warp(const _float fTimeDelta)
 	m_fWarpDeleay += fTimeDelta;
 
 	
+}
+
+_bool CPlayer::Find_WorkTarget(const _float& fMaxDist)
+{	// 작업 가능 여부를 반환 (가능한 경우, 타입 및 위치는 멤버 변수에 저장)
+	_float fMinDist = fMaxDist;
+	_bool  bFound = false;
+
+	CInteractMgr* pInteractMgr = CInteractMgr::GetInstance();
+
+	for (_uint i = CInteractMgr::WOOD; i <= CInteractMgr::BUILD; ++i)
+	{
+		CGameObject* pTarget = pInteractMgr->Find_Nearest(CInteractMgr::INTERACT_TYPE(i), m_vPos);
+
+		if (!pTarget) continue;
+
+		// 거리 계산
+		IInteractable* pIObj = dynamic_cast<IInteractable*>(pTarget);
+		_vec3 vWorkPos;
+		pIObj->Get_WorkPos(&vWorkPos);
+		vWorkPos = m_vPos - vWorkPos;
+		vWorkPos.y = 0.f;
+		_float fDist = D3DXVec3Length(&vWorkPos);
+
+		if(fDist < fMinDist)
+		{
+			fMinDist = fDist;
+			m_eWork = PLAYER_WORK(i);
+			m_vWorkPos = vWorkPos;
+			bFound = true;
+		}
+	}
+
+	return bFound;
+}
+
+void CPlayer::Start_Work()
+{
+	m_bWorking = true;
+	m_eCurState = PS_ACTION;
+
+	switch (m_eWork)
+	{
+	case PW_WOOD:
+		m_strFrameKey = L"actions_chop-wood";
+		break;
+	
+	case PW_ROCK:
+		m_strFrameKey = L"actions_chop-stone";
+		break;
+	
+	case PW_BUILD:
+		m_strFrameKey = L"actions_hammer";
+		break;
+	}
+}
+
+void CPlayer::Execute_Work(const _float& fTimeDelta)
+{
+	if(!m_bWorking) return;
+
+	if(!CInteractMgr::GetInstance()->Apply_Work(CInteractMgr::INTERACT_TYPE(m_eWork), m_vPos, m_fWorkSpeed * fTimeDelta))
+	{	// 작업 반영 실패(대상X, 거리 멂, 작업 완료) 시 작업 종료
+		Stop_Work();
+	}
+}
+
+void CPlayer::Stop_Work()
+{
+	if (!m_bWorking) return;
+
+	m_bWorking = false;
+	m_eWork = PW_NONE;
+	m_eCurState = PS_IDLE;
 }
 
 void	CPlayer::OnCollision(CGameObject* pObject)
@@ -1214,7 +1328,7 @@ void	CPlayer::OnCollision(CGameObject* pObject)
 	}
 	if (pObject->Get_OBJID() == OID_TRIGGER)
 	{
-		if (m_bAction) { return; }
+		if (m_bCutScene) { return; }
 		m_bCanTrigger = true;
 		m_pTriggerPoint = static_cast<CTriggerPoint*>(pObject);
 
