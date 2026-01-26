@@ -213,6 +213,11 @@
     <ClInclude Include="..\Header\CGaugeStar.h" />
     <ClInclude Include="..\Header\CIndicator.h" />
     <ClInclude Include="..\Header\CInteractionUI.h" />
+    <ClInclude Include="..\Header\CInvenBack.h" />
+    <ClInclude Include="..\Header\CInvenBtn.h" />
+    <ClInclude Include="..\Header\CInvenItem.h" />
+    <ClInclude Include="..\Header\CInvenSlot.h" />
+    <ClInclude Include="..\Header\CInventory.h" />
     <ClInclude Include="..\Header\CKBCharNPC.h" />
     <ClInclude Include="..\Header\CKBCharPlayer.h" />
     <ClInclude Include="..\Header\CMapDoor.h">
@@ -416,6 +421,11 @@
     <ClCompile Include="..\Code\CIndicator.cpp" />
     <ClCompile Include="..\Code\CInteractionUI.cpp" />
     <ClCompile Include="..\Code\CInteractMgr.cpp" />
+    <ClCompile Include="..\Code\CInvenBack.cpp" />
+    <ClCompile Include="..\Code\CInvenBtn.cpp" />
+    <ClCompile Include="..\Code\CInvenItem.cpp" />
+    <ClCompile Include="..\Code\CInvenSlot.cpp" />
+    <ClCompile Include="..\Code\CInventory.cpp" />
     <ClCompile Include="..\Code\CItem.cpp" />
     <ClCompile Include="..\Code\CKBBack.cpp" />
     <ClCompile Include="..\Code\CKBBack2.cpp" />

@@ -548,6 +548,15 @@ HRESULT CVillage::Ready_UI_Layer(const _tchar* pLayerTag)
 		return E_FAIL;
 	pGameObject->AddRef();
 
+	pGameObject = CPersistentMgr::GetInstance()->Get_Inventory();
+
+	if (nullptr == pGameObject)
+		return E_FAIL;
+
+	if (FAILED(pLayer->Add_GameObject(L"Inventory", pGameObject)))
+		return E_FAIL;
+	pGameObject->AddRef();
+
 
 	m_mapLayer.insert({ pLayerTag , pLayer });
 

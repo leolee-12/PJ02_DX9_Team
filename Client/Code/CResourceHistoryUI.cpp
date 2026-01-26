@@ -110,7 +110,7 @@ _int CResourceHistoryUI::Update_GameObject(const _float& fTimeDelta)
 	{
 		if (m_fDisplayTime >= 0.0f)
 		{
-			m_fDisplayTime -= fTimeDelta;
+			m_fDisplayTime -= fTimeDelta *2.0f;
 		}
 		else if (m_iOrder == 0 && m_fLerpTime >= 1.0f)
 		{
@@ -129,7 +129,7 @@ _int CResourceHistoryUI::Update_GameObject(const _float& fTimeDelta)
 		if (m_fLerpTime <= 1.0f)
 		{
 			D3DXVec3Lerp(&m_vPos, &m_vStartLerpPos, &m_vEndLerpPos, m_fLerpTime);
-			m_fLerpTime += fTimeDelta;
+			m_fLerpTime += fTimeDelta * 3.0f;
 
 		}
 		else
