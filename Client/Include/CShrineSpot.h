@@ -55,6 +55,7 @@ private:
 	_float				m_fPreWorkGauge;
 	_float				m_fWorkGauge;
 	CResourceWorkBar*	m_pWorkBar;
+	_float				m_fAccTime = 0.f;
 
 	static constexpr _float MAX_WORK_GAUGE = 1.f;
 

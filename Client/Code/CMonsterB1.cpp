@@ -161,8 +161,8 @@ void CMonsterB1::OnCollision(CGameObject* pObject)
 	{
 		if (!pObject->Get_Hp()) return;
 
-		_int iDamage = _int(static_cast<CTransform*>(pObject->Get_Component(ID_DYNAMIC, L"Com_Transform"))->Get_Scale(ROT_X));
-		Attacked(iDamage);
+		_float fDamage = _float(static_cast<CTransform*>(pObject->Get_Component(ID_DYNAMIC, L"Com_Transform"))->Get_Scale(ROT_X));
+		Attacked(fDamage);
 	}
 
 	if (pObject->Get_OBJID() == OID_BORDER)
@@ -264,7 +264,7 @@ void CMonsterB1::Ready_Variable()
 	// 게임로직 변수 세팅
 	_float fScale = 10.f;
 	m_fGroundY = -2.5f + fScale * 0.5f;
-	m_iAttack = 1;
+	m_fAttack = 1;
 	m_iMaxHp = m_iHp = 10;
 	m_iPhase = 1;
 
@@ -322,7 +322,7 @@ void CMonsterB1::Ready_Event()
 	{
 		if (Target == this)
 		{
-			Attacked(any_cast<_int>(Event.hmapData.find(L"Attack")->second));
+			Attacked(any_cast<_float>(Event.hmapData.find(L"Attack")->second));
 			break;
 		}
 	}
@@ -373,7 +373,7 @@ void CMonsterB1::Check_Frame()
 	case B1S_PREPARE:
 	{
 		m_fFrameEnd = 8.f;
-		m_fAcmlTime = 0.f;
+		m_fAccTime = 0.f;
 
 		for (_uint i = 0; i < 4; ++i)
 		{
@@ -428,7 +428,7 @@ void CMonsterB1::Move_Frame(const _float& fTimeDelta)
 	m_fFrame += m_fFrameSpeed * fTimeDelta;
 	_uint iCurFrame = _uint(m_fFrame);
 
-	m_fAcmlTime += fTimeDelta;
+	m_fAccTime += fTimeDelta;
 
 	if (m_fFrame >= m_fFrameEnd)
 	{
@@ -604,7 +604,7 @@ void CMonsterB1::Set_Material()
 	if (m_eCurState != B1S_PREPARE) return;
 
 	_float fMax = 1.f;
-	_float fRatio = min(m_fAcmlTime / 2.f, 1.f);
+	_float fRatio = min(m_fAccTime / 2.f, 1.f);
 	
 	// 텍스처 색상 혼합
 	m_pGraphicDev->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_ADD);
@@ -642,7 +642,7 @@ void CMonsterB1::Attack_HitBox()
 		IMessageChannel::EVENT EAttack;
 		EAttack.strType = L"Player.Attacked";
 		EAttack.eOBJID = Engine::OID_PLAYER;
-		EAttack.hmapData.emplace(L"Attack", m_iAttack);
+		EAttack.hmapData.emplace(L"Attack", m_fAttack);
 		EAttack.hmapData.emplace(L"Target", tempVec);
 		m_pMessageChannel->Publish(EAttack);
 	}
@@ -661,15 +661,17 @@ void CMonsterB1::Attack_HitBox_Land()
 		IMessageChannel::EVENT EAttack;
 		EAttack.strType = L"Player.Attacked";
 		EAttack.eOBJID = Engine::OID_PLAYER;
-		EAttack.hmapData.emplace(L"Attack", m_iAttack);
+		EAttack.hmapData.emplace(L"Attack", m_fAttack);
 		EAttack.hmapData.emplace(L"Target", tempVec);
 		m_pMessageChannel->Publish(EAttack);
 	}
 }
 
-void CMonsterB1::Attacked(const _int& iAttack)
+void CMonsterB1::Attacked(const _float& fAttack)
 {
-	if(m_iHp > 0) m_iHp -= iAttack;
+	if (m_iHp <= 0) return;
+
+	m_iHp -= _int(fAttack);
 
 	_tchar strSoundName[128] = L"";
 	swprintf_s(strSoundName, L"N2Hit%d.wav", Get_Rand_Int(1, 3));

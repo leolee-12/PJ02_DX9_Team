@@ -154,7 +154,9 @@ HRESULT CEffectMgr::Ready_EffectMgr(LPDIRECT3DDEVICE9 pGraphicDev)
 	if (chargeArrowPair.second)
 	{
 		CChargeArrow* pArrow = CChargeArrow::Create(pGraphicDev, L"Proto_ChargeArrowTexture");
-		pArrow->Set_Scale(_vec3(5.f, 1.f, 1.f));
+
+		_float fScale = 1.5f;
+		pArrow->Set_Scale(_vec3(5.f * fScale, 1.f * fScale, 1.f * fScale));
 		chargeArrowPair.first->second = pArrow;
 	}
 

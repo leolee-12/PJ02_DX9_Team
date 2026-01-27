@@ -111,7 +111,7 @@ void CNode::Set_Material()
 	case MONSTER_B1:
 	{
 		_float fMax = 1.f;
-		_float fRatio = min(m_fAcmlTime / 2.f, 1.f);
+		_float fRatio = min(m_fAccTime / 2.f, 1.f);
 
 		// 텍스처 색상 혼합
 		m_pGraphicDev->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_ADD);
@@ -197,7 +197,7 @@ void CNode::Ready_Variable()
 void CNode::Move_Frame(const _float& fTimeDelta)
 {
 	m_fFrame += m_fFrameSpeed * fTimeDelta;
-	m_fAcmlTime += fTimeDelta;
+	m_fAccTime += fTimeDelta;
 
 	if (m_fFrame >= m_fFrameEnd)
 	{

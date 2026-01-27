@@ -100,9 +100,10 @@ _bool CInteractMgr::Apply_Work(INTERACT_TYPE eType, const _vec3& vPos, const flo
 	_vec3 vWorkPos;
 	pIObj->Get_WorkPos(&vWorkPos);
 	vWorkPos -= vPos;
+	vWorkPos.y = 0.f;
 	fDist = D3DXVec3Length(&vWorkPos);
 
-	if (fDist > 1.f) return false;
+	if (fDist > 3.f) return false;
 
 	if (pIObj)
 	{

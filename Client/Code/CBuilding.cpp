@@ -10,6 +10,7 @@
 #include "CResourceWorkBar.h"
 #include "CPersistentMgr.h"
 #include "CShrineSpot.h"
+#include <CSoundMgr.h>
 
 CBuilding::CBuilding(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev)
@@ -61,11 +62,7 @@ HRESULT CBuilding::Ready_GameObject()
 
 _int CBuilding::Update_GameObject(const _float& fTimeDelta)
 {
-	//if (g_bDebug) { m_pColliderCom->Update_AABBforRender(); }
-
-	//m_pColliderCom->UpdateFromTransform(m_pTransformCom);
-
-	m_fAcmlTime += fTimeDelta;
+	m_fAccTime += fTimeDelta;
 
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
@@ -79,7 +76,7 @@ _int CBuilding::Update_GameObject(const _float& fTimeDelta)
 
 	if (iExit == DEAD)
 	{
-		//m_pColliderCom->UnregisterFromManager();
+		m_pColliderCom->UnregisterFromManager();
 
 		if(m_eBuildingState == BS_CONSTRUCTING) CInteractMgr::GetInstance()->Unregister_IObj(CInteractMgr::BUILD, this);
 	}
@@ -92,16 +89,27 @@ _int CBuilding::Update_GameObject(const _float& fTimeDelta)
 
 void CBuilding::LateUpdate_GameObject(const _float& fTimeDelta)
 {
-	if (!(m_fWorkGauge - m_fPreWorkGauge < 0.0001f))
+	if (m_fWorkGauge - m_fPreWorkGauge > 0.0001f)
 	{
 		m_pWorkBar->Active();
+
+		if (m_fAccTime >= 1.f)
+		{
+			//_uint iChannel = Get_Rand_Int(SOUND_EFFECT1, SOUND_EFFECT10);
+
+			_tchar strSoundName[128] = L"";
+			swprintf_s(strSoundName, L"Hammering_%d.wav", Get_Rand_Int(0, 33));
+			CSoundMgr::GetInstance()->Play(strSoundName, SOUND_BUILD, 0.5f);
+
+			m_fAccTime = 0.f;
+		}
 	}
 	else
 	{
-		if (m_fAcmlTime >= 3.f)
+		if (m_fAccTime >= 3.f)
 		{
 			m_pWorkBar->UnActive();
-			m_fAcmlTime = 0.f;
+			m_fAccTime = 0.f;
 		}
 	}
 
@@ -112,11 +120,18 @@ void CBuilding::LateUpdate_GameObject(const _float& fTimeDelta)
 	{
 		if (m_bUsingTrigger) { m_pTrigger->LateUpdate_GameObject(fTimeDelta); }
 
-		//m_pTransformCom->Compute_Bilboard(BBD_X);
+		m_pTransformCom->Compute_Bilboard(BBD_X);
 
 		Compute_ViewDepth(&vPos);
 	}
 	else if (m_eBuildingState == BS_CONSTRUCTING) m_fPreWorkGauge = m_fWorkGauge;
+
+	//------스프라이트 높이와 충돌체 위치 맞춤---------
+	_float fY(m_vPos.y - m_pTransformCom->Get_Scale(ROT_Y) * 0.125f);
+	AABB tAABB = { m_vPos.x, fY, m_vPos.z, 1.f, 1.f, 1.f };
+	m_pColliderCom->Set_AABB(tAABB);
+	m_pColliderCom->UpdateFromCustom(tAABB);
+	//-------------------------------------------------
 
 	m_pWorkBar->LateUpdate_GameObject(fTimeDelta);
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
@@ -228,14 +243,13 @@ HRESULT CBuilding::Add_Component()
 	m_mapComponent[ID_STATIC].insert({ L"Com_Texture_Complete", pComponent });
 
 	// Collider
-	//pComponent = m_pColliderCom = dynamic_cast<Engine::CCollider*>
-	//	(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Collider"));
-	////static_cast<Engine::CCollider*>(pComponent)->Set_AABB();
+	pComponent = m_pColliderCom = dynamic_cast<Engine::CCollider*>
+		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Collider"));
 
-	//if (nullptr == pComponent)
-	//	return E_FAIL;
+	if (nullptr == pComponent)
+		return E_FAIL;
 
-	//m_mapComponent[ID_STATIC].insert({ L"Com_Collider", pComponent });
+	m_mapComponent[ID_STATIC].insert({ L"Com_Collider", pComponent });
 
 	return S_OK;
 }
@@ -276,6 +290,7 @@ void CBuilding::Change_State(BUILDING_STATE eState)
 			fScale = 7.f;
 			m_fGroundY -= fScale * 0.1f;
 			break;
+
 		case BT_SHRINE:
 		{
 			fScale = 10.f;
@@ -298,6 +313,7 @@ void CBuilding::Change_State(BUILDING_STATE eState)
 			}
 		}
 			break;
+
 		default:
 			break;
 		}
@@ -305,7 +321,7 @@ void CBuilding::Change_State(BUILDING_STATE eState)
 		_vec3 vPos;
 		m_pTransformCom->Get_Info(INFO_POS, &vPos);
 		m_pTransformCom->Set_Pos(vPos.x, m_fGroundY, vPos.z);
-		m_pTransformCom->Rotation(ROT_X, 0.f);
+		m_pTransformCom->Rotation(ROT_X, -90.f);
 		m_pTransformCom->Set_Scale(fScale, fScale, fScale);
 
 		Ready_Trigger();
@@ -327,19 +343,19 @@ void CBuilding::Ready_Variable()
 {
 	_float fScale = 5.f;
 	m_pTransformCom->Set_Scale(fScale, fScale, fScale);
-	m_fAcmlTime = 0.f;
+	m_fAccTime = 0.f;
 
-	//Change_State(BS_CONSTRUCTING);
-	//m_fWorkGauge = 0.f;
+	Change_State(BS_CONSTRUCTING);
+	m_fWorkGauge = 0.f;
 
 	// 테스트용
-	m_fWorkGauge = 1.f;
-	Change_State(BS_COMPLETE);
+	//m_fWorkGauge = 1.f;
+	//Change_State(BS_COMPLETE);
 	// 테스트용
 
 	if(m_eBuildingType == BT_WORKSHOP)
 	{
-		m_fWorkGauge = 1.f;
+		m_fPreWorkGauge = m_fWorkGauge = 1.f;
 		Change_State(BS_COMPLETE);
 	}
 

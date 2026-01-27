@@ -60,7 +60,7 @@ private:
 
 	// 스테이터스 관련
 	_float		m_fGroundY;
-	_float		m_fAcmlTime;
+	_float		m_fAccTime;
 
 	_bool		m_bRunning = false;
 

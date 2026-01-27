@@ -52,7 +52,7 @@ protected:
 	ITEMSTATE			m_ePreState;
 	ITEMSTATE			m_eCurState;
 	ITEMID				m_eItemID;
-	_float				m_fAcmlTime;
+	_float				m_fAccTime;
 
 	// 물리 관련
 	_vec3				m_vSpeed;

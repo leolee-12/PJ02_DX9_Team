@@ -52,7 +52,7 @@ private:
 	_float		m_fSpeed;
 	_vec3		m_vSpeed;
 	_float		m_fGravity;
-	_float		m_fAcmlTime;
+	_float		m_fAccTime;
 	_bool		m_bChase;
 	_vec3		m_vLerpPos;		// Lerp용 위치
 

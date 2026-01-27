@@ -52,14 +52,14 @@ HRESULT CBreakableRock::Ready_GameObject()
 	m_iTextureIndex = 0;
 	m_pWorkBar = CResourceWorkBar::Create(m_pGraphicDev, _float(m_iHp), _vec3{});
 	m_pWorkBar->UnActive();
-	m_fAcmlTime = 0.f;
+	m_fAccTime = 0.f;
 
 	return S_OK;
 }
 
 _int CBreakableRock::Update_GameObject(const _float& fTimeDelta)
 {
-	m_fAcmlTime += fTimeDelta;
+	m_fAccTime += fTimeDelta;
 
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
@@ -79,33 +79,33 @@ _int CBreakableRock::Update_GameObject(const _float& fTimeDelta)
 
 void CBreakableRock::LateUpdate_GameObject(const _float& fTimeDelta)
 {
-	if (!(m_fWorkGauge - m_fPreWorkGauge < 0.0001f))
+	if (m_fWorkGauge - m_fPreWorkGauge > 0.0001f)
 	{
 		m_pWorkBar->Active();
 
-		if (m_fAcmlTime >= 1.f)
+		if (m_fAccTime >= 1.f)
 		{
-			_uint iChannel = Get_Rand_Int(SOUND_EFFECT1, SOUND_EFFECT10);
+			//_uint iChannel = Get_Rand_Int(SOUND_EFFECT1, SOUND_EFFECT10);
 
 			_tchar strSoundName[128] = L"";
 			swprintf_s(strSoundName, L"Stone Impact %d.wav", Get_Rand_Int(0, 4));
-			CSoundMgr::GetInstance()->Play(strSoundName, CHANNELID(iChannel), 0.5f);
+			CSoundMgr::GetInstance()->Play(strSoundName, SOUND_ROCK, 0.5f);
 
-			m_fAcmlTime = 0.f;
+			m_fAccTime = 0.f;
 		}
 	}
 	else
 	{
-		if (m_fAcmlTime >= 3.f)
+		if (m_fAccTime >= 3.f)
 		{
 			m_pWorkBar->UnActive();
-			m_fAcmlTime = 0.f;
+			m_fAccTime = 0.f;
 		}
 	}
 
 	_vec3 vPos;
 	m_pTransformCom->Get_Info(Engine::INFO_POS, &vPos);
-	//m_pTransformCom->Compute_Bilboard(BBD_X);
+	m_pTransformCom->Compute_Bilboard(BBD_X);
 	Compute_ViewDepth(&vPos);
 
 	Check_Status();
@@ -181,11 +181,11 @@ void CBreakableRock::Update_WorkBar(const _float& fTimeDelta)
 
 void CBreakableRock::Create_Item()
 {
-	_int itemCount = Get_Rand_Int(3, 5);
+	_uint iItemCount = Get_Rand_Int(3, 5);
 	_vec3 vPos;
 	m_pTransformCom->Get_Info(Engine::INFO_POS, &vPos);
 
-	for (_uint i = 0; i < itemCount; ++i)
+	for (_uint i = 0; i < iItemCount; ++i)
 	{
 		CGameObject* pItem;
 		_float fY(vPos.y - m_pTransformCom->Get_Scale(ROT_Y) * 0.25f);

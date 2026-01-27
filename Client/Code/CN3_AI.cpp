@@ -5,7 +5,7 @@
 CN3_AI::CN3_AI(LPDIRECT3DDEVICE9 pGraphicDev)
 	:	CAIController(pGraphicDev),
 		m_fSpeed(0.f),
-		m_fAcmlTime(0.f),
+		m_fAccTime(0.f),
 		m_bChase(false)
 {
 }
@@ -13,7 +13,7 @@ CN3_AI::CN3_AI(LPDIRECT3DDEVICE9 pGraphicDev)
 CN3_AI::CN3_AI(const CN3_AI& rhs)
 	:	CAIController(rhs),
 		m_fSpeed(rhs.m_fSpeed),
-		m_fAcmlTime(rhs.m_fAcmlTime),
+		m_fAccTime(rhs.m_fAccTime),
 		m_bChase(false)
 {
 }
@@ -28,7 +28,7 @@ HRESULT CN3_AI::Ready_AI(const _float& fDetectRange, const _float& fInteractRang
 		return E_FAIL;
 
 	m_fSpeed = 0.5f;
-	m_fAcmlTime = 0.f;
+	m_fAccTime = 0.f;
 	m_iRcmState = _uint(CMonsterN3::N3S_FLY);
 
 	return S_OK;
@@ -46,12 +46,12 @@ void CN3_AI::Enter_State(const _uint& iState)
 		{
 			m_fSpeed = 1.5f;
 
-			if (m_fAcmlTime < 2.f) vDesiredDir = Randomize_Dir();
+			if (m_fAccTime < 2.f) vDesiredDir = Randomize_Dir();
 		}
 		else
 		{
 			m_fSpeed = 3.f;
-			if (m_fAcmlTime >= 2.f) vDesiredDir = Compute_TargetDir();
+			if (m_fAccTime >= 2.f) vDesiredDir = Compute_TargetDir();
 		}
 		m_pOwnerTC->Get_Info(INFO_POS, &vPrevPos);
 		m_vDir = Compute_LimitedDir(60.f, m_vDir, vDesiredDir);
@@ -95,7 +95,7 @@ void CN3_AI::Exit_State(const _uint& iState)
 		break;
 	case CMonsterN3::N3S_RUSH:
 		if (!m_pTargetTC) m_bChase = false;
-		m_fAcmlTime = 0.f;
+		m_fAccTime = 0.f;
 		break;
 	case CMonsterN3::N3S_SPAWN:
 		break;
@@ -109,7 +109,7 @@ _int CN3_AI::Update_Component(const _float& fTimeDelta)
 {
 	_int iExit(0);
 
-	m_fAcmlTime += fTimeDelta;
+	m_fAccTime += fTimeDelta;
 
 	Compute_Distance();
 
@@ -149,7 +149,7 @@ void CN3_AI::Update_Fly(const _float& fTimeDelta)
 	{	// 타겟을 이미 발견했을 때
 		if (m_fDistance <= m_fInteractRange)
 		{
-			if (m_fAcmlTime >= 5.f)
+			if (m_fAccTime >= 5.f)
 				Change_State(CMonsterN3::N3S_PREPARE);
 		}
 	}
@@ -163,7 +163,7 @@ void CN3_AI::Update_Fly(const _float& fTimeDelta)
 
 	m_pOwnerTC->Move_Pos(&m_vDir, fTimeDelta, m_fSpeed);
 
-	if (_uint(m_fAcmlTime) % 3 == 0)
+	if (_uint(m_fAccTime) % 3 == 0)
 	{	// 타겟이 감지 범위 내에 없을 때는 순찰하다 대기 상태로 전환
 		Change_State(CMonsterN3::N3S_STOP);
 		return;
@@ -199,13 +199,13 @@ void CN3_AI::Update_Stop(const _float& fTimeDelta)
 	{
 		m_bChase = true;
 	}
-	else if ((m_bChase) && (m_fDistance <= m_fInteractRange) && (m_fAcmlTime >= 5.f))
+	else if ((m_bChase) && (m_fDistance <= m_fInteractRange) && (m_fAccTime >= 5.f))
 	{
 		Change_State(CMonsterN3::N3S_PREPARE);
 		return;
 	}
 
-	if (_uint(m_fAcmlTime) % 3 != 0)
+	if (_uint(m_fAccTime) % 3 != 0)
 	{	// 타겟이 감지 범위 내에 없을 때는 순찰하다 대기 상태로 전환
 		Change_State(CMonsterN3::N3S_FLY);
 	}

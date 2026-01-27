@@ -7,7 +7,7 @@
 
 CMonster::CMonster(LPDIRECT3DDEVICE9 pGraphicDev)
 	:	CGameObject(pGraphicDev),
-		m_iAttack(0),
+		m_fAttack(0),
 		m_fGroundY(0.f)
 {
 	ZeroMemory(&m_vPos, sizeof(_vec3));
@@ -15,7 +15,7 @@ CMonster::CMonster(LPDIRECT3DDEVICE9 pGraphicDev)
 
 CMonster::CMonster(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel)
 	:	CGameObject(pGraphicDev, StageChannel),
-		m_iAttack(0),
+		m_fAttack(0),
 		m_fGroundY(0.f)
 {
 	ZeroMemory(&m_vPos, sizeof(_vec3));
@@ -25,7 +25,7 @@ CMonster::CMonster(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel)
 CMonster::CMonster(const CMonster& rhs)
 	:	CGameObject(rhs),
 		m_vPos(rhs.m_vPos),
-		m_iAttack(rhs.m_iAttack),
+		m_fAttack(rhs.m_fAttack),
 		m_fGroundY(rhs.m_fGroundY)
 {
 }
@@ -197,11 +197,11 @@ HRESULT CMonster::Add_Component()
 
 void CMonster::Create_Item()
 {
-	_int itemCount = Get_Rand_Int(3, 5);
+	_uint iItemCount = Get_Rand_Int(3, 5);
 	_vec3 vPos;
 	m_pTransformCom->Get_Info(Engine::INFO_POS, &vPos);
 
-	for (_uint i = 0; i < itemCount; ++i)
+	for (_uint i = 0; i < iItemCount; ++i)
 	{
 		CGameObject* pItem;
 		_float fY(vPos.y - m_pTransformCom->Get_Scale(ROT_Y) * 0.25f);
