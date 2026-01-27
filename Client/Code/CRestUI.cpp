@@ -63,9 +63,14 @@ _int CRestUI::Update_GameObject(const _float& fTimeDelta)
 	Check_CusorColl();
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
-	CRenderer::GetInstance()->Add_RenderGroup(RENDER_UI, this);
 	m_pWorkName->Update_GameObject(fTimeDelta);
 	m_pInfoTextUI->Update_GameObject(fTimeDelta);
+	if (m_bFontRender) {
+		CRenderer::GetInstance()->Add_RenderGroup(RENDER_FONT, m_pWorkName);
+		CRenderer::GetInstance()->Add_RenderGroup(RENDER_FONT, m_pInfoTextUI);
+	}
+
+	CRenderer::GetInstance()->Add_RenderGroup(RENDER_UI, this);
 	return iExit;
 }
 
@@ -153,11 +158,13 @@ void CRestUI::Check_CusorColl()
 		m_pTransformCom->Set_Scale(103.0f * m_fScale * 1.3f, 87.0f * m_fScale * 1.3f, 1.0f);
 		m_pInfoTextUI->Active();
 		m_pWorkName->Active();
+		m_bFontRender = true;
 	}
 	else {
 		m_pTransformCom->Set_Scale(103.0f * m_fScale, 87.0f * m_fScale, 1.0f);
 		m_pInfoTextUI->UnActive();
 		m_pWorkName->UnActive();
+		m_bFontRender = false;
 	}
 
 }

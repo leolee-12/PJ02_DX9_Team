@@ -64,6 +64,8 @@ HRESULT CGauge::Ready_GameObject()
 
 	m_vecGaugeUI.push_back(pGameObject);
 
+	m_fDepth = 0.1f;
+
 	return S_OK;
 }
 
@@ -78,7 +80,9 @@ _int CGauge::Update_GameObject(const _float& fTimeDelta)
 		GaugeUI->Update_GameObject(fTimeDelta);
 	}
 
-	CRenderer::GetInstance()->Add_RenderGroup(RENDER_UI, this);
+	if (m_bFontRender) {
+		CRenderer::GetInstance()->Add_RenderGroup(RENDER_UI, this);
+	}
 
 	return NOEVENT;
 }
@@ -96,7 +100,7 @@ void CGauge::LateUpdate_GameObject(const _float& fTimeDelta)
 
 void CGauge::Render_GameObject()
 {
-	if (!m_bFontRender) { return; }
+	//if (!m_bFontRender) { return; }
 
 	D3DXCOLOR FontColor = D3DXCOLOR(240.f / 256.f, 240.f / 256.f, 240.f / 256.f, 1.f);
 	wchar_t szGauge[16];

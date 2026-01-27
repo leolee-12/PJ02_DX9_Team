@@ -59,11 +59,7 @@ HRESULT CBreakableRock::Ready_GameObject()
 
 _int CBreakableRock::Update_GameObject(const _float& fTimeDelta)
 {
-	if (g_bDebug) { m_pColliderCom->Update_AABBforRender(); }
-
 	m_fAccTime += fTimeDelta;
-
-	m_pColliderCom->UpdateFromTransform(m_pTransformCom);
 
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
@@ -116,6 +112,14 @@ void CBreakableRock::LateUpdate_GameObject(const _float& fTimeDelta)
 
 	m_pWorkBar->LateUpdate_GameObject(fTimeDelta);
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
+
+	AABB tAABB = { vPos, _vec3(2.f,2.f,2.f)};
+	m_pColliderCom->Set_AABB(tAABB);
+	m_pColliderCom->UpdateFromCustom(tAABB);
+	//-------------------------------------------------
+
+	// 충돌체 디버그용
+	if (g_bDebug) m_pColliderCom->Update_AABBforRender();
 }
 
 void CBreakableRock::Render_GameObject()
@@ -144,7 +148,14 @@ void CBreakableRock::Set_ObjectData(const Engine::OBJECTDATA& objData)
 	m_fBaseScale = objData.scale;
 
 	m_pTransformCom->Set_Pos(objData.x, objData.y, objData.z);
-	m_pTransformCom->Set_Scale(m_fScale, m_fScale, m_fScale);
+
+	_uint iTexWidth, iTexHeight;
+	m_pTextureCom->Get_TextureSize(&iTexWidth, &iTexHeight, 0);
+
+	float aspectRatio = static_cast<float>(iTexWidth) / static_cast<float>(iTexHeight);
+	float HelfWidth = m_fScale * aspectRatio * 0.5f;
+	float baseY = -2.4f;
+	m_pTransformCom->Set_Scale(m_fScale * aspectRatio, m_fScale, m_fScale);
 }
 
 void CBreakableRock::Check_Status()
