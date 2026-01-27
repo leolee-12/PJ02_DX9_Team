@@ -5,7 +5,7 @@
 CN2_AI::CN2_AI(LPDIRECT3DDEVICE9 pGraphicDev)
 	:	CAIController(pGraphicDev),
 		m_fSpeed(0.f),
-		m_fAcmlTime(0.f),
+		m_fAccTime(0.f),
 		m_bChase(false),
 		m_fGravity(0.f)
 {
@@ -14,7 +14,7 @@ CN2_AI::CN2_AI(LPDIRECT3DDEVICE9 pGraphicDev)
 CN2_AI::CN2_AI(const CN2_AI& rhs)
 	:	CAIController(rhs),
 		m_fSpeed(rhs.m_fSpeed),
-		m_fAcmlTime(rhs.m_fAcmlTime),
+		m_fAccTime(rhs.m_fAccTime),
 		m_bChase(false),
 		m_fGravity(rhs.m_fGravity)
 {
@@ -32,7 +32,7 @@ HRESULT CN2_AI::Ready_AI(const _float& fDetectRange, const _float& fInteractRang
 	m_fSpeed = 1.f;
 	m_vSpeed = { 0.f, 0.f, 0.f};
 	m_fGravity = -9.8f;
-	m_fAcmlTime = 0.f;
+	m_fAccTime = 0.f;
 	m_iRcmState = _uint(CMonsterN2::N2S_SPAWN);
 
 	return S_OK;
@@ -47,8 +47,8 @@ void CN2_AI::Enter_State(const _uint& iState)
 		m_fSpeed = 0.03f;
 		_vec3 vPrevPos, vDesiredDir;
 		
-		if		((!m_bChase) || (m_fAcmlTime < 1.f))	vDesiredDir = Randomize_Dir();
-		else if ((m_bChase) && (m_fAcmlTime >= 1.f))	vDesiredDir = Compute_TargetDir();
+		if		((!m_bChase) || (m_fAccTime < 1.f))	vDesiredDir = Randomize_Dir();
+		else if ((m_bChase) && (m_fAccTime >= 1.f))	vDesiredDir = Compute_TargetDir();
 
 		m_pOwnerTC->Get_Info(INFO_POS, &vPrevPos);
 		m_vDir = Compute_LimitedDir(60.f, m_vDir, vDesiredDir);
@@ -65,7 +65,7 @@ void CN2_AI::Enter_State(const _uint& iState)
 		break;
 	case CMonsterN2::N2S_LAND:
 	{
-		m_fAcmlTime = 0.f;
+		m_fAccTime = 0.f;
 		m_fSpeed = 1.f;
 	}
 		break;
@@ -120,7 +120,7 @@ _int CN2_AI::Update_Component(const _float& fTimeDelta)
 
 	_int iExit(0);
 
-	m_fAcmlTime += fTimeDelta;
+	m_fAccTime += fTimeDelta;
 
 	Compute_Distance();
 
@@ -158,7 +158,7 @@ void CN2_AI::Update_Crawl(const _float& fTimeDelta)
 	{	// 타겟을 이미 발견했을 때
 		if (m_fDistance <= m_fInteractRange)
 		{
-			if (m_fAcmlTime >= 5.f)
+			if (m_fAccTime >= 5.f)
 				Change_State(CMonsterN2::N2S_JUMP);
 		}
 	}
@@ -193,11 +193,11 @@ void CN2_AI::Update_Jump(const _float& fTimeDelta)
 
 void CN2_AI::Update_Land(const _float& fTimeDelta)
 {
-	if (m_fAcmlTime < 0.2f)  // 0.2초 동안
+	if (m_fAccTime < 0.2f)  // 0.2초 동안
 	{
 		_vec3 vPos;
 		m_pOwnerTC->Get_Info(INFO_POS, &vPos);
-		_float fDeceleration = 1.0f - (m_fAcmlTime / 0.2f);
+		_float fDeceleration = 1.0f - (m_fAccTime / 0.2f);
 		vPos += m_vDir * 0.5f * fDeceleration * fTimeDelta;
 		m_pOwnerTC->Set_Pos(vPos.x, vPos.y, vPos.z);
 	}
@@ -213,7 +213,7 @@ void CN2_AI::Update_Stop(const _float& fTimeDelta)
 	{
 		m_bChase = true;
 	}
-	else if ((m_bChase) && (m_fDistance <= m_fInteractRange) && (m_fAcmlTime >= 5.f))
+	else if ((m_bChase) && (m_fDistance <= m_fInteractRange) && (m_fAccTime >= 5.f))
 	{
 		Change_State(CMonsterN2::N2S_JUMP);
 		return;

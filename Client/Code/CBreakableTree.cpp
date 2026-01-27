@@ -49,7 +49,7 @@ HRESULT CBreakableTree::Ready_GameObject()
 	m_fFrame = 0.f;
 	m_fFrameSpeed = 6.f;
 	m_fFrameEnd = 32.f;
-	m_fAcmlTime = 0.f;
+	m_fAccTime = 0.f;
 
 	m_pColliderCom->RegisterToManager(this, CL_GRASS);
 	CInteractMgr::GetInstance()->Register_IObj(CInteractMgr::WOOD, this);
@@ -66,7 +66,7 @@ _int CBreakableTree::Update_GameObject(const _float& fTimeDelta)
 
 	m_pColliderCom->UpdateFromTransform(m_pTransformCom);
 
-	m_fAcmlTime += fTimeDelta;
+	m_fAccTime += fTimeDelta;
 
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
@@ -90,7 +90,7 @@ void CBreakableTree::LateUpdate_GameObject(const _float& fTimeDelta)
 	{
 		m_pWorkBar->Active();
 
-		if (m_fAcmlTime >= 1.f)
+		if (m_fAccTime >= 1.f)
 		{
 			//_uint iChannel = Get_Rand_Int(SOUND_EFFECT1, SOUND_EFFECT10);
 
@@ -98,15 +98,15 @@ void CBreakableTree::LateUpdate_GameObject(const _float& fTimeDelta)
 			swprintf_s(strSoundName, L"Wood Chop %d.wav", Get_Rand_Int(0, 3));
 			CSoundMgr::GetInstance()->Play(strSoundName, SOUND_WOOD, 0.5f);
 
-			m_fAcmlTime = 0.f;
+			m_fAccTime = 0.f;
 		}
 	}
 	else
 	{
-		if (m_fAcmlTime >= 3.f)
+		if (m_fAccTime >= 3.f)
 		{
 			m_pWorkBar->UnActive();
-			m_fAcmlTime = 0.f;
+			m_fAccTime = 0.f;
 		}
 	}
 

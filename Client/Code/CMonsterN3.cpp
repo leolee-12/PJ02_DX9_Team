@@ -124,8 +124,8 @@ void CMonsterN3::OnCollision(CGameObject* pObject)
 	{
 		if (!pObject->Get_Hp()) return;
 
-		_int iDamage = _int(static_cast<CTransform*>(pObject->Get_Component(ID_DYNAMIC, L"Com_Transform"))->Get_Scale(ROT_X));
-		Attacked(iDamage);
+		_float fDamage = _float(static_cast<CTransform*>(pObject->Get_Component(ID_DYNAMIC, L"Com_Transform"))->Get_Scale(ROT_X));
+		Attacked(fDamage);
 	}
 
 	if (pObject->Get_OBJID() == OID_BORDER)

@@ -10,7 +10,7 @@ CItem::CItem(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev),
 	m_ePreState(IS_END),
 	m_eCurState(IS_SPAWN),
-	m_fAcmlTime(0.f),
+	m_fAccTime(0.f),
 	m_fGravity(0.f),
 	m_fBounceDamp(0.f),
 	m_fGroundY(0.f)
@@ -21,7 +21,7 @@ CItem::CItem(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel)
 	: CGameObject(pGraphicDev, StageChannel),
 	m_ePreState(IS_END),
 	m_eCurState(IS_SPAWN),
-	m_fAcmlTime(0.f),
+	m_fAccTime(0.f),
 	m_fGravity(0.f),
 	m_fBounceDamp(0.f),
 	m_fGroundY(0.f)
@@ -32,7 +32,7 @@ CItem::CItem(const CItem& rhs)
 	: CGameObject(rhs),
 	m_ePreState(rhs.m_ePreState),
 	m_eCurState(rhs.m_eCurState),
-	m_fAcmlTime(rhs.m_fAcmlTime),
+	m_fAccTime(rhs.m_fAccTime),
 	m_fGravity(rhs.m_fGravity),
 	m_fBounceDamp(rhs.m_fBounceDamp),
 	m_fGroundY(rhs.m_fGroundY)
@@ -145,7 +145,7 @@ void CItem::Check_State()
 		break;
 	case IS_IDLE:
 		m_vSpeed = { 0.f, 0.f, 0.f };
-		m_fAcmlTime = 0.f;
+		m_fAccTime = 0.f;
 		break;
 	case IS_CHASE:
 		break;

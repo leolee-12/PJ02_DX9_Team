@@ -87,7 +87,7 @@ private:
 	_uint			m_iPhase;
 	_uint			m_iMaxHp;
 	_bool			m_bMtrl = false;
-	_float			m_fAcmlTime;
+	_float			m_fAccTime;
 
 	// 연출관련
 	_bool			m_bWait = true;

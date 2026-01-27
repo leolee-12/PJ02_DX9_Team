@@ -75,7 +75,7 @@ private:
 	_uint			m_iPhase;
 	_uint			m_iMaxHp;
 	_bool			m_bMtrl = false;
-	_float			m_fAcmlTime;
+	_float			m_fAccTime;
 
 	_bool			m_bWaiting = true;
 

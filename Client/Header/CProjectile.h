@@ -58,7 +58,7 @@ private:
 	_int				m_fAttack;
 	_float				m_fGroundY;
 	_bool				m_bActive;
-	_float				m_fAcmlTime;
+	_float				m_fAccTime;
 	_float				m_fLifeTime;
 	_vec3				m_vSpeed;
 	_bool				m_bUseGravity;

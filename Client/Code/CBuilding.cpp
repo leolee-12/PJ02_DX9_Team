@@ -62,7 +62,7 @@ HRESULT CBuilding::Ready_GameObject()
 
 _int CBuilding::Update_GameObject(const _float& fTimeDelta)
 {
-	m_fAcmlTime += fTimeDelta;
+	m_fAccTime += fTimeDelta;
 
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
@@ -93,7 +93,7 @@ void CBuilding::LateUpdate_GameObject(const _float& fTimeDelta)
 	{
 		m_pWorkBar->Active();
 
-		if (m_fAcmlTime >= 1.f)
+		if (m_fAccTime >= 1.f)
 		{
 			//_uint iChannel = Get_Rand_Int(SOUND_EFFECT1, SOUND_EFFECT10);
 
@@ -101,15 +101,15 @@ void CBuilding::LateUpdate_GameObject(const _float& fTimeDelta)
 			swprintf_s(strSoundName, L"Hammering_%d.wav", Get_Rand_Int(0, 33));
 			CSoundMgr::GetInstance()->Play(strSoundName, SOUND_BUILD, 0.5f);
 
-			m_fAcmlTime = 0.f;
+			m_fAccTime = 0.f;
 		}
 	}
 	else
 	{
-		if (m_fAcmlTime >= 3.f)
+		if (m_fAccTime >= 3.f)
 		{
 			m_pWorkBar->UnActive();
-			m_fAcmlTime = 0.f;
+			m_fAccTime = 0.f;
 		}
 	}
 
@@ -336,7 +336,7 @@ void CBuilding::Ready_Variable()
 {
 	_float fScale = 5.f;
 	m_pTransformCom->Set_Scale(fScale, fScale, fScale);
-	m_fAcmlTime = 0.f;
+	m_fAccTime = 0.f;
 
 	Change_State(BS_CONSTRUCTING);
 	m_fWorkGauge = 0.f;

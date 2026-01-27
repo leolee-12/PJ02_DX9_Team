@@ -64,6 +64,10 @@ private:
 
 	HRESULT			Add_Component();
 	void			Key_Input(const _float& fTimeDelta);
+	void			Key_Input_Debug(const _float& fTimeDelta);
+	void			Key_Input_Move(const _float& fTimeDelta);
+	void			Key_Input_Interact(const _float& fTimeDelta);
+	void			Key_Input_Combat(const _float& fTimeDelta);
 	void			Set_OnTerrain();
 	_vec3			Picking_OnTerrain();
 
@@ -76,6 +80,10 @@ private:
 	void			Move_Frame(const _float& fTimeDelta);
 	void			Set_TextureSet();
 	void			Set_FrameKey();
+	void			Set_FrameKey_Intro();
+	void			Set_FrameKey_Normal();
+	_int			Check_ComboMax();
+	_float			Check_ComboDelay();
 
 	// ==========================
 	//	Check_Frame : 상태 변경 시 Frame 초기화 및 설정해줄 값을 대입해줌
@@ -102,101 +110,106 @@ private:
 	void			Stop_Work();
 
 private:
+	// 컴포넌트
 	Engine::CRcTex*			m_pBufferCom;
 	Engine::CTransform*		m_pTransformCom;
 	Engine::CTextureSet*	m_pTextureCom;
 	Engine::CCalculator*	m_pCalculatorCom;
 	Engine::CCollider*		m_pColliderCom;
 
-	// 스프라이트 관련
+	// 상태 관리
 	PLAYERSTATE		m_ePreState;
 	PLAYERSTATE		m_eCurState;
 	WEAPONTYPE		m_eWeaponType;
-	wstring			m_strFrameKey;
-	_float			m_fFrame;
-	_float			m_fFrameEnd;
-	_float			m_fFrameSpeed;
-	_matrix			m_matTex;
+	PLAYER_WORK		m_eWork;
 
-	// 캐릭터 스테이터스 관련
-	_vec3			m_vNormDir[DIR_END];
-	_vec3			m_vDir;
-	_float			m_fSpeed;
+	// 능력치
+	_int			m_iMaxHp;
 	_float			m_fAttack;
-	_bool			m_bRoll;	// 구르기 중인지?
-	_int			m_iCombo;	// 공격 중인지? + 몇번째 콤보상태인지?
-	_int			m_iMaxCombo;
-	_float			m_fComboDelay;
-	_bool			m_bCutScene;	// CutScene 중인지?
-	_float			m_fAcmlTime;	// 무적용
-	_float			m_fAcmlTime2;	// 콤보딜레이용
-	_bool			m_bVillage = false;
+	_float			m_fSpeed;
 	_float			m_fPassion;
 	_float			m_fFaith;
 
-	// 윤석현추가
-	_int			m_iMaxHp = 8;
+	// 애니메이션
+	wstring			m_strFrameKey;
+	_float			m_fFrame;
+	_float			m_fFrameEnd;
+	_matrix			m_matTex;
 
-	// 알파 소팅 관련
-	_vec3			m_vPos;
+	// 이동
+	_vec3			m_vNormDir[DIR_END];
+	_vec3			m_vDir;
+	_vec3			m_vPos;				// 캐시용
+	//_vec3			m_vPrevPos;			// MapBoarder 처리용 (안쓰면 지우기)
+	_vec3			m_vLerpPos;			// Lerp용 위치
 
-	// 구르기 관련
-	_vec3			m_vLerpPos;		// Lerp용 위치
-	_float			m_fLerp;		// Lerp용 값
-
-	// 차지 공격 관련
-	_float			m_fCharge;
-	_float			m_fChargeMax;
-	CChargeArrow*	m_pChargeArrow;
-
-	// 메시지 채널 관련
-	_bool 			m_bMsgRegistered;
-
-	// 트리거 관련
-	_bool			m_bCanTrigger;
-	CTriggerPoint*	m_pTriggerPoint = nullptr;
+	// 상태 플래그
+	_bool			m_bRoll;			// 구르기 중인지?
+	_bool			m_bWorking;			// 작업 중인지?
 	_bool			m_bIntro;			// Ready에서 false 처리 (Intro 스프라이트 사용하려면 Ready 이후 Set 해주기)
-	_uint			m_iInteractType;	// 상호작용하는 대상 구분용
-	CInteractionUI* m_pInteractionUI = nullptr;
+	_bool			m_bCutScene;		// CutScene 중인지?
+	_bool			m_bVillage;
 
-	// 캐릭터 border 처리 관련
-	_vec3 m_vPrevPos;
+	// 누적 값 (프레임 간 유지)
+	_int			m_iCombo;			// 공격 중인지? + 몇번째 콤보상태인지?
+	_float			m_fCharge;
+	_float			m_fAccTime;			// 무적용
+	_float			m_fAccTime2;		// 콤보딜레이용
 
-	// 워프관련
-	_float m_fWarpDeleay = 0.f;
-	_vec3  m_vWarpPos = {};
-	_bool  m_IsWarp = false;
-
+	// 기타
+	// - 트리거 관련
+	CTriggerPoint*	m_pTriggerPoint;
+	CInteractionUI* m_pInteractionUI;
+	_bool			m_bCanTrigger;
+	//_uint			m_iInteractType;	// 상호작용하는 대상 구분용 (안쓰면 지우기)
+	// - 메시지 채널 관련
+	_bool 			m_bMsgRegistered;
+	// - 워프관련
+	_bool			m_IsWarp;
+	_float			m_fWarpDelay;
+	_vec3			m_vWarpPos;
+	// 이펙트
+	CChargeArrow*	m_pChargeArrow;
 	// 작업(Work) 관련
-	PLAYER_WORK		m_eWork;
-	_vec3			m_vWorkPos;
 	_float 			m_fWorkSpeed;
-	_bool			m_bWorking;
+	_vec3			m_vWorkPos;
 
 public:
 	static CPlayer* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 	static CPlayer* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel);
 
 	// 상수
-	static constexpr _float	PLAYER_DEFAULT_ATTACK = 1.f	/*+5.f*/;
-	static constexpr _float PLAYER_INVINCIBLE_TIME = 3.f;
-	static constexpr _float PLAYER_DEFAULT_SPEED = 12.f;
-	static constexpr _float PLAYER_INTRO_SPEED = 7.f;
-	static constexpr _float PLAYER_CHARGE_SPEED = 2.f;
-	static constexpr _float PLAYER_WORK_SPEED = 0.1f;
-	static constexpr _float PLAYER_DEFAULT_SCALE = 10.f;
-	static constexpr _float PLAYER_INTRO_SCALE = 11.f;
-	static constexpr _float PLAYER_REBIRTH_SCALE = 20.f;
+	static constexpr _float PLAYER_DEFAULT_SPEED		= 12.f;
+	static constexpr _float PLAYER_INTRO_SPEED			= 7.f;
+	static constexpr _float PLAYER_CHARGE_SPEED			= 2.f;
+	static constexpr _float PLAYER_DEFAULT_SCALE		= 10.f;
+	static constexpr _float PLAYER_INTRO_SCALE			= 11.f;
 
-	static constexpr _float SWORD_COMBO_DELAY_TIME = 0.1f;
-	static constexpr _float GAUNTLETS_COMBO_DELAY_TIME = 0.3f;
+	static constexpr _int	PLAYER_DEFAULT_HP			= 8;
+	static constexpr _float	PLAYER_DEFAULT_ATTACK		= 1.f	/*+5.f*/;
 
-	static constexpr _float DEFAULT_PASSION_GAIN = 0.2f;
-	static constexpr _float DEFAULT_FAITH_GAIN = 5.f;
-	static constexpr _float FAITH_DECREASE_RATE = 0.3f;
+	static constexpr _float SWORD_COMBO_DELAY			= 0.1f;
+	static constexpr _float GAUNTLETS_COMBO_DELAY		= 0.3f;
+	static constexpr _int	SWORD_COMBO_MAX				= 3;
+	static constexpr _int	GAUNTLETS_COMBO_MAX			= 4;
 
-	static constexpr _float MAX_PASSION_VALUE = 4.f;
-	static constexpr _float	MAX_FAITH_VALUE = 100.f;
+	static constexpr _float PLAYER_INVINCIBLE_TIME		= 3.f;
+	static constexpr _float PLAYER_CHARGE_MAX			= 3.f;
+	static constexpr _float PLAYER_WORK_SPEED			= 0.1f;
+	static constexpr _float PLAYER_WORK_RANGE			= 3.f;
+
+	static constexpr _float PLAYER_PASSION_MAX			= 4.f;
+	static constexpr _float PLAYER_FAITH_MAX			= 100.f;
+	static constexpr _float FAITH_DECREASE_RATE			= 0.3f;
+		
+	static constexpr _float FRAME_SPEED					= 24.f;
+	static constexpr _float LERF_FACTOR					= 0.2f;
+
+	static constexpr _float PLAYER_REBIRTH_SCALE		= 20.f;
+	static constexpr _float DEFAULT_PASSION_GAIN		= 0.2f;
+	static constexpr _float DEFAULT_FAITH_GAIN			= 5.f;
+	static constexpr _float MAX_PASSION_VALUE			= 4.f;
+	static constexpr _float	MAX_FAITH_VALUE				= 100.f;
 
 private:
 	virtual void Free();

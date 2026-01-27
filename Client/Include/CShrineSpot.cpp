@@ -58,7 +58,7 @@ _int CShrineSpot::Update_GameObject(const _float& fTimeDelta)
 {
 	if (g_bDebug) { m_pColliderCom->Update_AABBforRender(); }
 
-	m_fAcmlTime += fTimeDelta;
+	m_fAccTime += fTimeDelta;
 
 	m_pColliderCom->UpdateFromTransform(m_pTransformCom);
 
@@ -83,7 +83,7 @@ void CShrineSpot::LateUpdate_GameObject(const _float& fTimeDelta)
 	{
 		m_pWorkBar->Active();
 
-		if (m_fAcmlTime >= 1.f)
+		if (m_fAccTime >= 1.f)
 		{
 			//_uint iChannel = Get_Rand_Int(SOUND_EFFECT1, SOUND_EFFECT10);
 
@@ -91,7 +91,7 @@ void CShrineSpot::LateUpdate_GameObject(const _float& fTimeDelta)
 			swprintf_s(strSoundName, L"chanting%d.wav", Get_Rand_Int(1, 11));
 			CSoundMgr::GetInstance()->Play(strSoundName, SOUND_PRAY, 0.5f);
 
-			m_fAcmlTime = 0.f;
+			m_fAccTime = 0.f;
 		}
 	}
 

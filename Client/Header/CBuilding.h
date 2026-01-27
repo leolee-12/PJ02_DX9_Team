@@ -17,7 +17,7 @@ class CBuilding : public CGameObject, public IInteractable
 {
 public:
 	enum BUILDING_TYPE { BT_DUMMY, BT_WORKSHOP, BT_COOK, BT_KNUCKLEBONE, BT_SHRINE, BT_END };
-	enum BUILDING_STATE { BS_CONSTRUCTING, BS_COMPLETE, BS_END };
+	enum BUILDING_STATE { BS_SETTING, BS_CONSTRUCTING, BS_COMPLETE, BS_END };
 
 private:
 	explicit CBuilding(LPDIRECT3DDEVICE9 pGraphicDev);
@@ -59,7 +59,7 @@ private:
 	BUILDING_TYPE	m_eBuildingType;
 	BUILDING_STATE	m_eBuildingState;
 	_float			m_fGroundY;
-	_float			m_fAcmlTime;
+	_float			m_fAccTime;
 
 	_vec3			m_vPos = {};
 

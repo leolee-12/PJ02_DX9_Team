@@ -26,7 +26,7 @@ CMonsterB2::CMonsterB2(LPDIRECT3DDEVICE9 pGraphicDev)
 	m_fBtmPadding(0.f),
 	m_iPhase(0),
 	m_iMaxHp(0),
-	m_fAcmlTime(0.f)
+	m_fAccTime(0.f)
 {
 }
 
@@ -40,7 +40,7 @@ CMonsterB2::CMonsterB2(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChan
 	m_fBtmPadding(0.f),
 	m_iPhase(0),
 	m_iMaxHp(0),
-	m_fAcmlTime(0.f)
+	m_fAccTime(0.f)
 {
 }
 
@@ -55,7 +55,7 @@ CMonsterB2::CMonsterB2(const CMonsterB2& rhs)
 	m_fBtmPadding(rhs.m_fBtmPadding),
 	m_iPhase(rhs.m_iPhase),
 	m_iMaxHp(rhs.m_iPhase),
-	m_fAcmlTime(0.f)
+	m_fAccTime(0.f)
 {
 }
 
@@ -137,8 +137,8 @@ void CMonsterB2::OnCollision(CGameObject* pObject)
 	{
 		if (!pObject->Get_Hp()) return;
 
-		_int iDamage = _int(static_cast<CTransform*>(pObject->Get_Component(ID_DYNAMIC, L"Com_Transform"))->Get_Scale(ROT_X));
-		Attacked(iDamage);
+		_float fDamage = _float(static_cast<CTransform*>(pObject->Get_Component(ID_DYNAMIC, L"Com_Transform"))->Get_Scale(ROT_X));
+		Attacked(fDamage);
 	}
 
 	if (pObject->Get_OBJID() == OID_BORDER)
@@ -382,7 +382,7 @@ void CMonsterB2::Move_Frame(const _float& fTimeDelta)
 		CSoundMgr::GetInstance()->Play(L"LeshyRoar.wav", SOUND_BOSS, 0.2f);
 	}
 
-	m_fAcmlTime += fTimeDelta;
+	m_fAccTime += fTimeDelta;
 
 	if (m_fFrame >= m_fFrameEnd)
 	{
@@ -573,7 +573,7 @@ void CMonsterB2::Set_Material()
 	return;
 
 	_float fMax = 1.f;
-	_float fRatio = min(m_fAcmlTime / 2.f, 1.f);
+	_float fRatio = min(m_fAccTime / 2.f, 1.f);
 
 	// 텍스처 색상 혼합
 	m_pGraphicDev->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_ADD);

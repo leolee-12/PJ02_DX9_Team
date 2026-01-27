@@ -161,8 +161,8 @@ void CMonsterB1::OnCollision(CGameObject* pObject)
 	{
 		if (!pObject->Get_Hp()) return;
 
-		_int iDamage = _int(static_cast<CTransform*>(pObject->Get_Component(ID_DYNAMIC, L"Com_Transform"))->Get_Scale(ROT_X));
-		Attacked(iDamage);
+		_float fDamage = _float(static_cast<CTransform*>(pObject->Get_Component(ID_DYNAMIC, L"Com_Transform"))->Get_Scale(ROT_X));
+		Attacked(fDamage);
 	}
 
 	if (pObject->Get_OBJID() == OID_BORDER)
@@ -373,7 +373,7 @@ void CMonsterB1::Check_Frame()
 	case B1S_PREPARE:
 	{
 		m_fFrameEnd = 8.f;
-		m_fAcmlTime = 0.f;
+		m_fAccTime = 0.f;
 
 		for (_uint i = 0; i < 4; ++i)
 		{
@@ -428,7 +428,7 @@ void CMonsterB1::Move_Frame(const _float& fTimeDelta)
 	m_fFrame += m_fFrameSpeed * fTimeDelta;
 	_uint iCurFrame = _uint(m_fFrame);
 
-	m_fAcmlTime += fTimeDelta;
+	m_fAccTime += fTimeDelta;
 
 	if (m_fFrame >= m_fFrameEnd)
 	{
@@ -604,7 +604,7 @@ void CMonsterB1::Set_Material()
 	if (m_eCurState != B1S_PREPARE) return;
 
 	_float fMax = 1.f;
-	_float fRatio = min(m_fAcmlTime / 2.f, 1.f);
+	_float fRatio = min(m_fAccTime / 2.f, 1.f);
 	
 	// 텍스처 색상 혼합
 	m_pGraphicDev->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_ADD);

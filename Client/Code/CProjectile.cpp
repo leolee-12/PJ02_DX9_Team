@@ -17,7 +17,7 @@ CProjectile::CProjectile(LPDIRECT3DDEVICE9 pGraphicDev)
 	, m_fFrameSpeed(0.f)
 	, m_fAttack(0)
 	, m_fGroundY(0.f)
-	, m_fAcmlTime(0.f)
+	, m_fAccTime(0.f)
 	, m_fLifeTime(0.f)
 	, m_fGravity(0.f)
 	, m_bUseGravity(false)
@@ -34,7 +34,7 @@ CProjectile::CProjectile(const CProjectile& rhs)
 	, m_fFrameSpeed(0.f)
 	, m_fAttack(rhs.m_fAttack)
 	, m_fGroundY(rhs.m_fGroundY)
-	, m_fAcmlTime(rhs.m_fAcmlTime)
+	, m_fAccTime(rhs.m_fAccTime)
 	, m_fLifeTime(rhs.m_fLifeTime)
 	, m_fGravity(rhs.m_fGravity)
 	, m_bUseGravity(rhs.m_bUseGravity)
@@ -68,7 +68,7 @@ HRESULT CProjectile::Ready_GameObject()
 _int CProjectile::Update_GameObject(const _float& fTimeDelta)
 {
 	if (m_bUseGravity) m_vSpeed.y += m_fGravity * fTimeDelta;
-	m_fAcmlTime += fTimeDelta;
+	m_fAccTime += fTimeDelta;
 
 	m_pTransformCom->Move_Pos(&m_vSpeed, fTimeDelta, 1.f);
 
@@ -79,7 +79,7 @@ _int CProjectile::Update_GameObject(const _float& fTimeDelta)
 
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
-	if ((iExit == DEAD) || (m_vPos.y <= -2.5f) || (m_fAcmlTime >= m_fLifeTime))
+	if ((iExit == DEAD) || (m_vPos.y <= -2.5f) || (m_fAccTime >= m_fLifeTime))
 	{
 		if (m_pIndicator)
 		{
@@ -189,7 +189,7 @@ void CProjectile::Ready_Variable()
 	m_fGroundY = -2.5f + fScale * 0.5f;
 	m_fAttack = 1;
 	m_iHp = 1;
-	m_fAcmlTime = 0.f;
+	m_fAccTime = 0.f;
 	m_fLifeTime = 10.f;
 	m_fGravity = -9.8f * 2.f;
 

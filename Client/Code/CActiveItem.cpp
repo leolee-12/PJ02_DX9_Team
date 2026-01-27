@@ -100,9 +100,9 @@ void CActiveItem::OnCollision(CGameObject* pObject)
 
 void CActiveItem::Update_Idle(const _float& fTimeDelta)
 {
-	m_fAcmlTime += fTimeDelta;
+	m_fAccTime += fTimeDelta;
 
-	if (m_fAcmlTime >= 1.f)
+	if (m_fAccTime >= 1.f)
 	{
 		CTransform* pTransformCom = CPersistentMgr::GetInstance()->Get_PlayerTransform();
 
@@ -117,7 +117,7 @@ void CActiveItem::Update_Idle(const _float& fTimeDelta)
 		_float fDist = D3DXVec3Length(&vTargetPos);
 
 		if (fDist <= AUTO_CHASE_RANGE)	m_eCurState = IS_CHASE;
-		else							m_fAcmlTime = 0.f;
+		else							m_fAccTime = 0.f;
 	}
 }
 
