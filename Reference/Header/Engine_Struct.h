@@ -74,7 +74,7 @@ namespace Engine
 			, hx(_hx), hy(_hy), hz(_hz)
 		{
 		}
-		tagAABB(_vec3 vPos, _vec3 vHalfSize)
+		tagAABB(_vec3 vPos, _vec3 vHalfSize = _vec3(1.f, 1.f, 1.f))
 			: x(vPos.x), y(vPos.y), z(vPos.z)
 			, hx(vHalfSize.x), hy(vHalfSize.y), hz(vHalfSize.z)
 		{
