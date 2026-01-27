@@ -40,7 +40,7 @@ private:
 	CTransform*		m_pTransformCom;
 	CTexture*		m_pTextureCom;
 
-	CFontUIOrtho*	m_pName;
+	CFontUIOrtho*	m_pNameFont;
 	wstring			m_szName;
 
 	_vec2			m_vScreenPos;

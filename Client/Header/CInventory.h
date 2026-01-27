@@ -26,10 +26,12 @@ public:
 
 	void	Set_Active(_bool bActive) { m_bActive = bActive; }
 	void	Add_Item(CItem::ITEMID _eid, _int _iCount);
-	void	Use_Item(CItem::ITEMID _eid, _int _iCount);
+	BOOL	Use_Item(CItem::ITEMID _eid, _int _iCount);
 	void	Set_State(INVENSTATE _estate) { m_eCurInvenState = _estate; }
+	_int	GetItemCount(CItem::ITEMID _eid);
 private:
 	virtual void Free();
+	void	SortLocalPos();
 	void	Key_Input_Inven();
 	void    Ready_Event();
 	void Moveto(const _vec3& vStart, const _vec3& vEnd)
@@ -50,6 +52,7 @@ private:
 	INVENSTATE m_eCurInvenState;
 	INVENSTATE m_ePreInvenState;
 
+	_int	m_iInvenCount;
 
 	_vec3	m_vLerpStart;
 	_vec3	m_vLerpEnd;

@@ -80,7 +80,6 @@ HRESULT CResourceHistoryController::Ready_GameObject()
 		m_vHistoryPos.push_back(pos);
 	}
 
-	m_mResourceUI.find(TYPE_BERRY)->second->Apply_TotalCount(300);
 
 	return S_OK;
 }

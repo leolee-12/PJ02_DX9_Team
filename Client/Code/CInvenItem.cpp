@@ -71,7 +71,6 @@ void CInvenItem::LateUpdate_GameObject(const _float& fTimeDelta)
 void CInvenItem::Render_GameObject()
 {
 	if (!m_bRender) { return; }
-
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
 
 	if (m_eItemid < 0 || 4 < m_eItemid)
@@ -81,6 +80,7 @@ void CInvenItem::Render_GameObject()
 	m_pTextureCom->Set_Texture(m_iPage);
 
 	m_pBufferCom->Render_Buffer();
+	m_pCountFont->Render_GameObject();
 }
 
 void CInvenItem::OnCollision(CGameObject* pObject)
