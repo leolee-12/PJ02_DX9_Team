@@ -169,6 +169,8 @@ void CCookingInfoCard::Render_GameObject()
 	RECT rc3Player = { 850, 450, 1050,  500 };
 	CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans30", szFoodName, rc3Player, FontColor, DT_CENTER | DT_TOP);
 
+	m_pResourceFont->Render_GameObject();
+	m_pRecipeFont->Render_GameObject();
 
 }
 

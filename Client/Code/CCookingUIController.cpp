@@ -72,7 +72,7 @@ void CCookingUIController::Start_Cooking(_int iCookingCount)
 	m_pMiniGameUI->CookingStart(iCookingCount);
 	Set_CookingState(COOKINGUISTATE::CS_MINIGAME);
 
-	CPersistentMgr::GetInstance()->Get_ResourceHistory()->UseItem(TYPE_BERRY, -iCookingCount * m_pSelectUI->Get_RecipeCount());
+	CPersistentMgr::GetInstance()->Get_Inventory()->Use_Item(CItem::IG_BERRY, iCookingCount * m_pSelectUI->Get_RecipeCount());
 }
 
 void CCookingUIController::CalcuCookingAbleCount()
