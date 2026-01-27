@@ -119,6 +119,14 @@ void CBreakableTree::LateUpdate_GameObject(const _float& fTimeDelta)
 
 	m_pWorkBar->LateUpdate_GameObject(fTimeDelta);
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
+
+	AABB tAABB = { vPos, _vec3(2.f,3.5f,2.f) };
+	m_pColliderCom->Set_AABB(tAABB);
+	m_pColliderCom->UpdateFromCustom(tAABB);
+	//-------------------------------------------------
+
+	// 충돌체 디버그용
+	if (g_bDebug) m_pColliderCom->Update_AABBforRender();
 }
 
 void CBreakableTree::Render_GameObject()

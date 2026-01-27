@@ -67,6 +67,8 @@ private:
 	void			Update_Building(const _float& fTimeDelta);
 	void			LateUpdate_Building(const _float& fTimeDelta);
 
+	_vec3			Compute_GirdCoord(const _vec3& vPos);
+
 public:
 	static CVillage* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 private:
@@ -88,5 +90,5 @@ private:
 	queue<FOLLOWER_SPAWN_WORK>	m_queueFollowerSpawn;
 	_float						m_fSpawnTimer = 0.f;
 	static constexpr _float		FOLLOWER_SPAWN_DELAY = 8.f;
-	static constexpr _float		BUILDING_GRIDSIZE	 = 1.f;
+	static constexpr _float		BUILDING_GRIDSIZE	 = 2.f;
 };
