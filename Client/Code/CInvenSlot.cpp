@@ -18,7 +18,7 @@ HRESULT CInvenSlot::Ready_GameObject()
 	if (FAILED(Add_Component()))
 		return E_FAIL;
 
-	m_pTransformCom->Set_Scale(232 * m_fScale, 232 * m_fScale, 0.f);
+	m_pTransformCom->Set_Scale(232 * m_fScale, 232 * m_fScale, 1.0f);
 	m_pTransformCom->Set_Pos(m_vPos.x, m_vPos.y, m_vPos.z);
 
 	m_bRender = true;

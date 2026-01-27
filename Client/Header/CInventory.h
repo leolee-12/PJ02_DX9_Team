@@ -38,6 +38,8 @@ private:
 	CInvenSlot*		m_pInvenSlot;
 	CInvenItem*		m_pInvenItem;
 
+	vector<CInvenSlot*> m_vSlot;
+
 	_bool	m_bActive;
 
 };

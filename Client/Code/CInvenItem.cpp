@@ -20,7 +20,7 @@ HRESULT CInvenItem::Ready_GameObject()
 	if (FAILED(Add_Component()))
 		return E_FAIL;
 
-	m_pTransformCom->Set_Scale(114 * m_fScale, 93 * m_fScale, 0.2f);
+	m_pTransformCom->Set_Scale(128 * m_fScale, 128 * m_fScale, 1.0f);
 	m_pTransformCom->Set_Pos(m_vPos.x, m_vPos.y, m_vPos.z);
 
 	m_bRender = true;

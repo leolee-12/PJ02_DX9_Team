@@ -29,13 +29,18 @@ HRESULT CInvenBtn::Ready_GameObject()
 
 	m_pName->Set_Flags(DT_CENTER | DT_VCENTER);
 	m_pName->Set_FontColor(D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
-	m_pName->Set_Pos(_vec2(0.0f, 230.0f));
+	m_pName->Set_Pos(_vec2(m_vPos.x,m_vPos.y));
 	m_pName->Set_Scale(_vec2(59.f * 2.f, 123.f * 0.5f));
-	m_pName->Set_Font(L"Font_Default30_Heavy");
+	m_pName->Set_Font(L"Font_Default24");
 	m_pName->Set_Text(L"소지품");
 	m_pName->Active();
-
 	m_bRender = true;
+
+	m_pTransformCom->Set_Scale(293.0f * m_fScale, 94.0f * m_fScale, 1.0f);
+	m_pTransformCom->Set_Pos(m_vPos.x, m_vPos.y, m_vPos.z);
+	m_vScreenPos = _vec2(WINCX / 2 + m_vPos.x, WINCY / 2 - m_vPos.y);
+	m_vHitHalfScale = _vec2((106.0f * m_fScale) / 2, (90.0f * m_fScale) / 2);
+
 	return S_OK;
 }
 
@@ -60,7 +65,7 @@ void CInvenBtn::Render_GameObject()
 {
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
 
-	m_pTextureCom->Set_Texture();
+	m_pTextureCom->Set_Texture(m_iPage);
 
 	m_pBufferCom->Render_Buffer();
 }
@@ -129,10 +134,12 @@ void CInvenBtn::Check_CusorColl()
 			//WorkWoodEvent.strType = L"CWorkWood.Selected";
 			//m_pMessageChannel->Publish(WorkWoodEvent);
 		}
-		m_pTransformCom->Set_Scale(106.0f * m_fScale * 1.3f, 90.0f * m_fScale * 1.3f, 1.0f);
+		m_iPage = 1;
+		//m_pTransformCom->Set_Scale(106.0f * m_fScale * 1.3f, 90.0f * m_fScale * 1.3f, 1.0f);
 	}
 	else {
-		m_pTransformCom->Set_Scale(106.0f * m_fScale, 90.0f * m_fScale, 1.0f);
+		m_iPage = 0;
+		//m_pTransformCom->Set_Scale(106.0f * m_fScale, 90.0f * m_fScale, 1.0f);
 	}
 }
 

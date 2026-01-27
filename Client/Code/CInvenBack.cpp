@@ -18,8 +18,8 @@ HRESULT CInvenBack::Ready_GameObject()
 	if (FAILED(Add_Component()))
 		return E_FAIL;
 
-	m_pTransformCom->Set_Scale(WINCX / 2, WINCY, 0.f);
-	m_pTransformCom->Set_Pos(-WINCX / 4, 0, 0.49f);
+	m_pTransformCom->Set_Scale(WINCX / 2, WINCY, 1.0f);
+	m_pTransformCom->Set_Pos(-WINCX / 4, 0, 0.1f);
 
 	m_bRender = true;
 	return S_OK;

@@ -44,6 +44,7 @@ private:
 
 	_vec3			m_vPos;
 	float			m_fScale;
+	_int			m_iPage;
 	_bool			m_bRender;
 };
 
