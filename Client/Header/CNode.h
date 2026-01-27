@@ -39,7 +39,7 @@ public:
 	const _vec3&		Get_NodeDir() { return m_vDir; }
 
 	void				Set_UserID(USERID eID) { m_eUserID = eID; }
-	void				Set_AcmlTime(const _float& fTime) { m_fAcmlTime = fTime; }
+	void				Set_AcmlTime(const _float& fTime) { m_fAccTime = fTime; }
 	void				Set_Material();
 	void				Reset_Material();
 	void				Switch_UseMaterial() { m_bUseMtrl = !m_bUseMtrl; }
@@ -68,7 +68,7 @@ private:
 
 	// 패턴 관련
 	USERID			m_eUserID;
-	_float			m_fAcmlTime;
+	_float			m_fAccTime;
 	_bool			m_bMtrl = false;
 	_bool			m_bUseMtrl = false;
 

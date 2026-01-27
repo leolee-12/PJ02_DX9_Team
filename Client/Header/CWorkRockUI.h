@@ -49,5 +49,7 @@ private:
 
 	_vec3 m_vPos;
 	float m_fScale;
+
+	_bool m_bFontRender = false;
 };
 

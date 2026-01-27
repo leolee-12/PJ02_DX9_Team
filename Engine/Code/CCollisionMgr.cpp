@@ -29,6 +29,8 @@ HRESULT CCollisionMgr::Ready_CollisionMgr()
 	m_vecCollisionPool.push_back({ CL_PLAYER, CL_BORDER });
 	m_vecCollisionPool.push_back({ CL_MONSTER, CL_BORDER });
 	m_vecCollisionPool.push_back({ CL_PLAYER, CL_CHEST });
+	m_vecCollisionPool.push_back({ CL_BUILD, CL_BREAK });
+	m_vecCollisionPool.push_back({ CL_BUILD, CL_BUILD });
 	// WY
 	m_vecCollisionPool.push_back({ CL_NPC, CL_BORDER });
 
@@ -41,6 +43,7 @@ void CCollisionMgr::Check_Collisions(const _float& fDeltaTime)
 	{
 		for (auto& Group1 : m_hmapCollisionGroup[vec.first]) {				// 첫번째그룹
 			for (auto& Group2 : m_hmapCollisionGroup[vec.second]) {			// 두번째그룹
+				if (Group1.pOwner == Group2.pOwner) { continue; }			// 같은 레이어 순회시 같은 충돌체 비교 금지
 				if (IntersectAABB(Group1.tAABB, Group2.tAABB))				// 2중 for 돌면서 충돌체크
 				{
 					Group1.pOwner->OnCollision(Group2.pOwner);				// 충돌 했다면 상대방 게임 포인터로 콜백메서드 호출
@@ -222,6 +225,55 @@ vector<CGameObject*> CCollisionMgr::Test_AABB(const AABB& aabb, COLGROUP Groupfl
 	}
 
 	return vecTemp;			// 충돌한 모든 충돌체의 게임포인터를 반환
+}
+
+_bool CCollisionMgr::PickOnPlane(_vec3* pOut, LPDIRECT3DDEVICE9 pDevice, HWND hWnd, _float fPlaneY)
+{
+	if (pOut == nullptr || pDevice == nullptr)
+		return false;
+
+	// 마우스 스크린 좌표 얻기
+	POINT ptMouse;
+	GetCursorPos(&ptMouse);
+	ScreenToClient(hWnd, &ptMouse);
+
+	// 뷰포트 얻기
+	D3DVIEWPORT9 viewport;
+	pDevice->GetViewport(&viewport);
+
+	// 뷰, 투영 행렬 얻기
+	_matrix matView, matProj;
+	pDevice->GetTransform(D3DTS_VIEW, &matView);
+	pDevice->GetTransform(D3DTS_PROJECTION, &matProj);
+
+	// 스크린 좌표를 Near/Far 평면의 월드 좌표로 변환
+	_vec3 vScreenNear = _vec3((_float)ptMouse.x, (_float)ptMouse.y, 0.f);
+	_vec3 vScreenFar  = _vec3((_float)ptMouse.x, (_float)ptMouse.y, 1.f);
+
+	_vec3 vWorldNear, vWorldFar;
+	D3DXVec3Unproject(&vWorldNear, &vScreenNear, &viewport, &matProj, &matView, nullptr);
+	D3DXVec3Unproject(&vWorldFar,  &vScreenFar,  &viewport, &matProj, &matView, nullptr);
+
+	// 레이 방향 계산
+	_vec3 vRayDir = vWorldFar - vWorldNear;
+	D3DXVec3Normalize(&vRayDir, &vRayDir);
+
+	// Y = fPlaneY 평면과 레이의 교차점 계산
+	// 평면 방정식: y = fPlaneY
+	// 레이: P = vWorldNear + t * vRayDir
+	// fPlaneY = vWorldNear.y + t * vRayDir.y
+	// t = (fPlaneY - vWorldNear.y) / vRayDir.y
+
+	if (fabsf(vRayDir.y) < 0.0001f)  // 레이가 평면과 평행한 경우
+		return false;
+
+	_float t = (fPlaneY - vWorldNear.y) / vRayDir.y;
+
+	if (t < 0.f)  // 교차점이 카메라 뒤에 있는 경우
+		return false;
+
+	*pOut = vWorldNear + vRayDir * t;
+	return true;
 }
 
 void CCollisionMgr::Free()

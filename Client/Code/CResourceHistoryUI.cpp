@@ -87,6 +87,7 @@ HRESULT CResourceHistoryUI::Ready_GameObject()
 	m_EndLerpTime = 1.0f;
 	m_iDeltaAmount = 0;
 	m_iOrder = -1;
+	m_fDepth = 0.1f;
 	return S_OK;
 }
 
@@ -168,6 +169,8 @@ _int CResourceHistoryUI::Update_GameObject(const _float& fTimeDelta)
 	m_pNameFont->Update_GameObject(fTimeDelta);
 	m_pDeltaAmountFont->Update_GameObject(fTimeDelta);
 
+	CRenderer::GetInstance()->Add_RenderGroup(RENDER_UI, this);
+
 	return NOEVENT;
 }
 
@@ -185,6 +188,9 @@ void CResourceHistoryUI::LateUpdate_GameObject(const _float& fTimeDelta)
 
 void CResourceHistoryUI::Render_GameObject()
 {
+	m_pTotalCountFont->Render_GameObject();
+	m_pNameFont->Render_GameObject();
+	m_pDeltaAmountFont->Render_GameObject();
 }
 
 void CResourceHistoryUI::OnCollision(CGameObject* pObject)

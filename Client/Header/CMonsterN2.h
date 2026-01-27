@@ -42,7 +42,7 @@ private:
 	void				Set_Texture();
 
 	void				Attack_HitBox();
-	void				Attacked(const _int& iAttack);
+	void				Attacked(const _float& fAttack);
 	void				Update_State();
 	_vec3				Compute_LimitedDir(const _float& fAngle, const _vec3& vCurDir, const _vec3& vDesiredDir);
 	void				Compute_NodePos(const _float& fTimeDelta);

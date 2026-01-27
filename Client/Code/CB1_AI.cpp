@@ -5,7 +5,7 @@
 CB1_AI::CB1_AI(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CAIController(pGraphicDev),
 	m_fSpeed(0.f),
-	m_fAcmlTime(0.f),
+	m_fAccTime(0.f),
 	m_bChase(false),
 	m_fGravity(0.f),
 	m_iDequeMinSize(3),
@@ -18,7 +18,7 @@ CB1_AI::CB1_AI(LPDIRECT3DDEVICE9 pGraphicDev)
 CB1_AI::CB1_AI(const CB1_AI& rhs)
 	: CAIController(rhs),
 	m_fSpeed(rhs.m_fSpeed),
-	m_fAcmlTime(rhs.m_fAcmlTime),
+	m_fAccTime(rhs.m_fAccTime),
 	m_bChase(false),
 	m_fGravity(rhs.m_fGravity),
 	m_iDequeMinSize(rhs.m_iDequeMinSize),
@@ -41,7 +41,7 @@ HRESULT CB1_AI::Ready_AI(const _float& fDetectRange, const _float& fInteractRang
 	m_fSpeed = 1.f;
 	m_vSpeed = { 0.f, 0.f, 0.f };
 	m_fGravity = -9.8f;
-	m_fAcmlTime = 0.f;
+	m_fAccTime = 0.f;
 	m_iRcmState = _uint(CMonsterB1::B1S_SPAWN);
 
 	// 공격 패턴 설정
@@ -72,8 +72,8 @@ void CB1_AI::Enter_State(const _uint& iState)
 		m_fSpeed = 0.05f;
 		_vec3 vPrevPos, vDesiredDir;
 
-		if ((!m_bChase) || (m_fAcmlTime < 2.f))			vDesiredDir = Randomize_Dir();
-		else if ((m_bChase) && (m_fAcmlTime >= 2.f))	vDesiredDir = Compute_TargetDir();
+		if ((!m_bChase) || (m_fAccTime < 2.f))			vDesiredDir = Randomize_Dir();
+		else if ((m_bChase) && (m_fAccTime >= 2.f))	vDesiredDir = Compute_TargetDir();
 
 		m_pOwnerTC->Get_Info(INFO_POS, &vPrevPos);
 		m_vDir = Compute_LimitedDir(120.f, m_vDir, vDesiredDir);
@@ -90,7 +90,7 @@ void CB1_AI::Enter_State(const _uint& iState)
 	break;
 	case CMonsterB1::B1S_LAND:
 	{
-		m_fAcmlTime = 0.f;
+		m_fAccTime = 0.f;
 		m_fSpeed = 1.f;
 		m_bOnce = true;
 	}
@@ -98,7 +98,7 @@ void CB1_AI::Enter_State(const _uint& iState)
 
 	case CMonsterB1::B1S_PREPARE:
 	{
-		m_fAcmlTime = 0.f;
+		m_fAccTime = 0.f;
 		m_fSpeed = 0.3f;
 		m_pOwnerTC->Get_Info(INFO_POS, &m_vLerpPos);
 		m_vLerpPos -= m_vDir * 0.f;
@@ -107,7 +107,7 @@ void CB1_AI::Enter_State(const _uint& iState)
 
 	case CMonsterB1::B1S_ATTACK:
 	{
-		m_fAcmlTime = 0.f;
+		m_fAccTime = 0.f;
 		m_fSpeed = 0.1f;
 		m_pOwnerTC->Get_Info(INFO_POS, &m_vLerpPos);
 		m_vLerpPos += m_vDir * 15.f;
@@ -115,11 +115,11 @@ void CB1_AI::Enter_State(const _uint& iState)
 	break;
 
 	case CMonsterB1::B1S_SHOOT:
-		m_fAcmlTime = 0.f;
+		m_fAccTime = 0.f;
 		break;
 
 	case CMonsterB1::B1S_SUMMON:
-		m_fAcmlTime = 0.f;
+		m_fAccTime = 0.f;
 		break;
 
 	case CMonsterB1::B1S_ROAR:
@@ -260,7 +260,7 @@ _int CB1_AI::Update_Component(const _float& fTimeDelta)
 {
 	_int iExit(0);
 
-	m_fAcmlTime += fTimeDelta;
+	m_fAccTime += fTimeDelta;
 
 	if (!m_bActiveAI) return iExit;
 
@@ -314,7 +314,7 @@ void CB1_AI::Update_Crawl(const _float& fTimeDelta)
 	{	// 타겟을 이미 발견했을 때
 		if (m_fDistance <= m_fInteractRange)
 		{
-			if (m_fAcmlTime >= 5.f)
+			if (m_fAccTime >= 5.f)
 			{
 				if (!m_patternDeque.empty())
 				{
@@ -364,11 +364,11 @@ void CB1_AI::Update_Land(const _float& fTimeDelta)
 		}
 	}
 
-	if (m_fAcmlTime < 0.2f)  // 0.2초 동안
+	if (m_fAccTime < 0.2f)  // 0.2초 동안
 	{
 		_vec3 vPos;
 		m_pOwnerTC->Get_Info(INFO_POS, &vPos);
-		_float fDeceleration = 1.0f - (m_fAcmlTime / 0.2f);
+		_float fDeceleration = 1.0f - (m_fAccTime / 0.2f);
 		vPos += m_vDir * 0.5f * fDeceleration * fTimeDelta;
 		m_pOwnerTC->Set_Pos(vPos.x, vPos.y, vPos.z);
 	}
@@ -384,7 +384,7 @@ void CB1_AI::Update_Prepare(const _float& fTimeDelta)
 	D3DXVec3Lerp(&vPos, &vPos, &m_vLerpPos, m_fSpeed);
 	m_pOwnerTC->Set_Pos(vPos.x, vPos.y, vPos.z);
 
-	if (m_fAcmlTime >= 2.f) Change_State(CMonsterB1::B1S_ATTACK);
+	if (m_fAccTime >= 2.f) Change_State(CMonsterB1::B1S_ATTACK);
 }
 
 void CB1_AI::Update_Attack(const _float& fTimeDelta)
@@ -444,7 +444,7 @@ void CB1_AI::Update_Stop(const _float& fTimeDelta)
 	{
 		m_bChase = true;
 	}
-	else if ((m_bChase) && (m_fDistance <= m_fInteractRange) && (m_fAcmlTime >= 5.f))
+	else if ((m_bChase) && (m_fDistance <= m_fInteractRange) && (m_fAccTime >= 5.f))
 	{
 		if (!m_patternDeque.empty())
 		{

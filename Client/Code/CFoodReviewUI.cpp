@@ -103,10 +103,12 @@ _int CFoodReviewUI::Update_GameObject(const _float& fTimeDelta)
 	if (m_fRenderTimer >= 0.5f)
 	{
 		m_pBackReivewFont->Update_GameObject(fTimeDelta);
+		CRenderer::GetInstance()->Add_RenderGroup(RENDER_FONT, m_pBackReivewFont);
 	}
 	if (m_fRenderTimer >= 1.0f)
 	{
 		m_pAHNReivewFont->Update_GameObject(fTimeDelta);
+		CRenderer::GetInstance()->Add_RenderGroup(RENDER_FONT, m_pAHNReivewFont);
 	}
 	if (m_fRenderTimer >= 1.5f)
 	{

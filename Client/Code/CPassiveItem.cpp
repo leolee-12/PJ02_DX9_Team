@@ -161,7 +161,7 @@ void CPassiveItem::Update_Idle(const _float& fTimeDelta)
 			break;
 		}
 	}
-	m_fAcmlTime += fTimeDelta;
+	m_fAccTime += fTimeDelta;
 	m_pTrigger->Set_Pos_Trigger(m_vPos);
 	m_pTrigger->Update_GameObject(fTimeDelta);
 	if (m_eItemID == WP_SWORD || m_eItemID == WP_GAUNTLET)
@@ -172,9 +172,9 @@ void CPassiveItem::Update_Idle(const _float& fTimeDelta)
 
 void CPassiveItem::Update_Summon(const _float& fTimeDelta)
 {
-	m_fAcmlTime += fTimeDelta;
+	m_fAccTime += fTimeDelta;
 
-	if (m_fAcmlTime >= 3.f)
+	if (m_fAccTime >= 3.f)
 	{
 		m_eCurState = IS_IDLE;
 	}

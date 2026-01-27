@@ -37,6 +37,11 @@ public:
 
 	vector<CGameObject*> Test_AABB(const AABB& aabb, COLGROUP Groupflag = CL_ALL);	// 임시 충돌체크함수 (반환값 충돌한 모든 충돌체의 오너포인터 집단)
 
+
+public:
+	// 마우스 피킹: 스크린 좌표에서 Y 평면과의 교차점 반환
+	static _bool PickOnPlane(_vec3* pOut, LPDIRECT3DDEVICE9 pDevice, HWND hWnd, _float fPlaneY = -0.95f);
+
 private:
 	// 매니저 내부 데이터 관리 함수 모음 (해당 함수들은 외부에서 실행되면 안됨!!)
 	void Execute_UnregisterRequests();					// 요청큐에 쌓은 삭제요청들을 한번에 정리하는 함수

@@ -6,7 +6,7 @@
 CN1_AI::CN1_AI(LPDIRECT3DDEVICE9 pGraphicDev)
 	:	CAIController(pGraphicDev),
 		m_fSpeed(0.f),
-		m_fAcmlTime(0.f),
+		m_fAccTime(0.f),
 		m_bChase(false)
 {
 }
@@ -14,7 +14,7 @@ CN1_AI::CN1_AI(LPDIRECT3DDEVICE9 pGraphicDev)
 CN1_AI::CN1_AI(const CN1_AI& rhs)
 	:	CAIController(rhs),
 		m_fSpeed(rhs.m_fSpeed),
-		m_fAcmlTime(rhs.m_fAcmlTime),
+		m_fAccTime(rhs.m_fAccTime),
 		m_bChase(false)
 {
 }
@@ -29,7 +29,7 @@ HRESULT CN1_AI::Ready_AI(const _float& fDetectRange, const _float& fInteractRang
 		return E_FAIL;
 
 	m_fSpeed = 0.5f;
-	m_fAcmlTime = 0.f;
+	m_fAccTime = 0.f;
 	m_iRcmState = _uint(CMonsterN1::N1S_IDLE);
 
 	return S_OK;
@@ -46,13 +46,13 @@ void CN1_AI::Enter_State(const _uint& iState)
 		if (m_pTargetTC) m_fSpeed = 2.f;
 		else m_fSpeed = 0.5f;
 
-		if ((!m_bChase) || (m_fAcmlTime < 2.f))
+		if ((!m_bChase) || (m_fAccTime < 2.f))
 		{
 			m_vDir = Randomize_Dir();
 		}
 		else if (m_bChase)
 		{
-			if (m_fAcmlTime >= 2.f || m_iPreState == CMonsterN1::N1S_HIT)
+			if (m_fAccTime >= 2.f || m_iPreState == CMonsterN1::N1S_HIT)
 				m_vDir = Compute_TargetDir();
 		}
 	}
@@ -94,7 +94,7 @@ void CN1_AI::Exit_State(const _uint& iState)
 		break;
 	case CMonsterN1::N1S_ATTACK:
 		if (!m_pTargetTC) m_bChase = false;
-		m_fAcmlTime = 0.f;
+		m_fAccTime = 0.f;
 		break;
 	case CMonsterN1::N1S_HIT:
 		if (!m_pTargetTC) m_bChase = false;
@@ -114,7 +114,7 @@ _int CN1_AI::Update_Component(const _float& fTimeDelta)
 {
 	_int iExit(0);
 
-	m_fAcmlTime += fTimeDelta;
+	m_fAccTime += fTimeDelta;
 
 	Compute_Distance();
 
@@ -158,14 +158,14 @@ void CN1_AI::Update_Idle(const _float& fTimeDelta)
 
 	if (m_bChase)
 	{	// 타겟을 이미 발견했을 때
-		if ((m_fDistance <= m_fInteractRange) && (m_fAcmlTime >= 5.f))
+		if ((m_fDistance <= m_fInteractRange) && (m_fAccTime >= 5.f))
 		{	// 타겟이 상호작용 범위 내에 있을 시 공격 상태로 전환
 			Change_State(CMonsterN1::N1S_ATTACK);
 			return;
 		}
 		else
 		{	
-			if (_uint(m_fAcmlTime) % 3 != 0)	// 타겟이 상호작용 범위 내에 없을 시 이동 상태로 전환하여 추적
+			if (_uint(m_fAccTime) % 3 != 0)	// 타겟이 상호작용 범위 내에 없을 시 이동 상태로 전환하여 추적
 				Change_State(CMonsterN1::N1S_RUN);
 		}
 	}
@@ -176,7 +176,7 @@ void CN1_AI::Update_Idle(const _float& fTimeDelta)
 			m_bChase = true;
 			Change_State(CMonsterN1::N1S_RUN);
 		}
-		else if (_uint(m_fAcmlTime) % 3 != 0)
+		else if (_uint(m_fAccTime) % 3 != 0)
 		{	// 타겟이 감지 범위 내에 없을 때는 대기하다 이동 상태로 전환하여 순찰
 			Change_State(CMonsterN1::N1S_RUN);
 		}
@@ -189,7 +189,7 @@ void CN1_AI::Update_Run(const _float& fTimeDelta)
 
 	if (m_bChase)
 	{	// 타겟을 이미 발견했을 때
-		if ((m_fDistance <= m_fInteractRange) && (m_fAcmlTime >= 5.f))
+		if ((m_fDistance <= m_fInteractRange) && (m_fAccTime >= 5.f))
 		{	
 			Change_State(CMonsterN1::N1S_ATTACK);
 		}
@@ -202,7 +202,7 @@ void CN1_AI::Update_Run(const _float& fTimeDelta)
 		}
 	}
 
-	if (_uint(m_fAcmlTime) % 3 == 0)
+	if (_uint(m_fAccTime) % 3 == 0)
 	{	// 타겟이 감지 범위 내에 없을 때는 순찰하다 대기 상태로 전환
 		Change_State(CMonsterN1::N1S_IDLE);
 		return;

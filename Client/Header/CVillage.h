@@ -5,6 +5,7 @@
 #include <queue>
 
 class CCookingUIController;
+class CBuilding;
 
 // 팔로워 스폰 작업 구조체
 struct FOLLOWER_SPAWN_WORK
@@ -63,6 +64,11 @@ private:
 	void			Process_FollowerSpawnQueue(const _float& fTimeDelta);
 	void			Add_FollowerSpawnWork(const FOLLOWER_SPAWN_WORK& tWork);
 
+	void			Update_Building(const _float& fTimeDelta);
+	void			LateUpdate_Building(const _float& fTimeDelta);
+
+	_vec3			Compute_GirdCoord(const _vec3& vPos);
+
 public:
 	static CVillage* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 private:
@@ -76,8 +82,13 @@ private:
 
 	_bool	m_bReEnterFlag = false;
 
+	// 빌딩 관련 변수
+	_bool	m_bBuildingFlag = false;
+	CBuilding* m_pCurBuilding = nullptr;
+
 	// 팔로워 스폰 작업 큐
 	queue<FOLLOWER_SPAWN_WORK>	m_queueFollowerSpawn;
 	_float						m_fSpawnTimer = 0.f;
 	static constexpr _float		FOLLOWER_SPAWN_DELAY = 8.f;
+	static constexpr _float		BUILDING_GRIDSIZE	 = 2.f;
 };

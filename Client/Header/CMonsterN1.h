@@ -45,7 +45,7 @@ private:
 	void				Set_Texture();
 
 	void				Attack_HitBox();
-	void				Attacked(const _int& iAttack);
+	void				Attacked(const _float& fAttack);
 	void				Update_State();
 
 private:

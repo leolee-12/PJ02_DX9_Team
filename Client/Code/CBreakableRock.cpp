@@ -46,24 +46,22 @@ HRESULT CBreakableRock::Ready_GameObject()
 	if (FAILED(Add_Component()))
 		return E_FAIL;
 
-	m_pColliderCom->RegisterToManager(this, CL_GRASS);
+	m_eOBJID = OID_BREAK;
+
+	m_pColliderCom->RegisterToManager(this, CL_BREAK);
 	CInteractMgr::GetInstance()->Register_IObj(CInteractMgr::ROCK, this);
 
 	m_iTextureIndex = 0;
 	m_pWorkBar = CResourceWorkBar::Create(m_pGraphicDev, _float(m_iHp), _vec3{});
 	m_pWorkBar->UnActive();
-	m_fAcmlTime = 0.f;
+	m_fAccTime = 0.f;
 
 	return S_OK;
 }
 
 _int CBreakableRock::Update_GameObject(const _float& fTimeDelta)
 {
-	if (g_bDebug) { m_pColliderCom->Update_AABBforRender(); }
-
-	m_fAcmlTime += fTimeDelta;
-
-	m_pColliderCom->UpdateFromTransform(m_pTransformCom);
+	m_fAccTime += fTimeDelta;
 
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
@@ -83,39 +81,47 @@ _int CBreakableRock::Update_GameObject(const _float& fTimeDelta)
 
 void CBreakableRock::LateUpdate_GameObject(const _float& fTimeDelta)
 {
-	if (!(m_fWorkGauge - m_fPreWorkGauge < 0.0001f))
+	if (m_fWorkGauge - m_fPreWorkGauge > 0.0001f)
 	{
 		m_pWorkBar->Active();
 
-		if (m_fAcmlTime >= 1.f)
+		if (m_fAccTime >= 1.f)
 		{
-			_uint iChannel = Get_Rand_Int(SOUND_EFFECT1, SOUND_EFFECT10);
+			//_uint iChannel = Get_Rand_Int(SOUND_EFFECT1, SOUND_EFFECT10);
 
 			_tchar strSoundName[128] = L"";
 			swprintf_s(strSoundName, L"Stone Impact %d.wav", Get_Rand_Int(0, 4));
-			CSoundMgr::GetInstance()->Play(strSoundName, CHANNELID(iChannel), 0.005f);
+			CSoundMgr::GetInstance()->Play(strSoundName, SOUND_ROCK, 0.5f);
 
-			m_fAcmlTime = 0.f;
+			m_fAccTime = 0.f;
 		}
 	}
 	else
 	{
-		if (m_fAcmlTime >= 3.f)
+		if (m_fAccTime >= 3.f)
 		{
 			m_pWorkBar->UnActive();
-			m_fAcmlTime = 0.f;
+			m_fAccTime = 0.f;
 		}
 	}
 
 	_vec3 vPos;
 	m_pTransformCom->Get_Info(Engine::INFO_POS, &vPos);
-	//m_pTransformCom->Compute_Bilboard(BBD_X);
+	m_pTransformCom->Compute_Bilboard(BBD_X);
 	Compute_ViewDepth(&vPos);
 
 	Check_Status();
 
 	m_pWorkBar->LateUpdate_GameObject(fTimeDelta);
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
+
+	AABB tAABB = { vPos, _vec3(2.f,2.f,2.f)};
+	m_pColliderCom->Set_AABB(tAABB);
+	m_pColliderCom->UpdateFromCustom(tAABB);
+	//-------------------------------------------------
+
+	// 충돌체 디버그용
+	if (g_bDebug) m_pColliderCom->Update_AABBforRender();
 }
 
 void CBreakableRock::Render_GameObject()
@@ -144,7 +150,14 @@ void CBreakableRock::Set_ObjectData(const Engine::OBJECTDATA& objData)
 	m_fBaseScale = objData.scale;
 
 	m_pTransformCom->Set_Pos(objData.x, objData.y, objData.z);
-	m_pTransformCom->Set_Scale(m_fScale, m_fScale, m_fScale);
+
+	_uint iTexWidth, iTexHeight;
+	m_pTextureCom->Get_TextureSize(&iTexWidth, &iTexHeight, 0);
+
+	float aspectRatio = static_cast<float>(iTexWidth) / static_cast<float>(iTexHeight);
+	float HelfWidth = m_fScale * aspectRatio * 0.5f;
+	float baseY = -2.4f;
+	m_pTransformCom->Set_Scale(m_fScale * aspectRatio, m_fScale, m_fScale);
 }
 
 void CBreakableRock::Check_Status()
@@ -170,11 +183,11 @@ void CBreakableRock::Update_WorkBar(const _float& fTimeDelta)
 
 void CBreakableRock::Create_Item()
 {
-	_int itemCount = Get_Rand_Int(3, 5);
+	_uint iItemCount = Get_Rand_Int(3, 5);
 	_vec3 vPos;
 	m_pTransformCom->Get_Info(Engine::INFO_POS, &vPos);
 
-	for (_uint i = 0; i < itemCount; ++i)
+	for (_uint i = 0; i < iItemCount; ++i)
 	{
 		CGameObject* pItem;
 		_float fY(vPos.y - m_pTransformCom->Get_Scale(ROT_Y) * 0.25f);

@@ -18,7 +18,7 @@ HRESULT CPersistentMgr::Ready_GlobalObjects(LPDIRECT3DDEVICE9 pGraphicDev)
 {
 	if (m_pPlayer == nullptr)
 	{
-		vector<CTextureSet::TEXINFO> tempVec(32);
+		vector<CTextureSet::TEXINFO> tempVec(35);
 		tempVec[0] = CTextureSet::TEXINFO(L"idle", L"../Bin/Resource/Texture/Player/idle/dds/idle_%04d.dds", 72);
 		tempVec[1] = CTextureSet::TEXINFO(L"idle-up", L"../Bin/Resource/Texture/Player/idle-up/dds/idle-up_%04d.dds", 72);
 		tempVec[2] = CTextureSet::TEXINFO(L"run-up", L"../Bin/Resource/Texture/Player/run-up/dds/run-up_%04d.dds", 9);
@@ -56,6 +56,10 @@ HRESULT CPersistentMgr::Ready_GlobalObjects(LPDIRECT3DDEVICE9 pGraphicDev)
 		tempVec[29] = CTextureSet::TEXINFO(L"attack-combo2-gauntlets", L"../Bin/Resource/Texture/Player/attack-combo2-gauntlets/dds/attack-combo2-gauntlets_%04d.dds", 22);
 		tempVec[30] = CTextureSet::TEXINFO(L"attack-combo3-gauntlets", L"../Bin/Resource/Texture/Player/attack-combo3-gauntlets/dds/attack-combo3-gauntlets_%04d.dds", 22);
 		tempVec[31] = CTextureSet::TEXINFO(L"attack-combo4-gauntlets", L"../Bin/Resource/LWY/Player/attack-combo4-gauntlets/dds/attack-combo4-gauntlet2_%04d.dds", 28);
+
+		tempVec[32] = CTextureSet::TEXINFO(L"actions_chop-wood", L"../Bin/Resource/LWY/Player/actions_chop-wood/dds/actions_chop-wood_%04d.dds", 19);
+		tempVec[33] = CTextureSet::TEXINFO(L"actions_chop-stone", L"../Bin/Resource/Texture/Player/actions_chop-stone/dds/actions_chop-stone_%04d.dds", 22);
+		tempVec[34] = CTextureSet::TEXINFO(L"actions_hammer", L"../Bin/Resource/Texture/Player/actions_hammer/dds/actions_hammer_%04d.dds", 14);
 
 		if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_PlayerTexture", Engine::CTextureSet::Create(pGraphicDev, TEX_NORMAL, tempVec))))
 			return E_FAIL;

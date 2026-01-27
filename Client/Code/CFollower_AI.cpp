@@ -6,7 +6,7 @@
 CFollower_AI::CFollower_AI(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CAIController(pGraphicDev),
 	m_fSpeed(0.f),
-	m_fAcmlTime(0.f),
+	m_fAccTime(0.f),
 	m_bChase(false)
 {
 }
@@ -14,7 +14,7 @@ CFollower_AI::CFollower_AI(LPDIRECT3DDEVICE9 pGraphicDev)
 CFollower_AI::CFollower_AI(const CFollower_AI& rhs)
 	: CAIController(rhs),
 	m_fSpeed(rhs.m_fSpeed),
-	m_fAcmlTime(rhs.m_fAcmlTime),
+	m_fAccTime(rhs.m_fAccTime),
 	m_bChase(false)
 {
 }
@@ -29,7 +29,7 @@ HRESULT CFollower_AI::Ready_AI(const _float& fDetectRange, const _float& fIntera
 		return E_FAIL;
 
 	m_fSpeed = FW_DEFAULT_SPEED;
-	m_fAcmlTime = 0.f;
+	m_fAccTime = 0.f;
 	m_iRcmState = _uint(CFollower::FOLLOWER_IDLE);
 
 	return S_OK;
@@ -40,11 +40,11 @@ void CFollower_AI::Enter_State(const _uint& iState)
 	switch (iState)
 	{
 	case CFollower::FOLLOWER_IDLE:
-		m_fAcmlTime = 0.f;
+		m_fAccTime = 0.f;
 		break;
 	case CFollower::FOLLOWER_RUN:
 	{
-		m_fAcmlTime = 0.f;
+		m_fAccTime = 0.f;
 
 		if (!m_bChase || m_pTargetTC == nullptr) m_vDir = Randomize_Dir();
 		else									 m_vDir = Compute_TargetDir();
@@ -52,11 +52,11 @@ void CFollower_AI::Enter_State(const _uint& iState)
 		break;
 
 	case CFollower::FOLLOWER_DANCE:
-		m_fAcmlTime = 0.f;
+		m_fAccTime = 0.f;
 		break;
 
 	case CFollower::FOLLOWER_CHEER:
-		m_fAcmlTime = 0.f;
+		m_fAccTime = 0.f;
 		break;
 
 	case CFollower::FOLLOWER_TRANSFORM:
@@ -104,7 +104,7 @@ _int CFollower_AI::Update_Component(const _float& fTimeDelta)
 
 	_int iExit(0);
 
-	m_fAcmlTime += fTimeDelta;
+	m_fAccTime += fTimeDelta;
 
 	if (!m_bActiveAI) return iExit;
 
@@ -145,7 +145,7 @@ void CFollower_AI::Update_Idle(const _float& fTimeDelta)
 {
 	if ((!m_bChase) || (m_pTargetTC == nullptr))
 	{
-		if (m_fAcmlTime >= AUTO_ESCAPE_STATE_TIME)
+		if (m_fAccTime >= AUTO_ESCAPE_STATE_TIME)
 		{
 			_uint iRand = Get_Rand_Int(0, 4);
 
@@ -181,7 +181,7 @@ void CFollower_AI::Update_Run(const _float& fTimeDelta)
 			}
 		}
 
-		if (m_fAcmlTime >= AUTO_ESCAPE_STATE_TIME)
+		if (m_fAccTime >= AUTO_ESCAPE_STATE_TIME)
 		{
 			Change_State(CFollower::FOLLOWER_IDLE);
 			return;
@@ -195,7 +195,7 @@ void CFollower_AI::Update_Dance(const _float& fTimeDelta)
 {
 	if ((!m_bChase) || (m_pTargetTC == nullptr))
 	{
-		if (m_fAcmlTime >= AUTO_ESCAPE_STATE_TIME)
+		if (m_fAccTime >= AUTO_ESCAPE_STATE_TIME)
 		{
 			Change_State(CFollower::FOLLOWER_IDLE);
 			return;
