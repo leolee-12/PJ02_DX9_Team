@@ -209,7 +209,7 @@ HRESULT CVillage::Ready_Environment_Layer(const _tchar* pLayerTag)
 	// Village 지형물
 	_float fRadius(0.f);
 	_float fRadian(0.f);
-	for (int i = 0; i < 18; ++i)
+	for (int i = 0; i < 30; ++i)
 	{
 		fRadius = Get_Rand_Float(17.5f, 35.f);
 		fRadian = Get_Rand_Float(0.f, D3DX_PI * 2.f);

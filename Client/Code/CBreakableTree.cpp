@@ -49,7 +49,7 @@ HRESULT CBreakableTree::Ready_GameObject()
 	m_fFrame = 0.f;
 	m_fFrameSpeed = 6.f;
 	m_fFrameEnd = 32.f;
-	m_fAcmlTime = 0.f;
+	m_fAccTime = 0.f;
 
 	m_eOBJID = OID_BREAK;
 
@@ -68,7 +68,7 @@ _int CBreakableTree::Update_GameObject(const _float& fTimeDelta)
 
 	m_pColliderCom->UpdateFromTransform(m_pTransformCom);
 
-	m_fAcmlTime += fTimeDelta;
+	m_fAccTime += fTimeDelta;
 
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
@@ -88,33 +88,33 @@ _int CBreakableTree::Update_GameObject(const _float& fTimeDelta)
 
 void CBreakableTree::LateUpdate_GameObject(const _float& fTimeDelta)
 {
-	if (!(m_fWorkGauge - m_fPreWorkGauge < 0.0001f))
+	if (m_fWorkGauge - m_fPreWorkGauge > 0.0001f)
 	{
 		m_pWorkBar->Active();
 
-		if (m_fAcmlTime >= 1.f)
+		if (m_fAccTime >= 1.f)
 		{
-			_uint iChannel = Get_Rand_Int(SOUND_EFFECT1, SOUND_EFFECT10);
+			//_uint iChannel = Get_Rand_Int(SOUND_EFFECT1, SOUND_EFFECT10);
 
 			_tchar strSoundName[128] = L"";
 			swprintf_s(strSoundName, L"Wood Chop %d.wav", Get_Rand_Int(0, 3));
-			CSoundMgr::GetInstance()->Play(strSoundName, CHANNELID(iChannel), 0.005f);
+			CSoundMgr::GetInstance()->Play(strSoundName, SOUND_WOOD, 0.5f);
 
-			m_fAcmlTime = 0.f;
+			m_fAccTime = 0.f;
 		}
 	}
 	else
 	{
-		if (m_fAcmlTime >= 3.f)
+		if (m_fAccTime >= 3.f)
 		{
 			m_pWorkBar->UnActive();
-			m_fAcmlTime = 0.f;
+			m_fAccTime = 0.f;
 		}
 	}
 
 	_vec3 vPos;
 	m_pTransformCom->Get_Info(Engine::INFO_POS, &vPos);
-	//m_pTransformCom->Compute_Bilboard(BBD_X);
+	m_pTransformCom->Compute_Bilboard(BBD_X);
 	Compute_ViewDepth(&vPos);
 
 	Check_Status();
@@ -176,11 +176,11 @@ void CBreakableTree::OnCollision(CGameObject* pObject)
 
 void CBreakableTree::Create_Item()
 {
-	_int itemCount = Get_Rand_Int(3, 5);
+	_uint iItemCount = Get_Rand_Int(3, 5);
 	_vec3 vPos;
 	m_pTransformCom->Get_Info(Engine::INFO_POS, &vPos);
 
-	for (_uint i = 0; i < itemCount; ++i)
+	for (_uint i = 0; i < iItemCount; ++i)
 	{
 		CGameObject* pItem;
 		_float fY(vPos.y - m_pTransformCom->Get_Scale(ROT_Y) * 0.25f);

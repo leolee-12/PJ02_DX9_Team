@@ -40,7 +40,7 @@ protected:
 	_vec3				m_vEffectPos;
 
 	// 스테이터스 관련
-	_int				m_iAttack;
+	_float				m_fAttack;
 	_float				m_fGroundY;
 
 public:

@@ -53,7 +53,7 @@ private:
 	_int				m_iTextureIndex;
 	_float				m_fScale;
 	_float				m_fBaseScale;
-	_float				m_fAcmlTime;
+	_float				m_fAccTime;
 
 	// 상호작용 관련
 	_float				m_fPreWorkGauge;

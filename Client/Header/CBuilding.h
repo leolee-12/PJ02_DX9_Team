@@ -68,7 +68,7 @@ private:
 	BUILDING_TYPE	m_eBuildingType;
 	BUILDING_STATE	m_eBuildingState;
 	_float			m_fGroundY;
-	_float			m_fAcmlTime;
+	_float			m_fAccTime;
 
 	_vec3			m_vPos = {};
 

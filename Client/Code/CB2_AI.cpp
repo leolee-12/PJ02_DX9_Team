@@ -5,7 +5,7 @@
 CB2_AI::CB2_AI(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CAIController(pGraphicDev),
 	m_fSpeed(0.f),
-	m_fAcmlTime(0.f),
+	m_fAccTime(0.f),
 	m_bChase(false),
 	m_iDequeMinSize(3),
 	m_pOwner(nullptr),
@@ -17,7 +17,7 @@ CB2_AI::CB2_AI(LPDIRECT3DDEVICE9 pGraphicDev)
 CB2_AI::CB2_AI(const CB2_AI& rhs)
 	: CAIController(rhs),
 	m_fSpeed(rhs.m_fSpeed),
-	m_fAcmlTime(rhs.m_fAcmlTime),
+	m_fAccTime(rhs.m_fAccTime),
 	m_bChase(false),
 	m_iDequeMinSize(rhs.m_iDequeMinSize),
 	m_pOwner(nullptr),
@@ -38,7 +38,7 @@ HRESULT CB2_AI::Ready_AI(const _float& fDetectRange, const _float& fInteractRang
 
 	m_fSpeed = 1.f;
 	m_vSpeed = { 0.f, 0.f, 0.f };
-	m_fAcmlTime = 0.f;
+	m_fAccTime = 0.f;
 	m_iRcmState = _uint(CMonsterB2::B2S_SPAWN);
 
 	// 공격 패턴 설정
@@ -69,7 +69,7 @@ void CB2_AI::Enter_State(const _uint& iState)
 
 	case CMonsterB2::B2S_DIG:
 	{
-		m_fAcmlTime = 0.f;
+		m_fAccTime = 0.f;
 
 		m_fSpeed = 0.03f;
 		_vec3 vPrevPos, vDesiredDir;
@@ -141,7 +141,7 @@ void CB2_AI::Exit_State(const _uint& iState)
 	case CMonsterB2::B2S_ESCAPE:
 	{
 		if (!m_pTargetTC) m_bChase = false;
-		m_fAcmlTime = 0.f;
+		m_fAccTime = 0.f;
 	}
 	break;
 
@@ -263,7 +263,7 @@ _int CB2_AI::Update_Component(const _float& fTimeDelta)
 {
 	_int iExit(0);
 
-	m_fAcmlTime += fTimeDelta;
+	m_fAccTime += fTimeDelta;
 
 	if (!m_bActiveAI) return iExit;
 
@@ -333,8 +333,8 @@ void CB2_AI::Update_Idle(const _float& fTimeDelta)
 
 void CB2_AI::Update_Dig(const _float& fTimeDelta)
 {
-	if (m_fAcmlTime >= 5.f) Change_State(CMonsterB2::B2S_ESCAPE);
-	else if (m_fAcmlTime >= 1.5f)
+	if (m_fAccTime >= 5.f) Change_State(CMonsterB2::B2S_ESCAPE);
+	else if (m_fAccTime >= 1.5f)
 	{
 		_vec3 vPos;
 		m_pOwnerTC->Get_Info(INFO_POS, &vPos);
@@ -358,7 +358,7 @@ void CB2_AI::Update_Escape(const _float& fTimeDelta)
 
 void CB2_AI::Update_Hit(const _float& fTimeDelta)
 {
-	if (m_fAcmlTime >= 3.f)
+	if (m_fAccTime >= 3.f)
 	{
 		if (!m_patternDeque.empty())
 		{

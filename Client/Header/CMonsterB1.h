@@ -50,7 +50,7 @@ private:
 	void				Set_Material();
 	void				Reset_Material();
 
-	void				Attacked(const _int& iAttack);
+	void				Attacked(const _float& fAttack);
 	void				Update_State();
 	_vec3				Compute_LimitedDir(const _float& fAngle, const _vec3& vCurDir, const _vec3& vDesiredDir);
 	void				Compute_NodePos(const _float& fTimeDelta);
@@ -75,7 +75,7 @@ private:
 	_uint			m_iPhase;
 	_uint			m_iMaxHp;
 	_bool			m_bMtrl = false;
-	_float			m_fAcmlTime;
+	_float			m_fAccTime;
 
 	_bool			m_bWaiting = true;
 

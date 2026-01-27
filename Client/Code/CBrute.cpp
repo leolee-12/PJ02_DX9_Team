@@ -157,7 +157,7 @@ void CBrute::Ready_Variable()
 	_float fScale = 17.f;
 	m_fGroundY = -2.5f + fScale * 0.5f - 2.5f;
 	m_iHp = 10;
-	m_fAcmlTime = 0.f;
+	m_fAccTime = 0.f;
 
 	// Transform 세팅
 	m_pTransformCom->Set_Pos(10.f, m_fGroundY, 80.f);
@@ -217,7 +217,7 @@ void CBrute::Check_Frame()
 void CBrute::Move_Frame(const _float& fTimeDelta)
 {
 	m_fFrame += m_fFrameSpeed * fTimeDelta;
-	m_fAcmlTime += fTimeDelta;
+	m_fAccTime += fTimeDelta;
 
 	if (m_fFrame >= m_fFrameEnd)
 	{
