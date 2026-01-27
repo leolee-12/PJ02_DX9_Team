@@ -523,6 +523,27 @@
     <Filter Include="01. Scene\01. Maps\04. Tutorial">
       <UniqueIdentifier>{08f675a5-4005-4bed-9f8c-e9c1ef960dbb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\05. UI\14. Inventory">
+      <UniqueIdentifier>{31db5823-e2dd-4f0a-a7a1-52b07c8ea2a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. UI\14. Inventory\03. InventoryButton">
+      <UniqueIdentifier>{753bd3fc-db41-4b45-9775-f19dcf250c41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. UI\14. Inventory\02. InventoryItem">
+      <UniqueIdentifier>{df4eae04-e3fc-485f-be10-76f774b81fc9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. UI\14. Inventory\01. InventorySlot">
+      <UniqueIdentifier>{ddfde44c-35c7-4604-addf-65ba2cc89324}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. UI\14. Inventory\00. InventoryBack">
+      <UniqueIdentifier>{98ed5d6a-5bb0-44b9-8374-c36a9022c15a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. UI\14. Inventory\04. InventoryItemInfo">
+      <UniqueIdentifier>{fef21de5-e3e4-41ad-ac0d-a1fe82f51dee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. UI\14. Inventory\05. InventoryDeco">
+      <UniqueIdentifier>{f21bbcf0-39a0-44ad-8cde-c04fa1a5c60c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -1107,6 +1128,24 @@
     <ClInclude Include="..\Header\CChargeArrow.h">
       <Filter>02. GameObject\03. Dependent\01. Effect\04. Indicator</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CInvenBack.h">
+      <Filter>02. GameObject\05. UI\14. Inventory\00. InventoryBack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CInvenSlot.h">
+      <Filter>02. GameObject\05. UI\14. Inventory\01. InventorySlot</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CInvenItem.h">
+      <Filter>02. GameObject\05. UI\14. Inventory\02. InventoryItem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CInvenBtn.h">
+      <Filter>02. GameObject\05. UI\14. Inventory\03. InventoryButton</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CInventory.h">
+      <Filter>02. GameObject\05. UI\14. Inventory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\InventoryEnum.h">
+      <Filter>02. GameObject\05. UI\14. Inventory</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1645,6 +1684,21 @@
     </ClCompile>
     <ClCompile Include="..\Code\CPlayerWeaponUI.cpp">
       <Filter>02. GameObject\05. UI\04. PlayerUI\03. PlayerWeapon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CInvenBack.cpp">
+      <Filter>02. GameObject\05. UI\14. Inventory\00. InventoryBack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CInvenSlot.cpp">
+      <Filter>02. GameObject\05. UI\14. Inventory\01. InventorySlot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CInvenItem.cpp">
+      <Filter>02. GameObject\05. UI\14. Inventory\02. InventoryItem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CInvenBtn.cpp">
+      <Filter>02. GameObject\05. UI\14. Inventory\03. InventoryButton</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CInventory.cpp">
+      <Filter>02. GameObject\05. UI\14. Inventory</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

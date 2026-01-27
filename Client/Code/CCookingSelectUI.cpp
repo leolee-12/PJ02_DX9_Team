@@ -182,7 +182,6 @@ CCookingSelectUI* CCookingSelectUI::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessa
 
 void CCookingSelectUI::AddFood()
 {
-
 	if (m_iCurCookingCount < m_iCookingCountMax && m_pCookingtargetFood->Get_CraftableCount() > 0)
 	{
 		m_vecFood[m_iCurCookingCount]->Set_Render(true);
@@ -218,7 +217,7 @@ void CCookingSelectUI::ReSetSelecting()
 void CCookingSelectUI::init_data()
 {
 	ReSetSelecting();
-	m_iResourceCount = CPersistentMgr::GetInstance()->Get_ResourceHistory()->GetIndexHistoryItemCount(TYPE_BERRY);
+	m_iResourceCount = CPersistentMgr::GetInstance()->Get_Inventory()->GetItemCount(CItem::IG_BERRY);
 	m_pCookingtargetFood->Set_CraftableCount(m_iResourceCount / m_pCookingInfoCard->Get_RecipeCount());
 	m_pCookingInfoCard->Init_CalcuResouceCount(m_iResourceCount);
 }

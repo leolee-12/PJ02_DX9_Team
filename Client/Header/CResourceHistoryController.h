@@ -8,20 +8,6 @@ namespace Engine
 	class CRcTex;
 	class CTexture;
 }
-
-enum ResourceType
-{
-	TYPE_COIN,
-	TYPE_TIMBER,
-	TYPE_ROCK,
-	TYPE_BERRY,
-	TYPE_POOP,
-	TYPE_REDBEAN,
-	TYPE_RICE,
-	TYPE_BURNRICE,
-	TYPE_END
-};
-
 class CResourceHistoryUI;
 
 class CResourceHistoryController :
