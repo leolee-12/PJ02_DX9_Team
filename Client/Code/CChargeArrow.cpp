@@ -26,7 +26,7 @@ HRESULT	CChargeArrow::Ready_GameObject()
 	m_eType = EF_INDICATOR;     // 바닥 이펙트 타입
 	m_eState = ES_READY;
 	m_vDir = _vec3(0.f, 0.f, 1.f);
-	_float fScale = 4.f;
+	_float fScale = 6.f;
 	m_pTransformCom->Set_Scale(fScale, fScale, fScale);
 
 	m_vDepth = { 0.f, 0.f, FLT_MAX };

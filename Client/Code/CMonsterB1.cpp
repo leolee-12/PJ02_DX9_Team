@@ -264,7 +264,7 @@ void CMonsterB1::Ready_Variable()
 	// 게임로직 변수 세팅
 	_float fScale = 10.f;
 	m_fGroundY = -2.5f + fScale * 0.5f;
-	m_iAttack = 1;
+	m_fAttack = 1;
 	m_iMaxHp = m_iHp = 10;
 	m_iPhase = 1;
 
@@ -322,7 +322,7 @@ void CMonsterB1::Ready_Event()
 	{
 		if (Target == this)
 		{
-			Attacked(any_cast<_int>(Event.hmapData.find(L"Attack")->second));
+			Attacked(any_cast<_float>(Event.hmapData.find(L"Attack")->second));
 			break;
 		}
 	}
@@ -642,7 +642,7 @@ void CMonsterB1::Attack_HitBox()
 		IMessageChannel::EVENT EAttack;
 		EAttack.strType = L"Player.Attacked";
 		EAttack.eOBJID = Engine::OID_PLAYER;
-		EAttack.hmapData.emplace(L"Attack", m_iAttack);
+		EAttack.hmapData.emplace(L"Attack", m_fAttack);
 		EAttack.hmapData.emplace(L"Target", tempVec);
 		m_pMessageChannel->Publish(EAttack);
 	}
@@ -661,15 +661,15 @@ void CMonsterB1::Attack_HitBox_Land()
 		IMessageChannel::EVENT EAttack;
 		EAttack.strType = L"Player.Attacked";
 		EAttack.eOBJID = Engine::OID_PLAYER;
-		EAttack.hmapData.emplace(L"Attack", m_iAttack);
+		EAttack.hmapData.emplace(L"Attack", m_fAttack);
 		EAttack.hmapData.emplace(L"Target", tempVec);
 		m_pMessageChannel->Publish(EAttack);
 	}
 }
 
-void CMonsterB1::Attacked(const _int& iAttack)
+void CMonsterB1::Attacked(const _float& fAttack)
 {
-	if(m_iHp > 0) m_iHp -= iAttack;
+	if(m_iHp > 0) m_iHp -= _int(fAttack);
 
 	_tchar strSoundName[128] = L"";
 	swprintf_s(strSoundName, L"N2Hit%d.wav", Get_Rand_Int(1, 3));

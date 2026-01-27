@@ -86,7 +86,7 @@ private:
 	void			Move_Lerp(const _float& fTimeDelta);
 	void			Charge(const _float& fTimeDelta);
 	void			Attack_HitBox();
-	void			Attacked(_int iDamage);
+	void			Attacked(_float fDamage);
 
 	// ==========================
 	//	Move_Roll : 구르기 상태일 때 현재 위치를 Lerp를 적용하여 계산 및 이동
@@ -122,7 +122,7 @@ private:
 	_vec3			m_vNormDir[DIR_END];
 	_vec3			m_vDir;
 	_float			m_fSpeed;
-	_int			m_iAttack;
+	_float			m_fAttack;
 	_bool			m_bRoll;	// 구르기 중인지?
 	_int			m_iCombo;	// 공격 중인지? + 몇번째 콤보상태인지?
 	_int			m_iMaxCombo;
@@ -178,7 +178,7 @@ public:
 	static CPlayer* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel);
 
 	// 상수
-	static constexpr _float PLAYER_DEFAULT_ATTACK = 1.f;// +5.f;
+	static constexpr _float	PLAYER_DEFAULT_ATTACK = 1.f	/*+5.f*/;
 	static constexpr _float PLAYER_INVINCIBLE_TIME = 3.f;
 	static constexpr _float PLAYER_DEFAULT_SPEED = 12.f;
 	static constexpr _float PLAYER_INTRO_SPEED = 7.f;
@@ -193,7 +193,7 @@ public:
 
 	static constexpr _float DEFAULT_PASSION_GAIN = 0.2f;
 	static constexpr _float DEFAULT_FAITH_GAIN = 5.f;
-	static constexpr _float FAITH_DECREASE_RATE = 0.3;
+	static constexpr _float FAITH_DECREASE_RATE = 0.3f;
 
 	static constexpr _float MAX_PASSION_VALUE = 4.f;
 	static constexpr _float	MAX_FAITH_VALUE = 100.f;

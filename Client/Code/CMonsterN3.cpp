@@ -69,7 +69,7 @@ _int CMonsterN3::Update_GameObject(const _float& fTimeDelta)
 	_vec3 vHpPos = m_vPos;
 	vHpPos.y += 3.f;
 	m_pHpBar->Set_TargetPos(vHpPos);
-	m_pHpBar->Set_Hp(m_iHp);
+	m_pHpBar->Set_Hp(_float(m_iHp));
 	m_pHpBar->Update_GameObject(fTimeDelta);
 
 	if (iExit == DEAD)
@@ -227,7 +227,7 @@ void CMonsterN3::Ready_Variable()
 	// 게임로직 변수 세팅
 	_float fScale = N3_DEFAULT_SCALE;
 	m_fGroundY = -2.5f + fScale * 0.5f;
-	m_iAttack = 1;
+	m_fAttack = 1;
 	m_iHp = N3_DEFAULT_HP;
 	m_fHeight = N3_DEFAULT_HEIGHT;	// 공중에 떠있는 몬스터
 
@@ -259,7 +259,7 @@ void CMonsterN3::Ready_Event()
 	{
 		if (Target == this)
 		{
-			Attacked(any_cast<_int>(Event.hmapData.find(L"Attack")->second));
+			Attacked(any_cast<_float>(Event.hmapData.find(L"Attack")->second));
 			break;
 		}
 	}
@@ -432,17 +432,17 @@ void CMonsterN3::Attack_HitBox()
 		IMessageChannel::EVENT EAttack;
 		EAttack.strType = L"Player.Attacked";
 		EAttack.eOBJID = Engine::OID_PLAYER;
-		EAttack.hmapData.emplace(L"Attack", m_iAttack);
+		EAttack.hmapData.emplace(L"Attack", m_fAttack);
 		EAttack.hmapData.emplace(L"Target", tempVec);
 		m_pMessageChannel->Publish(EAttack);
 	}
 }
 
-void CMonsterN3::Attacked(const _int& iAttack)
+void CMonsterN3::Attacked(const _float& fAttack)
 {
 	if (m_iHp > 0) 
 	{
-		m_iHp -= iAttack;
+		m_iHp -= _int(fAttack);
 		m_pHpBar->Active();
 	}
 

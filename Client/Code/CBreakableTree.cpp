@@ -86,17 +86,17 @@ _int CBreakableTree::Update_GameObject(const _float& fTimeDelta)
 
 void CBreakableTree::LateUpdate_GameObject(const _float& fTimeDelta)
 {
-	if (!(m_fWorkGauge - m_fPreWorkGauge < 0.0001f))
+	if (m_fWorkGauge - m_fPreWorkGauge > 0.0001f)
 	{
 		m_pWorkBar->Active();
 
 		if (m_fAcmlTime >= 1.f)
 		{
-			_uint iChannel = Get_Rand_Int(SOUND_EFFECT1, SOUND_EFFECT10);
+			//_uint iChannel = Get_Rand_Int(SOUND_EFFECT1, SOUND_EFFECT10);
 
 			_tchar strSoundName[128] = L"";
 			swprintf_s(strSoundName, L"Wood Chop %d.wav", Get_Rand_Int(0, 3));
-			CSoundMgr::GetInstance()->Play(strSoundName, CHANNELID(iChannel), 0.005f);
+			CSoundMgr::GetInstance()->Play(strSoundName, SOUND_WOOD, 0.5f);
 
 			m_fAcmlTime = 0.f;
 		}
@@ -166,11 +166,11 @@ void CBreakableTree::OnCollision(CGameObject* pObject)
 
 void CBreakableTree::Create_Item()
 {
-	_int itemCount = Get_Rand_Int(3, 5);
+	_uint iItemCount = Get_Rand_Int(3, 5);
 	_vec3 vPos;
 	m_pTransformCom->Get_Info(Engine::INFO_POS, &vPos);
 
-	for (_uint i = 0; i < itemCount; ++i)
+	for (_uint i = 0; i < iItemCount; ++i)
 	{
 		CGameObject* pItem;
 		_float fY(vPos.y - m_pTransformCom->Get_Scale(ROT_Y) * 0.25f);

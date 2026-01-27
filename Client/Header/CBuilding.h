@@ -52,7 +52,7 @@ private:
 	Engine::CRcTex*		m_pBufferCom;
 	Engine::CTransform* m_pTransformCom;
 	Engine::CTexture*	m_pTextureCom;
-	//Engine::CCollider*	m_pColliderCom;
+	Engine::CCollider*	m_pColliderCom;
 	CTriggerPoint*		m_pTrigger;
 
 

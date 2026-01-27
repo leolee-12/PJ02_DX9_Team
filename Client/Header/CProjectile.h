@@ -55,7 +55,7 @@ private:
 	_matrix				m_matTex;
 
 	// 스테이터스 관련
-	_int				m_iAttack;
+	_int				m_fAttack;
 	_float				m_fGroundY;
 	_bool				m_bActive;
 	_float				m_fAcmlTime;

@@ -7,6 +7,7 @@
 #include "CFontMgr.h"
 #include "CResourceWorkBar.h"
 #include "CItem.h"
+#include <CSoundMgr.h>
 //#include "CPersistentMgr.h"
 
 CShrineSpot::CShrineSpot(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -57,6 +58,8 @@ _int CShrineSpot::Update_GameObject(const _float& fTimeDelta)
 {
 	if (g_bDebug) { m_pColliderCom->Update_AABBforRender(); }
 
+	m_fAcmlTime += fTimeDelta;
+
 	m_pColliderCom->UpdateFromTransform(m_pTransformCom);
 
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
@@ -76,9 +79,20 @@ _int CShrineSpot::Update_GameObject(const _float& fTimeDelta)
 
 void CShrineSpot::LateUpdate_GameObject(const _float& fTimeDelta)
 {
-	if (!(m_fWorkGauge - m_fPreWorkGauge < 0.0001f))
+	if (m_fWorkGauge - m_fPreWorkGauge > 0.0001f)
 	{
 		m_pWorkBar->Active();
+
+		if (m_fAcmlTime >= 1.f)
+		{
+			//_uint iChannel = Get_Rand_Int(SOUND_EFFECT1, SOUND_EFFECT10);
+
+			_tchar strSoundName[128] = L"";
+			swprintf_s(strSoundName, L"chanting%d.wav", Get_Rand_Int(1, 11));
+			CSoundMgr::GetInstance()->Play(strSoundName, SOUND_PRAY, 0.5f);
+
+			m_fAcmlTime = 0.f;
+		}
 	}
 
 	Check_Status();

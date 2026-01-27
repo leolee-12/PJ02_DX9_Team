@@ -15,7 +15,7 @@ CProjectile::CProjectile(LPDIRECT3DDEVICE9 pGraphicDev)
 	, m_fFrame(0.f)
 	, m_fFrameEnd(0.f)
 	, m_fFrameSpeed(0.f)
-	, m_iAttack(0)
+	, m_fAttack(0)
 	, m_fGroundY(0.f)
 	, m_fAcmlTime(0.f)
 	, m_fLifeTime(0.f)
@@ -32,7 +32,7 @@ CProjectile::CProjectile(const CProjectile& rhs)
 	, m_fFrame(0.f)
 	, m_fFrameEnd(0.f)
 	, m_fFrameSpeed(0.f)
-	, m_iAttack(rhs.m_iAttack)
+	, m_fAttack(rhs.m_fAttack)
 	, m_fGroundY(rhs.m_fGroundY)
 	, m_fAcmlTime(rhs.m_fAcmlTime)
 	, m_fLifeTime(rhs.m_fLifeTime)
@@ -187,7 +187,7 @@ void CProjectile::Ready_Variable()
 	// 게임로직 변수 세팅
 	_float fScale = 1.5f;
 	m_fGroundY = -2.5f + fScale * 0.5f;
-	m_iAttack = 1;
+	m_fAttack = 1;
 	m_iHp = 1;
 	m_fAcmlTime = 0.f;
 	m_fLifeTime = 10.f;

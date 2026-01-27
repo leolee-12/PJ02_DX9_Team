@@ -241,7 +241,7 @@ void CMonsterB2::Ready_Variable()
 	_float fScale = 50.f;
 	m_fBtmPadding = fScale * 0.51f;
 	m_fGroundY = -2.5f + fScale * 0.5f - m_fBtmPadding;
-	m_iAttack = 1;
+	m_fAttack = 1;
 	m_iMaxHp = m_iHp = 30;
 	m_iPhase = 1;
 
@@ -275,7 +275,7 @@ void CMonsterB2::Ready_Event()
 	{
 		if (Target == this)
 		{
-			Attacked(any_cast<_int>(Event.hmapData.find(L"Attack")->second));
+			Attacked(any_cast<_float>(Event.hmapData.find(L"Attack")->second));
 			break;
 		}
 	}
@@ -611,7 +611,7 @@ void CMonsterB2::Attack_HitBox(_vec3 vPos)
 		IMessageChannel::EVENT EAttack;
 		EAttack.strType = L"Player.Attacked";
 		EAttack.eOBJID = Engine::OID_PLAYER;
-		EAttack.hmapData.emplace(L"Attack", m_iAttack);
+		EAttack.hmapData.emplace(L"Attack", m_fAttack);
 		EAttack.hmapData.emplace(L"Target", tempVec);
 		m_pMessageChannel->Publish(EAttack);
 	}
@@ -637,9 +637,9 @@ void CMonsterB2::Summon_Spike(const _uint& iRecurCount, const _vec3& vSpeed)
 	}
 }
 
-void CMonsterB2::Attacked(const _int& iAttack)
+void CMonsterB2::Attacked(const _float& fAttack)
 {
-	if (m_iHp > 0) m_iHp -= iAttack;
+	if (m_iHp > 0) m_iHp -= _int(fAttack);
 
 	if (m_eCurState == B2S_IDLE)
 	{

@@ -72,7 +72,7 @@ HRESULT CCookingSelectUI::Ready_GameObject()
 		for (int j = 0; j < 6; ++j)
 		{
 			
-			pFood = CCookingTargetFood::Create(m_pGraphicDev, { -500.f + (75.f * j), -150.f + (75.f * i), 0.0001f }, 0.3f, FOODTYPE::FT_QUALITY, 3.0f);
+			pFood = CCookingTargetFood::Create(m_pGraphicDev, { -500.f + (75.f * j), -150.f + (75.f * i), 0.0001f }, 0.3f, FOODTYPE::FT_QUALITY, 3);
 			/*CCookingTargetFood* pFood =
 				dynamic_cast<CCookingTargetFood*>(pGameObject);*/
 

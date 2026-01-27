@@ -29,7 +29,7 @@ CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
 	m_fFrameEnd(0.f),
 	m_fFrameSpeed(0.f),
 	m_fSpeed(0.f),
-	m_iAttack(0),
+	m_fAttack(0.f),
 	m_bRoll(false),
 	m_iCombo(0),
 	m_fLerp(0.2f),
@@ -51,7 +51,7 @@ CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel)
 		m_fFrameEnd(0.f),
 		m_fFrameSpeed(0.f),
 		m_fSpeed(0.f),
-		m_iAttack(0),
+		m_fAttack(0.f),
 		m_bRoll(false),
 		m_iCombo(0),
 		m_fLerp(0.2f),
@@ -73,7 +73,7 @@ CPlayer::CPlayer(const CPlayer& rhs)
 		m_fFrameEnd(0.f),
 		m_fFrameSpeed(0.f),
 		m_fSpeed(rhs.m_fSpeed),
-		m_iAttack(rhs.m_iAttack),
+		m_fAttack(rhs.m_fAttack),
 		m_bRoll(false),
 		m_iCombo(0),
 		m_vPos(rhs.m_vPos),
@@ -182,7 +182,7 @@ void CPlayer::Ready_Variable()
 {
 	m_bIntro = false;
 	m_fSpeed = PLAYER_DEFAULT_SPEED;
-	m_iAttack = PLAYER_DEFAULT_ATTACK;
+	m_fAttack = PLAYER_DEFAULT_ATTACK;
 	m_iHp = 8;
 	m_fAcmlTime = 0.f;
 	m_fPassion = 4.f;
@@ -238,7 +238,7 @@ void CPlayer::Ready_Event()
 	{
 		if (Target == this)
 		{
-			Attacked(any_cast<_int>(Event.hmapData.find(L"Attack")->second));
+			Attacked(any_cast<_float>(Event.hmapData.find(L"Attack")->second));
 		}
 	}
 	}) });
@@ -299,7 +299,7 @@ void CPlayer::Ready_Event()
 				m_iHp += 2;
 				break;
 			case 2:
-				m_iAttack = _int(_float(m_iAttack) * 1.5f);
+				m_fAttack = m_fAttack * 1.5f;
 				break;
 			}
 		}
@@ -332,13 +332,13 @@ void CPlayer::Ready_Event()
 		{
 			// 검 먹은 로직
 			m_eWeaponType = WT_SWORD;
-			m_iAttack = 1;
+			m_fAttack = 1.f;
 		}
 		else if (name == L"Gauntlet")
 		{
 			// 건틀릿 먹은 로직
 			m_eWeaponType = WT_GAUNTLETS;
-			m_iAttack = 2;
+			m_fAttack = 2.f;
 		}
 }
 ) });
@@ -409,51 +409,52 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 	//	}
 	//}
 
+	//
+	//if (CDInputMgr::GetInstance()->Key_Down(DIK_F1))
+	//{	// 디버그용
+	//	m_bIntro = !m_bIntro;
+	//	if (m_bIntro)
+	//	{
+	//		m_fSpeed = PLAYER_INTRO_SPEED;
+	//		_float fScale = PLAYER_INTRO_SCALE;
+	//		m_pTransformCom->Set_Scale(fScale, fScale, fScale);
+	//	}
+	//	else
+	//	{
+	//		m_fSpeed = PLAYER_DEFAULT_SPEED;
+	//		_float fScale = PLAYER_DEFAULT_SCALE;
+	//		m_pTransformCom->Set_Scale(fScale, fScale, fScale);
+	//	}
+	//}
+	//if (CDInputMgr::GetInstance()->Key_Down(DIK_F2))
+	//{	// 디버그용
+	//	if (!m_bIntro) return;
+	//
+	//	if (!m_bCutScene)
+	//	{
+	//		m_bCutScene = true;
+	//		m_eCurState = PS_ACTION;
+	//		m_strFrameKey = L"intro_kneel";
+	//	}
+	//	else
+	//	{
+	//		m_strFrameKey = L"intro_kneel-wake";
+	//	}
+	//}
+	//if (CDInputMgr::GetInstance()->Key_Down(DIK_F3))
+	//{	// 디버그용
+	//	if (!m_bIntro) return;
+	//
+	//	m_eCurState = PS_REBIRTH;
+	//	m_strFrameKey = L"intro_rebirth";
+	//	_float fScale = PLAYER_REBIRTH_SCALE;
+	//	m_pTransformCom->Set_Scale(fScale, fScale, fScale);
+	//	m_pTransformCom->Set_Pos(m_vPos.x, 2.f, m_vPos.z);
+	//}
+
 	if (CDInputMgr::GetInstance()->Key_Down(DIK_Z))
 	{
 		g_bDebug = !g_bDebug;
-	}
-
-	if (CDInputMgr::GetInstance()->Key_Down(DIK_F1))
-	{	// 디버그용
-		m_bIntro = !m_bIntro;
-		if (m_bIntro)
-		{
-			m_fSpeed = PLAYER_INTRO_SPEED;
-			_float fScale = PLAYER_INTRO_SCALE;
-			m_pTransformCom->Set_Scale(fScale, fScale, fScale);
-		}
-		else
-		{
-			m_fSpeed = PLAYER_DEFAULT_SPEED;
-			_float fScale = PLAYER_DEFAULT_SCALE;
-			m_pTransformCom->Set_Scale(fScale, fScale, fScale);
-		}
-	}
-	if (CDInputMgr::GetInstance()->Key_Down(DIK_F2))
-	{	// 디버그용
-		if (!m_bIntro) return;
-
-		if (!m_bCutScene)
-		{
-			m_bCutScene = true;
-			m_eCurState = PS_ACTION;
-			m_strFrameKey = L"intro_kneel";
-		}
-		else
-		{
-			m_strFrameKey = L"intro_kneel-wake";
-		}
-	}
-	if (CDInputMgr::GetInstance()->Key_Down(DIK_F3))
-	{	// 디버그용
-		if (!m_bIntro) return;
-
-		m_eCurState = PS_REBIRTH;
-		m_strFrameKey = L"intro_rebirth";
-		_float fScale = PLAYER_REBIRTH_SCALE;
-		m_pTransformCom->Set_Scale(fScale, fScale, fScale);
-		m_pTransformCom->Set_Pos(m_vPos.x, 2.f, m_vPos.z);
 	}
 
 	if (CCutSceneMgr::GetInstance()->Get_Playing())				{ return; }
@@ -609,35 +610,11 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 			m_pChargeArrow = static_cast<CChargeArrow*>(CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_INDICATOR_ARROW, 0, m_vPos, _vec3(0.f, 0.f, 1.f), this));
 		}
 
-		m_pChargeArrow->Update_OwnerData(m_vPos, m_vDir, clamp((m_fCharge / m_fChargeMax), 0.f, 1.f));
-		m_pChargeArrow->Set_Scale(_vec3(5.f * m_fCharge, 1.f * m_fCharge, 1.f * m_fCharge));
+		_vec3 vPos = m_vPos;
+		_float fOffsetZ = 1.f;
+		vPos.z -= fOffsetZ;
+		m_pChargeArrow->Update_OwnerData(vPos, m_vDir, clamp((m_fCharge / m_fChargeMax), 0.f, 1.f));
 		m_pChargeArrow->Play();
-		
-		//else if(m_strFrameKey == L"charge-loop")
-		//{
-		//	m_fFrame = 0.f;
-		//	m_fChargeMax = m_fCharge;
-		//	m_strFrameKey = L"charge-end";
-		//
-		//	CProjectile* pTemp;
-		//	CGameObject* pProjectile = pTemp = CProjectile::Create(m_pGraphicDev, m_vPos, m_vDir * 10.f, false, CL_PBULLET, D3DXCOLOR(1.f, 0.f, 0.4f, 1.f));
-		//
-		//	_float fScale(1.5f + m_fCharge);
-		//	static_cast<CTransform*>(pProjectile->Get_Component(ID_DYNAMIC, L"Com_Transform"))->Set_Scale(fScale, fScale, fScale);
-		//
-		//	if (pProjectile)
-		//	{
-		//		wstring strObjTag = L"Projectile";
-		//
-		//		IMessageChannel::EVENT EProjectile;
-		//		EProjectile.strType = L"Obj.Add";
-		//		EProjectile.eOBJID = Engine::OID_PROJECTILE;
-		//		EProjectile.hmapData.emplace(L"Obj", pProjectile);
-		//		EProjectile.hmapData.emplace(L"LayerTag", L"GameLogic_Layer");
-		//		EProjectile.hmapData.emplace(L"ObjTag", strObjTag);
-		//		m_pMessageChannel->Publish(EProjectile);
-		//	}
-		//}
 	}
 	else if (CDInputMgr::GetInstance()->Mouse_Up(DIM_RB))
 	{
@@ -1109,7 +1086,7 @@ void CPlayer::Attack_HitBox()
 		IMessageChannel::EVENT EAttack;
 		EAttack.strType = L"Monster.Attacked";
 		EAttack.eOBJID = Engine::OID_MONSTER;
-		EAttack.hmapData.emplace(L"Attack", m_iAttack);
+		EAttack.hmapData.emplace(L"Attack", m_fAttack);
 		EAttack.hmapData.emplace(L"Target", tempVec);
 		m_pMessageChannel->Publish(EAttack);
 		_tchar strSoundName[128] = L"";
@@ -1130,18 +1107,18 @@ void CPlayer::Attack_HitBox()
 	{
 		IMessageChannel::EVENT EAttack;
 		EAttack.strType = L"Grass.Attacked";
-		EAttack.hmapData.emplace(L"Attack", m_iAttack);
+		EAttack.hmapData.emplace(L"Attack", m_fAttack);
 		EAttack.hmapData.emplace(L"Target", vecGrass);
 		m_pMessageChannel->Publish(EAttack);
 		CSoundMgr::GetInstance()->Play(L"GrassHit.wav", SOUND_EFFECT, 0.35f);
 	}
 }
 
-void CPlayer::Attacked(_int iDamage)
+void CPlayer::Attacked(_float fDamage)
 {
 	if ((m_eCurState == PS_ROLL) || (m_fAcmlTime < PLAYER_INVINCIBLE_TIME)) return;
 
-	if(m_iHp >= 2) m_iHp -= iDamage;	// 시연용
+	if(m_iHp >= 2) m_iHp -= _int(fDamage);	// 시연용
 
 	if (m_eCurState == PS_HIT) return;
 
@@ -1159,7 +1136,8 @@ void CPlayer::Attacked(_int iDamage)
 	CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_PLAYERHIT, 6, _vec3(m_vPos.x, m_vPos.y - 1.f, m_vPos.z), _vec3(0.2f, 0.2f, 0.f));
 
 	m_iCombo = 0;
-	m_pInteractionUI->UnActive();
+
+	if(m_pChargeArrow) m_pChargeArrow->Stop();
 }
 
 void CPlayer::Update_Warp(const _float fTimeDelta)

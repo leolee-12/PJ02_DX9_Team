@@ -10,6 +10,7 @@
 #include "CResourceWorkBar.h"
 #include "CPersistentMgr.h"
 #include "CShrineSpot.h"
+#include <CSoundMgr.h>
 
 CBuilding::CBuilding(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev)
@@ -61,10 +62,6 @@ HRESULT CBuilding::Ready_GameObject()
 
 _int CBuilding::Update_GameObject(const _float& fTimeDelta)
 {
-	//if (g_bDebug) { m_pColliderCom->Update_AABBforRender(); }
-
-	//m_pColliderCom->UpdateFromTransform(m_pTransformCom);
-
 	m_fAcmlTime += fTimeDelta;
 
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
@@ -79,7 +76,7 @@ _int CBuilding::Update_GameObject(const _float& fTimeDelta)
 
 	if (iExit == DEAD)
 	{
-		//m_pColliderCom->UnregisterFromManager();
+		m_pColliderCom->UnregisterFromManager();
 
 		if(m_eBuildingState == BS_CONSTRUCTING) CInteractMgr::GetInstance()->Unregister_IObj(CInteractMgr::BUILD, this);
 	}
@@ -92,9 +89,20 @@ _int CBuilding::Update_GameObject(const _float& fTimeDelta)
 
 void CBuilding::LateUpdate_GameObject(const _float& fTimeDelta)
 {
-	if (!(m_fWorkGauge - m_fPreWorkGauge < 0.0001f))
+	if (m_fWorkGauge - m_fPreWorkGauge > 0.0001f)
 	{
 		m_pWorkBar->Active();
+
+		if (m_fAcmlTime >= 1.f)
+		{
+			//_uint iChannel = Get_Rand_Int(SOUND_EFFECT1, SOUND_EFFECT10);
+
+			_tchar strSoundName[128] = L"";
+			swprintf_s(strSoundName, L"Hammering_%d.wav", Get_Rand_Int(0, 33));
+			CSoundMgr::GetInstance()->Play(strSoundName, SOUND_BUILD, 0.5f);
+
+			m_fAcmlTime = 0.f;
+		}
 	}
 	else
 	{
@@ -117,6 +125,13 @@ void CBuilding::LateUpdate_GameObject(const _float& fTimeDelta)
 		Compute_ViewDepth(&vPos);
 	}
 	else if (m_eBuildingState == BS_CONSTRUCTING) m_fPreWorkGauge = m_fWorkGauge;
+
+	//------스프라이트 높이와 충돌체 위치 맞춤---------
+	_float fY(m_vPos.y - m_pTransformCom->Get_Scale(ROT_Y) * 0.125f);
+	AABB tAABB = { m_vPos.x, fY, m_vPos.z, 1.f, 1.f, 1.f };
+	m_pColliderCom->Set_AABB(tAABB);
+	m_pColliderCom->UpdateFromCustom(tAABB);
+	//-------------------------------------------------
 
 	m_pWorkBar->LateUpdate_GameObject(fTimeDelta);
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
@@ -221,14 +236,13 @@ HRESULT CBuilding::Add_Component()
 	m_mapComponent[ID_STATIC].insert({ L"Com_Texture_Complete", pComponent });
 
 	// Collider
-	//pComponent = m_pColliderCom = dynamic_cast<Engine::CCollider*>
-	//	(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Collider"));
-	////static_cast<Engine::CCollider*>(pComponent)->Set_AABB();
+	pComponent = m_pColliderCom = dynamic_cast<Engine::CCollider*>
+		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_Collider"));
 
-	//if (nullptr == pComponent)
-	//	return E_FAIL;
+	if (nullptr == pComponent)
+		return E_FAIL;
 
-	//m_mapComponent[ID_STATIC].insert({ L"Com_Collider", pComponent });
+	m_mapComponent[ID_STATIC].insert({ L"Com_Collider", pComponent });
 
 	return S_OK;
 }
@@ -334,7 +348,7 @@ void CBuilding::Ready_Variable()
 
 	if(m_eBuildingType == BT_WORKSHOP)
 	{
-		m_fWorkGauge = 1.f;
+		m_fPreWorkGauge = m_fWorkGauge = 1.f;
 		Change_State(BS_COMPLETE);
 	}
 
