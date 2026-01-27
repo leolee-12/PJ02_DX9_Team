@@ -29,6 +29,8 @@ HRESULT CCollisionMgr::Ready_CollisionMgr()
 	m_vecCollisionPool.push_back({ CL_PLAYER, CL_BORDER });
 	m_vecCollisionPool.push_back({ CL_MONSTER, CL_BORDER });
 	m_vecCollisionPool.push_back({ CL_PLAYER, CL_CHEST });
+	m_vecCollisionPool.push_back({ CL_BUILD, CL_BREAK });
+	m_vecCollisionPool.push_back({ CL_BUILD, CL_BUILD });
 	// WY
 	m_vecCollisionPool.push_back({ CL_NPC, CL_BORDER });
 
@@ -41,6 +43,7 @@ void CCollisionMgr::Check_Collisions(const _float& fDeltaTime)
 	{
 		for (auto& Group1 : m_hmapCollisionGroup[vec.first]) {				// 첫번째그룹
 			for (auto& Group2 : m_hmapCollisionGroup[vec.second]) {			// 두번째그룹
+				if (Group1.pOwner == Group2.pOwner) { continue; }			// 같은 레이어 순회시 같은 충돌체 비교 금지
 				if (IntersectAABB(Group1.tAABB, Group2.tAABB))				// 2중 for 돌면서 충돌체크
 				{
 					Group1.pOwner->OnCollision(Group2.pOwner);				// 충돌 했다면 상대방 게임 포인터로 콜백메서드 호출

@@ -51,7 +51,9 @@ HRESULT CBreakableTree::Ready_GameObject()
 	m_fFrameEnd = 32.f;
 	m_fAcmlTime = 0.f;
 
-	m_pColliderCom->RegisterToManager(this, CL_GRASS);
+	m_eOBJID = OID_BREAK;
+
+	m_pColliderCom->RegisterToManager(this, CL_BREAK);
 	CInteractMgr::GetInstance()->Register_IObj(CInteractMgr::WOOD, this);
 
 	m_pWorkBar = CResourceWorkBar::Create(m_pGraphicDev, _float(m_iHp), _vec3{});

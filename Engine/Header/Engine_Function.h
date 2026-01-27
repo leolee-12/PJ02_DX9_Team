@@ -54,6 +54,7 @@ namespace Engine
 		{
 			pGameObject->PrepareDestroy();
 			Safe_Release(pGameObject);
+			pGameObject = nullptr;
 		}
 	}
 
