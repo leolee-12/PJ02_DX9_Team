@@ -17,7 +17,7 @@ CBuilding::CBuilding(LPDIRECT3DDEVICE9 pGraphicDev)
 	, m_pBufferCom(nullptr)
 	, m_pTransformCom(nullptr)
 	, m_pTextureCom(nullptr)
-	//, m_pColliderCom(nullptr)
+	, m_pColliderCom(nullptr)
 	, m_eBuildingType(BT_END)
 	, m_eBuildingState(BS_END)
 	, m_fWorkGauge(0.f)
@@ -33,7 +33,7 @@ CBuilding::CBuilding(const CBuilding& rhs)
 	, m_pBufferCom(nullptr)
 	, m_pTransformCom(nullptr)
 	, m_pTextureCom(nullptr)
-	//, m_pColliderCom(nullptr)
+	, m_pColliderCom(nullptr)
 	, m_eBuildingType(rhs.m_eBuildingType)
 	, m_eBuildingState(rhs.m_eBuildingState)
 	, m_fWorkGauge(0.f)
@@ -119,22 +119,24 @@ void CBuilding::LateUpdate_GameObject(const _float& fTimeDelta)
 	_vec3 vPos;
 	m_pTransformCom->Get_Info(Engine::INFO_POS, &vPos);
 
-	if (m_eBuildingState == BS_COMPLETE)
+	switch (m_eBuildingState)
 	{
+	case BS_PREVIEW:
+		m_pTransformCom->Compute_Bilboard(BBD_X);
+
+		Compute_ViewDepth(&vPos);
+		break;
+	case BS_CONSTRUCTING:
+		m_fPreWorkGauge = m_fWorkGauge;
+		break;
+	case BS_COMPLETE:
 		if (m_bUsingTrigger) { m_pTrigger->LateUpdate_GameObject(fTimeDelta); }
 
 		m_pTransformCom->Compute_Bilboard(BBD_X);
 
 		Compute_ViewDepth(&vPos);
+		break;
 	}
-	else if (m_eBuildingState == BS_CONSTRUCTING) m_fPreWorkGauge = m_fWorkGauge;
-
-	//------스프라이트 높이와 충돌체 위치 맞춤---------
-	_float fY(m_vPos.y - m_pTransformCom->Get_Scale(ROT_Y) * 0.125f);
-	AABB tAABB = { m_vPos.x, fY, m_vPos.z, 1.f, 1.f, 1.f };
-	m_pColliderCom->Set_AABB(tAABB);
-	m_pColliderCom->UpdateFromCustom(tAABB);
-	//-------------------------------------------------
 
 	m_pWorkBar->LateUpdate_GameObject(fTimeDelta);
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
@@ -387,7 +389,7 @@ void CBuilding::Change_State(BUILDING_STATE eState)
 	{
 		m_pTextureCom = static_cast<CTexture*>(Get_Component(ID_STATIC, L"Com_Texture_Complete"));
 		m_fGroundY = DEFAULT_COMPLETE_GROUNDY;
-		m_fWorkGauge = 1.f;
+		m_fPreWorkGauge = m_fWorkGauge = 1.f;
 		Ready_Trigger();
 
 		
