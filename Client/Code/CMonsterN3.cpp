@@ -440,10 +440,14 @@ void CMonsterN3::Attack_HitBox()
 
 void CMonsterN3::Attacked(const _float& fAttack)
 {
-	if (m_iHp > 0) 
+	if (m_iHp <= 0) return;
+
+	m_iHp -= _int(fAttack);
+	m_pHpBar->Active();
+
+	if (m_iHp <= 0)
 	{
-		m_iHp -= _int(fAttack);
-		m_pHpBar->Active();
+		Create_Item();
 	}
 
 	_tchar strSoundName[128] = L"";

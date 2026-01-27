@@ -669,7 +669,9 @@ void CMonsterB1::Attack_HitBox_Land()
 
 void CMonsterB1::Attacked(const _float& fAttack)
 {
-	if(m_iHp > 0) m_iHp -= _int(fAttack);
+	if (m_iHp <= 0) return;
+
+	m_iHp -= _int(fAttack);
 
 	_tchar strSoundName[128] = L"";
 	swprintf_s(strSoundName, L"N2Hit%d.wav", Get_Rand_Int(1, 3));

@@ -83,7 +83,6 @@ _int CMonsterN1::Update_GameObject(const _float& fTimeDelta)
 	{
 		m_pColliderCom->UnregisterFromManager();
 		CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_PARTICLE_RED, 0, m_vEffectPos, _vec3(0.2f, 0.2f, 0.2f));
-		Create_Item();
 		return iExit;
 	}
 
@@ -488,22 +487,28 @@ void CMonsterN1::Attack_HitBox()
 
 void CMonsterN1::Attacked(const _float& fAttack)
 {
-	if (m_iHp > 0)
-	{
-		m_iHp -= _int(fAttack);
-		m_pHpBar->Active();
-	}
+	if (m_iHp <= 0) return;
 
-	if (m_eAttackPhase != EXECUTE)
+	m_iHp -= _int(fAttack);
+	m_pHpBar->Active();
+
+	if (m_iHp <= 0)
 	{
-		if (m_eCurState == N1S_HIT)
+		Create_Item();
+	}
+	else
+	{
+		if (m_eAttackPhase != EXECUTE)
 		{
-			m_fFrame = 0.f;
-		}
-		else
-		{
-			m_eCurState = N1S_HIT;
-			m_pAICom->Set_State<MONSTER_N1_STATE>(N1S_HIT);
+			if (m_eCurState == N1S_HIT)
+			{
+				m_fFrame = 0.f;
+			}
+			else
+			{
+				m_eCurState = N1S_HIT;
+				m_pAICom->Set_State<MONSTER_N1_STATE>(N1S_HIT);
+			}
 		}
 	}
 

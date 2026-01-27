@@ -639,13 +639,22 @@ void CMonsterB2::Summon_Spike(const _uint& iRecurCount, const _vec3& vSpeed)
 
 void CMonsterB2::Attacked(const _float& fAttack)
 {
-	if (m_iHp > 0) m_iHp -= _int(fAttack);
+	if (m_iHp <= 0) return;
 
-	if (m_eCurState == B2S_IDLE)
+	m_iHp -= _int(fAttack);
+
+	if (m_iHp <= 0)
 	{
-		m_pAICom->Set_State(B2S_HIT);
-		m_eCurState = B2S_HIT;
-		m_fFrame = 0.f;
+
+	}
+	else
+	{
+		if (m_eCurState == B2S_IDLE)
+		{
+			m_pAICom->Set_State(B2S_HIT);
+			m_eCurState = B2S_HIT;
+			m_fFrame = 0.f;
+		}
 	}
 
 	_tchar strSoundName[128] = L"";
