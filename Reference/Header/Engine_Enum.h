@@ -37,6 +37,8 @@ namespace Engine
 		OID_WARP,
 		OID_EFFECT,
 		OID_CHEST,
+		OID_BUILD,
+		OID_BREAK,
 		OID_END 
 	};
 
@@ -80,7 +82,7 @@ namespace Engine
 		CL_NPC		= 1 << 9,
 		CL_CHEST	= 1 << 10,
 		CL_BUILD	= 1 << 11,
-		CL_13		= 1 << 12,
+		CL_BREAK	= 1 << 12,
 		CL_14		= 1 << 13,
 		CL_15		= 1 << 14,
 		CL_16		= 1 << 15,

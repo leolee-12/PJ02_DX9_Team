@@ -46,7 +46,9 @@ HRESULT CBreakableRock::Ready_GameObject()
 	if (FAILED(Add_Component()))
 		return E_FAIL;
 
-	m_pColliderCom->RegisterToManager(this, CL_GRASS);
+	m_eOBJID = OID_BREAK;
+
+	m_pColliderCom->RegisterToManager(this, CL_BREAK);
 	CInteractMgr::GetInstance()->Register_IObj(CInteractMgr::ROCK, this);
 
 	m_iTextureIndex = 0;

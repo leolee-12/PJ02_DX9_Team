@@ -37,6 +37,8 @@ namespace Engine
 		OID_WARP,
 		OID_EFFECT,
 		OID_CHEST,
+		OID_BUILD,
+		OID_BREAK,
 		OID_END 
 	};
 

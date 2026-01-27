@@ -385,6 +385,7 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 {
 	Key_Input_Debug(fTimeDelta);
 
+	if (CCutSceneMgr::GetInstance()->Get_Playing()) { return; }
 	Key_Input_Move(fTimeDelta);
 		
 	Key_Input_Interact(fTimeDelta);
@@ -464,7 +465,6 @@ void CPlayer::Key_Input_Debug(const _float& fTimeDelta)
 
 void CPlayer::Key_Input_Move(const _float& fTimeDelta)
 {
-	if (CCutSceneMgr::GetInstance()->Get_Playing()) { return; }
 	if ((m_eCurState == PS_HIT) || (m_eCurState == PS_REBIRTH)) { return; }
 
 	if (!m_bRoll && !m_iCombo && !m_fCharge && !m_bCutScene)
@@ -528,6 +528,8 @@ void CPlayer::Key_Input_Move(const _float& fTimeDelta)
 void CPlayer::Key_Input_Interact(const _float& fTimeDelta)
 {
 	// 트리거 키인풋
+	if (m_bCutScene || m_bWorking) { return; }
+
 	if (CDInputMgr::GetInstance()->Key_Down(DIK_E))
 	{
 		if (m_pTriggerPoint)
@@ -535,8 +537,7 @@ void CPlayer::Key_Input_Interact(const _float& fTimeDelta)
 			m_pTriggerPoint->Activate();
 			return;
 		}
-
-		if (!m_bWorking)
+		else
 		{
 			_float fFindDist = 3.f;
 
