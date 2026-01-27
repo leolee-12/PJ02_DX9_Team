@@ -25,8 +25,11 @@ public:
 	virtual			void		OnCollision(CGameObject* pObject);
 
 public:
-	static CInvenBtn* Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 _vPos, float _fScale);
+	static CInvenBtn* Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 _vLocalPos, _vec3 _vParentPos, _float _fScale);
 
+public:
+	void Set_ParentPos(_vec3 _vParentPos) { m_vParentPos = _vParentPos; }
+	void Set_Tex(wstring _szName);
 private:
 	virtual			void		Free();
 	void						Check_CusorColl();
@@ -38,13 +41,18 @@ private:
 	CTexture*		m_pTextureCom;
 
 	CFontUIOrtho*	m_pName;
+	wstring			m_szName;
 
 	_vec2			m_vScreenPos;
 	_vec2			m_vHitHalfScale;
 
-	_vec3			m_vPos;
-	float			m_fScale;
-	_int			m_iPage;
+	_vec3			m_vParentPos;
+	_vec3			m_vLocalPos;
+	_vec3			m_vWorldPos;
+
+	_float			m_fScale;
 	_bool			m_bRender;
+
+	_int			m_iPage;
 };
 

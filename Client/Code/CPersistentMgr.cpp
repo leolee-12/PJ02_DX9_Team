@@ -127,7 +127,7 @@ HRESULT CPersistentMgr::Ready_GlobalObjects(LPDIRECT3DDEVICE9 pGraphicDev)
 			return E_FAIL;
 		if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_InventorySlot", Engine::CTexture::Create(pGraphicDev, TEX_NORMAL, L"../Bin/Resource/YSD/Inventory/Slot.png", 1))))
 			return E_FAIL;
-		if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_InventoryItem", Engine::CTexture::Create(pGraphicDev, TEX_NORMAL, L"../Bin/Resource/YSD/Inventory/ItemData/Item_%d.png", 1))))
+		if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_InventoryItem", Engine::CTexture::Create(pGraphicDev, TEX_NORMAL, L"../Bin/Resource/YSD/Inventory/ItemData/Item_%d.png", 5))))
 			return E_FAIL;
 		if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_InventoryButton", Engine::CTexture::Create(pGraphicDev, TEX_NORMAL, L"../Bin/Resource/YSD/Inventory/Button_%d.png", 2))))
 			return E_FAIL;
@@ -180,4 +180,5 @@ void CPersistentMgr::Free()
 	Safe_Release(m_pResourceHistoryUI);
 	Safe_Release(m_pWeaponUIfirst);
 	Safe_Release(m_pWeaponUIsecond);
+	Safe_Release(m_pInventory);
 }

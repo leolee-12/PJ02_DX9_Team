@@ -1143,6 +1143,9 @@
     <ClInclude Include="..\Header\CInventory.h">
       <Filter>02. GameObject\05. UI\14. Inventory</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\InventoryEnum.h">
+      <Filter>02. GameObject\05. UI\14. Inventory</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">

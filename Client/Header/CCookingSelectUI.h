@@ -39,6 +39,7 @@ public:
 	_int Get_CookingCount() { return m_iCurCookingCount; }
 	void init_data();
 	_int Get_RecipeCount();
+
 private:
 	virtual void Free();
 

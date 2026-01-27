@@ -20,6 +20,8 @@ HRESULT CInvenBtn::Ready_GameObject()
 	if (FAILED(Add_Component()))
 		return E_FAIL;
 
+	m_vWorldPos = m_vLocalPos + m_vParentPos;
+
 	CGameObject* pGameObject = nullptr;
 
 	pGameObject = m_pName = CFontUIOrtho::Create(m_pGraphicDev);
@@ -29,26 +31,28 @@ HRESULT CInvenBtn::Ready_GameObject()
 
 	m_pName->Set_Flags(DT_CENTER | DT_VCENTER);
 	m_pName->Set_FontColor(D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
-	m_pName->Set_Pos(_vec2(m_vPos.x,m_vPos.y));
+	m_pName->Set_Pos(_vec2(m_vWorldPos.x, m_vWorldPos.y));
 	m_pName->Set_Scale(_vec2(59.f * 2.f, 123.f * 0.5f));
 	m_pName->Set_Font(L"Font_Default24");
-	m_pName->Set_Text(L"소지품");
+	m_pName->Set_Text(m_szName);
 	m_pName->Active();
 	m_bRender = true;
 
 	m_pTransformCom->Set_Scale(293.0f * m_fScale, 94.0f * m_fScale, 1.0f);
-	m_pTransformCom->Set_Pos(m_vPos.x, m_vPos.y, m_vPos.z);
-	m_vScreenPos = _vec2(WINCX / 2 + m_vPos.x, WINCY / 2 - m_vPos.y);
-	m_vHitHalfScale = _vec2((106.0f * m_fScale) / 2, (90.0f * m_fScale) / 2);
+	m_pTransformCom->Set_Pos(m_vWorldPos.x, m_vWorldPos.y, m_vWorldPos.z);
+	m_vScreenPos = _vec2(WINCX / 2 + m_vWorldPos.x, WINCY / 2 - m_vWorldPos.y);
+	m_vHitHalfScale = _vec2((293.0f * m_fScale) / 2, (94.0f * m_fScale) / 2);
 
 	return S_OK;
 }
 
 _int CInvenBtn::Update_GameObject(const _float& fTimeDelta)
 {
+	if (!m_bRender) { return NOEVENT; }
 	Check_CusorColl();
 
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
+	m_pName->Set_Pos(_vec2(m_vWorldPos.x, m_vWorldPos.y));
 	m_pName->Update_GameObject(fTimeDelta);
 	CRenderer::GetInstance()->Add_RenderGroup(RENDER_UI, this);
 	return iExit;
@@ -56,13 +60,18 @@ _int CInvenBtn::Update_GameObject(const _float& fTimeDelta)
 
 void CInvenBtn::LateUpdate_GameObject(const _float& fTimeDelta)
 {
+	if (!m_bRender) { return; }
+	m_vWorldPos = m_vParentPos + m_vLocalPos;
+	m_pTransformCom->Set_Pos(m_vWorldPos.x, m_vWorldPos.y, m_vWorldPos.z);
+	m_vScreenPos = _vec2(WINCX / 2 + m_vWorldPos.x, WINCY / 2 - m_vWorldPos.y);
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
 	m_pName->LateUpdate_GameObject(fTimeDelta);
-	Compute_ViewDepth_Ortho(&m_vPos);
+	Compute_ViewDepth_Ortho(&m_vWorldPos);
 }
 
 void CInvenBtn::Render_GameObject()
 {
+	if (!m_bRender) { return; }
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
 
 	m_pTextureCom->Set_Texture(m_iPage);
@@ -72,7 +81,6 @@ void CInvenBtn::Render_GameObject()
 
 void CInvenBtn::OnCollision(CGameObject* pObject)
 {
-
 }
 
 HRESULT CInvenBtn::Add_Component()
@@ -135,22 +143,24 @@ void CInvenBtn::Check_CusorColl()
 			//m_pMessageChannel->Publish(WorkWoodEvent);
 		}
 		m_iPage = 1;
+		m_pName->Set_FontColor(D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
 		//m_pTransformCom->Set_Scale(106.0f * m_fScale * 1.3f, 90.0f * m_fScale * 1.3f, 1.0f);
 	}
 	else {
 		m_iPage = 0;
+		m_pName->Set_FontColor(D3DXCOLOR(0.f, 0.f, 0.f, 1.f));
 		//m_pTransformCom->Set_Scale(106.0f * m_fScale, 90.0f * m_fScale, 1.0f);
 	}
 }
 
 
 
-CInvenBtn* CInvenBtn::Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 _vPos, float _fScale)
+CInvenBtn* CInvenBtn::Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 _vLocalPos, _vec3 _vParentPos, _float _fScale)
 {
 	CInvenBtn* pCInvenBtn = new CInvenBtn(pGraphicDev);
-	pCInvenBtn->m_vPos = _vPos;
+	pCInvenBtn->m_vLocalPos = _vLocalPos;
+	pCInvenBtn->m_vParentPos = _vParentPos;
 	pCInvenBtn->m_fScale = _fScale;
-
 
 	if (FAILED(pCInvenBtn->Ready_GameObject()))
 	{
@@ -161,7 +171,13 @@ CInvenBtn* CInvenBtn::Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 _vPos, float _
 	return pCInvenBtn;
 }
 
+void CInvenBtn::Set_Tex(wstring _szName)
+{
+	m_pName->Set_Text(_szName);
+}
+
 void CInvenBtn::Free()
 {
+	Safe_Release(m_pName);
 	CUi::Free();
 }

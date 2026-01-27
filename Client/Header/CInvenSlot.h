@@ -24,8 +24,10 @@ public:
 
 
 public:
-	static CInvenSlot* Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vPos, _float fScale);
+	static CInvenSlot* Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 _vLocalPos, _vec3 _vParentPos, _float _fScale);
 
+public:
+	void Set_ParentPos(_vec3 _vParentPos) { m_vParentPos = _vParentPos; }
 private:
 	virtual			void		Free();
 
@@ -35,6 +37,10 @@ private:
 	CRcTex* m_pBufferCom;
 	CTransform* m_pTransformCom;
 	CTexture* m_pTextureCom;
+
+	_vec3			m_vParentPos;
+	_vec3			m_vLocalPos;
+	_vec3			m_vWorldPos;
 
 	_vec3 m_vPos;
 	_float m_fScale;

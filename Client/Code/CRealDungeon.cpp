@@ -40,6 +40,7 @@
 #include "CPlayerTarotCard.h"
 #include "CItem.h"
 #include "CPlayerWeaponUI.h"
+#include "CInventory.h"
 
 CRealDungeon::CRealDungeon(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -570,6 +571,15 @@ HRESULT CRealDungeon::Ready_UI_Layer(const _tchar* pLayerTag)
 	CPersistentMgr::GetInstance()->Get_ResourceHistory()->Set_MessageChannel(m_pMessageChannel);
 
 	if (FAILED(pLayer->Add_GameObject(L"ResourceHistoryController", pGameObject)))
+		return E_FAIL;
+	pGameObject->AddRef();
+
+	pGameObject = CPersistentMgr::GetInstance()->Get_Inventory();
+
+	if (nullptr == pGameObject)
+		return E_FAIL;
+
+	if (FAILED(pLayer->Add_GameObject(L"Inventory", pGameObject)))
 		return E_FAIL;
 	pGameObject->AddRef();
 

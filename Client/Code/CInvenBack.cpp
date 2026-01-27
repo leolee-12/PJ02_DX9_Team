@@ -18,8 +18,9 @@ HRESULT CInvenBack::Ready_GameObject()
 	if (FAILED(Add_Component()))
 		return E_FAIL;
 
+	m_vWorldPos = m_vParentPos + m_vLocalPos;
 	m_pTransformCom->Set_Scale(WINCX / 2, WINCY, 1.0f);
-	m_pTransformCom->Set_Pos(-WINCX / 4, 0, 0.1f);
+	m_pTransformCom->Set_Pos(m_vWorldPos.x, m_vWorldPos.y, m_vWorldPos.z);
 
 	m_bRender = true;
 	return S_OK;
@@ -39,9 +40,11 @@ _int CInvenBack::Update_GameObject(const _float& fTimeDelta)
 void CInvenBack::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	if (!m_bRender) { return; }
+	m_vWorldPos = m_vParentPos + m_vLocalPos;
+	m_pTransformCom->Set_Pos(m_vWorldPos.x, m_vWorldPos.y, m_vWorldPos.z);
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
-	m_pTransformCom->Get_Info(INFO_POS, &m_vPos);
-	Compute_ViewDepth_Ortho(&m_vPos);
+	m_pTransformCom->Get_Info(INFO_POS, &m_vWorldPos);
+	Compute_ViewDepth_Ortho(&m_vWorldPos);
 }
 
 void CInvenBack::Render_GameObject()
@@ -59,11 +62,12 @@ void CInvenBack::OnCollision(CGameObject* pObject)
 
 }
 
-CInvenBack* CInvenBack::Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 _Pos, _float _scale)
+CInvenBack* CInvenBack::Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 _vLocalPos,_vec3 _vParentPos, _float _fScale)
 {
 	CInvenBack* pCInvenBack = new CInvenBack(pGraphicDev);
-	pCInvenBack->m_vPos = _Pos;
-	pCInvenBack->m_fScale = _scale;
+	pCInvenBack->m_vParentPos = _vParentPos;
+	pCInvenBack->m_vLocalPos = _vLocalPos;
+	pCInvenBack->m_fScale = _fScale;
 
 	if (FAILED(pCInvenBack->Ready_GameObject()))
 	{

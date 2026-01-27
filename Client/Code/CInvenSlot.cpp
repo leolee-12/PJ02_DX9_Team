@@ -18,8 +18,9 @@ HRESULT CInvenSlot::Ready_GameObject()
 	if (FAILED(Add_Component()))
 		return E_FAIL;
 
+	m_vWorldPos = m_vParentPos + m_vLocalPos;
 	m_pTransformCom->Set_Scale(232 * m_fScale, 232 * m_fScale, 1.0f);
-	m_pTransformCom->Set_Pos(m_vPos.x, m_vPos.y, m_vPos.z);
+	m_pTransformCom->Set_Pos(m_vWorldPos.x, m_vWorldPos.y, m_vWorldPos.z);
 
 	m_bRender = true;
 	return S_OK;
@@ -37,9 +38,11 @@ _int CInvenSlot::Update_GameObject(const _float& fTimeDelta)
 void CInvenSlot::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	if (!m_bRender) { return; }
+	m_vWorldPos = m_vParentPos + m_vLocalPos;
+	m_pTransformCom->Set_Pos(m_vWorldPos.x, m_vWorldPos.y, m_vWorldPos.z);
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
-	m_pTransformCom->Get_Info(INFO_POS, &m_vPos);
-	Compute_ViewDepth_Ortho(&m_vPos);
+	m_pTransformCom->Get_Info(INFO_POS, &m_vWorldPos);
+	Compute_ViewDepth_Ortho(&m_vWorldPos);
 }
 
 void CInvenSlot::Render_GameObject()
@@ -54,7 +57,6 @@ void CInvenSlot::Render_GameObject()
 
 void CInvenSlot::OnCollision(CGameObject* pObject)
 {
-
 }
 
 HRESULT CInvenSlot::Add_Component()
@@ -90,11 +92,12 @@ HRESULT CInvenSlot::Add_Component()
 	return S_OK;
 }
 
-CInvenSlot* CInvenSlot::Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vPos, _float fScale)
+CInvenSlot* CInvenSlot::Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 _vLocalPos, _vec3 _vParentPos, _float _fScale)
 {
 	CInvenSlot* pCInvenSlot = new CInvenSlot(pGraphicDev);
-	pCInvenSlot->m_vPos = vPos;
-	pCInvenSlot->m_fScale = fScale;
+	pCInvenSlot->m_vLocalPos = _vLocalPos;
+	pCInvenSlot->m_vParentPos = _vParentPos;
+	pCInvenSlot->m_fScale = _fScale;
 
 
 	if (FAILED(pCInvenSlot->Ready_GameObject()))

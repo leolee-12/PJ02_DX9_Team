@@ -334,6 +334,7 @@
     <ClInclude Include="..\Header\CVillage.h" />
     <ClInclude Include="..\Header\CWarp.h" />
     <ClInclude Include="..\Header\Gage_Enum.h" />
+    <ClInclude Include="..\Header\InventoryEnum.h" />
     <ClInclude Include="..\Header\LoadObjectList.h" />
     <ClInclude Include="..\Header\CPlayerTarotCard.h" />
     <ClInclude Include="..\Header\PlayerUI.h" />
