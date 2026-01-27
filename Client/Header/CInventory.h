@@ -2,11 +2,11 @@
 #include "CUi.h"
 #include "InventoryEnum.h"
 #include "CItem.h"
+
 class CInvenBack;
 class CInvenSlot;
 class CInvenItem;
 class CInvenBtn;
-
 
 class CInventory :
 	public CUi

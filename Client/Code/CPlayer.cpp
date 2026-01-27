@@ -331,6 +331,20 @@ void CPlayer::Ready_Event()
 }
 ) });
 
+	m_hmapSubHandles.insert({ L"Building.Enter", m_pMessageChannel->Subscribe(L"Building.Enter", [this](const IMessageChannel::EVENT& Event)
+	{
+		m_bCutScene = true;
+		return;
+	}
+	) });
+
+	m_hmapSubHandles.insert({ L"Building.Exit", m_pMessageChannel->Subscribe(L"Building.Exit", [this](const IMessageChannel::EVENT& Event)
+	{
+		m_bCutScene = false;
+		return;
+	}
+	) });
+
 	m_bMsgRegistered = true;
 }
 

@@ -25,16 +25,16 @@ CInventory::~CInventory()
 HRESULT CInventory::Ready_GameObject()
 {
 	m_vPos = _vec3{ 0,0,0 };
-	m_pInvenBack = CInvenBack::Create(m_pGraphicDev,_vec3(-WINCX / 4,0.0f,0.1f), m_vPos,1.0f);
+	m_pInvenBack = CInvenBack::Create(m_pGraphicDev,_vec3(-WINCX / 4,0.0f,0.01f), m_vPos,1.0f);
 	if (nullptr == m_pInvenBack)	
 		return E_FAIL;
 
-	m_pItemInvenBtn = CInvenBtn::Create(m_pGraphicDev, _vec3(-480.0f, 190.0f, 0.01f), m_vPos, 0.4f);
+	m_pItemInvenBtn = CInvenBtn::Create(m_pGraphicDev, _vec3(-480.0f, 190.0f, 0.f), m_vPos, 0.4f);
 	if (nullptr == m_pItemInvenBtn)
 		return E_FAIL;
 	m_pItemInvenBtn->Set_Tex(L"소모품");
 
-	m_pPlayerInfoBtn = CInvenBtn::Create(m_pGraphicDev, _vec3(-360.0f, 190.0f, 0.01f), m_vPos, 0.4f);
+	m_pPlayerInfoBtn = CInvenBtn::Create(m_pGraphicDev, _vec3(-360.0f, 190.0f, 0.f), m_vPos, 0.4f);
 	if (nullptr == m_pPlayerInfoBtn)
 		return E_FAIL;
 	m_pPlayerInfoBtn->Set_Tex(L"정보창");
