@@ -96,7 +96,7 @@ void CBuilding::LateUpdate_GameObject(const _float& fTimeDelta)
 	{
 		m_pWorkBar->Active();
 
-		if (m_fAccTime >= 1.f)
+		if (m_fAccTime >= 0.5f)
 		{
 			//_uint iChannel = Get_Rand_Int(SOUND_EFFECT1, SOUND_EFFECT10);
 

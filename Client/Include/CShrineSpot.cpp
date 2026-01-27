@@ -83,14 +83,22 @@ void CShrineSpot::LateUpdate_GameObject(const _float& fTimeDelta)
 	{
 		m_pWorkBar->Active();
 
-		if (m_fAccTime >= 1.f)
+		if (m_fAccTime >= 10.f)
 		{
 			//_uint iChannel = Get_Rand_Int(SOUND_EFFECT1, SOUND_EFFECT10);
 
 			_tchar strSoundName[128] = L"";
 			swprintf_s(strSoundName, L"chanting%d.wav", Get_Rand_Int(1, 11));
-			CSoundMgr::GetInstance()->Play(strSoundName, SOUND_PRAY, 0.5f);
+			CSoundMgr::GetInstance()->Play(strSoundName, SOUND_PRAY, 0.1f);
 
+			m_fAccTime = 0.f;
+		}
+	}
+	else
+	{
+		if (m_fAccTime >= 3.f)
+		{
+			m_pWorkBar->UnActive();
 			m_fAccTime = 0.f;
 		}
 	}
