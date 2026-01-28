@@ -89,6 +89,6 @@ private:
 	// 팔로워 스폰 작업 큐
 	queue<FOLLOWER_SPAWN_WORK>	m_queueFollowerSpawn;
 	_float						m_fSpawnTimer = 0.f;
-	static constexpr _float		FOLLOWER_SPAWN_DELAY = 8.f;
+	static constexpr _float		FOLLOWER_SPAWN_DELAY = 1.f;
 	static constexpr _float		BUILDING_GRIDSIZE	 = 2.f;
 };

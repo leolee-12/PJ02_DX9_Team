@@ -548,6 +548,9 @@ void CMultiLoadingThread::Loading_for_Village()
 
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_ResourceWorkFront", TEX_NORMAL, L"../Bin/Resource/LWY/UI/dds/WorkBarGreen.dds", 1));
 	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_BuildingIcon", TEX_NORMAL, L"../Bin/Resource/LWY/UI/BuildingCraft/dds/Building-Icon_%d.dds", 3));
+	m_iTotalProtoCount++;
 	// WYWYWY
 
 	// cookingUI

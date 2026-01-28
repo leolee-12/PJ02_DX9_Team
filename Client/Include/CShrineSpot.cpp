@@ -89,7 +89,7 @@ void CShrineSpot::LateUpdate_GameObject(const _float& fTimeDelta)
 
 			_tchar strSoundName[128] = L"";
 			swprintf_s(strSoundName, L"chanting%d.wav", Get_Rand_Int(1, 11));
-			CSoundMgr::GetInstance()->Play(strSoundName, SOUND_PRAY, 0.1f);
+			CSoundMgr::GetInstance()->Play(strSoundName, SOUND_PRAY, 0.05f);
 
 			m_fAccTime = 0.f;
 		}

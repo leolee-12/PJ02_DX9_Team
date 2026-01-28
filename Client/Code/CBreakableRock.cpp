@@ -91,7 +91,7 @@ void CBreakableRock::LateUpdate_GameObject(const _float& fTimeDelta)
 
 			_tchar strSoundName[128] = L"";
 			swprintf_s(strSoundName, L"Stone Impact %d.wav", Get_Rand_Int(0, 4));
-			CSoundMgr::GetInstance()->Play(strSoundName, SOUND_ROCK, 0.5f);
+			CSoundMgr::GetInstance()->Play(strSoundName, SOUND_ROCK, 0.2f);
 
 			m_fAccTime = 0.f;
 		}

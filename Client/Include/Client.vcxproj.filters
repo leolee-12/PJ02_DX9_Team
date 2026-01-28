@@ -547,6 +547,18 @@
     <Filter Include="02. GameObject\03. Dependent\01. Effect\05. CLetterBox">
       <UniqueIdentifier>{f30136d2-d7be-4a09-bc0e-f64f6ae77f84}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\05. UI\15. BuildingCraftUI">
+      <UniqueIdentifier>{a357c623-eaa8-48a7-8164-a122d14168e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. UI\15. BuildingCraftUI\00. Controller">
+      <UniqueIdentifier>{ff7a4a59-664b-47f2-937f-b40a9fd0584e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. UI\15. BuildingCraftUI\01. InfoCard">
+      <UniqueIdentifier>{e541c5b5-6fbe-4c5e-8280-2eff2448b013}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. UI\15. BuildingCraftUI\02. SelectSlot">
+      <UniqueIdentifier>{585d2fdd-2408-470d-8837-58ae58afcf5c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -1152,6 +1164,15 @@
     <ClInclude Include="..\Header\CLetterBox.h">
       <Filter>02. GameObject\03. Dependent\01. Effect\05. CLetterBox</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CBuildingCraftCtrl.h">
+      <Filter>02. GameObject\05. UI\15. BuildingCraftUI\00. Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CBuildingInfoCard.h">
+      <Filter>02. GameObject\05. UI\15. BuildingCraftUI\01. InfoCard</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CBuildingSelectSlot.h">
+      <Filter>02. GameObject\05. UI\15. BuildingCraftUI\02. SelectSlot</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1708,6 +1729,15 @@
     </ClCompile>
     <ClCompile Include="..\Code\CLetterBox.cpp">
       <Filter>02. GameObject\03. Dependent\01. Effect\05. CLetterBox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CBuildingCraftCtrl.cpp">
+      <Filter>02. GameObject\05. UI\15. BuildingCraftUI\00. Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CBuildingInfoCard.cpp">
+      <Filter>02. GameObject\05. UI\15. BuildingCraftUI\01. InfoCard</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CBuildingSelectSlot.cpp">
+      <Filter>02. GameObject\05. UI\15. BuildingCraftUI\02. SelectSlot</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

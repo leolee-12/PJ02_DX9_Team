@@ -717,7 +717,7 @@ void CVillage::Key_Input_Village()
 		{
 			_tchar strFollowerTex[128] = L"";
 			swprintf_s(strFollowerTex, L"Proto_Follower%dTexture", Get_Rand_Int(1, 5));
-			Add_FollowerSpawnWork(FOLLOWER_SPAWN_WORK(strFollowerTex, _vec3(217.7f, 0.f, 38.3f)));
+			Add_FollowerSpawnWork(FOLLOWER_SPAWN_WORK(strFollowerTex, _vec3(217.7f + Get_Rand_Float(-3.f, 3.f), 0.f, 38.3f + Get_Rand_Float(-3.f, 3.f))));
 		}
 	}
 }

@@ -25,6 +25,8 @@ public:
 	CGameObject*	Find_Nearest(INTERACT_TYPE eType, const _vec3& vPos);
 	_bool			Apply_Work(INTERACT_TYPE eType, const _vec3& vPos, const float& fWork);
 	void			Clear_IObj();
+	_bool			Has_BuildTarget() const;
+	_uint			Get_BuildCount() const;
 
 private:
 	unordered_map<INTERACT_TYPE, list<CGameObject*>> m_mapInteractables;
