@@ -421,12 +421,12 @@ void CPlayer::Key_Input_Debug(const _float& fTimeDelta)
 		if (GetAsyncKeyState(i + 48))
 		{	// 디버그용
 
-			if (i == 8)
+			if (i == 7)
 			{
 				if (auto pLetterBox = CEffectMgr::GetInstance()->Get_LetterBox())
 					pLetterBox->Play();
 			}
-			else if (i == 9)
+			else if (i == 8)
 			{
 				if (auto pLetterBox = CEffectMgr::GetInstance()->Get_LetterBox())
 					pLetterBox->Exit();

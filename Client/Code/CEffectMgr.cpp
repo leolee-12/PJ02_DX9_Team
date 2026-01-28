@@ -166,8 +166,9 @@ HRESULT CEffectMgr::Ready_EffectMgr(LPDIRECT3DDEVICE9 pGraphicDev)
 	if (letterBoxPair.second)
 	{
 		CLetterBox* pLetterBox = CLetterBox::Create(pGraphicDev, L"");
-		pLetterBox->Set_BarHeight(0.12f);       // 화면의 12%
-		pLetterBox->Set_TransitionTime(0.4f);
+		pLetterBox->Set_Color(D3DXCOLOR(0.f, 0.f, 0.f, 1.f));	// LetterBox 색상
+		pLetterBox->Set_BarHeight(0.25f);						// 화면 절반의 25%
+		pLetterBox->Set_TransitionTime(0.4f);					// 등장/퇴장 시간 0.4초
 		letterBoxPair.first->second = pLetterBox;
 	}
 
@@ -202,10 +203,17 @@ _int CEffectMgr::Update_Effect(const _float& fTimeDelta)
 
 void CEffectMgr::LateUpdate_Effect(const _float& fTimeDelta)
 {
+	if (!m_bReady) return;
+
 	for (auto& pEffect : m_EffectList)
 	{
 		pEffect->LateUpdate_GameObject(fTimeDelta);
 	}
+
+	auto iter = m_mapProtoEffect.find(EK_LETTERBOX_BLACK);
+
+	if (iter->second != nullptr)
+		iter->second->LateUpdate_GameObject(fTimeDelta);
 }
 
 CEffect* CEffectMgr::Create_Effect(	EFFECT_KEY eEffectKey, const _uint& iTexIdx, const _vec3& vPos,
