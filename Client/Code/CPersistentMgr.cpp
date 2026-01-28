@@ -118,11 +118,26 @@ HRESULT CPersistentMgr::Ready_GlobalObjects(LPDIRECT3DDEVICE9 pGraphicDev)
 
 	if (m_pWeaponUIfirst == nullptr && m_pWeaponUIsecond == nullptr)
 	{
-		if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_PlayerWeaponUI", Engine::CTexture::Create(pGraphicDev, TEX_NORMAL, L"../Bin/Resource/YSD/PlayerWeapon/Weapon_%d.png", 2))))
+		if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_PlayerWeaponUI", Engine::CTexture::Create(pGraphicDev, TEX_NORMAL, L"../Bin/Resource/YSD/PlayerWeapon/Weapon_%d.png", 3))))
 			return E_FAIL;
 		
 		m_pWeaponUIfirst = CPlayerWeaponUI::Create(pGraphicDev, _vec3{ -535.0f,230.0f,0.1f }, 0.2f, 0);
-		m_pWeaponUIsecond = CPlayerWeaponUI::Create(pGraphicDev, _vec3{ -500.0f,260.0f,0.1f }, 0.2f, 0);
+		m_pWeaponUIsecond = CPlayerWeaponUI::Create(pGraphicDev, _vec3{ -500.0f,260.0f,0.1f }, 0.2f, 2);
+	}
+
+	if (m_pInventory == nullptr)
+	{
+		if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_InventoryBack", Engine::CTexture::Create(pGraphicDev, TEX_NORMAL, L"../Bin/Resource/YSD/Inventory/InventoryBack.png", 1))))
+			return E_FAIL;
+		if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_InventorySlot", Engine::CTexture::Create(pGraphicDev, TEX_NORMAL, L"../Bin/Resource/YSD/Inventory/Slot.png", 1))))
+			return E_FAIL;
+		if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_InventoryItem", Engine::CTexture::Create(pGraphicDev, TEX_NORMAL, L"../Bin/Resource/YSD/Inventory/ItemData/Item_%d.png", 5))))
+			return E_FAIL;
+		if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_InventoryButton", Engine::CTexture::Create(pGraphicDev, TEX_NORMAL, L"../Bin/Resource/YSD/Inventory/Button_%d.png", 2))))
+			return E_FAIL;
+		
+
+		m_pInventory = CInventory::Create(pGraphicDev);
 	}
 
 	return S_OK;
@@ -169,4 +184,5 @@ void CPersistentMgr::Free()
 	Safe_Release(m_pResourceHistoryUI);
 	Safe_Release(m_pWeaponUIfirst);
 	Safe_Release(m_pWeaponUIsecond);
+	Safe_Release(m_pInventory);
 }

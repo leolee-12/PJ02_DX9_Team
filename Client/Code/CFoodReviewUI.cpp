@@ -87,15 +87,15 @@ _int CFoodReviewUI::Update_GameObject(const _float& fTimeDelta)
 {
 	m_fRenderTimer += fTimeDelta;
 
-	if (CDInputMgr::GetInstance()->Key_Down(DIK_C))
-	{
-		//L"GoodFood"
-		ReviewGoodFood();
-	}
-	if (CDInputMgr::GetInstance()->Key_Down(DIK_V))
-	{
-		ReviewBadFood();
-	}
+	//if (CDInputMgr::GetInstance()->Key_Down(DIK_C))
+	//{
+	//
+	//	ReviewGoodFood();
+	//}
+	//if (CDInputMgr::GetInstance()->Key_Down(DIK_V))
+	//{
+	//	ReviewBadFood();
+	//}
 
 	if (!m_bActive) { return NOEVENT; }
 	m_pReviewBackUI->Update_GameObject(fTimeDelta);

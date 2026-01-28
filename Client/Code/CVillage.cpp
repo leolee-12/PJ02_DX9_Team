@@ -566,6 +566,15 @@ HRESULT CVillage::Ready_UI_Layer(const _tchar* pLayerTag)
 		return E_FAIL;
 	pGameObject->AddRef();
 
+	pGameObject = CPersistentMgr::GetInstance()->Get_Inventory();
+
+	if (nullptr == pGameObject)
+		return E_FAIL;
+
+	if (FAILED(pLayer->Add_GameObject(L"Inventory", pGameObject)))
+		return E_FAIL;
+	pGameObject->AddRef();
+
 
 	m_mapLayer.insert({ pLayerTag , pLayer });
 
@@ -645,6 +654,8 @@ void CVillage::Ready_Event_Village()
 
 void CVillage::Key_Input_Village()
 {
+	IMessageChannel::EVENT SceneEvent;
+
 	// 디버그 키인풋 윤석현
 	if (CDInputMgr::GetInstance()->Key_Down(DIK_F9))
 	{
@@ -652,6 +663,8 @@ void CVillage::Key_Input_Village()
 		{
 			m_pCurBuilding = CBuilding::Create(m_pGraphicDev, m_pMessageChannel, _vec3(175.5f, -0.95f, 40.f), CBuilding::BT_KNUCKLEBONE, CBuilding::BS_PREVIEW);
 
+			SceneEvent.strType = L"Building.Enter";
+			m_pMessageChannel->Publish(SceneEvent);
 			m_bBuildingFlag = true;
 		}
 	}
@@ -661,6 +674,8 @@ void CVillage::Key_Input_Village()
 		{
 			Safe_Destroy(m_pCurBuilding);
 			m_bBuildingFlag = false;
+			SceneEvent.strType = L"Building.Exit";
+			m_pMessageChannel->Publish(SceneEvent);
 		}
 		else if (CDInputMgr::GetInstance()->Mouse_Down(DIM_LB))
 		{
@@ -675,6 +690,9 @@ void CVillage::Key_Input_Village()
 
 				m_pCurBuilding = nullptr;
 				m_bBuildingFlag = false;
+
+				SceneEvent.strType = L"Building.Exit";
+				m_pMessageChannel->Publish(SceneEvent);
 			}
 		}
 	}

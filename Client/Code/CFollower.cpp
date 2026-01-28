@@ -19,6 +19,7 @@ CFollower::CFollower(LPDIRECT3DDEVICE9 pGraphicDev)
 	m_fFrameSpeed(0.f),
 	m_ePreWork(FW_NONE),
 	m_eCurWork(FW_NONE)
+	, m_bUnConvert(false)
 {
 }
 
@@ -31,6 +32,7 @@ CFollower::CFollower(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChanne
 	m_fFrameSpeed(0.f),
 	m_ePreWork(FW_NONE),
 	m_eCurWork(FW_NONE)
+	, m_bUnConvert(false)
 {
 }
 
@@ -43,6 +45,7 @@ CFollower::CFollower(const CFollower& rhs)
 	m_fFrameSpeed(0.f),
 	m_ePreWork(FW_NONE),
 	m_eCurWork(FW_NONE)
+	, m_bUnConvert(false)
 {
 }
 
@@ -67,8 +70,10 @@ _int CFollower::Update_GameObject(const _float& fTimeDelta)
 {
 	Move_Frame(fTimeDelta);
 	Execute_Work(fTimeDelta);
-	
-	m_pTrigger->Update_GameObject(fTimeDelta);
+
+	if (m_eCurState != FOLLOWER_RECRUIT) {
+		m_pTrigger->Update_GameObject(fTimeDelta);
+	}
 
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
@@ -99,13 +104,15 @@ void CFollower::LateUpdate_GameObject(const _float& fTimeDelta)
 	_vec3 vTriggerPos = { m_vPos.x, fY, m_vPos.z };
 	m_pColliderCom->Set_AABB(tAABB);
 	m_pColliderCom->UpdateFromCustom(tAABB);
-	m_pTrigger->Set_Pos_Trigger(vTriggerPos);
 	//-------------------------------------------------
 	// 충돌체 디버그용
 
-	if (g_bDebug) m_pColliderCom->Update_AABBforRender();
+	if (m_eCurState != FOLLOWER_RECRUIT) {
+		m_pTrigger->Set_Pos_Trigger(vTriggerPos);
+		m_pTrigger->LateUpdate_GameObject(fTimeDelta);
+	}
 
-	m_pTrigger->LateUpdate_GameObject(fTimeDelta);
+	if (g_bDebug) m_pColliderCom->Update_AABBforRender();
 
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
 }
@@ -274,7 +281,33 @@ void CFollower::Ready_Variable()
 	m_fFrameSpeed = 24.f;
 	D3DXMatrixIdentity(&m_matTex);
 
-	m_pTrigger = CTriggerPoint::Create(m_pGraphicDev, m_pMessageChannel, m_vPos, _vec3(1.f, 1.f, 1.f), Trigger::TI_FOLLOWER, L"Follower", false, this);
+	if (!m_bUnConvert)
+	{
+		m_pTrigger = CTriggerPoint::Create(m_pGraphicDev, m_pMessageChannel, m_vPos, _vec3(1.f, 1.f, 1.f), Trigger::TI_FOLLOWER, L"Follower", false, this);
+	}
+	else
+	{
+		m_pTrigger = CTriggerPoint::Create(m_pGraphicDev, m_pMessageChannel, m_vPos, _vec3(1.f, 1.f, 1.f), Trigger::TI_FOLLOWER, L"UnConvert_Follower", false, this);
+
+		m_hmapSubHandles.insert({ L"Trigger.Activate.Owner", m_pMessageChannel->Subscribe(L"Trigger.Activate.Owner", [this](const IMessageChannel::EVENT& Event)
+		{
+			auto Nameiter = Event.hmapData.find(L"Trigger_Name");
+			if (Nameiter == Event.hmapData.end()) { return; }
+			auto Owneriter = Event.hmapData.find(L"Trigger_Owner");
+			if (Owneriter == Event.hmapData.end()) { return; }
+
+			if (any_cast<wstring>(Nameiter->second) == L"UnConvert_Follower")
+			{
+				if (any_cast<CGameObject*>(Owneriter->second) == this)
+				{
+					Safe_Destroy(m_pTrigger);
+					m_eCurState = FOLLOWER_RECRUIT;
+					m_pAICom->Set_State<FOLLOWER_STATE>(FOLLOWER_RECRUIT);
+				}
+			}
+		}
+	) });
+	}
 }
 
 void CFollower::Ready_Event()
@@ -380,6 +413,11 @@ void CFollower::Move_Frame(const _float& fTimeDelta)
 			}
 			else if (m_iRecruitState == 1)
 			{
+				if (m_bUnConvert)
+				{
+					m_iHp = 0;
+					return;
+				}
 				m_iRecruitState = 2;
 				m_fFrameEnd = 75;
 			}
@@ -627,6 +665,10 @@ CFollower* CFollower::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* Sta
 	CFollower* pFollower = new CFollower(pGraphicDev, StageChannel);
 
 	pFollower->m_strProtoKey = pProtoKey;
+	if (eState == FOLLOWER_UNCONVERT)
+	{
+		pFollower->m_bUnConvert = true;
+	}
 
 	if (FAILED(pFollower->Ready_GameObject()))
 	{

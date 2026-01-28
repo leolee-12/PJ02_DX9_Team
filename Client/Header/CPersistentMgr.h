@@ -8,6 +8,7 @@
 #include "CVillage.h"
 #include "CResourceHistoryController.h"
 #include "CPlayerWeaponUI.h"
+#include "CInventory.h"
 
 namespace Engine
 {
@@ -35,6 +36,7 @@ public:
 	CResourceHistoryController* Get_ResourceHistory() { return m_pResourceHistoryUI; }
 	CPlayerWeaponUI* Get_WeaponUIfirst() { return m_pWeaponUIfirst; }
 	CPlayerWeaponUI* Get_WeaponUIsecond() { return m_pWeaponUIsecond; }
+	CInventory* Get_Inventory() { return m_pInventory; }
 
 	void	Set_Village(CVillage* pVillage)
 	{
@@ -92,6 +94,7 @@ private:
 	CPlayerHP*			m_pPlayerHPUI			= nullptr;
 	CVillage*			m_pVillage				= nullptr;
 	CResourceHistoryController* m_pResourceHistoryUI	= nullptr;
+	CInventory*			m_pInventory			= nullptr;
 
 	CPlayerWeaponUI*    m_pWeaponUIfirst = nullptr;
 	CPlayerWeaponUI*	m_pWeaponUIsecond = nullptr;

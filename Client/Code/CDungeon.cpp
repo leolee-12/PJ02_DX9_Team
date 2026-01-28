@@ -117,7 +117,7 @@ _int CDungeon::Update_Scene(const _float& fTimeDelta)
 		pPlayerTransform->Get_Info(INFO_POS, &vPlayerPos);
 		Engine::CLightMgr::GetInstance()->Update_PointLights(vPlayerPos);
 	}
-	if (CDInputMgr::GetInstance()->Key_Down(DIK_R))
+	/*if (CDInputMgr::GetInstance()->Key_Down(DIK_R))
 	{
 		IMessageChannel::EVENT event;
 		event.strType = L"Select";
@@ -141,7 +141,7 @@ _int CDungeon::Update_Scene(const _float& fTimeDelta)
 		event.hmapData.insert({ L"Look_Stage", CDungeonLine::DL_1 });
 
 		m_pMessageChannel->Publish(event);
-	}
+	}*/
 
 	_int iExit = Engine::CScene::Update_Scene(fTimeDelta);
 
@@ -409,32 +409,6 @@ HRESULT CDungeon::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 		if (pGameObject)
 			pLayer->Add_GameObject(L"SkyBox", pGameObject);
 	}
-
-	// 디버그용
-
-	for (_uint i = 0; i < 20; ++i)
-	{
-		//pGameObject = CMonsterN2::Create(m_pGraphicDev, m_pMessageChannel);
-		//
-		//NULL_CHECK_RETURN(pGameObject, E_FAIL)
-		//
-		//	if (FAILED(pLayer->Add_GameObject(L"Monster", pGameObject)))
-		//		return E_FAIL;
-	}
-
-	//pGameObject = CMonsterB1::Create(m_pGraphicDev, m_pMessageChannel);
-	//
-	//NULL_CHECK_RETURN(pGameObject, E_FAIL)
-	//
-	//	if (FAILED(pLayer->Add_GameObject(L"Boss", pGameObject)))
-	//		return E_FAIL;
-
-	//pGameObject = CMonsterB2::Create(m_pGraphicDev, m_pMessageChannel);
-	//
-	//NULL_CHECK_RETURN(pGameObject, E_FAIL)
-	//
-	//	if (FAILED(pLayer->Add_GameObject(L"Boss", pGameObject)))
-	//		return E_FAIL;
 
 	//----------------------------튜토리얼 몬스터 배치---------------------------
 	CMonsterN1* pTemp = nullptr;
