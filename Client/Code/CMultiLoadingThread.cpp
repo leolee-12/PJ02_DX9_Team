@@ -488,6 +488,9 @@ void CMultiLoadingThread::Loading_for_Village()
 
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_ItemTexture", TEX_NORMAL, L"../Bin/Resource/Texture/Item/dds/Item_%02d.dds", 10));
 	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_SelectionArrow", TEX_NORMAL, L"../Bin/Resource/YSH/Etc/dds/Selection_Arrow.dds", 1));
+	m_iTotalProtoCount++;
 	// 디버그용 바로진입 프로토타입
 
 	// Effect

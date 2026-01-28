@@ -235,9 +235,9 @@ void CMainApp::Free()
 	Safe_Release(m_pGraphicDev);
 	Safe_Release(m_pDeviceClass);
 
-	CEffectMgr::DestroyInstance();
 	CInteractMgr::DestroyInstance();
 	CCutSceneMgr::DestroyInstance();
+	CEffectMgr::DestroyInstance();
 	CMapLoader::DestroyInstance();
 	CLightMgr::DestroyInstance();
 	CFontMgr::DestroyInstance();

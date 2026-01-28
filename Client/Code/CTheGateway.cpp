@@ -132,6 +132,11 @@ void CTheGateway::LateUpdate_Scene(const _float& fTimeDelta)
 
 void CTheGateway::Render_Scene()
 {
+	if (m_bShowSelect)
+	{
+		m_pLeftSelect->Render_GameObject();
+		m_pRightSelect->Render_GameObject();
+	}
 }
 
 HRESULT CTheGateway::Ready_Environment_Layer(const _tchar* pLayerTag)

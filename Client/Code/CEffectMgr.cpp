@@ -167,7 +167,7 @@ HRESULT CEffectMgr::Ready_EffectMgr(LPDIRECT3DDEVICE9 pGraphicDev)
 	{
 		CLetterBox* pLetterBox = CLetterBox::Create(pGraphicDev, L"");
 		pLetterBox->Set_Color(D3DXCOLOR(0.f, 0.f, 0.f, 1.f));	// LetterBox 색상
-		pLetterBox->Set_BarHeight(0.25f);						// 화면 절반의 25%
+		pLetterBox->Set_BarHeight(0.1f);						// 화면 절반의 10%
 		pLetterBox->Set_TransitionTime(0.4f);					// 등장/퇴장 시간 0.4초
 		letterBoxPair.first->second = pLetterBox;
 	}
