@@ -74,6 +74,7 @@ _int CLogo::Update_Scene(const _float& fTimeDelta)
 				//LSTmp = LOADING_DUNGEON;
 				//LSTmp = LOADING_KNUCKLEBONE;
 				//LSTmp = LOADING_AMDUSIASROOM;
+				//LSTmp = LOADING_THEGATEWAY;
 				break;
 			case LS_EDIT:
 				// 임시입니다.

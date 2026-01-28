@@ -187,6 +187,10 @@ void CRatau::Ready_Event()
 						m_eCurState = RATAU_EXIT;
 						return;
 					}
+					if (strDothis == L"Destroy") {
+						m_iHp = 0;
+						return;
+					}
 				}
 
 				return;

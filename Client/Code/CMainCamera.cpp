@@ -111,6 +111,7 @@ _int CMainCamera::Update_GameObject(const _float& fTimeDelta)
 void CMainCamera::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	CCamera::LateUpdate_GameObject(fTimeDelta);
+	CSoundMgr::GetInstance()->Set_ListenerPos(m_vEye);
 }
 
 void CMainCamera::Default_CameraSetting(const _float& fTimeDelta)

@@ -40,6 +40,9 @@
 #include "CNPCCommandUI.h"
 #include "CFoodReviewUI.h"
 #include "CTerrain.h"
+#include "CFontUIOrtho.h"
+#include "CSpeechBubbleOrtho.h"
+#include "CSelectionArrow.h"
 
 CVillage::CVillage(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -111,6 +114,10 @@ _int CVillage::Update_Scene(const _float& fTimeDelta)
 	if (m_bReEnterFlag)
 	{
 		CSoundMgr::GetInstance()->PlayBGM(L"02.Village.mp3", 0.1f);
+		IMessageChannel::EVENT FadeEvent;
+		FadeEvent.strType = L"Fade.Warp";
+		FadeEvent.hmapData[L"Fade"] = wstring(L"FadeIn");
+		m_pMessageChannel->Publish(FadeEvent);
 		m_bReEnterFlag = false;
 	}
 
@@ -188,6 +195,11 @@ void CVillage::LateUpdate_Scene(const _float& fTimeDelta)
 
 void CVillage::Render_Scene()
 {
+	if (m_bShowSelect)
+	{
+		m_pLeftSelect->Render_GameObject();
+		m_pRightSelect->Render_GameObject();
+	}
 }
 
 HRESULT CVillage::Ready_Environment_Layer(const _tchar* pLayerTag)
@@ -524,6 +536,42 @@ HRESULT CVillage::Ready_UI_Layer(const _tchar* pLayerTag)
 	pGameObject->AddRef();
 	//----------------------------- 플레이어 UI -----------------------------
 
+	_vec2 vDialoguePos = _vec2(0.f, -250.f);
+
+	pGameObject = m_pLeftSelect = CFontUIOrtho::Create(m_pGraphicDev, m_pMessageChannel);
+
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+
+	m_pLeftSelect->Set_Pos(_vec2(-125.f, -250.f));
+	m_pLeftSelect->Set_Scale(_vec2(250.f, 100.f));
+
+	if (FAILED(pLayer->Add_GameObject(L"Font", pGameObject)))
+		return E_FAIL;
+
+	pGameObject = m_pRightSelect = CFontUIOrtho::Create(m_pGraphicDev, m_pMessageChannel);
+
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+
+	m_pRightSelect->Set_Pos(_vec2(125.f, -250.f));
+	m_pRightSelect->Set_Scale(_vec2(250.f, 100.f));
+
+	if (FAILED(pLayer->Add_GameObject(L"Font", pGameObject)))
+		return E_FAIL;
+
+	pGameObject = m_pSpeechBubble = CSpeechBubbleOrtho::Create(m_pGraphicDev, _vec2(0.f, -250.f), _vec2(500.f, 100.f));
+
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+
+	if (FAILED(pLayer->Add_GameObject(L"Font", pGameObject)))
+		return E_FAIL;
+
+	pGameObject = m_pSelectionArrow = CSelectionArrow::Create(m_pGraphicDev, _vec3(0.f, -250.f, 0.01f));
+
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+
+	if (FAILED(pLayer->Add_GameObject(L"Font", pGameObject)))
+		return E_FAIL;
+
 	pGameObject = CFade::Create(m_pGraphicDev, m_pMessageChannel);
 
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
@@ -639,7 +687,7 @@ void CVillage::Ready_Event_Village()
 			}
 			if (any_cast<Trigger::TRIGGERID>(TIDiter->second) == Trigger::TI_KNUCKLE)
 			{
-				m_bKnuckleBoneFlag = true;
+				//m_bKnuckleBoneFlag = true;
 			}
 			if (any_cast<Trigger::TRIGGERID>(TIDiter->second) == Trigger::TI_COOKING)
 			{
@@ -650,10 +698,50 @@ void CVillage::Ready_Event_Village()
 			}
 		}
 	) });
+
+	m_hmapSubHandles.insert({ L"CutScene.End", m_pMessageChannel->Subscribe(L"CutScene.End", [this](const IMessageChannel::EVENT& Event) {
+	if (any_cast<wstring>(Event.hmapData.find(L"SceneName")->second) == L"Meet_Knucklebone")
+	{
+		m_bKnuckleBoneFlag = true;
+	}
+	}) });
+
+	m_hmapSubHandles.insert({ L"CutScene.ShowChoice", m_pMessageChannel->Subscribe(L"CutScene.ShowChoice", [this](const IMessageChannel::EVENT& Event) {
+		auto SceneNameiter = Event.hmapData.find(L"SceneName");
+		if (SceneNameiter == Event.hmapData.end()) { return; }
+
+		if (any_cast<wstring>(SceneNameiter->second) == L"Meet_Knucklebone")
+		{
+			auto Choiceiter = Event.hmapData.find(L"Choices");
+			if (Choiceiter == Event.hmapData.end()) { return; }
+
+			vector<wstring> vecChoiceTex = std::move(any_cast<vector<wstring>>(Choiceiter->second));
+
+			m_pLeftSelect->Set_Text(vecChoiceTex[0].c_str());
+			m_pLeftSelect->Set_FontColor(D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
+			m_pLeftSelect->Set_Flags(DT_CENTER | DT_VCENTER);
+
+			m_pRightSelect->Set_Text(vecChoiceTex[1].c_str());
+			m_pRightSelect->Set_FontColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+			m_pRightSelect->Set_Flags(DT_CENTER | DT_VCENTER);
+
+			m_iSelectSlot = 0;
+
+			m_pLeftSelect->Active();
+			m_pRightSelect->Active();
+			m_pSpeechBubble->Active();
+			m_pSelectionArrow->Active();
+
+			m_bShowSelect = true;
+		}
+	}) });
 }
 
 void CVillage::Key_Input_Village()
 {
+	Select_Key_Input();
+
+	if (m_bShowSelect) { return; }
 	IMessageChannel::EVENT SceneEvent;
 
 	// 디버그 키인풋 윤석현
@@ -720,6 +808,44 @@ void CVillage::Key_Input_Village()
 			Add_FollowerSpawnWork(FOLLOWER_SPAWN_WORK(strFollowerTex, _vec3(217.7f + Get_Rand_Float(-3.f, 3.f), 0.f, 38.3f + Get_Rand_Float(-3.f, 3.f))));
 		}
 	}
+}
+
+void CVillage::Select_Key_Input()
+{
+	if (!m_bShowSelect) { return; }
+
+	if (CDInputMgr::GetInstance()->Key_Down(DIK_LEFT))
+	{
+		if (m_iSelectSlot == 1)
+		{
+			m_iSelectSlot = 0;
+			m_pRightSelect->Set_FontColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+			m_pLeftSelect->Set_FontColor(D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
+			m_pSelectionArrow->Set_Dir(m_iSelectSlot);
+		}
+	}
+	if (CDInputMgr::GetInstance()->Key_Down(DIK_RIGHT))
+	{
+		if (m_iSelectSlot == 0)
+		{
+			m_iSelectSlot = 1;
+			m_pLeftSelect->Set_FontColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+			m_pRightSelect->Set_FontColor(D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
+			m_pSelectionArrow->Set_Dir(m_iSelectSlot);
+		}
+	}
+	if (CDInputMgr::GetInstance()->Key_Down(DIK_RETURN))
+	{
+		IMessageChannel::EVENT tSelectEvent;
+		tSelectEvent.strType = L"Choice.Selected";
+		m_pLeftSelect->UnActive();
+		m_pRightSelect->UnActive();
+		m_pSpeechBubble->UnActive();
+		m_pSelectionArrow->UnActive();
+		m_pMessageChannel->Publish(tSelectEvent);
+		m_bShowSelect = false;
+	}
+
 }
 
 void CVillage::Add_FollowerSpawnWork(const FOLLOWER_SPAWN_WORK& tWork)
