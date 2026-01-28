@@ -79,6 +79,8 @@ _int CShrineSpot::Update_GameObject(const _float& fTimeDelta)
 
 void CShrineSpot::LateUpdate_GameObject(const _float& fTimeDelta)
 {
+	_vec3 vPos;
+	m_pTransformCom->Get_Info(INFO_POS, &vPos);
 	if (m_fWorkGauge - m_fPreWorkGauge > 0.0001f)
 	{
 		m_pWorkBar->Active();
@@ -89,7 +91,7 @@ void CShrineSpot::LateUpdate_GameObject(const _float& fTimeDelta)
 
 			_tchar strSoundName[128] = L"";
 			swprintf_s(strSoundName, L"chanting%d.wav", Get_Rand_Int(1, 11));
-			CSoundMgr::GetInstance()->Play(strSoundName, SOUND_PRAY, 0.1f);
+			CSoundMgr::GetInstance()->PlaySound3D(strSoundName, SOUND_PRAY, 0.1f, vPos);
 
 			m_fAccTime = 0.f;
 		}

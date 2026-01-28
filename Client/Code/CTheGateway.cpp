@@ -67,12 +67,12 @@ HRESULT CTheGateway::Ready_Scene()
 	tTutoCutScene.strName = L"TheGateway_01";
 	tTutoCutScene.vecSteps =
 	{
-		{_vec3(0.f, 8.f, 68.f * 0.8f), 1.f, 0.5f, L"Narinder", L"가까이 오거라. 두려워 말라, 너는 이미 죽었건만,\n내 아직 너를 필요로 함이라."},
-		{_vec3(0.f, 8.f, 68.f * 0.8f), 1.f, 0.5f, L"Narinder", L"저 어리석은 주교들은 죽음으로 나와 너를 가를 수 있다\n생각하였다. 허나 이는 너를 내게 곧바로 보냄이라."},
-		{_vec3(0.f, 8.f, 68.f * 0.8f), 1.f, 0.5f, L"Narinder", L"내 너에게 생명을 주나니,\n허나 거기에는 대가가 따름이라!"},
-		{_vec3(0.f, 8.f, 68.f * 0.8f), 1.f, 0.5f, L"Narinder", L"내 바라는 것은 오직 하나, 나의 이름을 내세운 교단을\n만드는 것 뿐이니라. 어떻게 생각하느냐?",
+		{_vec3(0.f, 10.f, 68.f * 0.8f), 1.f, 0.5f, L"Narinder", L"가까이 오거라. 두려워 말라, 너는 이미 죽었건만,\n내 아직 너를 필요로 함이라."},
+		{_vec3(0.f, 10.f, 68.f * 0.8f), 1.f, 0.5f, L"Narinder", L"저 어리석은 주교들은 죽음으로 나와 너를 가를 수 있다\n생각하였다. 허나 이는 너를 내게 곧바로 보냄이라."},
+		{_vec3(0.f, 10.f, 68.f * 0.8f), 1.f, 0.5f, L"Narinder", L"내 너에게 생명을 주나니,\n허나 거기에는 대가가 따름이라!"},
+		{_vec3(0.f, 10.f, 68.f * 0.8f), 1.f, 0.5f, L"Narinder", L"내 바라는 것은 오직 하나, 나의 이름을 내세운 교단을\n만드는 것 뿐이니라. 어떻게 생각하느냐?",
 		ADV_DIALOGUE, 0.f, L"", vector<wstring>({L"예.", L"물론입니다."})},
-		{_vec3(0.f, 8.f, 68.f * 0.8f), 1.f, 0.5f, L"FadeOut", L"", ADV_IMMEDIATE},
+		{_vec3(0.f, 10.f, 68.f * 0.8f), 1.f, 0.5f, L"FadeOut", L"", ADV_IMMEDIATE},
 		{_vec3(0.f, 0.f, 35.f), 1.5f, 0.5f, L"Player", L"Move_Gateway", ADV_TIMED, 2.f}
 		
 	};
