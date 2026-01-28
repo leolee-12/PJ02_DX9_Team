@@ -82,13 +82,16 @@ HRESULT CEffect::Add_Component()
 	m_mapComponent[ID_DYNAMIC].insert({ L"Com_Transform", pComponent });
 
 	// Texture
-	pComponent = m_pTextureCom = dynamic_cast<Engine::CTexture*>
-		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(m_strProtoTexKey));
+	if (m_strProtoTexKey != L"")
+	{
+		pComponent = m_pTextureCom = dynamic_cast<Engine::CTexture*>
+			(Engine::CProtoMgr::GetInstance()->Clone_Prototype(m_strProtoTexKey));
 
-	if (nullptr == pComponent)
-		return E_FAIL;
+		if (nullptr == pComponent)
+			return E_FAIL;
 
-	m_mapComponent[ID_STATIC].insert({ L"Com_Texture", pComponent });
+		m_mapComponent[ID_STATIC].insert({ L"Com_Texture", pComponent });
+	}
 
 	return S_OK;
 }
