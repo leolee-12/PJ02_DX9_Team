@@ -3,6 +3,8 @@
 #include "CDInputMgr.h"
 #include "Trigger_Enum.h"
 #include "CSoundMgr.h"
+#include "CEffectMgr.h"
+#include "CLetterBox.h"
 
 CCutSceneMgr* CCutSceneMgr::m_pInstance = nullptr;
 
@@ -90,6 +92,8 @@ void CCutSceneMgr::Play_CutScene(const wstring& strName)
 	m_pCurrentCutScene = &(iter->second);
 	m_iCurrentStep = 0;
 	m_bPlaying = true;
+
+	CEffectMgr::GetInstance()->Get_LetterBox()->Play();
 
 	Execute_Step(m_iCurrentStep);
 }
@@ -269,6 +273,8 @@ void CCutSceneMgr::End_CutScene()
 	tEndEvent.strType = L"CutScene.End";
 	tEndEvent.hmapData[L"SceneName"] = CurSceneName;
 	m_pMessageChannel->Publish(tEndEvent);
+
+	CEffectMgr::GetInstance()->Get_LetterBox()->Exit();
 }
 
 void CCutSceneMgr::Unsubscribe_Handles()
