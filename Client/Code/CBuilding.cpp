@@ -532,6 +532,7 @@ void CBuilding::Ready_Event()
 					{ vCutScenePos, 1.5f, 0.5f, L"Ratau", L"너클본에 흥미가 있어보이는구려." },
 					{ vCutScenePos, 1.5f, 0.5f, L"Ratau", L"자, 나랑 너클본 한 판 하시겠소?", ADV_DIALOGUE, 0.f, L"", vector<wstring>({L"예.", L"아니오."}) },
 					{ m_vPos, 1.f, 0.5f, L"FadeOut", L"", ADV_TIMED, 2.f},
+					{ m_vPos, 1.f, 0.5f, L"Ratau", L"Destroy", ADV_IMMEDIATE},
 				};
 
 				CCutSceneMgr::GetInstance()->Register_CutScene(tKnuckleBoneScene);
