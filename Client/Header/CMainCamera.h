@@ -9,16 +9,10 @@ namespace Engine
 	class CTransform;
 }
 
-const _float DEFAULTZOOM = 18.f;
-const _float DEFAULTGAPZ = 15.f;
-const _float DEFAULTGAPY = 13.f;
-
-const _float DEFAULTLERP = 6.f;
-
 class CMainCamera : public CCamera
 {
 public:
-	enum MAINCAMSTATE {MCAM_DEFAULT, MCAM_STAGING, MCAM_END};
+	enum MAINCAMSTATE {MCAM_DEFAULT, MCAM_STAGING, MCAM_BUILDING, MCAM_END};
 private:
 	explicit CMainCamera(LPDIRECT3DDEVICE9 pGraphicDev);
 	explicit CMainCamera(const CMainCamera& rhs);
@@ -44,6 +38,7 @@ private:
 	void		Default_CameraSetting(const _float& fTimeDelta);
 	void		Shaking_CameraSetting(const _float& fTimeDelta);
 	void		Staging_CameraSetting(const _float& fTimeDelta);
+	void		Building_CameraSetting(const _float& fTimeDelta);
 	void		Ready_Event_MainCam();
 	void		Set_Shake(_float fStrength, _float fTime, _float fTempo);
 	void		Set_Zoom(_float fZoom);
@@ -52,6 +47,8 @@ private:
 
 	void		Set_Lerp(_float fLerp);
 	void		Reset_Lerp();
+
+	void		Key_Input_Building(const _float& fTimeDelta);
 
 
 private:
@@ -83,6 +80,13 @@ private:
 
 
 	Engine::CTransform* m_pTargetTransformCom;
+
+	
+	static constexpr _float DEFAULT_ZOOM = 18.f;
+	static constexpr _float DEFAULT_GAP_Z = 15.f;
+	static constexpr _float DEFAULT_GAP_Y = 13.f;
+	static constexpr _float DEFAULT_LERP = 6.f;
+	static constexpr _float DEFAULT_MOVESPEED = 20.f;
 
 
 public:
