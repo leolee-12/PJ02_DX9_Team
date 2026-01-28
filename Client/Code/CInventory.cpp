@@ -168,13 +168,12 @@ void CInventory::Key_Input_Inven()
 	{
 		m_bActive = !m_bActive;
 	}
-	if (CDInputMgr::GetInstance()->Key_Down(DIK_Q))
+	if (CDInputMgr::GetInstance()->Key_Down(DIK_TAB))
 	{
-		Set_State(IS_OPEN);
-	}
-	if (CDInputMgr::GetInstance()->Key_Down(DIK_R))
-	{
-		Set_State(IS_CLOSE);
+		if (IS_OPEN != m_ePreInvenState)
+			Set_State(IS_OPEN);
+		else
+			Set_State(IS_CLOSE);
 	}
 	if (CDInputMgr::GetInstance()->Key_Down(DIK_1))
 	{
@@ -250,7 +249,7 @@ BOOL CInventory::Use_Item(CItem::ITEMID _eid, _int _iCount)
 				return false;
 
 			pItem->Set_ItemCount(pItem->Get_ItemCount() - _iCount);
-			CPersistentMgr::GetInstance()->Get_ResourceHistory()->UseItem(TYPE_BERRY, -_iCount);
+			CPersistentMgr::GetInstance()->Get_ResourceHistory()->UseItem(_eid, -_iCount);
 			if (pItem->Get_ItemCount() == 0)
 			{
 				pItem->Set_ItemID(CItem::ID_END);
