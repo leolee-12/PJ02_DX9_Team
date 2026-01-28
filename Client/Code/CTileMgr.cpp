@@ -140,6 +140,8 @@ void CTileMgr::Pop_State()
 	m_iMapWidth = tState.iMapWidth;
 	m_iMapHeight = tState.iMapHeight;
 	m_bInitialized = tState.bInitialized;
+
+	m_bSkipFirstFrame = true;
 }
 
 void CTileMgr::Free()

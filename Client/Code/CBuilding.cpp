@@ -10,7 +10,9 @@
 #include "CResourceWorkBar.h"
 #include "CPersistentMgr.h"
 #include "CShrineSpot.h"
-#include <CSoundMgr.h>
+#include "CSoundMgr.h"
+#include "CCutSceneMgr.h"
+#include "CRatau.h"
 
 CBuilding::CBuilding(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev)
@@ -502,6 +504,45 @@ void CBuilding::Ready_Event()
 		}) });
 		break;
 	case BT_KNUCKLEBONE:
+		m_hmapSubHandles.insert({ L"Trigger.Activate", m_pMessageChannel->Subscribe(L"Trigger.Activate", [this](const IMessageChannel::EVENT& Event)
+		{
+			auto Owneriter = Event.hmapData.find(L"Trigger_TID");
+			if (Owneriter == Event.hmapData.end()) { return; }
+
+			if (any_cast<Trigger::TRIGGERID>(Owneriter->second) == Trigger::TI_KNUCKLE)
+			{
+				_vec3 vCutScenePos = { m_vPos.x, m_vPos.y, m_vPos.z - 5.f };
+
+				CGameObject* pRatau = CRatau::Create(m_pGraphicDev, m_pMessageChannel, vCutScenePos);
+
+				IMessageChannel::EVENT eAddRatau;
+				eAddRatau.strType = L"Obj.Add";
+				eAddRatau.eOBJID = Engine::OID_MONSTER;
+				eAddRatau.hmapData.emplace(L"Obj", pRatau);
+				eAddRatau.hmapData[L"LayerTag"] = L"GameLogic_Layer";
+				eAddRatau.hmapData.emplace(L"ObjTag", wstring(L"Ratau"));
+				m_pMessageChannel->Publish(eAddRatau);
+
+				CUTSCENE tKnuckleBoneScene;
+				tKnuckleBoneScene.strName = L"Meet_Knucklebone";
+				tKnuckleBoneScene.vecSteps =
+				{
+					{ vCutScenePos, 1.f, 1.f, L"Player", L"LookforCam", ADV_IMMEDIATE},
+					{ vCutScenePos, 0.75f, 0.5f, L"Ratau", L"Ratau_Intro", ADV_EVENT, 0.f, L"Ratau.Done" },
+					{ vCutScenePos, 1.5f, 0.5f, L"Ratau", L"너클본에 흥미가 있어보이는구려." },
+					{ vCutScenePos, 1.5f, 0.5f, L"Ratau", L"자, 나랑 너클본 한 판 하시겠소?", ADV_DIALOGUE, 0.f, L"", vector<wstring>({L"예.", L"아니오."}) },
+					{ m_vPos, 1.f, 0.5f, L"FadeOut", L"", ADV_TIMED, 2.f},
+				};
+
+				CCutSceneMgr::GetInstance()->Register_CutScene(tKnuckleBoneScene);
+
+				IMessageChannel::EVENT tBuildingEvent;
+				tBuildingEvent.strType = L"Staging.Start";
+				tBuildingEvent.hmapData[L"StagingName"] = wstring(L"Meet_Knucklebone");
+				m_pMessageChannel->Publish(tBuildingEvent);
+			}
+		}
+	) });
 		break;
 	}
 }

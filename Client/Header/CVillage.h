@@ -7,6 +7,10 @@
 class CCookingUIController;
 class CBuilding;
 
+class CFontUIOrtho;
+class CSpeechBubbleOrtho;
+class CSelectionArrow;
+
 // 팔로워 스폰 작업 구조체
 struct FOLLOWER_SPAWN_WORK
 {
@@ -69,6 +73,8 @@ private:
 
 	_vec3			Compute_GirdCoord(const _vec3& vPos);
 
+	void			Select_Key_Input();
+
 public:
 	static CVillage* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 private:
@@ -85,6 +91,17 @@ private:
 	// 빌딩 관련 변수
 	_bool	m_bBuildingFlag = false;
 	CBuilding* m_pCurBuilding = nullptr;
+
+	// 선택지 관련
+	CFontUIOrtho* m_pLeftSelect;
+	CFontUIOrtho* m_pRightSelect;
+
+	CSpeechBubbleOrtho* m_pSpeechBubble;
+
+	CSelectionArrow* m_pSelectionArrow;
+
+	_bool		  m_bShowSelect = false;
+	_uint		  m_iSelectSlot = 0;
 
 	// 팔로워 스폰 작업 큐
 	queue<FOLLOWER_SPAWN_WORK>	m_queueFollowerSpawn;

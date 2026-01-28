@@ -147,10 +147,10 @@ void CPlayer::Render_GameObject()
 
 	m_pGraphicDev->SetTextureStageState(0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE);
 
-	/*_tchar szPos[256] = L"";
+	_tchar szPos[256] = L"";
 	swprintf_s(szPos, L"[플레이어] 플레이어 중점 위치 X : %f, Y : %f, Z : %f", m_vPos.x, m_vPos.y, m_vPos.z);
 	OutputDebugString(szPos);
-	OutputDebugString(L"\n");*/
+	OutputDebugString(L"\n");
 
 	//_tchar szPos[256] = L"";
 	//swprintf_s(szPos, L"a : %d, r : %d, g : %d, b : %d", Test_a, Test_r, Test_g, Test_b);
@@ -1353,6 +1353,8 @@ void	CPlayer::OnCollision(CGameObject* pObject)
 	if (pObject->Get_OBJID() == OID_TRIGGER)
 	{
 		if (m_bCutScene) { return; }
+		if (CCutSceneMgr::GetInstance()->Get_Playing()) { return; }
+
 		m_bCanTrigger = true;
 		m_pTriggerPoint = static_cast<CTriggerPoint*>(pObject);
 
