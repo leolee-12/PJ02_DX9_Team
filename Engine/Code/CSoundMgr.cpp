@@ -1,4 +1,4 @@
-#include "CSoundMgr.h"
+ï»¿#include "CSoundMgr.h"
 #include "fmod.hpp"
 #include <io.h>
 
@@ -19,33 +19,33 @@ void CSoundMgr::Ready_SoundMgr()
 {
 	FMOD_RESULT result;
 
-	// FMOD ½Ã½ºÅÛ »ı¼º
+	// FMOD ì‹œìŠ¤í…œ ìƒì„±
 	result = FMOD::System_Create(&m_pSystem);
 	if (result != FMOD_OK)
 	{
-		// ¿¡·¯ Ã³¸®
+		// ì—ëŸ¬ ì²˜ë¦¬
 		return;
 	}
 
-	// FMOD ½Ã½ºÅÛ ÃÊ±âÈ­
-	// ¸Å°³º¯¼ö: (ÃÖ´ë Ã¤³Î ¼ö, ÃÊ±âÈ­ ÇÃ·¡±×, Ãß°¡ µå¶óÀÌ¹ö µ¥ÀÌÅÍ)
+	// FMOD ì‹œìŠ¤í…œ ì´ˆê¸°í™”
+	// ë§¤ê°œë³€ìˆ˜: (ìµœëŒ€ ì±„ë„ ìˆ˜, ì´ˆê¸°í™” í”Œë˜ê·¸, ì¶”ê°€ ë“œë¼ì´ë²„ ë°ì´í„°)
 	result = m_pSystem->init(MAXCHANNEL, FMOD_INIT_NORMAL, nullptr);
 	if (result != FMOD_OK)
 	{
-		// ¿¡·¯ Ã³¸®
+		// ì—ëŸ¬ ì²˜ë¦¬
 		return;
 	}
 
-	// »ç¿îµå ÆÄÀÏ ·Îµå
+	// ì‚¬ìš´ë“œ íŒŒì¼ ë¡œë“œ
 	LoadSoundFile();
 }
 
 void CSoundMgr::Free()
 {
-	// ¸ğµç »ç¿îµå Á¤Áö
+	// ëª¨ë“  ì‚¬ìš´ë“œ ì •ì§€
 	StopAll();
 
-	// »ç¿îµå ¸®¼Ò½º ÇØÁ¦
+	// ì‚¬ìš´ë“œ ë¦¬ì†ŒìŠ¤ í•´ì œ
 	for (auto& pair : m_mapSound)
 	{
 		if (pair.second)
@@ -56,7 +56,7 @@ void CSoundMgr::Free()
 	}
 	m_mapSound.clear();
 
-	// FMOD ½Ã½ºÅÛ Á¾·á ¹× ÇØÁ¦
+	// FMOD ì‹œìŠ¤í…œ ì¢…ë£Œ ë° í•´ì œ
 	if (m_pSystem)
 	{
 		m_pSystem->close();
@@ -67,7 +67,7 @@ void CSoundMgr::Free()
 
 void CSoundMgr::Update()
 {
-	// FMOD ½Ã½ºÅÛ ¾÷µ¥ÀÌÆ® (¸Å ÇÁ·¹ÀÓ È£Ãâ ÇÊ¿ä)
+	// FMOD ì‹œìŠ¤í…œ ì—…ë°ì´íŠ¸ (ë§¤ í”„ë ˆì„ í˜¸ì¶œ í•„ìš”)
 	if (m_pSystem)
 	{
 		m_pSystem->update();
@@ -80,13 +80,13 @@ void CSoundMgr::Play(const TCHAR* pSoundKey, CHANNELID eID, float fVolume)
 
 	if (iter == m_mapSound.end())
 	{
-		OutputDebugString(L"[»ç¿îµå ¸Å´ÏÀú] »ç¿îµå¸¦ Ã£À» ¼ö ¾øÀ½: ");
+		OutputDebugString(L"[ì‚¬ìš´ë“œ ë§¤ë‹ˆì €] ì‚¬ìš´ë“œë¥¼ ì°¾ì„ ìˆ˜ ì—†ìŒ: ");
 		OutputDebugString(pSoundKey);
 		OutputDebugString(L"\n");
 		return;
 	}
 
-	OutputDebugString(L"[»ç¿îµå ¸Å´ÏÀú] Àç»ı ½Ãµµ: ");
+	OutputDebugString(L"[ì‚¬ìš´ë“œ ë§¤ë‹ˆì €] ì¬ìƒ ì‹œë„: ");
 	OutputDebugString(pSoundKey);
 	OutputDebugString(L"\n");
 
@@ -96,27 +96,80 @@ void CSoundMgr::Play(const TCHAR* pSoundKey, CHANNELID eID, float fVolume)
 		m_pChannelArr[eID]->isPlaying(&bPlaying);
 	}
 
-	// ÇØ´ç Ã¤³Î¿¡¼­ Àç»ı ÁßÀÌ¸é Á¤Áö
+	// í•´ë‹¹ ì±„ë„ì—ì„œ ì¬ìƒ ì¤‘ì´ë©´ ì •ì§€
 	if (bPlaying)
 	{
 		m_pChannelArr[eID]->stop();
 	}
 
-	// »ç¿îµå Àç»ı
+	// ì‚¬ìš´ë“œ ì¬ìƒ
 	FMOD_RESULT result = m_pSystem->playSound(iter->second, nullptr, false, &m_pChannelArr[eID]);
 
 	if (result == FMOD_OK)
 	{
-		OutputDebugString(L"[»ç¿îµå ¸Å´ÏÀú] Àç»ı ¼º°ø!\n");
-		// º¼·ı ¼³Á¤ (0.0 ~ 1.0)
+		OutputDebugString(L"[ì‚¬ìš´ë“œ ë§¤ë‹ˆì €] ì¬ìƒ ì„±ê³µ!\n");
+		// ë³¼ë¥¨ ì„¤ì • (0.0 ~ 1.0)
 		m_pChannelArr[eID]->setVolume(fVolume);
 	}
 	else
 	{
-		OutputDebugString(L"[»ç¿îµå ¸Å´ÏÀú] Àç»ı ½ÇÆĞ!\n");
+		OutputDebugString(L"[ì‚¬ìš´ë“œ ë§¤ë‹ˆì €] ì¬ìƒ ì‹¤íŒ¨!\n");
+	}
+}
+
+void CSoundMgr::PlaySound3D(const TCHAR* pSoundKey, CHANNELID eID, float fVolume, const _vec3& vSoundPos)
+{
+	if (vSoundPos.z < m_vListenerPos.z) { return; }
+
+	_vec3 vDir = vSoundPos - m_vListenerPos;
+	_float fDistance = D3DXVec3Length(&vDir);
+
+	_float fAttenuation = 1.f - (fDistance / m_fMaxDistance);
+	fAttenuation = max(0.f, fAttenuation);
+
+	if (fAttenuation < 0.001f) { return; }
+
+	_float fFinalVolume = fVolume * fAttenuation;
+
+	auto iter = m_mapSound.find(pSoundKey);
+
+	if (iter == m_mapSound.end())
+	{
+		OutputDebugString(L"[ì‚¬ìš´ë“œ ë§¤ë‹ˆì €] ì‚¬ìš´ë“œë¥¼ ì°¾ì„ ìˆ˜ ì—†ìŒ: ");
+		OutputDebugString(pSoundKey);
+		OutputDebugString(L"\n");
+		return;
 	}
 
+	OutputDebugString(L"[ì‚¬ìš´ë“œ ë§¤ë‹ˆì €] ì¬ìƒ ì‹œë„: ");
+	OutputDebugString(pSoundKey);
+	OutputDebugString(L"\n");
 
+	bool bPlaying = false;
+	if (m_pChannelArr[eID])
+	{
+		m_pChannelArr[eID]->isPlaying(&bPlaying);
+	}
+
+	// í•´ë‹¹ ì±„ë„ì—ì„œ ì¬ìƒ ì¤‘ì´ë©´ ì •ì§€
+	if (bPlaying)
+	{
+		m_pChannelArr[eID]->stop();
+	}
+
+	// ì‚¬ìš´ë“œ ì¬ìƒ
+	FMOD_RESULT result = m_pSystem->playSound(iter->second, nullptr, false, &m_pChannelArr[eID]);
+
+	if (result == FMOD_OK)
+	{
+		OutputDebugString(L"[ì‚¬ìš´ë“œ ë§¤ë‹ˆì €] ì¬ìƒ ì„±ê³µ!\n");
+		// ë³¼ë¥¨ ì„¤ì • (0.0 ~ 1.0)
+		m_pChannelArr[eID]->setVolume(fFinalVolume);
+	}
+	else
+	{
+		OutputDebugString(L"[ì‚¬ìš´ë“œ ë§¤ë‹ˆì €] ì¬ìƒ ì‹¤íŒ¨!\n");
+	}
 }
 
 void CSoundMgr::PlayBGM(const TCHAR* pSoundKey, float fVolume)
@@ -126,13 +179,13 @@ void CSoundMgr::PlayBGM(const TCHAR* pSoundKey, float fVolume)
 	if (iter == m_mapSound.end())
 		return;
 
-	// BGM Ã¤³Î¿¡¼­ Àç»ı
+	// BGM ì±„ë„ì—ì„œ ì¬ìƒ
 	m_pSystem->playSound(iter->second, nullptr, false, &m_pChannelArr[SOUND_BGM]);
 
-	// º¼·ı ¼³Á¤
+	// ë³¼ë¥¨ ì„¤ì •
 	m_pChannelArr[SOUND_BGM]->setVolume(fVolume);
 
-	// ¹«ÇÑ ¹İº¹ ¼³Á¤
+	// ë¬´í•œ ë°˜ë³µ ì„¤ì •
 	m_pChannelArr[SOUND_BGM]->setMode(FMOD_LOOP_NORMAL);
 }
 
@@ -178,8 +231,8 @@ void CSoundMgr::LoadSoundFileRecursive(const char* pPath)
 
 	if (handle == -1)
 	{
-		// °æ·Î¸¦ Ã£Áö ¸øÇÔ!
-		OutputDebugStringA("»ç¿îµå Æú´õ¸¦ Ã£À» ¼ö ¾ø½À´Ï´Ù: ");
+		// ê²½ë¡œë¥¼ ì°¾ì§€ ëª»í•¨!
+		OutputDebugStringA("ì‚¬ìš´ë“œ í´ë”ë¥¼ ì°¾ì„ ìˆ˜ ì—†ìŠµë‹ˆë‹¤: ");
 		OutputDebugStringA(pPath);
 		OutputDebugStringA("\n");
 		return;
@@ -189,32 +242,32 @@ void CSoundMgr::LoadSoundFileRecursive(const char* pPath)
 
 	while (iResult != -1)
 	{
-		// "."°ú ".." Á¦¿Ü
+		// "."ê³¼ ".." ì œì™¸
 		if (!strcmp(fd.name, ".") || !strcmp(fd.name, ".."))
 		{
 			iResult = _findnext(handle, &fd);
 			continue;
 		}
 
-		// ÀüÃ¼ °æ·Î »ı¼º
+		// ì „ì²´ ê²½ë¡œ ìƒì„±
 		char szFullPath[256] = "";
 		sprintf_s(szFullPath, "%s%s", pPath, fd.name);
 
-		// µğ·ºÅÍ¸®ÀÎ °æ¿ì Àç±Í È£Ãâ
+		// ë””ë ‰í„°ë¦¬ì¸ ê²½ìš° ì¬ê·€ í˜¸ì¶œ
 		if (fd.attrib & _A_SUBDIR)
 		{
 			char szSubPath[256] = "";
 			sprintf_s(szSubPath, "%s/", szFullPath);
 			LoadSoundFileRecursive(szSubPath);
 		}
-		else // ÆÄÀÏÀÎ °æ¿ì
+		else // íŒŒì¼ì¸ ê²½ìš°
 		{
 			FMOD::Sound* pSound = nullptr;
 			FMOD_RESULT result = m_pSystem->createSound(szFullPath, FMOD_DEFAULT, nullptr, &pSound);
 
 			if (result == FMOD_OK)
 			{
-				// ÆÄÀÏ¸í¸¸ Å°·Î »ç¿ë (°æ·Î Á¦¿Ü)
+				// íŒŒì¼ëª…ë§Œ í‚¤ë¡œ ì‚¬ìš© (ê²½ë¡œ ì œì™¸)
 				wstring strSoundKey;
 
 #ifdef _UNICODE
@@ -229,8 +282,8 @@ void CSoundMgr::LoadSoundFileRecursive(const char* pPath)
 
 				if (result == FMOD_OK)
 				{
-					// ·Îµå ¼º°ø ·Î±×
-					OutputDebugStringA("»ç¿îµå ·Îµå ¼º°ø: ");
+					// ë¡œë“œ ì„±ê³µ ë¡œê·¸
+					OutputDebugStringA("ì‚¬ìš´ë“œ ë¡œë“œ ì„±ê³µ: ");
 					OutputDebugStringA(fd.name);
 					OutputDebugStringA("\n");
 				}
