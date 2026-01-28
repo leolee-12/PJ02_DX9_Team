@@ -8,6 +8,7 @@
 #include "CScreenEffect.h"
 #include "CIndicator.h"
 #include "CChargeArrow.h"
+#include "CLetterBox.h"
 
 IMPLEMENT_SINGLETON(CEffectMgr);
 
@@ -160,6 +161,16 @@ HRESULT CEffectMgr::Ready_EffectMgr(LPDIRECT3DDEVICE9 pGraphicDev)
 		chargeArrowPair.first->second = pArrow;
 	}
 
+	auto letterBoxPair = m_mapProtoEffect.try_emplace(EK_LETTERBOX_BLACK, nullptr);	// pair<iter, bool>
+	
+	if (letterBoxPair.second)
+	{
+		CLetterBox* pLetterBox = CLetterBox::Create(pGraphicDev, L"");
+		pLetterBox->Set_BarHeight(0.12f);       // 화면의 12%
+		pLetterBox->Set_TransitionTime(0.4f);
+		letterBoxPair.first->second = pLetterBox;
+	}
+
 	m_bReady = true;
 
 	return S_OK;
@@ -167,6 +178,8 @@ HRESULT CEffectMgr::Ready_EffectMgr(LPDIRECT3DDEVICE9 pGraphicDev)
 
 _int CEffectMgr::Update_Effect(const _float& fTimeDelta)
 {
+	if (!m_bReady) return NOEVENT;
+
 	for (auto iter = m_EffectList.begin(); iter != m_EffectList.end();)
 	{
 		_int iExit = (*iter)->Update_GameObject(fTimeDelta);
@@ -178,6 +191,11 @@ _int CEffectMgr::Update_Effect(const _float& fTimeDelta)
 		}
 		else ++iter;
 	}
+
+	auto iter = m_mapProtoEffect.find(EK_LETTERBOX_BLACK);
+
+	if (iter->second != nullptr)
+		iter->second->Update_GameObject(fTimeDelta);
 
 	return NOEVENT;
 }
@@ -237,6 +255,19 @@ void CEffectMgr::Clear_Effect()
 	}
 
 	m_EffectList.clear();
+}
+
+CEffect* CEffectMgr::Get_Effect(EFFECT_KEY eKey)
+{
+	auto iter = m_mapProtoEffect.find(eKey);
+
+	if (iter->second == nullptr)	return nullptr;
+	else							return iter->second;
+}
+
+CLetterBox* CEffectMgr::Get_LetterBox()
+{
+	return static_cast<CLetterBox*>(Get_Effect(EK_LETTERBOX_BLACK));
 }
 
 void CEffectMgr::Free()

@@ -544,6 +544,9 @@
     <Filter Include="02. GameObject\05. UI\14. Inventory\05. InventoryDeco">
       <UniqueIdentifier>{f21bbcf0-39a0-44ad-8cde-c04fa1a5c60c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\03. Dependent\01. Effect\05. CLetterBox">
+      <UniqueIdentifier>{f30136d2-d7be-4a09-bc0e-f64f6ae77f84}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -1146,6 +1149,9 @@
     <ClInclude Include="..\Header\InventoryEnum.h">
       <Filter>02. GameObject\05. UI\14. Inventory</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CLetterBox.h">
+      <Filter>02. GameObject\03. Dependent\01. Effect\05. CLetterBox</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1699,6 +1705,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CInventory.cpp">
       <Filter>02. GameObject\05. UI\14. Inventory</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CLetterBox.cpp">
+      <Filter>02. GameObject\03. Dependent\01. Effect\05. CLetterBox</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

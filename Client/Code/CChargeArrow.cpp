@@ -110,6 +110,7 @@ void CChargeArrow::Reset()
 {
 	m_eState = ES_READY;
 	m_vDir = _vec3(0.f, 0.f, 1.f);
+	m_fRatio = 0.f;
 }
 
 void CChargeArrow::Update_OwnerData(const _vec3& vPos, const _vec3& vDir, _float fRatio)

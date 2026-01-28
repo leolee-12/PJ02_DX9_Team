@@ -220,6 +220,7 @@
     <ClInclude Include="..\Header\CInventory.h" />
     <ClInclude Include="..\Header\CKBCharNPC.h" />
     <ClInclude Include="..\Header\CKBCharPlayer.h" />
+    <ClInclude Include="..\Header\CLetterBox.h" />
     <ClInclude Include="..\Header\CMapDoor.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClInclude>
@@ -445,6 +446,7 @@
     <ClCompile Include="..\Code\CKBTutorial.cpp" />
     <ClCompile Include="..\Code\CKnuckleBone.cpp" />
     <ClCompile Include="..\Code\CLeshyRoom.cpp" />
+    <ClCompile Include="..\Code\CLetterBox.cpp" />
     <ClCompile Include="..\Code\CLoading.cpp" />
     <ClCompile Include="..\Code\CLoadingCenter.cpp" />
     <ClCompile Include="..\Code\CLoadingCircle.cpp" />

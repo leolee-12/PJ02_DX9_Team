@@ -190,7 +190,7 @@ void CProjectile::Ready_Variable()
 	m_fAttack = 1;
 	m_iHp = 1;
 	m_fAccTime = 0.f;
-	m_fLifeTime = 10.f;
+	m_fLifeTime = 5.f;
 	m_fGravity = -9.8f * 2.f;
 
 	// Transform 세팅

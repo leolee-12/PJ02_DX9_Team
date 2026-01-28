@@ -19,6 +19,7 @@
 #include "CInteractionUI.h"
 #include "CInteractMgr.h"
 #include <IInteractable.h>
+#include "CLetterBox.h"
 
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev)
@@ -400,28 +401,39 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 	Key_Input_Debug(fTimeDelta);
 
 	if (CCutSceneMgr::GetInstance()->Get_Playing()) { return; }
+	if ((m_eCurState == PS_HIT) || (m_eCurState == PS_REBIRTH)) { return; }
+
 	Key_Input_Move(fTimeDelta);
-		
+
+	if (m_bCutScene || m_bWorking) { return; }
+
 	Key_Input_Interact(fTimeDelta);
+
+	if (m_bIntro || m_bCutScene) return;
 
 	Key_Input_Combat(fTimeDelta);
 }
 
 void CPlayer::Key_Input_Debug(const _float& fTimeDelta)
 {
-	//for (int i = 0; i < 9; ++i)
-	//{
-	//	if (GetAsyncKeyState(i + 48))
-	//	{	// 디버그용
+	for (int i = 0; i < 9; ++i)
+	{
+		if (GetAsyncKeyState(i + 48))
+		{	// 디버그용
 
-	//		if (i == 8)
-	//		{
-	//			_vec3 vEffectPos{ m_vPos.x, 3.f, m_vPos.z };
-	//			CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_ENEMYSPAWN, 0, vEffectPos);
-	//		}
-	//		else		CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_HIT, i, m_vPos);
-	//	}
-	//}
+			if (i == 8)
+			{
+				if (auto pLetterBox = CEffectMgr::GetInstance()->Get_LetterBox())
+					pLetterBox->Play();
+			}
+			else if (i == 9)
+			{
+				if (auto pLetterBox = CEffectMgr::GetInstance()->Get_LetterBox())
+					pLetterBox->Exit();
+			}
+			else		CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_HIT, i, m_vPos);
+		}
+	}
 
 	//
 	//if (CDInputMgr::GetInstance()->Key_Down(DIK_F1))
@@ -479,8 +491,6 @@ void CPlayer::Key_Input_Debug(const _float& fTimeDelta)
 
 void CPlayer::Key_Input_Move(const _float& fTimeDelta)
 {
-	if ((m_eCurState == PS_HIT) || (m_eCurState == PS_REBIRTH)) { return; }
-
 	if (!m_bRoll && !m_iCombo && !m_fCharge && !m_bCutScene)
 	{
 		if (CDInputMgr::GetInstance()->Key_Pressing(DIK_W))
@@ -542,8 +552,6 @@ void CPlayer::Key_Input_Move(const _float& fTimeDelta)
 void CPlayer::Key_Input_Interact(const _float& fTimeDelta)
 {
 	// 트리거 키인풋
-	if (m_bCutScene || m_bWorking) { return; }
-
 	if (CDInputMgr::GetInstance()->Key_Down(DIK_E))
 	{
 		if (m_pTriggerPoint)
@@ -563,9 +571,6 @@ void CPlayer::Key_Input_Interact(const _float& fTimeDelta)
 
 void CPlayer::Key_Input_Combat(const _float& fTimeDelta)
 {
-	// 인트로 상태에서는 사용 불가
-	if (m_bIntro || m_bCutScene) return;
-
 	if (CDInputMgr::GetInstance()->Key_Down(DIK_SPACE))
 	{
 		if ((m_bRoll) || (m_iCombo) || (m_fCharge)) return;
@@ -599,7 +604,7 @@ void CPlayer::Key_Input_Combat(const _float& fTimeDelta)
 
 	if (CDInputMgr::GetInstance()->Mouse_Pressing(DIM_RB))	// 눌렀을 때 한 번만 true
 	{
-		if ((m_bRoll) || (m_iCombo)) return;
+		if ((m_bRoll) || (m_iCombo) || m_strFrameKey == L"charge-end") return;
 
 		if (!m_fCharge)
 		{
@@ -644,7 +649,7 @@ void CPlayer::Key_Input_Combat(const _float& fTimeDelta)
 		{
 			m_fFrame = 0.f;
 			m_strFrameKey = L"charge-end";
-			m_pChargeArrow->Stop();
+			m_pChargeArrow->Reset();
 
 			CProjectile* pTemp;
 			CGameObject* pProjectile = pTemp = CProjectile::Create(m_pGraphicDev, m_vPos, m_vDir * 10.f, false, CL_PBULLET, D3DXCOLOR(1.f, 0.f, 0.4f, 1.f));
@@ -929,11 +934,11 @@ void CPlayer::Set_FrameKey_Intro()
 
 	case PS_RUN:
 	{
-		if (m_vDir == m_vNormDir[DIR_UP])										m_strFrameKey = L"intro_run-up";
+		if		(m_vDir == m_vNormDir[DIR_UP])										m_strFrameKey = L"intro_run-up";
 		else if (m_vDir == m_vNormDir[DIR_DOWN])									m_strFrameKey = L"intro_run-down";
-		else if (m_vDir == m_vNormDir[DIR_LD] || m_vDir == m_vNormDir[DIR_RD])	m_strFrameKey = L"intro_run-diagonal";
+		else if (m_vDir == m_vNormDir[DIR_LD] || m_vDir == m_vNormDir[DIR_RD])		m_strFrameKey = L"intro_run-diagonal";
 		else if (m_vDir == m_vNormDir[DIR_LEFT] || m_vDir == m_vNormDir[DIR_RIGHT])	m_strFrameKey = L"intro_run-horizontal";
-		else if (m_vDir == m_vNormDir[DIR_LU] || m_vDir == m_vNormDir[DIR_RU])	m_strFrameKey = L"intro_run-up-diagonal";
+		else if (m_vDir == m_vNormDir[DIR_LU] || m_vDir == m_vNormDir[DIR_RU])		m_strFrameKey = L"intro_run-up-diagonal";
 	}
 	break;
 
@@ -960,17 +965,17 @@ void CPlayer::Set_FrameKey_Normal()
 
 	case PS_RUN:
 	{
-		if (m_vDir == m_vNormDir[DIR_UP])										m_strFrameKey = L"run-up";
+		if		(m_vDir == m_vNormDir[DIR_UP])										m_strFrameKey = L"run-up";
 		else if (m_vDir == m_vNormDir[DIR_DOWN])									m_strFrameKey = L"run-down";
-		else if (m_vDir == m_vNormDir[DIR_LD] || m_vDir == m_vNormDir[DIR_RD])	m_strFrameKey = L"run-diagonal";
+		else if (m_vDir == m_vNormDir[DIR_LD] || m_vDir == m_vNormDir[DIR_RD])		m_strFrameKey = L"run-diagonal";
 		else if (m_vDir == m_vNormDir[DIR_LEFT] || m_vDir == m_vNormDir[DIR_RIGHT])	m_strFrameKey = L"run-horizontal";
-		else if (m_vDir == m_vNormDir[DIR_LU] || m_vDir == m_vNormDir[DIR_RU])	m_strFrameKey = L"run-up-diagonal";
+		else if (m_vDir == m_vNormDir[DIR_LU] || m_vDir == m_vNormDir[DIR_RU])		m_strFrameKey = L"run-up-diagonal";
 	}
 	break;
 
 	case PS_ROLL:
 	{
-		if (m_vDir == m_vNormDir[DIR_UP] || m_vDir == m_vNormDir[DIR_LU] || m_vDir == m_vNormDir[DIR_RU])	m_strFrameKey = L"roll-up";
+		if		(m_vDir == m_vNormDir[DIR_UP] || m_vDir == m_vNormDir[DIR_LU] || m_vDir == m_vNormDir[DIR_RU])		m_strFrameKey = L"roll-up";
 		else if (m_vDir == m_vNormDir[DIR_DOWN] || m_vDir == m_vNormDir[DIR_LD] || m_vDir == m_vNormDir[DIR_RD])	m_strFrameKey = L"roll-down";
 		else if (m_vDir == m_vNormDir[DIR_LEFT] || m_vDir == m_vNormDir[DIR_RIGHT])									m_strFrameKey = L"roll-horizontal";
 	}
@@ -981,13 +986,13 @@ void CPlayer::Set_FrameKey_Normal()
 		switch (m_eWeaponType)
 		{
 		case WT_SWORD:
-			if (m_iCombo == 1)	m_strFrameKey = L"attack-combo1";
+			if		(m_iCombo == 1)	m_strFrameKey = L"attack-combo1";
 			else if (m_iCombo == 2)	m_strFrameKey = L"attack-combo2";
 			else if (m_iCombo == 3)	m_strFrameKey = L"attack-combo3";
 			break;
 
 		case WT_GAUNTLETS:
-			if (m_iCombo == 1)	m_strFrameKey = L"attack-combo1-gauntlets";
+			if		(m_iCombo == 1)	m_strFrameKey = L"attack-combo1-gauntlets";
 			else if (m_iCombo == 2)	m_strFrameKey = L"attack-combo2-gauntlets";
 			else if (m_iCombo == 3)	m_strFrameKey = L"attack-combo3-gauntlets";
 			else if (m_iCombo == 4)	m_strFrameKey = L"attack-combo4-gauntlets";
