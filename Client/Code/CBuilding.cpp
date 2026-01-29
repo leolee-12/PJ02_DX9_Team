@@ -104,7 +104,7 @@ void CBuilding::LateUpdate_GameObject(const _float& fTimeDelta)
 
 			_tchar strSoundName[128] = L"";
 			swprintf_s(strSoundName, L"Hammering_%d.wav", Get_Rand_Int(0, 33));
-			CSoundMgr::GetInstance()->Play(strSoundName, SOUND_BUILD, 0.5f);
+			CSoundMgr::GetInstance()->Play(strSoundName, SOUND_BUILD, 0.2f);
 
 			m_fAccTime = 0.f;
 		}
