@@ -653,21 +653,21 @@ HRESULT CVillage::Ready_Light()
 
 void	CVillage::Ready_Event()
 {
-	m_hmapSubHandles.insert({ L"Obj_Add", m_pMessageChannel->Subscribe(L"Obj.Add", [this](const IMessageChannel::EVENT& Event) {
-{
-	CGameObject* pGObj = any_cast<CGameObject*>(Event.hmapData.find(L"Obj")->second);
+	m_hmapSubHandles.insert({ L"Obj_Add", m_pMessageChannel->Subscribe(L"Obj.Add", [this](const IMessageChannel::EVENT& Event)
+		{
+			CGameObject* pGObj = any_cast<CGameObject*>(Event.hmapData.find(L"Obj")->second);
 
-	if (pGObj != nullptr)
-	{
-		wstring strLayerTag = any_cast<const _tchar*>(Event.hmapData.find(L"LayerTag")->second);
-		wstring strObjTag = any_cast<wstring>(Event.hmapData.find(L"ObjTag")->second);
-		auto iter = m_mapLayer.find(strLayerTag);
+			if (pGObj != nullptr)
+			{
+				wstring strLayerTag = any_cast<const _tchar*>(Event.hmapData.find(L"LayerTag")->second);
+				wstring strObjTag = any_cast<wstring>(Event.hmapData.find(L"ObjTag")->second);
+				auto iter = m_mapLayer.find(strLayerTag);
 
-		if (iter != m_mapLayer.end())
-			iter->second->Add_GameObject(strObjTag, pGObj);
-	}
-}
-}) });
+				if (iter != m_mapLayer.end())
+					iter->second->Add_GameObject(strObjTag, pGObj);
+			}
+		}
+	) });
 }
 
 void CVillage::Ready_Event_Village()
@@ -699,42 +699,46 @@ void CVillage::Ready_Event_Village()
 		}
 	) });
 
-	m_hmapSubHandles.insert({ L"CutScene.End", m_pMessageChannel->Subscribe(L"CutScene.End", [this](const IMessageChannel::EVENT& Event) {
-	if (any_cast<wstring>(Event.hmapData.find(L"SceneName")->second) == L"Meet_Knucklebone")
-	{
-		m_bKnuckleBoneFlag = true;
-	}
-	}) });
-
-	m_hmapSubHandles.insert({ L"CutScene.ShowChoice", m_pMessageChannel->Subscribe(L"CutScene.ShowChoice", [this](const IMessageChannel::EVENT& Event) {
-		auto SceneNameiter = Event.hmapData.find(L"SceneName");
-		if (SceneNameiter == Event.hmapData.end()) { return; }
-
-		if (any_cast<wstring>(SceneNameiter->second) == L"Meet_Knucklebone")
+	m_hmapSubHandles.insert({ L"CutScene.End", m_pMessageChannel->Subscribe(L"CutScene.End", [this](const IMessageChannel::EVENT& Event)
 		{
-			auto Choiceiter = Event.hmapData.find(L"Choices");
-			if (Choiceiter == Event.hmapData.end()) { return; }
-
-			vector<wstring> vecChoiceTex = std::move(any_cast<vector<wstring>>(Choiceiter->second));
-
-			m_pLeftSelect->Set_Text(vecChoiceTex[0].c_str());
-			m_pLeftSelect->Set_FontColor(D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
-			m_pLeftSelect->Set_Flags(DT_CENTER | DT_VCENTER);
-
-			m_pRightSelect->Set_Text(vecChoiceTex[1].c_str());
-			m_pRightSelect->Set_FontColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
-			m_pRightSelect->Set_Flags(DT_CENTER | DT_VCENTER);
-
-			m_iSelectSlot = 0;
-
-			m_pLeftSelect->Active();
-			m_pRightSelect->Active();
-			m_pSpeechBubble->Active();
-			m_pSelectionArrow->Active();
-
-			m_bShowSelect = true;
+			if (any_cast<wstring>(Event.hmapData.find(L"SceneName")->second) == L"Meet_Knucklebone")
+			{
+				m_bKnuckleBoneFlag = true;
+			}
 		}
-	}) });
+	) });
+
+	m_hmapSubHandles.insert({ L"CutScene.ShowChoice", m_pMessageChannel->Subscribe(L"CutScene.ShowChoice", [this](const IMessageChannel::EVENT& Event)
+		{
+			auto SceneNameiter = Event.hmapData.find(L"SceneName");
+			if (SceneNameiter == Event.hmapData.end()) { return; }
+
+			if (any_cast<wstring>(SceneNameiter->second) == L"Meet_Knucklebone")
+			{
+				auto Choiceiter = Event.hmapData.find(L"Choices");
+				if (Choiceiter == Event.hmapData.end()) { return; }
+
+				vector<wstring> vecChoiceTex = std::move(any_cast<vector<wstring>>(Choiceiter->second));
+
+				m_pLeftSelect->Set_Text(vecChoiceTex[0].c_str());
+				m_pLeftSelect->Set_FontColor(D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
+				m_pLeftSelect->Set_Flags(DT_CENTER | DT_VCENTER);
+
+				m_pRightSelect->Set_Text(vecChoiceTex[1].c_str());
+				m_pRightSelect->Set_FontColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+				m_pRightSelect->Set_Flags(DT_CENTER | DT_VCENTER);
+
+				m_iSelectSlot = 0;
+
+				m_pLeftSelect->Active();
+				m_pRightSelect->Active();
+				m_pSpeechBubble->Active();
+				m_pSelectionArrow->Active();
+
+				m_bShowSelect = true;
+			}
+		}
+	) });
 }
 
 void CVillage::Key_Input_Village()

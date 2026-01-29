@@ -228,14 +228,14 @@ void CCookingInfoCard::Free()
 
 void CCookingInfoCard::Ready_Event()
 {
-	m_hmapSubHandles.insert({ L"CookInfoCard.Calcu", m_pMessageChannel->Subscribe(L"CookingInfoCard.CalcuResouce", [this](const IMessageChannel::EVENT& Event) {
-{
-		auto iter = Event.hmapData.find(L"ResourceCount");
-		if (iter == Event.hmapData.end())
-			return;
+	m_hmapSubHandles.insert({ L"CookInfoCard.Calcu", m_pMessageChannel->Subscribe(L"CookingInfoCard.CalcuResouce", [this](const IMessageChannel::EVENT& Event)
+		{
+			auto iter = Event.hmapData.find(L"ResourceCount");
+			if (iter == Event.hmapData.end())
+				return;
 
-		int ResourceCount = any_cast<int>(iter->second);
-			Set_RecourceCountText(ResourceCount);
-}
-}) });
+			int ResourceCount = any_cast<int>(iter->second);
+				Set_RecourceCountText(ResourceCount);
+		}
+	) });
 }

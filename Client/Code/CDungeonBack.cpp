@@ -27,8 +27,7 @@ HRESULT CDungeonBack::Ready_GameObject()
 	m_pTransformCom->Set_Scale((_float)WINCX, (_float)WINCY, 1.f);
 	m_pTransformCom->Set_Pos(0.f, 0.f, 0.5f);
 
-	m_hmapSubHandles.insert({ L"Render", m_pMessageChannel->Subscribe(
-		L"Select", [this](const IMessageChannel::EVENT&)
+	m_hmapSubHandles.insert({ L"Render", m_pMessageChannel->Subscribe(L"Select", [this](const IMessageChannel::EVENT&)
 		{
 			if (m_bRender)
 			{

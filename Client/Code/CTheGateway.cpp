@@ -447,42 +447,46 @@ HRESULT CTheGateway::Ready_Light()
 
 void	CTheGateway::Ready_Event()
 {
-	m_hmapSubHandles.insert({ L"CutScene.ShowChoice", m_pMessageChannel->Subscribe(L"CutScene.ShowChoice", [this](const IMessageChannel::EVENT& Event) {
-		auto SceneNameiter = Event.hmapData.find(L"SceneName");
-		if (SceneNameiter == Event.hmapData.end()) { return; }
-
-		if (any_cast<wstring>(SceneNameiter->second) == L"TheGateway_01")
+	m_hmapSubHandles.insert({ L"CutScene.ShowChoice", m_pMessageChannel->Subscribe(L"CutScene.ShowChoice", [this](const IMessageChannel::EVENT& Event)
 		{
-			auto Choiceiter = Event.hmapData.find(L"Choices");
-			if (Choiceiter == Event.hmapData.end()) { return; }
+			auto SceneNameiter = Event.hmapData.find(L"SceneName");
+			if (SceneNameiter == Event.hmapData.end()) { return; }
 
-			vector<wstring> vecChoiceTex = std::move(any_cast<vector<wstring>>(Choiceiter->second));
+			if (any_cast<wstring>(SceneNameiter->second) == L"TheGateway_01")
+			{
+				auto Choiceiter = Event.hmapData.find(L"Choices");
+				if (Choiceiter == Event.hmapData.end()) { return; }
 
-			m_pLeftSelect->Set_Text(vecChoiceTex[0].c_str());
-			m_pLeftSelect->Set_FontColor(D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
-			m_pLeftSelect->Set_Flags(DT_CENTER | DT_VCENTER);
+				vector<wstring> vecChoiceTex = std::move(any_cast<vector<wstring>>(Choiceiter->second));
 
-			m_pRightSelect->Set_Text(vecChoiceTex[1].c_str());
-			m_pRightSelect->Set_FontColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
-			m_pRightSelect->Set_Flags(DT_CENTER | DT_VCENTER);
+				m_pLeftSelect->Set_Text(vecChoiceTex[0].c_str());
+				m_pLeftSelect->Set_FontColor(D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
+				m_pLeftSelect->Set_Flags(DT_CENTER | DT_VCENTER);
 
-			m_iSelectSlot = 0;
+				m_pRightSelect->Set_Text(vecChoiceTex[1].c_str());
+				m_pRightSelect->Set_FontColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+				m_pRightSelect->Set_Flags(DT_CENTER | DT_VCENTER);
 
-			m_pLeftSelect->Active();
-			m_pRightSelect->Active();
-			m_pSpeechBubble->Active();
-			m_pSelectionArrow->Active();
+				m_iSelectSlot = 0;
 
-			m_bShowSelect = true;
+				m_pLeftSelect->Active();
+				m_pRightSelect->Active();
+				m_pSpeechBubble->Active();
+				m_pSelectionArrow->Active();
+
+				m_bShowSelect = true;
+			}
 		}
-	}) });
+	) });
 
-	m_hmapSubHandles.insert({ L"CutScene.End", m_pMessageChannel->Subscribe(L"CutScene.End", [this](const IMessageChannel::EVENT& Event) {
-	if (any_cast<wstring>(Event.hmapData.find(L"SceneName")->second) == L"TheGateway_01")
-	{
-		m_bSceneChangeFlag = true;
-	}
-	}) });
+	m_hmapSubHandles.insert({ L"CutScene.End", m_pMessageChannel->Subscribe(L"CutScene.End", [this](const IMessageChannel::EVENT& Event)
+		{
+			if (any_cast<wstring>(Event.hmapData.find(L"SceneName")->second) == L"TheGateway_01")
+			{
+				m_bSceneChangeFlag = true;
+			}
+		}
+	) });
 }
 
 void CTheGateway::Select_Key_Input()

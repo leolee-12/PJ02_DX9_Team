@@ -288,16 +288,18 @@ void CMonsterN2::Ready_Variable()
 
 void CMonsterN2::Ready_Event()
 {
-	m_hmapSubHandles.insert({ L"Monster_Damaged", m_pMessageChannel->Subscribe(L"Monster.Attacked", [this](const IMessageChannel::EVENT& Event) {
-	for (auto& Target : any_cast<vector<CGameObject*>>(Event.hmapData.find(L"Target")->second))
-	{
-		if (Target == this)
+	m_hmapSubHandles.insert({ L"Monster_Damaged", m_pMessageChannel->Subscribe(L"Monster.Attacked", [this](const IMessageChannel::EVENT& Event)
 		{
-			Attacked(any_cast<_float>(Event.hmapData.find(L"Attack")->second));
-			break;
+			for (auto& Target : any_cast<vector<CGameObject*>>(Event.hmapData.find(L"Target")->second))
+			{
+				if (Target == this)
+				{
+					Attacked(any_cast<_float>(Event.hmapData.find(L"Attack")->second));
+					break;
+				}
+			}
 		}
-	}
-	}) });
+	) });
 }
 
 void CMonsterN2::Check_Frame()

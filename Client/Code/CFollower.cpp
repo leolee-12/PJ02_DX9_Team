@@ -290,23 +290,23 @@ void CFollower::Ready_Variable()
 		m_pTrigger = CTriggerPoint::Create(m_pGraphicDev, m_pMessageChannel, m_vPos, _vec3(1.f, 1.f, 1.f), Trigger::TI_FOLLOWER, L"UnConvert_Follower", false, this);
 
 		m_hmapSubHandles.insert({ L"Trigger.Activate.Owner", m_pMessageChannel->Subscribe(L"Trigger.Activate.Owner", [this](const IMessageChannel::EVENT& Event)
-		{
-			auto Nameiter = Event.hmapData.find(L"Trigger_Name");
-			if (Nameiter == Event.hmapData.end()) { return; }
-			auto Owneriter = Event.hmapData.find(L"Trigger_Owner");
-			if (Owneriter == Event.hmapData.end()) { return; }
-
-			if (any_cast<wstring>(Nameiter->second) == L"UnConvert_Follower")
 			{
-				if (any_cast<CGameObject*>(Owneriter->second) == this)
+				auto Nameiter = Event.hmapData.find(L"Trigger_Name");
+				if (Nameiter == Event.hmapData.end()) { return; }
+				auto Owneriter = Event.hmapData.find(L"Trigger_Owner");
+				if (Owneriter == Event.hmapData.end()) { return; }
+
+				if (any_cast<wstring>(Nameiter->second) == L"UnConvert_Follower")
 				{
-					Safe_Destroy(m_pTrigger);
-					m_eCurState = FOLLOWER_RECRUIT;
-					m_pAICom->Set_State<FOLLOWER_STATE>(FOLLOWER_RECRUIT);
+					if (any_cast<CGameObject*>(Owneriter->second) == this)
+					{
+						Safe_Destroy(m_pTrigger);
+						m_eCurState = FOLLOWER_RECRUIT;
+						m_pAICom->Set_State<FOLLOWER_STATE>(FOLLOWER_RECRUIT);
+					}
 				}
 			}
-		}
-	) });
+		) });
 	}
 }
 

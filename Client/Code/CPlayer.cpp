@@ -215,26 +215,29 @@ void CPlayer::Ready_Event()
 	//	}
 	//	}) });
 
-	m_hmapSubHandles.insert({ L"Player.Spawn", m_pMessageChannel->Subscribe(L"Player.Spawn", [this](const IMessageChannel::EVENT& Event) {
-	_vec3 vSpawnPos = any_cast<_vec3>(Event.hmapData.find(L"Postion")->second);
-
-	m_pTransformCom->Set_Pos(vSpawnPos.x, vSpawnPos.y, vSpawnPos.z);
-	m_pTransformCom->Update_Component(0.f);
-	}) });
-
-	m_hmapSubHandles.insert({ L"Player_Damaged", m_pMessageChannel->Subscribe(L"Player.Attacked", [this](const IMessageChannel::EVENT& Event) {
-	for (auto& Target : any_cast<vector<CGameObject*>>(Event.hmapData.find(L"Target")->second))
-	{
-		if (Target == this)
+	m_hmapSubHandles.insert({ L"Player.Spawn", m_pMessageChannel->Subscribe(L"Player.Spawn", [this](const IMessageChannel::EVENT& Event)
 		{
-			Attacked(any_cast<_float>(Event.hmapData.find(L"Attack")->second));
+			_vec3 vSpawnPos = any_cast<_vec3>(Event.hmapData.find(L"Postion")->second);
+
+			m_pTransformCom->Set_Pos(vSpawnPos.x, vSpawnPos.y, vSpawnPos.z);
+			m_pTransformCom->Update_Component(0.f);
 		}
-	}
-	}) });
+	) });
 
-	m_hmapSubHandles.insert({ L"CutScene.Dialogue", m_pMessageChannel->Subscribe(L"CutScene.Dialogue", [this](const IMessageChannel::EVENT& Event) {
-	{
+	m_hmapSubHandles.insert({ L"Player_Damaged", m_pMessageChannel->Subscribe(L"Player.Attacked", [this](const IMessageChannel::EVENT& Event)
+		{
+			for (auto& Target : any_cast<vector<CGameObject*>>(Event.hmapData.find(L"Target")->second))
+			{
+				if (Target == this)
+				{
+					Attacked(any_cast<_float>(Event.hmapData.find(L"Attack")->second));
+				}
+			}
+		}
+	) });
 
+	m_hmapSubHandles.insert({ L"CutScene.Dialogue", m_pMessageChannel->Subscribe(L"CutScene.Dialogue", [this](const IMessageChannel::EVENT& Event)
+		{
 			if (!m_bCutScene && (m_eCurState != PS_REBIRTH)) {
 				m_eCurState = PS_IDLE;
 				m_iCombo = 0;
@@ -273,7 +276,7 @@ void CPlayer::Ready_Event()
 				}
 			}
 		}
-	}) });
+	) });
 
 	m_hmapSubHandles.insert({ L"Tarot.Selected", m_pMessageChannel->Subscribe(L"Tarot.Selected", [this](const IMessageChannel::EVENT& Event)
 		{
@@ -300,7 +303,8 @@ void CPlayer::Ready_Event()
 
 			if (m_fPassion > MAX_PASSION_VALUE)
 				m_fPassion = MAX_PASSION_VALUE;
-		}) });
+		}
+	) });
 
 	m_hmapSubHandles.insert({ L"Player.AddFaith", m_pMessageChannel->Subscribe(L"Player.AddFaith", [this](const IMessageChannel::EVENT& Event)
 		{
@@ -308,42 +312,43 @@ void CPlayer::Ready_Event()
 
 			if (m_fPassion > MAX_FAITH_VALUE)
 				m_fPassion = MAX_FAITH_VALUE;
-		}) });
+		}
+	) });
 
 	m_hmapSubHandles.insert({ L"Trigger.Activate.Owner",m_pMessageChannel->Subscribe(L"Trigger.Activate.Owner" ,[this](const IMessageChannel::EVENT& Event)
-{
-		auto iter = Event.hmapData.find(L"Trigger_Name");
-		if (iter == Event.hmapData.end())
-			return;
+		{
+			auto iter = Event.hmapData.find(L"Trigger_Name");
+			if (iter == Event.hmapData.end())
+				return;
 
-		wstring name = any_cast<wstring>(iter->second);
-		if (name == L"Sword")
-		{
-			// 검 먹은 로직
-			m_eWeaponType = WT_SWORD;
-			m_fAttack = 1.f;
+			wstring name = any_cast<wstring>(iter->second);
+			if (name == L"Sword")
+			{
+				// 검 먹은 로직
+				m_eWeaponType = WT_SWORD;
+				m_fAttack = 1.f;
+			}
+			else if (name == L"Gauntlet")
+			{
+				// 건틀릿 먹은 로직
+				m_eWeaponType = WT_GAUNTLETS;
+				m_fAttack = 2.f;
+			}
 		}
-		else if (name == L"Gauntlet")
-		{
-			// 건틀릿 먹은 로직
-			m_eWeaponType = WT_GAUNTLETS;
-			m_fAttack = 2.f;
-		}
-}
-) });
+	) });
 
 	m_hmapSubHandles.insert({ L"Building.Enter", m_pMessageChannel->Subscribe(L"Building.Enter", [this](const IMessageChannel::EVENT& Event)
-	{
-		m_bCutScene = true;
-		return;
-	}
+		{
+			m_bCutScene = true;
+			return;
+		}
 	) });
 
 	m_hmapSubHandles.insert({ L"Building.Exit", m_pMessageChannel->Subscribe(L"Building.Exit", [this](const IMessageChannel::EVENT& Event)
-	{
-		m_bCutScene = false;
-		return;
-	}
+		{
+			m_bCutScene = false;
+			return;
+		}
 	) });
 
 	m_bMsgRegistered = true;

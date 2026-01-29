@@ -53,15 +53,17 @@ HRESULT CGrass::Ready_GameObject()
 
 	m_pColliderCom->RegisterToManager(this, CL_GRASS);
 
-	m_hmapSubHandles.insert({ L"Grass.Attacked", m_pMessageChannel->Subscribe(L"Grass.Attacked", [this](const IMessageChannel::EVENT& Event) {
-		for (auto& Target : any_cast<vector<CGameObject*>>(Event.hmapData.find(L"Target")->second))
+	m_hmapSubHandles.insert({ L"Grass.Attacked", m_pMessageChannel->Subscribe(L"Grass.Attacked", [this](const IMessageChannel::EVENT& Event)
 		{
-			if (Target == this)
+			for (auto& Target : any_cast<vector<CGameObject*>>(Event.hmapData.find(L"Target")->second))
 			{
-				this->m_iHp = 0;
+				if (Target == this)
+				{
+					this->m_iHp = 0;
+				}
 			}
 		}
-	}) });
+	) });
 
 	return S_OK;
 }

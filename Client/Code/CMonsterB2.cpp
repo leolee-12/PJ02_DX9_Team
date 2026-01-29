@@ -270,34 +270,35 @@ void CMonsterB2::Ready_Variable()
 
 void CMonsterB2::Ready_Event()
 {
-	m_hmapSubHandles.insert({ L"Monster_Damaged", m_pMessageChannel->Subscribe(L"Monster.Attacked", [this](const IMessageChannel::EVENT& Event) {
-	for (auto& Target : any_cast<vector<CGameObject*>>(Event.hmapData.find(L"Target")->second))
-	{
-		if (Target == this)
+	m_hmapSubHandles.insert({ L"Monster_Damaged", m_pMessageChannel->Subscribe(L"Monster.Attacked", [this](const IMessageChannel::EVENT& Event)
 		{
-			Attacked(any_cast<_float>(Event.hmapData.find(L"Attack")->second));
-			break;
-		}
-	}
-	}) });
-
-	m_hmapSubHandles.insert({ L"Dialogue", m_pMessageChannel->Subscribe(L"CutScene.Dialogue", [this](const IMessageChannel::EVENT& Event)
-	{
-		auto CinemaTargetNameiter = Event.hmapData.find(L"CinemaTargetName");
-		if (CinemaTargetNameiter == Event.hmapData.end()) { return; }
-		auto Dothisiter = Event.hmapData.find(L"Dothis");
-		if (Dothisiter == Event.hmapData.end()) { return; }
-		if (any_cast<wstring>(CinemaTargetNameiter->second) == L"Leshy")
-		{
-			wstring strDothis = any_cast<wstring>(Dothisiter->second);
-			if (strDothis == L"Leshy_Intro") {
-				m_bWait = false;
-				return;
+			for (auto& Target : any_cast<vector<CGameObject*>>(Event.hmapData.find(L"Target")->second))
+			{
+				if (Target == this)
+				{
+					Attacked(any_cast<_float>(Event.hmapData.find(L"Attack")->second));
+					break;
+				}
 			}
 		}
+	) });
 
-		return;
-	}
+	m_hmapSubHandles.insert({ L"Dialogue", m_pMessageChannel->Subscribe(L"CutScene.Dialogue", [this](const IMessageChannel::EVENT& Event)
+		{
+			auto CinemaTargetNameiter = Event.hmapData.find(L"CinemaTargetName");
+			if (CinemaTargetNameiter == Event.hmapData.end()) { return; }
+			auto Dothisiter = Event.hmapData.find(L"Dothis");
+			if (Dothisiter == Event.hmapData.end()) { return; }
+			if (any_cast<wstring>(CinemaTargetNameiter->second) == L"Leshy")
+			{
+				wstring strDothis = any_cast<wstring>(Dothisiter->second);
+				if (strDothis == L"Leshy_Intro") {
+					m_bWait = false;
+					return;
+				}
+			}
+			return;
+		}
 	) });
 }
 

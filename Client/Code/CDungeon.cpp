@@ -644,21 +644,21 @@ HRESULT CDungeon::Ready_Light()
 
 void CDungeon::Ready_Event()
 {
-	m_hmapSubHandles.insert({ L"Obj_Add", m_pMessageChannel->Subscribe(L"Obj.Add", [this](const IMessageChannel::EVENT& Event) {
-	{
-		CGameObject* pGObj = any_cast<CGameObject*>(Event.hmapData.find(L"Obj")->second);
-
-		if (pGObj != nullptr)
+	m_hmapSubHandles.insert({ L"Obj_Add", m_pMessageChannel->Subscribe(L"Obj.Add", [this](const IMessageChannel::EVENT& Event)
 		{
-			wstring strLayerTag = any_cast<const _tchar*>(Event.hmapData.find(L"LayerTag")->second);
-			wstring strObjTag = any_cast<wstring>(Event.hmapData.find(L"ObjTag")->second);
-			auto iter = m_mapLayer.find(strLayerTag);
+			CGameObject* pGObj = any_cast<CGameObject*>(Event.hmapData.find(L"Obj")->second);
 
-			if(iter != m_mapLayer.end())
-				iter->second->Add_GameObject(strObjTag, pGObj);
+			if (pGObj != nullptr)
+			{
+				wstring strLayerTag = any_cast<const _tchar*>(Event.hmapData.find(L"LayerTag")->second);
+				wstring strObjTag = any_cast<wstring>(Event.hmapData.find(L"ObjTag")->second);
+				auto iter = m_mapLayer.find(strLayerTag);
+
+				if(iter != m_mapLayer.end())
+					iter->second->Add_GameObject(strObjTag, pGObj);
+			}
 		}
-	}
-	}) });
+	) });
 
 	m_hmapSubHandles.insert({ L"Dialogue", m_pMessageChannel->Subscribe(L"CutScene.Dialogue", [this](const IMessageChannel::EVENT& Event)
 		{
