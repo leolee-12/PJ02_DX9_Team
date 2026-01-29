@@ -65,22 +65,22 @@ HRESULT CFoodReviewUI::Ready_GameObject()
 void CFoodReviewUI::Ready_Event()
 {
 	m_hmapSubHandles.insert({ L"FoodReview.Open",m_pMessageChannel->Subscribe(L"Trigger.Activate.Owner" ,[this](const IMessageChannel::EVENT& Event)
-{
-		auto iter = Event.hmapData.find(L"Trigger_Name");
-		if (iter == Event.hmapData.end())
-			return;
-
-		wstring name = any_cast<wstring>(iter->second);
-		if (name == L"GoodFood")
 		{
-			ReviewGoodFood();
+			auto iter = Event.hmapData.find(L"Trigger_Name");
+			if (iter == Event.hmapData.end())
+				return;
+		
+			wstring name = any_cast<wstring>(iter->second);
+			if (name == L"GoodFood")
+			{
+				ReviewGoodFood();
+			}
+			else if (name == L"BadFood")
+			{
+				ReviewBadFood();
+			}
 		}
-		else if (name == L"BadFood")
-		{
-			ReviewBadFood();
-		}
-}
-) });
+	) });
 
 }
 _int CFoodReviewUI::Update_GameObject(const _float& fTimeDelta)

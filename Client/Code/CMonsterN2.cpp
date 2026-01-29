@@ -103,7 +103,7 @@ void CMonsterN2::LateUpdate_GameObject(const _float& fTimeDelta)
 	//------스프라이트 높이와 충돌체 위치 맞춤---------
 	AABB tAABB = { m_vPos.x, m_vPos.y, m_vPos.z, 0.75f, 0.75f, 0.75f };
 	m_pColliderCom->Set_AABB(tAABB);
-	m_pColliderCom->UpdateFromCustom(tAABB);
+	m_pColliderCom->UpdateFromAABB(tAABB);
 	if (g_bDebug) m_pColliderCom->Update_AABBforRender();
 	m_vEffectPos = { m_vPos.x, m_vPos.y + 0.5f, m_vPos.z };
 	//-------------------------------------------------
@@ -288,16 +288,18 @@ void CMonsterN2::Ready_Variable()
 
 void CMonsterN2::Ready_Event()
 {
-	m_hmapSubHandles.insert({ L"Monster_Damaged", m_pMessageChannel->Subscribe(L"Monster.Attacked", [this](const IMessageChannel::EVENT& Event) {
-	for (auto& Target : any_cast<vector<CGameObject*>>(Event.hmapData.find(L"Target")->second))
-	{
-		if (Target == this)
+	m_hmapSubHandles.insert({ L"Monster_Damaged", m_pMessageChannel->Subscribe(L"Monster.Attacked", [this](const IMessageChannel::EVENT& Event)
 		{
-			Attacked(any_cast<_float>(Event.hmapData.find(L"Attack")->second));
-			break;
+			for (auto& Target : any_cast<vector<CGameObject*>>(Event.hmapData.find(L"Target")->second))
+			{
+				if (Target == this)
+				{
+					Attacked(any_cast<_float>(Event.hmapData.find(L"Attack")->second));
+					break;
+				}
+			}
 		}
-	}
-	}) });
+	) });
 }
 
 void CMonsterN2::Check_Frame()

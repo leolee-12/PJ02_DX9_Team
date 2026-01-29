@@ -32,8 +32,7 @@ HRESULT CDungeonIcon::Ready_GameObject()
 	m_pTransformCom->Set_Scale(100.f, 100.f, 1.f);
 	//m_pTransformCom->Set_Pos(_float(-WINCX / 2) + 300.f, _float(-WINCY / 2) + 80.f, 0.f);
 
-	m_hmapSubHandles.insert({ L"Render", m_pMessageChannel->Subscribe(
-		L"Select", [this](const IMessageChannel::EVENT&)
+	m_hmapSubHandles.insert({ L"Render", m_pMessageChannel->Subscribe(L"Select", [this](const IMessageChannel::EVENT&)
 		{
 			if (m_bRender)
 			{

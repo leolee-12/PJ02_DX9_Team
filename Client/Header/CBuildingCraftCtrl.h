@@ -32,6 +32,8 @@ public:
 	void				Open();    // BCS_SELECT 진입
 	void				Close();   // BCS_IDLE 복귀
 
+	_bool				Get_IsOpen() { return m_eState == BCS_SELECT; }
+
 private:
 	HRESULT				Add_Component();
 	HRESULT				Ready_MyTransform();	// Ctrl 크기/위치 설정

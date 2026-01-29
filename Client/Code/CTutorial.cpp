@@ -421,12 +421,14 @@ HRESULT CTutorial::Ready_UI_Layer(const _tchar* pLayerTag)
 
 void CTutorial::Ready_Event()
 {
-	m_hmapSubHandles.insert({ L"CutScene.End", m_pMessageChannel->Subscribe(L"CutScene.End", [this](const IMessageChannel::EVENT& Event) {
-	if (any_cast<wstring>(Event.hmapData.find(L"SceneName")->second) == L"Tutorial_01")
-	{
-		m_bSceneChangeFlag = true;
-	}
-	}) });
+	m_hmapSubHandles.insert({ L"CutScene.End", m_pMessageChannel->Subscribe(L"CutScene.End", [this](const IMessageChannel::EVENT& Event)
+		{
+			if (any_cast<wstring>(Event.hmapData.find(L"SceneName")->second) == L"Tutorial_01")
+			{
+				m_bSceneChangeFlag = true;
+			}
+		}
+	) });
 }
 
 

@@ -43,7 +43,7 @@ _int CMapBorder::Update_GameObject(const _float& fTimeDelta)
 	tAABB.hy = 10.f;
 	tAABB.hz = TILE_SIZE * 0.5f;
 	m_pColliderCom->Set_AABB(tAABB);
-	m_pColliderCom->UpdateFromCustom(tAABB);
+	m_pColliderCom->UpdateFromAABB(tAABB);
 
 	if (g_bDebug) m_pColliderCom->Update_AABBforRender();
 

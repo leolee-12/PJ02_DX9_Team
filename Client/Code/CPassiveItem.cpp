@@ -99,7 +99,7 @@ void CPassiveItem::LateUpdate_GameObject(const _float& fTimeDelta)
 	{
 		AABB tWeaponAABB = { m_vPos, _vec3(1.f,2.f,1.f) };
 		m_pColliderCom->Set_AABB(tWeaponAABB);
-		m_pColliderCom->UpdateFromCustom(tWeaponAABB);
+		m_pColliderCom->UpdateFromAABB(tWeaponAABB);
 		m_pWeaponInfo->UnActive();
 	}
 	else

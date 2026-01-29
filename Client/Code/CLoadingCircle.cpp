@@ -33,7 +33,8 @@ HRESULT CLoadingCircle::Ready_GameObject()
 			m_bRender = false;
 			auto iter = m_hmapSubHandles.find(L"Stop_Rander");
 			m_pMessageChannel->Unsubscribe(iter->second);
-		}) });
+		}
+	) });
 
 	return S_OK;
 }

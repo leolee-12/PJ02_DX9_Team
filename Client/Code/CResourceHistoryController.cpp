@@ -144,38 +144,41 @@ void CResourceHistoryController::Ready_Event()
 	if (m_bMsgRegistered) return;
 
 	m_hmapSubHandles.insert({ L"History.Close",m_pMessageChannel->Subscribe(L"ResourceHistory.Close",[this](const IMessageChannel::EVENT& Event)
-	{
-			auto iter = Event.hmapData.find(L"ItemIndex");
-			if (iter == Event.hmapData.end())
-				return;
+		{
+				auto iter = Event.hmapData.find(L"ItemIndex");
+				if (iter == Event.hmapData.end())
+					return;
 
-			int ItemIndex = any_cast<int>(iter->second);
-			Sort(ItemIndex);
-	}
-) });
+				int ItemIndex = any_cast<int>(iter->second);
+				Sort(ItemIndex);
+		}
+	) });
+
 	m_hmapSubHandles.insert({ L"History.AddItem",m_pMessageChannel->Subscribe(L"ResourceHistory.AddItem",[this](const IMessageChannel::EVENT& Event)
-{
-		auto iter = Event.hmapData.find(L"ItemID");
-		if (iter == Event.hmapData.end())
-			return;
+		{
+				auto iter = Event.hmapData.find(L"ItemID");
+				if (iter == Event.hmapData.end())
+					return;
+		
+				int ItemIndex = any_cast<int>(iter->second);
+				AddItem(ItemIndex,1);
+		}
+	) });
 
-		int ItemIndex = any_cast<int>(iter->second);
-		AddItem(ItemIndex,1);
-}
-) });
 	m_hmapSubHandles.insert({ L"History.UseItem",m_pMessageChannel->Subscribe(L"ResourceHistory.UseItem",[this](const IMessageChannel::EVENT& Event)
-{
-		auto iter = Event.hmapData.find(L"ItemID");
-		if (iter == Event.hmapData.end())
-			return;
-		auto iter2 = Event.hmapData.find(L"ItemCount");
-		if (iter2 == Event.hmapData.end())
-			return;
-		int ItemIndex = any_cast<int>(iter->second);
-		int ItemCount = any_cast<int>(iter2->second);
-		UseItem(ItemIndex, ItemCount);
-}
-) });
+		{
+				auto iter = Event.hmapData.find(L"ItemID");
+				if (iter == Event.hmapData.end())
+					return;
+				auto iter2 = Event.hmapData.find(L"ItemCount");
+				if (iter2 == Event.hmapData.end())
+					return;
+				int ItemIndex = any_cast<int>(iter->second);
+				int ItemCount = any_cast<int>(iter2->second);
+				UseItem(ItemIndex, ItemCount);
+		}
+	) });
+
 	m_bMsgRegistered = true;
 }
 

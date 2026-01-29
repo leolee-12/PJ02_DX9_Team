@@ -153,7 +153,7 @@ void CBuilding::LateUpdate_GameObject(const _float& fTimeDelta)
 	_vec3 vTriggetHalfSize = { 1.99f, 2.f, 1.99f };
 	AABB tAABB = { vColliderPos, vTriggetHalfSize };
 	m_pColliderCom->Set_AABB(tAABB);
-	m_pColliderCom->UpdateFromCustom(tAABB);
+	m_pColliderCom->UpdateFromAABB(tAABB);
 	if (g_bDebug) m_pColliderCom->Update_AABBforRender();
 
 	if (m_eBuildingState == BS_PREVIEW) { m_bCanPlace = true; }
@@ -232,7 +232,7 @@ wstring CBuilding::Get_CompleteTexKey()
 void CBuilding::Set_PosForPick(const _vec3& vPos)
 {
 	m_vPos = vPos;
-	m_pTransformCom->Set_Pos(vPos.x, vPos.y, vPos.z);
+	m_pTransformCom->Set_Pos(vPos.x, m_fGroundY, vPos.z);
 	m_pTransformCom->Update_Component(0.f);
 }
 
@@ -472,78 +472,78 @@ void CBuilding::Ready_Event()
 	case BT_WORKSHOP:
 		break;
 	case BT_COOK:
-		m_hmapSubHandles.insert({ L"Cooking.End", m_pMessageChannel->Subscribe(L"Cooking.End", [this](const IMessageChannel::EVENT& Event) {
-		{
+		m_hmapSubHandles.insert({ L"Cooking.End", m_pMessageChannel->Subscribe(L"Cooking.End", [this](const IMessageChannel::EVENT& Event)
+			{
 				auto iter = Event.hmapData.find(L"isSuccess");
 				if (iter == Event.hmapData.end()) { return; }
 
 				_bool isSuccess = any_cast<_bool>(iter->second);
 
-			_vec3 vPos;
-			m_pTransformCom->Get_Info(INFO_POS, &vPos);
-			vPos.y -= 1.f;
+				_vec3 vPos;
+				m_pTransformCom->Get_Info(INFO_POS, &vPos);
+				vPos.y -= 1.f;
 
-			CGameObject* pItem = nullptr;
+				CGameObject* pItem = nullptr;
 
-			if (isSuccess)
-			{
-				pItem = CItem::Create(m_pGraphicDev, m_pMessageChannel, vPos, CItem::FD_GFOOD, false, 3.f);
+				if (isSuccess)
+				{
+					pItem = CItem::Create(m_pGraphicDev, m_pMessageChannel, vPos, CItem::FD_GFOOD, false, 3.f);
+				}
+				else
+				{
+					pItem = CItem::Create(m_pGraphicDev, m_pMessageChannel, vPos, CItem::FD_BFOOD, false, 3.f);
+				}
+
+				IMessageChannel::EVENT CookingEvent;
+				CookingEvent.strType = L"Obj.Add";
+				CookingEvent.hmapData[L"Obj"] = pItem;
+				CookingEvent.hmapData[L"LayerTag"] = L"GameLogic_Layer";
+				CookingEvent.hmapData[L"ObjTag"] = wstring(L"Item");
+				m_pMessageChannel->Publish(CookingEvent);
 			}
-			else
-			{
-				pItem = CItem::Create(m_pGraphicDev, m_pMessageChannel, vPos, CItem::FD_BFOOD, false, 3.f);
-			}
-
-			IMessageChannel::EVENT CookingEvent;
-			CookingEvent.strType = L"Obj.Add";
-			CookingEvent.hmapData[L"Obj"] = pItem;
-			CookingEvent.hmapData[L"LayerTag"] = L"GameLogic_Layer";
-			CookingEvent.hmapData[L"ObjTag"] = wstring(L"Item");
-			m_pMessageChannel->Publish(CookingEvent);
-		}
-		}) });
+		) });
 		break;
 	case BT_KNUCKLEBONE:
 		m_hmapSubHandles.insert({ L"Trigger.Activate", m_pMessageChannel->Subscribe(L"Trigger.Activate", [this](const IMessageChannel::EVENT& Event)
-		{
-			auto Owneriter = Event.hmapData.find(L"Trigger_TID");
-			if (Owneriter == Event.hmapData.end()) { return; }
-
-			if (any_cast<Trigger::TRIGGERID>(Owneriter->second) == Trigger::TI_KNUCKLE)
 			{
-				_vec3 vCutScenePos = { m_vPos.x, m_vPos.y, m_vPos.z - 5.f };
+				auto Owneriter = Event.hmapData.find(L"Trigger_TID");
+				if (Owneriter == Event.hmapData.end()) { return; }
 
-				CGameObject* pRatau = CRatau::Create(m_pGraphicDev, m_pMessageChannel, vCutScenePos);
-
-				IMessageChannel::EVENT eAddRatau;
-				eAddRatau.strType = L"Obj.Add";
-				eAddRatau.eOBJID = Engine::OID_MONSTER;
-				eAddRatau.hmapData.emplace(L"Obj", pRatau);
-				eAddRatau.hmapData[L"LayerTag"] = L"GameLogic_Layer";
-				eAddRatau.hmapData.emplace(L"ObjTag", wstring(L"Ratau"));
-				m_pMessageChannel->Publish(eAddRatau);
-
-				CUTSCENE tKnuckleBoneScene;
-				tKnuckleBoneScene.strName = L"Meet_Knucklebone";
-				tKnuckleBoneScene.vecSteps =
+				if (any_cast<Trigger::TRIGGERID>(Owneriter->second) == Trigger::TI_KNUCKLE)
 				{
-					{ vCutScenePos, 1.f, 1.f, L"Player", L"LookforCam", ADV_IMMEDIATE},
-					{ vCutScenePos, 0.75f, 0.5f, L"Ratau", L"Ratau_Intro", ADV_EVENT, 0.f, L"Ratau.Done" },
-					{ vCutScenePos, 1.5f, 0.5f, L"Ratau", L"너클본에 흥미가 있어보이는구려." },
-					{ vCutScenePos, 1.5f, 0.5f, L"Ratau", L"자, 나랑 너클본 한 판 하시겠소?", ADV_DIALOGUE, 0.f, L"", vector<wstring>({L"예.", L"아니오."}) },
-					{ m_vPos, 1.f, 0.5f, L"FadeOut", L"", ADV_TIMED, 2.f},
-					{ m_vPos, 1.f, 0.5f, L"Ratau", L"Destroy", ADV_IMMEDIATE},
-				};
+					_vec3 vCutScenePos = { m_vPos.x, m_vPos.y, m_vPos.z - 5.f };
 
-				CCutSceneMgr::GetInstance()->Register_CutScene(tKnuckleBoneScene);
+					CGameObject* pRatau = CRatau::Create(m_pGraphicDev, m_pMessageChannel, vCutScenePos);
 
-				IMessageChannel::EVENT tBuildingEvent;
-				tBuildingEvent.strType = L"Staging.Start";
-				tBuildingEvent.hmapData[L"StagingName"] = wstring(L"Meet_Knucklebone");
-				m_pMessageChannel->Publish(tBuildingEvent);
+					IMessageChannel::EVENT eAddRatau;
+					eAddRatau.strType = L"Obj.Add";
+					eAddRatau.eOBJID = Engine::OID_MONSTER;
+					eAddRatau.hmapData.emplace(L"Obj", pRatau);
+					eAddRatau.hmapData[L"LayerTag"] = L"GameLogic_Layer";
+					eAddRatau.hmapData.emplace(L"ObjTag", wstring(L"Ratau"));
+					m_pMessageChannel->Publish(eAddRatau);
+
+					CUTSCENE tKnuckleBoneScene;
+					tKnuckleBoneScene.strName = L"Meet_Knucklebone";
+					tKnuckleBoneScene.vecSteps =
+					{
+						{ vCutScenePos, 1.f, 1.f, L"Player", L"LookforCam", ADV_IMMEDIATE},
+						{ vCutScenePos, 0.75f, 0.5f, L"Ratau", L"Ratau_Intro", ADV_EVENT, 0.f, L"Ratau.Done" },
+						{ vCutScenePos, 1.5f, 0.5f, L"Ratau", L"너클본에 흥미가 있어보이는구려." },
+						{ vCutScenePos, 1.5f, 0.5f, L"Ratau", L"자, 나랑 너클본 한 판 하시겠소?", ADV_DIALOGUE, 0.f, L"", vector<wstring>({L"예.", L"아니오."}) },
+						{ m_vPos, 1.f, 0.5f, L"FadeOut", L"", ADV_TIMED, 2.f},
+						{ m_vPos, 1.f, 0.5f, L"Ratau", L"Destroy", ADV_IMMEDIATE},
+					};
+
+					CCutSceneMgr::GetInstance()->Register_CutScene(tKnuckleBoneScene);
+
+					IMessageChannel::EVENT tBuildingEvent;
+					tBuildingEvent.strType = L"Staging.Start";
+					tBuildingEvent.hmapData[L"StagingName"] = wstring(L"Meet_Knucklebone");
+					m_pMessageChannel->Publish(tBuildingEvent);
+				}
 			}
-		}
-	) });
+		) });
 		break;
 	}
 }

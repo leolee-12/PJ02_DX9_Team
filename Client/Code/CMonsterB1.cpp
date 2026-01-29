@@ -317,35 +317,37 @@ void CMonsterB1::Ready_Variable()
 
 void CMonsterB1::Ready_Event()
 {
-	m_hmapSubHandles.insert({ L"Monster_Damaged", m_pMessageChannel->Subscribe(L"Monster.Attacked", [this](const IMessageChannel::EVENT& Event) {
-	for (auto& Target : any_cast<vector<CGameObject*>>(Event.hmapData.find(L"Target")->second))
-	{
-		if (Target == this)
+	m_hmapSubHandles.insert({ L"Monster_Damaged", m_pMessageChannel->Subscribe(L"Monster.Attacked", [this](const IMessageChannel::EVENT& Event)
 		{
-			Attacked(any_cast<_float>(Event.hmapData.find(L"Attack")->second));
-			break;
-		}
-	}
-	}) });
-
-	m_hmapSubHandles.insert({ L"Dialogue", m_pMessageChannel->Subscribe(L"CutScene.Dialogue", [this](const IMessageChannel::EVENT& Event)
-	{
-		auto CinemaTargetNameiter = Event.hmapData.find(L"CinemaTargetName");
-		if (CinemaTargetNameiter == Event.hmapData.end()) { return; }
-		auto Dothisiter = Event.hmapData.find(L"Dothis");
-		if (Dothisiter == Event.hmapData.end()) { return; }
-		if (any_cast<wstring>(CinemaTargetNameiter->second) == L"Amdu")
-		{
-			wstring strDothis = any_cast<wstring>(Dothisiter->second);
-			if (strDothis == L"Amdu_Intro") {
-				m_bWaiting = false;
-				return;
+			for (auto& Target : any_cast<vector<CGameObject*>>(Event.hmapData.find(L"Target")->second))
+			{
+				if (Target == this)
+				{
+					Attacked(any_cast<_float>(Event.hmapData.find(L"Attack")->second));
+					break;
+				}
 			}
 		}
+	) });
 
-		return;
-	}
-	)});
+	m_hmapSubHandles.insert({ L"Dialogue", m_pMessageChannel->Subscribe(L"CutScene.Dialogue", [this](const IMessageChannel::EVENT& Event)
+		{
+			auto CinemaTargetNameiter = Event.hmapData.find(L"CinemaTargetName");
+			if (CinemaTargetNameiter == Event.hmapData.end()) { return; }
+			auto Dothisiter = Event.hmapData.find(L"Dothis");
+			if (Dothisiter == Event.hmapData.end()) { return; }
+			if (any_cast<wstring>(CinemaTargetNameiter->second) == L"Amdu")
+			{
+				wstring strDothis = any_cast<wstring>(Dothisiter->second);
+				if (strDothis == L"Amdu_Intro") {
+					m_bWaiting = false;
+					return;
+				}
+			}
+
+			return;
+		}
+	) });
 
 }
 
@@ -773,7 +775,7 @@ void CMonsterB1::Check_Status()
 	_float fY(m_vPos.y - m_pTransformCom->Get_Scale(ROT_Y) * 0.125f);
 	AABB tAABB = { m_vPos.x, fY, m_vPos.z, 2.5f, 2.5f, 2.5f };
 	m_pColliderCom->Set_AABB(tAABB);
-	m_pColliderCom->UpdateFromCustom(tAABB);
+	m_pColliderCom->UpdateFromAABB(tAABB);
 	m_vEffectPos = { m_vPos.x + 1.25f, fY - 0.25f, m_vPos.z };
 	//-------------------------------------------------
 

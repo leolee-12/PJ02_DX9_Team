@@ -300,12 +300,12 @@ void CBuildingCraftCtrl::Ready_Event()
 
 void CBuildingCraftCtrl::Update_Select(const _float& fTimeDelta)
 {
-	// BACKSPACE : 닫기
-	if (CDInputMgr::GetInstance()->Key_Down(DIK_BACK))
-	{
-		Close();
-		return;
-	}
+	//// BACKSPACE : 닫기
+	//if (CDInputMgr::GetInstance()->Key_Down(DIK_BACK))
+	//{
+	//	Close();
+	//	return;
+	//}
 
 	// 슬롯 마우스 호버 체크 (내부에서 인포카드 정보 갱신)
 	Update_SlotHover();
@@ -383,6 +383,7 @@ void CBuildingCraftCtrl::On_SlotClicked(BUILDING_TYPE eType)
 	// Scene에 이벤트 발행
 	IMessageChannel::EVENT tEvent;
 	tEvent.strType = L"Building.Select";
+	tEvent.hmapData[L"BuildingType"] = BUILDING_TYPE(eType);
 	//------------------
 	// 이벤트 정보 전달
 	//------------------

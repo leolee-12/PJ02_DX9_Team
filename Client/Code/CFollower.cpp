@@ -104,7 +104,7 @@ void CFollower::LateUpdate_GameObject(const _float& fTimeDelta)
 	AABB tAABB = { m_vPos.x, fY, m_vPos.z, 1.f, 1.f, 1.f };
 	_vec3 vTriggerPos = { m_vPos.x, fY, m_vPos.z };
 	m_pColliderCom->Set_AABB(tAABB);
-	m_pColliderCom->UpdateFromCustom(tAABB);
+	m_pColliderCom->UpdateFromAABB(tAABB);
 	//-------------------------------------------------
 	// 충돌체 디버그용
 
@@ -291,23 +291,23 @@ void CFollower::Ready_Variable()
 		m_pTrigger = CTriggerPoint::Create(m_pGraphicDev, m_pMessageChannel, m_vPos, _vec3(1.f, 1.f, 1.f), Trigger::TI_FOLLOWER, L"UnConvert_Follower", false, this);
 
 		m_hmapSubHandles.insert({ L"Trigger.Activate.Owner", m_pMessageChannel->Subscribe(L"Trigger.Activate.Owner", [this](const IMessageChannel::EVENT& Event)
-		{
-			auto Nameiter = Event.hmapData.find(L"Trigger_Name");
-			if (Nameiter == Event.hmapData.end()) { return; }
-			auto Owneriter = Event.hmapData.find(L"Trigger_Owner");
-			if (Owneriter == Event.hmapData.end()) { return; }
-
-			if (any_cast<wstring>(Nameiter->second) == L"UnConvert_Follower")
 			{
-				if (any_cast<CGameObject*>(Owneriter->second) == this)
+				auto Nameiter = Event.hmapData.find(L"Trigger_Name");
+				if (Nameiter == Event.hmapData.end()) { return; }
+				auto Owneriter = Event.hmapData.find(L"Trigger_Owner");
+				if (Owneriter == Event.hmapData.end()) { return; }
+
+				if (any_cast<wstring>(Nameiter->second) == L"UnConvert_Follower")
 				{
-					Safe_Destroy(m_pTrigger);
-					m_eCurState = FOLLOWER_RECRUIT;
-					m_pAICom->Set_State<FOLLOWER_STATE>(FOLLOWER_RECRUIT);
+					if (any_cast<CGameObject*>(Owneriter->second) == this)
+					{
+						Safe_Destroy(m_pTrigger);
+						m_eCurState = FOLLOWER_RECRUIT;
+						m_pAICom->Set_State<FOLLOWER_STATE>(FOLLOWER_RECRUIT);
+					}
 				}
 			}
-		}
-	) });
+		) });
 	}
 }
 

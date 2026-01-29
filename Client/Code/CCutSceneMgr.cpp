@@ -110,37 +110,42 @@ void CCutSceneMgr::Clear_CutScene()
 
 void CCutSceneMgr::Subscribe()
 {
-	m_hmapSubHandles.insert({ L"Trigger.Activate", m_pMessageChannel->Subscribe(L"Trigger.Activate", [this](const IMessageChannel::EVENT& Event) {
-		auto iter = Event.hmapData.find(L"Trigger_TID");
-		if (iter == Event.hmapData.end()) { return; }
-
-		if (any_cast<Trigger::TRIGGERID>(iter->second) == Trigger::TI_STAGING)
+	m_hmapSubHandles.insert({ L"Trigger.Activate", m_pMessageChannel->Subscribe(L"Trigger.Activate", [this](const IMessageChannel::EVENT& Event)
 		{
-			auto stagingiter = Event.hmapData.find(L"Trigger_Name");
+			auto iter = Event.hmapData.find(L"Trigger_TID");
+			if (iter == Event.hmapData.end()) { return; }
+
+			if (any_cast<Trigger::TRIGGERID>(iter->second) == Trigger::TI_STAGING)
+			{
+				auto stagingiter = Event.hmapData.find(L"Trigger_Name");
+				if (stagingiter == Event.hmapData.end()) { return; }
+
+				Play_CutScene(any_cast<wstring>(stagingiter->second));
+			}
+		}
+	) });
+
+	m_hmapSubHandles.insert({ L"Staging.Start", m_pMessageChannel->Subscribe(L"Staging.Start", [this](const IMessageChannel::EVENT& Event)
+		{
+			auto stagingiter = Event.hmapData.find(L"StagingName");
 			if (stagingiter == Event.hmapData.end()) { return; }
 
 			Play_CutScene(any_cast<wstring>(stagingiter->second));
 		}
-		
-	}) });
+	) });
 
-	m_hmapSubHandles.insert({ L"Staging.Start", m_pMessageChannel->Subscribe(L"Staging.Start", [this](const IMessageChannel::EVENT& Event) {
-		
-		auto stagingiter = Event.hmapData.find(L"StagingName");
-		if (stagingiter == Event.hmapData.end()) { return; }
+	m_hmapSubHandles.insert({ L"Dialogue.End", m_pMessageChannel->Subscribe(L"Dialogue.End", [this](const IMessageChannel::EVENT& Event)
+		{
+			m_bDialogueEnd = true;
+		}
+	) });
 
-		Play_CutScene(any_cast<wstring>(stagingiter->second));
-
-	}) });
-
-	m_hmapSubHandles.insert({ L"Dialogue.End", m_pMessageChannel->Subscribe(L"Dialogue.End", [this](const IMessageChannel::EVENT& Event) {
-		m_bDialogueEnd = true;
-	}) });
-
-	m_hmapSubHandles.insert({ L"Choice.Selected", m_pMessageChannel->Subscribe(L"Choice.Selected", [this](const IMessageChannel::EVENT& Event) {
-		m_bChoiceSelected = true;
-		Next_Step();
-	}) });
+	m_hmapSubHandles.insert({ L"Choice.Selected", m_pMessageChannel->Subscribe(L"Choice.Selected", [this](const IMessageChannel::EVENT& Event)
+		{
+			m_bChoiceSelected = true;
+			Next_Step();
+		}
+	) });
 }
 
 void CCutSceneMgr::Key_Input_CutScene()
@@ -246,7 +251,8 @@ void CCutSceneMgr::Execute_Step(_uint iStep)
 		m_bEventReceived = false;
 		m_hWaitEventHandle = m_pMessageChannel->Subscribe(
 			tStep.strWaitEventType,
-			[this](const IMessageChannel::EVENT& Event) {
+			[this](const IMessageChannel::EVENT& Event)
+			{
 				m_bEventReceived = true;
 			}
 		);
