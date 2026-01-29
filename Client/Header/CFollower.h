@@ -49,6 +49,7 @@ private:
 	void				Check_Work();
 	void				Execute_Work(const _float& fTimeDelta);
 	void				ReTarget() { m_ePreWork = FW_NONE; }
+	void				Check_BuildPriority();
 
 private:
 	Engine::CRcTex*			m_pBufferCom;
@@ -73,6 +74,7 @@ private:
 	_float			m_fGroundY;
 	FOLLOWER_WORK	m_ePreWork;
 	FOLLOWER_WORK	m_eCurWork;
+	FOLLOWER_WORK	m_eSavedWork;
 	_vec3			m_vLerpPos;
 	_uint			m_iRecruitState;
 

@@ -64,6 +64,9 @@ HRESULT CInventory::Ready_GameObject()
 	m_vLerpStart = { 0,0,0 };
 	m_vLerpEnd = { 0,0,0 };
 	m_iInvenCount = 0;
+	Add_Item(CItem::IG_GOLD, 17);
+	Add_Item(CItem::IG_WOOD, 18);
+	Add_Item(CItem::IG_STONE, 19);
 	Add_Item(CItem::IG_BERRY, 20);
 	return S_OK;
 }

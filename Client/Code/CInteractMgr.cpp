@@ -129,6 +129,20 @@ void CInteractMgr::Clear_IObj()
 	m_mapInteractables.clear();
 }
 
+_bool CInteractMgr::Has_BuildTarget() const
+{
+	auto iter = m_mapInteractables.find(BUILD);
+	return (iter != m_mapInteractables.end() && !iter->second.empty());
+}
+
+_uint CInteractMgr::Get_BuildCount() const
+{
+	auto iter = m_mapInteractables.find(BUILD);
+
+	if (iter != m_mapInteractables.end())	return _uint(iter->second.size());
+	else									return 0;
+}
+
 void CInteractMgr::Free()
 {
 	Clear_IObj();

@@ -149,6 +149,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\Header\Bishops_Enum.h" />
+    <ClInclude Include="..\Header\Building_Enum.h" />
     <ClInclude Include="..\Header\CAmdusiasRoom.h" />
     <ClInclude Include="..\Header\CB1_AI.h" />
     <ClInclude Include="..\Header\CB2_AI.h">
@@ -162,6 +163,8 @@
     <ClInclude Include="..\Header\CBossHpBarMiddle.h" />
     <ClInclude Include="..\Header\CBrute.h" />
     <ClInclude Include="..\Header\CBuilding.h" />
+    <ClInclude Include="..\Header\CBuildingCraftCtrl.h" />
+    <ClInclude Include="..\Header\CBuildingInfoCard.h" />
     <ClInclude Include="..\Header\CChargeArrow.h" />
     <ClInclude Include="..\Header\CChest.h" />
     <ClInclude Include="..\Header\CCookingButton.h" />
@@ -244,6 +247,7 @@
     <ClInclude Include="..\Header\CScreenEffect.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClInclude>
+    <ClInclude Include="..\Header\CBuildingSelectSlot.h" />
     <ClInclude Include="..\Header\CSpriteEffect.h" />
     <ClInclude Include="..\Header\CTarotCard.h" />
     <ClInclude Include="..\Header\CTarotInfo.h" />
@@ -369,6 +373,8 @@
     <ClCompile Include="..\Code\CBossHpBarFront.cpp" />
     <ClCompile Include="..\Code\CBossHpBarMiddle.cpp" />
     <ClCompile Include="..\Code\CBrute.cpp" />
+    <ClCompile Include="..\Code\CBuildingCraftCtrl.cpp" />
+    <ClCompile Include="..\Code\CBuildingInfoCard.cpp" />
     <ClCompile Include="..\Code\CChargeArrow.cpp" />
     <ClCompile Include="..\Code\CChest.cpp" />
     <ClCompile Include="..\Code\CBuilding.cpp" />
@@ -510,6 +516,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\Code\CSelectionArrow.cpp" />
+    <ClCompile Include="..\Code\CBuildingSelectSlot.cpp" />
     <ClCompile Include="..\Code\CSkyBox.cpp" />
     <ClCompile Include="..\Code\CSpeechBubble.cpp" />
     <ClCompile Include="..\Code\CSpeechBubbleOrtho.cpp" />
