@@ -6,11 +6,31 @@
 
 CBuildingSelectSlot::CBuildingSelectSlot(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CUi(pGraphicDev)
+	, m_pBufferCom(nullptr)
+	, m_pTransformCom(nullptr)
+	, m_pSlotTextureCom(nullptr)
+	, m_pIconTextureCom(nullptr)
+	, m_eBuildingType(BT_END)
+	, m_bHovered(false)
+	, m_bCanBuild(true)
+	, m_fScreenX(0.f)
+	, m_fScreenY(0.f)
+	, m_fWidth(64.f)       // 슬롯 기본 크기
+	, m_fHeight(64.f)
+	, m_fBaseScale(1.f)
+	, m_fTargetScale(1.f)
+	, m_fCurScale(1.f)
 {
 }
 
 CBuildingSelectSlot::~CBuildingSelectSlot()
 {
+}
+
+void CBuildingSelectSlot::Set_Scale(const _float& fScale)
+{
+	m_pTransformCom->Set_Scale(fScale, fScale, 1.f);
+	m_fBaseScale = m_fCurScale = m_fTargetScale = fScale;
 }
 
 HRESULT	CBuildingSelectSlot::Ready_GameObject()
@@ -32,9 +52,9 @@ _int CBuildingSelectSlot::Update_GameObject(const _float& fTimeDelta)
 
 	const _float fLerp = 10.f;
 
-	m_fCurrentScale = m_fCurrentScale + (m_fTargetScale - m_fCurrentScale) * fTimeDelta * fLerp;
+	m_fCurScale = m_fCurScale + (m_fTargetScale - m_fCurScale) * fTimeDelta * fLerp;
 
-	m_pTransformCom->Set_Scale(m_fCurrentScale, m_fCurrentScale, 1.f);
+	m_pTransformCom->Set_Scale(m_fCurScale, m_fCurScale, 1.f);
 
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 
@@ -72,8 +92,8 @@ _bool CBuildingSelectSlot::Is_Hovered()
 	ScreenToClient(g_hWnd, &ptMouse);
 
 	// 슬롯 영역 계산 (스크린 좌표)
-	_float fHalfW = m_fWidth * m_fCurrentScale * 0.5f;
-	_float fHalfH = m_fHeight * m_fCurrentScale * 0.5f;
+	_float fHalfW = m_fWidth * m_fCurScale * 0.5f;
+	_float fHalfH = m_fHeight * m_fCurScale * 0.5f;
 
 	return (ptMouse.x >= m_fScreenX - fHalfW && ptMouse.x <= m_fScreenX + fHalfW &&
 			ptMouse.y >= m_fScreenY - fHalfH && ptMouse.y <= m_fScreenY + fHalfH);
@@ -129,7 +149,9 @@ CBuildingSelectSlot* CBuildingSelectSlot::Create(LPDIRECT3DDEVICE9 pGraphicDev, 
 	}
 
 	pInstance->m_pTransformCom->Set_Pos(vPos.x, vPos.y, vPos.z);
+	pInstance->m_pTransformCom->Set_Scale(pInstance->m_fBaseScale, pInstance->m_fBaseScale, 1.f);
 	pInstance->m_eBuildingType = eType;
+
 
 	return pInstance;
 }

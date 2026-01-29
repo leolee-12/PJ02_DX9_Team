@@ -22,6 +22,8 @@ private:
 
 public:
 	void				Set_Pos(TEXTURE_TYPE eType, const _vec3& vPos);
+	void				Set_NameFontPos(const _float& fX, const _float& fY);
+	void				Set_CostFontPos(const _float& fX, const _float& fY);
 
 	virtual	HRESULT		Ready_GameObject();
 	virtual	_int		Update_GameObject(const _float& fTimeDelta);
@@ -33,6 +35,8 @@ public:
 
 private:
 	HRESULT				Add_Component();
+	HRESULT				Ready_MyTransform();
+	HRESULT				Ready_MyFont();
 	void				Update_Content(BUILDING_TYPE eType);  // 텍스트 갱신
 
 	// 컴포넌트

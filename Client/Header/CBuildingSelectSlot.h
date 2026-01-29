@@ -16,6 +16,7 @@ private:
 	virtual		~CBuildingSelectSlot();
 
 public:
+	void			Set_Scale(const _float& fScale);
 	void			Set_ScreenPos(_float fX, _float fY) { m_fScreenX = fX; m_fScreenY = fY; }
 	void            Set_Hovered(_bool b) { m_bHovered = b; }
 	void            Set_CanBuild(_bool b) { m_bCanBuild = b; }
@@ -48,9 +49,9 @@ private:
 	_float			m_fScreenY;
 	_float          m_fWidth;
 	_float          m_fHeight;
-	_float			m_fBaseScale;    // 기본 스케일
-	_float			m_fTargetScale;  // 목표 스케일
-	_float			m_fCurrentScale; // 현재 스케일
+	_float			m_fBaseScale;	// 기본 스케일
+	_float			m_fTargetScale;	// 목표 스케일
+	_float			m_fCurScale;	// 현재 스케일
 
 public:
 	static CBuildingSelectSlot* Create(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vPos, BUILDING_TYPE eType);

@@ -11,6 +11,7 @@ namespace Engine
 
 class	CBuildingSelectSlot;
 class	CBuildingInfoCard;
+class	CFontUIOrtho;
 
 class CBuildingCraftCtrl : public CUi
 {
@@ -33,9 +34,11 @@ public:
 
 private:
 	HRESULT				Add_Component();
-	HRESULT				Ready_Slots();		// 슬롯 생성
-	HRESULT				Ready_InfoCard();	// InfoCard 생성
-	void				Ready_Event();		// 이벤트 구독
+	HRESULT				Ready_MyTransform();	// Ctrl 크기/위치 설정
+	HRESULT				Ready_Slots();			// SelectSlot 생성 및 크기/위치 설정
+	HRESULT				Ready_InfoCard();		// InfoCard 생성 및 크기/위치 설정
+	HRESULT				Ready_TitleFont();		// TitleFont 생성 및 크기/위치 설정
+	void				Ready_Event();			// 이벤트 구독
 
 	void				Update_Select(const _float& fTimeDelta);
 	void				Update_Build(const _float& fTimeDelta);
@@ -53,12 +56,13 @@ private:
 	// 하위 UI
 	vector<CBuildingSelectSlot*>    m_vecSlots;
 	CBuildingInfoCard*				m_pInfoCard;
+	CFontUIOrtho*					m_pTitleFont;
 
 	// 호버 추적
 	CBuildingSelectSlot* m_pHoveredSlot;
 
 	BUILDING_CRAFT_STATE m_eState;
-	BUILDING_CRAFT_STATE m_ePreState = BCS_END;  // 초기화 필수!
+	BUILDING_CRAFT_STATE m_ePreState;
 
 public:
 	static CBuildingCraftCtrl* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMessageChannel);

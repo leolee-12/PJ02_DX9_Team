@@ -2,13 +2,19 @@
 #include "CBuildingCraftCtrl.h"
 #include "CBuildingInfoCard.h"
 #include "CBuildingSelectSlot.h"
+#include "CFontUIOrtho.h"
 #include "CDInputMgr.h"
 #include "CProtoMgr.h"
-#include "CFontMgr.h"
+#include "CRenderer.h"
 
 CBuildingCraftCtrl::CBuildingCraftCtrl(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CUi(pGraphicDev)
+	, m_pInfoCard(nullptr)
+	, m_pHoveredSlot(nullptr)
+	, m_eState(BCS_IDLE)
+	, m_ePreState(BCS_END)
 {
+	m_vecSlots.reserve(4);
 }
 
 CBuildingCraftCtrl::~CBuildingCraftCtrl()
@@ -20,22 +26,16 @@ HRESULT	CBuildingCraftCtrl::Ready_GameObject()
 	if(FAILED(Add_Component()))
 		return E_FAIL;
 
-	_vec3 vBackPos = ScreenToDX(WINCX * 0.25f, WINCY * 0.5f, 0.5f);
-	m_pTransformCom[BACKGROUND]->Set_Pos(vBackPos.x, vBackPos.y, vBackPos.z);
-	m_pTransformCom[BACKGROUND]->Set_Scale(WINCX * 0.5f, WINCY, 1.f);
-
-	_vec3 vDeco1Pos = ScreenToDX(120.f, 80.f, 0.4f);
-	m_pTransformCom[DECO1]->Set_Pos(vDeco1Pos.x, vDeco1Pos.y, vDeco1Pos.z);
-	m_pTransformCom[DECO1]->Set_Scale(50.f, 50.f, 1.f);
-
-	_vec3 vDeco2Pos = ScreenToDX(280.f, 80.f, 0.4f);
-	m_pTransformCom[DECO2]->Set_Pos(vDeco2Pos.x, vDeco2Pos.y, vDeco2Pos.z);
-	m_pTransformCom[DECO2]->Set_Scale(50.f, 50.f, 1.f);
+	if (FAILED(Ready_MyTransform()))
+		return E_FAIL;
 
 	if (FAILED(Ready_Slots()))
 		return E_FAIL;
 
 	if (FAILED(Ready_InfoCard()))
+		return E_FAIL;
+
+	if (FAILED(Ready_TitleFont()))
 		return E_FAIL;
 
 	Ready_Event();
@@ -71,7 +71,7 @@ void CBuildingCraftCtrl::Render_GameObject()
 {
 	if (BCS_SELECT != m_eState) return;
 
-	// 반복문 가능한데 헷갈려서 명시
+	// 이상 없으면 반복문으로 변경
 	// 배경 렌더
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom[BACKGROUND]->Get_World());
 	m_pTextureCom[BACKGROUND]->Set_Texture(0);
@@ -87,11 +87,6 @@ void CBuildingCraftCtrl::Render_GameObject()
 	m_pTextureCom[DECO2]->Set_Texture(0);
 	m_pBufferCom->Render_Buffer();
 
-	// 타이틀 폰트 (CFontMgr 직접 호출)
-	D3DXCOLOR FontColor = D3DXCOLOR(240.f / 256.f, 240.f / 256.f, 240.f / 256.f, 1.f);
-	RECT rcTitle = { 0, 0, WINCX / 2, WINCY / 2 };
-	CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans30", L"건설", rcTitle, FontColor, DT_CENTER | DT_BOTTOM);
-
 	// 슬롯 렌더
 	for (auto& pSlot : m_vecSlots)
 		pSlot->Render_GameObject();
@@ -99,14 +94,28 @@ void CBuildingCraftCtrl::Render_GameObject()
 	// 인포카드 렌더
 	if (m_pInfoCard)
 		m_pInfoCard->Render_GameObject();
+
+	// 타이틀 폰트
+	if (m_pTitleFont)
+		m_pTitleFont->Render_GameObject();
 }
 
 void CBuildingCraftCtrl::Open()
 {
+	m_eState = BCS_SELECT;
+	m_pTitleFont->Active();
 }
 
 void CBuildingCraftCtrl::Close()
 {
+	m_eState = BCS_IDLE;
+	m_pHoveredSlot = nullptr;
+	m_pTitleFont->UnActive();
+
+	for (auto& pSlot : m_vecSlots)
+		pSlot->Set_Hovered(false);
+
+	m_pInfoCard->Hide();
 }
 
 HRESULT	CBuildingCraftCtrl::Add_Component()
@@ -168,23 +177,50 @@ HRESULT	CBuildingCraftCtrl::Add_Component()
 	return S_OK;
 }
 
+HRESULT CBuildingCraftCtrl::Ready_MyTransform()
+{
+	_vec3 vBackPos = ScreenToDX(WINCX * 0.25f, WINCY * 0.5f, 0.5f);
+	m_pTransformCom[BACKGROUND]->Set_Pos(vBackPos.x, vBackPos.y, vBackPos.z);
+	m_pTransformCom[BACKGROUND]->Set_Scale(WINCX * 0.5f, WINCY, 1.f);
+
+	_float fDecoScale = 0.5f;
+
+	_vec3 vDeco1Pos = ScreenToDX(240.f, 80.f, 0.4f);
+	m_pTransformCom[DECO1]->Set_Pos(vDeco1Pos.x, vDeco1Pos.y, vDeco1Pos.z);
+	m_pTransformCom[DECO1]->Set_Scale(116.f * fDecoScale, 51.f * fDecoScale, 1.f);
+
+	_vec3 vDeco2Pos = ScreenToDX(400.f, 80.f, 0.4f);
+	m_pTransformCom[DECO2]->Set_Pos(vDeco2Pos.x, vDeco2Pos.y, vDeco2Pos.z);
+	m_pTransformCom[DECO2]->Set_Scale(118.f * fDecoScale, 51.f * fDecoScale, 1.f);
+
+	return S_OK;
+}
+
 HRESULT CBuildingCraftCtrl::Ready_Slots()
 {
 	BUILDING_TYPE arrTypes[4] = { BT_COOK, BT_KNUCKLEBONE, BT_SHRINE, BT_END};
 
 	// 슬롯 위치 계산 (예: 화면 중앙 기준 가로 배치)
-	const _float fStartX = 60.f;
-	const _float fY = 450.f;
-	const _float fGap = 100.f;
+	const _float fStartX = 90.f;
+	const _float fY = 360.f;
+	const _float fGap = 150.f;
+	const _float fSlotScale = 100.f;
 	
 	for (_uint i = 0; i < 4; ++i)
 	{
-		_vec3 vPos = ScreenToDX(fStartX + i * fGap, fY, 0.4f);
+		_float fScreenX = fStartX + i * fGap;
+		_float fScreenY = fY;
+
+		_vec3 vPos = ScreenToDX(fScreenX, fScreenY, 0.4f);
 
 		CBuildingSelectSlot* pSlot = CBuildingSelectSlot::Create(m_pGraphicDev, vPos, arrTypes[i]);
 
 		if (nullptr == pSlot)
 			return E_FAIL;
+
+		
+		pSlot->Set_ScreenPos(fScreenX, fScreenY);
+		pSlot->Set_Scale(fSlotScale);
 
 		if (arrTypes[i] == BT_END) pSlot->Set_CanBuild(false);
 
@@ -214,6 +250,29 @@ HRESULT CBuildingCraftCtrl::Ready_InfoCard()
 	_vec3 vIng2Pos = ScreenToDX(WINCX * 0.75f + 40.f, WINCY * 0.5f + 50.f, 0.4f);
 	m_pInfoCard->Set_Pos(CBuildingInfoCard::INGREDIENT2, vIng2Pos);
 
+	m_pInfoCard->Set_NameFontPos(WINCX * 0.75f, WINCY * 0.5f - 100.f);
+	m_pInfoCard->Set_CostFontPos(WINCX * 0.75f, WINCY * 0.5f + 80.f);
+
+	return S_OK;
+}
+
+HRESULT CBuildingCraftCtrl::Ready_TitleFont()
+{
+	_float fFontScale(0.5f);
+
+	// 폰트 생성
+	m_pTitleFont = CFontUIOrtho::Create(m_pGraphicDev);
+
+	NULL_CHECK_RETURN(m_pTitleFont, E_FAIL);
+
+	m_pTitleFont->Set_Font(L"Font_NotoSans30");
+	m_pTitleFont->Set_FontColor(D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
+	m_pTitleFont->Set_Flags(DT_CENTER | DT_VCENTER);
+	m_pTitleFont->Set_Text(L"건설");
+	_vec3 vTitlePos = ScreenToDX(320.f, 80.f, 0.4f);
+	m_pTitleFont->Set_Pos(_vec2(vTitlePos.x, vTitlePos.y));
+	m_pTitleFont->Set_Scale(_vec2(118.f * fFontScale, 51.f * fFontScale));
+
 	return S_OK;
 }
 
@@ -234,6 +293,8 @@ void CBuildingCraftCtrl::Update_Select(const _float& fTimeDelta)
 	// 슬롯 마우스 호버 체크 (내부에서 인포카드 정보 갱신)
 	Update_SlotHover();
 
+	CGameObject::Update_GameObject(fTimeDelta);
+
 	// 슬롯 업데이트 및 클릭 체크
 	for (auto& pSlot : m_vecSlots)
 	{
@@ -252,6 +313,10 @@ void CBuildingCraftCtrl::Update_Select(const _float& fTimeDelta)
 	// 인포카드 업데이트
 	if (m_pInfoCard)
 		m_pInfoCard->Update_GameObject(fTimeDelta);
+
+	m_pTitleFont->Update_GameObject(fTimeDelta);
+
+	CRenderer::GetInstance()->Add_RenderGroup(RENDER_UI, this);
 }
 
 void CBuildingCraftCtrl::Update_Build(const _float& fTimeDelta)
@@ -285,11 +350,11 @@ void CBuildingCraftCtrl::Update_SlotHover()
 		{
 			BUILDING_TYPE eType = m_pHoveredSlot->Get_BuildingType();
 
-			if (eType != BT_END) m_pInfoCard->Show(eType);
+			if (eType != BT_END)	m_pInfoCard->Show(eType);
+			else					m_pInfoCard->Hide();
 		}
 		else m_pInfoCard->Hide();
 	}
-	else m_pInfoCard->Hide();
 }
 
 void CBuildingCraftCtrl::On_SlotClicked(BUILDING_TYPE eType)
@@ -315,7 +380,7 @@ _vec3 CBuildingCraftCtrl::ScreenToDX(const _float& fX, const _float& fY, const _
 void CBuildingCraftCtrl::DXToScreen(const _vec3& vDX, _float& fScreenX, _float& fScreenY)
 {
 	fScreenX = vDX.x + _float(WINCX) * 0.5f;
-	fScreenY = vDX.y + _float(WINCY) * 0.5f;
+	fScreenY = -vDX.y + _float(WINCY) * 0.5f;
 }
 
 CBuildingCraftCtrl* CBuildingCraftCtrl::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMessageChannel)
@@ -337,5 +402,15 @@ CBuildingCraftCtrl* CBuildingCraftCtrl::Create(LPDIRECT3DDEVICE9 pGraphicDev, IM
 
 void CBuildingCraftCtrl::Free()
 {
+	for (auto& pSlot : m_vecSlots)
+	{
+		Safe_Release(pSlot);
+	}
+
+	m_vecSlots.clear();
+
+	Safe_Release(m_pInfoCard);
+	Safe_Release(m_pTitleFont);
+
 	CUi::Free();
 }
