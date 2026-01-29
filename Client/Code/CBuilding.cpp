@@ -232,7 +232,7 @@ wstring CBuilding::Get_CompleteTexKey()
 void CBuilding::Set_PosForPick(const _vec3& vPos)
 {
 	m_vPos = vPos;
-	m_pTransformCom->Set_Pos(vPos.x, vPos.y, vPos.z);
+	m_pTransformCom->Set_Pos(vPos.x, m_fGroundY, vPos.z);
 	m_pTransformCom->Update_Component(0.f);
 }
 

@@ -694,15 +694,17 @@ void CVillage::Ready_Event_Village()
 					m_bLeshyDungeonFlag = true;
 				}
 			}
-			if (any_cast<Trigger::TRIGGERID>(TIDiter->second) == Trigger::TI_KNUCKLE)
-			{
-				//m_bKnuckleBoneFlag = true;
-			}
 			if (any_cast<Trigger::TRIGGERID>(TIDiter->second) == Trigger::TI_COOKING)
 			{
 				m_pCookingUI->Set_CookingState(CCookingUIController::CS_SELECT);
 				CPersistentMgr::GetInstance()->Get_Player()->Set_Action(true);
 				m_bCookingFlag = true;
+				CSoundMgr::GetInstance()->Play(L"OpenMenu.wav", SOUND_UI, 0.3f);
+			}
+			if (any_cast<Trigger::TRIGGERID>(TIDiter->second) == Trigger::TI_CRAFTING)
+			{
+				m_pBuildingCraftCtrl->Open();
+				CPersistentMgr::GetInstance()->Get_Player()->Set_Action(true);
 				CSoundMgr::GetInstance()->Play(L"OpenMenu.wav", SOUND_UI, 0.3f);
 			}
 		}
@@ -748,6 +750,24 @@ void CVillage::Ready_Event_Village()
 			}
 		}
 	) });
+
+	m_hmapSubHandles.insert({ L"Building.Select", m_pMessageChannel->Subscribe(L"Building.Select", [this](const IMessageChannel::EVENT& Event)
+		{
+			auto SceneNameiter = Event.hmapData.find(L"BuildingType");
+			if (SceneNameiter == Event.hmapData.end()) { return; }
+
+			BUILDING_TYPE eType = any_cast<BUILDING_TYPE>(SceneNameiter->second);
+
+			if (m_bBuildingFlag || m_pCurBuilding != nullptr) { return; }
+
+			m_pCurBuilding = CBuilding::Create(m_pGraphicDev, m_pMessageChannel, _vec3(175.5f, -0.95f, 40.f), eType, CBuilding::BS_PREVIEW);
+
+			IMessageChannel::EVENT SceneEvent;
+			SceneEvent.strType = L"Building.Enter";
+			m_pMessageChannel->Publish(SceneEvent);
+			m_bBuildingFlag = true;
+		}
+	) });
 }
 
 void CVillage::Key_Input_Village()
@@ -759,18 +779,6 @@ void CVillage::Key_Input_Village()
 	if (m_bShowSelect) { return; }
 	IMessageChannel::EVENT SceneEvent;
 
-	// 디버그 키인풋 윤석현
-	if (CDInputMgr::GetInstance()->Key_Down(DIK_F9))
-	{
-		if (!m_bBuildingFlag && m_pCurBuilding == nullptr)
-		{
-			m_pCurBuilding = CBuilding::Create(m_pGraphicDev, m_pMessageChannel, _vec3(175.5f, -0.95f, 40.f), BT_KNUCKLEBONE, CBuilding::BS_PREVIEW);
-
-			SceneEvent.strType = L"Building.Enter";
-			m_pMessageChannel->Publish(SceneEvent);
-			m_bBuildingFlag = true;
-		}
-	}
 	if (m_bBuildingFlag)
 	{
 		if (CDInputMgr::GetInstance()->Key_Down(DIK_BACKSPACE))
@@ -797,6 +805,14 @@ void CVillage::Key_Input_Village()
 				SceneEvent.strType = L"Building.Exit";
 				m_pMessageChannel->Publish(SceneEvent);
 			}
+		}
+	}
+	else
+	{
+		if (CDInputMgr::GetInstance()->Key_Down(DIK_BACKSPACE))
+		{
+			m_pBuildingCraftCtrl->Close();
+			CPersistentMgr::GetInstance()->Get_Player()->Set_Action(false);
 		}
 	}
 
