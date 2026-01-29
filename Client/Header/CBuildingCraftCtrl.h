@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "CUi.h"
+#include "Building_Enum.h"
 
 namespace Engine
 {
@@ -8,10 +9,8 @@ namespace Engine
 	class CTexture;
 }
 
-class CBuilding;
-enum BUILDING_TYPE;
-class CBuildingSelectSlot;
-class CBuildingInfoCard;
+class	CBuildingSelectSlot;
+class	CBuildingInfoCard;
 
 class CBuildingCraftCtrl : public CUi
 {
@@ -34,14 +33,15 @@ public:
 
 private:
 	HRESULT				Add_Component();
-	HRESULT				Ready_Slots();              // 슬롯 생성
-	HRESULT				Ready_InfoCard();           // InfoCard 생성
-	void				Ready_Event();              // 이벤트 구독
+	HRESULT				Ready_Slots();		// 슬롯 생성
+	HRESULT				Ready_InfoCard();	// InfoCard 생성
+	void				Ready_Event();		// 이벤트 구독
 
 	void				Update_Select(const _float& fTimeDelta);
 	void				Update_Build(const _float& fTimeDelta);
-	void				Update_SlotHover();         // 호버 감지 → InfoCard 갱신
+	void				Update_SlotHover();	// 호버 감지 -> 인포카드 갱신
 	void				On_SlotClicked(BUILDING_TYPE eType);
+	_vec3				ScreenToDX(_float fX, _float fY) { return _vec3(fX - WINCX * 0.5f, -fY + WINCY * 0.5f, 0.f); }
 
 private:
 	// 컴포넌트

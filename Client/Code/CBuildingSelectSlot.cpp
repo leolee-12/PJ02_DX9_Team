@@ -1,5 +1,6 @@
 ﻿#include "pch.h"
 #include "CBuildingSelectSlot.h"
+#include "CBuilding.h"
 #include "CDInputMgr.h"
 #include "CProtoMgr.h"
 
@@ -19,7 +20,18 @@ HRESULT	CBuildingSelectSlot::Ready_GameObject()
 
 _int CBuildingSelectSlot::Update_GameObject(const _float& fTimeDelta)
 {
+	if (m_bHovered)
+	{
+		_float fMultiplier = 1.15f;
+		m_fTargetScale = m_fBaseScale * fMultiplier;
+	}
+	else m_fTargetScale = m_fBaseScale;
 
+	const _float fLerp = 10.f;
+
+	m_fCurrentScale = m_fCurrentScale + (m_fTargetScale - m_fCurrentScale) * fTimeDelta * fLerp;
+
+	m_pTransformCom->Set_Scale(m_fCurrentScale, m_fCurrentScale, 1.f);
 
 	return NOEVENT;
 }

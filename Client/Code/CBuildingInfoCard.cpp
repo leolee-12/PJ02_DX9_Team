@@ -118,19 +118,19 @@ void CBuildingInfoCard::Update_Content(BUILDING_TYPE eType)
 	// 건물 타입별 정보 설정
 	switch (eType)
 	{
-	case CBuilding::BT_COOK:
+	case BT_COOK:
 		m_pNameFont->Set_Text(L"오븐");
 		m_pCostFont->Set_Text(L"나무 x5");
 		break;
-	case CBuilding::BT_KNUCKLEBONE:
+	case BT_KNUCKLEBONE:
 		m_pNameFont->Set_Text(L"너클본테이블");
 		m_pCostFont->Set_Text(L"나무 x3, 돌 x2");
 		break;
-	case CBuilding::BT_SHRINE:
+	case BT_SHRINE:
 		m_pNameFont->Set_Text(L"성지");
 		m_pCostFont->Set_Text(L"나무 x3, 돌 x2");
 		break;
-	case CBuilding::BT_END:
+	case BT_END:
 		m_pNameFont->Set_Text(L"");
 		m_pCostFont->Set_Text(L"");
 		break;

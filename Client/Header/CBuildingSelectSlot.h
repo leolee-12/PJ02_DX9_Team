@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "CUi.h"
+#include "Building_Enum.h"
 
 namespace Engine
 {
@@ -7,8 +8,6 @@ namespace Engine
 	class CTransform;
 	class CTexture;
 }
-
-enum BUILDING_TYPE;
 
 class CBuildingSelectSlot : public CUi
 {
@@ -19,8 +18,8 @@ private:
 public:
 	void            Set_Hovered(_bool b) { m_bHovered = b; }
 	void            Set_CanBuild(_bool b) { m_bCanBuild = b; }
-	BUILDING_TYPE   Get_BuildingType() const { return m_eBuildingType; }
 	_bool           Get_CanBuild() const { return m_bCanBuild; }
+	BUILDING_TYPE   Get_BuildingType() const { return m_eBuildingType; }
 
 	virtual	HRESULT		Ready_GameObject();
 	virtual	_int		Update_GameObject(const _float& fTimeDelta);
@@ -46,6 +45,9 @@ private:
 
 	_float          m_fWidth;
 	_float          m_fHeight;
+	_float			m_fBaseScale;    // 기본 스케일
+	_float			m_fTargetScale;  // 목표 스케일
+	_float			m_fCurrentScale; // 현재 스케일
 
 public:
 	static CBuildingSelectSlot* Create(LPDIRECT3DDEVICE9 pGraphicDev, const _vec3& vPos, BUILDING_TYPE eType);

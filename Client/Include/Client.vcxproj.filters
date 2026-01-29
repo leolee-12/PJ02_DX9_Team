@@ -1173,6 +1173,9 @@
     <ClInclude Include="..\Header\CBuildingSelectSlot.h">
       <Filter>02. GameObject\05. UI\15. BuildingCraftUI\02. SelectSlot</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\Building_Enum.h">
+      <Filter>02. GameObject\05. UI\15. BuildingCraftUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">

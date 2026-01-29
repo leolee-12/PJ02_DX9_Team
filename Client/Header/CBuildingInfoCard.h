@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "CUi.h"
+#include "Building_Enum.h"
 
 namespace Engine
 {
@@ -9,8 +10,6 @@ namespace Engine
 }
 
 class CFontUIOrtho;
-class CBuildingSlot;
-enum BUILDING_TYPE;
 
 class CBuildingInfoCard : public CUi
 {

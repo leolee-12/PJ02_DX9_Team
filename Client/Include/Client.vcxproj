@@ -149,6 +149,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\Header\Bishops_Enum.h" />
+    <ClInclude Include="..\Header\Building_Enum.h" />
     <ClInclude Include="..\Header\CAmdusiasRoom.h" />
     <ClInclude Include="..\Header\CB1_AI.h" />
     <ClInclude Include="..\Header\CB2_AI.h">

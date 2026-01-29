@@ -268,22 +268,22 @@ HRESULT CVillage::Ready_Environment_Layer(const _tchar* pLayerTag)
 			return E_FAIL;
 	}
 
-	pGameObject = CBuilding::Create(m_pGraphicDev, m_pMessageChannel, _vec3(175.5f, -0.95f, 40.f), CBuilding::BT_WORKSHOP);
+	pGameObject = CBuilding::Create(m_pGraphicDev, m_pMessageChannel, _vec3(175.5f, -0.95f, 40.f), BT_WORKSHOP);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	if (FAILED(pLayer->Add_GameObject(L"Building", pGameObject)))
 		return E_FAIL;
 
-	pGameObject = CBuilding::Create(m_pGraphicDev, m_pMessageChannel, _vec3(198.5f, -0.95f, 40.f), CBuilding::BT_SHRINE);
+	pGameObject = CBuilding::Create(m_pGraphicDev, m_pMessageChannel, _vec3(198.5f, -0.95f, 40.f), BT_SHRINE);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	if (FAILED(pLayer->Add_GameObject(L"Building", pGameObject)))
 		return E_FAIL;
 
-	pGameObject = CBuilding::Create(m_pGraphicDev, m_pMessageChannel, _vec3(199.8f + 10.f, -0.95f, 35.f - 10.f), CBuilding::BT_KNUCKLEBONE);
+	pGameObject = CBuilding::Create(m_pGraphicDev, m_pMessageChannel, _vec3(199.8f + 10.f, -0.95f, 35.f - 10.f), BT_KNUCKLEBONE);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	if (FAILED(pLayer->Add_GameObject(L"Building", pGameObject)))
 		return E_FAIL;
 
-	pGameObject = CBuilding::Create(m_pGraphicDev, m_pMessageChannel, _vec3(199.8f - 10.f, -0.95f, 35.f - 10.f), CBuilding::BT_COOK);
+	pGameObject = CBuilding::Create(m_pGraphicDev, m_pMessageChannel, _vec3(199.8f - 10.f, -0.95f, 35.f - 10.f), BT_COOK);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	if (FAILED(pLayer->Add_GameObject(L"Building", pGameObject)))
 		return E_FAIL;
@@ -749,7 +749,7 @@ void CVillage::Key_Input_Village()
 	{
 		if (!m_bBuildingFlag && m_pCurBuilding == nullptr)
 		{
-			m_pCurBuilding = CBuilding::Create(m_pGraphicDev, m_pMessageChannel, _vec3(175.5f, -0.95f, 40.f), CBuilding::BT_KNUCKLEBONE, CBuilding::BS_PREVIEW);
+			m_pCurBuilding = CBuilding::Create(m_pGraphicDev, m_pMessageChannel, _vec3(175.5f, -0.95f, 40.f), BT_KNUCKLEBONE, CBuilding::BS_PREVIEW);
 
 			SceneEvent.strType = L"Building.Enter";
 			m_pMessageChannel->Publish(SceneEvent);

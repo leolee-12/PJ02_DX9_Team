@@ -134,19 +134,18 @@ HRESULT	CBuildingCraftCtrl::Add_Component()
 
 HRESULT CBuildingCraftCtrl::Ready_Slots()
 {
+	BUILDING_TYPE arrTypes[4] = { BT_COOK, BT_KNUCKLEBONE, BT_SHRINE, BT_END};
+
 	// 슬롯 위치 계산 (예: 화면 중앙 기준 가로 배치)
 	const _float fStartX = WINCX * 0.5f - 150.f;
 	const _float fY = WINCY * 0.5f;
 	const _float fGap = 100.f;
 
-	// CBuilding::BUILDING_TYPE { BT_DUMMY, BT_WORKSHOP, BT_COOK, BT_KNUCKLEBONE, BT_SHRINE, BT_END };
-	// -> BT_COOK(2), 3, 4, BT_END(5)
-
 	for (_uint i = 0; i < 4; ++i)
 	{
 		_vec3 vPos = { fStartX + i * fGap, fY, 0.f };
 
-		CBuildingSelectSlot* pSlot = CBuildingSelectSlot::Create(m_pGraphicDev, vPos, static_cast<BUILDING_TYPE>(i + 2));
+		CBuildingSelectSlot* pSlot = CBuildingSelectSlot::Create(m_pGraphicDev, vPos, arrTypes[i]);
 
 		if (nullptr == pSlot)
 			return E_FAIL;
@@ -225,9 +224,14 @@ void CBuildingCraftCtrl::Update_SlotHover()
 
 		if (m_pHoveredSlot)
 		{
-			_vec3 vSlotPos;
-			// 슬롯 위치 기준으로 인포카드 위치 계산
-			m_pInfoCard->Show(m_pHoveredSlot->Get_BuildingType(), vSlotPos);
+			BUILDING_TYPE eType = m_pHoveredSlot->Get_BuildingType();
+
+			if (eType != BT_END)
+			{
+				// 인포카드 위치 계산
+				_vec3 vInfoPos = { _float(WINCX) * 0.75f, _float(WINCY) * 0.5f, 0.f };
+				m_pInfoCard->Show(eType, vInfoPos);
+			}
 		}
 		else
 		{

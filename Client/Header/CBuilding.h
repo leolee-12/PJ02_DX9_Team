@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include "CGameObject.h"
 #include "IInteractable.h"
+#include "Building_Enum.h"
 
 namespace Engine
 {
@@ -16,7 +17,7 @@ class CResourceWorkBar;
 class CBuilding : public CGameObject, public IInteractable
 {
 public:
-	enum BUILDING_TYPE { BT_DUMMY, BT_WORKSHOP, BT_COOK, BT_KNUCKLEBONE, BT_SHRINE, BT_END };
+	//enum BUILDING_TYPE { BT_DUMMY, BT_WORKSHOP, BT_COOK, BT_KNUCKLEBONE, BT_SHRINE, BT_END };
 	enum BUILDING_STATE { BS_PREVIEW, BS_CONSTRUCTING, BS_COMPLETE, BS_END };
 
 private:
