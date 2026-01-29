@@ -3,6 +3,7 @@
 #include "CProtoMgr.h"
 #include "CBuilding.h"
 #include "CFontUIOrtho.h"
+#include "CItem.h"
 
 CBuildingInfoCard::CBuildingInfoCard(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CUi(pGraphicDev)
@@ -13,8 +14,16 @@ CBuildingInfoCard::~CBuildingInfoCard()
 {
 }
 
+void CBuildingInfoCard::Set_Pos(TEXTURE_TYPE eType, const _vec3& vPos)
+{
+	m_pTransformCom[eType]->Set_Pos(vPos.x, vPos.y, vPos.z);
+}
+
 HRESULT	CBuildingInfoCard::Ready_GameObject()
 {
+	if (FAILED(Add_Component()))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -33,15 +42,10 @@ void CBuildingInfoCard::Render_GameObject()
 {
 }
 
-void CBuildingInfoCard::Show(BUILDING_TYPE eType, const _vec3& vSlotPos)
+void CBuildingInfoCard::Show(BUILDING_TYPE eType)
 {
 	m_bVisible = true;
 	m_eDisplayType = eType;
-
-	// 슬롯 위쪽에 위치
-	_vec3 vPos = vSlotPos;
-	vPos.y -= 80.f;  // 슬롯 위로 오프셋
-	//m_pTransformCom->Set_Pos(vPos.x, vPos.y, vPos.z);
 
 	Update_Content(eType);
 }
@@ -120,21 +124,30 @@ void CBuildingInfoCard::Update_Content(BUILDING_TYPE eType)
 	{
 	case BT_COOK:
 		m_pNameFont->Set_Text(L"오븐");
-		m_pCostFont->Set_Text(L"나무 x5");
+		m_pCostFont->Set_Text(L"나무 x3, 돌 x3");
+		m_iTexIdx[INGREDIENT1] = CItem::IG_WOOD;
+		m_iTexIdx[INGREDIENT2] = CItem::IG_STONE;
 		break;
 	case BT_KNUCKLEBONE:
 		m_pNameFont->Set_Text(L"너클본테이블");
-		m_pCostFont->Set_Text(L"나무 x3, 돌 x2");
+		m_pCostFont->Set_Text(L"금화 x3, 나무 x3");
+		m_iTexIdx[INGREDIENT1] = CItem::IG_GOLD;
+		m_iTexIdx[INGREDIENT2] = CItem::IG_WOOD;
 		break;
 	case BT_SHRINE:
 		m_pNameFont->Set_Text(L"성지");
-		m_pCostFont->Set_Text(L"나무 x3, 돌 x2");
+		m_pCostFont->Set_Text(L"금화 x3, 돌 x3");
+		m_iTexIdx[INGREDIENT1] = CItem::IG_GOLD;
+		m_iTexIdx[INGREDIENT2] = CItem::IG_STONE;
 		break;
 	case BT_END:
 		m_pNameFont->Set_Text(L"");
 		m_pCostFont->Set_Text(L"");
 		break;
 	}
+
+	m_iTexIdx[BACKGROUND] = 0;
+	m_iTexIdx[ICON] = eType - 2;	// DUMMY, WORKSHOP 제외
 }
 
 CBuildingInfoCard* CBuildingInfoCard::Create(LPDIRECT3DDEVICE9 pGraphicDev)

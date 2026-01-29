@@ -15,6 +15,9 @@ CBuildingSelectSlot::~CBuildingSelectSlot()
 
 HRESULT	CBuildingSelectSlot::Ready_GameObject()
 {
+	if (FAILED(Add_Component()))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -33,7 +36,9 @@ _int CBuildingSelectSlot::Update_GameObject(const _float& fTimeDelta)
 
 	m_pTransformCom->Set_Scale(m_fCurrentScale, m_fCurrentScale, 1.f);
 
-	return NOEVENT;
+	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
+
+	return iExit;
 }
 
 void CBuildingSelectSlot::LateUpdate_GameObject(const _float& fTimeDelta)
@@ -42,6 +47,17 @@ void CBuildingSelectSlot::LateUpdate_GameObject(const _float& fTimeDelta)
 
 void CBuildingSelectSlot::Render_GameObject()
 {
+	// 슬롯 배경 렌더
+	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
+	m_pSlotTextureCom->Set_Texture(0);
+	m_pBufferCom->Render_Buffer();
+
+	// BT_END는 아이콘 렌더 안함 (텍스처 미싱 방지)
+	if (m_eBuildingType != BT_END)
+	{
+		m_pIconTextureCom->Set_Texture((_uint)m_eBuildingType);
+		m_pBufferCom->Render_Buffer();
+	}
 }
 
 _bool CBuildingSelectSlot::Is_Clicked()
@@ -56,13 +72,11 @@ _bool CBuildingSelectSlot::Is_Hovered()
 	ScreenToClient(g_hWnd, &ptMouse);
 
 	// 슬롯 영역 계산 (스크린 좌표)
-	_float fLeft	= m_vPos.x - m_fWidth * 0.5f;
-	_float fRight	= m_vPos.x + m_fWidth * 0.5f;
-	_float fTop		= m_vPos.y - m_fHeight * 0.5f;
-	_float fBottom	= m_vPos.y + m_fHeight * 0.5f;
+	_float fHalfW = m_fWidth * m_fCurrentScale * 0.5f;
+	_float fHalfH = m_fHeight * m_fCurrentScale * 0.5f;
 
-	return	(ptMouse.x >= fLeft	&& ptMouse.x <= fRight &&
-			 ptMouse.y >= fTop	&& ptMouse.y <= fBottom);
+	return (ptMouse.x >= m_fScreenX - fHalfW && ptMouse.x <= m_fScreenX + fHalfW &&
+			ptMouse.y >= m_fScreenY - fHalfH && ptMouse.y <= m_fScreenY + fHalfH);
 }
 
 HRESULT	CBuildingSelectSlot::Add_Component()

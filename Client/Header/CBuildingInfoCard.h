@@ -21,12 +21,14 @@ private:
 	virtual		~CBuildingInfoCard();
 
 public:
+	void				Set_Pos(TEXTURE_TYPE eType, const _vec3& vPos);
+
 	virtual	HRESULT		Ready_GameObject();
 	virtual	_int		Update_GameObject(const _float& fTimeDelta);
 	virtual	void		LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual	void		Render_GameObject();
 
-	void				Show(BUILDING_TYPE eType, const _vec3& vSlotPos);
+	void				Show(BUILDING_TYPE eType);
 	void				Hide();
 
 private:
@@ -45,6 +47,7 @@ private:
 	// 상태
 	_bool           m_bVisible;
 	BUILDING_TYPE   m_eDisplayType;     // 현재 표시 중인 건물
+	_uint			m_iTexIdx[TT_END];
 
 public:
 	static CBuildingInfoCard* Create(LPDIRECT3DDEVICE9 pGraphicDev);

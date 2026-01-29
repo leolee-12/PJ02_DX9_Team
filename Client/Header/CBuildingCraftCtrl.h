@@ -41,7 +41,8 @@ private:
 	void				Update_Build(const _float& fTimeDelta);
 	void				Update_SlotHover();	// 호버 감지 -> 인포카드 갱신
 	void				On_SlotClicked(BUILDING_TYPE eType);
-	_vec3				ScreenToDX(_float fX, _float fY) { return _vec3(fX - WINCX * 0.5f, -fY + WINCY * 0.5f, 0.f); }
+	_vec3				ScreenToDX(const _float& fX, const _float& fY, const _float& fZ = 0.f);
+	void				DXToScreen(const _vec3& vDX, _float& fScreenX, _float& fScreenY);
 
 private:
 	// 컴포넌트

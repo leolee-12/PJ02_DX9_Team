@@ -16,6 +16,7 @@ private:
 	virtual		~CBuildingSelectSlot();
 
 public:
+	void			Set_ScreenPos(_float fX, _float fY) { m_fScreenX = fX; m_fScreenY = fY; }
 	void            Set_Hovered(_bool b) { m_bHovered = b; }
 	void            Set_CanBuild(_bool b) { m_bCanBuild = b; }
 	_bool           Get_CanBuild() const { return m_bCanBuild; }
@@ -43,6 +44,8 @@ private:
 	_bool           m_bHovered;
 	_bool           m_bCanBuild;		// 자원 충분 여부
 
+	_float			m_fScreenX;
+	_float			m_fScreenY;
 	_float          m_fWidth;
 	_float          m_fHeight;
 	_float			m_fBaseScale;    // 기본 스케일

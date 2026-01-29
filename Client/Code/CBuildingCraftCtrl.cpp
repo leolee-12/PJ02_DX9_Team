@@ -4,6 +4,7 @@
 #include "CBuildingSelectSlot.h"
 #include "CDInputMgr.h"
 #include "CProtoMgr.h"
+#include "CFontMgr.h"
 
 CBuildingCraftCtrl::CBuildingCraftCtrl(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CUi(pGraphicDev)
@@ -16,6 +17,21 @@ CBuildingCraftCtrl::~CBuildingCraftCtrl()
 
 HRESULT	CBuildingCraftCtrl::Ready_GameObject()
 {
+	if(FAILED(Add_Component()))
+		return E_FAIL;
+
+	_vec3 vBackPos = ScreenToDX(WINCX * 0.25f, WINCY * 0.5f, 0.5f);
+	m_pTransformCom[BACKGROUND]->Set_Pos(vBackPos.x, vBackPos.y, vBackPos.z);
+	m_pTransformCom[BACKGROUND]->Set_Scale(WINCX * 0.5f, WINCY, 1.f);
+
+	_vec3 vDeco1Pos = ScreenToDX(120.f, 80.f, 0.4f);
+	m_pTransformCom[DECO1]->Set_Pos(vDeco1Pos.x, vDeco1Pos.y, vDeco1Pos.z);
+	m_pTransformCom[DECO1]->Set_Scale(50.f, 50.f, 1.f);
+
+	_vec3 vDeco2Pos = ScreenToDX(280.f, 80.f, 0.4f);
+	m_pTransformCom[DECO2]->Set_Pos(vDeco2Pos.x, vDeco2Pos.y, vDeco2Pos.z);
+	m_pTransformCom[DECO2]->Set_Scale(50.f, 50.f, 1.f);
+
 	if (FAILED(Ready_Slots()))
 		return E_FAIL;
 
@@ -53,14 +69,34 @@ void CBuildingCraftCtrl::LateUpdate_GameObject(const _float& fTimeDelta)
 
 void CBuildingCraftCtrl::Render_GameObject()
 {
-	if (BCS_SELECT != m_eState)
-		return;
+	if (BCS_SELECT != m_eState) return;
+
+	// 반복문 가능한데 헷갈려서 명시
+	// 배경 렌더
+	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom[BACKGROUND]->Get_World());
+	m_pTextureCom[BACKGROUND]->Set_Texture(0);
+	m_pBufferCom->Render_Buffer();
+
+	// 데코1 렌더
+	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom[DECO1]->Get_World());
+	m_pTextureCom[DECO1]->Set_Texture(0);
+	m_pBufferCom->Render_Buffer();
+
+	// 데코2 렌더
+	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom[DECO2]->Get_World());
+	m_pTextureCom[DECO2]->Set_Texture(0);
+	m_pBufferCom->Render_Buffer();
+
+	// 타이틀 폰트 (CFontMgr 직접 호출)
+	D3DXCOLOR FontColor = D3DXCOLOR(240.f / 256.f, 240.f / 256.f, 240.f / 256.f, 1.f);
+	RECT rcTitle = { 0, 0, WINCX / 2, WINCY / 2 };
+	CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans30", L"건설", rcTitle, FontColor, DT_CENTER | DT_BOTTOM);
 
 	// 슬롯 렌더
 	for (auto& pSlot : m_vecSlots)
 		pSlot->Render_GameObject();
 
-	// 인포카드 렌더 (슬롯 위에 표시)
+	// 인포카드 렌더
 	if (m_pInfoCard)
 		m_pInfoCard->Render_GameObject();
 }
@@ -137,18 +173,20 @@ HRESULT CBuildingCraftCtrl::Ready_Slots()
 	BUILDING_TYPE arrTypes[4] = { BT_COOK, BT_KNUCKLEBONE, BT_SHRINE, BT_END};
 
 	// 슬롯 위치 계산 (예: 화면 중앙 기준 가로 배치)
-	const _float fStartX = WINCX * 0.5f - 150.f;
-	const _float fY = WINCY * 0.5f;
+	const _float fStartX = 60.f;
+	const _float fY = 450.f;
 	const _float fGap = 100.f;
-
+	
 	for (_uint i = 0; i < 4; ++i)
 	{
-		_vec3 vPos = { fStartX + i * fGap, fY, 0.f };
+		_vec3 vPos = ScreenToDX(fStartX + i * fGap, fY, 0.4f);
 
 		CBuildingSelectSlot* pSlot = CBuildingSelectSlot::Create(m_pGraphicDev, vPos, arrTypes[i]);
 
 		if (nullptr == pSlot)
 			return E_FAIL;
+
+		if (arrTypes[i] == BT_END) pSlot->Set_CanBuild(false);
 
 		m_vecSlots.push_back(pSlot);
 	}
@@ -158,7 +196,25 @@ HRESULT CBuildingCraftCtrl::Ready_Slots()
 
 HRESULT CBuildingCraftCtrl::Ready_InfoCard()
 {
-	return E_NOTIMPL;
+	m_pInfoCard = CBuildingInfoCard::Create(m_pGraphicDev);
+
+	NULL_CHECK_RETURN(m_pInfoCard, E_FAIL);
+
+	_vec3 vBackPos = ScreenToDX(WINCX * 0.75f, WINCY * 0.5f, 0.5f);
+	m_pInfoCard->Set_Pos(CBuildingInfoCard::BACKGROUND, vBackPos);
+
+	_vec3 vIconPos = ScreenToDX(WINCX * 0.75f - 80.f, WINCY * 0.5f - 50.f, 0.4f);
+	m_pInfoCard->Set_Pos(CBuildingInfoCard::ICON, vIconPos);
+
+	// 재료1: 카드 하단 좌측
+	_vec3 vIng1Pos = ScreenToDX(WINCX * 0.75f - 40.f, WINCY * 0.5f + 50.f, 0.4f);
+	m_pInfoCard->Set_Pos(CBuildingInfoCard::INGREDIENT1, vIng1Pos);
+
+	// 재료2: 카드 하단 우측
+	_vec3 vIng2Pos = ScreenToDX(WINCX * 0.75f + 40.f, WINCY * 0.5f + 50.f, 0.4f);
+	m_pInfoCard->Set_Pos(CBuildingInfoCard::INGREDIENT2, vIng2Pos);
+
+	return S_OK;
 }
 
 void CBuildingCraftCtrl::Ready_Event()
@@ -169,7 +225,7 @@ void CBuildingCraftCtrl::Ready_Event()
 void CBuildingCraftCtrl::Update_Select(const _float& fTimeDelta)
 {
 	// BACKSPACE : 닫기
-	if (CDInputMgr::GetInstance()->Key_Down(DIK_BACKSPACE))
+	if (CDInputMgr::GetInstance()->Key_Down(DIK_BACK))
 	{
 		Close();
 		return;
@@ -185,7 +241,10 @@ void CBuildingCraftCtrl::Update_Select(const _float& fTimeDelta)
 
 		if (pSlot->Is_Clicked() && pSlot->Get_CanBuild())
 		{
-			On_SlotClicked(pSlot->Get_BuildingType());
+			if (pSlot->Get_BuildingType() != BT_END)
+			{
+				On_SlotClicked(pSlot->Get_BuildingType());
+			}
 			return;
 		}
 	}
@@ -226,18 +285,11 @@ void CBuildingCraftCtrl::Update_SlotHover()
 		{
 			BUILDING_TYPE eType = m_pHoveredSlot->Get_BuildingType();
 
-			if (eType != BT_END)
-			{
-				// 인포카드 위치 계산
-				_vec3 vInfoPos = { _float(WINCX) * 0.75f, _float(WINCY) * 0.5f, 0.f };
-				m_pInfoCard->Show(eType, vInfoPos);
-			}
+			if (eType != BT_END) m_pInfoCard->Show(eType);
 		}
-		else
-		{
-			m_pInfoCard->Hide();
-		}
+		else m_pInfoCard->Hide();
 	}
+	else m_pInfoCard->Hide();
 }
 
 void CBuildingCraftCtrl::On_SlotClicked(BUILDING_TYPE eType)
@@ -253,6 +305,17 @@ void CBuildingCraftCtrl::On_SlotClicked(BUILDING_TYPE eType)
 	// 이벤트 정보 전달
 	//------------------
 	m_pMessageChannel->Publish(tEvent);
+}
+
+_vec3 CBuildingCraftCtrl::ScreenToDX(const _float& fX, const _float& fY, const _float& fZ)
+{
+	return _vec3(fX - _float(WINCX) * 0.5f, -fY + _float(WINCY) * 0.5f, fZ);
+}
+
+void CBuildingCraftCtrl::DXToScreen(const _vec3& vDX, _float& fScreenX, _float& fScreenY)
+{
+	fScreenX = vDX.x + _float(WINCX) * 0.5f;
+	fScreenY = vDX.y + _float(WINCY) * 0.5f;
 }
 
 CBuildingCraftCtrl* CBuildingCraftCtrl::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMessageChannel)

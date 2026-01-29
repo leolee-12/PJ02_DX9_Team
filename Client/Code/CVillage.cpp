@@ -43,6 +43,7 @@
 #include "CFontUIOrtho.h"
 #include "CSpeechBubbleOrtho.h"
 #include "CSelectionArrow.h"
+#include "CBuildingCraftCtrl.h"
 
 CVillage::CVillage(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -603,6 +604,14 @@ HRESULT CVillage::Ready_UI_Layer(const _tchar* pLayerTag)
 	if (FAILED(pLayer->Add_GameObject(L"CFoodReviewUI", pGameObject)))
 		return E_FAIL;
 
+	pGameObject = m_pBuildingCraftCtrl = CBuildingCraftCtrl::Create(m_pGraphicDev, m_pMessageChannel);
+
+	if (nullptr == pGameObject)
+		return E_FAIL;
+
+	if (FAILED(pLayer->Add_GameObject(L"BuildingCraftCtrl", pGameObject)))
+		return E_FAIL;
+
 	pGameObject = CPersistentMgr::GetInstance()->Get_ResourceHistory();
 
 	if (nullptr == pGameObject)
@@ -739,6 +748,8 @@ void CVillage::Ready_Event_Village()
 
 void CVillage::Key_Input_Village()
 {
+	Key_Input_Village_Debug();
+
 	Select_Key_Input();
 
 	if (m_bShowSelect) { return; }
@@ -807,6 +818,18 @@ void CVillage::Key_Input_Village()
 			swprintf_s(strFollowerTex, L"Proto_Follower%dTexture", Get_Rand_Int(1, 5));
 			Add_FollowerSpawnWork(FOLLOWER_SPAWN_WORK(strFollowerTex, _vec3(217.7f + Get_Rand_Float(-3.f, 3.f), 0.f, 38.3f + Get_Rand_Float(-3.f, 3.f))));
 		}
+	}
+}
+
+void CVillage::Key_Input_Village_Debug()
+{
+	if (CDInputMgr::GetInstance()->Key_Down(DIK_X))
+	{
+		m_pBuildingCraftCtrl->Open();
+	}
+	else if (CDInputMgr::GetInstance()->Key_Down(DIK_C))
+	{
+		m_pBuildingCraftCtrl->Close();
 	}
 }
 

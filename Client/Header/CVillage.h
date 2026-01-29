@@ -10,6 +10,7 @@ class CBuilding;
 class CFontUIOrtho;
 class CSpeechBubbleOrtho;
 class CSelectionArrow;
+class CBuildingCraftCtrl;
 
 // 팔로워 스폰 작업 구조체
 struct FOLLOWER_SPAWN_WORK
@@ -64,6 +65,7 @@ private:
 	void			Ready_Event_Village();
 
 	void			Key_Input_Village();
+	void			Key_Input_Village_Debug();
 
 	void			Process_FollowerSpawnQueue(const _float& fTimeDelta);
 	void			Add_FollowerSpawnWork(const FOLLOWER_SPAWN_WORK& tWork);
@@ -99,6 +101,8 @@ private:
 	CSpeechBubbleOrtho* m_pSpeechBubble;
 
 	CSelectionArrow* m_pSelectionArrow;
+
+	CBuildingCraftCtrl* m_pBuildingCraftCtrl;	// 디버그용 캐싱
 
 	_bool		  m_bShowSelect = false;
 	_uint		  m_iSelectSlot = 0;
