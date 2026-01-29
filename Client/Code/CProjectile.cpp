@@ -108,7 +108,7 @@ void CProjectile::LateUpdate_GameObject(const _float& fTimeDelta)
 	_float fHalfScale = m_pTransformCom->Get_Scale(ROT_X) * 0.3f;
 	AABB tAABB = { m_vPos.x, m_vPos.y, m_vPos.z, fHalfScale, fHalfScale, fHalfScale };
 	m_pColliderCom->Set_AABB(tAABB);
-	m_pColliderCom->UpdateFromCustom(tAABB);
+	m_pColliderCom->UpdateFromAABB(tAABB);
 
 	if (g_bDebug) m_pColliderCom->Update_AABBforRender();
 

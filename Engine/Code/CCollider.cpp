@@ -8,11 +8,13 @@
 
 CCollider::CCollider(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CComponent(pGraphicDev), m_tAABB{ 0,0,0, 0.5f,0.5f,0.5f }, m_pOwner(nullptr), m_Group(CL_NONE)
+	, m_vPrePos({ FLT_MAX, FLT_MAX, FLT_MAX })
 {
 }
 
 CCollider::CCollider(const CCollider& rhs)
 	: CComponent(rhs), m_tAABB(rhs.m_tAABB), m_pOwner(nullptr), m_Group(rhs.m_Group)
+	, m_vPrePos(rhs.m_vPrePos)
 {
 }
 
@@ -22,8 +24,10 @@ CCollider::~CCollider()
 
 HRESULT CCollider::Ready_Collider(optional<AABB> tInitAABB)
 {
-	if (tInitAABB.has_value()) {
+	if (tInitAABB.has_value())
+	{
 		m_tAABB = tInitAABB.value();
+		m_vPrePos = _vec3(m_tAABB.x, m_tAABB.y, m_tAABB.z);
 	}
 	return S_OK;
 }
@@ -36,6 +40,14 @@ void CCollider::UpdateFromTransform(CTransform* pTransform)
 	_vec3 vPos{};
 	pTransform->Get_Info(INFO_POS, &vPos);
 
+	// 위치가 변경됐을 때만 갱신
+	if (m_vPrePos.x == vPos.x &&
+		m_vPrePos.y == vPos.y &&
+		m_vPrePos.z == vPos.z)
+		return;
+
+	m_vPrePos = vPos;
+
 	m_tAABB.x = vPos.x;
 	m_tAABB.y = vPos.y;
 	m_tAABB.z = vPos.z;
@@ -45,9 +57,8 @@ void CCollider::UpdateFromTransform(CTransform* pTransform)
 		Engine::CCollisionMgr::GetInstance()->RegisterCollider(m_pOwner, m_tAABB, m_Group);
 }
 
-void CCollider::UpdateFromCustom(const AABB& tAABB)
+void CCollider::UpdateFromAABB(const AABB& tAABB)
 {
-	// 매니저에 갱신: 등록된 소유자가 있으면 매니저에 갱신 전달
 	if (m_pOwner)
 		Engine::CCollisionMgr::GetInstance()->RegisterCollider(m_pOwner, tAABB, m_Group);
 }

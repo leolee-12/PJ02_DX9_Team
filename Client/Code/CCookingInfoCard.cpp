@@ -235,7 +235,7 @@ void CCookingInfoCard::Ready_Event()
 				return;
 
 			int ResourceCount = any_cast<int>(iter->second);
-				Set_RecourceCountText(ResourceCount);
+			Set_RecourceCountText(ResourceCount);
 		}
 	) });
 }

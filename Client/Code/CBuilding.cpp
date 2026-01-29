@@ -153,7 +153,7 @@ void CBuilding::LateUpdate_GameObject(const _float& fTimeDelta)
 	_vec3 vTriggetHalfSize = { 1.99f, 2.f, 1.99f };
 	AABB tAABB = { vColliderPos, vTriggetHalfSize };
 	m_pColliderCom->Set_AABB(tAABB);
-	m_pColliderCom->UpdateFromCustom(tAABB);
+	m_pColliderCom->UpdateFromAABB(tAABB);
 	if (g_bDebug) m_pColliderCom->Update_AABBforRender();
 
 	if (m_eBuildingState == BS_PREVIEW) { m_bCanPlace = true; }
