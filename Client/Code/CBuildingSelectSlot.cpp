@@ -15,8 +15,6 @@ CBuildingSelectSlot::CBuildingSelectSlot(LPDIRECT3DDEVICE9 pGraphicDev)
 	, m_bCanBuild(true)
 	, m_fScreenX(0.f)
 	, m_fScreenY(0.f)
-	, m_fWidth(64.f)       // 슬롯 기본 크기
-	, m_fHeight(64.f)
 	, m_fBaseScale(1.f)
 	, m_fTargetScale(1.f)
 	, m_fCurScale(1.f)
@@ -75,7 +73,7 @@ void CBuildingSelectSlot::Render_GameObject()
 	// BT_END는 아이콘 렌더 안함 (텍스처 미싱 방지)
 	if (m_eBuildingType != BT_END)
 	{
-		m_pIconTextureCom->Set_Texture((_uint)m_eBuildingType);
+		m_pIconTextureCom->Set_Texture(_uint(m_eBuildingType - 2));	// DUMMY, WORKSHOP 제외
 		m_pBufferCom->Render_Buffer();
 	}
 }
@@ -91,12 +89,15 @@ _bool CBuildingSelectSlot::Is_Hovered()
 	GetCursorPos(&ptMouse);
 	ScreenToClient(g_hWnd, &ptMouse);
 
-	// 슬롯 영역 계산 (스크린 좌표)
-	_float fHalfW = m_fWidth * m_fCurScale * 0.5f;
-	_float fHalfH = m_fHeight * m_fCurScale * 0.5f;
+	const _float fHalfSize = 50.f * (m_fCurScale / m_fBaseScale);
 
-	return (ptMouse.x >= m_fScreenX - fHalfW && ptMouse.x <= m_fScreenX + fHalfW &&
-			ptMouse.y >= m_fScreenY - fHalfH && ptMouse.y <= m_fScreenY + fHalfH);
+	_float fLeft = m_fScreenX - fHalfSize;
+	_float fRight = m_fScreenX + fHalfSize;
+	_float fTop = m_fScreenY - fHalfSize;
+	_float fBottom = m_fScreenY + fHalfSize;
+
+	return (ptMouse.x >= fLeft && ptMouse.x <= fRight &&
+			ptMouse.y >= fTop && ptMouse.y <= fBottom);
 }
 
 HRESULT	CBuildingSelectSlot::Add_Component()
@@ -121,7 +122,7 @@ HRESULT	CBuildingSelectSlot::Add_Component()
 
 	// Texture
 	pComponent = m_pSlotTextureCom = dynamic_cast<Engine::CTexture*>
-		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_CookingSelectSlot"));
+		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_BuildingIconBack"));
 
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 

@@ -236,22 +236,39 @@ HRESULT CBuildingCraftCtrl::Ready_InfoCard()
 
 	NULL_CHECK_RETURN(m_pInfoCard, E_FAIL);
 
+	// BG
 	_vec3 vBackPos = ScreenToDX(WINCX * 0.75f, WINCY * 0.5f, 0.5f);
+	_vec3 vBackScale{ 350.f, 350.f, 1.f };
 	m_pInfoCard->Set_Pos(CBuildingInfoCard::BACKGROUND, vBackPos);
+	m_pInfoCard->Set_Scale(CBuildingInfoCard::BACKGROUND, vBackScale);
 
-	_vec3 vIconPos = ScreenToDX(WINCX * 0.75f - 80.f, WINCY * 0.5f - 50.f, 0.4f);
+	// Icon, IconBG
+	_vec3 vIconPos = ScreenToDX(WINCX * 0.75f, WINCY * 0.5f - 90.f, 0.4f);
+	_vec3 vIconScale{ 128.f, 128.f, 1.f };
 	m_pInfoCard->Set_Pos(CBuildingInfoCard::ICON, vIconPos);
+	m_pInfoCard->Set_Scale(CBuildingInfoCard::ICON, vIconScale);
+	m_pInfoCard->Set_Pos(CBuildingInfoCard::ICONBACK, vIconPos);
+	m_pInfoCard->Set_Scale(CBuildingInfoCard::ICONBACK, vIconScale);
 
 	// 재료1: 카드 하단 좌측
-	_vec3 vIng1Pos = ScreenToDX(WINCX * 0.75f - 40.f, WINCY * 0.5f + 50.f, 0.4f);
+	_vec3 vIng1Pos = ScreenToDX(WINCX * 0.75f - 110.f, WINCY * 0.5f + 120.f, 0.4f);
+	_vec3 vIng1Scale{ 32.f, 32.f, 1.f };
 	m_pInfoCard->Set_Pos(CBuildingInfoCard::INGREDIENT1, vIng1Pos);
+	m_pInfoCard->Set_Scale(CBuildingInfoCard::INGREDIENT1, vIng1Scale);
 
 	// 재료2: 카드 하단 우측
-	_vec3 vIng2Pos = ScreenToDX(WINCX * 0.75f + 40.f, WINCY * 0.5f + 50.f, 0.4f);
+	_vec3 vIng2Pos = ScreenToDX(WINCX * 0.75f + 30.f, WINCY * 0.5f + 120.f, 0.4f);
+	_vec3 vIng2Scale{ 32.f, 32.f, 1.f };
 	m_pInfoCard->Set_Pos(CBuildingInfoCard::INGREDIENT2, vIng2Pos);
+	m_pInfoCard->Set_Scale(CBuildingInfoCard::INGREDIENT2, vIng2Scale);
 
-	m_pInfoCard->Set_NameFontPos(WINCX * 0.75f, WINCY * 0.5f - 100.f);
-	m_pInfoCard->Set_CostFontPos(WINCX * 0.75f, WINCY * 0.5f + 80.f);
+	// 폰트 위치만 여기서, 나머지는 인포카드에서 설정
+	m_pInfoCard->Set_FontPos(CBuildingInfoCard::FID_NAME,		_float(WINCX) * 0.75f,			_float(WINCY) * 0.5f - 10.f);
+	m_pInfoCard->Set_FontPos(CBuildingInfoCard::FID_DATA,		_float(WINCX) * 0.75f,			_float(WINCY) * 0.5f + 50.f);
+	m_pInfoCard->Set_FontPos(CBuildingInfoCard::FID_COST1,		_float(WINCX) * 0.75f - 70.f,	_float(WINCY) * 0.5f + 120.f);
+	m_pInfoCard->Set_FontPos(CBuildingInfoCard::FID_RESERVE1,	_float(WINCX) * 0.75f - 40.f,	_float(WINCY) * 0.5f + 120.f);
+	m_pInfoCard->Set_FontPos(CBuildingInfoCard::FID_COST2,		_float(WINCX) * 0.75f + 80.f,	_float(WINCY) * 0.5f + 120.f);
+	m_pInfoCard->Set_FontPos(CBuildingInfoCard::FID_RESERVE2,	_float(WINCX) * 0.75f + 110.f,	_float(WINCY) * 0.5f + 120.f);
 
 	return S_OK;
 }

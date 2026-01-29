@@ -47,8 +47,6 @@ private:
 
 	_float			m_fScreenX;
 	_float			m_fScreenY;
-	_float          m_fWidth;
-	_float          m_fHeight;
 	_float			m_fBaseScale;	// 기본 스케일
 	_float			m_fTargetScale;	// 목표 스케일
 	_float			m_fCurScale;	// 현재 스케일

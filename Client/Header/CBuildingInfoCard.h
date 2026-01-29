@@ -14,7 +14,18 @@ class CFontUIOrtho;
 class CBuildingInfoCard : public CUi
 {
 public:
-	enum TEXTURE_TYPE { BACKGROUND, ICON, INGREDIENT1, INGREDIENT2, TT_END };
+	enum TEXTURE_TYPE { BACKGROUND, ICONBACK, ICON, INGREDIENT1, INGREDIENT2, TT_END };
+	enum FONT_ID { FID_NAME, FID_DATA, FID_COST1, FID_RESERVE1, FID_COST2, FID_RESERVE2, FID_END };
+
+	typedef struct tagFontInfo
+	{
+		_vec2		vPos;
+		_vec2		vScale;
+		D3DXCOLOR	tColor;
+		_uint		uFlags;
+		wstring		strText;
+		wstring		strFontKey;
+	}FONTINFO;
 
 private:
 	explicit	CBuildingInfoCard(LPDIRECT3DDEVICE9 pGraphicDev);
@@ -22,8 +33,9 @@ private:
 
 public:
 	void				Set_Pos(TEXTURE_TYPE eType, const _vec3& vPos);
-	void				Set_NameFontPos(const _float& fX, const _float& fY);
-	void				Set_CostFontPos(const _float& fX, const _float& fY);
+	void				Set_Scale(TEXTURE_TYPE eType, const _vec3& vScale);
+	void				Set_Reserve(const _uint& iReserve1, const _uint& iReserve2);
+	void				Set_FontPos(FONT_ID eID, const _float& fX, const _float& fY);
 
 	virtual	HRESULT		Ready_GameObject();
 	virtual	_int		Update_GameObject(const _float& fTimeDelta);
@@ -35,7 +47,6 @@ public:
 
 private:
 	HRESULT				Add_Component();
-	HRESULT				Ready_MyTransform();
 	HRESULT				Ready_MyFont();
 	void				Update_Content(BUILDING_TYPE eType);  // 텍스트 갱신
 
@@ -45,8 +56,8 @@ private:
 	CTexture*		m_pTextureCom[TT_END];
 
 	// 폰트 UI
-	CFontUIOrtho*	m_pNameFont;        // 건물 이름
-	CFontUIOrtho*	m_pCostFont;        // 필요 자원
+	CFontUIOrtho*	m_pFont;
+	FONTINFO		m_tFontInfo[FID_END];
 
 	// 상태
 	_bool           m_bVisible;
