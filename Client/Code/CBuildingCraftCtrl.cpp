@@ -103,6 +103,10 @@ void CBuildingCraftCtrl::Render_GameObject()
 void CBuildingCraftCtrl::Open()
 {
 	m_eState = BCS_SELECT;
+
+	for (auto& pSlot : m_vecSlots)
+		pSlot->Check_CanBuild();
+
 	m_pTitleFont->Active();
 }
 
