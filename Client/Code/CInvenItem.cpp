@@ -5,6 +5,7 @@
 #include "CFontMgr.h"
 #include "CFontUIOrtho.h"
 
+#include "CItemDataTable.h"
 CInvenItem::CInvenItem(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CUi(pGraphicDev), m_pBufferCom(nullptr), m_pTransformCom(nullptr), m_bMsgRegistered(false)
 {
@@ -74,7 +75,7 @@ void CInvenItem::Render_GameObject()
 	if (!m_bRender) { return; }
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
 
-	if (m_tItemData.ID < 0 || 4 < m_tItemData.ID)
+	if (m_tItemData.ID < 0 || ITEM_INDEX_MAX < m_tItemData.ID)
 		m_iPage = 0;
 	else
 		m_iPage = m_tItemData.ID;

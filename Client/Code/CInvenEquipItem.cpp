@@ -58,7 +58,7 @@ void CInvenEquipItem::Render_GameObject()
 	if (!m_bRender) { return; }
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
 
-	if (m_tItemData.ID < 1 || 3 < m_tItemData.ID)
+	if (m_tItemData.ID < 1 || EQUIP_ITEM_INDEX_MAX < m_tItemData.ID)
 		m_iPage = 0;
 	else
 		m_iPage = m_tItemData.ID;

@@ -496,6 +496,7 @@ void CInventory::Add_Item(CItem::ITEMID _eid, _int _iCount)
 			ItemData.iCount += _iCount;
 			pItem->Set_ItemData(ItemData);
 			pItem->Set_Render(true);
+			CPersistentMgr::GetInstance()->Get_ResourceHistory()->AddItem(_eid, _iCount);
 			return;
 		}
 	}
@@ -506,12 +507,15 @@ void CInventory::Add_Item(CItem::ITEMID _eid, _int _iCount)
 		if (ItemData.ID ==  CItem::ID_END || ItemData.iCount == 0)
 		{
 			// NEW
+
 			ItemData.ID = _eid;
 			ItemData.iCount = _iCount;
 			pItem->Set_ItemData(ItemData);
 			pItem->Set_LocalPos(m_vSlotLocalPos[m_iCurItemCount]);
 			m_iCurItemCount++;
+			m_InventoryItemList.push_back(ItemData.ID);
 			pItem->Set_Render(true);
+			CPersistentMgr::GetInstance()->Get_ResourceHistory()->AddItem(_eid, _iCount);
 			return;
 		}
 	}
@@ -530,6 +534,7 @@ BOOL CInventory::Use_Item(CItem::ITEMID _eid, _int _iCount)
 			CPersistentMgr::GetInstance()->Get_ResourceHistory()->UseItem(_eid, -_iCount);
 			if (ItemData.iCount == 0)
 			{
+				m_InventoryItemList.remove(ItemData.ID);
 				ItemData.ID = CItem::ID_END;
 				pItem->Set_Render(false);
 				m_iCurItemCount--;
@@ -566,6 +571,8 @@ void CInventory::Free()
 	Safe_Release(m_pPlayerNameFont);
 	Safe_Release(m_pInvenPlyer);
 	Safe_Release(m_pInvenPlayerHp);
+	Safe_Release(m_pResourceFont);
+
 	for (auto& ptr : m_vSlot)
 	{
 		Safe_Release(ptr);
@@ -590,16 +597,19 @@ void CInventory::Free()
 	CUi::Free();
 }
 
+
 void CInventory::SortLocalPos()
 {
 	_int TempCount = 0;
-	for (auto pItem : m_vItem)
+	for (auto InvenItemID : m_InventoryItemList)
 	{
-		tItemData ItemData = pItem->Get_ItemData();
-		if (ItemData.ID != CItem::ID_END && 0 < ItemData.ID)
+		for (auto pItem : m_vItem)
 		{
-			pItem->Set_LocalPos(m_vSlotLocalPos[TempCount]);
-			TempCount++;
+			if (InvenItemID == pItem->Get_ItemData().ID)
+			{
+				pItem->Set_LocalPos(m_vSlotLocalPos[TempCount]);
+				TempCount++;
+			}
 		}
 	}
 }

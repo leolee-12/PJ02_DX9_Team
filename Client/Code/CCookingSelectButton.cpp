@@ -70,8 +70,8 @@ void CCookingSelectButton::Render_GameObject()
 	wchar_t szFoodName[32];
 
 	swprintf_s(szFoodName, L"요리");
-	RECT rc = { 320, 630, 380, 680 };
-	CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans30", szFoodName, rc, FontColor, DT_CENTER | DT_TOP);
+	RECT rc = { 310, 625, 380, 680 };
+	CFontMgr::GetInstance()->Render_Font(L"Font_Default24", szFoodName, rc, FontColor, DT_CENTER | DT_TOP);
 }
 
 void CCookingSelectButton::OnCollision(CGameObject* pObject)
