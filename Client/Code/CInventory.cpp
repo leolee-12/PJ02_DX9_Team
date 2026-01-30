@@ -433,8 +433,8 @@ void CInventory::Ready_Event()
 	if (m_pMessageChannel == nullptr) return;
 	if (m_bMsgRegistered) return;
 
-	m_hmapSubHandles.insert({ L"CInventory.ItemInfoRender",m_pMessageChannel->Subscribe(L"CInvenItem.OnHover",[this](const IMessageChannel::EVENT& Event)
-{
+	m_hmapSubHandles.insert({ L"CInventory.ItemInfoRender", m_pMessageChannel->Subscribe(L"CInvenItem.OnHover", [this](const IMessageChannel::EVENT& Event)
+	{
 		auto iter = Event.hmapData.find(L"ItemID");
 		if (iter == Event.hmapData.end())
 			return;
@@ -442,17 +442,15 @@ void CInventory::Ready_Event()
 		CItem::ITEMID ItemID = any_cast<CItem::ITEMID>(iter->second);
 		m_pInvenItemInfo->Set_ItemDataInit(ItemID);
 		m_pInvenItemInfo->Set_Active(true);
-}
-) });
+	}) });
 
-	m_hmapSubHandles.insert({ L"CInventory.ItemInfoUnRender",m_pMessageChannel->Subscribe(L"CInvenItem.OnHoverExit",[this](const IMessageChannel::EVENT& Event)
-{
+	m_hmapSubHandles.insert({ L"CInventory.ItemInfoUnRender", m_pMessageChannel->Subscribe(L"CInvenItem.OnHoverExit", [this](const IMessageChannel::EVENT& Event)
+	{
 		m_pInvenItemInfo->Set_Active(false);
-}
-) });
+	}) });
 
-	m_hmapSubHandles.insert({ L"CInventory.EquipItemInfoRender",m_pMessageChannel->Subscribe(L"CInvenEquipItem.OnHover",[this](const IMessageChannel::EVENT& Event)
-{
+	m_hmapSubHandles.insert({ L"CInventory.EquipItemInfoRender", m_pMessageChannel->Subscribe(L"CInvenEquipItem.OnHover", [this](const IMessageChannel::EVENT& Event)
+	{
 		auto iter = Event.hmapData.find(L"ItemID");
 		if (iter == Event.hmapData.end())
 			return;
@@ -460,14 +458,13 @@ void CInventory::Ready_Event()
 		EquipmentItemID ItemID = any_cast<EquipmentItemID>(iter->second);
 		m_pInvenItemInfo->Set_ItemDataInit(ItemID);
 		m_pInvenItemInfo->Set_Active(true);
-}
-) });
+	}) });
 
-	m_hmapSubHandles.insert({ L"CInventory.EquipItemInfoUnRender",m_pMessageChannel->Subscribe(L"CInvenEquipItem.OnHoverExit",[this](const IMessageChannel::EVENT& Event)
-{
+	m_hmapSubHandles.insert({ L"CInventory.EquipItemInfoUnRender", m_pMessageChannel->Subscribe(L"CInvenEquipItem.OnHoverExit", [this](const IMessageChannel::EVENT& Event)
+	{
 		m_pInvenItemInfo->Set_Active(false);
-}
-) });
+	}) });
+
 	m_bMsgRegistered = true;
 }
 
