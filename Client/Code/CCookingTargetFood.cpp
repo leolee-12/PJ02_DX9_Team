@@ -115,7 +115,7 @@ void CCookingTargetFood::Render_GameObject()
 	m_pTransformCom->Get_Info(INFO_POS, &m_vPos);
 	swprintf_s(szFoodCount, L"%d", m_iCraftableCount);
 	RECT rc0Player = { 0, 0, m_vPos.x + (WINCX * 0.5) + 30,-m_vPos.y + (WINCY * 0.5f) + 30 };
-	CFontMgr::GetInstance()->Render_Font(L"Font_NotoSans30", szFoodCount, rc0Player, FontColor, DT_RIGHT | DT_BOTTOM);
+	CFontMgr::GetInstance()->Render_Font(L"Font_Default40", szFoodCount, rc0Player, FontColor, DT_RIGHT | DT_BOTTOM);
 
 
 }

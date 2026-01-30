@@ -566,6 +566,8 @@ void CInventory::Free()
 	Safe_Release(m_pPlayerNameFont);
 	Safe_Release(m_pInvenPlyer);
 	Safe_Release(m_pInvenPlayerHp);
+	Safe_Release(m_pResourceFont);
+
 	for (auto& ptr : m_vSlot)
 	{
 		Safe_Release(ptr);
