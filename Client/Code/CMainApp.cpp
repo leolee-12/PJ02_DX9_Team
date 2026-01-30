@@ -42,6 +42,7 @@ HRESULT CMainApp::Ready_MainApp()
 	CCollisionMgr::GetInstance()->Ready_CollisionMgr();
 	CSoundMgr::GetInstance()->Ready_SoundMgr();
 	CPersistentMgr::GetInstance()->Ready_GlobalObjects(m_pGraphicDev);
+	ShowCursor(FALSE);
 
 	return S_OK;
 }
@@ -78,7 +79,7 @@ void CMainApp::Render_MainApp()
 	m_pDeviceClass->Render_Begin(D3DXCOLOR(0.f, 0.f, 0.f, 1.f));
 
 	m_pManagementClass->Render_Scene(m_pGraphicDev);
-
+	CPersistentMgr::GetInstance()->Get_Cursor()->Render_GameObject();
 	m_pDeviceClass->Render_End();
 }
 
@@ -109,7 +110,6 @@ HRESULT CMainApp::Ready_DefaultSetting(LPDIRECT3DDEVICE9* ppGraphicDev)
 
 	Ready_Font();
 	Ready_Proto();
-
 
 	return S_OK;
 }

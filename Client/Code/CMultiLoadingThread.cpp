@@ -429,6 +429,9 @@ void CMultiLoadingThread::Loading_for_Dungeon()
 
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_ChargeArrowTexture", TEX_NORMAL, L"../Bin/Resource/LWY/UI/Arrow/dds/AimDirection.dds", 1));
 	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_ConfettiTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/Confetti/dds/confetti.dds", 1));
+	m_iTotalProtoCount++;
 	// Effect
 }
 
@@ -522,6 +525,9 @@ void CMultiLoadingThread::Loading_for_Village()
 	m_iTotalProtoCount++;
 
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_ChargeArrowTexture", TEX_NORMAL, L"../Bin/Resource/LWY/UI/Arrow/dds/AimDirection.dds", 1));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_ConfettiTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/Confetti/dds/confetti.dds", 1));
 	m_iTotalProtoCount++;
 	// Effect
 
@@ -785,6 +791,9 @@ void CMultiLoadingThread::Loading_for_RealDungeon()
 	m_iTotalProtoCount++;
 
 	m_TexturLoadingqueue.push(TEXLR(L"Proto_ChargeArrowTexture", TEX_NORMAL, L"../Bin/Resource/LWY/UI/Arrow/dds/AimDirection.dds", 1));
+	m_iTotalProtoCount++;
+
+	m_TexturLoadingqueue.push(TEXLR(L"Proto_ConfettiTexture", TEX_NORMAL, L"../Bin/Resource/LWY/Effect/Confetti/dds/confetti.dds", 1));
 	m_iTotalProtoCount++;
 	// Effect
 
