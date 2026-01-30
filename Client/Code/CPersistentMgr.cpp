@@ -16,6 +16,14 @@ CPersistentMgr::~CPersistentMgr()
 
 HRESULT CPersistentMgr::Ready_GlobalObjects(LPDIRECT3DDEVICE9 pGraphicDev)
 {
+	if (m_pCursor == nullptr)
+	{
+		if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_MouseCursor", Engine::CTexture::Create(pGraphicDev, TEX_NORMAL, L"../Bin/Resource/LWY/UI/dds/Mouse_Cursor.dds", 1))))
+			return E_FAIL;
+
+		m_pCursor = CCursor::Create(pGraphicDev);
+	}
+
 	if (m_pPlayer == nullptr)
 	{
 		vector<CTextureSet::TEXINFO> tempVec(35);
@@ -160,6 +168,8 @@ void CPersistentMgr::Update_PersistnetMgr(const _float fTimeDelta)
 	Update_PlayerHp();
 	Update_PlayerGage();
 	Update_PlayerWeaponUI();
+
+	m_pCursor->Update_GameObject(fTimeDelta);
 }
 
 Engine::CTransform* CPersistentMgr::Get_PlayerTransform()
@@ -197,4 +207,5 @@ void CPersistentMgr::Free()
 	Safe_Release(m_pWeaponUIfirst);
 	Safe_Release(m_pWeaponUIsecond);
 	Safe_Release(m_pInventory);
+	Safe_Release(m_pCursor);
 }

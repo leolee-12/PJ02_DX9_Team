@@ -26,6 +26,8 @@ CParticleEffect::CParticleEffect(const CParticleEffect& rhs)
 	, m_iMaxTexIdx(rhs.m_iMaxTexIdx)
 	, m_bFull(false)
 	, m_tBaseColor(rhs.m_tBaseColor)
+	, m_iGridX(rhs.m_iGridX)
+	, m_iGridY(rhs.m_iGridY)
 {
 	m_vecParticles.reserve(m_iMaxParticles);
 }
@@ -45,8 +47,8 @@ HRESULT	CParticleEffect::Ready_GameObject()
 	m_iMaxParticles = 50;
 	m_fEmitRate = 10.f;
 	m_fEmitAcc = 0.f;
-	m_vGravity = _vec3(0.f, -9.8f * 2.5f, 0.f);
-	m_fDrag = 0.98f;
+	m_vGravity = _vec3(0.f, -9.8f * 2.5f, 0.f);	// 기본값 (Setter로 수정 가능)
+	m_fDrag = 0.98f;							// 기본값 (Setter로 수정 가능)
 
 	m_fSizeStart = 1.5f;
 	m_fSizeEnd = 0.1f;
@@ -90,7 +92,7 @@ _int CParticleEffect::Update_GameObject(const _float& fTimeDelta)
 
 		// 물리
 		p.vSpeed += m_vGravity * fTimeDelta;		// 중력
-		//p.vSpeed *= (1.f - m_fDrag * fTimeDelta);	// 공기저항
+		p.vSpeed *= (1.f - m_fDrag * fTimeDelta);	// 공기저항
 		p.vPos += iter->vSpeed * fTimeDelta;		// 움직임
 
 		// 바닥 충돌 (y = -2.5f)
@@ -171,7 +173,6 @@ void CParticleEffect::Render_GameObject()
 										DWORD(p.tColor.b * 255.f));
 
 		m_pGraphicDev->SetRenderState(D3DRS_TEXTUREFACTOR, dwColor);
-		//m_pGraphicDev->SetRenderState(D3DRS_TEXTUREFACTOR, D3DCOLOR_ARGB(dwAlpha, 255, 255, 255));
 
 		// 4. 쿼드 렌더링
 		m_pBufferCom->Render_Buffer();
@@ -239,14 +240,14 @@ void CParticleEffect::Emit_Particle()
 
 void CParticleEffect::Set_Texture(const _uint& iTexIdx)
 {
-	_uint iU = iTexIdx % GRID_X;
-	_uint iV = iTexIdx / GRID_X;
+	_uint iU = iTexIdx % m_iGridX;
+	_uint iV = iTexIdx / m_iGridY;
 
 	D3DXMatrixIdentity(&m_matTex);
-	m_matTex._11 = 1.f / GRID_X;          // U 스케일 (0.125)
-	m_matTex._22 = 1.f / GRID_Y;          // V 스케일 (0.25)
-	m_matTex._31 = iU / (_float)GRID_X;   // U 오프셋
-	m_matTex._32 = iV / (_float)GRID_Y;   // V 오프셋
+	m_matTex._11 = 1.f / _float(m_iGridX);	// U 스케일
+	m_matTex._22 = 1.f / _float(m_iGridY);	// V 스케일
+	m_matTex._31 = iU / _float(m_iGridX);	// U 오프셋
+	m_matTex._32 = iV / _float(m_iGridY);	// V 오프셋
 
 	m_pGraphicDev->SetTransform(D3DTS_TEXTURE0, &m_matTex);
 	m_pTextureCom->Set_Texture(0);

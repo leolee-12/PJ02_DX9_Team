@@ -249,9 +249,9 @@ HRESULT CVillage::Ready_Environment_Layer(const _tchar* pLayerTag)
 		fRadius = Get_Rand_Float(17.5f, 35.f);
 		fRadian = Get_Rand_Float(0.f, D3DX_PI * 2.f);
 
-		vTest = { 200.f + fRadius * cosf(fRadian),		// x
-						1.75f,								// y
-						37.5f + fRadius * sinf(fRadian) };
+		vTest = {	200.f + fRadius * cosf(fRadian),	// x
+					1.75f,								// y
+					37.5f + fRadius * sinf(fRadian) };
 
 		vGridPos = Compute_GirdCoord(vTest);
 

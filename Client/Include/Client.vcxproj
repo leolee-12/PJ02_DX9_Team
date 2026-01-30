@@ -188,6 +188,7 @@
     <ClInclude Include="..\Header\CBishop_Leshy.h" />
     <ClInclude Include="..\Header\CBishop_Shamura.h" />
     <ClInclude Include="..\Header\CCookingUpDownArrow.h" />
+    <ClInclude Include="..\Header\CCursor.h" />
     <ClInclude Include="..\Header\CCutSceneMgr.h" />
     <ClInclude Include="..\Header\CCookingUIController.h" />
     <ClInclude Include="..\Header\CDivider.h" />
@@ -410,6 +411,7 @@
     <ClCompile Include="..\Code\CBishop_Shamura.cpp" />
     <ClCompile Include="..\Code\CCookingTargetFood.cpp" />
     <ClCompile Include="..\Code\CCookingUpDownArrow.cpp" />
+    <ClCompile Include="..\Code\CCursor.cpp" />
     <ClCompile Include="..\Code\CCutSceneMgr.cpp" />
     <ClCompile Include="..\Code\CCookingUIController.cpp" />
     <ClCompile Include="..\Code\CDivider.cpp" />
