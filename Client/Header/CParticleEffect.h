@@ -22,7 +22,11 @@ private:
 	virtual		~CParticleEffect();
 
 public:
+	void			Set_GridXY(const _uint& iGridX, const _uint& iGridY) { m_iGridX = iGridX; m_iGridY = iGridY; }
 	void			Set_TextureKey(wstring strKey) { m_strProtoTexKey = strKey; }
+	void			Set_Size(const _float& fSizeStart, const _float& fSizeEnd) { m_fSizeStart = fSizeStart; m_fSizeEnd = fSizeEnd; }
+	void			Set_Gravity(const _vec3& vGravity) { m_vGravity = vGravity; }
+	void			Set_Drag(const _float& fDrag) { m_fDrag = fDrag; }
 	void			Set_EmitRange(const _vec3& v1, const _vec3& v2) { m_vEmitMinPos = v1; m_vEmitMaxPos = v2; }
 	void			Set_SpeedRange(const _vec3& v1, const _vec3& v2) { m_vMinSpeed = v1; m_vMaxSpeed = v2; }
 	void			Set_LifeTime(const _float& fTime) { m_fLifeTime = fTime; }
@@ -83,9 +87,11 @@ private:
 
 	_uint m_iMinTexIdx;  // 사용할 인덱스 시작 (포함)
 	_uint m_iMaxTexIdx;  // 사용할 인덱스 끝 (포함)
+	_uint m_iGridX;
+	_uint m_iGridY;
 
-	static constexpr _uint GRID_X = 8;
-	static constexpr _uint GRID_Y = 4;
+	//static constexpr _uint GRID_X = 8;
+	//static constexpr _uint GRID_Y = 4;
 
 private:
 	virtual void	Free();

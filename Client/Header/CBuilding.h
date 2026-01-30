@@ -37,6 +37,8 @@ public:
 	virtual _bool		Is_WorkComplete() const { return m_fWorkGauge >= MAX_WORK_GAUGE; }
 	virtual _vec3*		Get_WorkPos(_vec3* pWorkPos) const;
 
+	BUILDING_TYPE       Get_BuildingType() { return m_eBuildingType; }
+
 	_bool				Get_CanPlace() { return m_bCanPlace; }
 
 	wstring				Get_CompleteTexKey();

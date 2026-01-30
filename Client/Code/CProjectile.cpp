@@ -231,7 +231,7 @@ void CProjectile::Set_Material()
 	m_pGraphicDev->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_TFACTOR);	// Arg2 : Arg0이 0일 때 색상 = TFACTOR
 	m_pGraphicDev->SetRenderState(D3DRS_TEXTUREFACTOR, m_tColor);	// TFACTOR 설정 (가장자리 색상)
 
-	m_pGraphicDev->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE4X);	// 알파 : x2
+	m_pGraphicDev->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE4X);	// 알파 : x4
 	m_pGraphicDev->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);	// Arg1 : 텍스처의 알파
 
 	m_bMtrl = true;
@@ -244,6 +244,7 @@ void CProjectile::Reset_Material()
 	m_pGraphicDev->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
 	m_pGraphicDev->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_DIFFUSE);
 	m_pGraphicDev->SetRenderState(D3DRS_TEXTUREFACTOR, D3DCOLOR_ARGB(255, 255, 255, 255));
+	m_pGraphicDev->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1);
 
 	m_bMtrl = false;
 }

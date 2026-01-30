@@ -9,6 +9,7 @@
 #include "CResourceHistoryController.h"
 #include "CPlayerWeaponUI.h"
 #include "CInventory.h"
+#include "CCursor.h"
 
 namespace Engine
 {
@@ -29,6 +30,7 @@ public:
 
 public:
 	Engine::CTransform* Get_PlayerTransform();
+	CCursor* Get_Cursor() { return m_pCursor; }
 	CPlayer* Get_Player() { return m_pPlayer; }
 	CGauge* Get_Gauge() { return m_pGauge; }
 	CPlayerHP* Get_PlayerHPUI() { return m_pPlayerHPUI; }
@@ -95,6 +97,7 @@ private:
 	CVillage*			m_pVillage				= nullptr;
 	CResourceHistoryController* m_pResourceHistoryUI	= nullptr;
 	CInventory*			m_pInventory			= nullptr;
+	CCursor*			m_pCursor				= nullptr;
 
 	CPlayerWeaponUI*    m_pWeaponUIfirst = nullptr;
 	CPlayerWeaponUI*	m_pWeaponUIsecond = nullptr;

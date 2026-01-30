@@ -249,9 +249,9 @@ HRESULT CVillage::Ready_Environment_Layer(const _tchar* pLayerTag)
 		fRadius = Get_Rand_Float(17.5f, 35.f);
 		fRadian = Get_Rand_Float(0.f, D3DX_PI * 2.f);
 
-		vTest = { 200.f + fRadius * cosf(fRadian),		// x
-						1.75f,								// y
-						37.5f + fRadius * sinf(fRadian) };
+		vTest = {	200.f + fRadius * cosf(fRadian),	// x
+					1.75f,								// y
+					37.5f + fRadius * sinf(fRadian) };
 
 		vGridPos = Compute_GirdCoord(vTest);
 
@@ -801,10 +801,13 @@ void CVillage::Key_Input_Village()
 				if (iter != m_mapLayer.end())
 					iter->second->Add_GameObject(L"Building", m_pCurBuilding);
 
+				BUILDING_TYPE eType = m_pCurBuilding->Get_BuildingType();
+
 				m_pCurBuilding = nullptr;
 				m_bBuildingFlag = false;
 
 				SceneEvent.strType = L"Building.Exit";
+				SceneEvent.hmapData[L"BuildingType"] = eType;
 				m_pMessageChannel->Publish(SceneEvent);
 			}
 		}

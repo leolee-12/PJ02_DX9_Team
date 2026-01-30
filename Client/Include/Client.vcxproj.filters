@@ -580,6 +580,9 @@
     <Filter Include="02. GameObject\05. UI\15. BuildingCraftUI\02. SelectSlot">
       <UniqueIdentifier>{585d2fdd-2408-470d-8837-58ae58afcf5c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\05. UI\98. Cursor">
+      <UniqueIdentifier>{df6bc81c-1091-444d-9663-0e14c92446ac}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -1224,6 +1227,9 @@
     <ClInclude Include="..\Header\Building_Enum.h">
       <Filter>02. GameObject\05. UI\15. BuildingCraftUI</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CCursor.h">
+      <Filter>02. GameObject\05. UI\98. Cursor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1799,9 +1805,6 @@
     <ClCompile Include="..\Code\CInvenRedFog.cpp">
       <Filter>02. GameObject\05. UI\14. Inventory\05. InventoryEquip\04. InvenRedFog</Filter>
     </ClCompile>
-    <ClCompile Include="..\CInvenPlayerHp.cpp">
-      <Filter>02. GameObject\05. UI\14. Inventory\05. InventoryEquip\05. InvenPlayerHp</Filter>
-    </ClCompile>
     <ClCompile Include="..\Code\CLetterBox.cpp">
       <Filter>02. GameObject\03. Dependent\01. Effect\05. CLetterBox</Filter>
     </ClCompile>
@@ -1813,6 +1816,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\CBuildingSelectSlot.cpp">
       <Filter>02. GameObject\05. UI\15. BuildingCraftUI\02. SelectSlot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CCursor.cpp">
+      <Filter>02. GameObject\05. UI\98. Cursor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CInvenPlayerHp.cpp">
+      <Filter>02. GameObject\05. UI\14. Inventory\05. InventoryEquip\05. InvenPlayerHp</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
