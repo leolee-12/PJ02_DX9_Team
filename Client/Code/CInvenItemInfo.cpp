@@ -157,7 +157,7 @@ CInvenItemInfo* CInvenItemInfo::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 
 void CInvenItemInfo::Set_ItemDataInit(CItem::ITEMID _itemdID)
 {
-	if (_itemdID < 0 || ITEM_INDEX_MAX < _itemdID) return;
+	if (_itemdID < 0 || ITEM_INDEX_MAX <= _itemdID) return;
 	ItemTableData itd = ItemTable[_itemdID];
 
 	m_pInfoItem->Set_Render(true);
