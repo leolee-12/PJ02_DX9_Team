@@ -16,6 +16,14 @@ CPersistentMgr::~CPersistentMgr()
 
 HRESULT CPersistentMgr::Ready_GlobalObjects(LPDIRECT3DDEVICE9 pGraphicDev)
 {
+	if (m_pMouse == nullptr)
+	{
+		if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_MouseCursor", Engine::CTexture::Create(pGraphicDev, TEX_NORMAL, L"../Bin/Resource/LWY/UI/dds/Mouse_Cursor.dds", 1))))
+			return E_FAIL;
+
+		m_pMouse = CMouse::Create(pGraphicDev);
+	}
+
 	if (m_pPlayer == nullptr)
 	{
 		vector<CTextureSet::TEXINFO> tempVec(35);
