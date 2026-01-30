@@ -71,10 +71,7 @@ HRESULT CVillage::Ready_Scene()
 
 	Ready_Light();
 
-	Ready_Event_Village();
-
 	Ready_Event();
-
 
 	CCutSceneMgr::GetInstance()->Ready_CutsceneMgr(m_pMessageChannel);
 
@@ -231,7 +228,7 @@ HRESULT CVillage::Ready_Environment_Layer(const _tchar* pLayerTag)
 						-1.125f,									// y
 						37.5f + fRadius * sinf(fRadian) };
 
-		_vec3 vGridPos = Compute_GirdCoord(vTest);
+		_vec3 vGridPos = Compute_GridCoord(vTest);
 
 		OBJECTDATA tObjData1 = { "BreakableRock",						// 카테고리
 								0,										// 텍스처인덱스
@@ -253,7 +250,7 @@ HRESULT CVillage::Ready_Environment_Layer(const _tchar* pLayerTag)
 					1.75f,								// y
 					37.5f + fRadius * sinf(fRadian) };
 
-		vGridPos = Compute_GirdCoord(vTest);
+		vGridPos = Compute_GridCoord(vTest);
 
 		OBJECTDATA tObjData2 = { "BreakableTree",						// 카테고리
 								0,										// 텍스처인덱스
@@ -274,23 +271,21 @@ HRESULT CVillage::Ready_Environment_Layer(const _tchar* pLayerTag)
 	if (FAILED(pLayer->Add_GameObject(L"Building", pGameObject)))
 		return E_FAIL;
 
-	pGameObject = CBuilding::Create(m_pGraphicDev, m_pMessageChannel, _vec3(198.5f, -0.95f, 40.f), BT_SHRINE);
-	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	if (FAILED(pLayer->Add_GameObject(L"Building", pGameObject)))
-		return E_FAIL;
-
-	pGameObject = CBuilding::Create(m_pGraphicDev, m_pMessageChannel, _vec3(199.8f + 10.f, -0.95f, 35.f - 10.f), BT_KNUCKLEBONE);
-	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	if (FAILED(pLayer->Add_GameObject(L"Building", pGameObject)))
-		return E_FAIL;
-
-	pGameObject = CBuilding::Create(m_pGraphicDev, m_pMessageChannel, _vec3(199.8f - 10.f, -0.95f, 35.f - 10.f), BT_COOK);
-	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	if (FAILED(pLayer->Add_GameObject(L"Building", pGameObject)))
-		return E_FAIL;
+	//pGameObject = CBuilding::Create(m_pGraphicDev, m_pMessageChannel, _vec3(198.5f, -0.95f, 40.f), BT_SHRINE);
+	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	//if (FAILED(pLayer->Add_GameObject(L"Building", pGameObject)))
+	//	return E_FAIL;
+	//
+	//pGameObject = CBuilding::Create(m_pGraphicDev, m_pMessageChannel, _vec3(199.8f + 10.f, -0.95f, 35.f - 10.f), BT_KNUCKLEBONE);
+	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	//if (FAILED(pLayer->Add_GameObject(L"Building", pGameObject)))
+	//	return E_FAIL;
+	//
+	//pGameObject = CBuilding::Create(m_pGraphicDev, m_pMessageChannel, _vec3(199.8f - 10.f, -0.95f, 35.f - 10.f), BT_COOK);
+	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	//if (FAILED(pLayer->Add_GameObject(L"Building", pGameObject)))
+	//	return E_FAIL;
 	// Village 지형물
-
-
 
 	m_mapLayer.insert({ pLayerTag , pLayer });
 
@@ -640,7 +635,6 @@ HRESULT CVillage::Ready_UI_Layer(const _tchar* pLayerTag)
 	return S_OK;
 }
 
-
 HRESULT CVillage::Ready_Light()
 {
 	D3DLIGHT9	tLightInfo;
@@ -662,7 +656,7 @@ HRESULT CVillage::Ready_Light()
 	return S_OK;
 }
 
-void	CVillage::Ready_Event()
+void CVillage::Ready_Event()
 {
 	m_hmapSubHandles.insert({ L"Obj_Add", m_pMessageChannel->Subscribe(L"Obj.Add", [this](const IMessageChannel::EVENT& Event)
 		{
@@ -679,10 +673,7 @@ void	CVillage::Ready_Event()
 			}
 		}
 	) });
-}
 
-void CVillage::Ready_Event_Village()
-{
 	m_hmapSubHandles.insert({ L"Trigger.Activate", m_pMessageChannel->Subscribe(L"Trigger.Activate", [this](const IMessageChannel::EVENT& Event)
 		{
 			auto TIDiter = Event.hmapData.find(L"Trigger_TID");
@@ -774,7 +765,7 @@ void CVillage::Ready_Event_Village()
 
 void CVillage::Key_Input_Village()
 {
-	Key_Input_Village_Debug();
+	//Key_Input_Village_Debug();
 
 	Select_Key_Input();
 
@@ -809,6 +800,10 @@ void CVillage::Key_Input_Village()
 				SceneEvent.strType = L"Building.Exit";
 				SceneEvent.hmapData[L"BuildingType"] = eType;
 				m_pMessageChannel->Publish(SceneEvent);
+
+				_tchar strSoundName[128] = L"";
+				swprintf_s(strSoundName, L"Building Bell Ring_%d.wav", Get_Rand_Int(0, 2));
+				CSoundMgr::GetInstance()->Play(strSoundName, SOUND_EFFECT, 0.35f);
 			}
 		}
 	}
@@ -908,7 +903,7 @@ void CVillage::Update_Building(const _float& fTimeDelta)
 	_vec3 vPos = {};
 	if (CCollisionMgr::GetInstance()->PickOnPlane(&vPos, m_pGraphicDev, g_hWnd))
 	{
-		m_pCurBuilding->Set_PosForPick(Compute_GirdCoord(vPos));
+		m_pCurBuilding->Set_PosForPick(Compute_GridCoord(vPos));
 	}
 
 	m_pCurBuilding->Update_GameObject(fTimeDelta);
@@ -921,7 +916,7 @@ void CVillage::LateUpdate_Building(const _float& fTimeDelta)
 	m_pCurBuilding->LateUpdate_GameObject(fTimeDelta);
 }
 
-_vec3 CVillage::Compute_GirdCoord(const _vec3& vPos)
+_vec3 CVillage::Compute_GridCoord(const _vec3& vPos)
 {
 	_vec3 vGridPos = vPos;
 	vGridPos.x = floorf(vPos.x / BUILDING_GRIDSIZE) * BUILDING_GRIDSIZE;

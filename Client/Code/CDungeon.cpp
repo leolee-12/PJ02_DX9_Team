@@ -190,7 +190,7 @@ HRESULT CDungeon::Ready_Environment_Layer(const _tchar* pLayerTag)
 		return E_FAIL;
 
 
-	pGameObject = CChest::Create(m_pGraphicDev, m_pMessageChannel, _vec3(-148.f, 0.f, 14.1f), 10);
+	pGameObject = CChest::Create(m_pGraphicDev, m_pMessageChannel, _vec3(-148.f, 0.f, 14.1f), 20);
 
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 

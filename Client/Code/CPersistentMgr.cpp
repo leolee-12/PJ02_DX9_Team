@@ -163,7 +163,7 @@ HRESULT CPersistentMgr::Ready_GlobalObjects(LPDIRECT3DDEVICE9 pGraphicDev)
 	return S_OK;
 }
 
-void CPersistentMgr::Update_PersistnetMgr(const _float fTimeDelta)
+void CPersistentMgr::Update_PersistentMgr(const _float fTimeDelta)
 {
 	Update_PlayerHp();
 	Update_PlayerGage();

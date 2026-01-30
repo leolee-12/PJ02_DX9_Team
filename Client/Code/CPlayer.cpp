@@ -421,24 +421,24 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 
 void CPlayer::Key_Input_Debug(const _float& fTimeDelta)
 {
-	for (int i = 0; i < 9; ++i)
-	{
-		if (GetAsyncKeyState(i + 48))
-		{	// 디버그용
-
-			if (i == 7)
-			{
-				if (auto pLetterBox = CEffectMgr::GetInstance()->Get_LetterBox())
-					pLetterBox->Play();
-			}
-			else if (i == 8)
-			{
-				if (auto pLetterBox = CEffectMgr::GetInstance()->Get_LetterBox())
-					pLetterBox->Exit();
-			}
-			else		CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_HIT, i, m_vPos);
-		}
-	}
+	//for (int i = 0; i < 9; ++i)
+	//{
+	//	if (GetAsyncKeyState(i + 48))
+	//	{	// 디버그용
+	//
+	//		if (i == 7)
+	//		{
+	//			if (auto pLetterBox = CEffectMgr::GetInstance()->Get_LetterBox())
+	//				pLetterBox->Play();
+	//		}
+	//		else if (i == 8)
+	//		{
+	//			if (auto pLetterBox = CEffectMgr::GetInstance()->Get_LetterBox())
+	//				pLetterBox->Exit();
+	//		}
+	//		else		CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_HIT, i, m_vPos);
+	//	}
+	//}
 
 	//
 	//if (CDInputMgr::GetInstance()->Key_Down(DIK_F1))

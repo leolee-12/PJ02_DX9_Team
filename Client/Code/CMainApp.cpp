@@ -51,7 +51,7 @@ int CMainApp::Update_MainApp(const float& fTimeDelta)
 {
 	CDInputMgr::GetInstance()->Update_InputDev();
 	CCutSceneMgr::GetInstance()->Update_CutScene(fTimeDelta);
-	CPersistentMgr::GetInstance()->Update_PersistnetMgr(fTimeDelta);
+	CPersistentMgr::GetInstance()->Update_PersistentMgr(fTimeDelta);
 	m_pManagementClass->Update_Scene(fTimeDelta);
 
 	// 타일 매니저 업데이트
