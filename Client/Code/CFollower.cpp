@@ -72,7 +72,7 @@ _int CFollower::Update_GameObject(const _float& fTimeDelta)
 	Move_Frame(fTimeDelta);
 	Execute_Work(fTimeDelta);
 
-	if (m_eCurState != FOLLOWER_RECRUIT) {
+	if ((m_eCurState != FOLLOWER_RECRUIT) && (m_eCurState != FOLLOWER_CONVERT)) {
 		m_pTrigger->Update_GameObject(fTimeDelta);
 	}
 
@@ -109,7 +109,7 @@ void CFollower::LateUpdate_GameObject(const _float& fTimeDelta)
 	//-------------------------------------------------
 	// 충돌체 디버그용
 
-	if (m_eCurState != FOLLOWER_RECRUIT) {
+	if ((m_eCurState != FOLLOWER_RECRUIT) && (m_eCurState != FOLLOWER_CONVERT)) {
 		m_pTrigger->Set_Pos_Trigger(vTriggerPos);
 		m_pTrigger->LateUpdate_GameObject(fTimeDelta);
 	}
@@ -293,6 +293,7 @@ void CFollower::Ready_Variable()
 
 		m_hmapSubHandles.insert({ L"Trigger.Activate.Owner", m_pMessageChannel->Subscribe(L"Trigger.Activate.Owner", [this](const IMessageChannel::EVENT& Event)
 			{
+				CSoundMgr::GetInstance()->Play(L"follower warp in reverse effect.wav", SOUND_EFFECT, 0.35f);
 				auto Nameiter = Event.hmapData.find(L"Trigger_Name");
 				if (Nameiter == Event.hmapData.end()) { return; }
 				auto Owneriter = Event.hmapData.find(L"Trigger_Owner");
@@ -303,8 +304,8 @@ void CFollower::Ready_Variable()
 					if (any_cast<CGameObject*>(Owneriter->second) == this)
 					{
 						Safe_Destroy(m_pTrigger);
-						m_eCurState = FOLLOWER_RECRUIT;
-						m_pAICom->Set_State<FOLLOWER_STATE>(FOLLOWER_RECRUIT);
+						m_eCurState = FOLLOWER_CONVERT;
+						m_pAICom->Set_State<FOLLOWER_STATE>(FOLLOWER_CONVERT);
 					}
 				}
 			}
@@ -415,11 +416,6 @@ void CFollower::Move_Frame(const _float& fTimeDelta)
 			}
 			else if (m_iRecruitState == 1)
 			{
-				if (m_bUnConvert)
-				{
-					m_iHp = 0;
-					return;
-				}
 				m_iRecruitState = 2;
 				m_fFrameEnd = 75;
 			}
@@ -427,6 +423,14 @@ void CFollower::Move_Frame(const _float& fTimeDelta)
 			{
 				m_pAICom->Anim_End(m_eCurState);
 				m_eCurState = FOLLOWER_IDLE;
+			}
+		}
+		else if (m_eCurState == FOLLOWER_CONVERT)
+		{
+			if (m_bUnConvert)
+			{
+				m_iHp = 0;
+				return;
 			}
 		}
 		else if (m_eCurState == FOLLOWER_CHEER)
@@ -461,6 +465,12 @@ void CFollower::Move_Frame(const _float& fTimeDelta)
 					CSoundMgr::GetInstance()->Play(strSoundName, CHANNELID(iChannel), 0.02f);
 				}
 			}
+		}
+		break;
+
+		case FOLLOWER_CONVERT:
+		{
+			if (iCurAnimFrame == 76) CSoundMgr::GetInstance()->Play(L"float follower.wav", SOUND_EFFECT, 0.35f);
 		}
 		break;
 		}

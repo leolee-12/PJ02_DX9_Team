@@ -138,10 +138,10 @@ HRESULT CInventory::Ready_GameObject()
 	m_vLerpStart = { 0,0,0 };
 	m_vLerpEnd = { 0,0,0 };
 	m_iCurItemCount = 0;
-	Add_Item(CItem::IG_GOLD, 17);
-	Add_Item(CItem::IG_WOOD, 18);
-	Add_Item(CItem::IG_STONE, 19);
-	Add_Item(CItem::IG_BERRY, 20);
+	//Add_Item(CItem::IG_GOLD, 17);
+	//Add_Item(CItem::IG_WOOD, 18);
+	//Add_Item(CItem::IG_STONE, 19);
+	//Add_Item(CItem::IG_BERRY, 20);
 	return S_OK;
 }
 
@@ -386,22 +386,22 @@ void CInventory::Key_Input_Inven()
 			Set_State(INVEN_CLOSE);
 	}
 	// 삭제 테스트용 디버깅
-	if (CDInputMgr::GetInstance()->Key_Down(DIK_1))
-	{
-		Use_Item(CItem::IG_GOLD, 1);
-	}
-	if (CDInputMgr::GetInstance()->Key_Down(DIK_2))
-	{
-		Use_Item(CItem::IG_BERRY, 1);
-	}
-	if (CDInputMgr::GetInstance()->Key_Down(DIK_3))
-	{
-		Use_Item(CItem::IG_STONE, 1);
-	}
-	if (CDInputMgr::GetInstance()->Key_Down(DIK_4))
-	{
-		Use_Item(CItem::IG_WOOD, 1);
-	}
+	//if (CDInputMgr::GetInstance()->Key_Down(DIK_1))
+	//{
+	//	Use_Item(CItem::IG_GOLD, 1);
+	//}
+	//if (CDInputMgr::GetInstance()->Key_Down(DIK_2))
+	//{
+	//	Use_Item(CItem::IG_BERRY, 1);
+	//}
+	//if (CDInputMgr::GetInstance()->Key_Down(DIK_3))
+	//{
+	//	Use_Item(CItem::IG_STONE, 1);
+	//}
+	//if (CDInputMgr::GetInstance()->Key_Down(DIK_4))
+	//{
+	//	Use_Item(CItem::IG_WOOD, 1);
+	//}
 }
 
 void CInventory::Set_MessageChannel(IMessageChannel* pMessageChannel)

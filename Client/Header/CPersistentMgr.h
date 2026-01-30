@@ -26,7 +26,7 @@ private:
 
 public:
 	HRESULT		 Ready_GlobalObjects(LPDIRECT3DDEVICE9 pGraphicDev);
-	void		 Update_PersistnetMgr(const _float fTimeDelta);
+	void		 Update_PersistentMgr(const _float fTimeDelta);
 
 public:
 	Engine::CTransform* Get_PlayerTransform();
