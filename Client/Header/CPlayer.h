@@ -47,7 +47,8 @@ public:
 	_int			Get_MaxHp() { return m_iMaxHp; }
 	_int			Get_Hp() { return m_iHp; }
 	const _float&	Get_Passion() { return m_fPassion; }
-	const _float&	Get_Faith() { return m_fFaith; }
+	const _float& Get_Faith() { return m_fFaith; }
+	const _bool			Get_Village() { return m_bVillage; }
 	void			Add_passion(const _float& fNum) { m_fPassion += fNum; if (m_fPassion > 4.f) m_fPassion = 4.f; }
 	void			Add_Faith(const _float& fNum) { m_fFaith += fNum; if (m_fFaith > 100.f) m_fFaith = 100.f; }
 	void			Set_MessageChannel(IMessageChannel* pMessageChannel);

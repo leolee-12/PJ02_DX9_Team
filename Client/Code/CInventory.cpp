@@ -10,10 +10,19 @@
 #include "CInvenSlot.h"
 #include "CInvenItem.h"
 #include "CInvenBtn.h"
+#include "CInvenItemInfo.h"
 
+#include "CInvenStarImg.h"
+#include "CInvenRedFog.h"
+#include "CFontUIOrtho.h"
+#include "CInvenPlayer.h"
+#include "CInvenPlayerHp.h"
+#include "CInvenEquipItem.h"
 
+#include "CPersistentMgr.h"
 CInventory::CInventory(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CUi(pGraphicDev)
+	, m_bMsgRegistered(false)
 {
 }
 
@@ -24,7 +33,7 @@ CInventory::~CInventory()
 
 HRESULT CInventory::Ready_GameObject()
 {
-	m_vPos = _vec3{ 0,0,0 };
+	m_vPos = _vec3{ -700,0,0 };
 	m_pInvenBack = CInvenBack::Create(m_pGraphicDev,_vec3(-WINCX / 4,0.0f,0.01f), m_vPos,1.0f);
 	if (nullptr == m_pInvenBack)	
 		return E_FAIL;
@@ -39,15 +48,19 @@ HRESULT CInventory::Ready_GameObject()
 		return E_FAIL;
 	m_pPlayerInfoBtn->Set_Tex(L"정보창");
 
+
 	CInvenSlot* pSlot;
 	CInvenItem* pItem;
+	CInvenEquipItem* pEquipItem;
+
 	for (int i = 0; i < 2; ++i)
 	{
 		for (int j = 0; j < 6; ++j)
 		{
 
 			pSlot = CInvenSlot::Create(m_pGraphicDev, { -520.f + (75.f * j), 80.f - (75.f * i), 0.01f }, m_vPos, 0.3f);
-			pItem = CInvenItem::Create(m_pGraphicDev, { -520.f + (75.f * j), 80.f - (75.f * i), 0.01f }, m_vPos, 0.3f);
+			pItem = CInvenItem::Create(m_pGraphicDev, { -520.f + (75.f * j), 80.f - (75.f * i), 0.01f }, m_vPos, 0.3f,IRT_COUNT);
+			pItem->Set_HoverEvent(true);
 			if (nullptr == pSlot)
 				return E_FAIL;
 
@@ -58,12 +71,72 @@ HRESULT CInventory::Ready_GameObject()
 		}
 	}
 
-	m_eCurInvenState = IS_END;
-	m_ePreInvenState = IS_END;
+	_float angle = -150.0f;
+	_float length = 170.0f;
+	for (int i = 0; i < 10; ++i)
+	{
+		_vec2 v2 = _vec2(cosf(D3DXToRadian(angle)), sinf(D3DXToRadian(angle))) * length;
+
+		pSlot = CInvenSlot::Create(m_pGraphicDev, { -WINCX / 4 + (v2.x), -50.f - (v2.y), 0.01f }, m_vPos, 0.25f);
+		pEquipItem = CInvenEquipItem::Create(m_pGraphicDev, { -WINCX / 4 + (v2.x), -50.f - (v2.y), 0.01f }, m_vPos, 0.2f);
+		pEquipItem->Set_HoverEvent(true);
+		pSlot->Set_Page(1);
+		if (nullptr == pSlot)
+			return E_FAIL;
+		m_vPlayerSlot.push_back(pSlot);
+		m_vPlayerEquipItem.push_back(pEquipItem);
+		angle -= 27.0f;
+	}
+
+	m_pInfoStarImg = CInvenStarImg::Create(m_pGraphicDev, _vec3(-WINCX / 4, -50.0f, 0.01f), m_vPos, 0.2f);
+	if (nullptr == m_pInfoStarImg)
+		return E_FAIL;
+
+	m_pInfoRedFog = CInvenRedFog::Create(m_pGraphicDev, _vec3(-WINCX / 4, -50.0f, 0.001f), m_vPos, 1.0f);
+	if (nullptr == m_pInfoRedFog)
+		return E_FAIL;
+
+	m_pInvenPlyer = CInvenPlayer::Create(m_pGraphicDev, _vec3(-WINCX / 4, -20.0f, 0.0001f), m_vPos, 0.7f);
+	if (nullptr == m_pInvenPlyer)
+		return E_FAIL;
+
+	m_pInvenPlayerHp = CInvenPlayerHp::Create(m_pGraphicDev, _vec3(-WINCX / 4 -50.0f, 100.0f, 0.01f), m_vPos, 0.3f);
+	if (nullptr == m_pInvenPlayerHp)
+		return E_FAIL;
+
+	m_pPlayerNameFont = CFontUIOrtho::Create(m_pGraphicDev);
+	if (nullptr == m_pPlayerNameFont)
+		return E_FAIL;
+
+	m_pPlayerNameFont->Set_Flags(DT_CENTER | DT_VCENTER);
+	m_pPlayerNameFont->Set_FontColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+	m_pPlayerNameFont->Set_Pos(_vec2(-WINCX / 4+m_vPos.x, -30.0f + m_vPos.y));
+	m_pPlayerNameFont->Set_Scale(_vec2(300.0f, 123.f));
+	m_pPlayerNameFont->Set_Font(L"Font_Default30_Heavy");
+	m_pPlayerNameFont->Set_Text(L"어린 양");
+	m_pPlayerNameFont->Active();
+
+	m_pResourceFont = CFontUIOrtho::Create(m_pGraphicDev);
+	if (nullptr == m_pResourceFont)
+		return E_FAIL;
+
+	m_pResourceFont->Set_Flags(DT_CENTER | DT_VCENTER);
+	m_pResourceFont->Set_FontColor(D3DXCOLOR(0.5f, 0.5f, 0.5f, 1.0f));
+	m_pResourceFont->Set_Pos(_vec2(-WINCX / 4 + m_vPos.x, -30.0f + m_vPos.y));
+	m_pResourceFont->Set_Scale(_vec2(200.0f, 123.f));
+	m_pResourceFont->Set_Font(L"Font_Default24");
+	m_pResourceFont->Set_Text(L"재화");
+	m_pResourceFont->Active();
+
+	m_pInvenItemInfo = CInvenItemInfo::Create(m_pGraphicDev);
+	m_pInvenItemInfo->Set_Active(false);
+	m_eCurInvenState = INVEN_END;
+	m_ePreInvenState = INVEN_END;
+	m_eInvenRenderState = INVENRT_RESOURCE;
 	m_fLerpTime = 1.0f;
-	m_vLerpStart = { 0,0,0 };
-	m_vLerpEnd = { 0,0,0 };
-	m_iInvenCount = 0;
+	m_vLerpStart = _vec3{ 0,0,0 };
+	m_vLerpEnd = _vec3{ 0,0,0 };
+	m_iCurItemCount = 0;
 	Add_Item(CItem::IG_BERRY, 20);
 	return S_OK;
 }
@@ -76,25 +149,36 @@ _int CInventory::Update_GameObject(const _float& fTimeDelta)
 
 	if (m_eCurInvenState != m_ePreInvenState)
 	{
-		m_ePreInvenState = m_eCurInvenState;
 		switch (m_eCurInvenState)
 		{
-		case IS_OPEN:
+		case INVEN_IDLE:
+		{
+			m_bActive = false;
+			break;
+		}
+		case INVEN_OPEN:
+		{
 			Moveto(m_vPos, _vec3{ -700,0,0 });
+			m_bActive = true;
 			break;
-		case IS_STAY:
+		}
+		case INVEN_STAY:
+		{
 			break;
-		case IS_CLOSE:
+		}
+		case INVEN_CLOSE:
+		{
 			Moveto(m_vPos, _vec3{ 0,0,0 });
 			break;
-		case IS_END:
+		}
+		case INVEN_END:
 			break;
 		default:
 			break;
 		}
+			m_ePreInvenState = m_eCurInvenState;
 	}
-
-	if (m_eCurInvenState != IS_STAY)
+	if (m_eCurInvenState == INVEN_OPEN || m_eCurInvenState == INVEN_CLOSE )
 	{
 		if (m_fLerpTime < 1.0f)
 		{
@@ -105,10 +189,20 @@ _int CInventory::Update_GameObject(const _float& fTimeDelta)
 		{
 			m_fLerpTime = 1.0f;
 			D3DXVec3Lerp(&m_vPos, &m_vLerpStart, &m_vLerpEnd, m_fLerpTime);
-			Set_State(IS_STAY);
+
+			// 수정 예정
+			//if (m_eCurInvenState == IS_OPEN)
+			//{
+			//	Set_State(IS_STAY);
+			//}
+			//else if(m_eCurInvenState == IS_CLOSE)
+			//{
+			//	Set_State(IS_IDLE);
+			//}
 		}
 	}
 
+	// 인벤 디폴트 객체
 	m_pPlayerInfoBtn->Set_ParentPos(m_vPos);
 	m_pItemInvenBtn->Set_ParentPos(m_vPos);
 	m_pInvenBack->Set_ParentPos(m_vPos);
@@ -116,16 +210,77 @@ _int CInventory::Update_GameObject(const _float& fTimeDelta)
 	m_pItemInvenBtn->Update_GameObject(fTimeDelta);
 	m_pInvenBack->Update_GameObject(fTimeDelta);
 
-	for (auto it : m_vSlot)
+	m_pInvenItemInfo->Update_GameObject(fTimeDelta);
+
+	// 0번이 무기칸
+	CPlayer* pPlayer = CPersistentMgr::GetInstance()->Get_Player();
+	if (!pPlayer->Get_Village())
 	{
-		it->Update_GameObject(fTimeDelta);
-		it->Set_ParentPos(m_vPos);
+		if (pPlayer->Get_Weapon() == CPlayer::WEAPONTYPE::WT_SWORD)
+		{
+			m_vPlayerEquipItem[0]->Set_ItemID(EID_SWORD);
+		}
+		if (pPlayer->Get_Weapon() == CPlayer::WEAPONTYPE::WT_GAUNTLETS)
+		{
+			m_vPlayerEquipItem[0]->Set_ItemID(EID_GAUNTLETS);
+		}
 	}
-	for (auto it : m_vItem)
+	else
 	{
-		it->Update_GameObject(fTimeDelta);
-		it->Set_ParentPos(m_vPos);
+		m_vPlayerEquipItem[0]->Set_ItemID(EID_NONE);
 	}
+
+	switch (m_eInvenRenderState)
+	{
+	case INVENRT_RESOURCE:
+	{
+		// 소모품창
+		for (auto it : m_vSlot)
+		{
+			it->Set_ParentPos(m_vPos);
+			it->Update_GameObject(fTimeDelta);
+		}
+		for (auto it : m_vItem)
+		{
+			it->Set_ParentPos(m_vPos);
+			it->Update_GameObject(fTimeDelta);
+		}
+		m_pResourceFont->Set_Pos(_vec2(-540.0f + m_vPos.x, 130.0f + m_vPos.y));
+		m_pResourceFont->Update_GameObject(fTimeDelta);
+		break;
+	}
+	case INVENRT_PLAYERINFO:
+	{
+		// 정보창
+		m_pInfoRedFog->Set_ParentPos(m_vPos);
+		m_pInfoStarImg->Set_ParentPos(m_vPos);
+		m_pPlayerNameFont->Set_Pos(_vec2(-WINCX/4 + m_vPos.x, 150.0f + m_vPos.y));
+		m_pInvenPlyer->Set_ParentPos(m_vPos);
+		m_pInvenPlayerHp->Set_ParentPos(m_vPos);
+		m_pInfoRedFog->Update_GameObject(fTimeDelta);
+		m_pInfoStarImg->Update_GameObject(fTimeDelta);
+		m_pPlayerNameFont->Update_GameObject(fTimeDelta);
+		m_pInvenPlyer->Update_GameObject(fTimeDelta);
+		m_pInvenPlayerHp->Update_GameObject(fTimeDelta);
+		for (auto it : m_vPlayerSlot)
+		{
+			it->Set_ParentPos(m_vPos);
+			it->Update_GameObject(fTimeDelta);
+		}
+		for (auto it : m_vPlayerEquipItem)
+		{
+			it->Set_ParentPos(m_vPos);
+			it->Update_GameObject(fTimeDelta);
+		}
+		break;
+	}
+	case INVENRT_END:
+		break;
+	default:
+		break;
+	}
+
+	CRenderer::GetInstance()->Add_RenderGroup(RENDER_UI, this);
 	return NOEVENT;
 }
 
@@ -135,46 +290,98 @@ void CInventory::LateUpdate_GameObject(const _float& fTimeDelta)
 	m_pPlayerInfoBtn->LateUpdate_GameObject(fTimeDelta);
 	m_pItemInvenBtn->LateUpdate_GameObject(fTimeDelta);
 	m_pInvenBack->LateUpdate_GameObject(fTimeDelta);
-	for (auto it : m_vSlot)
+	m_pInvenItemInfo->LateUpdate_GameObject(fTimeDelta);
+
+	if (m_pPlayerInfoBtn->Get_OnClick())
 	{
-		it->LateUpdate_GameObject(fTimeDelta);
+		m_eInvenRenderState = INVENRT_PLAYERINFO;
+		m_pPlayerInfoBtn->Set_OnClick(false);
 	}
-	for (auto it : m_vItem)
+	if (m_pItemInvenBtn->Get_OnClick())
 	{
-		it->LateUpdate_GameObject(fTimeDelta);
+		m_eInvenRenderState = INVENRT_RESOURCE;
+		m_pItemInvenBtn->Set_OnClick(false);
+	}
+
+
+	switch (m_eInvenRenderState)
+	{
+	case INVENRT_RESOURCE:
+	{
+		//소모품창
+		for (auto it : m_vSlot)
+		{
+			it->LateUpdate_GameObject(fTimeDelta);
+		}
+		for (auto it : m_vItem)
+		{
+			it->LateUpdate_GameObject(fTimeDelta);
+		}
+		m_pResourceFont->LateUpdate_GameObject(fTimeDelta);
+		break;
+	}
+	case INVENRT_PLAYERINFO:
+	{
+		// 정보창
+		m_pInfoRedFog->LateUpdate_GameObject(fTimeDelta);
+		m_pInfoStarImg->LateUpdate_GameObject(fTimeDelta);
+		m_pPlayerNameFont->LateUpdate_GameObject(fTimeDelta);
+		m_pInvenPlyer->LateUpdate_GameObject(fTimeDelta);
+		m_pInvenPlayerHp->LateUpdate_GameObject(fTimeDelta);
+		for (auto it : m_vPlayerSlot)
+		{
+			it->LateUpdate_GameObject(fTimeDelta);
+		}
+		for (auto it : m_vPlayerEquipItem)
+		{
+			it->LateUpdate_GameObject(fTimeDelta);
+		}
+		break;
+	}
+	case INVENRT_END:
+		break;
+	default:
+		break;
 	}
 }
 
 void CInventory::Render_GameObject()
 {
 	if (!m_bActive) { return; }
-	m_pPlayerInfoBtn->Render_GameObject();
-	m_pItemInvenBtn->Render_GameObject();
-	m_pInvenBack->Render_GameObject();
-	for (auto it : m_vSlot)
+
+	switch (m_eInvenRenderState)
 	{
-		it->Render_GameObject();
+	case INVENRT_RESOURCE:
+	{
+		//소모품창
+		m_pResourceFont->Render_GameObject();
+		break;
 	}
-	for (auto it : m_vItem)
+	case INVENRT_PLAYERINFO:
 	{
-		it->Render_GameObject();
+		// 정보창
+		m_pInvenPlayerHp->Render_GameObject();
+		m_pPlayerNameFont->Render_GameObject();
+		break;
+	}
+	case INVENRT_END:
+		break;
+	default:
+		break;
 	}
 }
 
 void CInventory::Key_Input_Inven()
 {
 	// 디버기용 인풋
-	if (CDInputMgr::GetInstance()->Key_Down(DIK_L))
-	{
-		m_bActive = !m_bActive;
-	}
 	if (CDInputMgr::GetInstance()->Key_Down(DIK_TAB))
-	{
-		if (IS_OPEN != m_ePreInvenState)
-			Set_State(IS_OPEN);
+	{	
+		if (m_eCurInvenState == INVEN_IDLE || m_eCurInvenState == INVEN_CLOSE)
+			Set_State(INVEN_OPEN);
 		else
-			Set_State(IS_CLOSE);
+			Set_State(INVEN_CLOSE);
 	}
+	// 삭제 테스트용 디버깅
 	if (CDInputMgr::GetInstance()->Key_Down(DIK_1))
 	{
 		Use_Item(CItem::IG_GOLD, 1);
@@ -193,8 +400,72 @@ void CInventory::Key_Input_Inven()
 	}
 }
 
+void CInventory::Set_MessageChannel(IMessageChannel* pMessageChannel)
+{
+
+	if (pMessageChannel == nullptr) { return; }
+	if (m_pMessageChannel) {
+		CGameObject::Unsubscribe_Handles();
+		Safe_Release(m_pMessageChannel);
+		m_bMsgRegistered = false;
+	}
+	m_pMessageChannel = pMessageChannel;
+	m_pMessageChannel->AddRef();
+
+	
+	//for (auto it : m_vItem)
+	//{
+	//	it->Set_MessageChannel(pMessageChannel);
+	//}
+
+	//for (auto it : m_vPlayerEquipItem)
+	//{
+	//	it->Set_MessageChannel(pMessageChannel);
+	//}
+	Ready_Event();
+}
+
 void CInventory::Ready_Event()
 {
+	if (m_pMessageChannel == nullptr) return;
+	if (m_bMsgRegistered) return;
+
+	m_hmapSubHandles.insert({ L"CInventory.ItemInfoRender",m_pMessageChannel->Subscribe(L"CInvenItem.OnHover",[this](const IMessageChannel::EVENT& Event)
+{
+		auto iter = Event.hmapData.find(L"ItemID");
+		if (iter == Event.hmapData.end())
+			return;
+
+		CItem::ITEMID ItemID = any_cast<CItem::ITEMID>(iter->second);
+		m_pInvenItemInfo->Set_ItemDataInit(ItemID);
+		m_pInvenItemInfo->Set_Active(true);
+}
+) });
+
+	m_hmapSubHandles.insert({ L"CInventory.ItemInfoUnRender",m_pMessageChannel->Subscribe(L"CInvenItem.OnHoverExit",[this](const IMessageChannel::EVENT& Event)
+{
+		m_pInvenItemInfo->Set_Active(false);
+}
+) });
+
+	m_hmapSubHandles.insert({ L"CInventory.EquipItemInfoRender",m_pMessageChannel->Subscribe(L"CInvenEquipItem.OnHover",[this](const IMessageChannel::EVENT& Event)
+{
+		auto iter = Event.hmapData.find(L"ItemID");
+		if (iter == Event.hmapData.end())
+			return;
+
+		EquipmentItemID ItemID = any_cast<EquipmentItemID>(iter->second);
+		m_pInvenItemInfo->Set_ItemDataInit(ItemID);
+		m_pInvenItemInfo->Set_Active(true);
+}
+) });
+
+	m_hmapSubHandles.insert({ L"CInventory.EquipItemInfoUnRender",m_pMessageChannel->Subscribe(L"CInvenEquipItem.OnHoverExit",[this](const IMessageChannel::EVENT& Event)
+{
+		m_pInvenItemInfo->Set_Active(false);
+}
+) });
+	m_bMsgRegistered = true;
 }
 
 CInventory* CInventory::Create(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -215,24 +486,28 @@ void CInventory::Add_Item(CItem::ITEMID _eid, _int _iCount)
 {
 	for (auto pItem : m_vItem)
 	{
-		if (pItem->Get_ItemID() == _eid)
+		tItemData ItemData = pItem->Get_ItemData();
+		if (ItemData.ID == _eid)
 		{
 			// UPDATE
-			pItem->Set_ItemCount(pItem->Get_ItemCount() + _iCount);
+			ItemData.iCount += _iCount;
+			pItem->Set_ItemData(ItemData);
 			pItem->Set_Render(true);
 			return;
 		}
 	}
+
 	for (auto pItem : m_vItem)
 	{
-
-		if (pItem->Get_ItemID() ==  CItem::ID_END || pItem->Get_ItemCount() == 0)
+		tItemData ItemData = pItem->Get_ItemData();
+		if (ItemData.ID ==  CItem::ID_END || ItemData.iCount == 0)
 		{
 			// NEW
-			pItem->Set_ItemID(_eid);
-			pItem->Set_ItemCount(_iCount);
-			pItem->Set_LocalPos(m_vSlotLocalPos[m_iInvenCount]);
-			m_iInvenCount++;
+			ItemData.ID = _eid;
+			ItemData.iCount = _iCount;
+			pItem->Set_ItemData(ItemData);
+			pItem->Set_LocalPos(m_vSlotLocalPos[m_iCurItemCount]);
+			m_iCurItemCount++;
 			pItem->Set_Render(true);
 			return;
 		}
@@ -243,33 +518,35 @@ BOOL CInventory::Use_Item(CItem::ITEMID _eid, _int _iCount)
 {
 	for (auto pItem : m_vItem)
 	{
-		if (pItem->Get_ItemID() == _eid)
+		tItemData ItemData = pItem->Get_ItemData();
+		if (ItemData.ID == _eid)
 		{
-			if (pItem->Get_ItemCount()- _iCount  < 0)
+			if (ItemData.iCount < _iCount)
 				return false;
-
-			pItem->Set_ItemCount(pItem->Get_ItemCount() - _iCount);
+			ItemData.iCount -= _iCount;
 			CPersistentMgr::GetInstance()->Get_ResourceHistory()->UseItem(_eid, -_iCount);
-			if (pItem->Get_ItemCount() == 0)
+			if (ItemData.iCount == 0)
 			{
-				pItem->Set_ItemID(CItem::ID_END);
+				ItemData.ID = CItem::ID_END;
 				pItem->Set_Render(false);
-				m_iInvenCount--;
+				m_iCurItemCount--;
 				SortLocalPos();
 			}
+			pItem->Set_ItemData(ItemData);
 			return true;
 		}
 	}
 	return false;
 }
 
-_int CInventory::GetItemCount(CItem::ITEMID _eid)
+_int CInventory::Get_ItemCount(CItem::ITEMID _eid)
 {
 	for (auto pItem : m_vItem)
 	{
-		if (pItem->Get_ItemID() == _eid)
+		tItemData ItemData = pItem->Get_ItemData();
+		if (ItemData.ID == _eid)
 		{
-			return pItem->Get_ItemCount();
+			return ItemData.iCount;
 		}
 	}
 	return 0;
@@ -280,7 +557,12 @@ void CInventory::Free()
 	Safe_Release(m_pInvenBack);
 	Safe_Release(m_pItemInvenBtn);
 	Safe_Release(m_pPlayerInfoBtn);
-
+	Safe_Release(m_pInvenItemInfo);
+	Safe_Release(m_pInfoRedFog);
+	Safe_Release(m_pInfoStarImg);
+	Safe_Release(m_pPlayerNameFont);
+	Safe_Release(m_pInvenPlyer);
+	Safe_Release(m_pInvenPlayerHp);
 	for (auto& ptr : m_vSlot)
 	{
 		Safe_Release(ptr);
@@ -291,6 +573,16 @@ void CInventory::Free()
 		Safe_Release(ptr);
 	}
 	m_vItem.clear();
+	for (auto& ptr : m_vPlayerSlot)
+	{
+		Safe_Release(ptr);
+	}
+	m_vPlayerSlot.clear();
+	for (auto& ptr : m_vPlayerEquipItem)
+	{
+		Safe_Release(ptr);
+	}
+	m_vPlayerEquipItem.clear();
 
 	CUi::Free();
 }
@@ -300,11 +592,11 @@ void CInventory::SortLocalPos()
 	_int TempCount = 0;
 	for (auto pItem : m_vItem)
 	{
-		if (pItem->Get_ItemID() != CItem::ID_END && 0 < pItem->Get_ItemCount())
+		tItemData ItemData = pItem->Get_ItemData();
+		if (ItemData.ID != CItem::ID_END && 0 < ItemData.ID)
 		{
 			pItem->Set_LocalPos(m_vSlotLocalPos[TempCount]);
 			TempCount++;
 		}
 	}
 }
-

@@ -8,12 +8,12 @@ namespace Engine
 	class CTexture;
 }
 
-class CInvenSlot :
+class CInvenEquipSlot :
 	public CUi
 {
 private:
-	explicit CInvenSlot(LPDIRECT3DDEVICE9 pGraphicDev);
-	virtual ~CInvenSlot();
+	explicit CInvenEquipSlot(LPDIRECT3DDEVICE9 pGraphicDev);
+	virtual ~CInvenEquipSlot();
 
 public:
 	virtual			HRESULT		Ready_GameObject();
@@ -24,11 +24,10 @@ public:
 
 
 public:
-	static CInvenSlot* Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 _vLocalPos, _vec3 _vParentPos, _float _fScale);
-	static CInvenSlot* Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 _vLocalPos, _vec3 _vParentPos,_float _Width, _float _Height);
+	static CInvenEquipSlot* Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 _vLocalPos, _vec3 _vParentPos, _float _fScale);
+	static CInvenEquipSlot* Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 _vLocalPos, _vec3 _vParentPos, _float _Width, _float _Height);
 public:
 	void Set_ParentPos(_vec3 _vParentPos) { m_vParentPos = _vParentPos; }
-	void Set_Page(_int _iPage) { m_iPage = _iPage; }
 private:
 	virtual			void		Free();
 
@@ -49,6 +48,5 @@ private:
 
 	_float m_fScale;
 	_bool m_bRender;
-	_int  m_iPage;
 };
 

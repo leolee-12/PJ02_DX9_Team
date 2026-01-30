@@ -7,6 +7,13 @@ class CInvenBack;
 class CInvenSlot;
 class CInvenItem;
 class CInvenBtn;
+class CInvenItemInfo;
+class CInvenStarImg;
+class CInvenRedFog;
+class CFontUIOrtho;
+class CInvenPlayer;
+class CInvenPlayerHp;
+class CInvenEquipItem;
 
 class CInventory :
 	public CUi
@@ -28,7 +35,9 @@ public:
 	void	Add_Item(CItem::ITEMID _eid, _int _iCount);
 	BOOL	Use_Item(CItem::ITEMID _eid, _int _iCount);
 	void	Set_State(INVENSTATE _estate) { m_eCurInvenState = _estate; }
-	_int	GetItemCount(CItem::ITEMID _eid);
+	_int	Get_ItemCount(CItem::ITEMID _eid);
+	void	Set_MessageChannel(IMessageChannel* pMessageChannel);
+
 private:
 	virtual void Free();
 	void	SortLocalPos();
@@ -42,22 +51,37 @@ private:
 	}
 
 private:
-	CInvenBack*		m_pInvenBack;
-	CInvenBtn*		m_pItemInvenBtn;
-	CInvenBtn*		m_pPlayerInfoBtn;
+	// 기본
+	CInvenBack*			m_pInvenBack;
+	CInvenBtn*			m_pItemInvenBtn;
+	CInvenBtn*			m_pPlayerInfoBtn;
+	CInvenItemInfo*		m_pInvenItemInfo;
 
+	// 플레이어 정보
+	CInvenRedFog*		m_pInfoRedFog;
+	CInvenStarImg*		m_pInfoStarImg;
+	CFontUIOrtho*		m_pPlayerNameFont;
+	CInvenPlayer*		m_pInvenPlyer;
+	CInvenPlayerHp*		m_pInvenPlayerHp;
+	vector<CInvenSlot*> m_vPlayerSlot;
+	vector<CInvenEquipItem*> m_vPlayerEquipItem;
+	// 소지품
 	vector<CInvenSlot*> m_vSlot;
 	vector<CInvenItem*> m_vItem;
-	vector<_vec3>		m_vSlotLocalPos;
+	CFontUIOrtho* m_pResourceFont;
+
 	INVENSTATE m_eCurInvenState;
 	INVENSTATE m_ePreInvenState;
+	INVENTORY_RENDER_TYPE m_eInvenRenderState;
 
-	_int	m_iInvenCount;
+	vector<_vec3>		m_vSlotLocalPos;
+	// 인벤토리 
+	_int	m_iCurItemCount;
 
 	_vec3	m_vLerpStart;
 	_vec3	m_vLerpEnd;
 	_float	m_fLerpTime;
 
 	_bool	m_bActive;
-
+	_bool	m_bMsgRegistered;
 };

@@ -8,12 +8,12 @@ namespace Engine
 	class CTexture;
 }
 
-class CInvenSlot :
+class CInvenPlayer :
 	public CUi
 {
 private:
-	explicit CInvenSlot(LPDIRECT3DDEVICE9 pGraphicDev);
-	virtual ~CInvenSlot();
+	explicit CInvenPlayer(LPDIRECT3DDEVICE9 pGraphicDev);
+	virtual ~CInvenPlayer();
 
 public:
 	virtual			HRESULT		Ready_GameObject();
@@ -22,18 +22,15 @@ public:
 	virtual			void		Render_GameObject();
 	virtual			void		OnCollision(CGameObject* pObject);
 
-
 public:
-	static CInvenSlot* Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 _vLocalPos, _vec3 _vParentPos, _float _fScale);
-	static CInvenSlot* Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 _vLocalPos, _vec3 _vParentPos,_float _Width, _float _Height);
+	static CInvenPlayer* Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 _vLocalPos, _vec3 _vParentPos, _float _fScale);
+
 public:
 	void Set_ParentPos(_vec3 _vParentPos) { m_vParentPos = _vParentPos; }
-	void Set_Page(_int _iPage) { m_iPage = _iPage; }
 private:
 	virtual			void		Free();
-
 	HRESULT						Add_Component();
-
+	void		Move_Frame(const _float& fTimeDelta);
 private:
 	CRcTex* m_pBufferCom;
 	CTransform* m_pTransformCom;
@@ -43,12 +40,12 @@ private:
 	_vec3			m_vLocalPos;
 	_vec3			m_vWorldPos;
 
-	_vec3 m_vPos;
-	_float	m_fWidthScale;
-	_float	m_fHeightScale;
+	_float m_fFrameSpeed;
+	_float m_fFrameEnd;
+	_float m_fFrame;
 
-	_float m_fScale;
+	float m_fScale;
+	_vec3 m_vPos;
 	_bool m_bRender;
-	_int  m_iPage;
 };
 
