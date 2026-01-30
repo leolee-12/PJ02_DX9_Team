@@ -73,7 +73,6 @@ HRESULT CTutorial::Ready_Scene()
 		{_vec3(-4.f, 2.f, 88.f), 1.5f, 0.5f, L"Player", L"Start_Crying", ADV_IMMEDIATE},
 		{_vec3(- 4.f, 2.f, 88.f), 1.5f, 0.5f, L"Brute", L"Brute_Move", ADV_EVENT, 0.f, L"Brute.RunEnd" },
 		{_vec3(-4.f, 2.f, 88.f), 1.5f, 0.5f, L"Brute", L"Brute_Execute", ADV_EVENT, 0.f, L"Brute.ExecuteEnd" }
-
 	};
 
 	CCutSceneMgr::GetInstance()->Register_CutScene(tTutoCutScene);
@@ -422,12 +421,14 @@ HRESULT CTutorial::Ready_UI_Layer(const _tchar* pLayerTag)
 
 void CTutorial::Ready_Event()
 {
-	m_hmapSubHandles.insert({ L"CutScene.End", m_pMessageChannel->Subscribe(L"CutScene.End", [this](const IMessageChannel::EVENT& Event) {
-	if (any_cast<wstring>(Event.hmapData.find(L"SceneName")->second) == L"Tutorial_01")
-	{
-		m_bSceneChangeFlag = true;
-	}
-	}) });
+	m_hmapSubHandles.insert({ L"CutScene.End", m_pMessageChannel->Subscribe(L"CutScene.End", [this](const IMessageChannel::EVENT& Event)
+		{
+			if (any_cast<wstring>(Event.hmapData.find(L"SceneName")->second) == L"Tutorial_01")
+			{
+				m_bSceneChangeFlag = true;
+			}
+		}
+	) });
 }
 
 

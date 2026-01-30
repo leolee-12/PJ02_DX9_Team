@@ -96,20 +96,20 @@ CFontAlpha* CFontAlpha::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* p
 void CFontAlpha::Ready_Event()
 {
 	m_hmapSubHandles.insert({ L"Dialogue", m_pMessageChannel->Subscribe(L"CutScene.Dialogue", [this](const IMessageChannel::EVENT& Event)
-	{
-		auto CinemaTargetNameiter = Event.hmapData.find(L"CinemaTargetName");
-		if (CinemaTargetNameiter == Event.hmapData.end()) { return; }
-		auto Dothisiter = Event.hmapData.find(L"Dothis");
-		if (Dothisiter == Event.hmapData.end()) { return; }
-		if (any_cast<wstring>(CinemaTargetNameiter->second) == L"Font")
 		{
-			m_strText = any_cast<wstring>(Dothisiter->second);
-			Active();
-			Set_FontColor(D3DXCOLOR(1.f, 1.f, 1.f, 0.f));
-		}
+			auto CinemaTargetNameiter = Event.hmapData.find(L"CinemaTargetName");
+			if (CinemaTargetNameiter == Event.hmapData.end()) { return; }
+			auto Dothisiter = Event.hmapData.find(L"Dothis");
+			if (Dothisiter == Event.hmapData.end()) { return; }
+			if (any_cast<wstring>(CinemaTargetNameiter->second) == L"Font")
+			{
+				m_strText = any_cast<wstring>(Dothisiter->second);
+				Active();
+				Set_FontColor(D3DXCOLOR(1.f, 1.f, 1.f, 0.f));
+			}
 
-		return;
-	}
+			return;
+		}
 	) });
 }
 

@@ -14,23 +14,12 @@ protected:
 	virtual ~CGameObject();
 
 public:
-	/*void        Set_MessageChannel(IMessageChannel* pChannel)
-	{
-		if (pChannel == nullptr) { return; }
-		if (m_pMessageChannel) {
-			Safe_Release(m_pMessageChannel);
-		}
-		m_pMessageChannel = pChannel;
-		m_pMessageChannel->AddRef();
-	}*/
 	CComponent*			Get_Component(COMPONENTID eID, const wstring& strComponentTag);
 	OBJID				Get_OBJID() { return m_eOBJID; }
 	const _int			Get_Hp() const { return m_iHp; }
 	const _float		Get_Depth() { return m_fDepth; }
 	const _float		Get_DepthZ() { return m_vDepth.z; }
 	const _float		Get_DepthY() { return m_vDepth.y; }
-
-	//void				Set_Dead() { m_iHp = 0; }
 
 public:
 	virtual			HRESULT		Ready_GameObject();

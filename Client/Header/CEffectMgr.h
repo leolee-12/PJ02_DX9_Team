@@ -8,6 +8,7 @@ namespace Engine
 }
 
 class CEffect;
+class CLetterBox;
 
 class CEffectMgr : public CBase
 {
@@ -41,6 +42,9 @@ public:
 		// Indicator
 		, EK_INDICATOR_CIRCLE
 		, EK_INDICATOR_ARROW
+
+		// LetterBox
+		, EK_LETTERBOX_BLACK
 	};
 
 private:
@@ -55,7 +59,8 @@ public:
 	CEffect*		Create_Effect(	EFFECT_KEY eEffectKey, const _uint& iTexIdx, const _vec3& vPos,
 									const _vec3& vOffset = _vec3(0.f, 0.f, 0.f), CGameObject * pOwner = nullptr);
 	void			Clear_Effect();
-	
+	CEffect*		Get_Effect(EFFECT_KEY eKey);
+	CLetterBox*		Get_LetterBox();
 
 private:
 	LPDIRECT3DDEVICE9					m_pGraphicDev;

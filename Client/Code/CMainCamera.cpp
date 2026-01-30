@@ -111,6 +111,7 @@ _int CMainCamera::Update_GameObject(const _float& fTimeDelta)
 void CMainCamera::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	CCamera::LateUpdate_GameObject(fTimeDelta);
+	CSoundMgr::GetInstance()->Set_ListenerPos(m_vEye);
 }
 
 void CMainCamera::Default_CameraSetting(const _float& fTimeDelta)
@@ -169,70 +170,76 @@ void CMainCamera::Building_CameraSetting(const _float& fTimeDelta)
 
 void CMainCamera::Ready_Event_MainCam()
 {
-	m_hmapSubHandles.insert({ L"Player_Attacked", m_pMessageChannel->Subscribe(L"Monster.Attacked", [this](const IMessageChannel::EVENT& Event) {
-		Set_Shake(0.3f, 0.2f, 20.f);
-	}) });
+	m_hmapSubHandles.insert({ L"Player_Attacked", m_pMessageChannel->Subscribe(L"Monster.Attacked", [this](const IMessageChannel::EVENT& Event)
+		{
+			Set_Shake(0.3f, 0.2f, 20.f);
+		}
+	) });
 
-	m_hmapSubHandles.insert({ L"Set_CutSceneTarget", m_pMessageChannel->Subscribe(L"CutScene.CameraTarget", [this](const IMessageChannel::EVENT& Event) {
-		auto TargetPositer = Event.hmapData.find(L"TargetPos");
-		if (TargetPositer == Event.hmapData.end()) { return; }
-		auto Zoomiter = Event.hmapData.find(L"Zoom");
-		if (Zoomiter == Event.hmapData.end()) { return; }
-		auto Lerpiter = Event.hmapData.find(L"Lerp");
-		if (Lerpiter == Event.hmapData.end()) { return; }
+	m_hmapSubHandles.insert({ L"Set_CutSceneTarget", m_pMessageChannel->Subscribe(L"CutScene.CameraTarget", [this](const IMessageChannel::EVENT& Event)
+		{
+			auto TargetPositer = Event.hmapData.find(L"TargetPos");
+			if (TargetPositer == Event.hmapData.end()) { return; }
+			auto Zoomiter = Event.hmapData.find(L"Zoom");
+			if (Zoomiter == Event.hmapData.end()) { return; }
+			auto Lerpiter = Event.hmapData.find(L"Lerp");
+			if (Lerpiter == Event.hmapData.end()) { return; }
 
 
-		Set_CutScene_LookAt(any_cast<_vec3>(TargetPositer->second));
-		Reset_Zoom();
-		Reset_Lerp();
-		Set_Zoom(any_cast<_float>(Zoomiter->second));
-		Set_Lerp(any_cast<_float>(Lerpiter->second));
-		m_eCamState = MCAM_STAGING;
-	}) });
+			Set_CutScene_LookAt(any_cast<_vec3>(TargetPositer->second));
+			Reset_Zoom();
+			Reset_Lerp();
+			Set_Zoom(any_cast<_float>(Zoomiter->second));
+			Set_Lerp(any_cast<_float>(Lerpiter->second));
+			m_eCamState = MCAM_STAGING;
+		}
+	) });
 
-	m_hmapSubHandles.insert({ L"End_CutScene", m_pMessageChannel->Subscribe(L"CutScene.End", [this](const IMessageChannel::EVENT& Event) {
-		Reset_Zoom();
-		Reset_Lerp();
-		m_bShaking = false;
-		m_eCamState = MCAM_DEFAULT;
-	}) });
+	m_hmapSubHandles.insert({ L"End_CutScene", m_pMessageChannel->Subscribe(L"CutScene.End", [this](const IMessageChannel::EVENT& Event)
+		{
+			Reset_Zoom();
+			Reset_Lerp();
+			m_bShaking = false;
+			m_eCamState = MCAM_DEFAULT;
+		}
+	) });
 
 	m_hmapSubHandles.insert({ L"Dialogue", m_pMessageChannel->Subscribe(L"CutScene.Dialogue", [this](const IMessageChannel::EVENT& Event)
-	{
-		auto CinemaTargetNameiter = Event.hmapData.find(L"CinemaTargetName");
-		if (CinemaTargetNameiter == Event.hmapData.end()) { return; }
-		auto Dothisiter = Event.hmapData.find(L"Dothis");
-		if (Dothisiter == Event.hmapData.end()) { return; }
-		if (any_cast<wstring>(CinemaTargetNameiter->second) == L"Cam")
 		{
-			wstring strDothis = any_cast<wstring>(Dothisiter->second);
-			if (strDothis == L"Shake") {
-				Set_Shake(1.f, 2.5f, 10.f);
-				return;
+			auto CinemaTargetNameiter = Event.hmapData.find(L"CinemaTargetName");
+			if (CinemaTargetNameiter == Event.hmapData.end()) { return; }
+			auto Dothisiter = Event.hmapData.find(L"Dothis");
+			if (Dothisiter == Event.hmapData.end()) { return; }
+			if (any_cast<wstring>(CinemaTargetNameiter->second) == L"Cam")
+			{
+				wstring strDothis = any_cast<wstring>(Dothisiter->second);
+				if (strDothis == L"Shake") {
+					Set_Shake(1.f, 2.5f, 10.f);
+					return;
+				}
+				if (strDothis == L"Shake_Village") {
+					Set_Shake(1.f, 2.f, 10.f);
+					CSoundMgr::GetInstance()->Play(L"Earthquake.wav", SOUND_EFFECT, 0.2f);
+					return;
+				}
 			}
-			if (strDothis == L"Shake_Village") {
-				Set_Shake(1.f, 2.f, 10.f);
-				CSoundMgr::GetInstance()->Play(L"Earthquake.wav", SOUND_EFFECT, 0.2f);
-				return;
-			}
-		}
 
-		return;
-	}
+			return;
+		}
 	) });
 
 	m_hmapSubHandles.insert({ L"Building.Enter", m_pMessageChannel->Subscribe(L"Building.Enter", [this](const IMessageChannel::EVENT& Event)
-	{
-		m_eCamState = MCAM_BUILDING;
-		return;
-	}
+		{
+			m_eCamState = MCAM_BUILDING;
+			return;
+		}
 	) });
 
 	m_hmapSubHandles.insert({ L"Building.Exit", m_pMessageChannel->Subscribe(L"Building.Exit", [this](const IMessageChannel::EVENT& Event)
-	{
-		m_eCamState = MCAM_DEFAULT;
-		return;
-	}
+		{
+			m_eCamState = MCAM_DEFAULT;
+			return;
+		}
 	) });
 }
 

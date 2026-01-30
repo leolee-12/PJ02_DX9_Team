@@ -92,6 +92,7 @@ void CFollower::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	Update_State();
 	Check_Frame();
+	Check_BuildPriority();
 	Check_Work();
 
 	m_pTransformCom->Compute_Bilboard(BBD_X);
@@ -103,7 +104,7 @@ void CFollower::LateUpdate_GameObject(const _float& fTimeDelta)
 	AABB tAABB = { m_vPos.x, fY, m_vPos.z, 1.f, 1.f, 1.f };
 	_vec3 vTriggerPos = { m_vPos.x, fY, m_vPos.z };
 	m_pColliderCom->Set_AABB(tAABB);
-	m_pColliderCom->UpdateFromCustom(tAABB);
+	m_pColliderCom->UpdateFromAABB(tAABB);
 	//-------------------------------------------------
 	// 충돌체 디버그용
 
@@ -290,23 +291,23 @@ void CFollower::Ready_Variable()
 		m_pTrigger = CTriggerPoint::Create(m_pGraphicDev, m_pMessageChannel, m_vPos, _vec3(1.f, 1.f, 1.f), Trigger::TI_FOLLOWER, L"UnConvert_Follower", false, this);
 
 		m_hmapSubHandles.insert({ L"Trigger.Activate.Owner", m_pMessageChannel->Subscribe(L"Trigger.Activate.Owner", [this](const IMessageChannel::EVENT& Event)
-		{
-			auto Nameiter = Event.hmapData.find(L"Trigger_Name");
-			if (Nameiter == Event.hmapData.end()) { return; }
-			auto Owneriter = Event.hmapData.find(L"Trigger_Owner");
-			if (Owneriter == Event.hmapData.end()) { return; }
-
-			if (any_cast<wstring>(Nameiter->second) == L"UnConvert_Follower")
 			{
-				if (any_cast<CGameObject*>(Owneriter->second) == this)
+				auto Nameiter = Event.hmapData.find(L"Trigger_Name");
+				if (Nameiter == Event.hmapData.end()) { return; }
+				auto Owneriter = Event.hmapData.find(L"Trigger_Owner");
+				if (Owneriter == Event.hmapData.end()) { return; }
+
+				if (any_cast<wstring>(Nameiter->second) == L"UnConvert_Follower")
 				{
-					Safe_Destroy(m_pTrigger);
-					m_eCurState = FOLLOWER_RECRUIT;
-					m_pAICom->Set_State<FOLLOWER_STATE>(FOLLOWER_RECRUIT);
+					if (any_cast<CGameObject*>(Owneriter->second) == this)
+					{
+						Safe_Destroy(m_pTrigger);
+						m_eCurState = FOLLOWER_RECRUIT;
+						m_pAICom->Set_State<FOLLOWER_STATE>(FOLLOWER_RECRUIT);
+					}
 				}
 			}
-		}
-	) });
+		) });
 	}
 }
 
@@ -640,7 +641,34 @@ void CFollower::Execute_Work(const _float& fTimeDelta)
  		m_pAICom->Anim_End(m_eCurState);
 		m_pAICom->Set_TargetTransform(nullptr);
 		m_eCurState = FOLLOWER_IDLE;
+
+		// BUILD 완료 후 이전 작업으로 복귀
+		if (FW_BUILD == m_eCurWork && m_eSavedWork != FW_NONE)
+		{
+			m_eCurWork = m_eSavedWork;
+			m_eSavedWork = FW_NONE;
+		}
+		else
+		{
+			m_eCurWork = FOLLOWER_WORK(Get_Rand_Int(1, 5));
+		}
+
 		m_ePreWork = FW_NONE;
+	}
+}
+
+void CFollower::Check_BuildPriority()
+{
+	if (FW_BUILD == m_eCurWork)
+		return;
+
+	if (CInteractMgr::GetInstance()->Has_BuildTarget())
+	{
+		m_eSavedWork = m_eCurWork;
+
+		// BUILD로 전환
+		m_eCurWork = FW_BUILD;
+		m_ePreWork = FW_NONE;  // Check_Work()에서 타겟 재탐색
 	}
 }
 

@@ -619,153 +619,153 @@ HRESULT CRealDungeon::Ready_Light()
 
 void CRealDungeon::Ready_Event()
 {
-	m_hmapSubHandles.insert({ L"Obj_Add", m_pMessageChannel->Subscribe(L"Obj.Add", [this](const IMessageChannel::EVENT& Event) {
-	{
-		CGameObject* pObj = any_cast<CGameObject*>(Event.hmapData.find(L"Obj")->second);
+	m_hmapSubHandles.insert({ L"Obj_Add", m_pMessageChannel->Subscribe(L"Obj.Add", [this](const IMessageChannel::EVENT& Event)
+		{
+			CGameObject* pObj = any_cast<CGameObject*>(Event.hmapData.find(L"Obj")->second);
 
-		if (pObj != nullptr)
+			if (pObj != nullptr)
+			{
+				wstring strLayerTag = any_cast<const _tchar*>(Event.hmapData.find(L"LayerTag")->second);
+				wstring strObjTag = any_cast<wstring>(Event.hmapData.find(L"ObjTag")->second);
+				auto iter = m_mapLayer.find(strLayerTag);
+
+				if (iter != m_mapLayer.end())
+					iter->second->Add_GameObject(strObjTag, pObj);
+				else
+				{
+					CLayer* pLayer = CLayer::Create();
+
+					if (nullptr == pLayer)
+						return;
+
+					if (FAILED(pLayer->Add_GameObject(strObjTag, pObj)))
+						return;
+
+					m_mapLayer.insert({ strLayerTag , pLayer });
+				}
+			}
+		}
+	) });
+
+	m_hmapSubHandles.insert({ L"Summon_Dead", m_pMessageChannel->Subscribe(L"Summon.Dead", [this](const IMessageChannel::EVENT& Event)
 		{
 			wstring strLayerTag = any_cast<const _tchar*>(Event.hmapData.find(L"LayerTag")->second);
-			wstring strObjTag = any_cast<wstring>(Event.hmapData.find(L"ObjTag")->second);
+
 			auto iter = m_mapLayer.find(strLayerTag);
 
 			if (iter != m_mapLayer.end())
-				iter->second->Add_GameObject(strObjTag, pObj);
-			else
-			{
-				CLayer* pLayer = CLayer::Create();
-
-				if (nullptr == pLayer)
-					return;
-
-				if (FAILED(pLayer->Add_GameObject(strObjTag, pObj)))
-					return;
-
-				m_mapLayer.insert({ strLayerTag , pLayer });
-			}
+				iter->second->Reset_Layer();
 		}
-	}
-	}) });
-
-	m_hmapSubHandles.insert({ L"Summon_Dead", m_pMessageChannel->Subscribe(L"Summon.Dead", [this](const IMessageChannel::EVENT& Event) {
-{
-	wstring strLayerTag = any_cast<const _tchar*>(Event.hmapData.find(L"LayerTag")->second);
-
-	auto iter = m_mapLayer.find(strLayerTag);
-
-	if (iter != m_mapLayer.end())
-		iter->second->Reset_Layer();
-}
-}) });
+	) });
 
 	m_hmapSubHandles.insert({ L"Dialogue", m_pMessageChannel->Subscribe(L"CutScene.Dialogue", [this](const IMessageChannel::EVENT& Event)
-	{
-		auto CinemaTargetNameiter = Event.hmapData.find(L"CinemaTargetName");
-		if (CinemaTargetNameiter == Event.hmapData.end()) { return; }
-		auto Dothisiter = Event.hmapData.find(L"Dothis");
-		if (Dothisiter == Event.hmapData.end()) { return; }
-		if (any_cast<wstring>(CinemaTargetNameiter->second) == L"Sound")
 		{
-			wstring strDothis = any_cast<wstring>(Dothisiter->second);
-			if (strDothis == L"BGMStop") {
-				CSoundMgr::GetInstance()->StopSound(SOUND_BGM);
-				return;
-			}
-			if (strDothis == L"PlayAmdu") {
-				CSoundMgr::GetInstance()->StopSound(SOUND_BGM);
-				CSoundMgr::GetInstance()->PlayBGM(L"06.Amdu.mp3", 0.2f);
-				return;
-			}
-			if (strDothis == L"PlayLeshy") {
-				CSoundMgr::GetInstance()->StopSound(SOUND_BGM);
-				CSoundMgr::GetInstance()->PlayBGM(L"07.Leshy.mp3", 0.2f);
-				return;
-			}
-		}
-		if (any_cast<wstring>(CinemaTargetNameiter->second) == L"Scene")
-		{
-			wstring strDothis = any_cast<wstring>(Dothisiter->second);
-			if (strDothis == L"Create_ChestMB") {
-
-				CGameObject* pGameObject = nullptr;
-
-				pGameObject = CChest::Create(m_pGraphicDev, m_pMessageChannel, _vec3(-115.9f, 0.f, 13.5f), 50);
-
-				if (pGameObject == nullptr) { return; }
-
-				auto iter = m_mapLayer.find(L"Environment_Layer");
-				if (iter == m_mapLayer.end()) { return; }
-
-				iter->second->Add_GameObject(L"Chest", pGameObject);
-				return;
-			}
-			if (strDothis == L"Create_ChestLB") {
-
-				CGameObject* pGameObject = nullptr;
-
-				pGameObject = CChest::Create(m_pGraphicDev, m_pMessageChannel, _vec3(-260.2f, 0.f, 26.2f), 100);
-
-				if (pGameObject == nullptr) { return; }
-
-				auto iter = m_mapLayer.find(L"Environment_Layer");
-				if (iter == m_mapLayer.end()) { return; }
-
-				iter->second->Add_GameObject(L"Chest", pGameObject);
-				return;
-			}
-			if (strDothis == L"Create_Tarot") {
-
-				CGameObject* pGameObject = nullptr;
-
-				_float fHalfwincx = _float(WINCX / 2);
-				_float fHalfwincy = _float(WINCY / 2);
-
-				_vec3 vPos = { fHalfwincx - (fHalfwincx * 0.6f), fHalfwincy, 0.01f };
-
-				pGameObject = CTarotCard::Create(m_pGraphicDev, m_pMessageChannel, vPos, CTarotCard::TCT_HEART);
-
-				if (nullptr == pGameObject)
+			auto CinemaTargetNameiter = Event.hmapData.find(L"CinemaTargetName");
+			if (CinemaTargetNameiter == Event.hmapData.end()) { return; }
+			auto Dothisiter = Event.hmapData.find(L"Dothis");
+			if (Dothisiter == Event.hmapData.end()) { return; }
+			if (any_cast<wstring>(CinemaTargetNameiter->second) == L"Sound")
+			{
+				wstring strDothis = any_cast<wstring>(Dothisiter->second);
+				if (strDothis == L"BGMStop") {
+					CSoundMgr::GetInstance()->StopSound(SOUND_BGM);
 					return;
-
-				auto iter = m_mapLayer.find(L"UI_Layer");
-				if (iter == m_mapLayer.end()) { return; }
-
-				iter->second->Add_GameObject(L"Tarot", pGameObject);
-
-				vPos = { fHalfwincx + (fHalfwincx * 0.3f), fHalfwincy, 0.01f };
-
-				pGameObject = CTarotCard::Create(m_pGraphicDev, m_pMessageChannel, vPos, CTarotCard::TCT_SPEED);
-
-				if (nullptr == pGameObject)
+				}
+				if (strDothis == L"PlayAmdu") {
+					CSoundMgr::GetInstance()->StopSound(SOUND_BGM);
+					CSoundMgr::GetInstance()->PlayBGM(L"06.Amdu.mp3", 0.2f);
 					return;
-
-				iter->second->Add_GameObject(L"Tarot", pGameObject);
-
-				CSoundMgr::GetInstance()->Play(L"TarotCardIntro.wav", SOUND_EFFECT, 0.2f);
-				return;
+				}
+				if (strDothis == L"PlayLeshy") {
+					CSoundMgr::GetInstance()->StopSound(SOUND_BGM);
+					CSoundMgr::GetInstance()->PlayBGM(L"07.Leshy.mp3", 0.2f);
+					return;
+				}
 			}
+			if (any_cast<wstring>(CinemaTargetNameiter->second) == L"Scene")
+			{
+				wstring strDothis = any_cast<wstring>(Dothisiter->second);
+				if (strDothis == L"Create_ChestMB") {
+
+					CGameObject* pGameObject = nullptr;
+
+					pGameObject = CChest::Create(m_pGraphicDev, m_pMessageChannel, _vec3(-115.9f, 0.f, 13.5f), 50);
+
+					if (pGameObject == nullptr) { return; }
+
+					auto iter = m_mapLayer.find(L"Environment_Layer");
+					if (iter == m_mapLayer.end()) { return; }
+
+					iter->second->Add_GameObject(L"Chest", pGameObject);
+					return;
+				}
+				if (strDothis == L"Create_ChestLB") {
+
+					CGameObject* pGameObject = nullptr;
+
+					pGameObject = CChest::Create(m_pGraphicDev, m_pMessageChannel, _vec3(-260.2f, 0.f, 26.2f), 100);
+
+					if (pGameObject == nullptr) { return; }
+
+					auto iter = m_mapLayer.find(L"Environment_Layer");
+					if (iter == m_mapLayer.end()) { return; }
+
+					iter->second->Add_GameObject(L"Chest", pGameObject);
+					return;
+				}
+				if (strDothis == L"Create_Tarot") {
+
+					CGameObject* pGameObject = nullptr;
+
+					_float fHalfwincx = _float(WINCX / 2);
+					_float fHalfwincy = _float(WINCY / 2);
+
+					_vec3 vPos = { fHalfwincx - (fHalfwincx * 0.6f), fHalfwincy, 0.01f };
+
+					pGameObject = CTarotCard::Create(m_pGraphicDev, m_pMessageChannel, vPos, CTarotCard::TCT_HEART);
+
+					if (nullptr == pGameObject)
+						return;
+
+					auto iter = m_mapLayer.find(L"UI_Layer");
+					if (iter == m_mapLayer.end()) { return; }
+
+					iter->second->Add_GameObject(L"Tarot", pGameObject);
+
+					vPos = { fHalfwincx + (fHalfwincx * 0.3f), fHalfwincy, 0.01f };
+
+					pGameObject = CTarotCard::Create(m_pGraphicDev, m_pMessageChannel, vPos, CTarotCard::TCT_SPEED);
+
+					if (nullptr == pGameObject)
+						return;
+
+					iter->second->Add_GameObject(L"Tarot", pGameObject);
+
+					CSoundMgr::GetInstance()->Play(L"TarotCardIntro.wav", SOUND_EFFECT, 0.2f);
+					return;
+				}
+			}
+			return;
 		}
-		return;
-	}
 	) });
 
 	m_hmapSubHandles.insert({ L"Boss.Dead", m_pMessageChannel->Subscribe(L"Boss.Dead", [this](const IMessageChannel::EVENT& Event)
-	{
-		auto BossNameiter = Event.hmapData.find(L"BossName");
-		if (BossNameiter == Event.hmapData.end()) { return; }
-		wstring strDothis = any_cast<wstring>(BossNameiter->second);
-		if (strDothis == L"Amdu") {
-			CSoundMgr::GetInstance()->StopSound(SOUND_BGM);
-			CSoundMgr::GetInstance()->PlayBGM(L"05.RealDungeon.mp3", 0.1f);
-			return;
-		}
-		if (strDothis == L"Leshy") {
-			CSoundMgr::GetInstance()->StopSound(SOUND_BGM);
-			return;
-		}
+		{
+			auto BossNameiter = Event.hmapData.find(L"BossName");
+			if (BossNameiter == Event.hmapData.end()) { return; }
+			wstring strDothis = any_cast<wstring>(BossNameiter->second);
+			if (strDothis == L"Amdu") {
+				CSoundMgr::GetInstance()->StopSound(SOUND_BGM);
+				CSoundMgr::GetInstance()->PlayBGM(L"05.RealDungeon.mp3", 0.1f);
+				return;
+			}
+			if (strDothis == L"Leshy") {
+				CSoundMgr::GetInstance()->StopSound(SOUND_BGM);
+				return;
+			}
 
-		return;
-	}
+			return;
+		}
 	) });
 
 	m_hmapSubHandles.insert({ L"Trigger.Activate", m_pMessageChannel->Subscribe(L"Trigger.Activate", [this](const IMessageChannel::EVENT& Event)

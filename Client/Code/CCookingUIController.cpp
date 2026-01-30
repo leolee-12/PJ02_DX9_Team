@@ -145,11 +145,11 @@ void CCookingUIController::Ready_Event()
 	//		Set_CookingState(COOKINGUISTATE::CS_SELECT);
 	//	});
 
-	m_hmapSubHandles.insert({ L"CookingUI.Finish", m_pMessageChannel->Subscribe(L"Cooking.Finish", [this](const IMessageChannel::EVENT& Event) {
-{
-		Set_CookingState(COOKINGUISTATE::CS_SELECT);
-}
-}) });
+	m_hmapSubHandles.insert({ L"CookingUI.Finish", m_pMessageChannel->Subscribe(L"Cooking.Finish", [this](const IMessageChannel::EVENT& Event)
+		{
+			Set_CookingState(COOKINGUISTATE::CS_SELECT);
+		}
+	) });
 }
 
 CCookingUIController* CCookingUIController::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* pMessageChannel)

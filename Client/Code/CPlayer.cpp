@@ -19,6 +19,7 @@
 #include "CInteractionUI.h"
 #include "CInteractMgr.h"
 #include <IInteractable.h>
+#include "CLetterBox.h"
 
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev)
@@ -123,7 +124,7 @@ void CPlayer::LateUpdate_GameObject(const _float& fTimeDelta)
 	_float fY(m_vPos.y - m_pTransformCom->Get_Scale(ROT_Y) * 0.125f);
 	AABB tAABB = { m_vPos.x, fY, m_vPos.z, 1.f, 1.f, 1.f };
 	m_pColliderCom->Set_AABB(tAABB);
-	m_pColliderCom->UpdateFromCustom(tAABB);
+	m_pColliderCom->UpdateFromAABB(tAABB);
 	//-------------------------------------------------
 
 	// 충돌체 디버그용
@@ -146,10 +147,10 @@ void CPlayer::Render_GameObject()
 
 	m_pGraphicDev->SetTextureStageState(0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE);
 
-	/*_tchar szPos[256] = L"";
+	_tchar szPos[256] = L"";
 	swprintf_s(szPos, L"[플레이어] 플레이어 중점 위치 X : %f, Y : %f, Z : %f", m_vPos.x, m_vPos.y, m_vPos.z);
 	OutputDebugString(szPos);
-	OutputDebugString(L"\n");*/
+	OutputDebugString(L"\n");
 
 	//_tchar szPos[256] = L"";
 	//swprintf_s(szPos, L"a : %d, r : %d, g : %d, b : %d", Test_a, Test_r, Test_g, Test_b);
@@ -214,26 +215,29 @@ void CPlayer::Ready_Event()
 	//	}
 	//	}) });
 
-	m_hmapSubHandles.insert({ L"Player.Spawn", m_pMessageChannel->Subscribe(L"Player.Spawn", [this](const IMessageChannel::EVENT& Event) {
-	_vec3 vSpawnPos = any_cast<_vec3>(Event.hmapData.find(L"Postion")->second);
-
-	m_pTransformCom->Set_Pos(vSpawnPos.x, vSpawnPos.y, vSpawnPos.z);
-	m_pTransformCom->Update_Component(0.f);
-	}) });
-
-	m_hmapSubHandles.insert({ L"Player_Damaged", m_pMessageChannel->Subscribe(L"Player.Attacked", [this](const IMessageChannel::EVENT& Event) {
-	for (auto& Target : any_cast<vector<CGameObject*>>(Event.hmapData.find(L"Target")->second))
-	{
-		if (Target == this)
+	m_hmapSubHandles.insert({ L"Player.Spawn", m_pMessageChannel->Subscribe(L"Player.Spawn", [this](const IMessageChannel::EVENT& Event)
 		{
-			Attacked(any_cast<_float>(Event.hmapData.find(L"Attack")->second));
+			_vec3 vSpawnPos = any_cast<_vec3>(Event.hmapData.find(L"Postion")->second);
+
+			m_pTransformCom->Set_Pos(vSpawnPos.x, vSpawnPos.y, vSpawnPos.z);
+			m_pTransformCom->Update_Component(0.f);
 		}
-	}
-	}) });
+	) });
 
-	m_hmapSubHandles.insert({ L"CutScene.Dialogue", m_pMessageChannel->Subscribe(L"CutScene.Dialogue", [this](const IMessageChannel::EVENT& Event) {
-	{
+	m_hmapSubHandles.insert({ L"Player_Damaged", m_pMessageChannel->Subscribe(L"Player.Attacked", [this](const IMessageChannel::EVENT& Event)
+		{
+			for (auto& Target : any_cast<vector<CGameObject*>>(Event.hmapData.find(L"Target")->second))
+			{
+				if (Target == this)
+				{
+					Attacked(any_cast<_float>(Event.hmapData.find(L"Attack")->second));
+				}
+			}
+		}
+	) });
 
+	m_hmapSubHandles.insert({ L"CutScene.Dialogue", m_pMessageChannel->Subscribe(L"CutScene.Dialogue", [this](const IMessageChannel::EVENT& Event)
+		{
 			if (!m_bCutScene && (m_eCurState != PS_REBIRTH)) {
 				m_eCurState = PS_IDLE;
 				m_iCombo = 0;
@@ -272,7 +276,7 @@ void CPlayer::Ready_Event()
 				}
 			}
 		}
-	}) });
+	) });
 
 	m_hmapSubHandles.insert({ L"Tarot.Selected", m_pMessageChannel->Subscribe(L"Tarot.Selected", [this](const IMessageChannel::EVENT& Event)
 		{
@@ -299,7 +303,8 @@ void CPlayer::Ready_Event()
 
 			if (m_fPassion > MAX_PASSION_VALUE)
 				m_fPassion = MAX_PASSION_VALUE;
-		}) });
+		}
+	) });
 
 	m_hmapSubHandles.insert({ L"Player.AddFaith", m_pMessageChannel->Subscribe(L"Player.AddFaith", [this](const IMessageChannel::EVENT& Event)
 		{
@@ -307,42 +312,43 @@ void CPlayer::Ready_Event()
 
 			if (m_fPassion > MAX_FAITH_VALUE)
 				m_fPassion = MAX_FAITH_VALUE;
-		}) });
+		}
+	) });
 
 	m_hmapSubHandles.insert({ L"Trigger.Activate.Owner",m_pMessageChannel->Subscribe(L"Trigger.Activate.Owner" ,[this](const IMessageChannel::EVENT& Event)
-{
-		auto iter = Event.hmapData.find(L"Trigger_Name");
-		if (iter == Event.hmapData.end())
-			return;
+		{
+			auto iter = Event.hmapData.find(L"Trigger_Name");
+			if (iter == Event.hmapData.end())
+				return;
 
-		wstring name = any_cast<wstring>(iter->second);
-		if (name == L"Sword")
-		{
-			// 검 먹은 로직
-			m_eWeaponType = WT_SWORD;
-			m_fAttack = 1.f;
+			wstring name = any_cast<wstring>(iter->second);
+			if (name == L"Sword")
+			{
+				// 검 먹은 로직
+				m_eWeaponType = WT_SWORD;
+				m_fAttack = 1.f;
+			}
+			else if (name == L"Gauntlet")
+			{
+				// 건틀릿 먹은 로직
+				m_eWeaponType = WT_GAUNTLETS;
+				m_fAttack = 2.f;
+			}
 		}
-		else if (name == L"Gauntlet")
-		{
-			// 건틀릿 먹은 로직
-			m_eWeaponType = WT_GAUNTLETS;
-			m_fAttack = 2.f;
-		}
-}
-) });
+	) });
 
 	m_hmapSubHandles.insert({ L"Building.Enter", m_pMessageChannel->Subscribe(L"Building.Enter", [this](const IMessageChannel::EVENT& Event)
-	{
-		m_bCutScene = true;
-		return;
-	}
+		{
+			m_bCutScene = true;
+			return;
+		}
 	) });
 
 	m_hmapSubHandles.insert({ L"Building.Exit", m_pMessageChannel->Subscribe(L"Building.Exit", [this](const IMessageChannel::EVENT& Event)
-	{
-		m_bCutScene = false;
-		return;
-	}
+		{
+			m_bCutScene = false;
+			return;
+		}
 	) });
 
 	m_bMsgRegistered = true;
@@ -400,28 +406,39 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 	Key_Input_Debug(fTimeDelta);
 
 	if (CCutSceneMgr::GetInstance()->Get_Playing()) { return; }
+	if ((m_eCurState == PS_HIT) || (m_eCurState == PS_REBIRTH)) { return; }
+
 	Key_Input_Move(fTimeDelta);
-		
+
+	if (m_bCutScene || m_bWorking) { return; }
+
 	Key_Input_Interact(fTimeDelta);
+
+	if (m_bIntro || m_bCutScene) return;
 
 	Key_Input_Combat(fTimeDelta);
 }
 
 void CPlayer::Key_Input_Debug(const _float& fTimeDelta)
 {
-	//for (int i = 0; i < 9; ++i)
-	//{
-	//	if (GetAsyncKeyState(i + 48))
-	//	{	// 디버그용
+	for (int i = 0; i < 9; ++i)
+	{
+		if (GetAsyncKeyState(i + 48))
+		{	// 디버그용
 
-	//		if (i == 8)
-	//		{
-	//			_vec3 vEffectPos{ m_vPos.x, 3.f, m_vPos.z };
-	//			CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_ENEMYSPAWN, 0, vEffectPos);
-	//		}
-	//		else		CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_HIT, i, m_vPos);
-	//	}
-	//}
+			if (i == 7)
+			{
+				if (auto pLetterBox = CEffectMgr::GetInstance()->Get_LetterBox())
+					pLetterBox->Play();
+			}
+			else if (i == 8)
+			{
+				if (auto pLetterBox = CEffectMgr::GetInstance()->Get_LetterBox())
+					pLetterBox->Exit();
+			}
+			else		CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_HIT, i, m_vPos);
+		}
+	}
 
 	//
 	//if (CDInputMgr::GetInstance()->Key_Down(DIK_F1))
@@ -479,8 +496,6 @@ void CPlayer::Key_Input_Debug(const _float& fTimeDelta)
 
 void CPlayer::Key_Input_Move(const _float& fTimeDelta)
 {
-	if ((m_eCurState == PS_HIT) || (m_eCurState == PS_REBIRTH)) { return; }
-
 	if (!m_bRoll && !m_iCombo && !m_fCharge && !m_bCutScene)
 	{
 		if (CDInputMgr::GetInstance()->Key_Pressing(DIK_W))
@@ -542,8 +557,6 @@ void CPlayer::Key_Input_Move(const _float& fTimeDelta)
 void CPlayer::Key_Input_Interact(const _float& fTimeDelta)
 {
 	// 트리거 키인풋
-	if (m_bCutScene || m_bWorking) { return; }
-
 	if (CDInputMgr::GetInstance()->Key_Down(DIK_E))
 	{
 		if (m_pTriggerPoint)
@@ -563,9 +576,6 @@ void CPlayer::Key_Input_Interact(const _float& fTimeDelta)
 
 void CPlayer::Key_Input_Combat(const _float& fTimeDelta)
 {
-	// 인트로 상태에서는 사용 불가
-	if (m_bIntro || m_bCutScene) return;
-
 	if (CDInputMgr::GetInstance()->Key_Down(DIK_SPACE))
 	{
 		if ((m_bRoll) || (m_iCombo) || (m_fCharge)) return;
@@ -599,7 +609,7 @@ void CPlayer::Key_Input_Combat(const _float& fTimeDelta)
 
 	if (CDInputMgr::GetInstance()->Mouse_Pressing(DIM_RB))	// 눌렀을 때 한 번만 true
 	{
-		if ((m_bRoll) || (m_iCombo)) return;
+		if ((m_bRoll) || (m_iCombo) || m_strFrameKey == L"charge-end") return;
 
 		if (!m_fCharge)
 		{
@@ -644,7 +654,7 @@ void CPlayer::Key_Input_Combat(const _float& fTimeDelta)
 		{
 			m_fFrame = 0.f;
 			m_strFrameKey = L"charge-end";
-			m_pChargeArrow->Stop();
+			m_pChargeArrow->Reset();
 
 			CProjectile* pTemp;
 			CGameObject* pProjectile = pTemp = CProjectile::Create(m_pGraphicDev, m_vPos, m_vDir * 10.f, false, CL_PBULLET, D3DXCOLOR(1.f, 0.f, 0.4f, 1.f));
@@ -929,11 +939,11 @@ void CPlayer::Set_FrameKey_Intro()
 
 	case PS_RUN:
 	{
-		if (m_vDir == m_vNormDir[DIR_UP])										m_strFrameKey = L"intro_run-up";
+		if		(m_vDir == m_vNormDir[DIR_UP])										m_strFrameKey = L"intro_run-up";
 		else if (m_vDir == m_vNormDir[DIR_DOWN])									m_strFrameKey = L"intro_run-down";
-		else if (m_vDir == m_vNormDir[DIR_LD] || m_vDir == m_vNormDir[DIR_RD])	m_strFrameKey = L"intro_run-diagonal";
+		else if (m_vDir == m_vNormDir[DIR_LD] || m_vDir == m_vNormDir[DIR_RD])		m_strFrameKey = L"intro_run-diagonal";
 		else if (m_vDir == m_vNormDir[DIR_LEFT] || m_vDir == m_vNormDir[DIR_RIGHT])	m_strFrameKey = L"intro_run-horizontal";
-		else if (m_vDir == m_vNormDir[DIR_LU] || m_vDir == m_vNormDir[DIR_RU])	m_strFrameKey = L"intro_run-up-diagonal";
+		else if (m_vDir == m_vNormDir[DIR_LU] || m_vDir == m_vNormDir[DIR_RU])		m_strFrameKey = L"intro_run-up-diagonal";
 	}
 	break;
 
@@ -960,17 +970,17 @@ void CPlayer::Set_FrameKey_Normal()
 
 	case PS_RUN:
 	{
-		if (m_vDir == m_vNormDir[DIR_UP])										m_strFrameKey = L"run-up";
+		if		(m_vDir == m_vNormDir[DIR_UP])										m_strFrameKey = L"run-up";
 		else if (m_vDir == m_vNormDir[DIR_DOWN])									m_strFrameKey = L"run-down";
-		else if (m_vDir == m_vNormDir[DIR_LD] || m_vDir == m_vNormDir[DIR_RD])	m_strFrameKey = L"run-diagonal";
+		else if (m_vDir == m_vNormDir[DIR_LD] || m_vDir == m_vNormDir[DIR_RD])		m_strFrameKey = L"run-diagonal";
 		else if (m_vDir == m_vNormDir[DIR_LEFT] || m_vDir == m_vNormDir[DIR_RIGHT])	m_strFrameKey = L"run-horizontal";
-		else if (m_vDir == m_vNormDir[DIR_LU] || m_vDir == m_vNormDir[DIR_RU])	m_strFrameKey = L"run-up-diagonal";
+		else if (m_vDir == m_vNormDir[DIR_LU] || m_vDir == m_vNormDir[DIR_RU])		m_strFrameKey = L"run-up-diagonal";
 	}
 	break;
 
 	case PS_ROLL:
 	{
-		if (m_vDir == m_vNormDir[DIR_UP] || m_vDir == m_vNormDir[DIR_LU] || m_vDir == m_vNormDir[DIR_RU])	m_strFrameKey = L"roll-up";
+		if		(m_vDir == m_vNormDir[DIR_UP] || m_vDir == m_vNormDir[DIR_LU] || m_vDir == m_vNormDir[DIR_RU])		m_strFrameKey = L"roll-up";
 		else if (m_vDir == m_vNormDir[DIR_DOWN] || m_vDir == m_vNormDir[DIR_LD] || m_vDir == m_vNormDir[DIR_RD])	m_strFrameKey = L"roll-down";
 		else if (m_vDir == m_vNormDir[DIR_LEFT] || m_vDir == m_vNormDir[DIR_RIGHT])									m_strFrameKey = L"roll-horizontal";
 	}
@@ -981,13 +991,13 @@ void CPlayer::Set_FrameKey_Normal()
 		switch (m_eWeaponType)
 		{
 		case WT_SWORD:
-			if (m_iCombo == 1)	m_strFrameKey = L"attack-combo1";
+			if		(m_iCombo == 1)	m_strFrameKey = L"attack-combo1";
 			else if (m_iCombo == 2)	m_strFrameKey = L"attack-combo2";
 			else if (m_iCombo == 3)	m_strFrameKey = L"attack-combo3";
 			break;
 
 		case WT_GAUNTLETS:
-			if (m_iCombo == 1)	m_strFrameKey = L"attack-combo1-gauntlets";
+			if		(m_iCombo == 1)	m_strFrameKey = L"attack-combo1-gauntlets";
 			else if (m_iCombo == 2)	m_strFrameKey = L"attack-combo2-gauntlets";
 			else if (m_iCombo == 3)	m_strFrameKey = L"attack-combo3-gauntlets";
 			else if (m_iCombo == 4)	m_strFrameKey = L"attack-combo4-gauntlets";
@@ -1348,6 +1358,8 @@ void	CPlayer::OnCollision(CGameObject* pObject)
 	if (pObject->Get_OBJID() == OID_TRIGGER)
 	{
 		if (m_bCutScene) { return; }
+		if (CCutSceneMgr::GetInstance()->Get_Playing()) { return; }
+
 		m_bCanTrigger = true;
 		m_pTriggerPoint = static_cast<CTriggerPoint*>(pObject);
 

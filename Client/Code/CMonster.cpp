@@ -43,21 +43,26 @@ HRESULT CMonster::Ready_GameObject()
 
 	m_pColliderCom->RegisterToManager(this, CL_MONSTER);
 	
-	m_hmapSubHandles.insert({ L"Monster_Rotate", m_pMessageChannel->Subscribe(L"Monster.Move", [this](const IMessageChannel::EVENT& Event) {
-		if (Event.eOBJID == this->Get_OBJID()) {
-			m_pTransformCom->Rotation(ROT_Y, 1.f);
-		}
-		}) });
-
-	m_hmapSubHandles.insert({ L"Monster_Damaged", m_pMessageChannel->Subscribe(L"Monster.Attacked", [this](const IMessageChannel::EVENT& Event) {
-		for (auto& Target : any_cast<vector<CGameObject*>>(Event.hmapData.find(L"Target")->second))
+	m_hmapSubHandles.insert({ L"Monster_Rotate", m_pMessageChannel->Subscribe(L"Monster.Move", [this](const IMessageChannel::EVENT& Event)
 		{
-			if (Target == this)
+			if (Event.eOBJID == this->Get_OBJID())
 			{
-				m_iHp -= any_cast<_int>(Event.hmapData.find(L"Attack")->second);
+				m_pTransformCom->Rotation(ROT_Y, 1.f);
 			}
 		}
-	}) });
+	) });
+
+	m_hmapSubHandles.insert({ L"Monster_Damaged", m_pMessageChannel->Subscribe(L"Monster.Attacked", [this](const IMessageChannel::EVENT& Event)
+		{
+			for (auto& Target : any_cast<vector<CGameObject*>>(Event.hmapData.find(L"Target")->second))
+			{
+				if (Target == this)
+				{
+					m_iHp -= any_cast<_int>(Event.hmapData.find(L"Attack")->second);
+				}
+			}
+		}
+	) });
 
 	return S_OK;
 }

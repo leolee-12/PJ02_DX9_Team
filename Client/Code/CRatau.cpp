@@ -187,6 +187,10 @@ void CRatau::Ready_Event()
 						m_eCurState = RATAU_EXIT;
 						return;
 					}
+					if (strDothis == L"Destroy") {
+						m_iHp = 0;
+						return;
+					}
 				}
 
 				return;
@@ -206,17 +210,19 @@ void CRatau::Ready_Event()
 		}
 	) });
 
-	m_hmapSubHandles.insert({ L"CutScene.End", m_pMessageChannel->Subscribe(L"CutScene.End", [this](const IMessageChannel::EVENT& Event) {
-		wstring SceneName = any_cast<wstring>(Event.hmapData.find(L"SceneName")->second);
-	if (SceneName == L"Ratau_01")
-	{
-		m_iHp = 0;
-	}
-	if (SceneName == L"Ratau_00")
-	{
-		m_iHp = 0;
-	}
-	}) });
+	m_hmapSubHandles.insert({ L"CutScene.End", m_pMessageChannel->Subscribe(L"CutScene.End", [this](const IMessageChannel::EVENT& Event)
+		{
+			wstring SceneName = any_cast<wstring>(Event.hmapData.find(L"SceneName")->second);
+			if (SceneName == L"Ratau_01")
+			{
+				m_iHp = 0;
+			}
+			if (SceneName == L"Ratau_00")
+			{
+				m_iHp = 0;
+			}
+		}
+	) });
 }
 
 HRESULT CRatau::Ready_Dialogue(const _vec3& vDialoguePos)

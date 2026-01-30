@@ -30,12 +30,12 @@ public:
 	CComponent* Clone() override;
 
 	void UpdateFromTransform(CTransform* pTransform);				// 충돌체위치 갱신 함수
-	void UpdateFromCustom(const AABB& tAABB);						// 충돌체위치 갱신 함수
+	void UpdateFromAABB(const AABB& tAABB);							// 충돌체위치 갱신 함수
 	void RegisterToManager(CGameObject* pOwner, COLGROUP Group);	// 매니저에 콜라이더 정보 등록 함수
 	void UnregisterFromManager();									// 매니저에 콜라이더 정보 등록 해제함수
 
 	void Update_AABBforRender();
-	void Render_Collider();										// 디버그용 콜라이더 렌더링 함수
+	void Render_Collider();											// 디버그용 콜라이더 렌더링 함수
 
 
 private:
@@ -45,6 +45,8 @@ private:
 	AABB		 m_tAABB;		// AABB용 충돌체 정보
 	COLGROUP	 m_Group;		// 충돌처리 그룹 (매니저에서 그룹별로 충돌체크 하기 위함)
 	CGameObject* m_pOwner;		// 충돌체 소유자 포인터 (예시. 플레이어의 충돌체 = 플레이어의 포인터)
+
+	_vec3 		 m_vPrePos;     // 이전 프레임 위치 저장용 (위치정보가 달라질시에만 충돌체 갱신을 위함)
 private:
 	virtual void Free() override;
 };

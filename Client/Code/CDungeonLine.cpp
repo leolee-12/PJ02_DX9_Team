@@ -23,8 +23,7 @@ HRESULT CDungeonLine::Ready_GameObject()
 
 	m_pTransformCom->Set_Scale(50.f, 250.f, 1.f);
 
-	m_hmapSubHandles.insert({ L"Render", m_pMessageChannel->Subscribe(
-		L"Select", [this](const IMessageChannel::EVENT& event)
+	m_hmapSubHandles.insert({ L"Render", m_pMessageChannel->Subscribe(L"Select", [this](const IMessageChannel::EVENT& event)
 		{
 			if (m_bRender)
 			{
@@ -35,8 +34,7 @@ HRESULT CDungeonLine::Ready_GameObject()
 		}
 	) });
 
-	m_hmapSubHandles.insert({ L"Animation", m_pMessageChannel->Subscribe(
-		L"Choose", [this](const IMessageChannel::EVENT& event)
+	m_hmapSubHandles.insert({ L"Animation", m_pMessageChannel->Subscribe(L"Choose", [this](const IMessageChannel::EVENT& event)
 		{
 			auto iter = event.hmapData.find(L"Look_Stage");
 			if (iter == event.hmapData.end()) { return; }
@@ -48,8 +46,7 @@ HRESULT CDungeonLine::Ready_GameObject()
 		}
 	) });
 
-	m_hmapSubHandles.insert({ L"Change_Line", m_pMessageChannel->Subscribe(
-		L"Enter", [this](const IMessageChannel::EVENT& event)
+	m_hmapSubHandles.insert({ L"Change_Line", m_pMessageChannel->Subscribe(L"Enter", [this](const IMessageChannel::EVENT& event)
 		{
 			auto iter = event.hmapData.find(L"Look_Stage");
 			if (iter == event.hmapData.end()) { return; }

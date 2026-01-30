@@ -136,8 +136,8 @@ void CPlayerTarotCard::Free()
 void CPlayerTarotCard::Ready_Event()
 {
 	m_hmapSubHandles.insert({ L"Tarot.Selected", m_pMessageChannel->Subscribe(L"Tarot.Selected", [this](const IMessageChannel::EVENT& Event)
-	{
+		{
 			m_bRender = true;
-	}
-) });
+		}
+	) });
 }

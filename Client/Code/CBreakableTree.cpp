@@ -88,6 +88,9 @@ _int CBreakableTree::Update_GameObject(const _float& fTimeDelta)
 
 void CBreakableTree::LateUpdate_GameObject(const _float& fTimeDelta)
 {
+	_vec3 vPos;
+	m_pTransformCom->Get_Info(Engine::INFO_POS, &vPos);
+
 	if (m_fWorkGauge - m_fPreWorkGauge > 0.0001f)
 	{
 		m_pWorkBar->Active();
@@ -98,7 +101,7 @@ void CBreakableTree::LateUpdate_GameObject(const _float& fTimeDelta)
 
 			_tchar strSoundName[128] = L"";
 			swprintf_s(strSoundName, L"Wood Chop %d.wav", Get_Rand_Int(0, 3));
-			CSoundMgr::GetInstance()->Play(strSoundName, SOUND_WOOD, 0.5f);
+			CSoundMgr::GetInstance()->PlaySound3D(strSoundName, SOUND_WOOD, 0.5f, vPos);
 
 			m_fAccTime = 0.f;
 		}
@@ -112,8 +115,6 @@ void CBreakableTree::LateUpdate_GameObject(const _float& fTimeDelta)
 		}
 	}
 
-	_vec3 vPos;
-	m_pTransformCom->Get_Info(Engine::INFO_POS, &vPos);
 	m_pTransformCom->Compute_Bilboard(BBD_X);
 	Compute_ViewDepth(&vPos);
 
@@ -124,7 +125,7 @@ void CBreakableTree::LateUpdate_GameObject(const _float& fTimeDelta)
 
 	AABB tAABB = { vPos, _vec3(2.f,3.5f,2.f) };
 	m_pColliderCom->Set_AABB(tAABB);
-	m_pColliderCom->UpdateFromCustom(tAABB);
+	m_pColliderCom->UpdateFromAABB(tAABB);
 	//-------------------------------------------------
 
 	// 충돌체 디버그용

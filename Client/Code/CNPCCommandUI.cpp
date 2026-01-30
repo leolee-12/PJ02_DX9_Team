@@ -92,25 +92,25 @@ void CNPCCommandUI::OnCollision(CGameObject* pObject)
 void CNPCCommandUI::Ready_Event()
 {
 	m_hmapSubHandles.insert({ L"CommandUI1.Close",m_pMessageChannel->Subscribe(L"CWorkWood.Selected",[this](const IMessageChannel::EVENT& Event)
-	{
-		m_pOwner->SetCommand(CFollower::FW_WOOD);
-		m_pOwner = nullptr;
-		m_bRender = false;
-	}
+		{
+			m_pOwner->SetCommand(CFollower::FW_WOOD);
+			m_pOwner = nullptr;
+			m_bRender = false;
+		}
 	) });
 	m_hmapSubHandles.insert({ L"CommandUI2.Close",m_pMessageChannel->Subscribe(L"CWorkRock.Selected",[this](const IMessageChannel::EVENT& Event)
-	{
-		m_pOwner->SetCommand(CFollower::FW_ROCK);
-		m_pOwner = nullptr;
-		m_bRender = false;
-	}
+		{
+			m_pOwner->SetCommand(CFollower::FW_ROCK);
+			m_pOwner = nullptr;
+			m_bRender = false;
+		}
 	) });
 	m_hmapSubHandles.insert({ L"CommandUI3.Close",m_pMessageChannel->Subscribe(L"CWorkRest.Selected",[this](const IMessageChannel::EVENT& Event)
-	{
-		m_pOwner->SetCommand(CFollower::FW_PRAY);
-		m_pOwner = nullptr;
-		m_bRender = false;
-	}
+		{
+			m_pOwner->SetCommand(CFollower::FW_PRAY);
+			m_pOwner = nullptr;
+			m_bRender = false;
+		}
 	) });
 	m_hmapSubHandles.insert({ L"Trigger.Activate.Owner", m_pMessageChannel->Subscribe(L"Trigger.Activate.Owner", [this](const IMessageChannel::EVENT& Event)
 		{

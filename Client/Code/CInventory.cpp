@@ -134,9 +134,12 @@ HRESULT CInventory::Ready_GameObject()
 	m_ePreInvenState = INVEN_END;
 	m_eInvenRenderState = INVENRT_RESOURCE;
 	m_fLerpTime = 1.0f;
-	m_vLerpStart = _vec3{ 0,0,0 };
-	m_vLerpEnd = _vec3{ 0,0,0 };
+	m_vLerpStart = { 0,0,0 };
+	m_vLerpEnd = { 0,0,0 };
 	m_iCurItemCount = 0;
+	Add_Item(CItem::IG_GOLD, 17);
+	Add_Item(CItem::IG_WOOD, 18);
+	Add_Item(CItem::IG_STONE, 19);
 	Add_Item(CItem::IG_BERRY, 20);
 	return S_OK;
 }
@@ -413,15 +416,15 @@ void CInventory::Set_MessageChannel(IMessageChannel* pMessageChannel)
 	m_pMessageChannel->AddRef();
 
 	
-	//for (auto it : m_vItem)
-	//{
-	//	it->Set_MessageChannel(pMessageChannel);
-	//}
+	for (auto it : m_vItem)
+	{
+		it->Set_MessageChannel(pMessageChannel);
+	}
 
-	//for (auto it : m_vPlayerEquipItem)
-	//{
-	//	it->Set_MessageChannel(pMessageChannel);
-	//}
+	for (auto it : m_vPlayerEquipItem)
+	{
+		it->Set_MessageChannel(pMessageChannel);
+	}
 	Ready_Event();
 }
 

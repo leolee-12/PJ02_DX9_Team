@@ -80,7 +80,9 @@ _int CGauge::Update_GameObject(const _float& fTimeDelta)
 		GaugeUI->Update_GameObject(fTimeDelta);
 	}
 
-	CRenderer::GetInstance()->Add_RenderGroup(RENDER_UI, this);
+	if (m_eCurGaugeState == Gauge::GS_PASSION) {
+		CRenderer::GetInstance()->Add_RenderGroup(RENDER_UI, this);
+	}
 
 	return NOEVENT;
 }

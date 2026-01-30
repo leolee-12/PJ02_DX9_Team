@@ -7,6 +7,11 @@
 class CCookingUIController;
 class CBuilding;
 
+class CFontUIOrtho;
+class CSpeechBubbleOrtho;
+class CSelectionArrow;
+class CBuildingCraftCtrl;
+
 // 팔로워 스폰 작업 구조체
 struct FOLLOWER_SPAWN_WORK
 {
@@ -60,6 +65,7 @@ private:
 	void			Ready_Event_Village();
 
 	void			Key_Input_Village();
+	void			Key_Input_Village_Debug();
 
 	void			Process_FollowerSpawnQueue(const _float& fTimeDelta);
 	void			Add_FollowerSpawnWork(const FOLLOWER_SPAWN_WORK& tWork);
@@ -68,6 +74,8 @@ private:
 	void			LateUpdate_Building(const _float& fTimeDelta);
 
 	_vec3			Compute_GirdCoord(const _vec3& vPos);
+
+	void			Select_Key_Input();
 
 public:
 	static CVillage* Create(LPDIRECT3DDEVICE9 pGraphicDev);
@@ -86,9 +94,22 @@ private:
 	_bool	m_bBuildingFlag = false;
 	CBuilding* m_pCurBuilding = nullptr;
 
+	// 선택지 관련
+	CFontUIOrtho* m_pLeftSelect;
+	CFontUIOrtho* m_pRightSelect;
+
+	CSpeechBubbleOrtho* m_pSpeechBubble;
+
+	CSelectionArrow* m_pSelectionArrow;
+
+	CBuildingCraftCtrl* m_pBuildingCraftCtrl;	// 디버그용 캐싱
+
+	_bool		  m_bShowSelect = false;
+	_uint		  m_iSelectSlot = 0;
+
 	// 팔로워 스폰 작업 큐
 	queue<FOLLOWER_SPAWN_WORK>	m_queueFollowerSpawn;
 	_float						m_fSpawnTimer = 0.f;
-	static constexpr _float		FOLLOWER_SPAWN_DELAY = 8.f;
+	static constexpr _float		FOLLOWER_SPAWN_DELAY = 0.5f;
 	static constexpr _float		BUILDING_GRIDSIZE	 = 2.f;
 };

@@ -67,12 +67,12 @@ HRESULT CTheGateway::Ready_Scene()
 	tTutoCutScene.strName = L"TheGateway_01";
 	tTutoCutScene.vecSteps =
 	{
-		{_vec3(0.f, 8.f, 68.f * 0.8f), 1.f, 0.5f, L"Narinder", L"가까이 오거라. 두려워 말라, 너는 이미 죽었건만,\n내 아직 너를 필요로 함이라."},
-		{_vec3(0.f, 8.f, 68.f * 0.8f), 1.f, 0.5f, L"Narinder", L"저 어리석은 주교들은 죽음으로 나와 너를 가를 수 있다\n생각하였다. 허나 이는 너를 내게 곧바로 보냄이라."},
-		{_vec3(0.f, 8.f, 68.f * 0.8f), 1.f, 0.5f, L"Narinder", L"내 너에게 생명을 주나니,\n허나 거기에는 대가가 따름이라!"},
-		{_vec3(0.f, 8.f, 68.f * 0.8f), 1.f, 0.5f, L"Narinder", L"내 바라는 것은 오직 하나, 나의 이름을 내세운 교단을\n만드는 것 뿐이니라. 어떻게 생각하느냐?",
+		{_vec3(0.f, 10.f, 68.f * 0.8f), 1.f, 0.5f, L"Narinder", L"가까이 오거라. 두려워 말라, 너는 이미 죽었건만,\n내 아직 너를 필요로 함이라."},
+		{_vec3(0.f, 10.f, 68.f * 0.8f), 1.f, 0.5f, L"Narinder", L"저 어리석은 주교들은 죽음으로 나와 너를 가를 수 있다\n생각하였다. 허나 이는 너를 내게 곧바로 보냄이라."},
+		{_vec3(0.f, 10.f, 68.f * 0.8f), 1.f, 0.5f, L"Narinder", L"내 너에게 생명을 주나니,\n허나 거기에는 대가가 따름이라!"},
+		{_vec3(0.f, 10.f, 68.f * 0.8f), 1.f, 0.5f, L"Narinder", L"내 바라는 것은 오직 하나, 나의 이름을 내세운 교단을\n만드는 것 뿐이니라. 어떻게 생각하느냐?",
 		ADV_DIALOGUE, 0.f, L"", vector<wstring>({L"예.", L"물론입니다."})},
-		{_vec3(0.f, 8.f, 68.f * 0.8f), 1.f, 0.5f, L"FadeOut", L"", ADV_IMMEDIATE},
+		{_vec3(0.f, 10.f, 68.f * 0.8f), 1.f, 0.5f, L"FadeOut", L"", ADV_IMMEDIATE},
 		{_vec3(0.f, 0.f, 35.f), 1.5f, 0.5f, L"Player", L"Move_Gateway", ADV_TIMED, 2.f}
 		
 	};
@@ -132,6 +132,11 @@ void CTheGateway::LateUpdate_Scene(const _float& fTimeDelta)
 
 void CTheGateway::Render_Scene()
 {
+	if (m_bShowSelect)
+	{
+		m_pLeftSelect->Render_GameObject();
+		m_pRightSelect->Render_GameObject();
+	}
 }
 
 HRESULT CTheGateway::Ready_Environment_Layer(const _tchar* pLayerTag)
@@ -442,42 +447,46 @@ HRESULT CTheGateway::Ready_Light()
 
 void	CTheGateway::Ready_Event()
 {
-	m_hmapSubHandles.insert({ L"CutScene.ShowChoice", m_pMessageChannel->Subscribe(L"CutScene.ShowChoice", [this](const IMessageChannel::EVENT& Event) {
-		auto SceneNameiter = Event.hmapData.find(L"SceneName");
-		if (SceneNameiter == Event.hmapData.end()) { return; }
-
-		if (any_cast<wstring>(SceneNameiter->second) == L"TheGateway_01")
+	m_hmapSubHandles.insert({ L"CutScene.ShowChoice", m_pMessageChannel->Subscribe(L"CutScene.ShowChoice", [this](const IMessageChannel::EVENT& Event)
 		{
-			auto Choiceiter = Event.hmapData.find(L"Choices");
-			if (Choiceiter == Event.hmapData.end()) { return; }
+			auto SceneNameiter = Event.hmapData.find(L"SceneName");
+			if (SceneNameiter == Event.hmapData.end()) { return; }
 
-			vector<wstring> vecChoiceTex = std::move(any_cast<vector<wstring>>(Choiceiter->second));
+			if (any_cast<wstring>(SceneNameiter->second) == L"TheGateway_01")
+			{
+				auto Choiceiter = Event.hmapData.find(L"Choices");
+				if (Choiceiter == Event.hmapData.end()) { return; }
 
-			m_pLeftSelect->Set_Text(vecChoiceTex[0].c_str());
-			m_pLeftSelect->Set_FontColor(D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
-			m_pLeftSelect->Set_Flags(DT_CENTER | DT_VCENTER);
+				vector<wstring> vecChoiceTex = std::move(any_cast<vector<wstring>>(Choiceiter->second));
 
-			m_pRightSelect->Set_Text(vecChoiceTex[1].c_str());
-			m_pRightSelect->Set_FontColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
-			m_pRightSelect->Set_Flags(DT_CENTER | DT_VCENTER);
+				m_pLeftSelect->Set_Text(vecChoiceTex[0].c_str());
+				m_pLeftSelect->Set_FontColor(D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
+				m_pLeftSelect->Set_Flags(DT_CENTER | DT_VCENTER);
 
-			m_iSelectSlot = 0;
+				m_pRightSelect->Set_Text(vecChoiceTex[1].c_str());
+				m_pRightSelect->Set_FontColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+				m_pRightSelect->Set_Flags(DT_CENTER | DT_VCENTER);
 
-			m_pLeftSelect->Active();
-			m_pRightSelect->Active();
-			m_pSpeechBubble->Active();
-			m_pSelectionArrow->Active();
+				m_iSelectSlot = 0;
 
-			m_bShowSelect = true;
+				m_pLeftSelect->Active();
+				m_pRightSelect->Active();
+				m_pSpeechBubble->Active();
+				m_pSelectionArrow->Active();
+
+				m_bShowSelect = true;
+			}
 		}
-	}) });
+	) });
 
-	m_hmapSubHandles.insert({ L"CutScene.End", m_pMessageChannel->Subscribe(L"CutScene.End", [this](const IMessageChannel::EVENT& Event) {
-	if (any_cast<wstring>(Event.hmapData.find(L"SceneName")->second) == L"TheGateway_01")
-	{
-		m_bSceneChangeFlag = true;
-	}
-	}) });
+	m_hmapSubHandles.insert({ L"CutScene.End", m_pMessageChannel->Subscribe(L"CutScene.End", [this](const IMessageChannel::EVENT& Event)
+		{
+			if (any_cast<wstring>(Event.hmapData.find(L"SceneName")->second) == L"TheGateway_01")
+			{
+				m_bSceneChangeFlag = true;
+			}
+		}
+	) });
 }
 
 void CTheGateway::Select_Key_Input()

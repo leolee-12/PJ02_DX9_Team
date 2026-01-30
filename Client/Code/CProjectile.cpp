@@ -108,7 +108,7 @@ void CProjectile::LateUpdate_GameObject(const _float& fTimeDelta)
 	_float fHalfScale = m_pTransformCom->Get_Scale(ROT_X) * 0.3f;
 	AABB tAABB = { m_vPos.x, m_vPos.y, m_vPos.z, fHalfScale, fHalfScale, fHalfScale };
 	m_pColliderCom->Set_AABB(tAABB);
-	m_pColliderCom->UpdateFromCustom(tAABB);
+	m_pColliderCom->UpdateFromAABB(tAABB);
 
 	if (g_bDebug) m_pColliderCom->Update_AABBforRender();
 
@@ -190,7 +190,7 @@ void CProjectile::Ready_Variable()
 	m_fAttack = 1;
 	m_iHp = 1;
 	m_fAccTime = 0.f;
-	m_fLifeTime = 10.f;
+	m_fLifeTime = 5.f;
 	m_fGravity = -9.8f * 2.f;
 
 	// Transform 세팅

@@ -1,7 +1,7 @@
-#pragma once
+ï»¿#pragma once
 #include "Engine_Define.h"
 
-// FMOD Àü¹æ ¼±¾ğ
+// FMOD ì „ë°© ì„ ì–¸
 namespace FMOD
 {
 	class Sound;
@@ -34,27 +34,33 @@ private:
 public:
 	void Ready_SoundMgr();
 	void Free();
-	void Update(); // FMOD ½Ã½ºÅÛ ¾÷µ¥ÀÌÆ® (¸Å ÇÁ·¹ÀÓ È£Ãâ ÇÊ¿ä)
+	void Update(); // FMOD ì‹œìŠ¤í…œ ì—…ë°ì´íŠ¸ (ë§¤ í”„ë ˆì„ í˜¸ì¶œ í•„ìš”)
 public:
 	void Play(const TCHAR* pSoundKey, CHANNELID eID, float fVolume);
+	void PlaySound3D(const TCHAR* pSoundKey, CHANNELID eID, float fVolume, const _vec3& vSoundPos);
 	void PlayBGM(const TCHAR* pSoundKey, float fVolume);
 	void StopSound(CHANNELID eID);
 	void StopAll();
 	void SetChannelVolume(CHANNELID eID, float fVolume);
+
+	void Set_ListenerPos(const _vec3& vListnerPos) { m_vListenerPos = vListnerPos; }
 private:
 	void LoadSoundFile();
 	void LoadSoundFileRecursive(const char* pPath);
 private:
 	static CSoundMgr* m_pInstance;
 
-	// »ç¿îµå ¸®¼Ò½º Á¤º¸¸¦ °®´Â °´Ã¼ (64ºñÆ® FMOD::Sound Æ÷ÀÎÅÍ)
+	// ì‚¬ìš´ë“œ ë¦¬ì†ŒìŠ¤ ì •ë³´ë¥¼ ê°–ëŠ” ê°ì²´ (64ë¹„íŠ¸ FMOD::Sound í¬ì¸í„°)
 	std::map<std::wstring, FMOD::Sound*> m_mapSound;
 
-	// FMOD::Channel : Àç»ıÇÏ°í ÀÖ´Â »ç¿îµå¸¦ °ü¸®ÇÒ °´Ã¼
+	// FMOD::Channel : ì¬ìƒí•˜ê³  ìˆëŠ” ì‚¬ìš´ë“œë¥¼ ê´€ë¦¬í•  ê°ì²´
 	FMOD::Channel* m_pChannelArr[MAXCHANNEL];
 
-	// »ç¿îµå, Ã¤³Î °´Ã¼ ¹× ÀåÄ¡¸¦ °ü¸®ÇÏ´Â °´Ã¼ (64ºñÆ® FMOD::System)
+	// ì‚¬ìš´ë“œ, ì±„ë„ ê°ì²´ ë° ì¥ì¹˜ë¥¼ ê´€ë¦¬í•˜ëŠ” ê°ì²´ (64ë¹„íŠ¸ FMOD::System)
 	FMOD::System* m_pSystem;
+
+	_vec3   m_vListenerPos;
+	static constexpr _float	m_fMaxDistance = 50.f;
 };
 
 END
