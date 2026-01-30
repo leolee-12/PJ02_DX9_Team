@@ -317,7 +317,7 @@ void CBuildingCraftCtrl::Update_Select(const _float& fTimeDelta)
 	{
 		pSlot->Update_GameObject(fTimeDelta);
 
-		if (pSlot->Is_Clicked() && pSlot->Get_CanBuild())
+		if (pSlot->Check_Clicked() && pSlot->Get_CanBuild())
 		{
 			if (pSlot->Get_BuildingType() != BT_END)
 			{
@@ -347,7 +347,7 @@ void CBuildingCraftCtrl::Update_SlotHover()
 
 	for (auto& pSlot : m_vecSlots)
 	{	// 슬롯 별 마우스 호버 상태 갱신
-		if (pSlot->Is_Hovered())
+		if (pSlot->Check_Hovered())
 		{
 			pNewHovered = pSlot;
 			pSlot->Set_Hovered(true);

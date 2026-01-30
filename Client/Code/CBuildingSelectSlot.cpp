@@ -78,12 +78,12 @@ void CBuildingSelectSlot::Render_GameObject()
 	}
 }
 
-_bool CBuildingSelectSlot::Is_Clicked()
+_bool CBuildingSelectSlot::Check_Clicked()
 {
-	return Is_Hovered() && CDInputMgr::GetInstance()->Mouse_Down(DIM_LB);
+	return m_bHovered && CDInputMgr::GetInstance()->Mouse_Down(DIM_LB);
 }
 
-_bool CBuildingSelectSlot::Is_Hovered()
+_bool CBuildingSelectSlot::Check_Hovered()
 {
 	POINT ptMouse;
 	GetCursorPos(&ptMouse);
