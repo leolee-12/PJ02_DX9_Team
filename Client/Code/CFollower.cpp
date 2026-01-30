@@ -8,7 +8,8 @@
 #include "CFollower_AI.h"
 #include "CDInputMgr.h"
 #include "CTriggerPoint.h"
-#include <CSoundMgr.h>
+#include "CSoundMgr.h"
+#include "CEffectMgr.h"
 
 CFollower::CFollower(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev),
@@ -426,6 +427,17 @@ void CFollower::Move_Frame(const _float& fTimeDelta)
 			{
 				m_pAICom->Anim_End(m_eCurState);
 				m_eCurState = FOLLOWER_IDLE;
+			}
+		}
+		else if (m_eCurState == FOLLOWER_CHEER)
+		{
+			_uint iRand = Get_Rand_Int(0, 4);
+			
+			if (iRand == 0)
+			{
+				_vec3 vEffectPos = m_vPos;
+				vEffectPos.y += 2.f;
+				CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_PARTICLE_CONFETTI, 0, vEffectPos);
 			}
 		}
 	}

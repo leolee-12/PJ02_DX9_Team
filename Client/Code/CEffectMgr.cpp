@@ -4,7 +4,6 @@
 #include "CTransform.h"
 #include "CSpriteEffect.h"
 #include "CParticleEffect.h"
-//#include "CTrailEffect.h"
 #include "CScreenEffect.h"
 #include "CIndicator.h"
 #include "CChargeArrow.h"
@@ -104,12 +103,32 @@ HRESULT CEffectMgr::Ready_EffectMgr(LPDIRECT3DDEVICE9 pGraphicDev)
 	if (particlePair.second)
 	{
 		CParticleEffect* pParticleEffect = CParticleEffect::Create(pGraphicDev, L"Proto_MonsterParticleTexture");
+		pParticleEffect->Set_GridXY(8, 4);
 		pParticleEffect->Set_TextureRange(0, 31);
+		pParticleEffect->Set_Size(1.5f, 0.1f);
 		pParticleEffect->Set_EmitRange(_vec3(-1.f, 0.f, -1.f), _vec3(1.f, 1.f, 1.f));
 		pParticleEffect->Set_SpeedRange(_vec3(-3.f, 5.f, -3.f), _vec3(3.f, 10.f, 3.f));
 		pParticleEffect->Set_LifeTime(1.5f);
 		pParticleEffect->Set_EmitRate(30.f);
 		pParticleEffect->Set_BaseColor(D3DXCOLOR(0.1f, 0.1f, 1.f, 1.f));
+		particlePair.first->second = pParticleEffect;
+	}
+
+	particlePair = m_mapProtoEffect.try_emplace(EK_PARTICLE_CONFETTI, nullptr);	// pair<iter, bool>
+
+	if (particlePair.second)
+	{
+		CParticleEffect* pParticleEffect = CParticleEffect::Create(pGraphicDev, L"Proto_ConfettiTexture");
+		pParticleEffect->Set_GridXY(3, 3);
+		pParticleEffect->Set_TextureRange(0, 8);
+		pParticleEffect->Set_Size(1.f, 0.01f);
+		pParticleEffect->Set_Gravity(_vec3{0.f, 10.f, 0.f});	// 부력
+		pParticleEffect->Set_Drag(5.f);
+		pParticleEffect->Set_EmitRange(_vec3(-3.f, -3.f, -3.f), _vec3(3.f, 3.f, 3.f));
+		pParticleEffect->Set_SpeedRange(_vec3(-5.f, 7.5f, -5.f), _vec3(5.f, 15.f, 5.f));
+		pParticleEffect->Set_LifeTime(1.5f);
+		pParticleEffect->Set_EmitRate(30.f);
+		pParticleEffect->Set_BaseColor(D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
 		particlePair.first->second = pParticleEffect;
 	}
 
