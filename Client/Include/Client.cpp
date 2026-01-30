@@ -100,6 +100,11 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 				swprintf_s(szFPS, L"FPS: %d (%.2f ms)", iFPS, fFrameTime);
 				SetWindowText(g_hWnd, szFPS);
 
+				if (fTimer_FPS60 > 0.333f)
+				{
+					fTimer_FPS60 = 0.333f;
+				}
+
                 pMainApp->Update_MainApp(fTimer_FPS60);
                 pMainApp->LateUpdate_MainApp(fTimer_FPS60);
                 pMainApp->Render_MainApp();
