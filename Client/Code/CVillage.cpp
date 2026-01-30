@@ -801,10 +801,13 @@ void CVillage::Key_Input_Village()
 				if (iter != m_mapLayer.end())
 					iter->second->Add_GameObject(L"Building", m_pCurBuilding);
 
+				BUILDING_TYPE eType = m_pCurBuilding->Get_BuildingType();
+
 				m_pCurBuilding = nullptr;
 				m_bBuildingFlag = false;
 
 				SceneEvent.strType = L"Building.Exit";
+				SceneEvent.hmapData[L"BuildingType"] = eType;
 				m_pMessageChannel->Publish(SceneEvent);
 			}
 		}
