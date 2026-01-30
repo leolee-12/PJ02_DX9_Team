@@ -129,14 +129,26 @@ HRESULT CPersistentMgr::Ready_GlobalObjects(LPDIRECT3DDEVICE9 pGraphicDev)
 	{
 		if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_InventoryBack", Engine::CTexture::Create(pGraphicDev, TEX_NORMAL, L"../Bin/Resource/YSD/Inventory/InventoryBack.png", 1))))
 			return E_FAIL;
-		if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_InventorySlot", Engine::CTexture::Create(pGraphicDev, TEX_NORMAL, L"../Bin/Resource/YSD/Inventory/Slot.png", 1))))
+		if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_InventorySlot", Engine::CTexture::Create(pGraphicDev, TEX_NORMAL, L"../Bin/Resource/YSD/Inventory/Slot_%d.png", 2))))
 			return E_FAIL;
 		if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_InventoryItem", Engine::CTexture::Create(pGraphicDev, TEX_NORMAL, L"../Bin/Resource/YSD/Inventory/ItemData/Item_%d.png", 5))))
 			return E_FAIL;
 		if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_InventoryButton", Engine::CTexture::Create(pGraphicDev, TEX_NORMAL, L"../Bin/Resource/YSD/Inventory/Button_%d.png", 2))))
 			return E_FAIL;
-		
-
+		if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_InventoryItemInfoBack", Engine::CTexture::Create(pGraphicDev, TEX_NORMAL, L"../Bin/Resource/YSD/Inventory/InfoCard/InfoCardBg.png", 1))))
+			return E_FAIL;
+		if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_InventoryPlayer", Engine::CTexture::Create(pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Player/idle/dds/idle_%04d.dds", 72))))
+			return E_FAIL;
+		if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_InventoryStar", Engine::CTexture::Create(pGraphicDev, TEX_NORMAL, L"../Bin/Resource/YSD/Inventory/PlayerState/InvenStar.png", 1))))
+			return E_FAIL;
+		if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_InventoryRedFog", Engine::CTexture::Create(pGraphicDev, TEX_NORMAL, L"../Bin/Resource/YSD/Inventory/PlayerState/RedFog.png", 1))))
+			return E_FAIL;
+		if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_InventoryEquipItem", Engine::CTexture::Create(pGraphicDev, TEX_NORMAL, L"../Bin/Resource/YSD/Inventory/EquipItem/EquipItem_%d.png", 3))))
+			return E_FAIL;
+		//if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_PlayerHP", Engine::CTexture::Create(pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/UI/Player/dds/Health_%d.dds", 3))))
+		//	return E_FAIL;
+		//if (FAILED(CProtoMgr::GetInstance()->Ready_Prototype(L"Proto_InventoryLock", Engine::CTexture::Create(pGraphicDev, TEX_NORMAL, L"../Bin/Resource/YSD/Inventory/Lock.png", 1))))
+		//	return E_FAIL;
 		m_pInventory = CInventory::Create(pGraphicDev);
 	}
 

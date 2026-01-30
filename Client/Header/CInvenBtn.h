@@ -30,6 +30,8 @@ public:
 public:
 	void Set_ParentPos(_vec3 _vParentPos) { m_vParentPos = _vParentPos; }
 	void Set_Tex(wstring _szName);
+	void Set_OnClick(_bool _b) { m_bOnClick = _b; }
+	_bool Get_OnClick() { return m_bOnClick; }
 private:
 	virtual			void		Free();
 	void						Check_CusorColl();
@@ -54,5 +56,6 @@ private:
 	_bool			m_bRender;
 
 	_int			m_iPage;
+	_bool			m_bOnClick;
 };
 

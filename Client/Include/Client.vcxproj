@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -218,9 +218,15 @@
     <ClInclude Include="..\Header\CInteractionUI.h" />
     <ClInclude Include="..\Header\CInvenBack.h" />
     <ClInclude Include="..\Header\CInvenBtn.h" />
+    <ClInclude Include="..\Header\CInvenEquipItem.h" />
+    <ClInclude Include="..\Header\CInvenEquipSlot.h" />
     <ClInclude Include="..\Header\CInvenItem.h" />
+    <ClInclude Include="..\Header\CInvenPlayer.h" />
+    <ClInclude Include="..\Header\CInvenPlayerHp.h" />
     <ClInclude Include="..\Header\CInvenSlot.h" />
+    <ClInclude Include="..\Header\CInvenStarImg.h" />
     <ClInclude Include="..\Header\CInventory.h" />
+    <ClInclude Include="..\Header\CInvenItemInfo.h" />
     <ClInclude Include="..\Header\CKBCharNPC.h" />
     <ClInclude Include="..\Header\CKBCharPlayer.h" />
     <ClInclude Include="..\Header\CLetterBox.h" />
@@ -235,6 +241,7 @@
     <ClInclude Include="..\Header\CParticleEffect.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClInclude>
+    <ClInclude Include="..\Header\CPlayer.h" />
     <ClInclude Include="..\Header\CPlayerWeaponUI.h" />
     <ClInclude Include="..\Header\CResourceHistoryBack.h" />
     <ClInclude Include="..\Header\CResourceHistoryController.h" />
@@ -307,7 +314,6 @@
     <ClInclude Include="..\Header\CNode.h" />
     <ClInclude Include="..\Header\CPassiveItem.h" />
     <ClInclude Include="..\Header\CPersistentMgr.h" />
-    <ClInclude Include="..\Header\CPlayer.h" />
     <ClInclude Include="..\Header\CPlayerHP.h" />
     <ClInclude Include="..\Header\CProjectile.h" />
     <ClInclude Include="..\Header\CRatau.h" />
@@ -339,7 +345,10 @@
     <ClInclude Include="..\Header\CVillage.h" />
     <ClInclude Include="..\Header\CWarp.h" />
     <ClInclude Include="..\Header\Gage_Enum.h" />
+    <ClInclude Include="..\Header\CInvenRedFog.h" />
     <ClInclude Include="..\Header\InventoryEnum.h" />
+    <ClInclude Include="..\Header\CItemInfoBg.h" />
+    <ClInclude Include="..\Header\CItemDataTable.h" />
     <ClInclude Include="..\Header\LoadObjectList.h" />
     <ClInclude Include="..\Header\CPlayerTarotCard.h" />
     <ClInclude Include="..\Header\PlayerUI.h" />
@@ -361,6 +370,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\CInvenPlayerHp.cpp" />
     <ClCompile Include="..\Code\CAmdusiasRoom.cpp" />
     <ClCompile Include="..\Code\CB1_AI.cpp" />
     <ClCompile Include="..\Code\CB2_AI.cpp">
@@ -431,8 +441,13 @@
     <ClCompile Include="..\Code\CInteractMgr.cpp" />
     <ClCompile Include="..\Code\CInvenBack.cpp" />
     <ClCompile Include="..\Code\CInvenBtn.cpp" />
+    <ClCompile Include="..\Code\CInvenEquipItem.cpp" />
+    <ClCompile Include="..\Code\CInvenEquipSlot.cpp" />
     <ClCompile Include="..\Code\CInvenItem.cpp" />
+    <ClCompile Include="..\Code\CInvenItemInfo.cpp" />
+    <ClCompile Include="..\Code\CInvenPlayer.cpp" />
     <ClCompile Include="..\Code\CInvenSlot.cpp" />
+    <ClCompile Include="..\Code\CInvenStarImg.cpp" />
     <ClCompile Include="..\Code\CInventory.cpp" />
     <ClCompile Include="..\Code\CItem.cpp" />
     <ClCompile Include="..\Code\CKBBack.cpp" />
@@ -555,6 +570,8 @@
     <ClCompile Include="..\Code\CWorkRockUI.cpp" />
     <ClCompile Include="..\Code\CWorkWoodUI.cpp" />
     <ClCompile Include="..\Code\CPlayerTarotCard.cpp" />
+    <ClCompile Include="..\Code\CItemInfoBg.cpp" />
+    <ClCompile Include="..\Code\CInvenRedFog.cpp" />
     <ClCompile Include="CFontAlpha.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="CShrineSpot.cpp" />

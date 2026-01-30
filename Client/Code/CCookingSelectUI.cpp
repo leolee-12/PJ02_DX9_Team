@@ -217,7 +217,7 @@ void CCookingSelectUI::ReSetSelecting()
 void CCookingSelectUI::init_data()
 {
 	ReSetSelecting();
-	m_iResourceCount = CPersistentMgr::GetInstance()->Get_Inventory()->GetItemCount(CItem::IG_BERRY);
+	m_iResourceCount = CPersistentMgr::GetInstance()->Get_Inventory()->Get_ItemCount(CItem::IG_BERRY);
 	m_pCookingtargetFood->Set_CraftableCount(m_iResourceCount / m_pCookingInfoCard->Get_RecipeCount());
 	m_pCookingInfoCard->Init_CalcuResouceCount(m_iResourceCount);
 }

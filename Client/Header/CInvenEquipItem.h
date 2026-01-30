@@ -2,6 +2,7 @@
 #include "CUi.h"
 #include "InventoryEnum.h"
 #include "CItem.h"
+#include "CItemDataTable.h"
 
 namespace Engine
 {
@@ -10,25 +11,23 @@ namespace Engine
 	class CTexture;
 }
 
-struct tItemData
+struct EquipItemData
 {
-	CItem::ITEMID ID = CItem::ID_END;
-	ITEM_RENDER_TYPE RenderType = IRT_END;
-	_int	iCount = 0;
-	wstring Name = L"";
+	EquipmentItemID ID = EID_NONE;
+	wstring Name = L"무기 장비되지않음";
 	wstring Flavor = L"";
-	wstring Description = L"";
+	wstring Description = L"재 무기를 장비하지 않았습니다\n무기를 찾아 장비하세요.";
 	_bool	bOnHoverEvet = false;
 };
 
 class CFontUIOrtho;
 
-class CInvenItem :
+class CInvenEquipItem :
 	public CUi
 {
 private:
-	explicit CInvenItem(LPDIRECT3DDEVICE9 pGraphicDev);
-	virtual ~CInvenItem();
+	explicit CInvenEquipItem(LPDIRECT3DDEVICE9 pGraphicDev);
+	virtual ~CInvenEquipItem();
 
 public:
 	virtual			HRESULT		Ready_GameObject();
@@ -38,17 +37,17 @@ public:
 	virtual			void		OnCollision(CGameObject* pObject);
 
 public:
-	static CInvenItem* Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 _vLocalPos, _vec3 _vParentPos, _float _fScale, ITEM_RENDER_TYPE _RenderType);
+	static CInvenEquipItem* Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 _vLocalPos, _vec3 _vParentPos, _float _fScale);
 
 public:
 	void Set_Render(_bool _bRender) { m_bRender = _bRender; };
 	void Set_ParentPos(_vec3 _vParentPos) { m_vParentPos = _vParentPos; }
 	void Set_LocalPos(_vec3 _vLocalPos) { m_vLocalPos = _vLocalPos; }
 	_bool Get_Redner() { return m_bRender; }
-	const tItemData& Get_ItemData() const { return m_tItemData; }
-	void Set_ItemData(const tItemData& _ItemData){ m_tItemData = _ItemData; }
-	void Set_MessageChannel(IMessageChannel* pMessageChannel);
-	void Set_ItemID(CItem::ITEMID _id) { m_tItemData.ID = _id; }	
+	const EquipItemData& Get_ItemData() const { return m_tItemData; }
+	void Set_ItemData(const EquipItemData& _ItemData) { m_tItemData = _ItemData; }
+	void   Set_MessageChannel(IMessageChannel* pMessageChannel);
+	void Set_ItemID(EquipmentItemID _id) { m_tItemData.ID = _id; }
 	void Set_HoverEvent(bool _bEvent) { m_tItemData.bOnHoverEvet = _bEvent; }
 private:
 	virtual			void		Free();
@@ -60,8 +59,6 @@ private:
 	CRcTex* m_pBufferCom;
 	CTransform* m_pTransformCom;
 	CTexture* m_pTextureCom;
-
-	CFontUIOrtho* m_pCountFont;
 
 	_vec2			m_vScreenPos;
 	_vec2			m_vHitHalfScale;
@@ -77,6 +74,6 @@ private:
 	_bool m_bHover;
 	_bool m_bMsgRegistered;
 private:
-	tItemData m_tItemData;
+	EquipItemData m_tItemData;
 };
 

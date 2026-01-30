@@ -1,36 +1,25 @@
 ﻿#include "pch.h"
-#include "CInvenItem.h"
+#include "CInvenEquipItem.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
 #include "CFontMgr.h"
 #include "CFontUIOrtho.h"
 
-CInvenItem::CInvenItem(LPDIRECT3DDEVICE9 pGraphicDev)
+CInvenEquipItem::CInvenEquipItem(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CUi(pGraphicDev), m_pBufferCom(nullptr), m_pTransformCom(nullptr), m_bMsgRegistered(false)
 {
 	ZeroMemory(&m_vPos, sizeof(_vec3));
 }
 
-CInvenItem::~CInvenItem()
+CInvenEquipItem::~CInvenEquipItem()
 {
 }
 
-HRESULT CInvenItem::Ready_GameObject()
+HRESULT CInvenEquipItem::Ready_GameObject()
 {
 	if (FAILED(Add_Component()))
 		return E_FAIL;
-
-	m_pCountFont = CFontUIOrtho::Create(m_pGraphicDev);
-
-
-	m_pCountFont->Set_Flags(DT_CENTER | DT_VCENTER);
-	m_pCountFont->Set_FontColor(D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
-	m_pCountFont->Set_Pos(_vec2(m_vWorldPos.x+20.0f, m_vWorldPos.y-20.0f));
-	m_pCountFont->Set_Scale(_vec2(59.f * 2.f, 123.f * 0.5f));
-	m_pCountFont->Set_Font(L"Font_Default24");
-	m_pCountFont->Set_Text(to_wstring(m_tItemData.iCount));
-	m_pCountFont->Active();
-	m_bRender = false;
+	m_bRender = true;
 	m_bHover = false;
 
 
@@ -38,28 +27,23 @@ HRESULT CInvenItem::Ready_GameObject()
 	m_vHitHalfScale = _vec2((128.0f * m_fScale) / 2, (128.0f * m_fScale) / 2);
 	m_pTransformCom->Set_Scale(128.0f * m_fScale, 128.0f * m_fScale, 1.0f);
 	m_pTransformCom->Set_Pos(m_vPos.x, m_vPos.y, m_vPos.z);
+
+	m_tItemData.ID = EID_NONE;
 	return S_OK;
 }
 
-_int CInvenItem::Update_GameObject(const _float& fTimeDelta)
+_int CInvenEquipItem::Update_GameObject(const _float& fTimeDelta)
 {
 	if (!m_bRender) { return NOEVENT; }
 	if (m_tItemData.bOnHoverEvet) { OnHover_CusorColl(); }
-	if (m_tItemData.RenderType == IRT_COUNT)
-	{
-		m_pCountFont->Set_Pos(_vec2(m_vWorldPos.x + 20.0f, m_vWorldPos.y - 20.0f));
-		m_pCountFont->Update_GameObject(fTimeDelta);
-	}
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
 	CRenderer::GetInstance()->Add_RenderGroup(RENDER_UI, this);
 	return iExit;
 }
 
-void CInvenItem::LateUpdate_GameObject(const _float& fTimeDelta)
+void CInvenEquipItem::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	if (!m_bRender) { return; }
-	if (m_tItemData.RenderType == IRT_COUNT)
-		m_pCountFont->Set_Text(to_wstring(m_tItemData.iCount));
 
 	m_vWorldPos = m_vParentPos + m_vLocalPos;
 	m_vScreenPos = _vec2(WINCX / 2 + m_vWorldPos.x, WINCY / 2 - m_vWorldPos.y);
@@ -69,28 +53,26 @@ void CInvenItem::LateUpdate_GameObject(const _float& fTimeDelta)
 	Compute_ViewDepth_Ortho(&m_vWorldPos);
 }
 
-void CInvenItem::Render_GameObject()
+void CInvenEquipItem::Render_GameObject()
 {
 	if (!m_bRender) { return; }
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
 
-	if (m_tItemData.ID < 0 || 4 < m_tItemData.ID)
+	if (m_tItemData.ID < 1 || 3 < m_tItemData.ID)
 		m_iPage = 0;
 	else
 		m_iPage = m_tItemData.ID;
 	m_pTextureCom->Set_Texture(m_iPage);
 
 	m_pBufferCom->Render_Buffer();
-	if (m_tItemData.RenderType == IRT_COUNT)
-		m_pCountFont->Render_GameObject();
 }
 
-void CInvenItem::OnCollision(CGameObject* pObject)
+void CInvenEquipItem::OnCollision(CGameObject* pObject)
 {
 
 }
 
-void CInvenItem::OnHover_CusorColl()
+void CInvenEquipItem::OnHover_CusorColl()
 {
 	//if (!m_bRender) { return; }
 
@@ -110,7 +92,7 @@ void CInvenItem::OnHover_CusorColl()
 	{
 		m_bHover = true;
 		IMessageChannel::EVENT OnHoverEvent;
-		OnHoverEvent.strType = L"CInvenItem.OnHover";
+		OnHoverEvent.strType = L"CInvenEquipItem.OnHover";
 		OnHoverEvent.hmapData[L"ItemID"] = m_tItemData.ID;
 		m_pMessageChannel->Publish(OnHoverEvent);
 
@@ -124,14 +106,14 @@ void CInvenItem::OnHover_CusorColl()
 		if (m_bHover)
 		{
 			IMessageChannel::EVENT OnHoverExitEvent;
-			OnHoverExitEvent.strType = L"CInvenItem.OnHoverExit";
+			OnHoverExitEvent.strType = L"CInvenEquipItem.OnHoverExit";
 			m_pMessageChannel->Publish(OnHoverExitEvent);
 			m_bHover = false;
 		}
 	}
 }
 
-HRESULT CInvenItem::Add_Component()
+HRESULT CInvenEquipItem::Add_Component()
 {
 	Engine::CComponent* pComponent = nullptr;
 
@@ -154,7 +136,7 @@ HRESULT CInvenItem::Add_Component()
 	m_mapComponent[ID_DYNAMIC].insert({ L"Com_Transform", pComponent });
 
 	pComponent = m_pTextureCom = dynamic_cast<Engine::CTexture*>
-		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_InventoryItem"));
+		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_InventoryEquipItem"));
 
 	if (nullptr == pComponent)
 		return E_FAIL;
@@ -164,14 +146,14 @@ HRESULT CInvenItem::Add_Component()
 
 	return S_OK;
 }
-void CInvenItem::Ready_Event()
+void CInvenEquipItem::Ready_Event()
 {
 	if (m_pMessageChannel == nullptr) return;
 	if (m_bMsgRegistered) return;
 	m_bMsgRegistered = true;
 }
 
-void CInvenItem::Set_MessageChannel(IMessageChannel* pMessageChannel)
+void CInvenEquipItem::Set_MessageChannel(IMessageChannel* pMessageChannel)
 {
 
 	if (pMessageChannel == nullptr) { return; }
@@ -187,28 +169,26 @@ void CInvenItem::Set_MessageChannel(IMessageChannel* pMessageChannel)
 
 
 
-CInvenItem* CInvenItem::Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 _vLocalPos, _vec3 _vParentPos, _float _fScale, ITEM_RENDER_TYPE _RenderType)
+CInvenEquipItem* CInvenEquipItem::Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 _vLocalPos, _vec3 _vParentPos, _float _fScale)
 {
-	CInvenItem* pCInvenItem = new CInvenItem(pGraphicDev);
+	CInvenEquipItem* pCInvenEquipItem = new CInvenEquipItem(pGraphicDev);
 
-	pCInvenItem->m_vLocalPos = _vLocalPos;
-	pCInvenItem->m_vParentPos = _vParentPos;
-	pCInvenItem->m_fScale = _fScale;
-	pCInvenItem->m_vWorldPos = _vParentPos + _vLocalPos;
-	pCInvenItem->m_tItemData.RenderType = _RenderType;
+	pCInvenEquipItem->m_vLocalPos = _vLocalPos;
+	pCInvenEquipItem->m_vParentPos = _vParentPos;
+	pCInvenEquipItem->m_fScale = _fScale;
+	pCInvenEquipItem->m_vWorldPos = _vParentPos + _vLocalPos;
 
-	if (FAILED(pCInvenItem->Ready_GameObject()))
+	if (FAILED(pCInvenEquipItem->Ready_GameObject()))
 	{
-		Safe_Release(pCInvenItem);
-		MSG_BOX("pCInvenItem Create Failed");
+		Safe_Release(pCInvenEquipItem);
+		MSG_BOX("pCInvenEquipItem Create Failed");
 		return nullptr;
 	}
 
-	return pCInvenItem;
+	return pCInvenEquipItem;
 }
 
-void CInvenItem::Free()
+void CInvenEquipItem::Free()
 {
-	Safe_Release(m_pCountFont);
 	CUi::Free();
 }

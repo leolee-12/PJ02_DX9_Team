@@ -223,7 +223,7 @@ void CBuildingInfoCard::Update_Content(BUILDING_TYPE eType)
 	// 건물 타입별 정보 설정
 	switch (eType)
 	{
-		CPersistentMgr::GetInstance()->Get_Inventory()->GetItemCount(CItem::IG_WOOD);
+		CPersistentMgr::GetInstance()->Get_Inventory()->Get_ItemCount(CItem::IG_WOOD);
 
 	case BT_COOK:
 		m_iTexIdx[INGREDIENT1] = CItem::IG_WOOD;
@@ -232,8 +232,8 @@ void CBuildingInfoCard::Update_Content(BUILDING_TYPE eType)
 		m_tFontInfo[FID_DATA]	.strText = L"날 것을 요리해 먹을 수 있는 요리로 만듭니다.";
 		m_tFontInfo[FID_COST1]	.strText = L"나무 x2";
 		m_tFontInfo[FID_COST2]	.strText = L"돌 x2";
-		Set_Reserve(CPersistentMgr::GetInstance()->Get_Inventory()->GetItemCount(CItem::IG_WOOD),
-					CPersistentMgr::GetInstance()->Get_Inventory()->GetItemCount(CItem::IG_STONE));
+		Set_Reserve(CPersistentMgr::GetInstance()->Get_Inventory()->Get_ItemCount(CItem::IG_WOOD),
+					CPersistentMgr::GetInstance()->Get_Inventory()->Get_ItemCount(CItem::IG_STONE));
 		break;
 	case BT_KNUCKLEBONE:
 		m_iTexIdx[INGREDIENT1] = CItem::IG_GOLD;
@@ -242,8 +242,8 @@ void CBuildingInfoCard::Update_Content(BUILDING_TYPE eType)
 		m_tFontInfo[FID_DATA]	.strText = L"라타우가 좋아하는 너클본 게임을 할 수 있습니다.";
 		m_tFontInfo[FID_COST1]	.strText = L"금화 x2";
 		m_tFontInfo[FID_COST2]	.strText = L"나무 x2";
-		Set_Reserve(CPersistentMgr::GetInstance()->Get_Inventory()->GetItemCount(CItem::IG_GOLD),
-					CPersistentMgr::GetInstance()->Get_Inventory()->GetItemCount(CItem::IG_WOOD));
+		Set_Reserve(CPersistentMgr::GetInstance()->Get_Inventory()->Get_ItemCount(CItem::IG_GOLD),
+					CPersistentMgr::GetInstance()->Get_Inventory()->Get_ItemCount(CItem::IG_WOOD));
 
 		break;
 	case BT_SHRINE:
@@ -253,8 +253,8 @@ void CBuildingInfoCard::Update_Content(BUILDING_TYPE eType)
 		m_tFontInfo[FID_DATA].strText = L"추종자들이 기도를 드리는 곳, 신앙 게이지를 축적합니다.";
 		m_tFontInfo[FID_COST1].strText = L"금화 x2";
 		m_tFontInfo[FID_COST2].strText = L"돌 x2";
-		Set_Reserve(CPersistentMgr::GetInstance()->Get_Inventory()->GetItemCount(CItem::IG_GOLD),
-					CPersistentMgr::GetInstance()->Get_Inventory()->GetItemCount(CItem::IG_STONE));
+		Set_Reserve(CPersistentMgr::GetInstance()->Get_Inventory()->Get_ItemCount(CItem::IG_GOLD),
+					CPersistentMgr::GetInstance()->Get_Inventory()->Get_ItemCount(CItem::IG_STONE));
 		break;
 	case BT_END:
 		m_tFontInfo[FID_NAME].strText = L"";
