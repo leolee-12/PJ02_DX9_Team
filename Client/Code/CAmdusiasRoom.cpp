@@ -29,6 +29,7 @@
 #include "CTriggerPoint.h"
 #include "CLoading.h"
 #include "CManagement.h"
+#include "CEffectMgr.h"
 
 CAmdusiasRoom::CAmdusiasRoom(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev)
@@ -51,6 +52,8 @@ HRESULT CAmdusiasRoom::Ready_Scene()
 
 	if (FAILED(Ready_UI_Layer(L"UI_Layer")))
 		return E_FAIL;
+
+	CEffectMgr::GetInstance()->Ready_EffectMgr(m_pGraphicDev);
 
 	Ready_Light();
 

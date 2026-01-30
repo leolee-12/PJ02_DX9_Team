@@ -3,6 +3,8 @@
 #include "CBuilding.h"
 #include "CDInputMgr.h"
 #include "CProtoMgr.h"
+#include "CPersistentMgr.h"
+#include "CInventory.h"
 
 CBuildingSelectSlot::CBuildingSelectSlot(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CUi(pGraphicDev)
@@ -78,12 +80,32 @@ void CBuildingSelectSlot::Render_GameObject()
 	}
 }
 
-_bool CBuildingSelectSlot::Is_Clicked()
+void CBuildingSelectSlot::Check_CanBuild()
 {
-	return Is_Hovered() && CDInputMgr::GetInstance()->Mouse_Down(DIM_LB);
+	CInventory* pInventory = CPersistentMgr::GetInstance()->Get_Inventory();
+
+	switch (m_eBuildingType)
+	{
+	case BT_COOK:
+		m_bCanBuild = (pInventory->Get_ItemCount(CItem::IG_WOOD) >= 2 && pInventory->Get_ItemCount(CItem::IG_STONE) >= 2);
+		break;
+
+	case BT_KNUCKLEBONE:
+		m_bCanBuild = (pInventory->Get_ItemCount(CItem::IG_GOLD) >= 2 && pInventory->Get_ItemCount(CItem::IG_WOOD) >= 2);
+		break;
+
+	case BT_SHRINE:
+		m_bCanBuild = (pInventory->Get_ItemCount(CItem::IG_GOLD) >= 2 && pInventory->Get_ItemCount(CItem::IG_STONE) >= 2);
+		break;
+	}
 }
 
-_bool CBuildingSelectSlot::Is_Hovered()
+_bool CBuildingSelectSlot::Check_Clicked()
+{
+	return m_bHovered && CDInputMgr::GetInstance()->Mouse_Down(DIM_LB);
+}
+
+_bool CBuildingSelectSlot::Check_Hovered()
 {
 	POINT ptMouse;
 	GetCursorPos(&ptMouse);

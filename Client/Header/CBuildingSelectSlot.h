@@ -28,8 +28,9 @@ public:
 	virtual	void		LateUpdate_GameObject(const _float& fTimeDelta);
 	virtual	void		Render_GameObject();
 
-	_bool				Is_Clicked();
-	_bool				Is_Hovered();
+	void				Check_CanBuild();
+	_bool				Check_Clicked();
+	_bool				Check_Hovered();
 
 private:
 	HRESULT Add_Component();
