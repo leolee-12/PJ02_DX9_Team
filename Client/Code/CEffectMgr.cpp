@@ -75,6 +75,7 @@ HRESULT CEffectMgr::Ready_EffectMgr(LPDIRECT3DDEVICE9 pGraphicDev)
 	if (particlePair.second)
 	{
 		CParticleEffect* pParticleEffect = CParticleEffect::Create(pGraphicDev, L"Proto_MonsterParticleTexture");
+		pParticleEffect->Set_GridXY(8, 4);
 		pParticleEffect->Set_TextureRange(0, 31);
 		pParticleEffect->Set_EmitRange(_vec3(-1.f, 0.f, -1.f), _vec3(1.f, 1.f, 1.f));
 		pParticleEffect->Set_SpeedRange(_vec3(-3.f, 5.f, -3.f), _vec3(3.f, 10.f, 3.f));
@@ -89,6 +90,7 @@ HRESULT CEffectMgr::Ready_EffectMgr(LPDIRECT3DDEVICE9 pGraphicDev)
 	if (particlePair.second)
 	{
 		CParticleEffect* pParticleEffect = CParticleEffect::Create(pGraphicDev, L"Proto_MonsterParticleTexture");
+		pParticleEffect->Set_GridXY(8, 4);
 		pParticleEffect->Set_TextureRange(0, 31);
 		pParticleEffect->Set_EmitRange(_vec3(-1.f, 0.f, -1.f), _vec3(1.f, 1.f, 1.f));
 		pParticleEffect->Set_SpeedRange(_vec3(-3.f, 5.f, -3.f), _vec3(3.f, 10.f, 3.f));
