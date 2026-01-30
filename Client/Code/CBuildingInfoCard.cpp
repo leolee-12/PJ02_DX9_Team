@@ -223,8 +223,6 @@ void CBuildingInfoCard::Update_Content(BUILDING_TYPE eType)
 	// 건물 타입별 정보 설정
 	switch (eType)
 	{
-		CPersistentMgr::GetInstance()->Get_Inventory()->Get_ItemCount(CItem::IG_WOOD);
-
 	case BT_COOK:
 		m_iTexIdx[INGREDIENT1] = CItem::IG_WOOD;
 		m_iTexIdx[INGREDIENT2] = CItem::IG_STONE;

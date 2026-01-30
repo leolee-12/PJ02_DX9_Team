@@ -19,7 +19,8 @@
 #include "CInvenPlayerHp.h"
 #include "CInvenEquipItem.h"
 
-#include "CPersistentMgr.h"
+#include "Building_Enum.h"
+
 CInventory::CInventory(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CUi(pGraphicDev)
 	, m_bMsgRegistered(false)
@@ -434,40 +435,67 @@ void CInventory::Ready_Event()
 	if (m_bMsgRegistered) return;
 
 	m_hmapSubHandles.insert({ L"CInventory.ItemInfoRender",m_pMessageChannel->Subscribe(L"CInvenItem.OnHover",[this](const IMessageChannel::EVENT& Event)
-{
-		auto iter = Event.hmapData.find(L"ItemID");
-		if (iter == Event.hmapData.end())
-			return;
-
-		CItem::ITEMID ItemID = any_cast<CItem::ITEMID>(iter->second);
-		m_pInvenItemInfo->Set_ItemDataInit(ItemID);
-		m_pInvenItemInfo->Set_Active(true);
-}
-) });
+		{
+			auto iter = Event.hmapData.find(L"ItemID");
+			if (iter == Event.hmapData.end())
+				return;
+		
+			CItem::ITEMID ItemID = any_cast<CItem::ITEMID>(iter->second);
+			m_pInvenItemInfo->Set_ItemDataInit(ItemID);
+			m_pInvenItemInfo->Set_Active(true);
+		}
+	) });
 
 	m_hmapSubHandles.insert({ L"CInventory.ItemInfoUnRender",m_pMessageChannel->Subscribe(L"CInvenItem.OnHoverExit",[this](const IMessageChannel::EVENT& Event)
-{
-		m_pInvenItemInfo->Set_Active(false);
-}
-) });
+		{
+			m_pInvenItemInfo->Set_Active(false);
+		}
+	) });
 
 	m_hmapSubHandles.insert({ L"CInventory.EquipItemInfoRender",m_pMessageChannel->Subscribe(L"CInvenEquipItem.OnHover",[this](const IMessageChannel::EVENT& Event)
-{
-		auto iter = Event.hmapData.find(L"ItemID");
-		if (iter == Event.hmapData.end())
-			return;
-
-		EquipmentItemID ItemID = any_cast<EquipmentItemID>(iter->second);
-		m_pInvenItemInfo->Set_ItemDataInit(ItemID);
-		m_pInvenItemInfo->Set_Active(true);
-}
-) });
+		{
+			auto iter = Event.hmapData.find(L"ItemID");
+			if (iter == Event.hmapData.end())
+				return;
+		
+			EquipmentItemID ItemID = any_cast<EquipmentItemID>(iter->second);
+			m_pInvenItemInfo->Set_ItemDataInit(ItemID);
+			m_pInvenItemInfo->Set_Active(true);
+		}
+	) });
 
 	m_hmapSubHandles.insert({ L"CInventory.EquipItemInfoUnRender",m_pMessageChannel->Subscribe(L"CInvenEquipItem.OnHoverExit",[this](const IMessageChannel::EVENT& Event)
-{
-		m_pInvenItemInfo->Set_Active(false);
-}
-) });
+		{
+			m_pInvenItemInfo->Set_Active(false);
+		}
+	) });
+
+	m_hmapSubHandles.insert({ L"Building.Exit", m_pMessageChannel->Subscribe(L"Building.Exit", [this](const IMessageChannel::EVENT& Event)
+		{
+			auto iter = Event.hmapData.find(L"BuildingType");
+			if (iter == Event.hmapData.end())
+				return;
+
+			BUILDING_TYPE eType = any_cast<BUILDING_TYPE>(iter->second);
+
+			switch (eType)
+			{
+			case BT_COOK:
+				Use_Item(CItem::IG_WOOD, 2);
+				Use_Item(CItem::IG_STONE, 2);
+				break;
+			case BT_KNUCKLEBONE:
+				Use_Item(CItem::IG_GOLD, 2);
+				Use_Item(CItem::IG_WOOD, 2);
+				break;
+			case BT_SHRINE:
+				Use_Item(CItem::IG_GOLD, 2);
+				Use_Item(CItem::IG_STONE, 2);
+				break;
+			}
+		}
+	) });
+
 	m_bMsgRegistered = true;
 }
 

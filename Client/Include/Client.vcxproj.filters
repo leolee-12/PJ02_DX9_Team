@@ -1805,9 +1805,6 @@
     <ClCompile Include="..\Code\CInvenRedFog.cpp">
       <Filter>02. GameObject\05. UI\14. Inventory\05. InventoryEquip\04. InvenRedFog</Filter>
     </ClCompile>
-    <ClCompile Include="..\CInvenPlayerHp.cpp">
-      <Filter>02. GameObject\05. UI\14. Inventory\05. InventoryEquip\05. InvenPlayerHp</Filter>
-    </ClCompile>
     <ClCompile Include="..\Code\CLetterBox.cpp">
       <Filter>02. GameObject\03. Dependent\01. Effect\05. CLetterBox</Filter>
     </ClCompile>
@@ -1822,6 +1819,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CCursor.cpp">
       <Filter>02. GameObject\05. UI\98. Cursor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CInvenPlayerHp.cpp">
+      <Filter>02. GameObject\05. UI\14. Inventory\05. InventoryEquip\05. InvenPlayerHp</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
