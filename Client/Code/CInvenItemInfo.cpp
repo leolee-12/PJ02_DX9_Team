@@ -7,13 +7,8 @@
 #include "CInvenSlot.h"
 #include "CInvenItem.h"
 #include "CInvenEquipItem.h"
-//#include "CCookingTargetFood.h"
-//#include "CCookingSelectSlot.h"
+
 //#include "CDivider.h"
-//#include "CCookingStar.h"
-//#include "CCookingInfoRecipe.h"
-//#include "CCookingInfoFaith.h"
-//#include "CCookingUpDownArrow.h"
 
 #include "CFontMgr.h"
 #include "CFontUIOrtho.h"
@@ -80,21 +75,21 @@ HRESULT CInvenItemInfo::Ready_GameObject()
 	m_pItemNameFont->Set_Flags(DT_CENTER | DT_VCENTER);
 	m_pItemNameFont->Set_FontColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 	m_pItemNameFont->Set_Pos(_vec2(WINCX / 4, 0.0f));
-	m_pItemNameFont->Set_Scale(_vec2(300.0f, 123.f));
+	m_pItemNameFont->Set_Scale(_vec2(400.0f, 123.f));
 	m_pItemNameFont->Set_Font(L"Font_Default24");
 	m_pItemNameFont->Active();
 
 	m_pItemFlavorFont->Set_Flags(DT_CENTER | DT_VCENTER);
 	m_pItemFlavorFont->Set_FontColor(D3DXCOLOR(0.5f, 0.5f, 0.5f, 1.f));
 	m_pItemFlavorFont->Set_Pos(_vec2(WINCX / 4, -30.0f));
-	m_pItemFlavorFont->Set_Scale(_vec2(300.0f, 120.f));
+	m_pItemFlavorFont->Set_Scale(_vec2(400.0f, 120.f));
 	m_pItemFlavorFont->Set_Font(L"Font_Default");
 	m_pItemFlavorFont->Active();
 
 	m_pItemDescFont->Set_Flags(DT_CENTER | DT_VCENTER);
 	m_pItemDescFont->Set_FontColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.f));
 	m_pItemDescFont->Set_Pos(_vec2(WINCX / 4, -70.0f));
-	m_pItemDescFont->Set_Scale(_vec2(300.0f, 120.f));
+	m_pItemDescFont->Set_Scale(_vec2(400.0f, 120.f));
 	m_pItemDescFont->Set_Font(L"Font_Default");
 	m_pItemDescFont->Active();
 

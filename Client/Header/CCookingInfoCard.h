@@ -10,7 +10,7 @@ namespace Engine
 }
 
 class CFontUIOrtho;
-
+class CInvenSlot;
 class CCookingInfoCard :
 	public CUi
 {
@@ -36,12 +36,13 @@ private:
 	void						Ready_Event();
 
 private:
-	vector<CGameObject*> m_vecCookingSelectUI;
-	CFontUIOrtho*	m_pResourceFont;
-	CFontUIOrtho*	m_pRecipeFont;
+	vector<CGameObject*>	m_vecCookingSelectUI;
+	CFontUIOrtho*			m_pResourceFont;
+	CFontUIOrtho*			m_pRecipeFont;
+	CInvenSlot*				m_pDescBg;
 
-	_bool			m_bRender;
-	_int			m_iRecipeCount;
-	_int			m_iResourceCount;
+	_bool					m_bRender;
+	_int					m_iRecipeCount;
+	_int					m_iResourceCount;
 };
 
