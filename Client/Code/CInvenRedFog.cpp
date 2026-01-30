@@ -1,24 +1,24 @@
 ﻿#include "pch.h"
-#include "CInvenBack.h"
+#include "CInvenRedFog.h"
 #include "CProtoMgr.h"
 #include "CRenderer.h"
 
-CInvenBack::CInvenBack(LPDIRECT3DDEVICE9 pGraphicDev)
+CInvenRedFog::CInvenRedFog(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CUi(pGraphicDev), m_pBufferCom(nullptr), m_pTransformCom(nullptr)
 {
 	ZeroMemory(&m_vPos, sizeof(_vec3));
 }
 
-CInvenBack::~CInvenBack()
+CInvenRedFog::~CInvenRedFog()
 {
 }
 
-HRESULT CInvenBack::Ready_GameObject()
+HRESULT CInvenRedFog::Ready_GameObject()
 {
 	if (FAILED(Add_Component()))
 		return E_FAIL;
 
-	m_pTransformCom->Set_Scale(WINCX / 2, WINCY, 1.0f);
+	m_pTransformCom->Set_Scale(512*m_fScale, 512* m_fScale, 1.0f);
 	m_pTransformCom->Set_Pos(m_vWorldPos.x, m_vWorldPos.y, m_vWorldPos.z);
 
 	m_bRender = true;
@@ -26,7 +26,7 @@ HRESULT CInvenBack::Ready_GameObject()
 }
 
 
-_int CInvenBack::Update_GameObject(const _float& fTimeDelta)
+_int CInvenRedFog::Update_GameObject(const _float& fTimeDelta)
 {
 	if (!m_bRender) { return NOEVENT; }
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
@@ -36,7 +36,7 @@ _int CInvenBack::Update_GameObject(const _float& fTimeDelta)
 	return iExit;
 }
 
-void CInvenBack::LateUpdate_GameObject(const _float& fTimeDelta)
+void CInvenRedFog::LateUpdate_GameObject(const _float& fTimeDelta)
 {
 	if (!m_bRender) { return; }
 	m_vWorldPos = m_vParentPos + m_vLocalPos;
@@ -46,7 +46,7 @@ void CInvenBack::LateUpdate_GameObject(const _float& fTimeDelta)
 	Compute_ViewDepth_Ortho(&m_vWorldPos);
 }
 
-void CInvenBack::Render_GameObject()
+void CInvenRedFog::Render_GameObject()
 {
 	if (!m_bRender) { return; }
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_World());
@@ -56,29 +56,29 @@ void CInvenBack::Render_GameObject()
 	m_pBufferCom->Render_Buffer();
 }
 
-void CInvenBack::OnCollision(CGameObject* pObject)
+void CInvenRedFog::OnCollision(CGameObject* pObject)
 {
 
 }
 
-CInvenBack* CInvenBack::Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 _vLocalPos,_vec3 _vParentPos, _float _fScale)
+CInvenRedFog* CInvenRedFog::Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 _vLocalPos, _vec3 _vParentPos, _float _fScale)
 {
-	CInvenBack* pCInvenBack = new CInvenBack(pGraphicDev);
-	pCInvenBack->m_vParentPos = _vParentPos;
-	pCInvenBack->m_vLocalPos = _vLocalPos;
-	pCInvenBack->m_fScale = _fScale;
-	pCInvenBack->m_vWorldPos = _vParentPos + _vLocalPos;
-	if (FAILED(pCInvenBack->Ready_GameObject()))
+	CInvenRedFog* pCInvenRedFog = new CInvenRedFog(pGraphicDev);
+	pCInvenRedFog->m_vParentPos = _vParentPos;
+	pCInvenRedFog->m_vLocalPos = _vLocalPos;
+	pCInvenRedFog->m_fScale = _fScale;
+	pCInvenRedFog->m_vWorldPos = _vParentPos + _vLocalPos;
+	if (FAILED(pCInvenRedFog->Ready_GameObject()))
 	{
-		Safe_Release(pCInvenBack);
-		MSG_BOX("pCInvenBack Create Failed");
+		Safe_Release(pCInvenRedFog);
+		MSG_BOX("pCInvenRedFog Create Failed");
 		return nullptr;
 	}
 
-	return pCInvenBack;
+	return pCInvenRedFog;
 }
 
-HRESULT CInvenBack::Add_Component()
+HRESULT CInvenRedFog::Add_Component()
 {
 	Engine::CComponent* pComponent = nullptr;
 
@@ -101,7 +101,7 @@ HRESULT CInvenBack::Add_Component()
 	m_mapComponent[ID_DYNAMIC].insert({ L"Com_Transform", pComponent });
 
 	pComponent = m_pTextureCom = dynamic_cast<Engine::CTexture*>
-		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_InventoryBack"));
+		(Engine::CProtoMgr::GetInstance()->Clone_Prototype(L"Proto_InventoryRedFog"));
 
 	if (nullptr == pComponent)
 		return E_FAIL;
@@ -115,7 +115,7 @@ HRESULT CInvenBack::Add_Component()
 
 
 
-void CInvenBack::Free()
+void CInvenRedFog::Free()
 {
 	CUi::Free();
 }

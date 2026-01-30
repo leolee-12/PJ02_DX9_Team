@@ -8,12 +8,12 @@ namespace Engine
 	class CTexture;
 }
 
-class CInvenSlot :
+class CInvenStarImg :
 	public CUi
 {
 private:
-	explicit CInvenSlot(LPDIRECT3DDEVICE9 pGraphicDev);
-	virtual ~CInvenSlot();
+	explicit CInvenStarImg(LPDIRECT3DDEVICE9 pGraphicDev);
+	virtual ~CInvenStarImg();
 
 public:
 	virtual			HRESULT		Ready_GameObject();
@@ -22,13 +22,11 @@ public:
 	virtual			void		Render_GameObject();
 	virtual			void		OnCollision(CGameObject* pObject);
 
+public:
+	static CInvenStarImg* Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 _vLocalPos, _vec3 _vParentPos, _float _fScale);
 
 public:
-	static CInvenSlot* Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 _vLocalPos, _vec3 _vParentPos, _float _fScale);
-	static CInvenSlot* Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 _vLocalPos, _vec3 _vParentPos,_float _Width, _float _Height);
-public:
 	void Set_ParentPos(_vec3 _vParentPos) { m_vParentPos = _vParentPos; }
-	void Set_Page(_int _iPage) { m_iPage = _iPage; }
 private:
 	virtual			void		Free();
 
@@ -43,12 +41,8 @@ private:
 	_vec3			m_vLocalPos;
 	_vec3			m_vWorldPos;
 
+	float m_fScale;
 	_vec3 m_vPos;
-	_float	m_fWidthScale;
-	_float	m_fHeightScale;
-
-	_float m_fScale;
 	_bool m_bRender;
-	_int  m_iPage;
 };
 

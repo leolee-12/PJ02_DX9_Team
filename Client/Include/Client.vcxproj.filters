@@ -526,11 +526,14 @@
     <Filter Include="02. GameObject\05. UI\14. Inventory">
       <UniqueIdentifier>{31db5823-e2dd-4f0a-a7a1-52b07c8ea2a2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\05. UI\14. Inventory\04. InventoryItemInfo">
+      <UniqueIdentifier>{fef21de5-e3e4-41ad-ac0d-a1fe82f51dee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. UI\14. Inventory\04. InventoryItemInfo\00. ItemInfoBg">
+      <UniqueIdentifier>{74e32bda-059f-4fa3-a3ed-d1a5ad1ae423}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02. GameObject\05. UI\14. Inventory\03. InventoryButton">
       <UniqueIdentifier>{753bd3fc-db41-4b45-9775-f19dcf250c41}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\05. UI\14. Inventory\02. InventoryItem">
-      <UniqueIdentifier>{df4eae04-e3fc-485f-be10-76f774b81fc9}</UniqueIdentifier>
     </Filter>
     <Filter Include="02. GameObject\05. UI\14. Inventory\01. InventorySlot">
       <UniqueIdentifier>{ddfde44c-35c7-4604-addf-65ba2cc89324}</UniqueIdentifier>
@@ -538,11 +541,29 @@
     <Filter Include="02. GameObject\05. UI\14. Inventory\00. InventoryBack">
       <UniqueIdentifier>{98ed5d6a-5bb0-44b9-8374-c36a9022c15a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\05. UI\14. Inventory\04. InventoryItemInfo">
-      <UniqueIdentifier>{fef21de5-e3e4-41ad-ac0d-a1fe82f51dee}</UniqueIdentifier>
+    <Filter Include="02. GameObject\05. UI\14. Inventory\02. InventoryItem">
+      <UniqueIdentifier>{df4eae04-e3fc-485f-be10-76f774b81fc9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\05. UI\14. Inventory\05. InventoryDeco">
-      <UniqueIdentifier>{f21bbcf0-39a0-44ad-8cde-c04fa1a5c60c}</UniqueIdentifier>
+    <Filter Include="02. GameObject\05. UI\14. Inventory\05. InventoryEquip">
+      <UniqueIdentifier>{28814b05-8d83-49e1-a9aa-9ed7db3a58fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. UI\14. Inventory\05. InventoryEquip\00. InvenPlayer">
+      <UniqueIdentifier>{e43f2c9c-f1c0-4cf3-a36e-a5439de8528e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. UI\14. Inventory\05. InventoryEquip\01. InvenEquipSlot">
+      <UniqueIdentifier>{9c8a6eb8-f18f-48bf-9e03-6fc002a39a61}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. UI\14. Inventory\05. InventoryEquip\02. InvenEquipItem">
+      <UniqueIdentifier>{07a7c69c-c655-4051-b7ea-5f037a67e8f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. UI\14. Inventory\05. InventoryEquip\03. InvenStar">
+      <UniqueIdentifier>{2dcf9198-e83d-49cd-83c2-aaa2a9794da4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. UI\14. Inventory\05. InventoryEquip\04. InvenRedFog">
+      <UniqueIdentifier>{9ae73df3-11a7-4199-b6d5-9f11a74abe9d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\05. UI\14. Inventory\05. InventoryEquip\05. InvenPlayerHp">
+      <UniqueIdentifier>{4a8e7f1e-6470-4284-8cbf-d28da1cd7f87}</UniqueIdentifier>
     </Filter>
     <Filter Include="02. GameObject\03. Dependent\01. Effect\05. CLetterBox">
       <UniqueIdentifier>{f30136d2-d7be-4a09-bc0e-f64f6ae77f84}</UniqueIdentifier>
@@ -584,9 +605,6 @@
     </ClInclude>
     <ClInclude Include="..\Header\CBackGround.h">
       <Filter>02. GameObject\02. Environment\97. BackGround</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Header\CPlayer.h">
-      <Filter>02. GameObject\01. GameActor\00. Player</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CMonster.h">
       <Filter>02. GameObject\01. GameActor\01. Monster</Filter>
@@ -1161,6 +1179,36 @@
     <ClInclude Include="..\Header\InventoryEnum.h">
       <Filter>02. GameObject\05. UI\14. Inventory</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CItemInfoBg.h">
+      <Filter>02. GameObject\05. UI\14. Inventory\04. InventoryItemInfo\00. ItemInfoBg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CInvenItemInfo.h">
+      <Filter>02. GameObject\05. UI\14. Inventory\04. InventoryItemInfo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CItemDataTable.h">
+      <Filter>02. GameObject\05. UI\14. Inventory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CPlayer.h">
+      <Filter>02. GameObject\01. GameActor\00. Player</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CInvenPlayer.h">
+      <Filter>02. GameObject\05. UI\14. Inventory\05. InventoryEquip\00. InvenPlayer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CInvenEquipSlot.h">
+      <Filter>02. GameObject\05. UI\14. Inventory\05. InventoryEquip\01. InvenEquipSlot</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CInvenEquipItem.h">
+      <Filter>02. GameObject\05. UI\14. Inventory\05. InventoryEquip\02. InvenEquipItem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CInvenStarImg.h">
+      <Filter>02. GameObject\05. UI\14. Inventory\05. InventoryEquip\03. InvenStar</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CInvenRedFog.h">
+      <Filter>02. GameObject\05. UI\14. Inventory\05. InventoryEquip\04. InvenRedFog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CInvenPlayerHp.h">
+      <Filter>02. GameObject\05. UI\14. Inventory\05. InventoryEquip\05. InvenPlayerHp</Filter>
+    </ClInclude>
     <ClInclude Include="..\Header\CLetterBox.h">
       <Filter>02. GameObject\03. Dependent\01. Effect\05. CLetterBox</Filter>
     </ClInclude>
@@ -1729,6 +1777,30 @@
     </ClCompile>
     <ClCompile Include="..\Code\CInventory.cpp">
       <Filter>02. GameObject\05. UI\14. Inventory</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CItemInfoBg.cpp">
+      <Filter>02. GameObject\05. UI\14. Inventory\04. InventoryItemInfo\00. ItemInfoBg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CInvenItemInfo.cpp">
+      <Filter>02. GameObject\05. UI\14. Inventory\04. InventoryItemInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CInvenPlayer.cpp">
+      <Filter>02. GameObject\05. UI\14. Inventory\05. InventoryEquip\00. InvenPlayer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CInvenEquipSlot.cpp">
+      <Filter>02. GameObject\05. UI\14. Inventory\05. InventoryEquip\01. InvenEquipSlot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CInvenEquipItem.cpp">
+      <Filter>02. GameObject\05. UI\14. Inventory\05. InventoryEquip\02. InvenEquipItem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CInvenStarImg.cpp">
+      <Filter>02. GameObject\05. UI\14. Inventory\05. InventoryEquip\03. InvenStar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CInvenRedFog.cpp">
+      <Filter>02. GameObject\05. UI\14. Inventory\05. InventoryEquip\04. InvenRedFog</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CInvenPlayerHp.cpp">
+      <Filter>02. GameObject\05. UI\14. Inventory\05. InventoryEquip\05. InvenPlayerHp</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CLetterBox.cpp">
       <Filter>02. GameObject\03. Dependent\01. Effect\05. CLetterBox</Filter>

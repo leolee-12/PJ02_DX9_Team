@@ -20,14 +20,7 @@ HRESULT CInvenBtn::Ready_GameObject()
 	if (FAILED(Add_Component()))
 		return E_FAIL;
 
-	m_vWorldPos = m_vLocalPos + m_vParentPos;
-
-	CGameObject* pGameObject = nullptr;
-
-	pGameObject = m_pNameFont = CFontUIOrtho::Create(m_pGraphicDev);
-
-	if (nullptr == pGameObject)
-		return E_FAIL;
+	m_pNameFont = CFontUIOrtho::Create(m_pGraphicDev);
 
 	m_pNameFont->Set_Flags(DT_CENTER | DT_VCENTER);
 	m_pNameFont->Set_FontColor(D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
@@ -43,6 +36,7 @@ HRESULT CInvenBtn::Ready_GameObject()
 	m_vScreenPos = _vec2(WINCX / 2 + m_vWorldPos.x, WINCY / 2 - m_vWorldPos.y);
 	m_vHitHalfScale = _vec2((293.0f * m_fScale) / 2, (94.0f * m_fScale) / 2);
 
+	m_bOnClick = false;
 	return S_OK;
 }
 
@@ -133,28 +127,20 @@ void CInvenBtn::Check_CusorColl()
 		_long(m_vScreenPos.y + m_vHitHalfScale.y)
 	};
 
-
 	if (PtInRect(&tRc, pt))
 	{
-
 		if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
 		{
-			//IMessageChannel::EVENT WorkWoodEvent;
-			//WorkWoodEvent.strType = L"CWorkWood.Selected";
-			//m_pMessageChannel->Publish(WorkWoodEvent);
+			m_bOnClick = true;
 		}
 		m_iPage = 1;
 		m_pNameFont->Set_FontColor(D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
-		//m_pTransformCom->Set_Scale(106.0f * m_fScale * 1.3f, 90.0f * m_fScale * 1.3f, 1.0f);
 	}
 	else {
 		m_iPage = 0;
 		m_pNameFont->Set_FontColor(D3DXCOLOR(0.f, 0.f, 0.f, 1.f));
-		//m_pTransformCom->Set_Scale(106.0f * m_fScale, 90.0f * m_fScale, 1.0f);
 	}
 }
-
-
 
 CInvenBtn* CInvenBtn::Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 _vLocalPos, _vec3 _vParentPos, _float _fScale)
 {
@@ -162,7 +148,7 @@ CInvenBtn* CInvenBtn::Create(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 _vLocalPos, _v
 	pCInvenBtn->m_vLocalPos = _vLocalPos;
 	pCInvenBtn->m_vParentPos = _vParentPos;
 	pCInvenBtn->m_fScale = _fScale;
-
+	pCInvenBtn->m_vWorldPos = _vLocalPos + _vParentPos;
 	if (FAILED(pCInvenBtn->Ready_GameObject()))
 	{
 		Safe_Release(pCInvenBtn);

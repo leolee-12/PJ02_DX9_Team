@@ -579,6 +579,8 @@ HRESULT CRealDungeon::Ready_UI_Layer(const _tchar* pLayerTag)
 	if (nullptr == pGameObject)
 		return E_FAIL;
 
+	CPersistentMgr::GetInstance()->Get_Inventory()->Set_MessageChannel(m_pMessageChannel);
+
 	if (FAILED(pLayer->Add_GameObject(L"Inventory", pGameObject)))
 		return E_FAIL;
 	pGameObject->AddRef();
