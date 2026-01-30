@@ -320,21 +320,25 @@ HRESULT CVillage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 			switch (spawn.type)
 			{
 			case 0:
-				CPersistentMgr::GetInstance()->Get_Player()->Set_Pos(_vec3(spawn.x * 0.8f, -0.95f, spawn.z * 0.8f)); // 실제 스폰 지점
-				//CPersistentMgr::GetInstance()->Get_Player()->Set_Pos(_vec3(199.8f, -0.95f, 35.f));	// 디버그용
-				CPersistentMgr::GetInstance()->Get_Player()->Set_Village(true);
-				pGameObject = CPersistentMgr::GetInstance()->Get_Player();
+			{
+				CPlayer* pPlayer = CPersistentMgr::GetInstance()->Get_Player();
+				pPlayer->Set_Pos(_vec3(spawn.x * 0.8f, -0.95f, spawn.z * 0.8f)); // 실제 스폰 지점
+				//pPlayer->Set_Pos(_vec3(199.8f, -0.95f, 35.f));	// 디버그용
+				pPlayer->Set_Village(true);
+				pPlayer->Set_Hp(pPlayer->Get_MaxHp());
 
-				if (nullptr == pGameObject)
+				if (nullptr == pPlayer)
 					return E_FAIL;
 
-				CPersistentMgr::GetInstance()->Get_Player()->Set_MessageChannel(m_pMessageChannel);
+				pPlayer->Set_MessageChannel(m_pMessageChannel);
 
-				if (FAILED(pLayer->Add_GameObject(L"Player", pGameObject)))
+				if (FAILED(pLayer->Add_GameObject(L"Player", pPlayer)))
 					return E_FAIL;
 
-				pGameObject->AddRef();
-				break;
+				pPlayer->AddRef();
+			}
+			break;
+
 			case 1:
 				switch (spawn.monsterType)
 				{

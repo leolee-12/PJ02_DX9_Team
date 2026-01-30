@@ -39,6 +39,7 @@ public:
 	void			Set_StopCrying();
 	void			Set_Reborn();
 	void			Set_Weapon(WEAPONTYPE eType) { m_eWeaponType = eType; }
+	void			Set_Hp(_int iHp) { m_iHp = iHp; }
 
 	void			Set_Action(_bool b) { m_bCutScene = b; }
 	void			Set_Village(_bool b) { m_bVillage = b; }

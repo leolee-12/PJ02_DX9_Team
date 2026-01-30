@@ -328,7 +328,7 @@ void CChest::Create_Item()
 	{
 		CGameObject* pItem;
 		_float fY(m_vPos.y - m_pTransformCom->Get_Scale(ROT_Y) * 0.25f);
-		pItem = CItem::Create(m_pGraphicDev, m_pMessageChannel, _vec3(m_vPos.x, fY, m_vPos.z - 2.f), CItem::ITEMID(Get_Rand_Int(0, 3)), true);
+		pItem = CItem::Create(m_pGraphicDev, m_pMessageChannel, _vec3(m_vPos.x, fY, m_vPos.z - 2.f), CItem::ITEMID(Get_Rand_Int(0, 4)), true);
 
 		if (pItem)
 		{

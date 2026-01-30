@@ -72,7 +72,7 @@ _int CFollower::Update_GameObject(const _float& fTimeDelta)
 	Move_Frame(fTimeDelta);
 	Execute_Work(fTimeDelta);
 
-	if (m_eCurState != FOLLOWER_RECRUIT) {
+	if ((m_eCurState != FOLLOWER_RECRUIT) && (m_eCurState != FOLLOWER_CONVERT)) {
 		m_pTrigger->Update_GameObject(fTimeDelta);
 	}
 
@@ -109,7 +109,7 @@ void CFollower::LateUpdate_GameObject(const _float& fTimeDelta)
 	//-------------------------------------------------
 	// 충돌체 디버그용
 
-	if (m_eCurState != FOLLOWER_RECRUIT) {
+	if ((m_eCurState != FOLLOWER_RECRUIT) && (m_eCurState != FOLLOWER_CONVERT)) {
 		m_pTrigger->Set_Pos_Trigger(vTriggerPos);
 		m_pTrigger->LateUpdate_GameObject(fTimeDelta);
 	}
@@ -304,8 +304,8 @@ void CFollower::Ready_Variable()
 					if (any_cast<CGameObject*>(Owneriter->second) == this)
 					{
 						Safe_Destroy(m_pTrigger);
-						m_eCurState = FOLLOWER_TRANSFORM;
-						m_pAICom->Set_State<FOLLOWER_STATE>(FOLLOWER_TRANSFORM);
+						m_eCurState = FOLLOWER_CONVERT;
+						m_pAICom->Set_State<FOLLOWER_STATE>(FOLLOWER_CONVERT);
 					}
 				}
 			}
@@ -425,11 +425,10 @@ void CFollower::Move_Frame(const _float& fTimeDelta)
 				m_eCurState = FOLLOWER_IDLE;
 			}
 		}
-		else if (m_eCurState == FOLLOWER_TRANSFORM)
+		else if (m_eCurState == FOLLOWER_CONVERT)
 		{
 			if (m_bUnConvert)
 			{
-				CSoundMgr::GetInstance()->Play(L"float follower.wav", SOUND_EFFECT, 0.35f);
 				m_iHp = 0;
 				return;
 			}
@@ -466,6 +465,12 @@ void CFollower::Move_Frame(const _float& fTimeDelta)
 					CSoundMgr::GetInstance()->Play(strSoundName, CHANNELID(iChannel), 0.02f);
 				}
 			}
+		}
+		break;
+
+		case FOLLOWER_CONVERT:
+		{
+			if (iCurAnimFrame == 76) CSoundMgr::GetInstance()->Play(L"float follower.wav", SOUND_EFFECT, 0.35f);
 		}
 		break;
 		}
