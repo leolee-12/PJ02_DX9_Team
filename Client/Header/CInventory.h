@@ -75,8 +75,9 @@ private:
 	INVENSTATE m_ePreInvenState;
 	INVENTORY_RENDER_TYPE m_eInvenRenderState;
 
-	vector<_vec3>		m_vSlotLocalPos;
-	_int	m_iCurItemCount;
+	vector<_vec3>				m_vSlotLocalPos;
+	list<CItem::ITEMID>			m_InventoryItemList;
+	_int						m_iCurItemCount;
 
 	_vec3	m_vLerpStart;
 	_vec3	m_vLerpEnd;
