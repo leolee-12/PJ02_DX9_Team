@@ -496,6 +496,7 @@ void CInventory::Add_Item(CItem::ITEMID _eid, _int _iCount)
 			ItemData.iCount += _iCount;
 			pItem->Set_ItemData(ItemData);
 			pItem->Set_Render(true);
+			CPersistentMgr::GetInstance()->Get_ResourceHistory()->AddItem(_eid, _iCount);
 			return;
 		}
 	}
@@ -506,6 +507,7 @@ void CInventory::Add_Item(CItem::ITEMID _eid, _int _iCount)
 		if (ItemData.ID ==  CItem::ID_END || ItemData.iCount == 0)
 		{
 			// NEW
+
 			ItemData.ID = _eid;
 			ItemData.iCount = _iCount;
 			pItem->Set_ItemData(ItemData);
@@ -513,6 +515,7 @@ void CInventory::Add_Item(CItem::ITEMID _eid, _int _iCount)
 			m_iCurItemCount++;
 			m_InventoryItemList.push_back(ItemData.ID);
 			pItem->Set_Render(true);
+			CPersistentMgr::GetInstance()->Get_ResourceHistory()->AddItem(_eid, _iCount);
 			return;
 		}
 	}
@@ -602,8 +605,7 @@ void CInventory::SortLocalPos()
 	{
 		for (auto pItem : m_vItem)
 		{
-			tItemData ItemData = pItem->Get_ItemData();
-			if (InvenItemID == ItemData.ID)
+			if (InvenItemID == pItem->Get_ItemData().ID)
 			{
 				pItem->Set_LocalPos(m_vSlotLocalPos[TempCount]);
 				TempCount++;
