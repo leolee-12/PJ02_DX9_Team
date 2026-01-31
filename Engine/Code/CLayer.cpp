@@ -21,11 +21,6 @@ HRESULT CLayer::Add_GameObject(const wstring& pObjTag, CGameObject* pGameObject)
 	if (nullptr == pGameObject)
 		return E_FAIL;
 
-	if (pObjTag == L"Chest")
-	{
-		_vec3 test;
-	}
-
 	m_mapObject[pObjTag].push_back(pGameObject);
 
 	return S_OK;
@@ -39,14 +34,6 @@ HRESULT CLayer::Ready_Layer()
 _int CLayer::Update_Layer(const _float& fTimeDelta)
 {
 	_int	iResult(0);
-
-	/*for (auto& pObj : m_mapObject)
-	{
-		iResult = pObj.second->Update_GameObject(fTimeDelta);
-
-		if (iResult & 0x80000000)
-			return iResult;
-	}*/
 
 	for (auto iter = m_mapObject.begin(); iter != m_mapObject.end(); ++iter)
 	{

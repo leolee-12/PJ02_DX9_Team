@@ -22,7 +22,11 @@ CMonsterB1::CMonsterB1(LPDIRECT3DDEVICE9 pGraphicDev)
 	m_fFrameEnd(0.f),
 	m_fFrameSpeed(0.f),
 	m_iPhase(0),
-	m_iMaxHp(0)
+	m_iMaxHp(0),
+	m_bMtrl(false),
+	m_bWaiting(true),
+	m_bDead(false)
+
 {
 	ZeroMemory(m_pNode, sizeof(m_pNode));
 }
@@ -35,7 +39,10 @@ CMonsterB1::CMonsterB1(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChan
 	m_fFrameEnd(0.f),
 	m_fFrameSpeed(0.f),
 	m_iPhase(0),
-	m_iMaxHp(0)
+	m_iMaxHp(0),
+	m_bMtrl(false),
+	m_bWaiting(true),
+	m_bDead(false)
 {
 	ZeroMemory(m_pNode, sizeof(m_pNode));
 }
@@ -48,7 +55,10 @@ CMonsterB1::CMonsterB1(const CMonsterB1& rhs)
 	m_fFrameEnd(0.f),
 	m_fFrameSpeed(0.f),
 	m_iPhase(rhs.m_iPhase),
-	m_iMaxHp(rhs.m_iMaxHp)
+	m_iMaxHp(rhs.m_iMaxHp),
+	m_bMtrl(false),
+	m_bWaiting(true),
+	m_bDead(false)
 {
 	memcpy(m_pNode, rhs.m_pNode, sizeof(m_pNode));
 }
@@ -87,12 +97,6 @@ _int CMonsterB1::Update_GameObject(const _float& fTimeDelta)
 	for (auto& pComponent : m_mapComponent[ID_DYNAMIC])
 	pComponent.second->Update_Component(fTimeDelta);
 
-	//if (iExit == DEAD)
-	//{
-	//	m_pColliderCom->UnregisterFromManager();
-	//	return iExit;
-	//}
-
 	if (!m_bWaiting) {
 		CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHA, this);
 
@@ -125,15 +129,6 @@ void CMonsterB1::LateUpdate_GameObject(const _float& fTimeDelta)
 	for (_uint i = 0; i < 4; ++i)
 	{
 		m_pNode[i]->LateUpdate_GameObject(fTimeDelta);
-
-		/*if ((vDir.z > 0.f) && (	(m_eCurState != B1S_SHOOT)	&&
-								(m_eCurState != B1S_SUMMON)	&&
-								(m_eCurState != B1S_SPAWN)	&&
-								(m_eCurState != B1S_ROAR)	))
-			m_pNode[i]->Set_Depth(m_fDepth - (i + 1) * 0.001f);
-		
-		else
-			m_pNode[i]->Set_Depth(m_fDepth + (i + 1) * 0.001f);*/
 	}
 
 	Check_Status();

@@ -26,7 +26,9 @@ CMonsterB2::CMonsterB2(LPDIRECT3DDEVICE9 pGraphicDev)
 	m_fBtmPadding(0.f),
 	m_iPhase(0),
 	m_iMaxHp(0),
-	m_fAccTime(0.f)
+	m_fAccTime(0.f),
+	m_bMtrl(false),
+	m_bWaiting(true)
 {
 }
 
@@ -40,7 +42,10 @@ CMonsterB2::CMonsterB2(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChan
 	m_fBtmPadding(0.f),
 	m_iPhase(0),
 	m_iMaxHp(0),
-	m_fAccTime(0.f)
+	m_fAccTime(0.f),
+	m_bMtrl(false),
+	m_bWaiting(true),
+	m_pHpBar(nullptr)
 {
 }
 
@@ -54,8 +59,11 @@ CMonsterB2::CMonsterB2(const CMonsterB2& rhs)
 	m_fFrameSpeed(0.f),
 	m_fBtmPadding(rhs.m_fBtmPadding),
 	m_iPhase(rhs.m_iPhase),
-	m_iMaxHp(rhs.m_iPhase),
-	m_fAccTime(0.f)
+	m_iMaxHp(rhs.m_iMaxHp),
+	m_fAccTime(0.f),
+	m_bMtrl(false),
+	m_bWaiting(true),
+	m_pHpBar(nullptr)
 {
 }
 
@@ -80,19 +88,14 @@ _int CMonsterB2::Update_GameObject(const _float& fTimeDelta)
 {
 	Check_Phase();
 
-	if (!m_bWait) {
+	if (!m_bWaiting) {
 		Move_Frame(fTimeDelta);
 	}
 
 	for (auto& pComponent : m_mapComponent[ID_DYNAMIC])
 		pComponent.second->Update_Component(fTimeDelta);
 
-	//if (iExit == DEAD)
-	//{
-	//	m_pColliderCom->UnregisterFromManager();
-	//	return iExit;
-	//}
-	if (!m_bWait) {
+	if (!m_bWaiting) {
 		CRenderer::GetInstance()->Add_RenderGroup(RENDER_ALPHA, this);
 		m_pHpBar->Update_Hp(m_iHp);
 		m_pHpBar->Update_GameObject(fTimeDelta);
@@ -114,8 +117,6 @@ void CMonsterB2::LateUpdate_GameObject(const _float& fTimeDelta)
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
 
 	Check_Status();
-
-	_vec3 vDir = *m_pAICom->Get_Dir();
 }
 
 void CMonsterB2::Render_GameObject()
@@ -124,11 +125,7 @@ void CMonsterB2::Render_GameObject()
 
 	Set_TextureSet();
 
-	//m_pGraphicDev->SetTextureStageState(0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_COUNT2);
-
 	m_pBufferCom->Render_Buffer();
-
-	//m_pGraphicDev->SetTextureStageState(0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE);
 }
 
 void CMonsterB2::OnCollision(CGameObject* pObject)
@@ -263,7 +260,6 @@ void CMonsterB2::Ready_Variable()
 
 	// Anim 관련 세팅
 	m_fFrameSpeed = 24.f;
-	//D3DXMatrixIdentity(&m_matTex);
 
 	m_pHpBar = CBossHpBar::Create(m_pGraphicDev, _float(m_iMaxHp), L"레쉬");
 }
@@ -293,7 +289,7 @@ void CMonsterB2::Ready_Event()
 			{
 				wstring strDothis = any_cast<wstring>(Dothisiter->second);
 				if (strDothis == L"Leshy_Intro") {
-					m_bWait = false;
+					m_bWaiting = false;
 					return;
 				}
 			}
@@ -770,7 +766,7 @@ void CMonsterB2::Check_Status()
 			fY = m_vPos.y - m_pTransformCom->Get_Scale(ROT_Y) * 0.24f;	// 충돌체 위치를 내려서 공격받지 않게 무적상태 구현
 
 		else fY = m_vPos.y + m_pTransformCom->Get_Scale(ROT_Y) * 0.06f;
-		AABB tAABB = { m_vPos.x, fY, m_vPos.z + 2.5f, 2.5f, 2.5f, 2.5f };
+		AABB tAABB = { m_vPos.x, fY, m_vPos.z + 2.0f, 3.f, 3.f, 3.f };
 		m_pColliderCom->Set_AABB(tAABB);
 		m_pColliderCom->UpdateFromAABB(tAABB);
 		if (g_bDebug) m_pColliderCom->Update_AABBforRender();

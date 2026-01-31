@@ -134,26 +134,6 @@ HRESULT CEffectMgr::Ready_EffectMgr(LPDIRECT3DDEVICE9 pGraphicDev)
 		particlePair.first->second = pParticleEffect;
 	}
 
-	//CParticleEffect* pDustLand = CParticleEffect::Create(pGraphicDev);
-	//pDustLand->Set_TextureKey(L"Proto_DustTexture");
-	//pDustLand->Set_EmitRange(_vec3(-0.5f, 0.f, -0.5f), _vec3(0.5f, 0.f, 0.5f));
-	//pDustLand->Set_SpeedRange(_vec3(-2.f, 1.f, -2.f), _vec3(2.f, 3.f, 2.f));
-	//pDustLand->Set_LifeTime(0.5f);
-	//pDustLand->Set_EmitRate(30.f);
-	//m_mapProtoEffect.emplace(EK_DUST_LAND, pDustLand);
-
-	//auto trailPair = m_mapProtoEffect.try_emplace(EK_TRAIL_GREEN, nullptr);	// pair<iter, bool>
-	//
-	//if (trailPair.second)
-	//{
-	//	CTrailEffect* pTrailEffect = CTrailEffect::Create(pGraphicDev, L"Proto_GreenTrailTexture");
-	//	pTrailEffect->Set_Color(D3DXCOLOR(1.0f, 1.f, 1.0f, 0.8f));
-	//	pTrailEffect->Set_HeadSize(0.5f);
-	//	pTrailEffect->Set_TailLength(1.5f);
-	//	pTrailEffect->Set_Emissive(false);
-	//	trailPair.first->second = pTrailEffect;
-	//}
-
 	auto screenPair = m_mapProtoEffect.try_emplace(EK_SCREEN_IMPACT, nullptr);	// pair<iter, bool>
 
 	if (screenPair.second)

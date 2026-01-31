@@ -74,15 +74,14 @@ private:
 	// 패턴 관련
 	_uint			m_iPhase;
 	_uint			m_iMaxHp;
-	_bool			m_bMtrl = false;
+	_bool			m_bMtrl;
 	_float			m_fAccTime;
-
-	_bool			m_bWaiting = true;
+	_bool			m_bWaiting;
 
 	//보스 체력바 관련
 	CBossHpBar* m_pHpBar;
+	_bool		m_bDead;
 
-	_bool		m_bDead = false;
 public:
 	static CMonsterB1* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel);
 	static CMonsterB1* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, _vec3 vPos);

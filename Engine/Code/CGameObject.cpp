@@ -72,9 +72,6 @@ void CGameObject::Compute_ViewDepth(const _vec3* pPos)
     m_pGraphicDev->GetTransform(D3DTS_VIEW, &matCamWorld);
     D3DXMatrixInverse(&matCamWorld, 0, &matCamWorld);
 
-    _vec3   vCamPos;
-    memcpy(&vCamPos, &matCamWorld.m[3][0], sizeof(_vec3));
-
 	m_vDepth = *pPos;
 }
 

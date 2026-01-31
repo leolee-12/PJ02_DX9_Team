@@ -23,6 +23,7 @@ protected:
 	void				Update_Idle(const _float& fTimeDelta);
 	void				Update_Summon(const _float& fTimeDelta);
 	void				Interact();
+	_bool				Is_MeleeWeapon() const;
 
 protected:
 	_bool		   m_bTriggered;

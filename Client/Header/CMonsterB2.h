@@ -77,7 +77,6 @@ private:
 	_float				m_fFrame;
 	_float				m_fFrameEnd;
 	_float				m_fFrameSpeed;
-	//_matrix				m_matTex;	// 거대한 보스여서 Flip 안해도 괜찮아보임
 	_float				m_fBtmPadding;
 
 	// AI 관련
@@ -86,13 +85,14 @@ private:
 	// 패턴 관련
 	_uint			m_iPhase;
 	_uint			m_iMaxHp;
-	_bool			m_bMtrl = false;
+	_bool			m_bMtrl;
 	_float			m_fAccTime;
 
 	// 연출관련
-	_bool			m_bWait = true;
+	_bool			m_bWaiting;
+
 	// UI
-	CBossHpBar* m_pHpBar = nullptr;
+	CBossHpBar* m_pHpBar;
 
 public:
 	static CMonsterB2* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel);

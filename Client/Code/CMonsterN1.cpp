@@ -73,7 +73,7 @@ _int CMonsterN1::Update_GameObject(const _float& fTimeDelta)
 
 	m_pTransformCom->Get_Info(INFO_POS, &m_vPos);
 	_vec3 vHpPos = m_vPos;
-	vHpPos.y += 3.f;
+	vHpPos.y += HP_BAR_Y_OFFSET;
 	m_pHpBar->Set_TargetPos(vHpPos);
 	m_pHpBar->Set_Hp(_float(m_iHp));
 	m_pHpBar->Update_GameObject(fTimeDelta);
@@ -104,7 +104,7 @@ void CMonsterN1::LateUpdate_GameObject(const _float& fTimeDelta)
 	m_pColliderCom->UpdateFromTransform(m_pTransformCom);
 	// 충돌체 디버그용
 	if (g_bDebug) m_pColliderCom->Update_AABBforRender();
-	m_vEffectPos = { m_vPos.x, m_vPos.y + 0.5f, m_vPos.z };
+	m_vEffectPos = { m_vPos.x, m_vPos.y + EFFECT_Y_OFFSET, m_vPos.z };
 
 	m_pHpBar->LateUpdate_GameObject(fTimeDelta);
 	CGameObject::LateUpdate_GameObject(fTimeDelta);

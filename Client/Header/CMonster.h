@@ -46,6 +46,9 @@ protected:
 public:
 	static CMonster* Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel);
 
+	static constexpr _float HP_BAR_Y_OFFSET			= 3.f;
+	static constexpr _float EFFECT_Y_OFFSET			= 0.5f;
+
 protected:
 	virtual void Free();
 };

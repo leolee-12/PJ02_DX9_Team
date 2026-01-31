@@ -20,8 +20,8 @@ CGauge::CGauge(LPDIRECT3DDEVICE9 pGraphicDev)
 	, m_eCurGaugeState(Gauge::GS_END)
 	, m_ePreGaugeState(Gauge::GS_END)
 	, m_bFontRender(true)
-	, m_fMaxPassionGaugeValue(CPlayer::MAX_PASSION_VALUE)
-	, m_fMaxFaithGaugeValue(CPlayer::MAX_FAITH_VALUE)
+	, m_fMaxPassionGaugeValue(CPlayer::PLAYER_PASSION_MAX)
+	, m_fMaxFaithGaugeValue(CPlayer::PLAYER_FAITH_MAX)
 {
 	ZeroMemory(&m_vPos, sizeof(_vec3));
 }
