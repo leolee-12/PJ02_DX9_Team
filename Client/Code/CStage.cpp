@@ -3,7 +3,6 @@
 #include "CBackGround.h"
 #include "CProtoMgr.h"
 #include "CDynamicCamera.h"
-// #include "CSkyBox.h"  // CMySkyBox로 대체
 #include "CMySkyBox.h"
 #include "CPersistentMgr.h"
 #include "CDungeonBack.h"
@@ -22,7 +21,7 @@
 #include "CMapObject.h"
 #include "CGrass.h"
 #include "CCollisionMgr.h"
-#include <CMonsterB1.h>
+#include "CMonsterB1.h"
 
 
 
@@ -198,20 +197,6 @@ HRESULT CStage::Ready_GameLogic_Layer(const _tchar* pLayerTag)
 
 	for (_uint i = 0; i < 1; ++i)
 	{
-		//pGameObject = CMonsterN1::Create(m_pGraphicDev, m_pMessageChannel);
-		//
-		//NULL_CHECK_RETURN(pGameObject, E_FAIL)
-		//
-		//if (FAILED(pLayer->Add_GameObject(L"Monster", pGameObject)))
-		//	return E_FAIL;
-		//
-		//pGameObject = CMonsterN2::Create(m_pGraphicDev, m_pMessageChannel);
-		//
-		//NULL_CHECK_RETURN(pGameObject, E_FAIL)
-		//
-		//	if (FAILED(pLayer->Add_GameObject(L"Monster", pGameObject)))
-		//		return E_FAIL;
-
 		pGameObject = CMonsterB1::Create(m_pGraphicDev, m_pMessageChannel);
 
 		NULL_CHECK_RETURN(pGameObject, E_FAIL)
@@ -331,13 +316,6 @@ CStage* CStage::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 		MSG_BOX("pTest Create Failed");
 		return nullptr;
 	}
-
-	/*if (FAILED(pTest->Ready_Const_Layer(pConstLayer)))
-	{
-		Safe_Release(pTest);
-		MSG_BOX("pTest Create Failed");
-		return nullptr;
-	}*/
 
 	return pTest;
 }

@@ -121,8 +121,10 @@ void CPlayer::LateUpdate_GameObject(const _float& fTimeDelta)
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
 
 	//------스프라이트 높이와 충돌체 위치 맞춤---------
-	_float fY(m_vPos.y - m_pTransformCom->Get_Scale(ROT_Y) * 0.125f);
-	AABB tAABB = { m_vPos.x, fY, m_vPos.z, 1.f, 1.f, 1.f };
+	_float fOffsetRatioY = 0.125f;
+	_float fY(m_vPos.y - m_pTransformCom->Get_Scale(ROT_Y) * fOffsetRatioY);
+	AABB tAABB = {	m_vPos.x,					fY,							m_vPos.z,
+					PLAYER_AABB_HALFRANGE_X,	PLAYER_AABB_HALFRANGE_Y,	PLAYER_AABB_HALFRANGE_Z };
 	m_pColliderCom->Set_AABB(tAABB);
 	m_pColliderCom->UpdateFromAABB(tAABB);
 	//-------------------------------------------------
@@ -147,15 +149,12 @@ void CPlayer::Render_GameObject()
 
 	m_pGraphicDev->SetTextureStageState(0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE);
 
+#ifdef _DEBUG
 	_tchar szPos[256] = L"";
 	swprintf_s(szPos, L"[플레이어] 플레이어 중점 위치 X : %f, Y : %f, Z : %f", m_vPos.x, m_vPos.y, m_vPos.z);
 	OutputDebugString(szPos);
 	OutputDebugString(L"\n");
-
-	//_tchar szPos[256] = L"";
-	//swprintf_s(szPos, L"a : %d, r : %d, g : %d, b : %d", Test_a, Test_r, Test_g, Test_b);
-	//OutputDebugString(szPos);
-	//OutputDebugString(L"\n");
+#endif
 }
 
 void CPlayer::Ready_Variable()
@@ -207,13 +206,8 @@ void CPlayer::Ready_Variable()
 void CPlayer::Ready_Event()
 {
 	if (m_pMessageChannel == nullptr) return;
-	if (m_bMsgRegistered) return;
 
-	//m_hmapSubHandles.insert({ L"StartGame.Move", m_pMessageChannel->Subscribe(L"Start_Game", [this](const IMessageChannel::EVENT& Event) {
-	//	if (Event.eOBJID == this->Get_OBJID()) {
-	//		m_pTransformCom->Set_Pos(10.f, 10.f, 10.f);
-	//	}
-	//	}) });
+	if (m_bMsgRegistered) return;
 
 	m_hmapSubHandles.insert({ L"Player.Spawn", m_pMessageChannel->Subscribe(L"Player.Spawn", [this](const IMessageChannel::EVENT& Event)
 		{
@@ -290,6 +284,7 @@ void CPlayer::Ready_Event()
 				m_iMaxHp += 2;
 				m_iHp += 2;
 				break;
+
 			case 2:
 				m_fAttack = m_fAttack * 1.5f;
 				break;
@@ -301,8 +296,8 @@ void CPlayer::Ready_Event()
 		{
 			m_fPassion += DEFAULT_PASSION_GAIN;
 
-			if (m_fPassion > MAX_PASSION_VALUE)
-				m_fPassion = MAX_PASSION_VALUE;
+			if (m_fPassion > PLAYER_PASSION_MAX)
+				m_fPassion = PLAYER_PASSION_MAX;
 		}
 	) });
 
@@ -310,8 +305,8 @@ void CPlayer::Ready_Event()
 		{
 			m_fFaith += DEFAULT_FAITH_GAIN;
 
-			if (m_fPassion > MAX_FAITH_VALUE)
-				m_fPassion = MAX_FAITH_VALUE;
+			if (m_fFaith > PLAYER_FAITH_MAX)
+				m_fFaith = PLAYER_FAITH_MAX;
 		}
 	) });
 
@@ -421,68 +416,6 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 
 void CPlayer::Key_Input_Debug(const _float& fTimeDelta)
 {
-	//for (int i = 0; i < 9; ++i)
-	//{
-	//	if (GetAsyncKeyState(i + 48))
-	//	{	// 디버그용
-	//
-	//		if (i == 7)
-	//		{
-	//			if (auto pLetterBox = CEffectMgr::GetInstance()->Get_LetterBox())
-	//				pLetterBox->Play();
-	//		}
-	//		else if (i == 8)
-	//		{
-	//			if (auto pLetterBox = CEffectMgr::GetInstance()->Get_LetterBox())
-	//				pLetterBox->Exit();
-	//		}
-	//		else		CEffectMgr::GetInstance()->Create_Effect(CEffectMgr::EK_HIT, i, m_vPos);
-	//	}
-	//}
-
-	//
-	//if (CDInputMgr::GetInstance()->Key_Down(DIK_F1))
-	//{	// 디버그용
-	//	m_bIntro = !m_bIntro;
-	//	if (m_bIntro)
-	//	{
-	//		m_fSpeed = PLAYER_INTRO_SPEED;
-	//		_float fScale = PLAYER_INTRO_SCALE;
-	//		m_pTransformCom->Set_Scale(fScale, fScale, fScale);
-	//	}
-	//	else
-	//	{
-	//		m_fSpeed = PLAYER_DEFAULT_SPEED;
-	//		_float fScale = PLAYER_DEFAULT_SCALE;
-	//		m_pTransformCom->Set_Scale(fScale, fScale, fScale);
-	//	}
-	//}
-	//if (CDInputMgr::GetInstance()->Key_Down(DIK_F2))
-	//{	// 디버그용
-	//	if (!m_bIntro) return;
-	//
-	//	if (!m_bCutScene)
-	//	{
-	//		m_bCutScene = true;
-	//		m_eCurState = PS_ACTION;
-	//		m_strFrameKey = L"intro_kneel";
-	//	}
-	//	else
-	//	{
-	//		m_strFrameKey = L"intro_kneel-wake";
-	//	}
-	//}
-	//if (CDInputMgr::GetInstance()->Key_Down(DIK_F3))
-	//{	// 디버그용
-	//	if (!m_bIntro) return;
-	//
-	//	m_eCurState = PS_REBIRTH;
-	//	m_strFrameKey = L"intro_rebirth";
-	//	_float fScale = PLAYER_REBIRTH_SCALE;
-	//	m_pTransformCom->Set_Scale(fScale, fScale, fScale);
-	//	m_pTransformCom->Set_Pos(m_vPos.x, 2.f, m_vPos.z);
-	//}
-
 	if (CDInputMgr::GetInstance()->Key_Down(DIK_Z))
 	{
 		g_bDebug = !g_bDebug;
@@ -1069,7 +1002,7 @@ void CPlayer::Set_Tied()
 {
 	m_bIntro = true;
 	m_fSpeed = PLAYER_INTRO_SPEED;
-	_float fScale = 11.f;
+	_float fScale = PLAYER_INTRO_SCALE;
 	m_pTransformCom->Set_Scale(fScale, fScale, fScale);
 }
 
@@ -1095,7 +1028,7 @@ void CPlayer::Set_Reborn()
 {
 	m_eCurState = PS_REBIRTH;
 	m_strFrameKey = L"intro_rebirth";
-	_float fScale = 20.f;
+	_float fScale = PLAYER_REBIRTH_SCALE;
 	m_pTransformCom->Set_Scale(fScale, fScale, fScale);
 	m_pTransformCom->Set_Pos(m_vPos.x, 2.f, m_vPos.z);
 	m_vDir = _vec3(0.f, 0.f, -1.f);
@@ -1124,8 +1057,8 @@ void CPlayer::Attack_HitBox()
 	else					fX = m_vPos.x - 1.2f;
 
 
-	AABB tAABB = { fX, m_vPos.y, m_vPos.z - 1.f,
-					2.f, 1.f, 2.f };
+	AABB tAABB = {	fX,							m_vPos.y,					m_vPos.z - 1.f,
+					PLAYER_ATTACK_HALFRANGE_X,	PLAYER_ATTACK_HALFRANGE_Y,	PLAYER_ATTACK_HALFRANGE_Z };
 
 	if(g_bDebug) CRenderer::GetInstance()->Add_TestCollider(tAABB, 60);
 
@@ -1229,11 +1162,11 @@ _bool CPlayer::Find_WorkTarget(const _float& fMaxDist)
 
 		// 거리 계산
 		IInteractable* pIObj = dynamic_cast<IInteractable*>(pTarget);
-		_vec3 vWorkPos;
+		_vec3 vWorkPos, vWorkDir;
 		pIObj->Get_WorkPos(&vWorkPos);
-		vWorkPos = m_vPos - vWorkPos;
-		vWorkPos.y = 0.f;
-		_float fDist = D3DXVec3Length(&vWorkPos);
+		vWorkDir = m_vPos - vWorkPos;
+		vWorkDir.y = 0.f;
+		_float fDist = D3DXVec3Length(&vWorkDir);
 
 		if(fDist < fMinDist)
 		{
@@ -1241,6 +1174,9 @@ _bool CPlayer::Find_WorkTarget(const _float& fMaxDist)
 			m_eWork = PLAYER_WORK(i);
 			m_vWorkPos = vWorkPos;
 			bFound = true;
+
+			if (m_vWorkPos.x < m_vPos.x)	m_vDir = m_vNormDir[DIR_LEFT];
+			else							m_vDir = m_vNormDir[DIR_RIGHT];
 		}
 	}
 
@@ -1417,11 +1353,12 @@ CPlayer* CPlayer::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 
 void CPlayer::Free()
 {
-	if (m_pChargeArrow)
-	{
-		m_pChargeArrow->Set_Dead();  // CEffectMgr가 정리
-		m_pChargeArrow = nullptr;
-	}
+	//if (m_pChargeArrow)
+	//{
+	//	//m_pChargeArrow->Set_Dead();  // CEffectMgr가 정리
+	//	//m_pChargeArrow = nullptr;
+	//}
+	Safe_Release(m_pChargeArrow);
 
 	Safe_Release(m_pInteractionUI);
 	CGameObject::Free();

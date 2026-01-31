@@ -293,7 +293,7 @@ void CFollower::Ready_Variable()
 
 		m_hmapSubHandles.insert({ L"Trigger.Activate.Owner", m_pMessageChannel->Subscribe(L"Trigger.Activate.Owner", [this](const IMessageChannel::EVENT& Event)
 			{
-				CSoundMgr::GetInstance()->Play(L"follower warp in reverse effect.wav", SOUND_EFFECT, 0.35f);
+				/*CSoundMgr::GetInstance()->Play(L"follower warp in reverse effect.wav", SOUND_EFFECT, 0.35f);*/
 				auto Nameiter = Event.hmapData.find(L"Trigger_Name");
 				if (Nameiter == Event.hmapData.end()) { return; }
 				auto Owneriter = Event.hmapData.find(L"Trigger_Owner");
@@ -670,10 +670,10 @@ void CFollower::Execute_Work(const _float& fTimeDelta)
 			m_eCurWork = m_eSavedWork;
 			m_eSavedWork = FW_NONE;
 		}
-		else
-		{
-			m_eCurWork = FOLLOWER_WORK(Get_Rand_Int(1, 5));
-		}
+		//else
+		//{
+		//	m_eCurWork = FOLLOWER_WORK(Get_Rand_Int(1, 5));
+		//}
 
 		m_ePreWork = FW_NONE;
 	}

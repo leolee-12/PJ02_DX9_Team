@@ -28,8 +28,8 @@ public:
 	ITEMSTATE			Get_State() { return m_eCurState; }
 
 	virtual HRESULT		Ready_GameObject();
-	virtual void		LateUpdate_GameObject(const _float& fTimeDelta);	// 아직은 동일하므로 추상클래스에 넣었으나, 달라지면 각자 override하여 사용
-	virtual void		Render_GameObject();								// 아직은 동일하므로 추상클래스에 넣었으나, 달라지면 각자 override하여 사용
+	virtual void		LateUpdate_GameObject(const _float& fTimeDelta);
+	virtual void		Render_GameObject();
 	virtual void		OnCollision(CGameObject* pObject) PURE;				// 하위클래스에 구현 강제
 	virtual void		Ready_Event();
 

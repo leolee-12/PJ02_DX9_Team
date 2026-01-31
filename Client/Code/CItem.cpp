@@ -121,7 +121,6 @@ void CItem::Ready_Variable()
 	m_pTransformCom->Set_Scale(2.f, 2.f, 1.f);
 
 	// 게임로직 변수 세팅
-
 	_float fX = (rand() % 20 - 10.f) * 0.3f * m_fThrowRange;
 	_float fZ = (rand() % 20 - 10.f) * 0.3f * m_fThrowRange;
 	m_vSpeed = { fX, 10.f + Get_Rand_Float(-2.5f, 2.5f), fZ};

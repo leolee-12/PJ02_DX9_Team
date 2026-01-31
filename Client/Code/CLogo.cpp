@@ -10,6 +10,7 @@
 #include "CLoading.h"
 #include "CDInputMgr.h"
 #include "CTitleTab.h"
+#include <CSoundMgr.h>
 
 CLogo::CLogo(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CScene(pGraphicDev), m_pLoading(nullptr)
@@ -35,6 +36,8 @@ HRESULT CLogo::Ready_Scene()
 		return E_FAIL;
 
 	m_eLogoState = LS_START;
+
+	CSoundMgr::GetInstance()->Play(L"Start Game.wav", SOUND_EFFECT, 0.1f);
 
 	return S_OK;
 }
@@ -68,13 +71,13 @@ _int CLogo::Update_Scene(const _float& fTimeDelta)
 			switch (m_eLogoState)
 			{
 			case LS_START:
-				//LSTmp = LOADING_TUTORIAL;
-				LSTmp = LOADING_REALDUNGEON;
-				//LSTmp = LOADING_VILLAGE;
-				//LSTmp = LOADING_DUNGEON;
-				//LSTmp = LOADING_KNUCKLEBONE;
-				//LSTmp = LOADING_AMDUSIASROOM;
+				LSTmp = LOADING_TUTORIAL;
 				//LSTmp = LOADING_THEGATEWAY;
+				//LSTmp = LOADING_DUNGEON;
+				//LSTmp = LOADING_VILLAGE;
+				//LSTmp = LOADING_KNUCKLEBONE;
+				//LSTmp = LOADING_REALDUNGEON;
+				//LSTmp = LOADING_AMDUSIASROOM;
 				break;
 			case LS_EDIT:
 				// 임시입니다.

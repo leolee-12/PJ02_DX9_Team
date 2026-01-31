@@ -188,7 +188,13 @@ public:
 	static constexpr _float PLAYER_INTRO_SCALE			= 11.f;
 
 	static constexpr _int	PLAYER_DEFAULT_HP			= 8;
-	static constexpr _float	PLAYER_DEFAULT_ATTACK		= 1.f	/*+5.f*/;
+	static constexpr _float	PLAYER_DEFAULT_ATTACK		= 1.f;
+	static constexpr _float	PLAYER_AABB_HALFRANGE_X		= 1.f;
+	static constexpr _float	PLAYER_AABB_HALFRANGE_Y		= 1.f;
+	static constexpr _float	PLAYER_AABB_HALFRANGE_Z		= 1.f;
+	static constexpr _float	PLAYER_ATTACK_HALFRANGE_X	= 2.f;
+	static constexpr _float	PLAYER_ATTACK_HALFRANGE_Y	= 1.5f;
+	static constexpr _float	PLAYER_ATTACK_HALFRANGE_Z	= 2.5f;
 
 	static constexpr _float SWORD_COMBO_DELAY			= 0.1f;
 	static constexpr _float GAUNTLETS_COMBO_DELAY		= 0.3f;
@@ -210,8 +216,6 @@ public:
 	static constexpr _float PLAYER_REBIRTH_SCALE		= 20.f;
 	static constexpr _float DEFAULT_PASSION_GAIN		= 0.2f;
 	static constexpr _float DEFAULT_FAITH_GAIN			= 5.f;
-	static constexpr _float MAX_PASSION_VALUE			= 4.f;
-	static constexpr _float	MAX_FAITH_VALUE				= 100.f;
 
 private:
 	virtual void Free();

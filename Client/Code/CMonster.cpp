@@ -89,18 +89,6 @@ void CMonster::LateUpdate_GameObject(const _float& fTimeDelta)
 	Compute_ViewDepth(&m_vPos);
 
 	CGameObject::LateUpdate_GameObject(fTimeDelta);
-
-	/*Engine::CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(Engine::CManagement::GetInstance()->
-		Get_Component(ID_DYNAMIC, L"GameLogic_Layer", L"Player", L"Com_Transform"));
-
-	if (nullptr == pPlayerTransformCom)
-		return;
-
-	_vec3 vPlayerPos{};
-	pPlayerTransformCom->Get_Info(INFO_POS, &vPlayerPos);
-
-	m_pTransformCom->Chase_Target(&vPlayerPos, fTimeDelta, 5.f);*/
-
 }
 
 void CMonster::Render_GameObject()
@@ -216,13 +204,13 @@ void CMonster::Create_Item()
 		{
 			wstring strObjTag = L"Item";
 
-			IMessageChannel::EVENT ESummonMonster;
-			ESummonMonster.strType = L"Obj.Add";
-			ESummonMonster.eOBJID = Engine::OID_ITEM;
-			ESummonMonster.hmapData.emplace(L"Obj", pItem);
-			ESummonMonster.hmapData.emplace(L"LayerTag", L"GameLogic_Layer");
-			ESummonMonster.hmapData.emplace(L"ObjTag", strObjTag);
-			m_pMessageChannel->Publish(ESummonMonster);
+			IMessageChannel::EVENT tEvent;
+			tEvent.strType = L"Obj.Add";
+			tEvent.eOBJID = Engine::OID_ITEM;
+			tEvent.hmapData.emplace(L"Obj", pItem);
+			tEvent.hmapData.emplace(L"LayerTag", L"GameLogic_Layer");
+			tEvent.hmapData.emplace(L"ObjTag", strObjTag);
+			m_pMessageChannel->Publish(tEvent);
 		}
 	}
 }

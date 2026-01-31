@@ -38,7 +38,7 @@ HRESULT CPassiveItem::Ready_GameObject()
 
 	Ready_Event();
 
-	if (m_eItemID == WP_SWORD || m_eItemID == WP_GAUNTLET)
+	if (Is_MeleeWeapon())
 	{
 		m_eCurState = IS_IDLE;
 		if (m_eItemID == WP_SWORD)
@@ -87,7 +87,7 @@ void CPassiveItem::LateUpdate_GameObject(const _float& fTimeDelta)
 	if (m_pTrigger) {
 		m_pTrigger->LateUpdate_GameObject(fTimeDelta);
 	}
-	if (m_eItemID == WP_SWORD || m_eItemID == WP_GAUNTLET)
+	if (Is_MeleeWeapon())
 	{
 		m_pWeaponInfo->LateUpdate_GameObject(fTimeDelta);
 	}
@@ -95,7 +95,7 @@ void CPassiveItem::LateUpdate_GameObject(const _float& fTimeDelta)
 	CItem::LateUpdate_GameObject(fTimeDelta);
 
 
-	if (m_eItemID == WP_SWORD || m_eItemID == WP_GAUNTLET)
+	if (Is_MeleeWeapon())
 	{
 		AABB tWeaponAABB = { m_vPos, _vec3(1.f,2.f,1.f) };
 		m_pColliderCom->Set_AABB(tWeaponAABB);
@@ -117,7 +117,7 @@ void CPassiveItem::OnCollision(CGameObject* pObject)
 
 	if (pObject->Get_OBJID() == OID_PLAYER)
 	{
-		if (m_eItemID == WP_SWORD || m_eItemID == WP_GAUNTLET)
+		if (Is_MeleeWeapon())
 		{
 			m_pWeaponInfo->Active();
 		}
@@ -164,7 +164,7 @@ void CPassiveItem::Update_Idle(const _float& fTimeDelta)
 	m_fAccTime += fTimeDelta;
 	m_pTrigger->Set_Pos_Trigger(m_vPos);
 	m_pTrigger->Update_GameObject(fTimeDelta);
-	if (m_eItemID == WP_SWORD || m_eItemID == WP_GAUNTLET)
+	if (Is_MeleeWeapon())
 	{
 		m_pWeaponInfo->Update_GameObject(fTimeDelta);
 	}
@@ -196,7 +196,11 @@ void CPassiveItem::Interact()
 		// 플레이어의 무기 슬롯에 장착
 		return;
 	}
+}
 
+_bool CPassiveItem::Is_MeleeWeapon() const
+{
+	return (m_eItemID == WP_SWORD || m_eItemID == WP_GAUNTLET);
 }
 
 CPassiveItem* CPassiveItem::Create(LPDIRECT3DDEVICE9 pGraphicDev, IMessageChannel* StageChannel, ITEMID eID, _float fThrowRange)
