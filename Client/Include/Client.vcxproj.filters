@@ -490,24 +490,6 @@
     <Filter Include="02. GameObject\05. UI\12. FoodReviewUI\01. FoodReviewImage">
       <UniqueIdentifier>{e5864e32-2ca4-4e62-811f-59ca0abf0031}</UniqueIdentifier>
     </Filter>
-    <Filter Include="03. Manager">
-      <UniqueIdentifier>{f4a5af23-1cb1-4c65-b73d-7132d05ea4c2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="03. Manager\02. TileMgr">
-      <UniqueIdentifier>{01b64606-77a6-499b-92aa-0bad3eff8f84}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="03. Manager\00. CutSceneMgr">
-      <UniqueIdentifier>{37f20989-8197-4784-9469-9d8b5aef87c6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="03. Manager\03. InteractMgr">
-      <UniqueIdentifier>{cc4ab9a0-c95b-4ff8-939b-ac400d44b4d1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="03. Manager\01. PersistentMgr">
-      <UniqueIdentifier>{153d294d-a813-4bb7-9dee-2e2680526024}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="03. Manager\04. EffectMgr">
-      <UniqueIdentifier>{613f16cb-d640-48b5-84eb-5098839b2c76}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObject\05. UI\04. PlayerUI\02. PlayerTarotCard">
       <UniqueIdentifier>{65f80286-6539-4ec7-b2aa-91d3a26cfb90}</UniqueIdentifier>
     </Filter>
@@ -582,6 +564,24 @@
     </Filter>
     <Filter Include="02. GameObject\05. UI\98. Cursor">
       <UniqueIdentifier>{df6bc81c-1091-444d-9663-0e14c92446ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Manager">
+      <UniqueIdentifier>{f4a5af23-1cb1-4c65-b73d-7132d05ea4c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Manager\02. TileMgr">
+      <UniqueIdentifier>{01b64606-77a6-499b-92aa-0bad3eff8f84}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Manager\00. CutSceneMgr">
+      <UniqueIdentifier>{37f20989-8197-4784-9469-9d8b5aef87c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Manager\03. InteractMgr">
+      <UniqueIdentifier>{cc4ab9a0-c95b-4ff8-939b-ac400d44b4d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Manager\01. PersistentMgr">
+      <UniqueIdentifier>{153d294d-a813-4bb7-9dee-2e2680526024}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Manager\04. EffectMgr">
+      <UniqueIdentifier>{613f16cb-d640-48b5-84eb-5098839b2c76}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

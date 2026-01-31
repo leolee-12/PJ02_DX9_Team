@@ -456,7 +456,15 @@ void CMonsterB2::Move_Frame(const _float& fTimeDelta)
 		{
 		case B2S_DIG:
 		{
+			if (iCurAnimFrame == 16) CSoundMgr::GetInstance()->Play(L"Dig.wav", SOUND_BOSS, 0.35f);
+
 			if ((iCurAnimFrame >= 24) && (iCurAnimFrame % 3 == 0)) m_pAICom->Set_Signal();
+		}
+		break;
+
+		case B2S_ESCAPE:
+		{
+			if (iCurAnimFrame == 4) CSoundMgr::GetInstance()->Play(L"Dig.wav", SOUND_BOSS, 0.35f);
 		}
 		break;
 
@@ -502,6 +510,8 @@ void CMonsterB2::Move_Frame(const _float& fTimeDelta)
 				IMessageChannel::EVENT tEvent;
 				tEvent.strType = L"Leshy.Appeared";
 				m_pMessageChannel->Publish(tEvent);
+
+				CSoundMgr::GetInstance()->Play(L"CutSceneBomb.wav", SOUND_BOSS, 0.35f);
 			}
 		}
 		}

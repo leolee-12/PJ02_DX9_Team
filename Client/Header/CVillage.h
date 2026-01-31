@@ -62,8 +62,6 @@ private:
 	HRESULT			Ready_Light();
 	void			Ready_Event();
 
-	void			Ready_Event_Village();
-
 	void			Key_Input_Village();
 	void			Key_Input_Village_Debug();
 
@@ -73,7 +71,7 @@ private:
 	void			Update_Building(const _float& fTimeDelta);
 	void			LateUpdate_Building(const _float& fTimeDelta);
 
-	_vec3			Compute_GirdCoord(const _vec3& vPos);
+	_vec3			Compute_GridCoord(const _vec3& vPos);
 
 	void			Select_Key_Input();
 

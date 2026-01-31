@@ -33,12 +33,11 @@ _int CCursor::Update_GameObject(const _float& fTimeDelta)
 	// 스크린 좌표 → DX 좌표
 	_float fX = pt.x - _float(WINCX) * 0.5f;
 	_float fY = -pt.y + _float(WINCY) * 0.5f;
+	_float fHalfScale = 16.f;
 
-	m_pTransformCom->Set_Pos(fX, fY, 0.f);
+	m_pTransformCom->Set_Pos(fX + fHalfScale, fY - fHalfScale, 0.f);
 
 	_int iExit = CGameObject::Update_GameObject(fTimeDelta);
-
-	//CRenderer::GetInstance()->Add_RenderGroup(RENDER_UI, this);
 
 	return iExit;
 }

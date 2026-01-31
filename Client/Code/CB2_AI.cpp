@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "CB2_AI.h"
 #include "CTransform.h"
+#include "CSoundMgr.h"
 
 CB2_AI::CB2_AI(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CAIController(pGraphicDev),
@@ -395,6 +396,10 @@ void CB2_AI::Update_Smash(const _float& fTimeDelta)
 				break;
 			}
 		}
+
+		_tchar strSoundName[128] = L"";
+		swprintf_s(strSoundName, L"Smash_%d.wav", Get_Rand_Int(0, 2));
+		CSoundMgr::GetInstance()->Play(strSoundName, SOUND_BOSS, 0.35f);
 
 		m_bOnce = false;
 	}
