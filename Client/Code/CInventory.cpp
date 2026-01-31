@@ -549,6 +549,40 @@ void CInventory::Add_Item(CItem::ITEMID _eid, _int _iCount)
 	}
 }
 
+void CInventory::Add_Item_NoAlram(CItem::ITEMID _eid, _int _iCount)
+{
+	for (auto pItem : m_vItem)
+	{
+		tItemData ItemData = pItem->Get_ItemData();
+		if (ItemData.ID == _eid)
+		{
+			// UPDATE
+			ItemData.iCount += _iCount;
+			pItem->Set_ItemData(ItemData);
+			pItem->Set_Render(true);
+			return;
+		}
+	}
+
+	for (auto pItem : m_vItem)
+	{
+		tItemData ItemData = pItem->Get_ItemData();
+		if (ItemData.ID == CItem::ID_END || ItemData.iCount == 0)
+		{
+			// NEW
+
+			ItemData.ID = _eid;
+			ItemData.iCount = _iCount;
+			pItem->Set_ItemData(ItemData);
+			pItem->Set_LocalPos(m_vSlotLocalPos[m_iCurItemCount]);
+			m_iCurItemCount++;
+			m_InventoryItemList.push_back(ItemData.ID);
+			pItem->Set_Render(true);
+			return;
+		}
+	}
+}
+
 BOOL CInventory::Use_Item(CItem::ITEMID _eid, _int _iCount)
 {
 	for (auto pItem : m_vItem)
