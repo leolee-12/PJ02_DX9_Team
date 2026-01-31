@@ -40,12 +40,12 @@ HRESULT CResourceHistoryController::Ready_GameObject()
 		return E_FAIL;
 
 	m_mResourceUI.insert({ 2 , pGameObject });
-	pGameObject = CResourceHistoryUI::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ WINCX / 2,WINCY / 2 - 60.0f, 0.1f }, L"열매", TYPE_BERRY);
+	pGameObject = CResourceHistoryUI::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ WINCX / 2,WINCY / 2 - 60.0f, 0.1f }, L"베리", TYPE_BERRY);
 	if (nullptr == pGameObject)
 		return E_FAIL;
 
 	m_mResourceUI.insert({ 3 , pGameObject });
-	pGameObject = CResourceHistoryUI::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ WINCX / 2,WINCY / 2, 0.1f }, L"똥", TYPE_POOP);
+	pGameObject = CResourceHistoryUI::Create(m_pGraphicDev, m_pMessageChannel, _vec3{ WINCX / 2,WINCY / 2, 0.1f }, L"퇴비", TYPE_POOP);
 	if (nullptr == pGameObject)
 		return E_FAIL;
 

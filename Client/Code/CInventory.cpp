@@ -138,10 +138,8 @@ HRESULT CInventory::Ready_GameObject()
 	m_vLerpStart = { 0,0,0 };
 	m_vLerpEnd = { 0,0,0 };
 	m_iCurItemCount = 0;
-	//Add_Item(CItem::IG_GOLD, 17);
-	//Add_Item(CItem::IG_WOOD, 18);
-	//Add_Item(CItem::IG_STONE, 19);
-	//Add_Item(CItem::IG_BERRY, 20);
+
+	// Add_Item_NoAlram(CItem::IG_GOLD, 20);
 	return S_OK;
 }
 
@@ -544,6 +542,40 @@ void CInventory::Add_Item(CItem::ITEMID _eid, _int _iCount)
 			m_InventoryItemList.push_back(ItemData.ID);
 			pItem->Set_Render(true);
 			CPersistentMgr::GetInstance()->Get_ResourceHistory()->AddItem(_eid, _iCount);
+			return;
+		}
+	}
+}
+
+void CInventory::Add_Item_NoAlram(CItem::ITEMID _eid, _int _iCount)
+{
+	for (auto pItem : m_vItem)
+	{
+		tItemData ItemData = pItem->Get_ItemData();
+		if (ItemData.ID == _eid)
+		{
+			// UPDATE
+			ItemData.iCount += _iCount;
+			pItem->Set_ItemData(ItemData);
+			pItem->Set_Render(true);
+			return;
+		}
+	}
+
+	for (auto pItem : m_vItem)
+	{
+		tItemData ItemData = pItem->Get_ItemData();
+		if (ItemData.ID == CItem::ID_END || ItemData.iCount == 0)
+		{
+			// NEW
+
+			ItemData.ID = _eid;
+			ItemData.iCount = _iCount;
+			pItem->Set_ItemData(ItemData);
+			pItem->Set_LocalPos(m_vSlotLocalPos[m_iCurItemCount]);
+			m_iCurItemCount++;
+			m_InventoryItemList.push_back(ItemData.ID);
+			pItem->Set_Render(true);
 			return;
 		}
 	}
