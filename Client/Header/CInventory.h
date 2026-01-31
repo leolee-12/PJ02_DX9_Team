@@ -33,6 +33,7 @@ public:
 
 	void	Set_Active(_bool bActive) { m_bActive = bActive; }
 	void	Add_Item(CItem::ITEMID _eid, _int _iCount);
+	void	Add_Item_NoAlram(CItem::ITEMID _eid, _int _iCount);
 	BOOL	Use_Item(CItem::ITEMID _eid, _int _iCount);
 	void	Set_State(INVENSTATE _estate) { m_eCurInvenState = _estate; }
 	_int	Get_ItemCount(CItem::ITEMID _eid);
