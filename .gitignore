@@ -417,12 +417,14 @@ FodyWeavers.xsd
 *.msm
 *.msp
 
-# Claude Code
-CLAUDE.md
 # Project specific ignores
-CLAUDE.md
 Maps/
-.claude/
 MAP_SYSTEM_PLAN.md
 MAP_SYSTEM_PROGRESS.md
+
+# Personal
 [Dd]ocs/
+CLAUDE.md
+AGENTS.md
+.claude/
+.agents/
